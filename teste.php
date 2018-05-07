@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 //teste1
-
+//teste2
 //------------------------------------------------------------teste para corrigir fin_despesa_elemeneto----------------------------------------------------------------------------------
 $conexao = new Conexao();
 $pdo = $conexao->connect();
@@ -238,26 +238,15 @@ try {
                             </div>
                         </div>
 
-
                     </div>
                     ===================================================
                     End page content
 
-
                 </div>
                 ===================================================
                 END CONTENT CONTAINER
-
-
-
-
-
                
             </div>
-
-           
-
-
              SCROLL PAGE BUTTON 
             ===================================================
             <button class="scroll-top btn">
@@ -317,10 +306,6 @@ try {
                 $("#formula").html($("#formula").text().slice(0, -1)); 
               
             });
-            
-            
-            
-            
             
         });
         </script>
