@@ -409,34 +409,56 @@ class Relatorio {
         }
     }
     
+    
+    //************************************************ RELATORIO DESTINOS ********************************************************
     function percorreRelatorioDestinos(PDO $pdo = null) {
         $retorno = "";
         try {
             $daoDiaRelatorioDestino = new DaoDiaRelatorioDestino();
-            foreach ($this->getDestinos() as $destino) {
-                $daoDiaRelatorioDestino->setIdRelatorio($this->getIdRelatorio());
-                $daoDiaRelatorioDestino->setIdRelatorioDestino($destino['id_relatorio_destino']);
-                $daoDiaRelatorioDestino->setIdCidadeInicio($destino['id_cidade_inicio']);
-                $daoDiaRelatorioDestino->setIdCidadeFim($destino['id_cidade_fim']);
-                $daoDiaRelatorioDestino->setDhInicio($destino['dh_inicio']);
-                $daoDiaRelatorioDestino->setDhFim($destino['dh_fim']);
-                $daoDiaRelatorioDestino->setIdTransporte($destino['id_transporte']);
-                $daoDiaRelatorioDestino->setIdTransporteTipo($destino['id_transporte_tipo']);
-                $daoDiaRelatorioDestino->setDsTransporteTipo($destino['ds_transporte_tipo']);
+            $daoDiaRelatorioDestino->setIdRelatorio($this->getIdRelatorio());
+            
+            //registros do banco
+            $daoDiaRelatorioDestino->select($pdo);
+            $arrayAuxiliar = $daoDiaRelatorioDestino->getMsgRetorno();
+            
+            foreach ($this->getDestinos() as $indiceAplicacao => $linhaAplicacao) {
                 
-                if((int)$destino['id_relatorio_destino'] === 0){ //CADASTRO
+                $daoDiaRelatorioDestino->setIdRelatorioDestino($linhaAplicacao['id_relatorio_destino']);
+                $daoDiaRelatorioDestino->setIdCidadeInicio($linhaAplicacao['id_cidade_inicio']);
+                $daoDiaRelatorioDestino->setIdCidadeFim($linhaAplicacao['id_cidade_fim']);
+                $daoDiaRelatorioDestino->setDhInicio($linhaAplicacao['dh_inicio']);
+                $daoDiaRelatorioDestino->setDhFim($linhaAplicacao['dh_fim']);
+                $daoDiaRelatorioDestino->setIdTransporte($linhaAplicacao['id_transporte']);
+                $daoDiaRelatorioDestino->setIdTransporteTipo($linhaAplicacao['id_transporte_tipo']);
+                $daoDiaRelatorioDestino->setDsTransporteTipo($linhaAplicacao['ds_transporte_tipo']);
+                
+                if((int)$linhaAplicacao['id_relatorio_destino'] === 0){ //CADASTRO
                     $retorno .= $this->insereRelatorioDestino($pdo,$daoDiaRelatorioDestino);
                 } else { //ALTERAÇÃO
-                    $daoDiaRelatorioDestino->select($pdo);
-                    //Verifica se o registro foi alterado para atualizar de fato no banco de dados
-                    $diferenca = array_diff_assoc($daoDiaRelatorioDestino->getMsgRetorno()[0], $destino);
-                    if (!empty($diferenca)) {
-                        $retorno .= $this->atualizaRelatorioDestino($pdo,$daoDiaRelatorioDestino);
+                    //Percorre os registros persistidos no banco
+                    foreach ($daoDiaRelatorioDestino->getMsgRetorno() as $indiceBd => $linhaBd) {
+                        if($linhaAplicacao['id_relatorio_destino'] == $linhaBd['id_relatorio_destino']){
+                            $diferenca = array_diff_assoc($linhaAplicacao, $linhaBd);
+                            if ($diferenca) {
+                                //Update
+                                $retorno .= $this->atualizaRelatorioDestino($pdo,$daoDiaRelatorioDestino);
+                            }
+                            //remove o indice para permanecer no array apenas os registros que deverão ser removidos
+                            unset($arrayAuxiliar[$indiceBd]);
+                        }
                     }
                 }
                 if (!empty($retorno)) {
                     return $retorno;
                     break;
+                }
+            }
+            
+            if ($arrayAuxiliar) {
+                //registros que foram excluídos
+                foreach ($arrayAuxiliar as $linhaAremover) {
+                    $daoDiaRelatorioDestino->setIdRelatorioDestino($linhaAremover['id_relatorio_destino']);
+                    $retorno .= $this->excluirRelatorioDestino($pdo,$daoDiaRelatorioDestino);
                 }
             }
             return $retorno;
@@ -473,7 +495,7 @@ class Relatorio {
         $retorno = "";
         try {
             //Retorna os dados antes da alteração
-            $daoDiaRelatorioDestino->select($pdo);
+            $daoDiaRelatorioDestino->selectLinha($pdo);
 
             if (!$daoDiaRelatorioDestino->getSucesso()) {
                 return Metodos::retornoAjax("Erro", "console", $daoDiaRelatorioDestino->getMsgRetorno());
@@ -501,6 +523,30 @@ class Relatorio {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    function excluirRelatorioDestino(PDO $pdo, DaoDiaRelatorioDestino $daoDiaRelatorioDestino) {
+        try {
+            
+            if (!Log::SalvaLogD('dia_relatorio_destino', $daoDiaRelatorioDestino->getIdRelatorioDestino(), $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoDiaRelatorioDestino->delete($pdo);
+            
+            if ($daoDiaRelatorioDestino->getSucesso()) {
+                return "";
+            } else {
+                return $daoDiaRelatorioDestino->getMsgRetorno();
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    //************************************************ FIM ********************************************************
+    
+    //************************************************ RELATORIO ANEXOS ********************************************************
     
     function percorreRelatorioAnexos(PDO $pdo = null) {
         $retorno = "";
@@ -592,7 +638,9 @@ class Relatorio {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-        
+    
+    //************************************************ FIM ********************************************************
+    
     function associaRelatorioADiaria(PDO $pdo) {
         $retorno = "";
         try {
@@ -631,63 +679,6 @@ class Relatorio {
         }
     }
     
-    function excluirRelatorioDestinoIndividual(){
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
-            $retorno = "";
-            $daoDiaRelatorioDestino = new DaoDiaRelatorioDestino();
-            $daoDiaRelatorioDestino->setIdRelatorioDestino($this->getIdRelatorioDestino());
-            
-            $idRelatorioDestino = $daoDiaRelatorioDestino->getIdRelatorioDestino();
-            if (!Log::SalvaLogD('dia_relatorio_destino', $idRelatorioDestino, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }
-            
-            $daoDiaRelatorioDestino->delete($pdo);
-            if ($daoDiaRelatorioDestino->getSucesso()) {
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaRelatorioDestino->getMsgRetorno());
-                $pdo->rollBack();
-            }
-            
-            return $retorno;
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-    
-    function excluirRelatorioAnexoIndividual(){
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
-            $retorno = "";
-            $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
-            $daoDiaRelatorioAnexo->setIdRelatorioAnexo($this->getIdRelatorioAnexo());
-            
-            
-            $daoDiaRelatorioAnexo->delete($pdo);
-            if ($daoDiaRelatorioAnexo->getSucesso()) {
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaRelatorioAnexo->getMsgRetorno());
-                $pdo->rollBack();
-            }
-            
-            return $retorno;
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
 }
 
 

@@ -3,9 +3,7 @@ $(document).ready(function () {
     //*********************************************************************
     func = new Funcoes();
     // var tabela = $('#tabela').DataTable();
-      $("body").on("click", ".rhTeste", function (e) {
-        top.location.href = "/pages/rh/relatorios/grafico1.php";
-    });
+
     function aniversario() {
         $.ajax({
             "url": "/model/rh/funcionario/request.php",

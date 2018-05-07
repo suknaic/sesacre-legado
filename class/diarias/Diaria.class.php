@@ -643,85 +643,8 @@ class Diaria {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function excluirDiariaDestino(PDO $pdo, int $idDestino = 0) {
-        try {
-            $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
-            $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
-            $daoDiaDiariaDestino->setIdDiariaDestino($idDestino);
-            if (!Log::SalvaLogD('dia_diaria_destino', $idDestino, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }
-            
-            $daoDiaDiariaDestino->delete($pdo);
-            
-            if ($daoDiaDiariaDestino->getSucesso()) {
-                return "";
-            } else {
-                return $daoDiaDiariaDestino->getMsgRetorno();
-            }
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-    
-    function excluirDiariaDestinoIndividual(){
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
-            $retorno = "";
-            $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
-            $daoDiaDiariaDestino->setIdDiariaDestino($this->getIdDiariaDestino());
-            
-            $idDiariaDestino = $daoDiaDiariaDestino->getIdDiariaDestino();
-            if (!Log::SalvaLogD('dia_diaria_destino', $idDiariaDestino, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }
-            
-            $daoDiaDiariaDestino->delete($pdo);
-            if ($daoDiaDiariaDestino->getSucesso()) {
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiariaDestino->getMsgRetorno());
-                $pdo->rollBack();
-            }
-            
-            return $retorno;
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-    
-    function excluirDiariaAnexoIndividual(){
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
-            $retorno = "";
-            $daoDiaAnexo = new DaoDiaAnexo();
-            $daoDiaAnexo->setIdAnexo($this->getIdAnexo());
-            
-            
-            $daoDiaDiariaDestino->delete($pdo);
-            if ($daoDiaDiariaDestino->getSucesso()) {
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiariaDestino->getMsgRetorno());
-                $pdo->rollBack();
-            }
-            
-            return $retorno;
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
+       
+   
     
     function validaDiariaDestino(){
         $retorno = "";
@@ -786,10 +709,6 @@ class Diaria {
             
             if($this->getIdDiariaPai()){
                 $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
-            }
-            
-            if($this->getIdRelatorio()){
-                $daoDiaDiaria->setIdRelatorio($this->getIdRelatorio());
             }
             
             $daoDiaDiaria->setStEstagio($this->getStEstagio());
@@ -862,10 +781,6 @@ class Diaria {
                 $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
             }
             
-            if($this->getIdRelatorio()){
-                $daoDiaDiaria->setIdRelatorio($this->getIdRelatorio());
-            }
-            
             $daoDiaDiaria->setStEstagio($this->getStEstagio());
             $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
             
@@ -912,41 +827,65 @@ class Diaria {
     }
     
     
-    
+    //****************************************** DIA_DIARIA_DESTINO ************************************************
     function percorreDiariaDestinos(PDO $pdo = null) {
         $retorno = "";
         try {
             $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
-            foreach ($this->getItinerario() as $destino) {
-                $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
-                $daoDiaDiariaDestino->setIdDiariaDestino($destino['id_diaria_destino']);
-                $daoDiaDiariaDestino->setIdCidadeInicio($destino['id_cidade_inicio']);
-                $daoDiaDiariaDestino->setIdCidadeFim($destino['id_cidade_fim']);
-                $daoDiaDiariaDestino->setDhInicio($destino['dh_inicio']);
-                $daoDiaDiariaDestino->setDhFim($destino['dh_fim']);
-                $daoDiaDiariaDestino->setIdTransporte($destino['id_transporte']);
-                $daoDiaDiariaDestino->setIdDecreto($destino['id_decreto']);
-                $daoDiaDiariaDestino->setIdClasse($destino['id_classe']);
-                $daoDiaDiariaDestino->setFlPernoite($destino['fl_pernoite']);
-                $daoDiaDiariaDestino->setQtDiariaDestino($destino['qt_diaria_destino']);
-                $daoDiaDiariaDestino->setVlDiariaDestino($destino['vl_diaria_destino']);
+            $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
+            
+            //registros do banco
+            $daoDiaDiariaDestino->select($pdo);
+            $arrayAuxiliar = $daoDiaDiariaDestino->getMsgRetorno();
+
+            foreach ($this->getItinerario() as $indiceAplicacao => $linhaAplicacao) {
                 
+                $daoDiaDiariaDestino->setIdDiariaDestino($linhaAplicacao['id_diaria_destino']);
+                $daoDiaDiariaDestino->setIdCidadeInicio($linhaAplicacao['id_cidade_inicio']);
+                $daoDiaDiariaDestino->setIdCidadeFim($linhaAplicacao['id_cidade_fim']);
+                $daoDiaDiariaDestino->setDhInicio($linhaAplicacao['dh_inicio']);
+                $daoDiaDiariaDestino->setDhFim($linhaAplicacao['dh_fim']);
+                $daoDiaDiariaDestino->setIdTransporte($linhaAplicacao['id_transporte']);
+                $daoDiaDiariaDestino->setIdDecreto($linhaAplicacao['id_decreto']);
+                $daoDiaDiariaDestino->setIdClasse($linhaAplicacao['id_classe']);
+                $daoDiaDiariaDestino->setFlPernoite($linhaAplicacao['fl_pernoite']);
+                $daoDiaDiariaDestino->setQtDiariaDestino($linhaAplicacao['qt_diaria_destino']);
+                $daoDiaDiariaDestino->setVlDiariaDestino($linhaAplicacao['vl_diaria_destino']);
                 
-                if((int)$destino['id_diaria_destino'] === 0){ //CADASTRO
+                //se o indice for 0, é um cadastro
+                if ((int)$linhaAplicacao['id_diaria_destino'] === 0) {
+                    //insert
                     $retorno .= $this->insereDiariaDestino($pdo,$daoDiaDiariaDestino);
-                } else { //ALTERAÇÃO
-                    $daoDiaDiariaDestino->select($pdo);
-                    //Verifica se o registro foi alterado para atualizar de fato no banco de dados
-                    $diferenca = array_diff_assoc($daoDiaDiariaDestino->getMsgRetorno()[0], $destino);
-                    if (!empty($diferenca)) {
-                        $retorno .= $this->atualizaDiariaDestino($pdo,$daoDiaDiariaDestino);
+                } else {
+                    //Percorre os registros persistidos no banco
+                    foreach ($daoDiaDiariaDestino->getMsgRetorno() as $indiceBd => $linhaBd) {
+                        if($linhaAplicacao['id_diaria_destino'] == $linhaBd['id_diaria_destino']){
+                            $diferenca = array_diff_assoc($linhaAplicacao, $linhaBd);
+                            if ($diferenca) {
+                                //Update
+                                $retorno .= $this->atualizaDiariaDestino($pdo,$daoDiaDiariaDestino);
+                            }
+                            //remove o indice para permanecer no array apenas os registros que deverão ser removidos
+                            unset($arrayAuxiliar[$indiceBd]);
+                        }
                     }
                 }
+                //Se ocorrer erro sai do laço e retorna o erro
                 if (!empty($retorno)) {
                     return $retorno;
                     break;
                 }
+                
             }
+            
+            if ($arrayAuxiliar) {
+                //registros que foram excluídos
+                foreach ($arrayAuxiliar as $linhaAremover) {
+                    $daoDiaDiariaDestino->setIdDiariaDestino($linhaAremover['id_diaria_destino']);
+                    $retorno .= $this->excluirDiariaDestino($pdo,$daoDiaDiariaDestino);
+                }
+            }
+            
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -982,7 +921,7 @@ class Diaria {
         try {
             
             //Retorna os dados antes da alteração
-            $daoDiaDiariaDestino->select($pdo);
+            $daoDiaDiariaDestino->selectLinha($pdo);
 
             if (!$daoDiaDiariaDestino->getSucesso()) {
                 return Metodos::retornoAjax("Erro", "console", $daoDiaDiariaDestino->getMsgRetorno());
@@ -1011,37 +950,82 @@ class Diaria {
         }
     }
     
+    function excluirDiariaDestino(PDO $pdo, DaoDiaDiariaDestino $daoDiaDiariaDestino) {
+        try {
+            
+            if (!Log::SalvaLogD('dia_diaria_destino', $daoDiaDiariaDestino->getIdDiariaDestino(), $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoDiaDiariaDestino->delete($pdo);
+            
+            if ($daoDiaDiariaDestino->getSucesso()) {
+                return "";
+            } else {
+                return $daoDiaDiariaDestino->getMsgRetorno();
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    //************************************************ FIM *******************************************************
+    
+    
+    //******************************************** DIA_ANEXO *****************************************************
     function percorreDiariaAnexos(PDO $pdo = null) {
         $retorno = "";
         try {
             $daoDiaAnexo = new DaoDiaAnexo();
-            if ($this->getAnexos()) {
-                foreach ($this->getAnexos() as $anexo) {
-                    $daoDiaAnexo->setIdDiaria($this->getIdDiaria());
-                    $daoDiaAnexo->setIdAnexo((int)$anexo['id_anexo']);
-                    $daoDiaAnexo->setNmAnexo($anexo['nm_anexo']);
-                    $daoDiaAnexo->setNmMimeType($anexo['nm_mime_type']);
-                    
-                    if (array_key_exists('path_anexo', $anexo)) {
-                        $arquivoPath = $anexo['path_anexo'];
-                    }
+            $daoDiaAnexo->setIdDiaria($this->getIdDiaria());
+            
+            //registros do banco
+            $daoDiaAnexo->select($pdo);
+            $arrayAuxiliar = $daoDiaAnexo->getMsgRetorno();
 
-                    if((int)$anexo['id_anexo'] === 0){ //CADASTRO
-                        $retorno .= $this->insereDiariaAnexo($pdo,$daoDiaAnexo,$arquivoPath);
-                    } else { //ALTERAÇÃO
-                        $daoDiaAnexo->select($pdo);
-                        //Verifica se o registro foi alterado para atualizar de fato no banco de dados
-                        $diferenca = array_diff_assoc($daoDiaAnexo->getMsgRetorno()[0], $anexo);
-                        if (!empty($diferenca)) {
-                            $retorno .= $this->atualizaDiariaAnexo($pdo,$daoDiaAnexo,$arquivoPath);
+            if ($this->getAnexos()) {
+                foreach ($this->getAnexos() as $indiceAplicacao => $linhaAplicacao) {
+
+                    $daoDiaAnexo->setIdAnexo($linhaAplicacao['id_anexo']);
+                    $daoDiaAnexo->setNmAnexo($linhaAplicacao['nm_anexo']);
+                    $daoDiaAnexo->setNmMimeType($linhaAplicacao['nm_mime_type']);
+                    $path_arquivo = $linhaAplicacao['path_anexo'];
+
+                    //se o indice for 0, é um cadastro
+                    if ((int)$linhaAplicacao['id_anexo'] === 0) {
+                        //insert
+                        $retorno .= $this->insereDiariaAnexo($pdo,$daoDiaAnexo,$path_arquivo);
+                    } else {
+                        //Percorre os registros persistidos no banco
+                        foreach ($daoDiaAnexo->getMsgRetorno() as $indiceBd => $linhaBd) {
+                            if($linhaAplicacao['id_anexo'] == $linhaBd['id_anexo']){
+                                $diferenca = array_diff_assoc($linhaAplicacao, $linhaBd);
+                                if ($diferenca) {
+                                    //Update - Por enquanto sem tratamento
+                                }
+                                //remove o indice para permanecer no array apenas os registros que deverão ser removidos
+                                unset($arrayAuxiliar[$indiceBd]);
+                            }
                         }
                     }
+
+                    //Se ocorrer erro sai do laço e retorna o erro
                     if (!empty($retorno)) {
                         return $retorno;
                         break;
                     }
+
+                }   
+            }
+            
+            if ($arrayAuxiliar) {
+                //registros que foram excluídos
+                foreach ($arrayAuxiliar as $linhaAremover) {
+                    $daoDiaAnexo->setIdAnexo($linhaAremover['id_anexo']);
+                    $retorno .= $this->excluirDiariaAnexo($pdo,$daoDiaAnexo);
                 }
             }
+            
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -1099,6 +1083,23 @@ class Diaria {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    function excluirDiariaAnexo(PDO $pdo, DaoDiaAnexo $daoDiaAnexo) {
+        try {
+            
+            $daoDiaAnexo->delete($pdo);
+            
+            if ($daoDiaAnexo->getSucesso()) {
+                return "";
+            } else {
+                return $daoDiaAnexo->getMsgRetorno();
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    //****************************************************** FIM *********************************************************
     
     function retornaDadosRelatorio(PDO $pdo = null) {
         $retorno = "";

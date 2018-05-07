@@ -335,15 +335,15 @@ class FinOrdemModel {
                 $finOrdemItensModel = new FinOrdemItensModel();
                 foreach ($ordem as $linha) {
                     if ($linha->tp == "C" || $linha->tp == "P") {
-                        
+
                         $finOrdemItensModel->setIdPedido($ordem[0]->idPedido);
                         $finOrdemItensModel->setTpItem($linha->tp);
                         $finOrdemItensModel->setIdOrdem($idOrdem);
                         $finOrdemItensModel->setIdPreOrdem($linha->idPreOrdem);
                         $finOrdemItensModel->setQdItensPre(Metodos::ConverteValorIng($linha->qtd));
-                        
+
                         $daoFinOrdem->retornaValorPreOrdem($pdo, $linha->idPreOrdem);
-                        
+
                         if ($daoFinOrdem->Sucesso()) {
                             $finOrdemItensModel->setVlItensPre($daoFinOrdem->getMsgRetorno()["vl_itens_pre"]);
                         } else {
@@ -359,9 +359,9 @@ class FinOrdemModel {
                             if (!$finOrdemItensModel->getSucesso()) {
                                 $erro = true;
                             }
-                        }else{
-                           return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
-                            $pdo->rollBack(); 
+                        } else {
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
+                            $pdo->rollBack();
                         }
                     } else if ($linha->tp == "S") {
                         $finOrdemItensModel->setIdPedido($ordem[0]->idPedido);
@@ -370,8 +370,7 @@ class FinOrdemModel {
                         $finOrdemItensModel->setIdPreOrdem($linha->idPreOrdem);
                         $finOrdemItensModel->setQdItensPre(Metodos::ConverteValorIng($linha->qtd));
                         $finOrdemItensModel->setVlItensPre(Metodos::ConverteValorIng($linha->vl));
-                        $daoFinOrdem->retornaValorPreOrdem($pdo, $linha->idPreOrdem);
-                        $finOrdemItensModel->cadastrarItens($pdo);
+                        $finOrdemItensModel->retornaSaldoItemPreOrdem($pdo);
 
                         if ($finOrdemItensModel->getSucesso()) {
 
@@ -379,6 +378,9 @@ class FinOrdemModel {
                             if (!$finOrdemItensModel->getSucesso()) {
                                 $erro = true;
                             }
+                        } else {
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
+                            $pdo->rollBack();
                         }
                     } else {
                         $erro = true;

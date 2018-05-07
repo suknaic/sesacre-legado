@@ -155,10 +155,12 @@ function limpaFormItinerario() {
 }
 limpaFormItinerario();
 
-function valorComMascara(valor) {
-    var valor = valor.split('.');
-    valor[0] = valor[0].split(/(?=(?:...)*$)/).join('.');
-    return valor.join(',');
+function valorComMascara(valor) { 
+    var valor = Number(valor).toFixed(2);
+    var valorStr = valor.toString();
+    valorStr = valorStr.split('.');
+    valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
+    return valorStr.join(',');
 }
 
 function valorSemMascara(valor){
@@ -528,62 +530,6 @@ $(document).ready(function () {
                 },
                 callback: function (result) {
                     if (result) {
-
-                        if (itinerario.id_diaria_destino > 0) {
-
-                            $.ajax({
-                                "url": "/model/diarias/diaria/request.php",
-                                "dataType": "html",
-                                "data": {
-                                    "acao": "excluirDiariaDestinoIndividual",
-                                    "id": itinerario.id_diaria_destino
-                                },
-                                "success": function (response) {
-                                    console.log(response);
-                                    if (response.trim() == "SessaoExpirada") {
-                                        func.modalAlert(func.msgSemPermissao);
-                                        return false;
-                                    }
-
-                                    try {
-                                        response = JSON.parse(response);
-                                    } catch (e) {
-                                        func.modalAlert(func.msgErroPadrao);
-                                        console.log("Parse JSON");
-                                        console.log(response);
-                                        return false;
-                                    }
-
-                                    if (response.tipoMsg === "Erro") {
-                                        if (response.tipoExibicao === "console") {
-                                            console.log('Console Mensagem');
-                                            console.log(response);
-                                            func.modalAlert(func.msgErroPadrao);
-                                            return false;
-                                        } else if (response.tipoExibicao === "alert") {
-                                            func.modalAlert(response.msg);
-                                            return false;
-                                        }
-                                    } else if (response.tipoMsg === "ok") {
-                                        func.modalAlert(response.msg, 'primary');
-                                        //Reload após deletar o registro
-                                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        console.log('Ultimo else');
-                                        console.log(response);
-                                        func.modalAlert(func.msgErroPadrao);
-                                        return false;
-                                    }
-                                },
-                                "error": function (response) {
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                }
-                            });
-                        }
                         $this.closest('tr').remove();
                     }
                 }
@@ -591,99 +537,4 @@ $(document).ready(function () {
         }
     });
     
-    //********************************REMOVE ANEXO*******************************************
-    $('body').on('click', '.remove-anexo', function (e) {
-        
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-
-        } else {
-            e.preventDefault();
-            var $this = $(this);
-
-            var anexo = $this.closest(".form-group").data('anexo');
-
-            var mensagem = "Arquivo: " + anexo.nm_anexo;
-            bootbox.confirm({
-                title: 'Caixa de Confirmação',
-                message: 'Você tem Certeza que deseja continuar com a Exclusão do anexo do Relatório <span class="text-danger">' + mensagem + '</span>?',
-                buttons: {
-                    'cancel': {
-                        label: 'Não',
-                        className: 'btn-default btn-rounded'
-                    },
-                    'confirm': {
-                        label: 'Sim',
-                        className: 'btn-primary btn-rounded'
-                    }
-                },
-                callback: function (result) {
-                    if (result) {
-
-                        var Dados = {
-                            id: anexo.id_anexo,
-                            caminho: anexo.path_anexo
-                        }
-
-                        $.ajax({
-                            "url": "/model/diarias/diaria/request.php",
-                            "dataType": "html",
-                            "data": {
-                                "acao": "excluirAnexoIndividual",
-                                "dados": Dados
-                        },
-                        "success": function (response) {
-                            console.log(response);
-                            if (response.trim() == "SessaoExpirada") {
-                                func.modalAlert(func.msgSemPermissao);
-                                return false;
-                            }
-
-                            try {
-                                response = JSON.parse(response);
-                            } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                console.log(response);
-                                return false;
-                            }
-
-                            if (response.tipoMsg === "Erro") {
-                                if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                } else if (response.tipoExibicao === "alert") {
-                                    func.modalAlert(response.msg);
-                                    return false;
-                                }
-                            } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
-                                //Reload após deletar o registro
-                                if (Dados.id > 0) {
-                                    $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                        location.reload();
-                                    });
-                                }
-
-                            } else {
-                                console.log('Ultimo else');
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
-                                return false;
-                            }
-                            },
-                            "error": function (response) {
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
-                                return false;
-                            }
-                        });
-                        $this.closest('.form-group').remove();
-                    }
-                }
-            });
-        }
-    });
 });

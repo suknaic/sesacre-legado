@@ -108,6 +108,35 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
         }
     }
     
+    public function selectLinha(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_diaria_destino,"
+                            . "id_diaria,id_cidade_inicio,"
+                            . "id_cidade_fim,dh_inicio,dh_fim,"
+                            . "id_transporte,"
+                            . "id_decreto,"
+                            . "id_classe,"
+                            . "fl_pernoite,"
+                            . "qt_diaria_destino,"
+                            . "vl_diaria_destino "
+                        . "from dia_diaria_destino where id_diaria_destino = :id_diaria_destino";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_diaria_destino",$this->getIdDiariaDestino(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    
     public function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {

@@ -18,6 +18,17 @@ class DaoFinOrdem extends FinOrdemTb {
     public function cadastrarOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
+//                var_dump($this->getIdPedido());
+//                 var_dump($this->getIdLotacao());
+//                  var_dump($this->getNrOrdem());
+//                   var_dump($this->getAaOrdem());
+//                    var_dump($this->getNrOrdem());
+//                     var_dump($this->getNrPrazoOrdem());
+//                      var_dump($this->getTpOrdem());
+//                       var_dump($this->getDtIniOrdem());
+//                        var_dump($this->getDtFimOrdem());
+//                         var_dump($this->getSitOrdem());
+                
                 $sql = "INSERT INTO fin_ordem (id_pedido, id_lotacao, id_pessoa, nr_ordem, aa_ordem, fl_unica, nr_prazo_ordem, tp_ordem, dt_ini_ordem, "
                         . "dt_fim_ordem, sit_ordem) VALUES (:pedido, :lotacao, :idPessoa, :numero, :ano, :fl, :prazo, :tpOrdem, :dt_ini, :dt_fim, :sit_ordem)";
                 $stmt = $pdo->prepare($sql);
@@ -37,7 +48,7 @@ class DaoFinOrdem extends FinOrdemTb {
             }
         } catch (Exception $ex) {
             $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
+            $this->msgRetorno = $ex->getMessage().'1';
         }
     }
 
