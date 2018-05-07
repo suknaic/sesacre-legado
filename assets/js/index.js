@@ -1,0 +1,452 @@
+$(document).ready(function () {
+  
+    //*********************************************************************
+    func = new Funcoes();
+    // var tabela = $('#tabela').DataTable();
+      $("body").on("click", ".rhTeste", function (e) {
+        top.location.href = "/pages/rh/relatorios/grafico1.php";
+    });
+    function aniversario() {
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                acao: "aniversario"
+            },
+            "success": function (response) {
+                //console.log(response);
+                
+                $(".aniversario").html(response);
+                    setTimeout(function () {
+                        $(".aniversario").html("");
+                    }, 15000); // O valor é representado em milisegundos.
+
+            }
+        });
+    }
+    aniversario();
+    function formatReal(int)
+    {
+        var tmp = int + '';
+        tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
+        if (tmp.length > 6)
+            tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+
+        return tmp;
+    }
+    function listaUsuarios() {
+        let dataSet = [];
+        let valores = [];
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": 'json',
+            "data": {
+                acao: "listaUsuariosJSON"
+            },
+            "success": function (response) {
+
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+
+                $("#totalUsuarios").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['nm_pessoa'],
+                        valores[i]['nm_email']
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabela').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Nome"},
+                        {title: "Email"}
+                    ]
+                });
+            }
+        });
+    }
+    listaUsuarios();
+
+//    function listaProgramasTrabalho() {
+//        let dataSet = [];
+//        let valores = [];
+//        var $this = $(this);
+//        var progTrab = {
+//            cd: null,
+//            ds: null,
+//            ano: 2018
+//        };
+//
+//        $.ajax({
+//            "url": "/model/request.php",
+//            "dataType": "json",
+//            "data": {
+//                "acao": "listarProgTrabJSON",
+//                "progTrab": progTrab
+//            },
+//            "success": function (response) {
+//
+//                if ($.trim(response)) {
+//                    if (response.length) {
+//                        valores = response
+//                    }
+//                }
+//
+//                $("#totalProgramasTrabalho").append(valores.length);
+//                for (var i = valores.length - 1; i >= 0; i--) {
+//                    let total = Number(valores[i]['saldo'])
+//                    let valor = [
+//                        valores[i]['funcional'],
+//                        total.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
+//                    ]
+//                    dataSet.push(valor)
+//                }
+//                $('#tabelaProgramaTrabalho').DataTable({
+//                    data: dataSet,
+//                    language: {
+//                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+//                    },
+//                    columns: [
+//                        {title: "Funcional Programática"},
+//                        {title: "Saldo"}
+//                    ]
+//                });
+//            }
+//        });
+//    }
+//
+//    listaProgramasTrabalho();
+
+    function listaLiberacoes() {
+        let dataSet = [];
+        let valores = [];
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listarLiberacaoCentralJSON"
+
+            },
+            "success": function (response) {
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+
+                $("#totalProgramasTrabalho").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['cd_programa_trabalho'] + '-' + valores[i]['ds_programa_trabalho'],
+                        valores[i]['nm_lotacao'],
+                        valores[i]['cd_despesa_elemento'],
+                        valores[i]['nr_fonte'],
+                        valores[i]['nm_tipo_gasto'],
+                        Number(valores[i]['valor']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabelaProgramaTrabalho').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Funcional Programática"},
+                        {title: "Central"},
+                        {title: "Despesa"},
+                        {title: "Fonte"},
+                        {title: "Tipo gasto"},
+                        {title: "Valor"}
+                    ]
+                });
+            }
+        });
+    }
+
+    listaLiberacoes();
+
+    function listaContratos() {
+        let dataSet = [];
+
+        let valores = []
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listarContratos"
+            },
+            "success": function (response) {
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                $("#totalContratos").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['nr_contrato'],
+                        valores[i]['nm_objeto']
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabelaContratos').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Nº Contrato"},
+                        {title: "Objeto"}
+                    ]
+                });
+            }
+        });
+    }
+
+    listaContratos()
+
+    function listaLicitacoes() {
+        let dataSet = [];
+
+        let valores = []
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listarLicitacoes"
+            },
+            "success": function (response) {
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                $("#totalLicitacoes").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let total = Number(valores[i]['saldo'])
+                    let valor = [
+                        valores[i]['cd_pregao'],
+                        valores[i]['nm_objeto'],
+                        Number(valores[i]['vl_total_est']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        Number(valores[i]['vl_total_hom']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        valores[i]['nm_situacao'],
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabelaLicitacoes').DataTable({
+                    data: dataSet,
+                    order: [[1, 'asc']],
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Pregão"},
+                        {title: "Objeto"},
+                        {title: "Valor Estimado"},
+                        {title: "Valor Homologado"},
+                        {title: "Situação"}
+                    ]
+                });
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaLicitacoes()
+
+    function listaEmpenhos() {
+        let dataSet = [];
+
+        let valores = []
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listarEmpenhos"
+            },
+            "success": function (response) {
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                $("#totalEmpenhos").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['nr_empenho'],
+                        valores[i]['ds_empenho'],
+                        valores[i]['dh_empenho_sistema'],
+                        valores[i]['dt_empenho_safira'],
+                        Number(valores[i]['vl_empenho']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabelaEmpenhos').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Nº Empenho"},
+                        {title: "Descrição"},
+                        {title: "Data Empenho no Sistema"},
+                        {title: "Data Empenho no Safira"},
+                        {title: "Valor do Empenho"}
+                    ]
+                });
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaEmpenhos()
+
+    function listaPedidos() {
+        let dataSet = [];
+
+        let valores = []
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listarPedidos"
+            },
+            "success": function (response) {
+
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                $("#totalPedidos").append(valores.length);
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['nr_pedido'],
+                        valores[i]['nm_tipo_solicitacao'],
+                        valores[i]['ds_pedido'],
+                        valores[i]['dt_pedido'],
+                        // valores[i]['st_pedido'],
+                        Number(valores[i]['vl_pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabelaPedidos').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Nº Pedido"},
+                        {title: "Tipo de Solicitação"},
+                        {title: "Descrição"},
+                        {title: "Data do Pedido"},
+                        {title: "Valor do Pedido"}
+                    ]
+                });
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaPedidos()
+
+    function listaQuantidadePedidos() {
+        let dataSet = []
+        let dataLabels = []
+        let valores = []
+        let color = ['#059BFF', '#db1818', '#FFC233', '#76d343']
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listaQuantidadeSituacaoPedido"
+            },
+            "success": function (response) {
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                let i = 0;
+                let informacoes = "";
+                for (var index in valores) {
+                    dataSet.push(parseInt(valores[index]['quantidade']))
+                    dataLabels.push(valores[index]['situacao']);
+                    informacoes += '' +
+                            '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
+                            '<p class=""><i class="fa fa-square" style="color:' + color[i] + '"></i> ' + valores[index]['situacao'] + ' </p>' +
+                            '</div>' +
+                            '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">' +
+                            '<p class="text-center">' + valores[index]['quantidade'] + '</p>' +
+                            '</div>';
+                    i++
+                }
+
+                $("#table_pedido_info").find('tbody').find('.info_resultado').html(informacoes);
+
+                var ctx = document.getElementById("donutChartPedidoSituacao");
+                data = {
+                    datasets: [{
+                            data: dataSet,
+                            backgroundColor: color
+
+                        }],
+                    labels: dataLabels
+                };
+                var meuDonutChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {legend: !1, responsive: !1}
+
+
+                });
+
+                return false;
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaQuantidadePedidos()
+
+})

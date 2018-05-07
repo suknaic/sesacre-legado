@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/index.load.php";
+?>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title><?php echo TITULO_DO_SISTEMA; ?></title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <!--Bootstrap Stylesheet [ REQUIRED ]-->
+        <link href="/assets/lib/template/css/bootstrap.min.css" rel="stylesheet">
+        <!--Nifty Stylesheet [ REQUIRED ]-->
+        <link href="/assets/lib/template/css/nifty.min.css" rel="stylesheet">
+        <!-- Font Awesome [ REQUIRED ] -->
+        <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css">
+        <!-- themify icons [ REQUIRED ] -->
+        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+        <!--DataTables [ OPT ]-->
+        <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">      
+        <!-- Estilo Default das Páginas [ REQUIRED ] -->
+        <link rel="stylesheet" href="/assets/css/estilo.css">
+    </head>
+    <!--TIPS-->
+    <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
+    <body>
+        <div id="container" class="effect aside-float aside-bright mainnav-lg">
+            <?php
+            //Cabeçalho do Sistema
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            ?>
+            <?php
+            //Modal Alert
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            ?>
+            <div class="boxed">
+                <!--CONTENT CONTAINER-->
+                <!--===================================================-->
+                <div id="content-container">
+                    <!--Page Title-->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <div id="page-title">
+                        <h1 class="page-header text-overflow">Pedido de necessidade</h1> 
+                    </div>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--End page title-->
+                    <!--Page content-->
+                    <!--===================================================-->
+                    <div id="page-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel-footer text-left">
+                                    <button class="btn btn-primary btn-rounded btn-novo" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Novo Pedido</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- /Fim do menu de navegação-->
+                        <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#"  method="post">
+                            <div class="panel">
+                                <div class="panel-body">  
+
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            <div class="panel-body">
+                                                Número do pedido :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control" type="text" name="numero" id="numero" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="panel-body">
+                                                Central :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select" name="central" id="central">
+                                                        <option value="">Selecione uma Central</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="panel-body">
+                                                Ano :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select" name="ano" id="ano">
+                                                        <option value="">Selecione uma Ano</option>
+                                                        <?php echo Metodos::retornaAnosSelect(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <div class="panel-body">
+                                                Contratado :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select" name="contratado" id="contratado">
+                                                        <option value="">Selecione um contratado</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="panel-body">
+                                                Tipo de gasto :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select" name="tipoGasto" id="tipoGasto">
+                                                        <option value="">Selecione uma modalidade</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>    
+
+                                    <div class="form-group">
+                                        <div class="col-md-2">
+                                            <div class="panel-body">
+                                                <br/>
+                                                <button class="btn btn-primary btn-rounded btn-pesquisar" type="button"> Pesquisar
+                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </form>
+
+                        <div class="panel-body">
+                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Pedido</th>
+                                                    <th class="text-center">Tipo</th>
+                                                    <th class="text-center">Funcional Programática</th>
+                                                    <th class="text-center">Fonte</th>
+                                                    <th class="text-center">Elemento de Despesa</th>
+                                                    <th class="text-center">Tipo de gasto</th>
+                                                    <th class="text-center">Lotação</th>
+                                                    <th class="text-center">Descrição</th>
+                                                    <th class="text-center">Valor</th>
+                                                    <th class="text-center">Status</th>
+                                                    <th class="text-center">Ação</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabela"></div>
+                <!--===================================================-->
+                <!--End page content-->
+            </div>
+            <!--===================================================-->
+            <!--END CONTENT CONTAINER-->
+            <!--MENU LATERAL-->
+            <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
+            <!--END MENU LATERAL-->
+        </div>
+        <!-- FOOTER -->
+        <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
+        <!-- END FOOTER -->
+        <!-- SCROLL PAGE BUTTON -->
+        <!--===================================================-->
+        <button class="scroll-top btn">
+            <i class="pci-chevron chevron-up"></i>
+        </button>
+        <!--===================================================-->
+    </div>
+    <!--===================================================-->
+    <!-- END OF CONTAINER -->
+    <!--jQuery [ REQUIRED ]-->
+    <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
+    <!--BootstrapJS [ REQUIRED ]-->
+    <script src="/assets/lib/template/js/bootstrap.min.js"></script>
+    <!--NiftyJS [ RECOMMENDED ]-->
+    <script src="/assets/lib/template/js/nifty.min.js"></script>
+    <!--DataTables-->
+    <!--DataTables [OPT]-->
+    <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>       
+    <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>   
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>     		                                
+    <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+    <!--Select2-->
+    <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+    <!--JAVASCRIP da pagina-->
+    <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
+    <script src="/assets/lib/sesacre/funcoes.js"></script>
+    <script src="/assets/js/financeiro/necessidade_central/index.js"></script>
+    <!-- END JAVASCRIPT -->
+</body>
+</html>

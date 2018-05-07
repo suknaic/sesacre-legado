@@ -1,0 +1,30 @@
+<?php
+
+//Perfil do Sistema
+define("PERFIL_TI", 1); //Perfil da TI, SUPORTE.
+define("PERFIL_ZEUS", 2); //Perfil para os Gerentes da SESACRE. Destinado aos Sec, Dir e etc.
+                    //A Ideia desse Perfil é conseguir visualizar as coisas sem que se consiga alterar nada.
+define("PERFIL_FINANCEIRO", 3);
+define("PERFIL_PLANEJAMENTO", 4);
+define("PERFIL_FINANCEIRO_ZEUS", 5);
+define("PERFIL_PLANEJAMENTO_ZEUS", 6);
+define("PERFIL_PLANEJAMENTO_USUARIO", 7);
+define("PERFIL_FINANCEIRO_USUARIO", 8);
+define("PERFIL_RH", 9);
+define("PERFIL_RH_ZEUS", 10);
+define("PERFIL_RH_USUARIO", 11);
+define("PERFIL_CONTRATOS_USUARIO", 12);
+define("PERFIL_COMPRAS_USUARIO", 13);
+define("PERFIL_PLANEJAMENTO_CENTRAL_DEMANDA", 14);
+define("PERFIL_PLANEJAMENTO_SEC_ADJ_PLA_GESTAO", 15);
+define("PERFIL_PLANEJAMENTO_SEC_ADJ_ADM_FINAN", 16);
+define("PERFIL_PLANEJAMENTO_SEC_ADJ_ATE_SAUDE", 17);
+define("PERFIL_PLANEJAMENTO_SEC_GERAL", 18);
+define("PERFIL_PLANEJAMENTO_CONSELHO", 19);
+define("PERFIL_COMPRAS_TECNICO", 20);
+define("PERFIL_COMPRAS_ADMINISTRADOR", 21);
+define("PERFIL_CONTRATOS_TECNICO", 22);
+define("PERFIL_CONTRATOS_ADMINISTRADOR", 23);
+define("PERFIL_FINANCEIRO_CENTRAL", 24);
+define("PERFIL_DIARIA", 25);
+define("PERFIL_DIARIA_ZEUS", 26);

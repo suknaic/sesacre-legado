@@ -1,0 +1,22 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="anexaArquivo" data-keyboard="false">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Arquivo</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-upload" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="arquivo" id="arquivo" class="form-control-file" />
+                    <input type="hidden" id="idChamado" name="idChamado" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <input type="submit" class="btn btn-primary btn-enviarUpload" data-dismiss="modal" value="Enviar">
+            </div>
+        </div>
+    </div>
+</div>

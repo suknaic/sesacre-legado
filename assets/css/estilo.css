@@ -1,0 +1,152 @@
+
+
+#banner {
+    background-color: #635959;
+    background-repeat: no-repeat;
+    margin-bottom: 1%;
+    position: relative;
+    border-radius: 10px;
+}
+
+#banner, img {
+    width: 100%;
+    border-radius: 10px;
+    max-height: 200px;
+}
+
+#corpo{
+    margin-top: -0.8%;
+    border: solid;
+    border-color:silver;
+    border-radius: 10px;
+    padding: 2%;
+    /*background-color: #F1F1F1;*/
+}
+
+
+#tlogin{
+
+    margin-top: 1.6%;
+    margin-bottom: 1%;
+    text-align: center;
+}
+
+#field_login{
+
+    border: solid;
+    border-color:silver;
+    border-radius: 10px;
+    border-width: 0.5px;
+    padding: 2%;
+    width: 300px;
+    margin: 0 auto;
+}
+
+#rotape {
+    max-height:100px;
+    background-color: #282132;
+    color: white;
+    margin-top: 0.2%;
+    border-radius: 10px;
+    padding: 0.5%;
+    font-size: 85%;
+    max-height: 100%;
+}
+
+#spanAc{
+    width: 40%;
+    margin-left: 70%;
+    margin-top: -3%;
+    display: block;
+    /*margin-left: 85%;*/
+    padding: 0;
+    margin-bottom: 0%;
+}
+
+.logoac{
+    width: 50%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+
+.botaoDocumentoAcoes a{
+    color: black;
+}
+
+.botaoDocumentoAcoes a:hover{
+    color: black;
+}
+
+.botaoDocumentoAcoes>li>a:hover {
+    background-color: #333;
+    color: white;
+}
+
+.botaoDocumentoAcoes>li>a.dropdown-toggle:hover {
+    background-color: #333;
+    color: white;
+}
+
+.botaoDocumentoAcoes>li>a {
+background-color: white;
+    color: black;
+}
+
+
+.box-shadow--2dp {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12)
+}
+.box-shadow--3dp {
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .14), 0 3px 3px -2px rgba(0, 0, 0, .2), 0 1px 8px 0 rgba(0, 0, 0, .12)
+}
+.box-shadow--4dp {
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2)
+}
+.box-shadow--6dp {
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12), 0 3px 5px -1px rgba(0, 0, 0, .2)
+}
+.box-shadow--8dp {
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2)
+}
+.box-shadow--16dp {
+    box-shadow: 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12), 0 8px 10px -5px rgba(0, 0, 0, .2)
+}
+
+
+#doc_botao{
+ width: 30%;
+ margin: 0 auto;
+}
+
+
+.inputPFa{
+    margin-bottom: -4px;
+}
+
+.form-group-mg-bot{
+    margin-bottom: -10px;
+}
+
+.page-header{
+    padding: 0px 0px 10px 0px;
+}
+#page-content{
+    padding: 0;
+}
+
+.dd-direita{
+    display: block; 
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+
+#content-container  #page-content label {
+    margin-bottom: 0px;
+}
+
+.panelInformacoesItens p{
+    margin-bottom: 0px;
+}
+            
+        
