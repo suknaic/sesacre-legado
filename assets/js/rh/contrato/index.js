@@ -4,7 +4,7 @@ $(document).ready(function () {
     //datapiker, plugins para data
 
     func = new Funcoes();
-
+    $("#nr_cpf").focus();
     $('body').on('click', '.btn-pesquisar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

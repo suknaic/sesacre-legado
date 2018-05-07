@@ -78,6 +78,9 @@
                                             <a href="/pages/rh/relatorios/index.php">Diversos em PDF</a>
                                         </li>
                                         <li>
+                                            <a href="/pages/rh/relatorios/indexSituacao.php">Férias, Licenças e Concessões PDF</a>
+                                        </li>
+                                        <li>
                                             <a href="/pages/rh/relatorios/grafico1.php">Gráfico</a>
                                         </li>
                                     </ul>
