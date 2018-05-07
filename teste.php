@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 $conexao = new Conexao();
 $pdo = $conexao->connect();
 $resut = 0;
+$teste = 'Maçao';
 
 try {
     $sql = "select id_despesa_elemento, ds_despesa_elemento from  view_despesa_elemento";
