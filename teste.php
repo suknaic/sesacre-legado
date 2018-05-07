@@ -31,6 +31,7 @@ try {
     $stmt = $pdo->prepare($sql);
     
     $stmt->execute();
+    echo 'Nada';
     }
 } catch (Error $e) {
     echo $e->getMessage();
