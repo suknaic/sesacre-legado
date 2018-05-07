@@ -408,20 +408,21 @@ $(document).ready(function () {
 
             url: '/model/compras/gcon/upload/uploadAnexo.php',
             data: anexar,
+            acao: 'inserir_anexo',
             processData: false,
             contentType: false,
             type: 'POST',
 
-            "success": function (response) {
-                console.log(response);
-                if (response.trim() == "SessaoExpirada") {
+            "success": function (data) {
+                console.log(data);
+                if (data.trim() == "SessaoExpirada") {
                     $("#upload").modal('hide');
                     func.modalAlert(func.msgSemPermissao);
                     return false;
                 }
 
                 try {
-                    response = JSON.parse(response);
+                    response = JSON.parse(data);
                 } catch (e) {
                     $("#upload").modal('hide');
                     func.modalAlert(func.msgErroPadrao, 'danger');
@@ -545,7 +546,6 @@ $(document).ready(function () {
                 var centrais = $this.find('.selectCentrais').val();
                 central.push(centrais);
             });
-//            console.log(central);
             var tipoDeGasto = [];
             $('#tipogasto .tipoGastoCampos').each(function () {
                 var $this = $(this);
@@ -553,7 +553,7 @@ $(document).ready(function () {
                 idGast = (idGast == null) ? 0 : idGast;
                 var tpGast = $this.find('.tipoGastoSelect').val();
                 var vlGast = $this.find('.valorTipoGasto').val();
-                tipoDeGasto.push({'id': idGast, 'tpg': tpGast, 'valor': parseFloat(vlGast)});
+                tipoDeGasto.push({'id': idGast, 'tpg': tpGast, 'valor': vlGast});
             });
             console.log(tipoDeGasto);
             
@@ -589,7 +589,6 @@ $(document).ready(function () {
                     "atualizaProcesso": processo
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

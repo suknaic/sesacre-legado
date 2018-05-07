@@ -15,6 +15,34 @@ class DaoDiaRelatorioDestino extends DiaRelatorioDestino {
         return $this->msgRetorno;
     }
     
+    public function selectLinha(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_relatorio_destino,"
+                            . "id_relatorio,"
+                            . "id_cidade_inicio,"
+                            . "id_cidade_fim,"
+                            . "dh_inicio,"
+                            . "dh_fim,"
+                            . "id_transporte,"
+                            . "id_transporte_tipo,"
+                            . "ds_transporte_tipo "
+                        . "from dia_relatorio_destino where id_relatorio_destino = :id_relatorio_destino";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_relatorio_destino",$this->getIdRelatorioDestino(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {

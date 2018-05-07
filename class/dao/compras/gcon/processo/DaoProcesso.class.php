@@ -72,10 +72,11 @@ class DaoProcesso extends ProcessoExtd {
     //Método para listar processos cadastrados        
     function listarProcesso($pdo, $filtro, $anexo) {
         try {
-            $list = $pdo->prepare("SELECT DISTINCT ON (PRO.id_processo) PRO.id_processo, PRO.nm_centrais, PRO.cd_ada_cpr, PRO.cd_pregao, 
-                                            PRO.vl_total_est, PRO.vl_total_hom, PRO.dt_processo,
-                                            UNI.nm_unidade_contempladas, array_to_string(array_agg(CID.nm_cidade), ', ') as nm_cidade, MOD.nm_modalidade, 
-                                            OBJ.nm_objeto, SIT.nm_situacao, TPG.nm_tipo_gasto, PES.nm_pessoa 
+            $list = $pdo->prepare("SELECT DISTINCT ON(PRO.id_processo) PRO.id_processo, PRO.cd_ada_cpr, PRO.cd_pregao, 
+                                            PRO.vl_total_est, PRO.vl_total_hom, PRO.dt_processo, UNI.nm_unidade_contempladas, 
+                                            array_to_string(array_agg(DISTINCT TG.nm_tipo_gasto), '; ') as tipos_gastos, MOD.nm_modalidade, 
+                                            array_to_string(array_agg(DISTINCT SL.nm_lotacao), '; ') as centrais, array_to_string(array_agg(DISTINCT CID.nm_cidade), '; ') as nm_cidade, 
+                                            OBJ.nm_objeto, SIT.nm_situacao, PES.nm_pessoa 
                                             $anexo
                                     FROM gco_processo  PRO
                                             LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto
@@ -84,14 +85,16 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_processo_unidade PU ON PU.id_processo = PRO.id_processo
                                             LEFT JOIN gco_unidade_contempladas UNI ON UNI.id_unidade_contempladas = PU.id_unidade_contempladas                                        
                                             LEFT JOIN gco_anotacao ANO ON ANO.id_processo = PRO.id_processo
-                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao 
-                                                                                                                                                from gco_anotacao where id_processo = PRO.id_processo order by id_processo, id_anotacao  desc)
-                                            LEFT JOIN pla_tipo_gasto TPG ON TPG.id_tipo_gasto = PRO.id_tipo_gasto
+                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, id_anotacao  desc)
+                                            LEFT JOIN gco_processo_tipo_gasto GPTPG ON GPTPG.id_processo = PRO.id_processo
+                                            LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = GPTPG.id_tipo_gasto
+                                            LEFT JOIN gco_processo_central GPC ON GPC.id_processo = PRO.id_processo
+                                            LEFT JOIN ses_lotacao SL ON SL.id_lotacao = GPC.id_lotacao
                                             LEFT JOIN ses_pessoa PES ON PES.id_pessoa = ANO.id_pessoa       
                                             LEFT JOIN gco_area_abrangencia AREA on AREA.id_processo = PRO.id_processo
-                                            LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade  
+                                            LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade   
                                     $filtro 
-                                            GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, TPG.id_tipo_gasto, PES.id_pessoa, SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
+                                            GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PES.id_pessoa,SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
                                             ORDER BY PRO.id_processo, ANO.id_anotacao DESC");
             $list->execute();
             if ($list->rowCount() >= 0) {
@@ -242,7 +245,7 @@ class DaoProcesso extends ProcessoExtd {
                                         SET st_ativo =:status 
                                     WHERE id_processo =:id_processo");
 
-            $del->bindValue(":id_processo", $this->getId_Processo(), PDO::PARAM_INT);
+            $del->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $del->bindValue(':status', 0, PDO::PARAM_STR);
             $del->execute();
             return TRUE;
@@ -341,7 +344,7 @@ class DaoProcesso extends ProcessoExtd {
         }
     }
 
-    //metodo para inserir a(s) central(is) de um processo
+    //metodo para inserir o(s) tipos de gato(s) de um processo
     function cadastrarTipoGasto($pdo, $valorTipoGasto) {
         try {
             $sql = $pdo->prepare("INSERT INTO gco_processo_tipo_gasto(id_processo, id_tipo_gasto, vl_processo_tipo_gasto) VALUES (:id_processo, :id_tipo_gasto, :valorTipoGasto)");
@@ -355,6 +358,32 @@ class DaoProcesso extends ProcessoExtd {
         }
     }
 
+    //metodo para editar o(s) tipos de gato(s) de um processo
+    function editarTipoGasto($pdo, $idTipogasto, $valor) {
+        try {
+            $sql = $pdo->prepare("UPDATE gco_processo_tipo_gasto SET id_tipo_gasto = :idTipoGasto, vl_processo_tipo_gasto = :vlTipoGasto WHERE id_processo_tipo_gasto = :idProcessoTipoGasto");
+            $sql->bindValue(":idProcessoTipoGasto", $this->getTipoGasto(), PDO::PARAM_INT);
+            $sql->bindValue(":vlTipoGasto", $valor, PDO::PARAM_INT);
+            $sql->bindValue(":idTipoGasto", $idTipogasto, PDO::PARAM_INT);
+            $sql->execute();
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    //metodo para inserir o(s) tipos de gato(s) de um processo
+    function deletarTipoGasto($pdo) {
+        try {
+            $sql = $pdo->prepare("DELETE FROM gco_processo_tipo_gasto WHERE id_processo_tipo_gasto = :idProcessoTipoGasto");
+            $sql->bindValue(":idProcessoTipoGasto", $this->getTipoGasto(), PDO::PARAM_INT);
+            $sql->execute();
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
     //metodo para deletar a area de um processo
     function deletarAreaAbrangencia($pdo) {
         try {
@@ -414,9 +443,9 @@ class DaoProcesso extends ProcessoExtd {
             $upload = $pdo->prepare("INSERT INTO gco_anexo(ds_anexo, lk_anexo, id_processo) VALUES (:nome, :endereco, :id_processo)");
             $upload->bindValue(":nome", $this->getNomeAnexo() === '' ? null : $this->getNomeAnexo(), PDO::PARAM_STR);
             $upload->bindValue(":endereco", $this->getEndereço() === '' ? null : $this->getEndereço(), PDO::PARAM_STR);
-            $upload->bindValue("id_processo", $this->getId_Processo(), PDO::PARAM_INT);
+            $upload->bindValue("id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $upload->execute();
-            return true;
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -425,10 +454,12 @@ class DaoProcesso extends ProcessoExtd {
     //método para listar processo para PDF
     function carregarProcessoPdf($pdo) {
         try {
-            $processo = $pdo->prepare(" SELECT PRO.id_processo, PRO.cd_ada_cpr, PRO.cd_pregao, 
-                                            PRO.vl_total_est, PRO.vl_total_hom, PRO.dt_processo,
-                                            UNI.nm_unidade_contempladas, array_to_string(array_agg(CID.nm_cidade), ', ') as nm_cidade, MOD.nm_modalidade, 
-                                            OBJ.nm_objeto, SIT.nm_situacao, TPG.nm_tipo_gasto, PES.nm_pessoa 
+            $processo = $pdo->prepare(" SELECT 
+                                            PRO.id_processo, PRO.cd_ada_cpr, PRO.cd_pregao, 
+                                            PRO.vl_total_est, PRO.vl_total_hom, PRO.dt_processo, UNI.nm_unidade_contempladas, 
+                                            array_to_string(array_agg(DISTINCT TG.nm_tipo_gasto), '; ') as tipos_gastos, MOD.nm_modalidade, 
+                                            array_to_string(array_agg(DISTINCT SL.nm_lotacao), '; ') as centrais, array_to_string(array_agg(DISTINCT CID.nm_cidade), '; ') as nm_cidade, 
+                                            OBJ.nm_objeto, SIT.nm_situacao, PES.nm_pessoa
                                         FROM gco_processo  PRO
                                             LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto
                                             LEFT JOIN gco_modalidade MOD ON MOD.id_modalidade = PRO.id_modalidade
@@ -436,15 +467,18 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_processo_unidade PU ON PU.id_processo = PRO.id_processo
                                             LEFT JOIN gco_unidade_contempladas UNI ON UNI.id_unidade_contempladas = PU.id_unidade_contempladas                                        
                                             LEFT JOIN gco_anotacao ANO ON ANO.id_processo = PRO.id_processo
-                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = ANO.id_situacao
-                                            LEFT JOIN pla_tipo_gasto TPG ON TPG.id_tipo_gasto = PRO.id_tipo_gasto
+                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, id_anotacao  desc)
+                                            LEFT JOIN gco_processo_tipo_gasto GPTPG ON GPTPG.id_processo = PRO.id_processo
+                                            LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = GPTPG.id_tipo_gasto
+                                            LEFT JOIN gco_processo_central GPC ON GPC.id_processo = PRO.id_processo
+                                            LEFT JOIN ses_lotacao SL ON SL.id_lotacao = GPC.id_lotacao
                                             LEFT JOIN ses_pessoa PES ON PES.id_pessoa = ANO.id_pessoa       
                                             LEFT JOIN gco_area_abrangencia AREA on AREA.id_processo = PRO.id_processo
                                             LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade  
                                         WHERE (PRO.id_processo=:id_processo) AND PRO.st_ativo='1' 
-                                            GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, TPG.id_tipo_gasto, PES.id_pessoa, SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
+                                            GROUP BY PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PES.id_pessoa,SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
                                             ORDER BY ANO.id_anotacao DESC");
-            $processo->bindValue(":id_processo", $this->getId_Processo(), PDO::PARAM_INT);
+            $processo->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $processo->execute();
             if ($processo->rowCount() > 0) {
                 return $processo->fetch(PDO::FETCH_ASSOC);
@@ -466,7 +500,7 @@ class DaoProcesso extends ProcessoExtd {
                                         INNER JOIN gco_situacao as SIT ON SIT.id_situacao = ANO.id_situacao
                                     WHERE ANO.id_processo =:id_processo
                                         ORDER BY ANO.id_anotacao");
-            $dados->bindValue(":id_processo", $this->getId_Processo(), PDO::PARAM_INT);
+            $dados->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $dados->execute();
             if ($dados->rowCount() >= 0) {
                 return $dados->fetchAll(PDO::FETCH_ASSOC);
@@ -510,11 +544,11 @@ class DaoProcesso extends ProcessoExtd {
         try {
             $processo = $pdo->prepare("UPDATE gco_processo 
                                         SET st_ativo ='1' 
-                                    WHERE cd_ada_cpr =:ada");
+                                    WHERE id_processo =:idProcesso");
 
-            $processo->bindValue(":ada", $this->getADA_process(), PDO::PARAM_STR);
+            $processo->bindValue(":idProcesso", $this->getIdProcesso(), PDO::PARAM_INT);
             $processo->execute();
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -535,7 +569,7 @@ class DaoProcesso extends ProcessoExtd {
             if ($dados->rowCount() > 0) {
                 return $dados->fetch(PDO::FETCH_ASSOC);
             } else {
-                return "";
+                return FALSE;
             }
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -597,7 +631,7 @@ class DaoProcesso extends ProcessoExtd {
                                   INNER JOIN ses_pessoa as pessoa ON pessoa.id_pessoa = anotacao.id_pessoa
                                   WHERE anotacao.id_processo = :idProcesso 
                                   order by anotacao.id_anotacao desc');
-            $sql->bindValue(':idProcesso', $this->getId_Processo(), PDO::PARAM_INT);
+            $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
             $sql->execute();
             if ($sql->rowCount() >= 0) {
                 return $sql->fetch(PDO::FETCH_ASSOC);
@@ -727,7 +761,7 @@ class DaoProcesso extends ProcessoExtd {
     
     function retornarTipoDeGastoDoProcesso($pdo) {
         try {
-            $sql = $pdo->prepare('SELECT id_processo_tipo_gasto as id, id_tipo_gasto as tpg, vl_processo_tipo_gasto as valor FROM gco_processo_tipo_gasto
+            $sql = $pdo->prepare('SELECT id_processo_tipo_gasto, id_tipo_gasto, vl_processo_tipo_gasto FROM gco_processo_tipo_gasto
                                   WHERE id_processo=:idProcesso');
             $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
             $sql->execute();

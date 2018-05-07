@@ -69,13 +69,13 @@ if (!$session->vPCompras()) {
                     <tr class='tudo'>
                         <td class='tudo'><b>Item</b></td>
                         <td class='tudo'><b>ADA / CPR</b></td>
-                        <td class='tudo'><b>Categoria</b></td>
+                        <td class='tudo'><b>Tipo De Gasto</b></td>
                         <td class='tudo'><b>Situação</b></td>
                         <td class='tudo'><b>Data Entrada</b></td>
                         <td class='tudo'><b>Modalidade</b></td>
                         <td class='tudo'><b>Pregão</b></td>
                         <td class='tudo'><b>Objeto</b></td>
-                        <td class='tudo'><b>Central de Atendimento</b></td>
+                        <td class='tudo'><b>Centrais de Atendimento</b></td>
                         <td class='tudo'><b>Área de Abrangência</b></td>
                         <td class='tudo'><b>Valor Estimado</b></td>
                         <td class='tudo'><b>Valor Homologado</b></td>
@@ -87,13 +87,13 @@ if (!$session->vPCompras()) {
         $html .= "<tr>
                         <td>" . $i . "</td>
                         <td>" . $linhas['cd_ada_cpr'] . "</td>
-                        <td>" . $linhas['nm_tipo_gasto'] . "</td>
+                        <td>" . $linhas['tipos_gastos'] . "</td>
                         <td>" . $linhas['nm_situacao'] . "</td>
                         <td>" . Metodos::ConverteDataBR($linhas['dt_processo']) . "</td>
                         <td class='justificar'>" . $linhas['nm_modalidade'] . "</td>
                         <td>" . $linhas['cd_pregao'] . "</td>
                         <td class='justificar'>" . $linhas['nm_objeto'] . "</td>
-                        <td class='justificar'>" . $linhas['nm_centrais'] . "</td>
+                        <td class='justificar'>" . $linhas['centrais'] . "</td>
                         <td>" . $linhas['nm_cidade'] . "</td>
                         <td>" . Metodos::ConverteValorBr($linhas['vl_total_est'], 2) . "</td>
                         <td>" . Metodos::ConverteValorBr($linhas['vl_total_hom'], 2) . "</td>
