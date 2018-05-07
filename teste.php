@@ -1,7 +1,7 @@
 <?php
-teste joellytton
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-//teste
+//teste1
 
 //------------------------------------------------------------teste para corrigir fin_despesa_elemeneto----------------------------------------------------------------------------------
 $conexao = new Conexao();
@@ -31,6 +31,7 @@ try {
     $stmt = $pdo->prepare($sql);
     
     $stmt->execute();
+    echo 'Nada';
     }
 } catch (Error $e) {
     echo $e->getMessage();
