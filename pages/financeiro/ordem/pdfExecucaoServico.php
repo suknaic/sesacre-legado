@@ -183,17 +183,17 @@ function pdf($ordem = null) {
                 <td style="text-align: center"><b>Dados de Contato:</b> <br/> 
                 <b>(Contratante)</b> 
                 </td>
-                <td><b>Emissor:</b>'.$dados[0]["emissor"].'<br/>
-                    <b>Setor:</b>'.$dados[0]["setor"].'<br/>
-                    <b>Telefone/Fax:</b>'.$dados[0]["nr_telefone_celular"].'<br/>
-                    <b>E-mail:</b> '.$dados[0]["nm_email"].'<br/>
-                    <b>Data de Emissão:</b> '. Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
-                    <b>Sol. de Necessidade nº:</b> '.$dados[0]["id_pedido"].' 
+                <td><b>Emissor:</b> ' .$dados[0]["emissor"].'<br/>
+                    <b>Setor:</b> ' .$dados[0]["setor"].'<br/>
+                    <b>Telefone/Fax:</b> ' .$dados[0]["nr_telefone_celular"].'<br/>
+                    <b>E-mail:</b> ' .$dados[0]["nm_email"].'<br/>
+                    <b>Data de Emissão:</b> ' .Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
+                    <b>Sol. de Necessidade nº:</b> ' .$dados[0]["id_pedido"].' 
                 </td>
             </tr>
                 <tr>
                 <td colspan="2">
-                    <b>Licitação nº:</b>'.$dados[0]["nm_modalidade"].'.:'.$dados[0]["cd_pregao"].'<br/>
+                    <b>Licitação nº:</b> '.$dados[0]["nm_modalidade"].'.:'.$dados[0]["cd_pregao"].'<br/>
                     <b>Objeto Licitado/Contratado:</b> '.$dados[0]["nm_objeto"].'<br/>
                     <b>Contrato Nº:</b> '.$dados[0]["nr_contrato"].'  <br/>
                     <b>Vigencia:</b> '. Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]).' a '. Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]).'
@@ -205,7 +205,7 @@ function pdf($ordem = null) {
              <caption style="background-color:#c9c9c9 "><strong>DADOS DA CONTRATADA</strong></caption>
                 <tr>
                     <td >
-                        <b>Razão Social.:</b> ' . $dados[0]["nm_pessoa"] . '<br/>
+                        <b>Razão Social:</b> ' . $dados[0]["nm_pessoa"] . '<br/>
                         <b>CNPJ:</b> ' . $dados[0]["nr_cnpj"] . '&nbsp;&nbsp;<b>Contato.:</b> ' . $dados[0]["telefoneCredor"] . '<br/>
                         <b>Credor Safira nº: </b>'.$dados[0]["nr_safira"].'<br/>        
                         <b>Endereço:</b> ' . $dados[0]["ds_logradouro"] . '<br/>
@@ -272,12 +272,12 @@ function pdf($ordem = null) {
                 
                 <tr>
                     <td><b>Destinatário/Remetente:</b></td>
-                    <td>Secretaria De Saúde Do Estado Do Acre</td>
+                    <td>Secretaria de Estado de Saúde do Acre</td>
                 </tr>
 
                 <tr>
                     <td><b>Nota de Empenho nº:</b></td>
-                    <td>' . $dados[0]["nr_empenho"] . ' Fonte :' . $dados[0]["nr_fonte"] . '</td>
+                    <td>' . $dados[0]["nr_empenho"] . ' Fonte: ' . $dados[0]["nr_fonte"] . '</td>
                 </tr>
 
                 <tr>
@@ -298,7 +298,7 @@ function pdf($ordem = null) {
                     OBS:<br/>
                     1) Ao emitir Documento Fiscal, a Contratada deverá descrever o objeto conforme discriminado
                        nesta Ordem, registrando no campo informações adicionais o número da Ordem, da Nota de Empenho,
-                       da Ata de Registro de Preços e do Contrato Administrativo, anexando a mesma as certidões de
+                       da Ata de Registro de Preços e do Contrato Administrativo, anexando à mesma as certidões de
                        regularidade fiscal exigidas no ato da licitação, sendo seu não cumprimento passivo de 
                        devolução do Documento Fiscal;<br/>
                     2) Esta Ordem será emitida em 02 vias, sendo 1 via do Emissor (Contratante) e 1 via do 

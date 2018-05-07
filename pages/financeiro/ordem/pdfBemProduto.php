@@ -183,9 +183,9 @@ function pdf($ordem = null) {
                 <td style="text-align: center"><b>Dados de Contato:</b> <br/> 
                 <b>(Contratante)</b> 
                 </td>
-                <td><b>Emissor:</b>'.$dados[0]["emissor"].'<br/>
-                    <b>Setor:</b>'.$dados[0]["setor"].'<br/>
-                    <b>Telefone/Fax:</b>'.$dados[0]["nr_telefone_celular"].'<br/>
+                <td><b>Emissor:</b> '.$dados[0]["emissor"].'<br/>
+                    <b>Setor:</b> '.$dados[0]["setor"].'<br/>
+                    <b>Telefone/Fax:</b> '.$dados[0]["nr_telefone_celular"].'<br/>
                     <b>E-mail:</b> '.$dados[0]["nm_email"].'<br/>
                     <b>Data de Emissão:</b> '. Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
                     <b>Sol. de Necessidade nº:</b> '.$dados[0]["id_pedido"].' 
@@ -205,8 +205,8 @@ function pdf($ordem = null) {
             <caption style="background-color:#c9c9c9 "><strong>DADOS DA CONTRATADA</strong></caption>
                 <tr>
                     <td >
-                        <b>Razão Social.:</b> ' . $dados[0]["nm_pessoa"] . '<br/>
-                        <b>CNPJ:</b> ' . $dados[0]["nr_cnpj"] . '&nbsp;&nbsp;<b>Contato.:</b> ' . $dados[0]["telefoneCredor"] . '<br/>
+                        <b>Razão Social:</b> ' . $dados[0]["nm_pessoa"] . '<br/>
+                        <b>CNPJ:</b> ' . $dados[0]["nr_cnpj"] . '&nbsp;&nbsp;<b>Contato:</b> ' . $dados[0]["telefoneCredor"] . '<br/>
                         <b>Credor Safira nº: </b>'.$dados[0]["nr_safira"].'<br/>        
                         <b>Endereço:</b> ' . $dados[0]["ds_logradouro"] . '<br/>
                         <b>Bairro:</b> ' . $dados[0]["ds_bairro"] . '<br/>
@@ -247,7 +247,7 @@ function pdf($ordem = null) {
                     <td style="background-color:#e5e5e5;text-align: center;">' . Metodos::ConverteValorBr($total, 2) . '</td>
                 </tr>
                 <tr>
-                    <td colspan="7"><b>Valor total por extenso:</b>' . Metodos::valorPorExtenso($total, '$') . '</td>
+                    <td colspan="7"><b>Valor Total por Extenso:</b>' . Metodos::valorPorExtenso($total, '$') . '</td>
                 </tr>
                 </table>';
 
@@ -270,12 +270,12 @@ function pdf($ordem = null) {
                 
                 <tr>
                     <td><b>Destinatário/Remetente:</b></td>
-                    <td>Secretaria De Saúde Do Estado Do Acre</td>
+                    <td>Secretaria de Estado de Saúde do Acre</td>
                 </tr>
 
                 <tr>
                     <td><b>Nota de Empenho nº:</b></td>
-                    <td>' . $dados[0]["nr_empenho"] . ' Fonte :' . $dados[0]["nr_fonte"] . '</td>
+                    <td>' . $dados[0]["nr_empenho"] . ' Fonte: ' . $dados[0]["nr_fonte"] . '</td>
                 </tr>
                 <tr>
                     <td><b>Elemento da Despesa:</b></td>
