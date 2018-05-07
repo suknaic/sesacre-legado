@@ -151,7 +151,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
 
                                 <div class="col-md-4">
                                     <div class="panel-body">
-                                        <p class= "form-control-static">Categoria:</p>
+                                        <p class= "form-control-static">Tipos de Gasto:</p>
                                         <select class="form-control select" name="categoria_pesquisa" id="categoria_pesquisa" multiple required="true">
                                         </select>
                                     </div>
@@ -200,13 +200,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                                         <thead>
                                                             <tr>
                                                                 <th class="text-capitalize text-center">ADA/CPR</th>
-                                                                <th class="text-capitalize text-center">Categoria</th>
+                                                                <th class="text-capitalize text-center">Tipos De Gastos</th>
                                                                 <th class="text-capitalize text-center">Situação</th>
                                                                 <th class="text-capitalize text-center">Data Entrega</th>
                                                                 <th class="text-capitalize text-center">Modalidade</th>
                                                                 <th class="text-capitalize text-center">N° Pregão</th>
                                                                 <th class="text-capitalize text-center">Objeto</th>
-                                                                <th class="text-capitalize text-center">Central de Atendimento</th>
+                                                                <th class="text-capitalize text-center">Centrais de Atendimento</th>
                                                                 <th class="text-capitalize text-center">Área de Abrangência</th>
                                                                 <th class="text-capitalize text-center">Valor T. Estimado</th>
                                                                 <th class="text-capitalize text-center">Valor Homologado</th>

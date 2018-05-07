@@ -50,8 +50,6 @@ switch ($_REQUEST['acao']) {
     case 'edita_processo':
         try {
             $dados = filter_input(INPUT_POST, 'atualizaProcesso', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            print_r($dados);
-//            return false;
             $edita = new Processo();
             $edita->setIdProcesso((int) $dados['id_processo']);
             $edita->setAda(trim($dados['ada_process']));
@@ -114,8 +112,8 @@ switch ($_REQUEST['acao']) {
             $filtro = filter_input(INPUT_POST, 'excluiProcesso', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             $desativa = new Processo();
-            $desativa->setId_Processo((int) ($filtro['id']));
-            $desativa->setADA_process($filtro['ada']);
+            $desativa->setIdProcesso((int) ($filtro['id']));
+            $desativa->setAda($filtro['ada']);
 
             echo $desativa->desativarProcesso();
             return;
@@ -258,10 +256,11 @@ switch ($_REQUEST['acao']) {
     case "ativar_processo":
         try {
 
-            $ada = filter_input(INPUT_POST, 'ativa_processo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_POST, 'ativa_processo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             $processo = new Processo();
-            $processo->setADA_process($ada['ada']);
+            $processo->setAda($dados['ada']);
+            $processo->setIdProcesso($dados['idProcesso']);
 
             echo $processo->ativarProcesso();
             return;
