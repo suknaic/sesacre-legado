@@ -214,7 +214,7 @@ class DaoSesCidade extends SesCidade {
                 from ses_cidade cid, ses_estado est, ses_pais pais 
                 where cid.id_estado = est.id_estado 
                 and est.id_pais = pais.id_pais
-                and (cid.nm_cidade ilike '". $this->getNm_cidade() ."' or est.nm_sigla ilike '" . $this->getNm_cidade() . "')";
+                and (unaccent(cid.nm_cidade) ilike unaccent('". $this->getNm_cidade() ."') or unaccent(est.nm_sigla) like unaccent('" . $this->getNm_cidade() . "'))";
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
