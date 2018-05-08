@@ -68,7 +68,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/administracao/categoriaPrin
                                     <div class="col-sm-3"></div>
                                     <div class="col-sm-6">
                                         <div class="panel-body">
-                                            <p class="form-control-static">Categoria Principal: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class="form-control-static">Categoria Principal: <span class="text-danger">*</span></p>
                                             <input type="text" class="form-control" placeholder="Categoria Principal" id="nmCategoriaPrincipal"  required autofocus>
                                         </div>
                                     </div>

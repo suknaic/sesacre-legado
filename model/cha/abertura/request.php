@@ -159,13 +159,29 @@ switch ($_REQUEST['acao']) {
         }
 
 
-    case 'listaChamadoTable':
+    case 'listaChamadoTable1':
         try {
 
             $cha = new Chamado();
             $idPessoaFisica = filter_input(INPUT_POST, 'id_usuario', FILTER_DEFAULT);
             $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_DEFAULT);
-            echo $cha->retornaTrChamado($idPessoaFisica, $idStatus);
+            echo $cha->retornaTrChamado1($idPessoaFisica, $idStatus);
+
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+            case 'listaChamadoTable2':
+        try {
+
+            $cha = new Chamado();
+            $idPessoaFisica = filter_input(INPUT_POST, 'id_usuario', FILTER_DEFAULT);
+            $idStatus = filter_input(INPUT_POST, 'idStatus', FILTER_DEFAULT);
+            echo $cha->retornaTrChamado2($idPessoaFisica, $idStatus);
 
             return;
             break;

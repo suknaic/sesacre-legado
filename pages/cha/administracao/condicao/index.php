@@ -68,7 +68,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/administracao/condicao/inde
                                     <div class="col-sm-3"></div>
                                     <div class="col-sm-6">
                                         <div class="panel-body">
-                                            <p class="form-control-static">Condição: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class="form-control-static">Condição: <span class="text-danger">*</span></p>
                                             <input type="text" class="form-control" placeholder="Condição" id="nmCondicao"  required autofocus>
                                         </div>
                                     </div>

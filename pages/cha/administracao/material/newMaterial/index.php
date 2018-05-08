@@ -69,28 +69,28 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-4">
-                                                <div class="panel-body">Nome: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body">Nome: <span class="text-danger">*</span>
                                                     <input type="text" class="form-control" name="nm_material" id="nm_material" value="<?php echo $dadosMaterial['nm_material'];?>" placeholder="">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="panel-body">Data de Aquisição:
-                                                    <input type="text" class="form-control" name="data_aquisicao" id="data_aquisicao" value="<?php if ($dadosMaterial != 0) { if ($dadosMaterial['dt_aquisicao'] != 0) {echo Metodos::ConverteDataBR($dadosMaterial['dt_aquisicao']);} else {echo $dadosMaterial['dt_aquisicao'];}} else {echo $dadosMaterial['dt_aquisicao'];}?>" placeholder="99/99/9999" data-mask="99/99/9999">
+                                                    <input type="text" class="form-control" name="data_aquisicao" id="data_aquisicao" value="<?php if ($dadosMaterial != 0) { if ($dadosMaterial['dt_aquisicao'] != 0) {echo Metodos::ConverteDataBR($dadosMaterial['dt_aquisicao']);} else {echo $dadosMaterial['dt_aquisicao'];}} else {echo $dadosMaterial['dt_aquisicao'];}?>" placeholder="__/__/____" data-mask="99/99/9999">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="panel-body">Garantia: <span class="text-danger">(Qt. em meses)</i></span>
-                                                    <input class="form-control" type="number" name="qt_garantia" id="qt_garantia" min="0" value="<?php echo $dadosMaterial['qt_meses_garantia'];?>" placeholder="10 meses">
+                                                <div class="panel-body">Garantia: <i class="fa fa-question-circle text-default" title="Quantidade em Meses"></i>
+                                                    <input class="form-control" type="number" name="qt_garantia" id="qt_garantia" min="0" value="<?php echo $dadosMaterial['qt_meses_garantia'];?>" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="col-md-4">
-                                                <div class="panel-body">Unidade de Medida: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body">Unidade de Medida: <span class="text-danger">*</span>
                                                     <input type="hidden" name="idUnidadeMedida" id="idUnidadeMedida" value="<?php echo $dadosMaterial['id_unidade_medida'];?>">
                                                     <select class="form-control" name="id_unidade_medida" id="id_unidade_medida">
-                                                        <option value="0">Selecione uma unidade de medida</option>
+                                                        <option value="0">Selecione a Unidade de Medida</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -105,11 +105,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+<!--                                    </div>
                                     <div class="panel">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Dados da Máquina</h3>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
                                             <div class="col-md-5">
                                                 <div class="panel-body">Modelo:
@@ -165,20 +165,20 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-5">
-                                                <div class="panel-body"> Estado<span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body"> Estado: <span class="text-danger">*</span>
                                                     <select class="form-control" name="tp_estado" id="tp_estado">
                                                         <?php
                                                             if ($dadosMaterial == 0) {
-                                                                echo '<option value="0">Selecione um estado</option>
+                                                                echo '<option value="0">Selecione o Estado</option>
                                                                       <option value="1">Novo</option>
                                                                       <option value="2">Velho</option>';
                                                             } else {
                                                                 if ($dadosMaterial['tp_estado'] == 1) {
-                                                                    echo '<option value="0">Selecione um estado</option>
+                                                                    echo '<option value="0">Selecione o Estado</option>
                                                                           <option value="1" selected>Novo</option>
                                                                           <option value="2">Velho</option>';
                                                                 } elseif ($dadosMaterial['tp_estado'] == 2) {
-                                                                    echo '<option value="0">Selecione um estado</option>
+                                                                    echo '<option value="0">Selecione o Estado</option>
                                                                           <option value="1">Novo</option>
                                                                           <option value="2" selected>Velho</option>';
                                                                 }

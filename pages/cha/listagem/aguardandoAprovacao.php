@@ -56,30 +56,38 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-title">
-                        <h3 class="page-header text-overflow">Listagem Usuário</h3>
+                        <h1 class="page-header text-overflow">Aguardando Aprovação</h1>
+                        <p class="pad-btn text-sm">Lista de Chamados que estão com os Gerentes das Divisões aguardando aprovação para que sejam repassados para os Técnicos</p>
                     </div>
                     <div id="page-content">
-                        <div class="row">
-                            <div class="col-sm-12 eq-box-md eq-no-panel">
-                                <div class="panel">
-                                    <input type="hidden" class="form-control" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION['idUser']; ?>">
-                                    <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Usuário</th>
-                                                <th>Lotação</th>
-                                                <th>Equipe</th>
-                                                <th>Primária</th>
-                                                <th>Secundária</th>
-                                                <th>Técnico</th>
-                                                <th>Data Criação</th>
-                                                <th>Data Agendamento</th>
-                                                <th>Status</th>
-                                                <th class="text-center">Ações</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div id="tabela_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                                <input type="hidden" class="form-control" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION['idUser']; ?>">
+                                                <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Usuário</th>
+                                                            <th>Lotação</th>
+                                                            <th>Equipe</th>
+                                                            <th>Primária</th>
+                                                            <th>Secundária</th>
+                                                            <th>Técnico</th>
+                                                            <th>Data Criação</th>
+                                                            <th>Data Agendamento</th>
+                                                            <th>Status</th>
+                                                            <th class="text-center">Ações</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +119,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
             <!-- END OF CONTAINER -->
 
         </div>
-    </div>
 
     <!--jQuery [ REQUIRED ]-->
     <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
@@ -136,7 +143,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
     <!--JAVASCRIP da pagina-->
     <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
     <script src="/assets/lib/sesacre/funcoes.js"></script>
-    <script src="/assets/js/cha/listagem/aguardandoAtendimento.js"></script>
+    <script src="/assets/js/cha/listagem/aguardandoAprovacao.js"></script>
     <!-- select2 -->
     <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>

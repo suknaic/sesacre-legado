@@ -66,13 +66,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                     <div class="col-md-3"></div>
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <p class= "form-control-static">Categoria Primária: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class= "form-control-static">Categoria Primária: <span class="text-danger">*</span></p>
                                             <input type="text" class="form-control" name="categoriaPrimaria" id="nmCategoriaPrimaria" required="true">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <p class= "form-control-static">Categoria Tipo: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class= "form-control-static">Categoria Tipo: <span class="text-danger">*</span></p>
                                             <select class="form-control" name="categoriaTipo" id="idCategoriaTipo" title="Selecione uma Categoria Tipo" required="true">
                                                 <option value="0">Selecione a Categoria Tipo</option>
                                             </select>

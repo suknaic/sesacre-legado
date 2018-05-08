@@ -654,7 +654,7 @@ class Chamado {
         }
     }
 
-    public function retornaTrChamado($idPessoaFisica, $idStatus) { //Listagem Chamado
+    public function retornaTrChamado1($idPessoaFisica, $idStatus) { //Listagem Chamado
         //print_r($idPessoaFisica);
         $retorno = "";
         try {
@@ -702,6 +702,54 @@ class Chamado {
 //                             . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idChamado . "-" . $idFromSistema . ' >
 //                                <i class="fa fa-trash-o text-danger" aria-hidden="true"></i>
 //                              </button>'
+                            . '</td>'
+                            . "</tr>";
+                    $retorno .= "</tr>";
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
+    
+    public function retornaTrChamado2($idPessoaFisica, $idStatus) { //Listagem Chamado
+        //print_r($idPessoaFisica);
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            /* @var $pdo PDO */
+            $dao = new DaoChaChamado();
+            $dao->setIdPessoaSolicitante($idPessoaFisica);
+            $filtro = " ";
+            //*******************************************************************************************************
+            $filtro = " and s.id_status = '$idStatus' ";
+            //******************************************************************************************************
+            $result = $dao->retornaTodosChamados($pdo, $filtro);
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    $idChamado = $v['id_chamado'];
+                    $idFromSistema = $v['id_form_sistema'];
+                    $retorno .= "<tr>";
+                    $retorno .= "<td>" . $v['id_chamado'] . "</td>"
+                            . "<td>" . $v['nm_solicitante'] . "</td>"
+                            . "<td>" . $v['nm_lotacao'] . "</td>"
+                            . "<td>" . $v['nm_categoria_tipo'] . "</td>"
+                            . "<td>" . $v['nm_categoria_primaria'] . "</td>"
+                            . "<td>" . $v['nm_categoria_secundaria'] . "</td>"
+                            . "<td>" . $v['nm_atendimento'] . "</td>"
+                            . "<td>" . $v['dh_abertura'] . "</td>"
+                            . "<td>" . $v['dh_agendamento'] . "</td>"
+                            . "<td>" . $v['nm_status'] . "</td>"
+                            . '<td style="text-align: center;">'
+                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
+                            . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
+                            . ' value=' . $idChamado . ' >
+                                <i class="fa fa-eye fa-lg text-success" aria-hidden="true"></i>
+                              </button> '
                             . '</td>'
                             . "</tr>";
                     $retorno .= "</tr>";

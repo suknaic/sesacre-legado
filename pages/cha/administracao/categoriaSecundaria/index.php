@@ -66,19 +66,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                     <div class="col-md-1"></div>
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <p class= "form-control-static">Categoria Secundária: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class= "form-control-static">Categoria Secundária: <span class="text-danger">*</span></p>
                                             <input type="text" class="form-control" name="categoriaSecundaria" id="nmCategoriaSecundaria" required="true">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <p class= "form-control-static">Valor: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class= "form-control-static">Valor: <span class="text-danger">*</span></p>
                                             <input type="text" class="form-control" name="vlSecundaria" id="vlCategoriaSecundaria" placeholder="Informe o valor em R$"  required="true">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <p class= "form-control-static">Categoria Primária: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span></p>
+                                            <p class= "form-control-static">Categoria Primária: <span class="text-danger">*</span></p>
                                             <select class="form-control" name="categoriaPrimaria" id="idCategoriaPrimaria" title="Selecione uma Categoria Primária" required="true">
                                                 <option value="0">Selecione a Categoria Primária</option>
                                             </select>

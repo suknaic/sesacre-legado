@@ -1693,7 +1693,7 @@ class CategoriaSecundaria {
                                                                         </div>
                                                                     </div>                
                                                                     <div class="form-group">
-                                                                        <label class="col-lg-3 control-label">Nome da Pasta: <i class="fa fa-question-circle text-danger" title="Preencha quando o Tipo de Permissão for Pasta Compartilhada"></i></label>
+                                                                        <label class="col-lg-3 control-label">Nome da Pasta: <i class="fa fa-question-circle text-default" title="Preencha quando o Tipo de Permissão for Pasta Compartilhada"></i></label>
                                                                         <div class="col-lg-7">
                                                                             <input type="text" class="form-control " name="nmPasta" placeholder="Pasta" id="nmPasta" required>
                                                                         </div>

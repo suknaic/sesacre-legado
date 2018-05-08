@@ -65,17 +65,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-4">
-                                                <div class="panel-body">N° Material: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body">N° Material: <span class="text-danger">*</span>
                                                     <input type="text" class="form-control" name="nm_material" id="nm_material" placeholder="">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="panel-body">N° Série: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body">N° Série: <span class="text-danger">*</span>
                                                     <input type="text" class="form-control" name="nm_serie" id="nm_serie" placeholder="">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="panel-body">N° Patrimônio: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+                                                <div class="panel-body">N° Patrimônio: <span class="text-danger">*</span>
                                                     <input type="text" class="form-control" name="nm_patrimonio" id="nm_patrimonio" placeholder="">
                                                 </div>
                                             </div>
