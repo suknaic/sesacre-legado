@@ -653,6 +653,52 @@ class Chamado {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    public function retornaTrChamado($idPessoaFisica) { //Listagem Chamado
+        //print_r($idPessoaFisica);
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            /* @var $pdo PDO */
+            $dao = new DaoChaChamado();
+            $dao->setIdPessoaSolicitante($idPessoaFisica);
+            $filtro = " ";
+            //*******************************************************************************************************
+            $result = $dao->retornaTodosChamados($pdo, $filtro);
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    $idChamado = $v['id_chamado'];
+                    $idFromSistema = $v['id_form_sistema'];
+                    $retorno .= "<tr>";
+                    $retorno .= "<td>" . $v['id_chamado'] . "</td>"
+                            . "<td>" . $v['nm_solicitante'] . "</td>"
+                            . "<td>" . $v['nm_lotacao'] . "</td>"
+                            . "<td>" . $v['nm_categoria_tipo'] . "</td>"
+                            . "<td>" . $v['nm_categoria_primaria'] . "</td>"
+                            . "<td>" . $v['nm_categoria_secundaria'] . "</td>"
+                            . "<td>" . $v['nm_atendimento'] . "</td>"
+                            . "<td>" . $v['dh_abertura'] . "</td>"
+                            . "<td>" . $v['dh_agendamento'] . "</td>"
+                            . "<td>" . $v['nm_status'] . "</td>"
+                            . '<td style="text-align: center;">'
+                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
+                            . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
+                            . ' value=' . $idChamado . ' >
+                                <i class="fa fa-mail-forward text-success" aria-hidden="true"></i>
+                              </button> '
+                            . '</td>'
+                            . "</tr>";
+                    $retorno .= "</tr>";
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
 
     public function retornaTrChamado1($idPessoaFisica, $idStatus) { //Listagem Chamado
         //print_r($idPessoaFisica);
@@ -689,12 +735,12 @@ class Chamado {
                             . '<button type="button" class="btn btn-default btn-edit btn-xs"'
                             . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
                             . ' value=' . $idChamado . ' >
-                                <i class="fa fa-eye fa-lg text-success" aria-hidden="true"></i>
+                                <i class="fa fa-mail-forward text-success" aria-hidden="true"></i>
                               </button> '
                             . '<button type="button" class="btn btn-default btn-edit btn-xs"'
                             . ' title="Editar" nome="' . $v['nm_solicitante'] . '" '
                             . ' value=' . $idChamado . ' >
-                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
+                                <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
                               </button> '
                             . '<button type="button" class="btn btn-default btn-cancelar btn-xs" title="Cancelar" value=' . $idChamado . "-" . $idFromSistema . ' >
                                 <i class="fa fa-ban text-danger" aria-hidden="true"></i>
@@ -748,7 +794,7 @@ class Chamado {
                             . '<button type="button" class="btn btn-default btn-edit btn-xs"'
                             . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
                             . ' value=' . $idChamado . ' >
-                                <i class="fa fa-eye fa-lg text-success" aria-hidden="true"></i>
+                                <i class="fa fa-mail-forward text-success" aria-hidden="true"></i>
                               </button> '
                             . '</td>'
                             . "</tr>";
