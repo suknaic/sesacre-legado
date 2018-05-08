@@ -783,6 +783,31 @@ class pessoaFisica {
     }
 
 //************************************************************************************************************************
+    public function retornaOptionPf($id) {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $cidade = new DaoSesPessoaFisica();
+            $result = $cidade->retornaPessoaFisicaOption($pdo);
+            $retorno .= "<option selected value = '0'>Selecione Pessoa Fisica</option>";
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    if ($v['id_pessoa'] == $id) {
+                        $retorno .= "<option selected value = '" . $v['id_pessoa'] . "'>" . $v['nr_cpf'] ." - ". $v['nm_pessoa'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_pessoa'] . "'>" . $v['nr_cpf'] ." - ". $v['nm_pessoa'] . "</option>";
+                    }
+                }
+            }
+
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
 }
 
 ?>

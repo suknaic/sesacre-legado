@@ -3,8 +3,7 @@ $(document).ready(function () {
     func = new Funcoes();
     func.carregaTabelaPadrao('tabela', null, [6]);
     //**********************************
-    $("#nr_cpf").mask("999.999.999-99");
-    $("#dt_nascimento").mask("99/99/9999");
+    $("#nm_pessoa").focus();
     //datapiker, plugins para data
     //*****************************************************
     $('body').on('click', '.btn-pesquisar', function (e) {

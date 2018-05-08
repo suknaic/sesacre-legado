@@ -42,6 +42,7 @@ $(document).ready(function () {
     //**********************
     func = new Funcoes();
     func.carregaTabelaPadrao('tabela', null, [7]);
+    $("#nm_nome").focus();
     //************************************
     $("#nr_cpf").mask("999.999.999-99");
     $("#dt_nascimento").mask("99/99/9999");

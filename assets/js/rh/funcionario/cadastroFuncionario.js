@@ -355,13 +355,7 @@ $(document).ready(function () {
         }
         listaCidadeCombo($idEstado, 2, null);
     });
-//    $("body").on("change", "#id_estado_endereco", function (e) {
-//        $idEstado = $("#id_estado_endereco").val();
-//        if ($idEstado == 0) {
-//            return;
-//        }
-//        listaCidadeCombo($idEstado, 2, $("#id_cidade").val());
-//    });
+
 //******************************************************************************************
     $(".nr").mask("99");
     $("#nr_cpf").mask("999.999.999-99");
