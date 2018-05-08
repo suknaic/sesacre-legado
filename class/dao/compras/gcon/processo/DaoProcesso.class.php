@@ -27,24 +27,6 @@ class DaoProcesso extends ProcessoExtd {
         }
     }
 
-    //Método para cadastrar Anotação do processo
-    function cadastraAnotacao($pdo) {
-        try {
-            $cadanota = $pdo->prepare("INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario)
-                                       VALUES(:anotacoes_process, :id_processo, :id_situacao, :id_tecnico, :id_usuario)");
-
-            $cadanota->bindValue(":anotacoes_process", $this->getAnotacoes() === '' ? null : $this->getAnotacoes(), PDO::PARAM_STR);
-            $cadanota->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
-            $cadanota->bindValue(":id_situacao", $this->getSituacao(), PDO::PARAM_INT);
-            $cadanota->bindValue(":id_usuario", $this->getUser(), PDO::PARAM_INT);
-            $cadanota->bindValue(":id_tecnico", $this->getTecnico(), PDO::PARAM_INT);
-            $cadanota->execute();
-            return TRUE;
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
     function updateIdAnotacaoPro($pdo) {
         try {
             $upidanota = $pdo->prepare("UPDATE gco_processo SET id_anotacao =:id_anotacao WHERE id_processo =:id_processo");
@@ -437,20 +419,6 @@ class DaoProcesso extends ProcessoExtd {
         }
     }
 
-    //método para salvar dados do anexo
-    function cadastrarAnexo($pdo) {
-        try {
-            $upload = $pdo->prepare("INSERT INTO gco_anexo(ds_anexo, lk_anexo, id_processo) VALUES (:nome, :endereco, :id_processo)");
-            $upload->bindValue(":nome", $this->getNomeAnexo() === '' ? null : $this->getNomeAnexo(), PDO::PARAM_STR);
-            $upload->bindValue(":endereco", $this->getEndereço() === '' ? null : $this->getEndereço(), PDO::PARAM_STR);
-            $upload->bindValue("id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
-            $upload->execute();
-            return TRUE;
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
     //método para listar processo para PDF
     function carregarProcessoPdf($pdo) {
         try {
@@ -574,72 +542,7 @@ class DaoProcesso extends ProcessoExtd {
         } catch (PDOException $e) {
             return $e->getMessage();
         }
-    }
-
-    function anexos($pdo) {
-        try {
-            $dados = $pdo->prepare(" SELECT id_anexo, ds_anexo 
-                                        FROM gco_anexo
-                                        WHERE id_processo=:id_processo
-                                    GROUP BY id_anexo");
-            $dados->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
-            $dados->execute();
-            if ($dados->rowCount() >= 0) {
-                return $dados->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                return "";
-            }
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
-    function excluiAnexo($pdo) {
-        try {
-            $exclui = $pdo->prepare(" DELETE 
-                                        FROM gco_anexo 
-                                      WHERE id_anexo=:id_anexo");
-            $exclui->bindValue("id_anexo", $this->getIdAnexo(), PDO::PARAM_INT);
-            $exclui->execute();
-            return true;
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
-    function retornaAnotacoes($pdo) {
-        try {
-            $sql = $pdo->prepare('SELECT anotacao.ds_anotacao, anotacao.dh_anotacao, pessoa.nm_pessoa
-                                        FROM gco_anotacao as anotacao 
-                                            INNER JOIN ses_pessoa as pessoa ON pessoa.id_pessoa=anotacao.id_usuario
-                                                 WHERE anotacao.id_processo=:idProcesso
-                                                      ORDER BY anotacao.id_anotacao');
-            $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
-            $sql->execute();
-            if ($sql->rowCount() >= 0) {
-                return $sql->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
-
-    function carregaAnotacao($pdo) {
-        try {
-            $sql = $pdo->prepare('SELECT anotacao.id_anotacao, pessoa.id_pessoa, anotacao.id_situacao
-                                  FROM gco_anotacao as anotacao 
-                                  INNER JOIN ses_pessoa as pessoa ON pessoa.id_pessoa = anotacao.id_pessoa
-                                  WHERE anotacao.id_processo = :idProcesso 
-                                  order by anotacao.id_anotacao desc');
-            $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
-            $sql->execute();
-            if ($sql->rowCount() >= 0) {
-                return $sql->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
-    }
+    } 
 
     function retornarProcessoLog($pdo) {
         try {

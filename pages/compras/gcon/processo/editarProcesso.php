@@ -65,21 +65,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close"
-                                                data-dismiss="modal"
-                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                            <span aria-hidden="true">&times;</span>
                                         </button>
                                         <h4 class="modal-title">Anexo</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="POST" enctype="multipart/form-data" id="form-upload" name="form-upload">
+                                        <form id="form-upload" name="form-upload">
                                             <input type="hidden" name="id_processo" id="id_processo" value="<?php echo $dados['id_processo']; ?>">
+                                            <input type="hidden" name="acao" id="acao" value="inserir_anexo">
                                             <input type="file" name="file" id="file">
                                         </form>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
-                                        <input type="submit" class="btn btn-primary btn-enviarUpload" value="Enviar">
+                                        <button type="button" class="btn btn-primary btn-enviarUpload">Enviar</button>
                                     </div>
                                 </div>
                             </div>
