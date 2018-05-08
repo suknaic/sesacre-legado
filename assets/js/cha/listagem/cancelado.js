@@ -28,9 +28,9 @@ $(document).ready(function () {
             "dataType": "html",
             "method": "POST",
             "data": {
-                "acao": "listaChamadoTable",
+                "acao": "listaChamadoTable2",
                 "id_usuario": id_usuario,
-                "idStatus": '1'
+                "idStatus": '2'
 
             },
             "success":

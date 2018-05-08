@@ -63,8 +63,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                         <h4 class="text-main pad-btm bord-btm">Acompanhamento rápido dos seus chamados</h4>
                         <form action="abertura/cadastraChamado.php?id=<?php echo $id; ?>" method="post">
                             <div class="container-fluid">
-                                <div class="btn-group dropdown dropup">
-                                    <button class="btn btn-primary btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="margin-left: 870px; display: block" aria-expanded="false" data-toggle="dropdown">
+                                <div class="btn-group dropdown dropup" style="float: right">
+                                    <button class="btn btn-warning btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="display: block" aria-expanded="false" data-toggle="dropdown">
                                         <i class="fa fa-plus" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right" style="opacity: 1">
@@ -93,35 +93,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                     <!--===================================================-->
                     <div id="page-content">
                         <div class="row">
-
-                            <!--                            <div class="col-sm-4 text-center">
-                                                            <button class="btn">
-                                                                <a href="listagem/index.php">
-                                                                    <div class="panel panel-bordered panel-primary">
-                                                                        <div class="panel-heading">
-                                                                            <h3 class="panel-title text-center">Meus Chamados</h3>
-                                                                        </div>
-                                                                        <div class="panel-body text-center">
-                                                                            <span class="fa fa-user fa-2x" style="margin-right: 200px"></span>
-                                                                            <span class="text-right text-lg mar-no" style="font-size: 25px">15</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </a>
-                                                            </button>
-                                                        </div>-->
-
-                            <div class="col-lg-5 text-center" style="margin-left: 90px">
+                            <!--//*****************************************-->
+                            <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Chamados</h3>
+                                    </div>
                                     <div class="panel-body text-center clearfix">
                                         <div class="col-sm-4 pad-top">
                                             <div class="text-lg">
-                                                <p class="text-5x text-thin text-main">30</p>                                            
+                                                <p class="text-5x text-thin text-main">2</p>                                            
                                             </div>
-                                            <p class="text-sm text-bold text-uppercase">Chamados</p>
+                                            <p class="text-sm text-bold text-uppercase">Chamados Abertos</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
-                                            <p class="text-xs">Clique para visualizar seus chamados que já foram abertos.</p>
+                                            <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
+                                            <p class="text-xs">Clique para visualizar todos os seus chamados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
                                                     <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
@@ -141,20 +128,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 text-center">
+                            <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Aguardando Aprovação</h3>
+                                    </div>
                                     <div class="panel-body text-center clearfix">
                                         <div class="col-sm-4 pad-top">
                                             <div class="text-lg">
-                                                <p class="text-5x text-thin text-main">9</p>                                            
+                                                <p class="text-5x text-thin text-main">2</p>                                            
                                             </div>
-                                            <p class="text-sm text-bold text-uppercase">Aguardando Atendimento</p>
+                                            <p class="text-sm text-bold text-uppercase">Aguardando Aprovação</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <form action="/pages/cha/listagem/aguardandoAtendimento.php">
-                                                <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
+                                            <form action="/pages/cha/listagem/aguardandoAprovacao.php">
+                                                <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
                                             </form>
-                                            <p class="text-xs">Clique para visualizar seus chamados que estão aguardando atendimento.</p>
+                                            <p class="text-xs">Clique para visualizar seus chamados que estão Aguardando Aprovação.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
                                                     <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
@@ -174,8 +164,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 text-center" style="margin-left: 90px">
+                            <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Em Atendimento</h3>
+                                    </div>
                                     <div class="panel-body text-center clearfix">
                                         <div class="col-sm-4 pad-top">
                                             <div class="text-lg">
@@ -184,7 +177,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-sm text-bold text-uppercase">Em Atendimento</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão em atendimento.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -204,19 +197,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-lg-5 text-center">
+                            
+                            <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Cancelados</h3>
+                                    </div>
                                     <div class="panel-body text-center clearfix">
                                         <div class="col-sm-4 pad-top">
                                             <div class="text-lg">
-                                                <p class="text-5x text-thin text-main">5</p>                                            
+                                                <p class="text-5x text-thin text-main">2</p>                                            
                                             </div>
-                                            <p class="text-sm text-bold text-uppercase">Agendados</p>
+                                            <p class="text-sm text-bold text-uppercase">Cancelados</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
-                                            <p class="text-xs">Clique para visualizar seus chamados que estão agendados.</p>
+                                            <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
+                                            <p class="text-xs">Clique para visualizar seus chamados que foram cancelados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
                                                     <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
@@ -236,7 +232,106 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 text-center" style="margin-left: 90px">
+                            <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
+                                <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Agendados</h3>
+                                    </div>
+                                    <div class="panel-body text-center clearfix">
+                                        <div class="col-sm-4 pad-top">
+                                            <div class="text-lg">
+                                                <p class="text-5x text-thin text-main">2</p>                                            
+                                            </div>
+                                            <p class="text-sm text-bold text-uppercase">Agendados</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
+                                            <p class="text-xs">Clique para visualizar seus chamados que estão agendados.</p>
+                                            <ul class="list-unstyled text-center bord-top pad-top mar-no row">
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
+                                                    <p class="text-sm text-muted mar-no">Computador</p><!--Primaria-->
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">273</span>
+                                                    <p class="text-sm text-muted mar-no">Sesacrenet</p>
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">122</span>
+                                                    <p class="text-sm text-muted mar-no">Siag</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
+                                <div class="panel">
+                                    <div class="panel-heading" style="background-color: #00C5CD">
+                                        <h3 class="panel-title text-center" style="color: #FFF">Pausados</h3>
+                                    </div>
+                                    <div class="panel-body text-center clearfix">
+                                        <div class="col-sm-4 pad-top">
+                                            <div class="text-lg">
+                                                <p class="text-5x text-thin text-main">2</p>                                            
+                                            </div>
+                                            <p class="text-sm text-bold text-uppercase">Pausados</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <button class="btn mar-ver" style="background-color: #00C5CD; color: #FFF">Visualizar Chamados</button>
+                                            <p class="text-xs">Clique para visualizar seus chamados que estão pausados.</p>
+                                            <ul class="list-unstyled text-center bord-top pad-top mar-no row">
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
+                                                    <p class="text-sm text-muted mar-no">Computador</p><!--Primaria-->
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">273</span>
+                                                    <p class="text-sm text-muted mar-no">Sesacrenet</p>
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">122</span>
+                                                    <p class="text-sm text-muted mar-no">Siag</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-lg-4" style="margin-right: -3px">
+                                <div class="panel">
+                                    <div class="panel-body text-center clearfix">
+                                        <div class="col-sm-4 pad-top">
+                                            <div class="text-lg">
+                                                <p class="text-5x text-thin text-main">4</p>                                            
+                                            </div>
+                                            <p class="text-sm text-bold text-uppercase">Não Avaliados</p>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
+                                            <p class="text-xs">Clique para visualizar seus chamados que precisam ser avaliados.</p>
+                                            <ul class="list-unstyled text-center bord-top pad-top mar-no row">
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
+                                                    <p class="text-sm text-muted mar-no">Computador</p><!--Primaria-->
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">273</span>
+                                                    <p class="text-sm text-muted mar-no">Sesacrenet</p>
+                                                </li>
+                                                <li class="col-xs-4">
+                                                    <span class="text-lg text-semibold text-main">122</span>
+                                                    <p class="text-sm text-muted mar-no">Siag</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-lg-4" style="margin-right: -3px">
                                 <div class="panel">
                                     <div class="panel-body text-center clearfix">
                                         <div class="col-sm-4 pad-top">
@@ -267,69 +362,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                 </div>
                             </div>
 
-                            <div class="col-lg-5 text-center">
-                                <div class="panel">
-                                    <div class="panel-body text-center clearfix">
-                                        <div class="col-sm-4 pad-top">
-                                            <div class="text-lg">
-                                                <p class="text-5x text-thin text-main">13</p>                                            
-                                            </div>
-                                            <p class="text-sm text-bold text-uppercase">Cancelados</p>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <form action="/pages/cha/listagem/cancelado.php">
-                                                <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
-                                            </form>
-                                            <p class="text-xs">Clique para visualizar seus chamados que foram cancelados.</p>
-                                            <ul class="list-unstyled text-center bord-top pad-top mar-no row">
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
-                                                    <p class="text-sm text-muted mar-no">Computador</p><!--Primaria-->
-                                                </li>
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">273</span>
-                                                    <p class="text-sm text-muted mar-no">Sesacrenet</p>
-                                                </li>
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">122</span>
-                                                    <p class="text-sm text-muted mar-no">Siag</p>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-lg-5 text-center" style="margin-left: 90px">
-                                <div class="panel">
-                                    <div class="panel-body text-center clearfix">
-                                        <div class="col-sm-4 pad-top">
-                                            <div class="text-lg">
-                                                <p class="text-5x text-thin text-main">4</p>                                            
-                                            </div>
-                                            <p class="text-sm text-bold text-uppercase">Não Avaliados</p>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <button class="btn btn-primary mar-ver">Visualizar Chamados</button>
-                                            <p class="text-xs">Clique para visualizar seus chamados que precisam ser avaliados.</p>
-                                            <ul class="list-unstyled text-center bord-top pad-top mar-no row">
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">302</span> <!--idDoChamado-->
-                                                    <p class="text-sm text-muted mar-no">Computador</p><!--Primaria-->
-                                                </li>
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">273</span>
-                                                    <p class="text-sm text-muted mar-no">Sesacrenet</p>
-                                                </li>
-                                                <li class="col-xs-4">
-                                                    <span class="text-lg text-semibold text-main">122</span>
-                                                    <p class="text-sm text-muted mar-no">Siag</p>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
 
 
                             <!--===================================================-->

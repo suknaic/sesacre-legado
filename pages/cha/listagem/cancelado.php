@@ -55,32 +55,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
 
                     <!--Page content-->
                     <!--===================================================-->
+                    <div id="page-title">
+                        <h1 class="page-header text-overflow">Cancelados</h1>
+                        <p class="pad-btn text-sm">Lista de Chamados que que foram Cancelados</p>
+                    </div>
                     <div id="page-content">
-
                         <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Listagem Usuário</h3>
-                            </div>
                             <div class="panel-body">
-                                <div class="pad-btm form-inline form-inline dt-bootstrap no-footer">
+                                <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                                     <div class="row">
-                                        <div class="col-sm-6 table-toolbar-left">
-                                            <button id="demo-btn-addrow" class="btn btn-default">
-                                                <i class="fa fa-filter "></i>
-                                                Filtro Avançado
-                                            </button>
-                                            <button class="btn btn-default">
-                                                <i class="fa fa-print"></i>
-                                            </button>
-                                            <button class="btn btn-default">
-                                                <i class="fa fa-file-pdf-o"></i>
-                                            </button>
-                                            <button class="btn btn-default">
-                                                <i class="fa fa-file-excel-o"></i>
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <div class="col-sm-12">
+                                        <div class="col-sm-12">
+                                            <div id="tabela_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                                                 <input type="hidden" class="form-control" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION['idUser']; ?>">
                                                 <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                     <thead>
@@ -101,67 +86,68 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                                                 </table>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
-
-                    <!--MENU LATERAL-->
-                    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
-                    <!--END MENU LATERAL-->
-
-
-                    <!-- FOOTER -->
-                    <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
-                    <!-- END FOOTER -->
-
-
-                    <!-- SCROLL PAGE BUTTON -->
-                    <!--===================================================-->
-                    <button class="scroll-top btn">
-                        <i class="pci-chevron chevron-up"></i>
-                    </button>
-                    <!--===================================================-->
-
-
-
                 </div>
+
+
+                <!--MENU LATERAL-->
+                <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
+                <!--END MENU LATERAL-->
+
+
+                <!-- FOOTER -->
+                <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
+                <!-- END FOOTER -->
+
+
+                <!-- SCROLL PAGE BUTTON -->
                 <!--===================================================-->
-                <!-- END OF CONTAINER -->
+                <button class="scroll-top btn">
+                    <i class="pci-chevron chevron-up"></i>
+                </button>
+                <!--===================================================-->
+
+
 
             </div>
+            <!--===================================================-->
+            <!-- END OF CONTAINER -->
 
-            <!--jQuery [ REQUIRED ]-->
-            <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
-            <!--BootstrapJS [ REQUIRED ]-->
-            <script src="/assets/lib/template/js/bootstrap.min.js"></script>
-            <!--NiftyJS [ REQUIRED ]-->
-            <script src="/assets/lib/template/js/nifty.min.js"></script>
-            <!--DataTables [OPT]-->
+        </div>
 
-            <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
-            <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
-            <!-- DIALOG CONFIRM [OPT] -->
-            <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
-            <!--JAVASCRIP da pagina-->
-            <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
-            <script src="/assets/lib/sesacre/funcoes.js"></script>
-            <script src="/assets/js/cha/listagem/index.js"></script>
-            <!-- select2 -->
-            <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
-            <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-            <!-- END JAVASCRIPT -->
+    <!--jQuery [ REQUIRED ]-->
+    <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
+    <!--BootstrapJS [ REQUIRED ]-->
+    <script src="/assets/lib/template/js/bootstrap.min.js"></script>
+    <!--NiftyJS [ REQUIRED ]-->
+    <script src="/assets/lib/template/js/nifty.min.js"></script>
+    <!--DataTables [OPT]-->
 
-    </body>
+    <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+    <!-- DIALOG CONFIRM [OPT] -->
+    <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
+    <!--JAVASCRIP da pagina-->
+    <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
+    <script src="/assets/lib/sesacre/funcoes.js"></script>
+    <script src="/assets/js/cha/listagem/cancelado.js"></script>
+    <!-- select2 -->
+    <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+    <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+    <!-- END JAVASCRIPT -->
+
+</body>
 </html>
