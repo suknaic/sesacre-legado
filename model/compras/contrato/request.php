@@ -13,7 +13,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralMo
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Fonte.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
 $session = new Session('ajax');
 //var_dump($session->getIdUser());
 //return FALSE;
@@ -137,8 +137,8 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaPessoaFisica':
         try {
-            $modalidadeModel = new ModalidadeModel();
-            echo $modalidadeModel->retornaOptionsPessoaFisica();
+            $pessoaFisica = new pessoaFisica();
+            echo $pessoaFisica->retornaOptionPf(0);
             return;
             break;
         } catch (Error $e) {
