@@ -295,6 +295,7 @@ $(document).ready(function () {
         if (pf) {
             var cpf = $("#empresa option:selected").text().split('-');
             $("#cnpj").val(cpf[0]);
+            return false;
 
         } else {
             $.ajax({
