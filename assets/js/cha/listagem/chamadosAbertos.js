@@ -28,9 +28,8 @@ $(document).ready(function () {
             "dataType": "html",
             "method": "POST",
             "data": {
-                "acao": "listaChamadoTable1",
+                "acao": "listaChamadoTable",
                 "id_usuario": id_usuario,
-                "idStatus": '1'
 
             },
             "success":
@@ -404,8 +403,9 @@ $(document).ready(function () {
         e.preventDefault();
         //**********************
         var id = $(this).val();
-        $idChamado = id.split("-")[0];
-            top.location.href = "/pages/cha/informatica/abertura/editarChamado.php?id=" + $idChamado;
+        if (id.split("-")[0] == 1) {
+            top.location.href = "/pages/cha/listagem/editar.php?id=" + id;
+        }
 
     });
 
