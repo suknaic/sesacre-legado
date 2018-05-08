@@ -50,6 +50,39 @@ $(document).ready(function () {
         });
     });
     
-    
+    //********************************REMOVE ANEXO*******************************************
+    $('body').on('click', '.remove-anexo', function (e) {
+        
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+
+            var anexo = $this.closest(".form-group").data('anexo');
+
+            var mensagem = "Arquivo: " + anexo.nm_anexo;
+            bootbox.confirm({
+                title: 'Caixa de Confirmação',
+                message: 'Você tem Certeza que deseja continuar com a Exclusão do anexo do Relatório <span class="text-danger">' + mensagem + '</span>?',
+                buttons: {
+                    'cancel': {
+                        label: 'Não',
+                        className: 'btn-default btn-rounded'
+                    },
+                    'confirm': {
+                        label: 'Sim',
+                        className: 'btn-primary btn-rounded'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $this.closest('.form-group').remove();
+                    }
+                }
+            });
+        }
+    });
 });
 

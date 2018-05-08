@@ -894,7 +894,7 @@ class Contrato {
             $pdo = $conexao->connect();
             $rh = new DaoSesContrato();
             $filtro = "";
-//***************************************************************
+            //***************************************************************
             if ($todos == 0) {
                 $filter = array();
                 if ($dataInicio <> 0 && $dataFim <> 0) {
@@ -1412,7 +1412,32 @@ class Contrato {
             $retorno = "";
         }
     }
+    public function retornaOptionAnoSituacao($id = 0) {
+//        $retorno = "<option value='0'>Selecione uma pessoa</option>";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $cargo = new DaoSesContrato();
+            $result = $cargo->retornaAnoSituacao($pdo);
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    if ($id == $v['ano']) {
+                        $retorno .= "<option value = '" . $v['ano'] . "' selected>" . $v['ano'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['ano'] . "'>" . $v['ano'] . "</option>";
+                    }
+                }
+            }
 
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
     public function retornaListaTodasPessoas(PDO $pdo = null) {
         $retorno = "";
         try {

@@ -6,6 +6,7 @@ $(document).ready(function () {
         $('#codItemPesquisa').focus();
     });
 
+
     //Mascara do sistema
     $('.data').mask("99/99/9999")
 
@@ -87,7 +88,7 @@ $(document).ready(function () {
         });
     });
 
-    $("body").on("focus", "#valor_unitario", function () {
+    $("body").on("focus", "#vl", function () {
         $(this).priceFormat({
             centsLimit: 4,
             prefix: '',
@@ -156,8 +157,8 @@ $(document).ready(function () {
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
                         itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
                             'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(), 
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(),'pergunta':$("input[name='optradio']:checked").val()});
+                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
+                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
                     }
                 }
 
@@ -165,10 +166,10 @@ $(document).ready(function () {
                     if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
                             $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
                         itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
-                            'id': $("body").find("#id").val(), 'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"),
-                            'local': $("body").find("#prazo").val(), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+                            'id': $("body").find("#id").val(),
+                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
                             'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta':$("input[name='optradio']:checked").val()});
+                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
                     }
                 }
             });

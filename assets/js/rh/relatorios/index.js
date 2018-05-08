@@ -2,23 +2,23 @@
 //**********************************
 $(document).ready(function () {
     //******************************************************************************************    
-function listaEscolaridadeFormacaoCombo() {
-    $.ajax({
-        "url": "/model/rh/funcionario/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaEscolaridadeFormacaoOption"
-        },
-        "success": function (response) {
-            //  console.log(response);
-            $(".formacao").append(response);
-            $(".formacao").select2({
-                width: " 100%"
-            });
-        }
-    });
-}
-listaEscolaridadeFormacaoCombo();
+    function listaEscolaridadeFormacaoCombo() {
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaEscolaridadeFormacaoOption"
+            },
+            "success": function (response) {
+                //  console.log(response);
+                $(".formacao").append(response);
+                $(".formacao").select2({
+                    width: " 100%"
+                });
+            }
+        });
+    }
+    listaEscolaridadeFormacaoCombo();
 //******************************************************************************************
     function listaVinculoCombo() {
         $.ajax({
@@ -33,7 +33,7 @@ listaEscolaridadeFormacaoCombo();
                 //console.log(response);
                 $("#id_vinculo").append(response);
                 $("#id_vinculo").select2({
-                        width: " 100%"
+                    width: " 100%"
                 });
             }
         });
@@ -52,7 +52,7 @@ listaEscolaridadeFormacaoCombo();
                 // console.log(response);
                 $("#id_lotacao").append(response);
                 $("#id_lotacao").select2({
-                          width: " 100%"
+                    width: " 100%"
                 });
             }
         });
@@ -94,16 +94,16 @@ listaEscolaridadeFormacaoCombo();
         });
     }
     listaFuncaoCombo();
-//******************************************************************************************
-    //**********************
+    //******************************************************************************************
     func = new Funcoes();
+    //************************************
+    $("#tipo").select2({
+        width: " 100%"
+    });
     //************************************
     $(".data").mask("99/99/9999");
     //datapiker, plugins para data
-    $('.data').datepicker({
-        format: 'dd/mm/yyyy',
-        language: "pt-BR"
-    });
+    
     $(".data").datepicker().on('changeDate', function () {
         $(".data").datepicker('hide');
     });
@@ -200,7 +200,7 @@ listaEscolaridadeFormacaoCombo();
                 return false
         }
 
-        
+
     });
     $('body').on('keypress', '.formRelatorio', function (e) {
         var key = e.which;
@@ -212,18 +212,18 @@ listaEscolaridadeFormacaoCombo();
     );
     $('body').on('change', '#tipo', function (e) {
         var tipo = $("#tipo").val();
-        if(tipo == 0){
+        if (tipo == 0) {
             $(".quebres").hide();
             $(".competencia").hide();
         }
-        if(tipo>0 && tipo < 6){
+        if (tipo > 0 && tipo < 6) {
             $(".quebres").show();
             $(".competencia").hide();
         }
-        if(tipo == 6){
+        if (tipo == 6) {
             $(".quebres").hide();
             $(".competencia").show();
         }
-        
+
     });
 });

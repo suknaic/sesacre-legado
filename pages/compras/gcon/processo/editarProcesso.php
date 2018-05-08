@@ -72,7 +72,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                         <h4 class="modal-title">Anexo</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/model/compras/gcon/upload/uploadAnexo.php" method="POST" enctype="multipart/form-data" id="form-upload" name="form-upload">
+                                        <form method="POST" enctype="multipart/form-data" id="form-upload" name="form-upload">
                                             <input type="hidden" name="id_processo" id="id_processo" value="<?php echo $dados['id_processo']; ?>">
                                             <input type="file" name="file" id="file">
                                         </form>
@@ -218,21 +218,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                             </div>
 
                             <div class="panel">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tipos De Gastos</h3>
+                                </div>
                                 <div id="tipogasto">
-<!--                                    <div class="tipoGastoCampos row">
-                                        <div class="col-md-4 ">
-                                            <div class="panel-body">Tipo de Gasto: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                                <select class="form-control tipoGastoSelect" name="tipoGasto">
-                                                    <option value="0" selected>Selecione a categoria</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="panel-body">Valor do Tipo de Gasto: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                                <input class="form-control valorTipoGasto" type="text" name="val_tipo_gasto" id="val_tipo_gasto" placeholder="1.000.000,00">
-                                            </div>
-                                        </div>
-                                    </div>-->
+                                    
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-3">
@@ -243,18 +233,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Centrais De Atendimento</h3>
+                                </div>
                                 <div id="centrais">
-<!--                                    <div class="centrais row">
-                                        <div class="col-md-4">
-                                            <div class="panel-body">Centrais de Atendimento: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                                <div class="centraisCampos">
-                                                    <select class="form-control selectCentrais" name="centraisAtendimento" required id="centraisAtendimento">
-                                                        <option value="0" selected="">Selecione uma central</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>-->
+                                    
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-3">

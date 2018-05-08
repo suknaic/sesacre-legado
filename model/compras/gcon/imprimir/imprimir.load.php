@@ -9,9 +9,8 @@ if(!$session->vPCompras()){
 }else{
     $idProcesso  = $_REQUEST['idProcesso'];
     $processo = new Processo();
-    $processo->setId_Processo($idProcesso);
+    $processo->setIdProcesso($idProcesso);
     $dados = $processo->processoPdf();
-    var_dump($dados);
     $html = "
             <html>
                 <head>
@@ -44,15 +43,20 @@ if(!$session->vPCompras()){
                             <div class='titulo'><b>DETALHAMENTO DO PROCESSO</b></div><br/>
                             <div class='lado_E'><b>Ada / Cpr: </b></div><div class='lado_D'>".$dados['cd_ada_cpr']."</div>
                             <div class='lado_E'><b>Data de Cadastro: </b></div><div class='lado_D'>".Metodos::ConverteDataBR($dados["dt_processo"])."</div>";
-                if($dados['nm_tipo_gasto'] != null && $dados['nm_tipo_gasto'] != ""){ 
-                    $html.="<div class='lado_E'><b>Categoria: </b></div><div class='lado_D'>".$dados['nm_tipo_gasto']."</div>";
+                if($dados['tipos_gastos'] != null && $dados['tipos_gastos'] != ""){ 
+                    $html.="<div class='lado_E'><b>Tipos De Gastos: </b></div><div class='lado_D'>".$dados['tipos_gastos']."</div>";
                 } else {
-                    $html.="<div class='lado_E'><b>Categoria: </b></div><div class='lado_Vazio'></div>";
+                    $html.="<div class='lado_E'><b>Tipos De Gastos: </b></div><div class='lado_Vazio'></div>";
                 }
                 if ($dados['nm_objeto'] != null && $dados['nm_objeto'] != ""){
                     $html.="<div class='lado_E'><b>Objeto: </b></div><div class='lado_D'>".$dados['nm_objeto']."</div>";
                 } else {
                     $html.="<div class='lado_E'><b>Objeto: </b></div><div class='lado_Vazio'></div>"; 
+                }
+                if($dados['centrais'] != null && $dados['centrais'] != ""){ 
+                    $html.="<div class='lado_E'><b>Centrais De Atendimento: </b></div><div class='lado_D'>".$dados['centrais']."</div>";
+                } else {
+                    $html.="<div class='lado_E'><b>Centrais: </b></div><div class='lado_Vazio'></div>";
                 }
                     $html.="<div class='lado_E'><b>Valor Total Estimado: </b></div><div class='lado_D'>R$ ".Metodos::ConverteValorBr($dados["vl_total_est"], 2)." </div>";
                 if ($dados['nm_cidade'] != null && $dados['nm_cidade'] != ""){
@@ -98,7 +102,7 @@ $html.=                    "<br/><br/>
                                     </tr>";
 // ========================================== Obtendo Hitórico do Processo ===========================================
     
-    $processo->setId_Processo($idProcesso);
+    $processo->setIdProcesso($idProcesso);
     $historico = $processo->hitoricoProcessoPdf();
 
 // ===================================================================================================================

@@ -889,7 +889,29 @@ class DaoSesContrato extends SesContrato {
             return $retorno;
         }
     }
+    //*********************************************************
+        function retornaAnoSituacao(PDO $pdo = null) {
 
+        $retorno = FALSE;
+
+        $sql = "select distinct to_char(dt_inicio, 'YYYY')ano from ses_contrato_historico 
+                where id_contrato_situacao is not null 
+                order by ano desc";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return $retorno;
+            }
+            return $retorno;
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            return $retorno;
+        }
+    }
+//******************************************************
     function retornaPessoaFuncoes(PDO $pdo = null) {
         $retorno = false;
 

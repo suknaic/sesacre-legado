@@ -75,8 +75,7 @@ class DaoDiaDiaria extends DiaDiaria {
                             . "id_pessoa_solicitante = :id_pessoa_solicitante, "
                             . "fl_retorno = :fl_retorno, "
                             . "id_pedido = :id_pedido, "
-                            . "id_diaria_pai = :id_diaria_pai, "
-                            . "id_relatorio = :id_relatorio "
+                            . "id_diaria_pai = :id_diaria_pai "
                         . " where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
@@ -94,7 +93,6 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
-                $stmt->bindValue(":id_relatorio", $this->getIdRelatorio(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
                 
                 $stmt->execute();
@@ -229,16 +227,17 @@ class DaoDiaDiaria extends DiaDiaria {
             if (!empty($pdo)) {
                 $sql = "SELECT diaria.id_diaria,
                                 diaria.id_relatorio,
-                                proponente.nm_pessoa AS nm_proponente,
-                                proposto.nm_pessoa AS nm_proposto,
-                                lot.nm_lotacao AS nm_lotacao_proposto,
-                                fun.nm_funcao AS nm_funcao_proposto,
+                                destino.id_diaria_destino,
+                                (select nm_pessoa from ses_pessoa proponente where proponente.id_pessoa = diaria.id_pessoa_proponente) as nm_proponente,
+                                (select nm_pessoa from ses_pessoa proposto where proposto.id_pessoa = diaria.id_pessoa_proposto) as nm_proposto,
+                                (select nm_lotacao from ses_lotacao lt_proposto where lt_proposto.id_lotacao = id_lotacao_proposto) as nm_lotacao_proposto,
+                                (select nm_funcao from ses_funcao fn_proposto where fn_proposto.id_funcao = id_funcao_proposto) as nm_funcao_proposto,
                                 cdi.descricao || ' até ' || cdf.descricao AS origem_destino,
                                 destino.qt_diaria_destino,
                                 destino.vl_diaria_destino, 
                                 round(destino.qt_diaria_destino * destino.vl_diaria_destino,2) as valor
                          FROM dia_diaria diaria
-                         LEFT JOIN dia_diaria_destino destino ON destino.id_diaria = diaria.id_diaria
+                         JOIN dia_diaria_destino destino ON destino.id_diaria = diaria.id_diaria
                          LEFT JOIN
                            (SELECT cidade.id_cidade,
                                    pais.nm_pais || '(' || estado.nm_sigla || ')' || cidade.nm_cidade AS descricao
@@ -254,13 +253,7 @@ class DaoDiaDiaria extends DiaDiaria {
                                  ses_estado estado,
                                  ses_pais pais
                             WHERE cidade.id_estado = estado.id_estado
-                              AND estado.id_pais = pais.id_pais) AS cdf ON cdf.id_cidade = destino.id_cidade_fim
-                         LEFT JOIN ses_pessoa proposto ON diaria.id_pessoa_proposto = proposto.id_pessoa
-                         LEFT JOIN ses_contrato cnt ON cnt.id_pessoa_fisica = diaria.id_pessoa_proposto
-                         LEFT JOIN ses_contrato_lotacao cl ON cl.id_contrato = cnt.id_contrato
-                         LEFT JOIN ses_funcao fun ON fun.id_funcao = cl.id_funcao
-                         LEFT JOIN ses_lotacao lot ON lot.id_lotacao = cl.id_lotacao
-                         LEFT JOIN ses_pessoa proponente ON diaria.id_pessoa_proponente = proponente.id_pessoa" . $this->montaFiltro() . " order by diaria.id_diaria desc";
+                              AND estado.id_pais = pais.id_pais) AS cdf ON cdf.id_cidade = destino.id_cidade_fim " . $this->montaFiltro() . " order by diaria.id_diaria desc";
                         
                 $stmt = $pdo->prepare($sql);
                

@@ -93,7 +93,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-        case 'pesquisaGraficoFuncionario':
+    case 'pesquisaGraficoFuncionario':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $todos = $dados['todos'];
@@ -104,6 +104,17 @@ switch ($_REQUEST['acao']) {
             //**************************************
             $banco = new Contrato();
             echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 3, $idVinculo, $idLotacao);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+    case 'listaAnoSituacaoOption':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $prog = new Contrato();
+            echo $prog->retornaOptionAnoSituacao($id);
             return;
             break;
         } catch (Exception $e) {

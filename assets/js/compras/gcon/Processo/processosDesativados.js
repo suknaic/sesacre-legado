@@ -31,10 +31,6 @@ $(document).ready(function () {
     //chamando função para listar processos
     listarProcessos(0);
     
-    $('body').on('click', '.btn-ativar', function (e) {
-        $("#ada").val($(this).val());
-    });
-    
     $('body').on("click", ".btn-ativar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -43,7 +39,8 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var processo = {
-                ada: $("#ada").val()
+                idProcesso : $(this).val(),
+                ada : $(this).attr('ada')
             };
             $.ajax({
                 "url": "/model/compras/gcon/processo/request.php",
