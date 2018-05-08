@@ -291,55 +291,9 @@ $(document).ready(function () {
 
     //carrega cnpj
     $("body").on("change", "#empresa", function () {
-        var pf = $("#cont_pf").is(":checked");
-        if (pf) {
-            var cpf = $("#empresa option:selected").text().split('-');
-            $("#cnpj").val(cpf[0]);
+            var x = $("#empresa option:selected").text().split('-');
+            $("#cnpj").val(x[0]);
             return false;
-
-        } else {
-            $.ajax({
-                "url": "/model/compras/contrato/request.php",
-                "dataType": 'html',
-                "data": {
-                    "acao": "retornaCnpj",
-                    "id": $("#empresa option:selected").val()
-                },
-                "success": function (response) {
-
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        return false;
-                    }
-
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        $("#cnpj").val(response.msg);
-                        return false;
-                    } else {
-                        console.log('Ultimo else');
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    }
-                }
-            });
-        }
-
     });
 
     //busca produtos
