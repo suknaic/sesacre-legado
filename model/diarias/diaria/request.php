@@ -174,21 +174,6 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-    
-    case 'excluirDiariaDestinoIndividual':
-        
-        try {
-            $filtro = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
-            $prog = new Diaria();
-            $prog->setIdDiariaDestino((int)$filtro);
-            echo $prog->excluirDiariaDestinoIndividual();
-            return;
-            break;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-            break;
-        }
 
     case 'retornaDiaria':
         try {
