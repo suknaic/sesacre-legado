@@ -455,7 +455,7 @@ class DaoSesContrato extends SesContrato {
                     inner join ses_lotacao l on cl.id_lotacao = l.id_lotacao
                     inner join ses_cargo cg on c.id_cargo = cg.id_cargo
                     left join ses_funcao f on cl.id_funcao = f.id_funcao
-                where c.st_ativo = '1'
+                where c.st_ativo = '1' and P.st_ativo = '1' and PF.st_ativo = '1'
                 $filtro
                 $agrupar
                 $ordem";

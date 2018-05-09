@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function listaLotacaoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaLotacaoOption"
@@ -24,7 +24,7 @@ $(document).ready(function () {
         var id_usuario = $("#id_usuario").val();
 
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": "html",
             "method": "POST",
             "data": {
@@ -218,7 +218,7 @@ $(document).ready(function () {
         });
     });
 
-       $('body').on('click', '.btn-editar', function (e) {
+    $('body').on('click', '.btn-editar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
@@ -398,194 +398,6 @@ $(document).ready(function () {
             $this.prop("disabled", false);
         }
     });
-    
-    $('body').on('click', '.btn-edit', function (e) {
-        e.preventDefault();
-        //**********************
-        var id = $(this).val();
-        if (id.split("-")[0] == 1) {
-            top.location.href = "/pages/cha/listagem/editar.php?id=" + id;
-        }
-
-    });
-
-    $('body').on('click', '.btn-remover', function (e) {
-        var $this = $(this);
-        var id = $this.val();
-        var item = $this.closest('td').find('.btn-edit').attr("nome");
-        var idChamado = id;
-
-        bootbox.confirm({
-            title: 'Caixa de Confirmação',
-            message: 'Você tem Certeza que deseja remover:   <span class="text-danger">' + item + '</span>?',
-            buttons: {
-                'cancel': {
-                    label: 'Não',
-                    className: 'btn-default btn-rounded'
-                },
-                'confirm': {
-                    label: 'Sim',
-                    className: 'btn-primary btn-rounded'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    var Dados = {
-                        idChamado: idChamado
-
-                    }
-
-                    if (id == "") {
-                        func.modalAlert(func.msgPreencherCampos);
-                        $this.prop("disabled", false);
-                        return false;
-                    }
-
-                    $.ajax({
-                        "url": "/model/cha/abertura/request.php",
-                        "dataType": "html",
-                        "method": "POST",
-                        "data": {
-                            "acao": "removerFormSistema",
-                            "idChamado": Dados
-                        },
-                        "success": function (response) {
-                            console.log(response);
-                            if (response.trim() == "SessaoExpirada") {
-                                func.modalAlert(func.msgSemPermissao);
-                                return false;
-                            }
-
-                            try {
-                                response = JSON.parse(response);
-                            } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                //console.log("Parse JSON");
-                                //console.log(response);
-                                return false;
-                            }
-
-                            if (response.tipoMsg === "Erro") {
-                                if (response.tipoExibicao === "console") {
-                                    //console.log('Console Mensagem');
-                                    //console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                } else if (response.tipoExibicao === "alert") {
-                                    func.modalAlert(response.msg);
-                                    return false;
-                                }
-                            } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
-                                func.fechaModalReload();
-                                return false;
-                            } else {
-                                //console.log('Ultimo else');
-                                //console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
-                                return false;
-                            }
-                        },
-                        "error": function (response) {
-                            //console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        }
-                    });
-                }
-            }
-        });
-    });
-//******************************************************************************************
-//    $('body').on('click', '.btn-remover', function (e) {
-//
-//        var $this = $(this);
-//        var id = $this.val();
-//        var chamado = $this.closest('td').find('.btn-edit').attr("nome");
-//
-//        bootbox.confirm({
-//            title: 'Caixa de Confirmação',
-//            message: 'Você tem Certeza que deseja continuar com a Exclusão do Chamado <span class="text-danger">' + id + '</span>?',
-//            buttons: {
-//                'cancel': {
-//                    label: 'Não',
-//                    className: 'btn-default btn-rounded'
-//                },
-//                'confirm': {
-//                    label: 'Sim',
-//                    className: 'btn-primary btn-rounded'
-//                }
-//            },
-//            callback: function (result) {
-//                if (result) {
-//                    var Dados = {
-//                        id: id
-//                    }
-//
-//                    if (id == "") {
-//                        func.modalAlert(func.msgPreencherCampos);
-//                        $this.prop("disabled", false);
-//                        return false;
-//                    }
-//
-//                    $.ajax({
-//                        "url": "/model/cha/abertura/request.php",
-//                        "dataType": "html",
-//                        "data": {
-//                            "acao": "removerFormSistemas",
-//                            "dados": Dados
-//                        },
-//                        "success": function (response) {
-//                            if (response.trim() == "SessaoExpirada") {
-//                                func.modalAlert(func.msgSemPermissao);
-//                                return false;
-//                            }
-//
-//                            try {
-//                                response = JSON.parse(response);
-//                            } catch (e) {
-//                                func.modalAlert(func.msgErroPadrao);
-//                                console.log("Parse JSON");
-//                                console.log(response);
-//                                return false;
-//                            }
-//
-//                            if (response.tipoMsg === "Erro") {
-//                                if (response.tipoExibicao === "console") {
-//                                    //console.log('Console Mensagem');
-//                                    //console.log(response);
-//                                    func.modalAlert(func.msgErroPadrao);
-//                                    return false;
-//                                } else if (response.tipoExibicao === "alert") {
-//                                    func.modalAlert(response.msg);
-//                                    return false;
-//                                }
-//                            } else if (response.tipoMsg === "ok") {
-//                                func.modalAlert(response.msg, 'primary');
-////                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-////                                    top.location.href = "/pages/rh/funcionario/index.php";
-////                                });
-//                                return false;
-//                            } else {
-//                                //console.log('Ultimo else');
-//                                //console.log(response);
-//                                func.modalAlert(func.msgErroPadrao);
-//                                return false;
-//                            }
-//                        },
-//                        "error": function (response) {
-//                            //console.log(response);
-//                            func.modalAlert(func.msgErroPadrao);
-//                            return false;
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//
-//    });
-
-
 
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();

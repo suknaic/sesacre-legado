@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function listaLotacaoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaLotacaoOption"
@@ -24,13 +24,13 @@ $(document).ready(function () {
         var id_usuario = $("#id_usuario").val();
 
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": "html",
             "method": "POST",
             "data": {
-                "acao": "listaChamadoTable2",
+                "acao": "listaChamadoTable1",
                 "id_usuario": id_usuario,
-                "idStatus": '2'
+                "idStatus": '1'
 
             },
             "success":
@@ -82,7 +82,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/model/cha/abertura/request.php",
+                "url": "/model/cha/informatica/chamado/request.php",
                 "dataType": "html",
                 "data": {
                     "acao": "salvarChamado",
@@ -170,7 +170,7 @@ $(document).ready(function () {
                         return false;
                     }
                     $.ajax({
-                        "url": "/model/cha/abertura/request.php",
+                        "url": "/model/cha/informatica/chamado/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "cancela",
@@ -219,7 +219,7 @@ $(document).ready(function () {
         });
     });
 
-       $('body').on('click', '.btn-editar', function (e) {
+    $('body').on('click', '.btn-editar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
@@ -343,7 +343,7 @@ $(document).ready(function () {
 //console.log(DadosFormSistema);
 
             $.ajax({
-                "url": "/model/cha/abertura/request.php",
+                "url": "/model/cha/informatica/chamado/request.php",
                 "dataType": 'html',
                 'method': 'POST',
                 "data": {
@@ -399,14 +399,13 @@ $(document).ready(function () {
             $this.prop("disabled", false);
         }
     });
-    
+
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();
         //**********************
         var id = $(this).val();
-        if (id.split("-")[0] == 1) {
-            top.location.href = "/pages/cha/listagem/editar.php?id=" + id;
-        }
+        $idChamado = id.split("-")[0];
+        top.location.href = "/pages/cha/informatica/edita/edita.php?id=" + $idChamado;
 
     });
 
@@ -443,7 +442,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/cha/abertura/request.php",
+                        "url": "/model/cha/informatica/chamado/request.php",
                         "dataType": "html",
                         "method": "POST",
                         "data": {

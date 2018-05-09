@@ -416,7 +416,7 @@ $(document).ready(function () {
         let dataSet = []
         let dataLabels = []
         let valores = []
-        let color = ['#5e63f2', '#69efd7', '#FFC233', '#76d343']
+        let color = ['#6312aa', '#003fff', '#FFC233', '#76d343']
         var $this = $(this);
 
         $.ajax({
@@ -498,7 +498,7 @@ $(document).ready(function () {
         let dataSet = []
         let dataLabels = []
         let valores = []
-        let color = ['#5e63f2', '#69efd7', '#FFC233', '#76d343', '#059BFF', '#db1818']
+        let color = ['#ce4848', '#00ff1d', '#FFC233', '#df22f4', '#ff7200']
 
         var $this = $(this);
 

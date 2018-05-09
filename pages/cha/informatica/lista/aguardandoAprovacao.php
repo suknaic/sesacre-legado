@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -56,8 +56,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cancelados</h1>
-                        <p class="pad-btn text-sm">Lista de Chamados que que foram Cancelados</p>
+                        <h1 class="page-header text-overflow">Aguardando Aprovação</h1>
+                        <p class="pad-btn text-sm">Lista de Chamados que estão com os Gerentes das Divisões aguardando aprovação para que sejam repassados para os Técnicos</p>
                     </div>
                     <div id="page-content">
                         <div class="panel">
@@ -143,7 +143,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
     <!--JAVASCRIP da pagina-->
     <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
     <script src="/assets/lib/sesacre/funcoes.js"></script>
-    <script src="/assets/js/cha/listagem/cancelado.js"></script>
+    <script src="/assets/js/cha/informatica/lista/aguardandoAprovacao.js"></script>
     <!-- select2 -->
     <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
