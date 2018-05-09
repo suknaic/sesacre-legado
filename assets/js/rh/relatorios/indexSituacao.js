@@ -119,7 +119,11 @@ $(document).ready(function () {
             func.modalAlert(" É necessário informar o tipo de Relatório");
             return false;
         }
-//************************************************************************************************
+        if (ano == 0) {
+            func.modalAlert(" É necessário informar o Ano para o Relatório");
+            return false;
+        }
+    //************************************************************************************************
         if (ano == 0 && mes == 0 && vinculo == 0 && lotacao == 0 && situacao == 0) {
         //alert("É necessário informar no mínimo um filtro para imprimir");
             func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
@@ -129,8 +133,8 @@ $(document).ready(function () {
             func.modalAlert("Selecione o Ano");
             return false;
         }
-
-//********************************************************************
+     
+    //********************************************************************
 
         var pesquisa = vinculo + "-" + lotacao + "-" + situacao + "-" + mes + "-" + ano;
         var w = window.btoa(pesquisa);
@@ -140,9 +144,6 @@ $(document).ready(function () {
                 break;
             case '2':
                 window.open("/pages/rh/relatorios/relatorioSituacaoPdf.php?pesquisa=" + w, "_blank");
-                break;
-            case '3':
-                window.open("/pages/rh/relatorios/relatorioVinculoSitPdf.php?pesquisa=" + w, "_blank");
                 break;
             default:
                 return false

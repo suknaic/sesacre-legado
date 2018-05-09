@@ -769,9 +769,9 @@ class pessoaFisica {
             } else {
                 foreach ($result as $v) {
                     if ($v['id_pessoa_juridica'] == $id) {
-                        $retorno .= "<option selected value = '" . $v['id_pessoa_juridica'] . "'>" . $v['nm_pessoa'] . " / " . $v['nm_fantasia'] . "</option>";
+                        $retorno .= "<option selected value = '" . $v['id_pessoa_juridica'] . "'>" . $v['nm_pessoa'] . "</option>";
                     } else {
-                        $retorno .= "<option value = '" . $v['id_pessoa_juridica'] . "'>" . $v['nm_pessoa'] . " / " . $v['nm_fantasia'] . "</option>";
+                        $retorno .= "<option value = '" . $v['id_pessoa_juridica'] . "'>" . $v['nm_pessoa'] . "</option>";
                     }
                 }
             }
