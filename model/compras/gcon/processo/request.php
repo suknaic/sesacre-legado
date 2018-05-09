@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/objeto/Objeto.clas
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/situacao/Situacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/modalidade/Modalidade.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/unidade/Unidade.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/anotacao/Anotacao.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/lotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Metodos.class.php";
 
@@ -269,45 +270,14 @@ switch ($_REQUEST['acao']) {
             return;
         }
 
-    case "carrega_anexos":
-        try {
-
-            $id_processo = $_REQUEST['id_processo'];
-
-            $anexo = new Processo();
-            $anexo->setIdProcesso((int) $id_processo);
-
-            echo $anexo->carregarAnexos();
-            return;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-        }
-
-    case "excluir_anexos":
-        try {
-            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-            $class = new Processo();
-            $class->setIdAnexo($dados['id_anexo']);
-            $class->setIdProcesso($dados['id_processo']);
-            $class->setNomeAnexo($dados['anexo']);
-
-            echo $class->excluirAnexo();
-            return;
-        } catch (Exception $ex) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-        }
-
     case "listar_anotacoes":
         try {
-            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-            $class = new Processo();
-            $class->setIdProcesso($dados['id_processo']);
-
-            echo $class->retornarAnotacoes();
+            $dados = filter_input(INPUT_POST, 'idProcesso', FILTER_DEFAULT);
+            
+            $anotacao = new Anotacao();
+            $anotacao->setIdProcesso((int)$dados);
+            
+            echo $anotacao->retornarAnotacoes();
             return;
         } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -318,11 +288,11 @@ switch ($_REQUEST['acao']) {
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-            $class = new Processo();
-            $class->setIdProcesso($dados['id_processo']);
-            $class->setAnotacoes($dados['anotacao']);
+            $anotacao = new Anotacao();
+            $anotacao->setIdProcesso($dados['id_processo']);
+            $anotacao->setAnotacao($dados['anotacao']);
 
-            echo $class->adicionarAnotacao();
+            echo $anotacao->cadastrarAnotacao();
             return;
         } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());

@@ -72,8 +72,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                         <h4 class="modal-title">Anexo</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/model/compras/gcon/upload/uploadAnexo.php" method="POST" enctype="multipart/form-data" id="form-upload" name="form-upload">
+                                        <form id="form-upload" name="form-upload">
                                             <input type="hidden" name="id_processo" id="id_processo">
+                                            <input type="hidden" name="acao" id="acao" value="inserir_anexo">
                                             <input type="file" name="file" id="file">
                                         </form>
                                     </div>
