@@ -9,6 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/processo/Processo.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/liberacaoCentral/FinCentralLiberacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/CentralResponsavel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 
 $session = new Session('ajax');
 // header('Content-type: application/json');
@@ -106,6 +107,20 @@ switch ($_REQUEST['acao']) {
             $classe = new Pedido();
 
             echo $classe->listaSituacaoQuantidadeJSON();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+    case 'listaQuantidadeOrdem':
+        try {
+
+            $classe = new FinOrdemModel();
+
+            echo $classe->listaTipoQuantidadeJSON();
             return;
             break;
         } catch (Exception $e) {
