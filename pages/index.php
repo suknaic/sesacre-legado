@@ -143,59 +143,59 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                             </div>
                             <div class="col-md-3"></div>
                         </div> -->
-                       <!--
-                        <div class="row">
-                            <div class="col-md-3"></div>
-                            <div class="col-md-6">
-                                <div class="panel">
-                                    <div class="panel" style="margin-bottom: 0px;">                                                                                                                       
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead>
+                        <!--
+                         <div class="row">
+                             <div class="col-md-3"></div>
+                             <div class="col-md-6">
+                                 <div class="panel">
+                                     <div class="panel" style="margin-bottom: 0px;">                                                                                                                       
+                                         <div class="table-responsive">
+                                             <table class="table">
+                                                 <thead>
+                                                     <tr>
+                                                         <th class="text-center">#</th>
+                                                         <th>Mensagem</th>
+                                                         <th>Data</th>
+                                                         <th>Tipo</th>
+                                                     </tr>
+                                                 </thead>
+                                                 <tbody>                                                  
+                                                     <tr>
+                                                         <td class="text-center"><i class="fa fa-envelope"></i></td>
+                                                         <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
+                                                         <td><span class="text-muted">30 de Fevereiro 2018</span></td>
+                                                         <td><span class="label label-info">Sistema</span></td>
+                                                     </tr>
+                                                     <tr>
+                                                         <td class="text-center"><i class="fa fa-envelope"></i></td>
+                                                         <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
+                                                         <td><span class="text-muted">30 de Fevereiro 2018</span></td>
+                                                         <td><span class="label label-warning">Sistema</span></td>
+                                                     </tr>
+                                                     <tr>
+                                                         <td class="text-center"><i class="fa fa-envelope"></i></td>
+                                                         <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
+                                                         <td><span class="text-muted">30 de Fevereiro 2018</span></td>
+                                                         <td><span class="label label-danger">Sistema</span></td>
+                                                     </tr>
                                                     <tr>
-                                                        <th class="text-center">#</th>
-                                                        <th>Mensagem</th>
-                                                        <th>Data</th>
-                                                        <th>Tipo</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>                                                  
-                                                    <tr>
-                                                        <td class="text-center"><i class="fa fa-envelope"></i></td>
-                                                        <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
-                                                        <td><span class="text-muted">30 de Fevereiro 2018</span></td>
-                                                        <td><span class="label label-info">Sistema</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><i class="fa fa-envelope"></i></td>
-                                                        <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
-                                                        <td><span class="text-muted">30 de Fevereiro 2018</span></td>
-                                                        <td><span class="label label-warning">Sistema</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-center"><i class="fa fa-envelope"></i></td>
-                                                        <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
-                                                        <td><span class="text-muted">30 de Fevereiro 2018</span></td>
-                                                        <td><span class="label label-danger">Sistema</span></td>
-                                                    </tr>
-                                                   <tr>
-                                                        <td class="text-center"><i class="fa fa-envelope"></i></td>
-                                                        <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
-                                                        <td><span class="text-muted">30 de Fevereiro 2018</span></td>
-                                                        <td><span class="label label-success">Sistema</span></td>
-                                                    </tr>                                                                                                                                                       
-                                                </tbody>
-                                            </table>
-                                        </div>                                                                               
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3"></div>
-
-                        </div> -->
+                                                         <td class="text-center"><i class="fa fa-envelope"></i></td>
+                                                         <td><a href="#" class="btn-link">Mudanças na Interface</a></td>
+                                                         <td><span class="text-muted">30 de Fevereiro 2018</span></td>
+                                                         <td><span class="label label-success">Sistema</span></td>
+                                                     </tr>                                                                                                                                                       
+                                                 </tbody>
+                                             </table>
+                                         </div>                                                                               
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-md-3"></div>
+ 
+                         </div> -->
                         <div class="conteudo" style="margin-left: 10px;margin-top: 10px;margin-right: 10px;">
                             <div class="row aniversario">
-                                
+
                             </div>
                             <!-- Dasboard chamados -->
                             <div class="row">
@@ -326,7 +326,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                     <div style="width: 100%; padding: 10px 17px; display: inline-block; background: #fff; border: 1px solid #E6E9ED; -webkit-column-break-inside:avoid;-moz-column-break-inside:avoid;column-break-inside:avoid;opacity:1;transition:all .2s ease;">
                                         <div>
-                                          <h2>Pedidos de Necessidade</h2>
+                                            <h3>Pedidos de Necessidade</h3>
                                         </div>
                                         <div style="display: block;">
                                             <table id="table_pedido_info" style="width:100%">
@@ -359,7 +359,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                 <div class="col-md-4 col-sm-4 col-xs-12">
                                     <div style="width: 100%; padding: 10px 17px; display: inline-block; background: #fff; border: 1px solid #E6E9ED; -webkit-column-break-inside:avoid;-moz-column-break-inside:avoid;column-break-inside:avoid;opacity:1;transition:all .2s ease;">
                                         <div>
-                                          <h2>Ordens Emitidas</h2>
+                                            <h3>Ordens Emitidas</h3>
                                         </div>
                                         <div style="display: block;">
                                             <table id="table_tipo_ordem_info" style="width:100%">
@@ -376,20 +376,52 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                                                 <p class="">Quantidade</p>
                                                             </div>
                                                         </th>
-                                                    </tr>                                        
+                                                    </tr>   
                                                     <tr>
                                                         <td style="width:37%;">                                            
                                                             <canvas id="donutChartTipoOrdem" height="140" width="140"></canvas>
                                                         </td>
                                                         <td class="info_resultado_tipo_ordem">                                      
                                                         </td>
+                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-4 col-xs-12">                                
+                                <div class="col-md-4 col-sm-4 col-xs-12">       
+                                    <div style="width: 100%; padding: 10px 17px; display: inline-block; background: #fff; border: 1px solid #E6E9ED; -webkit-column-break-inside:avoid;-moz-column-break-inside:avoid;column-break-inside:avoid;opacity:1;transition:all .2s ease;">
+                                        <div>
+                                            <h3>Funcionários</h3>
+                                        </div>
+                                        <div style="display: block;">
+                                            <table id="table_tipo_vinculo_info" style="width:100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <th style="width:37%;">
+                                                            <p>Vínculos</p>
+                                                        </th>
+                                                        <th>
+                                                            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                                                <p class="">Tipo de Vínculo</p>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                                                <p class="">Quantidade</p>
+                                                            </div>
+                                                        </th>
+                                                    </tr>                                        
+                                                    <tr>
+                                                        <td style="width:37%;">                                            
+                                                            <canvas id="donutChartVinculo" height="140" width="140"></canvas>
+                                                        </td>
+                                                        <td class="info_resultado_vinculo">                                      
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>                                                                                                                          
                             </div>
                         </div>
