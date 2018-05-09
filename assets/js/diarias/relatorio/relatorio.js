@@ -27,6 +27,7 @@ function carregaTabela(nomeTabela, response, colunaEscondida, destroi = false) {
 }
 
 function limpaFormDestino(){
+    $("#id_relatorio_destino").removeData('destino');
     $("#id_relatorio_destino").val(0);
     $("#ds_cidade_inicio").val('');
     $("#id_cidade_inicio").val(0);
@@ -64,6 +65,11 @@ function editaLinhaDestino(dadosLinha){
     //AQUI IRÁ RECEBER OS DADOS DA LINHA QUE DESEJA EDITAR E ATRIBUIRÁ AO FORMULÁRIO DA PÁGINA
     for( var dado in dadosLinha){
         var atributo_id = "#" + dado;
+        
+        if (dado === 'id_transporte_tipo') {
+            var atrAux = atributo_id + '_default';
+            $(atrAux).val(dadosLinha[dado]);
+        }
         $(atributo_id).val(dadosLinha[dado]);
     };
     $('html, body').animate({
@@ -156,6 +162,23 @@ function retornaItinerario(){
     
 }
 
+function listaTransporteTipoCombo(idTransporte,idTipo) {
+    var PARAMETROS = {
+        transporte: idTransporte,
+        tipo: idTipo
+    };
+    $.ajax({
+        "url": "/model/diarias/relatorio/request.php",
+        "dataType": 'html',
+        "data": {
+            acao: "listaTransporteTipoOption",
+            dados: PARAMETROS,
+        },
+        "success": function (response) {
+            $("#id_transporte_tipo").html(response);
+        }
+    });
+}
 
 $(document).ready(function () {
     func = new Funcoes();
@@ -175,6 +198,22 @@ $(document).ready(function () {
     //Essa informação será usada para complementar a informação do anexo
     $("#idRelatorio").val($("#id_relatorio").val());
     
+    if ($("#idRelatorio").val() > 0) {
+        $("#relViagem").show();
+    } else {
+        $("#relViagem").hide();
+    }
+    
+    $('body').on('change','#id_transporte',function(e){
+        e.preventDefault();
+        var id = $("#id_transporte option:selected").val();
+        var tipo = $("#id_transporte_tipo_default").val();
+        if (id > 0) {
+            listaTransporteTipoCombo(id, tipo);
+        } else {
+            $("#id_transporte_tipo").html('<option value="0">Selecione o tipo do transporte</option>');
+        }
+    });
     
     //Preenche o form para edição do itinerario
     $('#destinos').on('click', '.edit-destino', function(e){
@@ -353,66 +392,4 @@ $(document).ready(function () {
         }
     });
     
-    $('body').on('click','.ver-anexo', function(e){
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-
-        } else {
-            var $this = $(this);
-
-            var anexo = $this.closest(".form-group").data('anexo');
-            $.ajax({
-                "url": "/model/diarias/relatorio/request.php",
-                "dataType": "html",
-                "data": {
-                    "acao": "abreArquivo",
-                    "id": anexo.id_relatorio_anexo
-                },
-                "success": function (response) {
-                    console.log(response);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
-                        return false;
-                    }
-
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'primary');
-                        //Reload após deletar o registro
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
-                    } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    }
-                    },
-                    "error": function (response) {
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    }
-                });
-        }
-    });
 });

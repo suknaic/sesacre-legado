@@ -1,10 +1,11 @@
-<?php
+<?php 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaRelatorio.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaRelatorioDestino.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaRelatorioAnexo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporte.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporteTipo.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporteTemTipo.class.php";
 
 class Relatorio {
     //DIA_RELATORIO
@@ -212,11 +213,11 @@ class Relatorio {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            $daoDiaTransporteTipo = new DaoDiaTransporteTipo();
-            $daoDiaTransporteTipo->select($pdo);
-            
-            if ($daoDiaTransporteTipo->getSucesso()) {
-                foreach ($daoDiaTransporteTipo->getMsgRetorno() as $linha) {
+            $daoDiaTransporteTemTipo = new DaoDiaTransporteTemTipo();
+            $daoDiaTransporteTemTipo->setIdTransporte($idTransporte);
+            $daoDiaTransporteTemTipo->select($pdo);
+            if ($daoDiaTransporteTemTipo->getSucesso()) {
+                foreach ($daoDiaTransporteTemTipo->getMsgRetorno() as $linha) {
                     if ($idTransporteTipo == $linha['id_transporte_tipo']) {
                         $retorno .= "<option value = '" . $linha['id_transporte_tipo'] . "'selected>" . $linha['nm_transporte_tipo'] . "</option>";
                     } else {
@@ -258,6 +259,7 @@ class Relatorio {
         }
         
     }
+    
     
     function abreArquivo(PDO $pdo = null) {
         $retorno = "";
@@ -552,34 +554,53 @@ class Relatorio {
         $retorno = "";
         try {
             $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
+            $daoDiaRelatorioAnexo->setIdRelatorio($this->getIdRelatorio());
+            
+            //registros do banco
+            $daoDiaRelatorioAnexo->select($pdo);
+            $arrayAuxiliar = $daoDiaRelatorioAnexo->getMsgRetorno();
+            
             if ($this->getAnexos()) {
-                foreach ($this->getAnexos() as $anexo) {
-                    $daoDiaRelatorioAnexo->setIdRelatorio($this->getIdRelatorio());
+                foreach ($this->getAnexos() as $indiceAplicacao => $linhaAplicacao) {
 
-                    $daoDiaRelatorioAnexo->setIdRelatorioAnexo((int)$anexo['id_anexo']);
-                    $daoDiaRelatorioAnexo->setNmRelatorioAnexo($anexo['nm_anexo']);
-                    $daoDiaRelatorioAnexo->setNmMimeType($anexo['nm_mime_type']);
-                    
-                    if (array_key_exists('path_anexo', $anexo)) {
-                        $arquivoPath = $anexo['path_anexo'];
-                    }
+                    $daoDiaRelatorioAnexo->setIdRelatorioAnexo($linhaAplicacao['id_anexo']);
+                    $daoDiaRelatorioAnexo->setNmRelatorioAnexo($linhaAplicacao['nm_anexo']);
+                    $daoDiaRelatorioAnexo->setNmMimeType($linhaAplicacao['nm_mime_type']);
+                    $path_arquivo = $linhaAplicacao['path_anexo'];
 
-                    if((int)$anexo['id_anexo'] === 0){ //CADASTRO
-                        $retorno .= $this->insereRelatorioAnexo($pdo,$daoDiaRelatorioAnexo,$arquivoPath);
-
-                    } else { //ALTERAÇÃO
-                        $daoDiaRelatorioAnexo->select($pdo);
-                        //Verifica se o registro foi alterado para atualizar de fato no banco de dados
-                        $diferenca = array_diff_assoc($daoDiaRelatorioAnexo->getMsgRetorno()[0], $anexo);
-                        if (!empty($diferenca)) {
-                            $retorno .= $this->atualizaRelatorioAnexo($pdo,$daoDiaRelatorioAnexo);
+                    //se o indice for 0, é um cadastro
+                    if ((int)$linhaAplicacao['id_anexo'] === 0) {
+                        //insert
+                        $retorno .= $this->insereRelatorioAnexo($pdo,$daoDiaRelatorioAnexo,$path_arquivo);
+                    } else {
+                        //Percorre os registros persistidos no banco
+                        foreach ($daoDiaRelatorioAnexo->getMsgRetorno() as $indiceBd => $linhaBd) {
+                            if($linhaAplicacao['id_anexo'] == $linhaBd['id_relatorio_anexo']){
+                                $diferenca = array_diff_assoc($linhaAplicacao, $linhaBd);
+                                if ($diferenca) {
+                                    //Update - Por enquanto sem tratamento
+                                }
+                                //remove o indice para permanecer no array apenas os registros que deverão ser removidos
+                                unset($arrayAuxiliar[$indiceBd]);
+                            }
                         }
                     }
+
+                    //Se ocorrer erro sai do laço e retorna o erro
                     if (!empty($retorno)) {
                         return $retorno;
                         break;
                     }
+
                 }
+                
+            if ($arrayAuxiliar) {
+                //registros que foram excluídos
+                foreach ($arrayAuxiliar as $linhaAremover) {
+                    $daoDiaRelatorioAnexo->setIdRelatorioAnexo($linhaAremover['id_anexo']);
+                    $retorno .= $this->excluirRelatorioAnexo($pdo,$daoDiaRelatorioAnexo);
+                }
+            }
             }
             return $retorno;
         } catch (Exception $exc) {
@@ -639,6 +660,21 @@ class Relatorio {
         }
     }
     
+    function excluirRelatorioAnexo(PDO $pdo, DaoDiaRelatorioAnexo $daoDiaRelatorioAnexo) {
+        try {
+            
+            $daoDiaRelatorioAnexo->delete($pdo);
+            
+            if ($daoDiaRelatorioAnexo->getSucesso()) {
+                return "";
+            } else {
+                return $daoDiaRelatorioAnexo->getMsgRetorno();
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
     //************************************************ FIM ********************************************************
     
     function associaRelatorioADiaria(PDO $pdo) {
@@ -676,6 +712,128 @@ class Relatorio {
             
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    function baixarAnexo(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
+            $daoDiaRelatorioAnexo->setIdRelatorioAnexo($this->getIdRelatorioAnexo());
+            $daoDiaRelatorioAnexo->select($pdo);
+            
+            if ($daoDiaRelatorioAnexo->getSucesso()) {
+                $retorno = $daoDiaRelatorioAnexo->getMsgRetorno()[0];
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function infoProposto(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoDiaRelatorio = new DaoDiaRelatorio();
+            $daoDiaRelatorio->setIdRelatorio($this->getIdRelatorio());
+            $daoDiaRelatorio->infoProposto($pdo);
+            if ($daoDiaRelatorio->getSucesso()) {
+                $retorno = $daoDiaRelatorio->getMsgRetorno();
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function infoAnexos(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
+            $daoDiaRelatorioAnexo->setIdRelatorio($this->getIdRelatorio());
+            $daoDiaRelatorioAnexo->select($pdo);
+            if ($daoDiaRelatorioAnexo->getSucesso()) {
+                $retorno = $daoDiaRelatorioAnexo->getMsgRetorno();
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function infoDestinosResumo(PDO $pdo = null){
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoDiaRelatorioDestino = new DaoDiaRelatorioDestino();
+            $daoDiaRelatorioDestino->setIdRelatorio($this->getIdRelatorio());
+            $daoDiaRelatorioDestino->selectDestinosResumo($pdo);
+            if ($daoDiaRelatorioDestino->getSucesso()) {
+                $retorno = $daoDiaRelatorioDestino->getMsgRetorno();
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+
+    }
+    
+    function infoDestinosLocomocao(PDO $pdo = null){
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoDiaRelatorioDestino = new DaoDiaRelatorioDestino();
+            $daoDiaRelatorioDestino->setIdRelatorio($this->getIdRelatorio());
+            $daoDiaRelatorioDestino->select($pdo);
+            if ($daoDiaRelatorioDestino->getSucesso()) {
+                $retorno = $daoDiaRelatorioDestino->getMsgRetorno();
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+
+    }
+    
+    function destinosLocomocaoPadrao(PDO $pdo = null){
+        
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaTransporteTemTipo = new DaoDiaTransporteTemTipo();
+            $daoDiaTransporteTemTipo->infoLocomocao($pdo);
+
+            if ($daoDiaTransporteTemTipo->getSucesso()) {
+                $retorno = $daoDiaTransporteTemTipo->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
         }
     }
     
