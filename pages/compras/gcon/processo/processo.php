@@ -145,6 +145,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                 </div>
                             </div>
                             <div class="panel">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tipos De Gastos</h3>
+                                </div>
                                 <div id="tipogasto">
                                     <div class="tipoGastoCampos row">
                                         <div class="col-md-4 ">
@@ -170,9 +173,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="panel">
                                 <div id="centrais">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Centrais De Atendimento</h3>
+                                    </div>
                                     <div class="centrais row">
-
                                         <div class="col-md-4">
                                             <div class="panel-body">Centrais de Atendimento: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
                                                 <div class="centraisCampos">
