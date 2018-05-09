@@ -460,7 +460,7 @@ $(document).ready(function () {
         let dataSet = []
         let dataLabels = []
         let valores = []
-        let color = ['#76d343', '#003fff', '#FFC233', '#76d343']
+        let color = ['#6312aa', '#003fff', '#FFC233', '#76d343']
         var $this = $(this);
 
         $.ajax({
