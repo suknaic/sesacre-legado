@@ -402,8 +402,10 @@ $(document).ready(function () {
                 }
                 let i = 0;
                 let informacoes = "";
+                let total = 0;
                 for (var index in valores) {
                     dataSet.push(parseInt(valores[index]['quantidade']))
+                    total += parseInt(valores[index]['quantidade']);
                     dataLabels.push(valores[index]['situacao']);
                     informacoes += '' +
                             '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
@@ -414,6 +416,13 @@ $(document).ready(function () {
                             '</div>';
                     i++
                 }
+                 informacoes += '' +
+                            '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
+                            '<p class="text-bold">Total</p>' +
+                            '</div>' +
+                            '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">' +
+                            '<p class="text-center">' + total + '</p>' +
+                            '</div>';
 
                 $("#table_pedido_info").find('tbody').find('.info_resultado').html(informacoes);
 
@@ -557,6 +566,9 @@ $(document).ready(function () {
                 let informacoes = "";
                 let total = 0;
                 for (var index in valores) {
+                    if(valores[index]['name'] == "Temporário"){
+                        continue;
+                    }
                     dataSet.push(parseInt(valores[index]['y']))
                     total += valores[index]['y'];
                     dataLabels.push(valores[index]['name']);
