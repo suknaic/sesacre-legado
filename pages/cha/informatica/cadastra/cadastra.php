@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -51,8 +51,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Edição de Chamado</h1>
-                        <p class="pad-btn text-sm">Altere os dados dos campos que você deseja para que seu chamado seja realizado sem nenhuma complicação e seja concluído o mais breve possível.</p>
+                        <h1 class="page-header text-overflow">Cadastro de Chamado</h1>
+                        <p class="pad-btn text-sm">Preeencha todos os campos obrigatórios para que seu chamado seja realizado sem nenhuma complicação e seja concluído o mais breve possível.</p>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -61,7 +61,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--===================================================-->
                     <div id="page-content">
                         <?php
-                        require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/cha/informatica/abertura/_modalAnexaArquivo.html";
+                        require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/cha/informatica/cadastra/_modalAnexaArquivo.html";
                         ?>
                         <!-- Inicio Form -->
                         <div class="row">
@@ -299,7 +299,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/cha/abertura/cadastraChamado.js"></script>
+        <script src="/assets/js/cha/informatica/chamado/chamado.js"></script>
         <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->
