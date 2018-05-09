@@ -14,7 +14,7 @@ switch ($_REQUEST['acao']) {
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $pedido = new Pedido();
-            
+
             $pedido->setNrPedido($dados);
             echo $pedido->retornaDadosPedidoOrdem($session);
             return;
@@ -42,7 +42,7 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaLotacao':
         try {
             $lotacao = new Lotacao();
-            echo  $lotacao->retornaOptionLotacao(null);
+            echo $lotacao->retornaOptionLotacao(null);
             return;
             break;
         } catch (Error $e) {
@@ -58,6 +58,20 @@ switch ($_REQUEST['acao']) {
             $finOrdemModel = new FinOrdemModel();
             $finOrdemModel->setIdPessoa($session->getIdUser());
             echo $finOrdemModel->cadastrarOrdem($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'cancelarOrdem':
+        try {
+            $ordem = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT);
+            $finOrdemModel = new FinOrdemModel();
+            $finOrdemModel->setIdOrdem($ordem);
+            echo $finOrdemModel->cancelaOrdem();
             return;
             break;
         } catch (Error $e) {
