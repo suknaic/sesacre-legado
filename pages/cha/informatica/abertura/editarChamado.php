@@ -51,8 +51,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro de Chamado</h1>
-                        <p class="pad-btn text-sm">Preeencha todos os campos obrigatórios para que seu chamado seja realizado sem nenhuma complicação e seja concluído o mais breve possível.</p>
+                        <h1 class="page-header text-overflow">Edição de Chamado</h1>
+                        <p class="pad-btn text-sm">Altere os dados dos campos que você deseja para que seu chamado seja realizado sem nenhuma complicação e seja concluído o mais breve possível.</p>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
     //*********************************************************************
     func = new Funcoes();
     // var tabela = $('#tabela').DataTable();
@@ -14,11 +14,11 @@ $(document).ready(function () {
             },
             "success": function (response) {
                 //console.log(response);
-                
+
                 $(".aniversario").html(response);
-                    setTimeout(function () {
-                        $(".aniversario").html("");
-                    }, 15000); // O valor é representado em milisegundos.
+                setTimeout(function () {
+                    $(".aniversario").html("");
+                }, 15000); // O valor é representado em milisegundos.
 
             }
         });
@@ -402,8 +402,10 @@ $(document).ready(function () {
                 }
                 let i = 0;
                 let informacoes = "";
+                let total = 0;
                 for (var index in valores) {
                     dataSet.push(parseInt(valores[index]['quantidade']))
+                    total += parseInt(valores[index]['quantidade']);
                     dataLabels.push(valores[index]['situacao']);
                     informacoes += '' +
                             '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
@@ -414,6 +416,13 @@ $(document).ready(function () {
                             '</div>';
                     i++
                 }
+                 informacoes += '' +
+                            '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
+                            '<p class="text-bold">Total</p>' +
+                            '</div>' +
+                            '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">' +
+                            '<p class="text-center">' + total + '</p>' +
+                            '</div>';
 
                 $("#table_pedido_info").find('tbody').find('.info_resultado').html(informacoes);
 
@@ -461,12 +470,13 @@ $(document).ready(function () {
                 "acao": "listaQuantidadeOrdem"
             },
             "success": function (response) {
-                                                
+//                console.log(response);
                 if ($.trim(response)) {
                     if (response.length) {
                         valores = response
                     }
                 }
+                console.log(valores);
                 let i = 0;
                 let informacoes = "";
                 let total = 0;
@@ -484,13 +494,13 @@ $(document).ready(function () {
                     i++
                 }
                 informacoes += '' +
-                            '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
-                            '<p class="text-bold"> Total </p>' +
-                            '</div>' +
-                            '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">' +
-                            '<p class="text-center">'+total+'</p>' +
-                            '</div>';
-                
+                        '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
+                        '<p class="text-bold"> Total </p>' +
+                        '</div>' +
+                        '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">' +
+                        '<p class="text-center">' + total + '</p>' +
+                        '</div> ';
+
                 $("#table_tipo_ordem_info").find('tbody').find('.info_resultado_tipo_ordem').html(informacoes);
 
                 var ctx = document.getElementById("donutChartTipoOrdem");
@@ -521,7 +531,92 @@ $(document).ready(function () {
         });
     }
 
-    listaQuantidadeOrdem()
+    listaQuantidadeOrdem();
+    //**********************************************************************************************************
+    function listaVinculos() {
+        var Dados = {
+            dt_inicio: 0,
+            dt_fim: 0,
+            todos: 1
+        };
+        let dataSet = []
+        let dataLabels = []
+        let valores = []
+        let color = ['#5e63f2', '#69efd7', '#FFC233', '#76d343', '#059BFF', '#db1818']
+                     
+        var $this = $(this);
 
+        $.ajax({
+            "url": "/model/rh/relatorios/request.php",
+            "dataType": 'html',
+            "method": 'POST',
+            "data": {
+                acao: "pesquisaGrafico1",
+                dados: Dados
+            },
+            "success": function (response) {
+                try {
+                    valores = JSON.parse(response);
+                } catch (e) {
+                    console.log(response);
+                    return false;
+                }
+                console.log(valores);
+                let i = 0;
+                let informacoes = "";
+                let total = 0;
+                for (var index in valores) {
+                    if(valores[index]['name'] == "Temporário"){
+                        continue;
+                    }
+                    dataSet.push(parseInt(valores[index]['y']))
+                    total += valores[index]['y'];
+                    dataLabels.push(valores[index]['name']);
+                    informacoes += '' +
+                            '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
+                            '<p class=""><i class="fa fa-square" style="color:' + color[i] + '"></i> ' + valores[index]['name'] + ' </p>' +
+                            '</div>' +
+                            '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">' +
+                            '<p class="text-center">' + valores[index]['y'] + '</p>' +
+                            '</div>';
+                    i++
+                }
+                informacoes += '' +
+                        '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
+                        '<p class="text-bold"> Total </p>' +
+                        '</div>' +
+                       
+
+                $("#table_tipo_vinculo_info").find('tbody').find('.info_resultado_vinculo').html(informacoes);
+
+                var ctx = document.getElementById("donutChartVinculo");
+                data = {
+                    datasets: [{
+                            data: dataSet,
+                            backgroundColor: color
+
+                        }],
+                    labels: dataLabels
+                };
+                var meuDonutChart2 = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {legend: !1, responsive: !1}
+
+
+                });
+
+                return false;
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaVinculos();
 
 })

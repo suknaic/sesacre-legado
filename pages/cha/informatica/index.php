@@ -62,7 +62,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                         <h1 class="page-header text-overflow">Help Desk</h1>
                         <p class="pad-btm text-sm">Acompanhamento rápido dos seus chamados</p>
                         <form action="abertura/cadastraChamado.php?id=<?php echo $id; ?>" method="post" style="margin-top: -80px; margin-bottom: 100px">
-                                <div class="btn-group dropdown dropup" style="float: right">
+                                <div class="btn-group dropdown" style="float: right">
                                     <button class="btn btn-warning btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="display: block" aria-expanded="false" data-toggle="dropdown">
                                         <i class="fa fa-plus" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px"></i>
                                     </button>

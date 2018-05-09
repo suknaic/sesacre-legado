@@ -112,6 +112,18 @@ function editLinhaItinerario(dadosLinha) {
             $(atrAux).val(dadosLinha[dado]);
         }
         
+        //trata o checkbox da fl_pernoite
+        if (dado === 'fl_pernoite') {
+            var atrAux = atributo_id;
+            
+            if (dadosLinha[dado] === 'S'){
+                $(atrAux).prop("checked", true);
+            } else {
+                $(atrAux).prop("checked", false);
+            }
+            
+        }
+        
         
         //Aqui mascara os valores que vieram do BD sem separador de milhar e . como separador decimal
         //é necessário forçar a máscara para o usuário que está operando
@@ -131,6 +143,7 @@ function editLinhaItinerario(dadosLinha) {
 
 function limpaFormItinerario() {
 
+    $("#id_diaria_destino").removeData('itinerario');
     $("#fl_pernoite").prop("checked", false);
     $("#id_diaria_destino").val(0);
     $("#id_classe_default").val(0);

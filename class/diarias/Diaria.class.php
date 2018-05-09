@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDecreto.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTipo.class.php";
@@ -450,9 +450,9 @@ class Diaria {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     if ($linha['id_diaria'] != $this->getIdDiaria()) {
                         if ($this->getIdDiariaPai() == $linha['id_diaria']) {
-                            $retorno .= "<option value = '" . $linha['id_diaria'] . "' selected>Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . "</option>";
+                            $retorno .= "<option value = '" . $linha['id_diaria'] . "' selected>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . "</option>";
                         } else {
-                            $retorno .= "<option value = '" . $linha['id_diaria'] . "'>Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] ."</option>";
+                            $retorno .= "<option value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] ."</option>";
                         }
                     }
                 }
@@ -576,7 +576,7 @@ class Diaria {
                                             . "<a href='./diaria/diaria.php?id=" . $linha['id_diaria'] ."'>Editar</a> | "
                                             . "<a href='#' class='excluirDiaria'>Excluir</a> | "
                                             . "<a href='./relatorio/relatorio.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | "
-                                            . "<a href='./relatorio/imprimirDiaria.php?id=" . $linha['id_diaria'] . "'>Imprimir</a>"
+                                            . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "'>Imprimir</a>"
                                         . "</td>"
                                      . "</tr>";
                     } else {
@@ -620,8 +620,10 @@ class Diaria {
             //Percorre todos os destinos para exlcuir
             $daoDiaDiaria->selectDestinos($pdo);
             if ($daoDiaDiaria->getSucesso()) {
+                $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
                 foreach ($daoDiaDiaria->getMsgRetorno() as $destino) {
-                    $retorno = $this->excluirDiariaDestino($pdo,$destino['id_diaria_destino']);
+                    $daoDiaDiariaDestino->setIdDiariaDestino($destino['id_diaria_destino']);
+                    $retorno = $this->excluirDiariaDestino($pdo,$daoDiaDiariaDestino);
                 }
             }
             

@@ -143,7 +143,7 @@ $(document).ready(function () {
                 window.open("/pages/rh/relatorios/relatorioLotacaoSitPdf.php?pesquisa=" + w, "_blank");
                 break;
             case '2':
-                window.open("/pages/rh/relatorios/relatorioSituacaoPdf.php?pesquisa=" + w, "_blank");
+                window.open("/pages/rh/relatorios/relatorioVinculoSitPdf.php?pesquisa=" + w, "_blank");
                 break;
             default:
                 return false
