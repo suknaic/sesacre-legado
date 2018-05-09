@@ -28,7 +28,7 @@ $lotacoes = $banco->pesquisaRelatorioVinculo($idVinculo, $idLotacao, $idCargo, $
 //return FALSE;
 if (empty($lotacoes)) {
     echo '<script language="javaScript">
-              window.alert("Nenhum Registro Econtrado");
+              window.alert("Não Existe Registro para esta Pesquisa");
               window.close();
           </script>';
     return false;
@@ -156,7 +156,7 @@ $html .= $cabecalho;
 $html .= "  <br>          
             <hr>
             <div class='centro'>
-                    <b>" . utf8_decode("RELATÓRIO DE FUNCIONÁRIOS POR LOTAÇÂO") . "</b>
+                    <b>" . utf8_decode("RELATÓRIO DE FUNCIONÁRIOS POR LOTAÇÃO") . "</b>
             </div><hr>
                 <b>" . utf8_decode("LOTAÇÃO") . ": " . utf8_decode($lotacoes[0]['nm_lotacao']) . "</b><br> <hr>
                <b>=>". utf8_decode("VÍNCULO: ") . utf8_decode($lotacoes[0]['nm_vinculo']) . "</b><br>
@@ -246,7 +246,7 @@ foreach ($lotacoes as $linhas) {
 $html = $cabecalho;
         $html .= "
                 <hr>
-                <b>" . utf8_decode("LOTAÇÂO") . ": " . utf8_decode($linhas['nm_lotacao']). "</b><br>
+                <b>" . utf8_decode("LOTAÇÃO") . ": " . utf8_decode($linhas['nm_lotacao']). "</b><br>
                 <hr>
                  <b>=> " . utf8_decode("VÍNCULO: ") . utf8_decode($linhas['nm_vinculo']) . "</b><br>
                      <table>

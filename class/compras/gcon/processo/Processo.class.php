@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Metodos.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/anotacao/DaoGcoAnotacao.class.php";
 
 class Processo {
 
@@ -19,13 +19,10 @@ class Processo {
     private $tipoGasto = null;
     private $objeto = null;
     private $area = null;
+    private $user = null;
     private $situacao = null;
     private $modalidade = null;
-    private $user = null;
-    private $endereco = null;
-    private $nomeAnexo = null;
     private $TabelaAnexo = null;
-    private $idAnexo = null;
     private $centraisAtendimento = null;
 
     function getIdProcesso() {
@@ -244,18 +241,20 @@ class Processo {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                         } else {
-                            $cadPro->setAnotacoes($this->anotacoes);
-                            $cadPro->setSituacao($this->situacao);
-                            $cadPro->setUser($this->user);
-                            $cadPro->setTecnico($this->tecnico);
-                            $cadastraAnotacao = $cadPro->cadastraAnotacao($pdo);
+                            $anotacao = new DaoGcoAnotacao();
+                            $anotacao->setIdProcesso($cadPro->getIdProcesso());
+                            $anotacao->setAnotacao($this->anotacoes);
+                            $anotacao->setSituacao($this->situacao);
+                            $anotacao->setUser($this->user);
+                            $anotacao->setTecnico($this->tecnico);
+                            $cadastraAnotacao = $anotacao->cadastrarAnotacao($pdo);
 
                             if (!$cadastraAnotacao) {
                                 $pdo->rollBack();
                                 return Metodos::retornoAjax("Erro", "console", $cadastraAnotacao);
                             } else {
-                                $cadPro->setAnotacoes($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                                if (!Log::SalvaLogI('gco_anotacao', $cadPro->getAnotacoes(), $pdo)) {
+                                $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
+                                if (!Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
                                     $pdo->rollBack();
                                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                                 }
@@ -308,6 +307,10 @@ class Processo {
 
                             if (count($this->tipoGasto) > 0) {
                                 foreach ($this->tipoGasto as $tipoGasto) {
+                                    if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
+                                        $pdo->rollBack();
+                                        return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
+                                    }
                                     $cadPro->setTipoGasto($tipoGasto['tpg']);
                                     $cadastraTipoGasto = $cadPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGasto["valor"]));
                                     if ($cadastraTipoGasto) {
@@ -514,6 +517,10 @@ class Processo {
                     if ($dadosTipoGasto == NULL) {
                         if (count($this->tipoGasto) > 0) {
                             foreach ($this->tipoGasto as $tipoGasto) {
+                                if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
+                                    $pdo->rollBack();
+                                    return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
+                                }
                                 $editPro->setTipoGasto($tipoGasto['tpg']);
                                 $cadastraTipoGasto = $editPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGasto["valor"]));
                                 if ($cadastraTipoGasto) {
@@ -531,35 +538,42 @@ class Processo {
                     } else {
                         $busca = $editPro->retornarTipoDeGastoDoProcesso($pdo);
                         foreach ($this->tipoGasto as $key => $tipoGastoApp) {
-                            foreach ($busca as $tipoGastoBd) {
-                                if ($tipoGastoApp['id'] == $tipoGastoBd['id_processo_tipo_gasto']) {
-                                    $tipoGastoBd['vl_processo_tipo_gasto'] = Metodos::ConverteValorBr($tipoGastoBd['vl_processo_tipo_gasto'], 2);
-                                    if (count(array_diff_assoc($tipoGastoApp, $tipoGastoBd)) > 0) {
-                                        $editPro->setTipoGasto($tipoGastoApp['id']);
-                                        $editaProcessoTipoGasto = $editPro->editarTipoGasto($pdo, $tipoGastoApp['tpg'], Metodos::ConverteValorIng($tipoGastoApp['valor']));
-                                        if ($editaProcessoTipoGasto) {
-                                            if (!Log::SalvaLogU('gco_processo_tipo_gasto', $tipoGastoApp['id'], $tipoGastoBd, $pdo)) {
-                                                $pdo->rollBack();
-                                                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
-                                            }
-                                        } else {
-                                            $pdo->rollBack();
-                                            return Metodos::retornoAjax('Erro', 'console', $editaProcessoTipoGasto);
-                                        }
-                                        unset($busca[$key]);
-                                    }
-                                } elseif ($tipoGastoApp['id'] == 0) {
-                                    $editPro->setTipoGasto($tipoGastoApp['tpg']);
-                                    $cadastraTipoGasto = $editPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGastoApp["valor"]));
-                                    if ($cadastraTipoGasto) {
-                                        $editPro->setTipoGasto($pdo->lastInsertId('gco_processo_tipo_gasto_id_processo_tipo_gasto_seq'));
-                                        if (!Log::SalvaLogI('gco_processo_tipo_gasto', $editPro->getTipoGasto(), $pdo)) {
-                                            $pdo->rollBack();
-                                            return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
-                                        }
-                                    } else {
+                            if (Metodos::ConverteValorIng($tipoGastoApp['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
+
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
+                            }
+                            if ($tipoGastoApp['id'] == 0) {
+                                $editPro->setTipoGasto($tipoGastoApp['tpg']);
+                                $cadastraTipoGasto = $editPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGastoApp["valor"]));
+                                if ($cadastraTipoGasto) {
+                                    $editPro->setTipoGasto($pdo->lastInsertId('gco_processo_tipo_gasto_id_processo_tipo_gasto_seq'));
+                                    if (!Log::SalvaLogI('gco_processo_tipo_gasto', $editPro->getTipoGasto(), $pdo)) {
                                         $pdo->rollBack();
-                                        return Metodos::retornoAjax('Erro', 'console', $cadastraTipoGasto);
+                                        return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                                    }
+                                } else {
+                                    $pdo->rollBack();
+                                    return Metodos::retornoAjax('Erro', 'console', $cadastraTipoGasto);
+                                }
+                            } else {
+                                foreach ($busca as $tipoGastoBd) {
+                                    if ($tipoGastoApp['id'] == $tipoGastoBd['id_processo_tipo_gasto']) {
+                                        $tipoGastoBd['vl_processo_tipo_gasto'] = Metodos::ConverteValorBr($tipoGastoBd['vl_processo_tipo_gasto'], 2);
+                                        if (count(array_diff_assoc($tipoGastoBd, $tipoGastoApp)) > 0) {
+                                            $editPro->setTipoGasto($tipoGastoApp['id']);
+                                            $editaProcessoTipoGasto = $editPro->editarTipoGasto($pdo, $tipoGastoApp['tpg'], Metodos::ConverteValorIng($tipoGastoApp['valor']));
+                                            if ($editaProcessoTipoGasto) {
+                                                if (!Log::SalvaLogU('gco_processo_tipo_gasto', $tipoGastoApp['id'], $tipoGastoBd, $pdo)) {
+                                                    $pdo->rollBack();
+                                                    return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                                                }
+                                            } else {
+                                                $pdo->rollBack();
+                                                return Metodos::retornoAjax('Erro', 'console', $editaProcessoTipoGasto);
+                                            }
+                                            unset($busca[$key]);
+                                        }
                                     }
                                 }
                             }
@@ -580,15 +594,17 @@ class Processo {
                         }
                     }
 
-                    $editPro->setAnotacoes("Edição de dados");
-                    $editPro->setSituacao($this->situacao);
-                    $editPro->setTecnico($this->tecnico);
-                    $editPro->setUser($this->user);
+                    $anotacao = new DaoGcoAnotacao();
+                    $anotacao->setIdProcesso($this->idProcesso);
+                    $anotacao->setAnotacao("Edição de dados");
+                    $anotacao->setSituacao($this->situacao);
+                    $anotacao->setTecnico($this->tecnico);
+                    $anotacao->setUser($this->user);
 
-                    $insereAnotacao = $editPro->cadastraAnotacao($pdo);
+                    $insereAnotacao = $anotacao->cadastrarAnotacao($pdo);
                     if ($insereAnotacao) {
-                        $editPro->setAnotacoes($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                        if (Log::SalvaLogI('gco_anotacao', $editPro->getAnotacoes(), $pdo)) {
+                        $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
+                        if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
                             $pdo->commit();
                             return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                         }
@@ -702,7 +718,7 @@ class Processo {
                     $filtro = "WHERE PRO.st_ativo = '1'";
                 }
                 //-----------------------------------------------------------------------------//
-                if ($this->getTabelaAnexo() == 'sim') {
+                if ($this->TabelaAnexo == 'sim') {
                     $anexo = ", COALESCE(json_object_agg(ANE.id_anexo, ANE.ds_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS ds_anexo,
                               COALESCE(json_object_agg(ANE.id_anexo, ANE.lk_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS lk_anexo";
                     $resultado = $proDao->listarProcesso($pdo, $filtro, $anexo);
@@ -886,65 +902,6 @@ class Processo {
         }
     }
 
-    public function upload() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-
-            $uploadDao = new DaoProcesso();
-            $uploadDao->setIdProcesso($this->idProcesso);
-            $uploadDao->setNomeAnexo($this->nomeAnexo);
-            $uploadDao->setEndereco($this->endereco);
-
-            $cadastraAnexo = $uploadDao->cadastrarAnexo($pdo);
-
-            if ($cadastraAnexo) {
-
-                $uploadDao->setIdAnexo($pdo->lastInsertId('gco_anexo_id_anexo_seq'));
-                if (Log::SalvaLogI('gco_anexo', $uploadDao->getIdAnexo(), $pdo)) {
-                    
-                    $dados = $uploadDao->acharProcessoUpload($pdo);
-                    
-                    if ($dados != FALSE) {
-                        $uploadDao->setSituacao($dados['id_situacao']);
-                        $uploadDao->setTecnico($dados['id_pessoa']);
-                        $uploadDao->setUser($_SESSION['idUser']);
-                        $uploadDao->setAnotacoes("Anexo " . $this->nomeAnexo . " adicionado.");
-
-                        $cadastraAnotacao = $uploadDao->cadastraAnotacao($pdo);
-                        var_dump($cadastraAnexo);
-                        return;
-                        if ($cadastraAnotacao) {
-                            $uploadDao->setAnotacoes($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                            if (Log::SalvaLogI('gco_anotacao', $uploadDao->getAnotacoes(), $pdo)) {
-                                $pdo->commit();
-                                return Metodos::retornoAjax("ok", "html", "Anexo salvo com sucesso.");
-                            } else {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                            }
-                        } else {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "console", $cadastraAnotacao);
-                        }
-                    } else {
-                        $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                    }
-                } else {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                }
-            } else {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $cadastraAnexo);
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
-        }
-    }
-
     public function processoPdf() {
         try {
             $conexao = new Conexao();
@@ -1048,189 +1005,6 @@ class Processo {
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
-    public function carregarAnexos() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $dao = new DaoProcesso();
-            $dao->setIdProcesso($this->idProcesso);
-
-            $dados = $dao->anexos($pdo);
-            if (count($dados) > 0) {
-                $cont = 1;
-                $anexos = '     <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Anexos</h3>
-                                    </div>
-                                    <div class="input_ordens">
-                                        <div class="form-group">
-                                            <div class="col-sm-3"></div>
-                                            <div class="col-sm-6">';
-                foreach ($dados as $linha) {
-                    $anexos .= '                 <div id="anexo_' . $cont . '">   
-                                                    <div class="panel-body">Anexo ' . $cont . ':
-                                                        <div class="input-group">
-                                                            <input class="form-control" name="anexo" readonly id="anexo_' . $cont . '" value="' . $linha['ds_anexo'] . '">
-                                                            <div class="input-group-btn">
-                                                                <button type="button" class="btn btn-ExluirAnexo" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '">
-                                                                    <i class="fa fa-remove fa-lg text-danger"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>';
-                    $cont++;
-                }
-                $anexos .= '                 </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <div class="col-md-5"></div>
-                                        <div class="col-md-2 text-center">
-                                            <button  type="button" class="btn btn-warning btn-block btn-rounded btn-anexar" title="Adicionar Anexo">
-                                                <i class="fa fa-upload" aria-hidden="true"></i> Adicionar
-                                            </button>
-                                        </div>
-                                        <div class="col-md-5"></div>
-                                    </div> 
-                                </div>';
-                return $anexos;
-            } else {
-                $anexos = '     <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Anexos</h3>
-                                    </div><br>
-                                    <div class="input_ordens">
-                                        <div class="form-group">
-                                        <div class="col-md-5"></div>
-                                        <div class="col-md-2 text-center">
-                                            <button  type="button" class="btn btn-warning btn-block btn-rounded btn-anexar" title="Adicionar Anexo">
-                                                <i class="fa fa-upload" aria-hidden="true"></i> Adicionar
-                                            </button>
-                                        </div>
-                                        <div class="col-md-5"></div>
-                                    </div> 
-                                    </div>
-                                </div>';
-                return $anexos;
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
-        }
-    }
-
-    public function excluirAnexo() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-
-            $dao = new DaoProcesso();
-            $dao->setIdAnexo($this->idAnexo);
-            $dao->setIdProcesso($this->idProcesso);
-
-            if (Log::SalvaLogD('gco_anexo', $dao->getIdAnexo(), $pdo)) {
-                $deletaAnexo = $dao->excluiAnexo($pdo);
-                if ($deletaAnexo) {
-                    $dados = $dao->acharProcessoUpload($pdo);
-                    if ($dados != "") {
-                        $dao->setSituacao($dados['id_situacao']);
-                        $dao->setTecnico($dados['id_pessoa']);
-                        $dao->setUser($_SESSION['idUser']);
-                        $dao->setAnotacoes("Anexo " . $this->nomeAnexo . " removido.");
-
-                        $cadastraAnotacao = $dao->cadastraAnotacao($pdo);
-                        if ($cadastraAnotacao) {
-                            $dao->setAnotacoes($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                            if (Log::SalvaLogI('gco_anotacao', $dao->getAnotacoes(), $pdo)) {
-                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . md5($this->nomeAnexo);
-                                if (unlink($link)) {
-                                    $pdo->commit();
-                                    return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");
-                                } else {
-                                    $pdo->rollBack();
-                                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                                }
-                            } else {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                            }
-                        } else {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                        }
-                    }
-                } else {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", $deletaAnexo);
-                }
-            } else {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
-        }
-    }
-
-    public function retornarAnotacoes() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $dao = new DaoProcesso();
-            $dao->setIdProcesso($this->idProcesso);
-
-            $dados = $dao->retornaAnotacoes($pdo);
-            $retorno = '';
-            if (count($dados != 0)) {
-                foreach ($dados as $anotacoes) {
-                    $retorno .= date('d/m/Y H:i:s', strtotime($anotacoes['dh_anotacao'])) . ' - ' . $anotacoes['nm_pessoa'] . ': ' . $anotacoes['ds_anotacao'] . "\n";
-                }
-                return $retorno;
-            } else {
-                return $retorno;
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
-        }
-    }
-
-    public function adicionarAnotacao() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $dao = new DaoProcesso();
-            $pdo->beginTransaction();
-
-            $dao->setIdProcesso($this->idProcesso);
-            $dao->setAnotacoes($this->anotacoes);
-            $busca = $dao->carregaAnotacao($pdo);
-            $dao->setSituacao($busca['id_situacao']);
-            $dao->setUser($_SESSION['idUser']);
-            $dao->setTecnico($busca['id_pessoa']);
-
-            $cadastraAnotacao = $dao->cadastraAnotacao($pdo);
-            if (!$cadastraAnotacao) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $cadastraAnotacao);
-            } else {
-                $dao->setAnotacoes($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                if (Log::SalvaLogI('gco_anotacao', $dao->getAnotacoes(), $pdo)) {
-                    $pdo->commit();
-                    return Metodos::retornoAjax("ok", "html", 'Anotação Adicionada com Sucesso.');
-                } else {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                }
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 

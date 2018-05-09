@@ -261,7 +261,7 @@ $(document).ready(function () {
         var id_processo = $("#id_processo").val();
 
         $.ajax({
-            "url": "/model/compras/gcon/processo/request.php",
+            "url": "/model/compras/gcon/upload/uploadAnexo.php",
             "dataType": "html",
             "method": "POST",
             "data": {
@@ -276,16 +276,14 @@ $(document).ready(function () {
     carregaAnexos();
 
     function carregaAnotacoes() {
-        var id_processo = {
-            id_processo: $("#id_processo").val()
-        };
+        var id_processo = $("#id_processo").val();
         $.ajax({
             "url": "/model/compras/gcon/processo/request.php",
             "dataType": "html",
             "method": "POST",
             "data": {
                 "acao": "listar_anotacoes",
-                "dados": id_processo
+                "idProcesso": id_processo
             },
             "success": function (response) {
                 $("#anotacoes_process").html(response);
@@ -351,7 +349,7 @@ $(document).ready(function () {
             anexo: anexo
         };
         $.ajax({
-            "url": "/model/compras/gcon/processo/request.php",
+            "url": "/model/compras/gcon/upload/uploadAnexo.php",
             "dataType": "html",
             "method": "POST",
             "data": {
@@ -405,24 +403,21 @@ $(document).ready(function () {
         var anexar = new FormData(tabela);
 
         $.ajax({
-
             url: '/model/compras/gcon/upload/uploadAnexo.php',
             data: anexar,
-            acao: 'inserir_anexo',
             processData: false,
             contentType: false,
             type: 'POST',
 
-            "success": function (data) {
-                console.log(data);
-                if (data.trim() == "SessaoExpirada") {
+            "success": function (response) {
+                if (response.trim() == "SessaoExpirada") {
                     $("#upload").modal('hide');
                     func.modalAlert(func.msgSemPermissao);
                     return false;
                 }
 
                 try {
-                    response = JSON.parse(data);
+                    response = JSON.parse(response);
                 } catch (e) {
                     $("#upload").modal('hide');
                     func.modalAlert(func.msgErroPadrao, 'danger');
@@ -436,7 +431,7 @@ $(document).ready(function () {
                         return false;
                     } else if (response.tipoExibicao === "alert") {
                         $("#upload").modal('hide');
-                        func.modalAlert(response.msg, 'danger');
+                        func.modalAlert(response.msg, 'warning');
                         return false;
                     }
                 } else if (response.tipoMsg === "ok") {
@@ -497,8 +492,6 @@ $(document).ready(function () {
                     return false;
                 }
 
-
-
                 if (response.tipoMsg === "Erro") {
                     if (response.tipoExibicao === "console") {
                         $("#adAnotacao").modal('hide');
@@ -523,7 +516,6 @@ $(document).ready(function () {
                 }
             },
             "error": function (response) {
-                $this.prop("disabled", false);
                 $("#adAnotacao").modal('hide');
                 func.modalAlert(func.msgErroPadrao, 'danger');
                 return false;
@@ -537,9 +529,6 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else {
             e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-
             var central = [];
             $('#centrais .centrais').each(function () {
                 var $this = $(this);
@@ -555,7 +544,6 @@ $(document).ready(function () {
                 var vlGast = $this.find('.valorTipoGasto').val();
                 tipoDeGasto.push({'id': idGast, 'tpg': tpGast, 'valor': vlGast});
             });
-            console.log(tipoDeGasto);
             
             var processo = {
                 id_processo: $("#id_processo").val(),
@@ -589,7 +577,6 @@ $(document).ready(function () {
                     "atualizaProcesso": processo
                 },
                 "success": function (response) {
-                    $this.prop("disabled", false);
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -620,12 +607,10 @@ $(document).ready(function () {
                     }
                 },
                 "error": function (response) {
-                    $this.prop("disabled", false);
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
-            $this.prop("disabled", false);
         }
     });
 });

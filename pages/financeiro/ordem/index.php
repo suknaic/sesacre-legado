@@ -185,6 +185,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
     <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
     <!--Select2-->
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+    <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
     <!--JAVASCRIP da pagina-->
     <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
     <script src="/assets/lib/sesacre/funcoes.js"></script>

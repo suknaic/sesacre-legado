@@ -19,10 +19,7 @@ class ProcessoExtd {
     private $situacao = null;
     private $modalidade = null;
     private $user = null;
-    private $endereco = null;
-    private $nomeAnexo = null;
     private $TabelaAnexo = null;
-    private $idAnexo = null;
     private $centraisAtendimento = null;
 
     function getIdProcesso() {

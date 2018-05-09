@@ -1,5 +1,4 @@
 <?php
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/class/lib/mpdf/vendor/autoload.php";
@@ -14,14 +13,19 @@ if (!$session->vPRh()) {
     return;
 }
 //*****************************************************
-$idFormacao = base64_decode($_GET["pesquisa"]);
+$filtro = base64_decode($_GET["pesquisa"]);
 //**************************************
-//print_r($idFormacao);
-//return false;
+$idVinculo = explode("-", $filtro)[0];
+$idLotacao = explode("-", $filtro)[1];
+$idSituacao = explode("-", $filtro)[2];
+$mes = explode("-", $filtro)[3];
+$ano = explode("-", $filtro)[4];
 //**************************************
 $banco = new Contrato();
-$vinc = $banco->pesquisaRelatorioCompetencia($idFormacao);
-if (empty($vinc)) {
+$dados = $banco->pesquisaRelatorioSituacao($idVinculo, $idLotacao, $idSituacao, $mes, $ano, 1);
+//print_r($vinc);
+//return FALSE;
+if (empty($dados)) {
     echo '<script language="javaScript">
               window.alert("Não Existe Registro para esta Pesquisa");
               window.close();
@@ -43,7 +47,7 @@ $cabecalho ="<div class ='lateralLogo'>
             </div>";
 //*******************************************************************************************************************
 $data = explode("-", date('Y-m-d'));
-$dia = $data[2];
+$dias = $data[2];
 $mes = $data[1];
 $ano = $data[0];
 $meses = array(
@@ -151,73 +155,96 @@ $html .= $cabecalho;
 $html .= "  <br>          
             <hr>
             <div class='centro'>
-                    <b>" . utf8_decode("RELATÓRIO DE FUNCIONÁRIOS - COMPETÊNCIA: ")  . utf8_decode($vinc[0]['nm_escolaridade_formacao']) . "</b>
+                    <b>" . utf8_decode("RELATÓRIO DE FÉRIAS, LICENÇAS E CONCESSÕES") . "</b>
             </div><hr>
-                <b>" . utf8_decode("VÍNCULO") . ": " . utf8_decode($vinc[0]['nm_vinculo']) . "</b><br> <hr>
-               <b>=>". utf8_decode("LOTAÇÃO: ") . utf8_decode($vinc[0]['nm_lotacao']) . "</b><br>
+                <b>" . utf8_decode("SITUAÇÃO") . ": " . utf8_decode($dados[0]['nm_contrato_situacao']) . "</b><br> <hr>
+               <b>=>". utf8_decode("LOTAÇÃO: ") . utf8_decode($dados[0]['nm_lotacao']) . "</b><br>
                <table>
                         <tr>
+                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
+                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
+                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>Cargo</b></td>
-                            <td width=><b>" . utf8_decode("Função") . "</b></td>
-                            <td width=><b>C. H.</b></td>
+                            <td width=><b>" . utf8_decode("Inicio") . "</b></td>
+                            <td width=><b>" . utf8_decode("Fim") . "</b></td>
+                            <td width=><b>Dias</b></td>
                         </tr>";
 
-$idVinc = $vinc[0]['id_vinculo'];
-$idLot = $vinc[0]['id_lotacao'];
+$idSit = $dados[0]['id_contrato_situacao'];
+$idLot = $dados[0]['id_lotacao'];
 $somaQuantVinculo = 0;
 $somaQuantLot = 0;
 $totalGeral = 0;
-foreach ($vinc as $linhas) {
+foreach ($dados as $linhas) {
     $totalGeral ++;
-    if ($idVinc == $linhas['id_vinculo']) {
+    if ($idSit == $linhas['id_contrato_situacao']) {
         if ($idLot == $linhas['id_lotacao']) {
             $somaQuantVinculo ++;
             $somaQuantLot ++;
             $html .= "
-                        <tr> 
+                        <tr>
+                        <td>" .
+                    utf8_decode($linhas['nr_matricula']) . "
+                            </td>
                             <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                    utf8_decode($linhas['nm_vinculo']) . "
                             </td>
                             <td>" .
                     utf8_decode($linhas['nm_cargo']) . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_funcao']) . "
+                    utf8_decode($linhas['nm_pessoa']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_inicio']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_fim']) . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                    utf8_decode($linhas['dias']) . "
                             </td>
                         </tr>";
         } else {
 
             $html .= "   <tr>
-                            <td colspan=3 align='right'><b>".utf8_decode("Quantidade p/Lotação").":
+                            <td colspan=6 align='right'><b>".utf8_decode("Quantidade p/Lotação").":
                             <td><b>" . $somaQuantLot . "</td>
                         </tr>
                     </table>
                     <br>
                     <b>=>".utf8_decode("LOTAÇÃO: ") . utf8_decode($linhas['nm_lotacao']) . "</b><br>
                     <table>
-                        <tr>
                            <tr>
+                           <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
+                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
+                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>Cargo</b></td>
-                            <td width=><b>" . utf8_decode("Função") . "</b></td>
-                            <td width=><b>C. H.</b></td>
+                            <td width=><b>" . utf8_decode("Inicio") . "</b></td>
+                            <td width=><b>" . utf8_decode("Fim") . "</b></td>
+                            <td width=><b>Dias</b></td>
                         </tr>
                         <tr> 
+                        <td>" .
+                    utf8_decode($linhas['nr_matricula']) . "
+                            </td>
                             <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                    utf8_decode($linhas['nm_vinculo']) . "
                             </td>
                             <td>" .
                     utf8_decode($linhas['nm_cargo']) . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_funcao']) . "
+                    utf8_decode($linhas['nm_pessoa']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_inicio']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_fim']) . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                    utf8_decode($linhas['dias']) . "
                             </td>
                         </tr>";
             $somaQuantLot = 0;
@@ -228,12 +255,12 @@ foreach ($vinc as $linhas) {
     } else {
 
         $html .= "<tr>
-                            <td colspan=3 align='right'><b>".utf8_decode("Quantidade p/Lotação:")."<br></td>
+                            <td colspan=6 align='right'><b>".utf8_decode("Quantidade p/Lotação:")."<br></td>
                             <td><b>" . $somaQuantLot . "</td>
                  </tr>
             </table>
             <hr>
-            <div class='esquerda'><b>" . utf8_decode("Total p/Vínculo: </b></div><div class='esquerda'><b>") . $somaQuantVinculo . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
+            <div class='esquerda'><b>" . utf8_decode("Total p/Situação: </b></div><div class='esquerda'><b>") . $somaQuantVinculo . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
             <br>
             <hr>";
 
@@ -242,28 +269,40 @@ foreach ($vinc as $linhas) {
 $html = $cabecalho;
         $html .= "
                 <hr>
-                <b>" . utf8_decode("VÍNCULO") . ": " . utf8_decode($linhas['nm_vinculo']). "</b><br>
+                <b>" . utf8_decode("SITUAÇÃO") . ": " . utf8_decode($linhas['nm_contrato_situacao']). "</b><br>
                 <hr>
                  <b>=> " . utf8_decode("LOTAÇÂO: ") . utf8_decode($linhas['nm_lotacao']) . "</b><br>
                      <table>
                         <tr>
+                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
+                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
+                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>Cargo</b></td>
-                            <td width=><b>" . utf8_decode("Função") . "</b></td>
-                            <td width=><b>C. H.</b></td>
+                            <td width=><b>" . utf8_decode("Inicio") . "</b></td>
+                            <td width=><b>" . utf8_decode("Fim") . "</b></td>
+                            <td width=><b>Dias</b></td>
                         </tr>
                         <tr> 
+                        <td>" .
+                    utf8_decode($linhas['nr_matricula']) . "
+                            </td>
                              <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                    utf8_decode($linhas['nm_vinculo']) . "
                             </td>
                             <td>" .
                     utf8_decode($linhas['nm_cargo']) . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_funcao']) . "
+                    utf8_decode($linhas['nm_pessoa']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_inicio']) . "
+                            </td>
+                            <td>" .
+                    utf8_decode($linhas['dt_fim']) . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                    utf8_decode($linhas['dias']) . "
                             </td>
                         </tr>";
         $somaQuantLot = 0;
@@ -271,24 +310,24 @@ $html = $cabecalho;
         $idLot = $linhas['id_lotacao'];
         $somaQuantLot ++;
         $somaQuantVinculo ++;
-        $idVinc = $linhas['id_vinculo'];
+        $idSit = $linhas['id_contrato_situacao'];
         
     }
 }
 
 $html .= "      <tr>
-                            <td colspan=3 align='right'><b>" . utf8_decode(" Quantidade p/Lotação"). "</td>
+                            <td colspan=6 align='right'><b>" . utf8_decode(" Quantidade p/Lotação"). "</td>
                             <td><b>" . $somaQuantLot . "</td>
                 </tr>
             </table>
             <hr>
-            <div class='esquerda'><b>" . utf8_decode("Total p/ Vínculo: </b></div><div class='esquerda'><b>") . $somaQuantVinculo . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
+            <div class='esquerda'><b>" . utf8_decode("Total p/ Situação: </b></div><div class='esquerda'><b>") . $somaQuantVinculo . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
             <br>
             <hr>
             <div class='centro'><b>" . utf8_decode("Total Geral do Relatório: ")."</b> <b>" . $totalGeral . utf8_decode(" Funcionários") . "</b> </div>
             <hr>
             <div align='center'><br><br><br>
-                    " . utf8_decode("Relatório gerado em " ) . $dia . " de " . utf8_decode($meses[$mes]) . " de " . $ano . " as " . date("H:i:s") . "  
+                    " . utf8_decode("Relatório gerado em " ) . $dias . " de " . utf8_decode($meses[$mes]) . " de " . $ano . " as " . date("H:i:s") . "  
             </div>
            </body>
     </html>";
@@ -308,3 +347,4 @@ function pdf() {
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+

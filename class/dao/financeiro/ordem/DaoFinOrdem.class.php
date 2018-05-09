@@ -18,17 +18,6 @@ class DaoFinOrdem extends FinOrdemTb {
     public function cadastrarOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-//                var_dump($this->getIdPedido());
-//                 var_dump($this->getIdLotacao());
-//                  var_dump($this->getNrOrdem());
-//                   var_dump($this->getAaOrdem());
-//                    var_dump($this->getNrOrdem());
-//                     var_dump($this->getNrPrazoOrdem());
-//                      var_dump($this->getTpOrdem());
-//                       var_dump($this->getDtIniOrdem());
-//                        var_dump($this->getDtFimOrdem());
-//                         var_dump($this->getSitOrdem());
-                
                 $sql = "INSERT INTO fin_ordem (id_pedido, id_lotacao, id_pessoa, nr_ordem, aa_ordem, fl_unica, nr_prazo_ordem, tp_ordem, dt_ini_ordem, "
                         . "dt_fim_ordem, sit_ordem) VALUES (:pedido, :lotacao, :idPessoa, :numero, :ano, :fl, :prazo, :tpOrdem, :dt_ini, :dt_fim, :sit_ordem)";
                 $stmt = $pdo->prepare($sql);
@@ -48,7 +37,7 @@ class DaoFinOrdem extends FinOrdemTb {
             }
         } catch (Exception $ex) {
             $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage().'1';
+            $this->msgRetorno = $ex->getMessage() . '1';
         }
     }
 
@@ -139,7 +128,7 @@ class DaoFinOrdem extends FinOrdemTb {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pre", $pre, PDO::PARAM_INT);
                 $stmt->execute();
-                
+
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
@@ -197,7 +186,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         on f.id_fonte = p.id_fonte
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
-                        where ordem.aa_ordem = :ano " . $condicao . "";
+                        where ordem.sit_ordem > '0' and ordem.aa_ordem = :ano " . $condicao . "";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ano", $ano, PDO::PARAM_INT);
                 $stmt->execute();
@@ -229,6 +218,71 @@ class DaoFinOrdem extends FinOrdemTb {
                         where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
+    public function retornaQuantidadeTipo(PDO $pdo = null) {
+        try {
+            $sql = "SELECT "
+                    . " tp_ordem, count(id_ordem) AS quantidade"
+                    . " FROM fin_ordem"
+                    . " WHERE aa_ordem = :aaOrdem"
+                    . " GROUP BY tp_ordem";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":aaOrdem", date("Y"), PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function deleteOrdem(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_ordem set sit_ordem = 0 where id_ordem = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaOrdem(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_ordem where id_ordem = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;

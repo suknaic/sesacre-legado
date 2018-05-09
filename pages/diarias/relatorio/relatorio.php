@@ -66,6 +66,14 @@
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalPesqCidade.html";
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalAnexaArquivo.html";
                         ?>
+                        <div class="panel" id="relViagem">
+                            <div class="panel-heading text-center">
+                                <h3 class="panel-title">Relatório de Viagem</h3>
+                            </div>
+                            <div class="panel-body">
+                                <a href="imprimir.php?id=<?php echo $id_relatorio;?>">Anexo III - PDF</a>
+                            </div>
+                        </div>
                         <form>
                             <input type="hidden" id="id_diaria" value="<?php echo $id_diaria; ?>">
                             <input type="hidden" id="id_relatorio" value="<?php echo $id_relatorio; ?>"/>
@@ -195,6 +203,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
+                                                <input type="hidden" id="id_transporte_tipo_default" />
                                                 <label for="id_transporte_tipo">Transporte: <span class="text-danger">*</span></label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
@@ -340,5 +349,3 @@
         <!-- END JAVASCRIPT -->
     </body>
 </html>
-
-

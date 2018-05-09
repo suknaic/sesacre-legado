@@ -304,7 +304,7 @@ $(document).ready(function () {
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
+                                    console.log(response);
                                     func.modalAlert(func.msgErroPadrao);
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
