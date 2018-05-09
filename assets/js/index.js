@@ -447,4 +447,81 @@ $(document).ready(function () {
 
     listaQuantidadePedidos()
 
+    function listaQuantidadeOrdem() {
+        let dataSet = []
+        let dataLabels = []
+        let valores = []
+        let color = ['#5e63f2', '#69efd7', '#FFC233', '#76d343']
+        var $this = $(this);
+
+        $.ajax({
+            "url": "/model/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listaQuantidadeOrdem"
+            },
+            "success": function (response) {
+                                                
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                let i = 0;
+                let informacoes = "";
+                let total = 0;
+                for (var index in valores) {
+                    dataSet.push(parseInt(valores[index]['quantidade']))
+                    total += valores[index]['quantidade'];
+                    dataLabels.push(valores[index]['tipo']);
+                    informacoes += '' +
+                            '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
+                            '<p class=""><i class="fa fa-square" style="color:' + color[i] + '"></i> ' + valores[index]['tipo'] + ' </p>' +
+                            '</div>' +
+                            '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">' +
+                            '<p class="text-center">' + valores[index]['quantidade'] + '</p>' +
+                            '</div>';
+                    i++
+                }
+                informacoes += '' +
+                            '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
+                            '<p class="text-bold"> Total </p>' +
+                            '</div>' +
+                            '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">' +
+                            '<p class="text-center">'+total+'</p>' +
+                            '</div>';
+                
+                $("#table_tipo_ordem_info").find('tbody').find('.info_resultado_tipo_ordem').html(informacoes);
+
+                var ctx = document.getElementById("donutChartTipoOrdem");
+                data = {
+                    datasets: [{
+                            data: dataSet,
+                            backgroundColor: color
+
+                        }],
+                    labels: dataLabels
+                };
+                var meuDonutChart1 = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {legend: !1, responsive: !1}
+
+
+                });
+
+                return false;
+            },
+            "error": function (response) {
+                console.log(response)
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+
+    listaQuantidadeOrdem()
+
+
 })

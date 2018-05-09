@@ -246,5 +246,28 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    public function retornaQuantidadeTipo(PDO $pdo = null) {
+        try {
+            $sql = "SELECT "
+                    . " tp_ordem, count(id_ordem) AS quantidade"
+                    . " FROM fin_ordem"
+                    . " WHERE aa_ordem = :aaOrdem"
+                    . " GROUP BY tp_ordem";
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":aaOrdem", date("Y"), PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
 }
