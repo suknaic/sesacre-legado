@@ -41,16 +41,18 @@ $(document).ready(function () {
     }
     listaSituacaoCombo();
     //****************************************************
-    function listaSituacao2Combo() {
+    function listaSituacao2Combo(idSituacao) {
         $.ajax({
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaSituacaoOption"
+                acao: "listaSituacaoOption",
+                id: idSituacao,
             },
             "success": function (response) {
                 //console.log(response);
-                $("#id_situacao2").append(response);
+                
+                $("#id_situacao2").html(response);
                 $("#id_situacao2").select2({
                     width: " 100%"
                 });
@@ -222,7 +224,7 @@ $(document).ready(function () {
         $('#modalContratoHistorico').modal('show');
         $idContratoHistorico = $(this).val();
 
-        listaSituacao2Combo();
+        //listaSituacao2Combo();
         //**********************************************************************************
         //  $("#id_situacao2").val(0).change();
         $("#dt_inicio_editar").val("");
@@ -232,7 +234,8 @@ $(document).ready(function () {
         $("#id_contrato_historico").val($idContratoHistorico);
         $("#dt_inicio_editar").val($(this).closest(".historicoLinha").find(".dataIni").attr("dt_inicio"));
         $("#dt_fim_editar").val($(this).closest(".historicoLinha").find(".dataFim").attr("dt_fim"));
-        $("#id_situacao2").val($(this).closest(".historicoLinha").find(".situacao").attr("idSituacao")).change();
+        listaSituacao2Combo($(this).closest(".historicoLinha").find(".situacao").attr("idSituacao"));
+        //$("#id_situacao2").val($(this).closest(".historicoLinha").find(".situacao").attr("idSituacao")).change();
     });
     //******************************************************************************************
     $("body").on("click", ".AtualizarItem", function () {

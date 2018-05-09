@@ -910,8 +910,8 @@ class Contrato {
             } else {
                 $filter[] = "to_char(ch.dt_inicio, 'YYYY') = '$ano'";
             }
-            
-            
+
+
 
             //*************************************************
 
@@ -1248,6 +1248,7 @@ class Contrato {
                                 <td class='situacao' idSituacao='" . $linha['id_contrato_situacao'] . "'>" . $linha['nm_contrato_situacao'] . "</td>
                                 <td class='dataIni' dt_inicio='" . $linha['dt_inicio'] . "'>" . $linha['dt_inicio'] . "</td>
                                 <td class='dataFim' dt_fim='" . $linha['dt_fim'] . "'>" . $linha['dt_fim'] . "</td>
+                                <td class='dataFim'>" . $linha['ds_observacao'] . "</td>
                                 <td style='text-align: center;'>
                                     <button type='button' title='editar' class='editarLinha' value=" . $linha['id_contrato_historico'] . "><i class='fa fa-pencil text-success'></i></button>
                                     <button type='button' title='Remover' class='excluirLinha' value=" . $linha['id_contrato_historico'] . "><i class='fa fa-remove text-danger'></i></button>
@@ -1370,7 +1371,7 @@ class Contrato {
     }
 
 //************************************************************************************************************************
-    public function retornaOptionSituacao() {
+    public function retornaOptionSituacao($id) {
         $retorno = "";
         try {
             $conexao = new Conexao();
@@ -1384,14 +1385,26 @@ class Contrato {
             } else {
                 $tipo = $result[0]['tp_situacao'];
                 $retorno .= "<optgroup label='" . ($result[0]['tp_situacao'] == 'A' ? 'AFASTAMENTOS' : "") . "'>";
+                print_r($id);
                 foreach ($result as $v) {
-                    if ($tipo == $v['tp_situacao']) {
-                        $retorno .= "<option value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
+                    if ($id == $v['id_contrato_situacao']) {
+                        if ($tipo == $v['tp_situacao']) {
+                            $retorno .= "<option selected value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
+                        } else {
+                            $retorno .= "</optgroup>";
+                            $retorno .= "<optgroup label='" . ($v['tp_situacao'] == 'C' ? 'CONCESSÕES' : ($v['tp_situacao'] == 'F' ? 'FÉRIAS' : ($v['tp_situacao'] == 'I' ? 'INATIVOS' : 'LICENÇAS'))) . "'>";
+                            $retorno .= "<option selected value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
+                            $tipo = $v['tp_situacao'];
+                        }
                     } else {
-                        $retorno .= "</optgroup>";
-                        $retorno .= "<optgroup label='" . ($v['tp_situacao'] == 'C' ? 'CONCESSÕES' : ($v['tp_situacao'] == 'F' ? 'FÉRIAS' : ($v['tp_situacao'] == 'I' ? 'INATIVOS' : 'LICENÇAS'))) . "'>";
-                        $retorno .= "<option value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
-                        $tipo = $v['tp_situacao'];
+                        if ($tipo == $v['tp_situacao']) {
+                            $retorno .= "<option value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
+                        } else {
+                            $retorno .= "</optgroup>";
+                            $retorno .= "<optgroup label='" . ($v['tp_situacao'] == 'C' ? 'CONCESSÕES' : ($v['tp_situacao'] == 'F' ? 'FÉRIAS' : ($v['tp_situacao'] == 'I' ? 'INATIVOS' : 'LICENÇAS'))) . "'>";
+                            $retorno .= "<option value = '" . $v['id_contrato_situacao'] . "'>" . $v['nm_contrato_situacao'] . "</option>";
+                            $tipo = $v['tp_situacao'];
+                        }
                     }
                 }
                 $retorno .= "</optgroup>";

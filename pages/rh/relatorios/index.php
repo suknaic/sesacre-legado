@@ -197,7 +197,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 <div class="form-group">
                                                 <div class="col-md-1"></div>
                                                     <div class="col-md-5">
-                                                        Competência:
+                                                        Competência:<span class="text-danger">*</span>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
