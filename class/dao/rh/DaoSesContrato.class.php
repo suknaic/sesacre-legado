@@ -530,7 +530,53 @@ class DaoSesContrato extends SesContrato {
             return $retorno;
         }
     }
+    
+    //*****************************************************************************************************************************
+    function retornaRelatorioSituacao($pdo, $filtro, $tipo) {
+        $retorno = FALSE;
+        $ativo = "";
+        $ordem = "";
+        switch ($tipo) {
+            case '1':
+                $ordem = "ORDER BY cs.nm_contrato_situacao, l.nm_lotacao, v.nm_vinculo, c.id_contrato, p.nm_pessoa, dt_inicio";
+                break;
+            case '2':
+                $ordem = "ORDER BY cs.nm_contrato_situacao, v.nm_vinculo, l.nm_lotacao, c.id_contrato, p.nm_pessoa, dt_inicio";
+                break;
+            
+        }
+        $sql = "select 
+                        c.nr_matricula, c.id_contrato, cs.id_contrato_situacao, cs.nm_contrato_situacao, l.id_lotacao, l.nm_lotacao, v.id_vinculo, v.nm_vinculo, p.nm_pessoa, 
+			cg.id_cargo, cg.nm_cargo, to_char(ch.dt_inicio, 'dd/mm/YYYY')dt_inicio, to_char(ch.dt_fim, 'dd/mm/YYYY')dt_fim, (ch.dt_fim-ch.dt_inicio)dias,
+                        ch.ds_observacao
+                    from ses_contrato_historico ch
+                    inner join ses_contrato c on ch.id_contrato = c.id_contrato
+                    inner join ses_vinculo v on v.id_vinculo = c.id_vinculo
+                    inner join ses_cargo cg on cg.id_cargo = c.id_cargo
+                    inner join ses_contrato_situacao cs on cs.id_contrato_situacao = ch.id_contrato_situacao
+                    inner join ses_contrato_lotacao cl on c.id_contrato = cl.id_contrato
+                    inner join ses_lotacao l on cl.id_lotacao = l.id_lotacao
+                    inner join ses_pessoa_fisica pf on c.id_pessoa_fisica = pf.id_pessoa_fisica
+                    inner join ses_pessoa p on pf.id_pessoa = p.id_pessoa
+                    where c.st_ativo = '1'
+                $filtro
+                $ordem";
+        //print_r($sql);
 
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return $retorno;
+            }
+            return $retorno;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return $retorno;
+        }
+    }
     //*******************************************************************************
     function retornaRelatorioCompetencia($pdo, $filtro) {
         $retorno = FALSE;

@@ -67,15 +67,11 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-
-
-    case 'excluirRelatorioDestinoIndividual':
-        
+    case 'listaTransporteTipoOption':
         try {
-            $filtro = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $prog = new Relatorio();
-            $prog->setIdRelatorioDestino((int)$filtro);
-            echo $prog->excluirRelatorioDestinoIndividual();
+            echo $prog->retornaTransporteTipoOption(null,(int)$filtro['transporte'],(int)$filtro['tipo']);
             return;
             break;
         } catch (Exception $e) {
@@ -83,20 +79,4 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-
-    case 'excluirRelatorioAnexoIndividual':
-        
-        try {
-            $filtro = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
-            $prog = new Relatorio();
-            $prog->setIdRelatorioAnexo((int)$filtro);
-            echo $prog->excluirRelatorioAnexoIndividual();
-            return;
-            break;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-            break;
-        }
-
 }

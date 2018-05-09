@@ -1,223 +1,288 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Relatorio.class.php";
 $session = new Session();
 
-//if(!$session->vPDiarias()){
-//    header("Location: /pages/index.php");
-//}else{
-    $idDiaria  = $_REQUEST['id'];
-    $diaria = new Diaria();
-    $diaria->setIdDiaria($idDiaria);
-    
-    $dados = $diaria->retornaDadosRelatorio();
-    $destinos = $diaria->retornaTrsRelatorio();
-    $resumo = $diaria->retornaInfoResumidaRelatorio();
-    
-    $tpInicial = ' ';
-    $tpProrrogacao = ' ';
-    $tpComplemento = ' ';
-    
-    $data = explode('/', $dados['dt_criacao']);
-    $dia = $data[0];
-    $mes = $data[1];
-    $ano = $data[2];
-    
-    $meses = Metodos::getMeses();
-            
-    switch ($dados['id_tipo']) {
-        case 1:
-            $tpInicial = 'X';
-            break;
-        case 2:
-            $tpProrrogacao = 'X';
-            break;
-        case 3:
-            $tpComplemento = 'X';
-            break;
-}
-    
-    $html = "
-            <html>
-                <head>
-                    <style>
-                       page toc { sheet-size: A4; }
-                        body{
-                            font-family: arial;
-                            font-style: normal;
-                            font-variant: normal;
-                            font-size: 9pt;
-                        }
+$idRelatorio  = $_REQUEST['id'];
+$relatorio = new Relatorio();
+$relatorio->setIdRelatorio($idRelatorio);
+
+$dados = $relatorio->infoProposto();
+$destino = $relatorio->infoDestinosResumo();
+$anexos = $relatorio->infoAnexos();
+$locomocao = $relatorio->infoDestinosLocomocao();
+$locomocao_padrao = $relatorio->destinosLocomocaoPadrao();
+
+$html = "
+        <html>
+        <head>
+
+         <style>
+                    page toc { sheet-size: A4; }
+                    body{
+                    font-family: arial;
+                    font-style: normal;
+                    font-variant: normal;
+                    }
                     
-                        table {
-                            margin-top: 2%;
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        table, td, tr{
-                            border: 1px solid black;
-                        }
+                    table {
+                        margin-top: 2%;
+                        border-collapse: collapse;
+                        margin-left: -6%;
+                        margin-right: -6%;
+                        width: 100%;
+                    }
+                    
+                    th{
+                    padding: 1%;
+                    border: 1px solid black;
+                    background-color:#9e9e9e';
+                    }
+                    
+                    caption{
+                    border: 1px solid black;
+                    position: absolute;
+                    width: 100%;
+                    margin-right: 5%;
+                    
+                     left:2%;
+                    }
+                    
 
-                        tr, td{
-                            padding: 1%;
-                            font-size: 9pt;
-                            text-align: center;
-                        }
+                    table, td, tr{
+                        border: 1px solid black;
+                    }
 
-                        #cabecalho{
-                          display:block;
+                    tr, td{
+                        padding: 1%;
+                        font-size: 9pt;
+                    }
 
-                        }
+                    #cabecalho{
+                      display:block;
 
-                        .cabecalho2{
-                          position: relative;
-                          text-align: center;
-                          margin-top: 1%;
-                          font-weight: bold;
-                          font-size: 9pt;
+                    }
 
-                        }
+                    .cabecalho2{
+                      position: relative;
+                      text-align: center;
+                      margin-top: 1%;
+                      font-weight: bold;
+                      font-size: 9pt;
 
-                        #brasao{
-                          width: 9%;
-                          margin: 0 auto;
+                    }
 
-                        }
+                    #brasao{
+                      width: 8%;
+                      margin: 0 auto;
 
-                        #erro{
+                    }
+                    
+                    #erro{
+                    text-align: center;
+                    
+                    }
+                   
+                    .centro{
+                     text-align: center;
+                    }
+                    
+                    .lateral{
+                    margin-left: 20%;
+                    }
+                    
+                    .esquerda{
+                        float: left;
+                        width: 100%;
+                    }
+                    
+                    .direita{
+                        float: right;
+                        width: 50%;
+                    }
+                    
+                    .matri{
+                        float: right;
+                        width: 23%;
+                    }
+                    
+                    .ass_esquerda{
+                        float: left;
+                        width: 50%;
                         text-align: center;
+                    }
+                    
+                    .ass_direita{
+                        float: right;
+                        width: 50%;
+                        text-align: center;
+                    }
+                    
+                    .lista{
+                        float: left;
+                        width: 20%;
+                    }
+                    
+                    .sub_lista{
+                        float: right;
+                        width: 60%;
+                    }
+                    
+                    .nome_ser{
+                        float: left;
+                        width: 70%;
+                    }
+                    
+                     .nome{
+                        float: left; width:50%;
+                    }
+                    
+            </style>
+            </head>
+            <body>
+            <div id='cabecalho'>
+              <div id='brasao'><img src='http://localhost/assets/img/acrebrasao.jpg'></div>
+              <p class='cabecalho2'>
+                ESTADO DO ACRE
+                <br/>
+                DECRETO N° 6.854 DE 30 DE DEZEMBRO DE 2002
+                <br/>
+                <br/>
+                ANEXO III
+                <br/>
+                RELATÓRIO DE VIAGEM
+              </p>
+            </div>
+            <div class='nome'>
+                <b>ADA: </b> 
+            </div>
+            <br/><br/>
+            
+            <div class='nome_ser'><b>Nome do Servidor:</b> ".$dados['nm_proposto']."</div>
+            ";
+              if($dados['mt_proposto'] != null && $dados['mt_proposto'] !=""){
+           $html .="<div class='matri'><b>Matrícula:</b>".$dados['mt_proposto']."</div>";
+                  }
+$html .="
+            
+            <div class='esquerda'><b>Cargo, emprego ou função:</b> ".$dados['fn_proposto']."</div>
+           
+            <div class='esquerda'><b>Órgão/Setor de lotação:</b> ".$dados['lt_proposto']."</div>
+          
+            <div class='esquerda'><p align='justify'><b>Descrição detalhada do(s) serviço(s) executado(s):</b><br/>
+                ".$dados['ds_servico_executado']."</p>
+            </div>
+     
+            <div class='esquerda'><p align='justify'><b>Local(is) de realização do(s) serviço(s):</b><br/>
+                ".$dados['ds_locais_executado']."</p>
+            </div>
+            
+            <div class='esquerda'><b>Período do afastamento:</b></div>
+            De  ".$destino['dt_ini'].",  às  ".$destino['hr_ini']. " hs.  a  ".$destino['dt_fim'].",  às  ".$destino['hr_fim']."
+            <br/><br/>";
 
-                        }
+    if ($locomocao) {
+        $cont = 0;
+        foreach ($locomocao as $i => $linha) {
+            $cont += 1;
+            $trpAux = null;
+            $html   .=      "<div class='esquerda'><b>Meio de Locomoção ". $cont .":</b></div>";
+            foreach ($locomocao_padrao as $z => $padrao) {
+                if ($trpAux != $padrao['id_transporte']) {    
+                    $marcado = ($linha['id_transporte'] == $padrao['id_transporte']) ? 'X' : ' ';
+                    
+                    $html .= "<div class='lista'>(".$marcado .")". $padrao['nm_transporte'].":<br/></div><br/>";
+                }
+                
+                
+                if (($linha['id_transporte_tipo'] == $padrao['id_transporte_tipo'] && $linha['id_transporte'] == $padrao['id_transporte'])) {
+                    $check = '&#9745;';
+                    $ds_transporte = $linha['ds_transporte_tipo'];
+                } else {
+                    $check = '&#9744;';
+                    $ds_transporte = '';
+                }
+//                $check = ($linha['id_transporte_tipo'] == $padrao['id_transporte_tipo'] && $linha['id_transporte'] == $padrao['id_transporte']) ? '&#9745; ' : '&#9744; ' ;
 
-                        .centro{
-                         text-align: center;
-                        }
-
-                        .lateral{
-                        //margin-left: -6%;
-                        }
-
-                        .lateralDireita{
-                        text-align: right;
-                        }
-                        .esquerda{
-                            float: left; width:50%; text-align: center;
-                        }
-                        .direita{
-                            float:right; width:50%; text-align: center;
-                        }
-                        .matricula{
-                            float:right; width:30%; text-align: right;
-                        }
-                        .nome{
-                            float: left; width:50%;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div id='cabecalho'>
-                        <div id='brasao'><img src='http://localhost/assets/img/acrebrasao.jpg'></div>
-                        <p class='cabecalho2'>
-                          ESTADO DO ACRE
-                          <br/>
-                          DECRETO Nº 6.854 DE 30 DE DEZEMBRO DE 2002
-                        </p>
-                    </div>
-                    <div class='centro'><b>ANEXO II</b></div>
-                    <div class='centro'><b>PROPOSTA E CONCESSÃO DE DIÁRIAS</b></div>
-                    <div class='nome'>
-                        <b>ADA: </b> 
-                    </div>
-                    <div class='lateralDireita'>
-                        Inicial (".$tpInicial.")
-                        <br/>
-                        Prorrogação (".$tpProrrogacao.")
-                        <br/>
-                        Complementação (".$tpComplemento.")
-                    </div>
-                    <br/>
-                    <div class='centro'>
-                        <b>PROPOSTA</b>
-                    </div>
-                    <div class='lateral'>
-                        <b>Proponente</b><br/>
-                        Nome: ".$dados['nm_proponente']."<br/>
-                        Cargo, função ou emprego: ".$dados['fn_proponente']."<br/>
-                        Órgao/Setor de lotação: ".$dados['lt_proponente']."
-                    </div>
-                    <br/>
-                    <div class='lateral '>
-                        <b>Proposto</b><br/>
-                        Nome: ".$dados['nm_proposto'].",  CPF: ".Metodos::formataCpf($dados['proposto_cpf']).", Matrícula: ".$dados['proposto_matricula']." <br/>
-                        Cargo, função ou emprego: ".$dados['fn_proposto']." <br/>
-                        Órgao/Setor de lotação: ".$dados['lt_proposto']."
-                    </div>
-                    <div class='lateral'>
-                        <p align='justify'>
-                            <b>Descrição dos serviços a serem executados:</b><br/>
-                            ".$dados['ds_servico_executado']."
-                        </p>
-                    </div>
-                    <div class='lateral'>
-                        <p align='justify'>
-                            <b>Local(is) de realização do(s) serviço(s):</b><br/>   
-                            ".$dados['ds_locais_executado']."
-                        </p>
-                    </div>
-                    <br/>
-                    <div class='lateral'>
-                       <b> Período provável do afastamento:</b><br/>
-                       De: ".$resumo['dt_ini'].", às ".$resumo['hr_ini']." até ".$resumo['dt_fim'].", às ".$resumo['hr_fim']."
-                    </div>
-                    <table>
-                        <tr>
-                            <td width=34%><b>Quantidades de Diárias</b></td>
-                            <td width=33%><b>Valor Unitário</b></td>
-                            <td width=33%><b>Valor Total</b></td>
-                        </tr>
-                        ".$destinos."
-                        <tr>
-                            <td colspan=2><b>Soma Total</b></td>
-                            <td>".number_format($resumo['soma_total'],2,",",".")."</td>
-                        </tr>
-                    </table>
-                    <div class='lateral'>
-                        <b>Observação:</b> <br/>
-                        ".$dados['ds_obs']."
-                        <p align='justify'></p>
-                        <br/><br/>
-                        <div class='centro'>
-                             Rio Branco - AC , ".$dia." de ".$meses[$mes]." de ".$ano."
-                        </div>
-                    </div>
-                    <br/><br/>
-                    <div class='esquerda'>
-                        ..........................................<br/>
-                        Proponente
-                    </div>
-                    <div class='direita'>
-                        .............................................<br/>
-                        Proposto
-                    </div>
-                    <br/>
-                    <div class='lateral'>
-                        <b>CONCESSÃO</b><br/>
-                        Concedo e autorizo o pagamento da(s) diária(s) acima proposta(s).
-                    </div>
-                    <br/><br/>
-                    <div class='esquerda'>
-                        ..........................................<br/>
-                        Ordenador de Despesa
-                    </div>
-                    <div class='direita'>
-                        ............................................. <br/>
-                        Chefe do Setor Financeiro
-                    </div>
-                    <br/>
-                    <div class='centro'>
-                        (Alterado pelo Decreto 6.124/2013)
-                    </div>
-                </body>
-            </html>";
-//}
-
+                $html   .=    "<div class='sub_lista'><b>" . $check . $padrao['nm_transporte_tipo'].": </b>".$ds_transporte."<br/></div><br/>";
+                
+                $trpAux = $padrao['id_transporte'];
+            }
+        }
+    }
+//$cont = 1;           
+//                foreach ($dest as $ml) {
+//                    $html   .=      "<div class='esquerda'><b>Meio de Locomoção ".$cont.":</b></div>"; 
+//
+//             if($ml['id_transporte']==1){
+//    $html   .=      "<div class='lista'>(x) Áereo: <br/></div><br/>";             
+//                }  else {
+//    $html   .=      "<div class='lista'>(   ) Áereo: <br/></div><br/>";
+//                }" 
+// 
+//            "; if($ml['id_transporte']==2){
+//    $html   .=      "<div class='lista'>(x) Terrestre: <br/></div>";             
+//                }  else {
+//    $html   .=      "<div class='lista'>(   ) Terrestre: <br/></div>";
+//                }" 
+//            
+//            "; if($ml['id_transporte']==2 && $ml['id_transporte_tipo']==1){
+//    $html   .=      "<div class='sub_lista'><b>&#9745; Ônibus: </b>".$ml['descTransporte']."<br/></div><br/>";             
+//                }  else {
+//    $html   .=      "<div class='sub_lista'><b>&#9744; Ônibus: </b><br/></div><br/>";
+//                }"
+//            
+//            "; if($ml['id_transporte']==2 && $ml['id_transporte_tipo']==2){
+//    $html   .=      "<div class='lateral'><b>&#9745; Veículo oficial: </b>".$ml['descTransporte']."<br/></div>";             
+//                }  else {
+//    $html   .=      "<div class='lateral'><b>&#9744; Veículo oficial: </b><br/></div>";
+//                }" 
+//            
+//            "; if($ml['id_transporte']==2 && $ml['id_transporte_tipo']==3){
+//    $html   .=      "<div class='lateral'><b>&#9745; Outro:  </b>".$ml['descTransporte']."<br/></div><br/><br/>";             
+//                }  else {
+//    $html   .=      "<div class='lateral'><b>&#9744; Outro:  </b><br/></div><br/>";
+//                }"
+//            
+//             "; if($ml['id_transporte']==3){
+//    $html   .=      "<div class='lista'>(x) Fluvial: <br/></div>";             
+//                }  else {
+//    $html   .=      "<div class='lista'>(   ) Fluvial: <br/></div>";
+//                }"
+//             
+//             "; if($ml['id_transporte']==3 && $ml['id_transporte_tipo']==2){
+//    $html   .=      "<div class='lateral'><b>&#9745; Veículo oficial: </b>".$ml['descTransporte']."<br/></div>";             
+//                }  else {
+//    $html   .=      "<div class='lateral'><b>&#9744; Veículo oficial: </b><br/></div>";
+//                }" 
+//            
+//            "; if($ml['id_transporte']==3 && $ml['id_transporte_tipo']==3){
+//    $html   .=      "<div class='lateral'><b>&#9745; Outro:  </b>".$ml['descTransporte']."<br/></div><br/>";             
+//                }  else {
+//    $html   .=      "<div class='lateral'><b>&#9744; Outro:  </b><br/></div>";  
+//                }
+//                $cont++;
+//                }$html.="           
+//                        
+    $html .=  "<div class='esquerda'><p align='justify'><b>Documento(s) Anexado(s):</b><br/>";
+    
+    if ($anexos) {
+        foreach ($anexos as $linha) {
+            $html .= "<p>".$linha['nm_relatorio_anexo']."</p>";
+        }
+    }
+    $html .= "</div> ";
+       $html .= "<br/>
+            
+            <div class='centro'> ___________________________, ________ de ____________________ de ________. </div>
+            <br/><br/>
+            
+            <div class='ass_esquerda'> ____________________________________ <br/> Relator</div> 
+            <div class='ass_direita'> _____________________________________ <br/> Chefe Imediato </div>
+            <br/>
+            
+            <div class='centro'> (Alterado pelo Decreto 6.124/2013)</div>
+           
+           </body>
+           </html>";

@@ -849,7 +849,7 @@ class Contrato {
             $pdo = $conexao->connect();
             $rh = new DaoSesContrato();
             $filtro = "";
-//***************************************************************
+            //***************************************************************
             $filter = array();
             if ($idVinculo <> 0) {
                 $filter[] = "v.id_vinculo = $idVinculo";
@@ -876,9 +876,53 @@ class Contrato {
             } else {
                 return false;
             }
-//****************************************************************    
+            //****************************************************************    
             //print_r($filtro);
             $result = $rh->retornaRelatorioVinculos($pdo, $filtro, $tipo);
+
+            return $result;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
+
+    //********************************************************************************************************************
+    public function pesquisaRelatorioSituacao($idVinculo, $idLotacao, $idSituacao, $mes, $ano, $tipo) {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $rh = new DaoSesContrato();
+            $filtro = "";
+            //***************************************************************
+            $filter = array();
+            if ($idVinculo <> 0) {
+                $filter[] = "v.id_vinculo = $idVinculo";
+            }
+            if ($idLotacao <> 0) {
+                $filter[] = "l.id_lotacao = $idLotacao";
+            }
+            if ($idSituacao <> 0) {
+                $filter[] = "cs.id_contrato_situacao = $idSituacao";
+            }
+            if ($mes <> 0) {
+                $filter[] = "(to_char(ch.dt_inicio, 'YYYY-MM') = '$ano-$mes' or to_char(ch.dt_fim, 'YYYY-MM') = '$ano-$mes')";
+            } else {
+                $filter[] = "to_char(ch.dt_inicio, 'YYYY') = '$ano'";
+            }
+            
+            
+
+            //*************************************************
+
+            if (count($filter) > 0) {
+                $filtro = " and " . implode(' and ', $filter);
+            } else {
+                return false;
+            }
+            //****************************************************************    
+            //print_r($filtro);
+            $result = $rh->retornaRelatorioSituacao($pdo, $filtro, $tipo);
 
             return $result;
         } catch (Exception $ex) {
@@ -1412,6 +1456,7 @@ class Contrato {
             $retorno = "";
         }
     }
+
     public function retornaOptionAnoSituacao($id = 0) {
 //        $retorno = "<option value='0'>Selecione uma pessoa</option>";
         try {
@@ -1438,6 +1483,7 @@ class Contrato {
             $retorno = "";
         }
     }
+
     public function retornaListaTodasPessoas(PDO $pdo = null) {
         $retorno = "";
         try {

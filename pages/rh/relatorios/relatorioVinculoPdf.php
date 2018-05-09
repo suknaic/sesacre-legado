@@ -28,7 +28,7 @@ $vinc = $banco->pesquisaRelatorioVinculo($idVinculo, $idLotacao, $idCargo, $idFu
 //return FALSE;
 if (empty($vinc)) {
     echo '<script language="javaScript">
-              window.alert("Nenhum Registro Econtrado");
+              window.alert("Não Existe Registro para esta Pesquisa");
               window.close();
           </script>';
     return false;

@@ -84,8 +84,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         <select id="tipo" class="form-control">
                                                             <option value="0">Selecione Tipo de Relatório</option>                                                                
                                                             <option value="1">Por Lotação</option>
-                                                            <option value="2">Por Situação</option>
-                                                            <option value="3">Por Vínculo</option>
+                                                            <option value="2">Por Vínculo</option>
 
                                                             <?php
                                                             // echo $lotacoes;
@@ -102,30 +101,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
 
                                                 </div>
                                                 <div class="col-md-2">
-                                                    Mês:
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-list inputPFa"></p>
-                                                        </span>
-                                                        <select id="mes" class="form-control">
-                                                            <option value="0">Selecione o Mês</option>                                                                
-                                                            <option value="1">Janeiro</option>
-                                                            <option value="2">Fevereiro</option>
-                                                            <option value="3">Março</option>
-                                                            <option value="4">Abril</option>
-                                                            <option value="5">Maio</option>
-                                                            <option value="6">Junho</option>
-                                                            <option value="7">Julho</option>
-                                                            <option value="8">Agosto</option>
-                                                            <option value="9">Setembro</option>
-                                                            <option value="10">Outubro</option>
-                                                            <option value="11">Novembro</option>
-                                                            <option value="12">Dezembro</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    Ano:
+                                                    Ano:<span class="text-danger">*</span> 
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
@@ -138,25 +114,50 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    Mês:
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="mes" class="form-control">
+                                                            <option value="0">Selecione o Mês</option>                                                                
+                                                            <option value="01">Janeiro</option>
+                                                            <option value="02">Fevereiro</option>
+                                                            <option value="03">Março</option>
+                                                            <option value="04">Abril</option>
+                                                            <option value="05">Maio</option>
+                                                            <option value="06">Junho</option>
+                                                            <option value="07">Julho</option>
+                                                            <option value="08">Agosto</option>
+                                                            <option value="09">Setembro</option>
+                                                            <option value="10">Outubro</option>
+                                                            <option value="11">Novembro</option>
+                                                            <option value="12">Dezembro</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                
                                             </div>
                                             <hr>
                                             <div class="quebres">
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-4">
-                                                        Vínculo:
+                                                        Situação:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_vinculo" class="form-control">
-                                                                <option value="0">Selecione Vínculo</option>                                                                
+                                                            <select id="id_situacao" class="form-control">
+                                                                <option value="0">Selecione Situação</option>                                                                
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    
                                                     <div class="col-md-6">
                                                         Lotação:
                                                         <div class="input-group">
@@ -175,13 +176,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 <div class="form-group">    
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-4">
-                                                        Situação:
+                                                        Vínculo:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_situacao" class="form-control">
-                                                                <option value="0">Selecione Situação</option>                                                                
+                                                            <select id="id_vinculo" class="form-control">
+                                                                <option value="0">Selecione Vínculo</option>                                                                
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>

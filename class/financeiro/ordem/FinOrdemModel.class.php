@@ -290,6 +290,17 @@ class FinOrdemModel {
 
         return $this;
     }
+    
+    public function getTipoOrdem(): array {
+        $arr_tipo = array(
+            '1' => 'Entrega',
+            '2' => 'Execução/Serviço'               
+        );
+        return $arr_tipo;
+    }
+    
+    
+    
 
     public function cadastrarOrdem($ordem) {
         try {
@@ -503,7 +514,67 @@ class FinOrdemModel {
                             </tr>";
             }
             return Metodos::retornoAjax("ok", "html", $tabela);
+        }else{
+            return Metodos::retornoAjax("Erro", "alert", "Nenhum registro encontrado");
         }
+    }
+    
+    public function listaTipoQuantidadeJSON() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $dao = new DaoFinOrdem();
+            $dao->retornaQuantidadeTipo($pdo);
+            
+            $arrayTipo = array();
+                                    
+            foreach ($this->getTipoOrdem() as $key => $value) {
+                $arrayTipo[$key] = array(
+                    "tipo" => $value,
+                    "quantidade" => 0
+                );
+            }
+                      
+            $arrayQuantidade = array();
+            foreach ($dao->getMsgRetorno() as $value) {
+                if(array_key_exists($value['tp_ordem'], $arrayTipo)){
+                    $arrayTipo[$value['tp_ordem']]['quantidade'] = $value['quantidade'];
+                }                
+            }
+            
+            foreach ($arrayTipo as $key => $value) {
+                $arrayQuantidade[] = $value;
+            }
+                        
+            return json_encode($arrayQuantidade);             
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function cancelaOrdem() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinOrdem = new DaoFinOrdem();
+        $pdo->beginTransaction();
+        $daoFinOrdem->setIdOrdem($this->id_ordem);
+        $daoFinOrdem->deleteOrdem($pdo);
+        $busca = "";
+        if (!$daoFinOrdem->Sucesso()) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+        }
+
+       
+        $daoFinOrdem->retornaOrdem($pdo);
+        $busca = $daoFinOrdem->getMsgRetorno();        
+        if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+        }
+
+        $pdo->commit();
+        return Metodos::retornoAjax("ok", "html", "Ordem removida com sucesso.");
     }
 
 }
