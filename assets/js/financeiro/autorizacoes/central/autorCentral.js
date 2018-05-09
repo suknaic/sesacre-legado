@@ -164,7 +164,7 @@ $(document).ready(function () {
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, 'primary');
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    window.location.href = "/pages/financeiro/autorizacoes/orcamento/index.php";
+                                    window.location.href = "/pages/financeiro/autorizacoes/central/index.php";
                                 });
                                 return false;
                             } else {

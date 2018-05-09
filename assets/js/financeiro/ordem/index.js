@@ -17,7 +17,7 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else {
             var $this = $(this);
-             if ($this.attr("tp") == 1) {
+            if ($this.attr("tp") == 1) {
                 window.open("/pages/financeiro/ordem/pdfBemProduto.php?id=" + $this.val());
             } else if ($this.attr("tp") == 2) {
                 window.open("/pages/financeiro/ordem/pdfExecucaoServico.php?id=" + $this.val());
@@ -56,7 +56,6 @@ $(document).ready(function () {
                 dados: dados
             },
             "success": function (response) {
-              console.log(response);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
                     return false;
@@ -84,6 +83,92 @@ $(document).ready(function () {
                     console.log('Ultimo else');
                     func.modalAlert(func.msgErroPadrao);
                     return false;
+                }
+            }
+        });
+    });
+
+    $('body').on('click', '.excluir', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        bootbox.confirm({
+            title: func.msgCaixaDeConfirmacao,
+            message: 'Você tem Certeza que deseja continuar com a cancelamento da <span class="text-danger">ordem</span> ?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var dados = {
+                        "pedido": $("#pedido").val(),
+                        "obsAutoriza": $("#obsAutoriza").val()
+                    }
+
+                    if ($("#obsAutoriza").val() == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    if ($("#pedido").val() == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/financeiro/ordem/request.php",
+                        "dataType": 'html',
+                        "method": "POST",
+                        "data": {
+                            "acao": "cancelarOrdem",
+                            "dados": id
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao);
+                                console.log("Parse JSON");
+                                return false;
+                            }
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log('Console Mensagem');
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'primary');
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    location.reload();
+                                });
+                                return false;
+                            } else {
+                                console.log('Ultimo else');
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
                 }
             }
         });

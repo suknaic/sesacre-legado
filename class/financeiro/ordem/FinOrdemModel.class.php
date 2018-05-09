@@ -503,7 +503,34 @@ class FinOrdemModel {
                             </tr>";
             }
             return Metodos::retornoAjax("ok", "html", $tabela);
+        }else{
+            return Metodos::retornoAjax("Erro", "alert", "Nenhum registro encontrado");
         }
+    }
+
+    public function cancelaOrdem() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinOrdem = new DaoFinOrdem();
+        $pdo->beginTransaction();
+        $daoFinOrdem->setIdOrdem($this->id_ordem);
+        $daoFinOrdem->deleteOrdem($pdo);
+        $busca = "";
+        if (!$daoFinOrdem->Sucesso()) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+        }
+
+       
+        $daoFinOrdem->retornaOrdem($pdo);
+        $busca = $daoFinOrdem->getMsgRetorno();        
+        if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+        }
+
+        $pdo->commit();
+        return Metodos::retornoAjax("ok", "html", "Ordem removida com sucesso.");
     }
 
 }
