@@ -163,6 +163,7 @@ $html .= "  <br>
                <b>=>" . utf8_decode("LOTAÇÃO: ") . utf8_decode($rs[0]['nm_lotacao']) . "</b><br>
                <table>
                         <tr>
+                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
                             <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
                             <td width=><b>" . utf8_decode("Função") . "</b></td>
@@ -183,6 +184,9 @@ foreach ($rs as $linhas) {
             $html .= "
                         <tr> 
                             <td>" .
+                    utf8_decode($linhas['nr_matricula']) . "
+                            </td>
+                            <td>" .
                     utf8_decode($linhas['nm_pessoa']) . "
                             </td>
                             <td>" .
@@ -198,7 +202,7 @@ foreach ($rs as $linhas) {
         } else {
 
             $html .= "   <tr>
-                            <td colspan=3 align='right'><b>" . utf8_decode("Quantidade p/Lotação") . ":
+                            <td colspan=4 align='right'><b>" . utf8_decode("Quantidade p/Lotação") . ":
                             <td><b>" . $somaQuantLot . "</td>
                         </tr>
                     </table>
@@ -207,12 +211,16 @@ foreach ($rs as $linhas) {
                     <table>
                         <tr>
                            <tr>
+                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
                             <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
                             <td width=><b>" . utf8_decode("Função") . "</b></td>
                             <td width=><b>C. H.</b></td>
                         </tr>
                         <tr> 
+                            <td>" .
+                    utf8_decode($linhas['nr_matricula']) . "
+                            </td>
                             <td>" .
                     utf8_decode($linhas['nm_pessoa']) . "
                             </td>
@@ -234,7 +242,7 @@ foreach ($rs as $linhas) {
     } else {
 
         $html .= "<tr>
-                            <td colspan=3 align='right'><b>" . utf8_decode("Quantidade p/Lotações:") . "<br></td>
+                            <td colspan=4 align='right'><b>" . utf8_decode("Quantidade p/Lotações:") . "<br></td>
                             <td><b>" . $somaQuantLot . "</td>
                  </tr>
             </table>
@@ -253,12 +261,16 @@ foreach ($rs as $linhas) {
                  <b>=> " . utf8_decode("LOTAÇÂO: ") . utf8_decode($linhas['nm_lotacao']) . "</b><br>
                      <table>
                         <tr>
+                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
                             <td width=><b>" . utf8_decode("Nome") . "</b></td>
                             <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
                             <td width=><b>" . utf8_decode("Função") . "</b></td>
                             <td width=><b>C. H.</b></td>
                         </tr>
                         <tr> 
+                            <td>" .
+                utf8_decode($linhas['nr_matricula']) . "
+                            </td>
                              <td>" .
                 utf8_decode($linhas['nm_pessoa']) . "
                             </td>
@@ -282,7 +294,7 @@ foreach ($rs as $linhas) {
 }
 
 $html .= "      <tr>
-                            <td colspan=3 align='right'><b>" . utf8_decode(" Quantidade p/Lotação") . "</td>
+                            <td colspan=4 align='right'><b>" . utf8_decode(" Quantidade p/Lotação") . "</td>
                             <td><b>" . $somaQuantLot . "</td>
                 </tr>
             </table>
