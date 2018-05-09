@@ -73,55 +73,6 @@ $(document).ready(function () {
     }
     listaUsuarios();
 
-//    function listaProgramasTrabalho() {
-//        let dataSet = [];
-//        let valores = [];
-//        var $this = $(this);
-//        var progTrab = {
-//            cd: null,
-//            ds: null,
-//            ano: 2018
-//        };
-//
-//        $.ajax({
-//            "url": "/model/request.php",
-//            "dataType": "json",
-//            "data": {
-//                "acao": "listarProgTrabJSON",
-//                "progTrab": progTrab
-//            },
-//            "success": function (response) {
-//
-//                if ($.trim(response)) {
-//                    if (response.length) {
-//                        valores = response
-//                    }
-//                }
-//
-//                $("#totalProgramasTrabalho").append(valores.length);
-//                for (var i = valores.length - 1; i >= 0; i--) {
-//                    let total = Number(valores[i]['saldo'])
-//                    let valor = [
-//                        valores[i]['funcional'],
-//                        total.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
-//                    ]
-//                    dataSet.push(valor)
-//                }
-//                $('#tabelaProgramaTrabalho').DataTable({
-//                    data: dataSet,
-//                    language: {
-//                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//                    },
-//                    columns: [
-//                        {title: "Funcional Programática"},
-//                        {title: "Saldo"}
-//                    ]
-//                });
-//            }
-//        });
-//    }
-//
-//    listaProgramasTrabalho();
 
     function listaLiberacoes() {
         let dataSet = [];
@@ -151,6 +102,8 @@ $(document).ready(function () {
                         valores[i]['nr_fonte'],
                         valores[i]['nm_tipo_gasto'],
                         Number(valores[i]['valor']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        Number(valores[i]['pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        Number(valores[i]['saldo']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
                     ]
                     dataSet.push(valor)
                 }
@@ -165,7 +118,10 @@ $(document).ready(function () {
                         {title: "Despesa"},
                         {title: "Fonte"},
                         {title: "Tipo gasto"},
-                        {title: "Valor"}
+                        {title: "Valor"},
+                        {title: "Pedido"},
+                        {title: "Saldo"}
+
                     ]
                 });
             }
@@ -416,13 +372,13 @@ $(document).ready(function () {
                             '</div>';
                     i++
                 }
-                 informacoes += '' +
-                            '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
-                            '<p class="text-bold">Total</p>' +
-                            '</div>' +
-                            '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">' +
-                            '<p class="text-center">' + total + '</p>' +
-                            '</div>';
+                informacoes += '' +
+                        '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">' +
+                        '<p class="text-bold">Total</p>' +
+                        '</div>' +
+                        '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">' +
+                        '<p class="text-center">' + total + '</p>' +
+                        '</div>';
 
                 $("#table_pedido_info").find('tbody').find('.info_resultado').html(informacoes);
 
@@ -543,7 +499,7 @@ $(document).ready(function () {
         let dataLabels = []
         let valores = []
         let color = ['#5e63f2', '#69efd7', '#FFC233', '#76d343', '#059BFF', '#db1818']
-                     
+
         var $this = $(this);
 
         $.ajax({
@@ -566,7 +522,7 @@ $(document).ready(function () {
                 let informacoes = "";
                 let total = 0;
                 for (var index in valores) {
-                    if(valores[index]['name'] == "Temporário"){
+                    if (valores[index]['name'] == "Temporário") {
                         continue;
                     }
                     dataSet.push(parseInt(valores[index]['y']))
@@ -585,9 +541,7 @@ $(document).ready(function () {
                         '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
                         '<p class="text-bold"> Total </p>' +
                         '</div>' +
-                       
-
-                $("#table_tipo_vinculo_info").find('tbody').find('.info_resultado_vinculo').html(informacoes);
+                        $("#table_tipo_vinculo_info").find('tbody').find('.info_resultado_vinculo').html(informacoes);
 
                 var ctx = document.getElementById("donutChartVinculo");
                 data = {
