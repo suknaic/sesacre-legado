@@ -4,7 +4,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     $("body").on("change", "#id_lotacao1", function (e) {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -25,7 +25,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaPaisCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaPaisOption"
@@ -39,13 +39,10 @@ $(document).ready(function () {
             }
         });
     }
-    //*********************************************************************************************************************
-
-
 //*********************************************************************************************************************
     function listarCategoriaTipo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": "html",
             "data": {
                 "acao": "listaTipoOption",
@@ -73,7 +70,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     $("body").on("change", "#idCategoriaTipo", function (e) {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaPrimariaOption",
@@ -100,7 +97,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     $("body").on("change", "#idCategoriaPrimaria", function (e) {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaSecundariaOption",
@@ -127,7 +124,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     $("body").on("change", "#idCategoriaSecundaria", function (e) {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -145,7 +142,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaLotacao1Combo(change = false) {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -169,7 +166,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaLotacaoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaLotacaoOptionPessoa",
@@ -186,7 +183,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaCargo1Combo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -207,7 +204,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaCargoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaCargoOptionPessoa",
@@ -225,7 +222,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaFuncao1Combo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -246,7 +243,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaFuncaoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaFuncaoOptionPessoa",
@@ -264,7 +261,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaVinculo1Combo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -285,7 +282,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaVinculoCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaVinculoOptionPessoa",
@@ -302,7 +299,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaEscolaridade1Combo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -323,7 +320,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaEscolaridadeCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaEscolaridadeOptionPessoa"
@@ -340,7 +337,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaEstadoCivil1Combo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -361,7 +358,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaEstadoCivilCombo() {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaEstadoCivilOptionPessoa"
@@ -378,7 +375,7 @@ $(document).ready(function () {
 //*********************************************************************************************************************
     function listaPessoaCombo() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaPessoaOption"
@@ -391,7 +388,7 @@ $(document).ready(function () {
                     width: " 100%"
                 });
                 $.ajax({
-                    "url": "/model/cha/abertura/request.php",
+                    "url": "/model/cha/informatica/chamado/request.php",
                     "dataType": 'html',
                     'method': 'POST',
                     "data": {
@@ -449,23 +446,9 @@ $(document).ready(function () {
         });
     }
 //*********************************************************************************************************************
-//    function listaChamado() {
-//        $.ajax({
-//            "url": "/model/cha/abertura/chamado-request.php",
-//            "dataType": 'html',
-//            "data": {
-//                acao: "listaChamadoTable"
-//            },
-//            "success": function (response) {
-//                func.carregaTabelaPadrao('tabela', response, [10]);
-//            }
-//        });
-//    }
-//    listaChamado();
-//*********************************************************************************************************************
     function returnChamados() {
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": "html",
             "method": "POST",
             "data": {
@@ -560,7 +543,7 @@ $(document).ready(function () {
             return false;
         }
         $.ajax({
-            "url": "/model/cha/abertura/request.php",
+            "url": "/model/cha/informatica/chamado/request.php",
             "dataType": 'html',
             'method': 'POST',
             "data": {
@@ -716,10 +699,7 @@ $(document).ready(function () {
             var idLotacao = ($("#id_lotacao1").val() ? $("#id_lotacao1").val() : "");
             var idVinculo = ($("#idVinculo").val() ? $("#idVinculo").val() : "");
 
-
-//            console.log($("#nm_email").val());
             var DadosFormSistema = {
-//                idChamado: $("#idChamado").val(),
                 nmPessoa: nmPessoa,
                 dsEmail: dsEmail,
                 nrTelefone: nrTelefone,
@@ -773,9 +753,7 @@ $(document).ready(function () {
             var dsIpGateway = ($("#dsIpGateway").val() ? $("#dsIpGateway").val() : "");
             var nrTelefone = ($("#nrTelefone").val() ? $("#nrTelefone").val() : "");
 
-//            console.log($("#nm_email").val());
             var DadosFormInfraestrutura = {
-//                idChamado: $("#idChamado").val(),
                 tpLiberacao: tpLiberacao,
                 nmPessoa: nmPessoa,
                 idCargo: idCargo,
@@ -805,7 +783,7 @@ $(document).ready(function () {
 //            console.log(DadosFormSistema);
 //            return;
 
-            
+
 //            if (DadosChamado.idCategoriaSecundaria == 0 || DadosChamado.idPessoaSolicitante == "" || DadosChamado.idPessoaServico == "" || DadosChamado.dhAbertura == "" ||
 //                    DadosChamado.dsChamado == "" || DadosChamado.nrTelefoneSolicitante == "" || DadosChamado.dsFinalizado == "" || DadosChamado.dhFinalizado == "" ||
 //                    DadosChamado.nrAvaliacao == "" || DadosChamado.dhAvaliacao == "" || DadosChamado.dsAvaliacao == "" || DadosChamado.vlChamado == "" ||
@@ -844,7 +822,7 @@ $(document).ready(function () {
 //console.log(DadosFormSistema);
 
             $.ajax({
-                "url": "/model/cha/abertura/request.php",
+                "url": "/model/cha/informatica/chamado/request.php",
                 "dataType": 'html',
                 'method': 'POST',
                 "data": {
@@ -933,7 +911,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/cha/abertura/request.php",
+                        "url": "/model/cha/informatica/chamado/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "remChamado",
@@ -1030,7 +1008,7 @@ $(document).ready(function () {
 
         $.ajax({
 
-            url: '/model/cha/abertura/upload/anexaArquivo.php',
+            url: '/model/cha/informatica/chamado/upload/anexaArquivo.php',
             data: anexar,
             processData: false,
             contentType: false,

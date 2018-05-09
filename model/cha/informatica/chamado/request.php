@@ -1,8 +1,8 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/abertura/Chamado.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/form_sistemas/FormSistemas.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/chamado/Chamado.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/formularios/formSistemas/FormSistemas.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/administracao/categoriaTipo/CategoriaTipo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/administracao/categoriaPrimaria/CategoriaPrimaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/administracao/categoriaSecundaria/CategoriaSecundaria.class.php";

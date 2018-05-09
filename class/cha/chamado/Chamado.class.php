@@ -1,9 +1,9 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/cha/DaoChaFormSistemas.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/form_sistemas/FormSistemas.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/formularios/formSistemas/FormSistemas.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/cha/DaoChaFormInfraestrutura.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/form_infraestrutura/FormInfraestrutura.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/cha/formularios/formInfraestrutura/FormInfraestrutura.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/cha/DaoChaChamado.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/cargo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
