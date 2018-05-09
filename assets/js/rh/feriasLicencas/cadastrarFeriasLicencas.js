@@ -192,6 +192,7 @@ $(document).ready(function () {
                             console.log(response);
                             return false;
                         }
+                        //console.log(response);
                         $(".titulo").text(response[0]['nm_social']);
                         $("#id_contrato").val(idContrato);
                         $("#id_pessoa_fisica").val(idPessoaFisica);
