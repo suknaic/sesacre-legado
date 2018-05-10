@@ -337,7 +337,11 @@
                                 <li>
                                     <a href="http://www.sidis.ac.gov.br/" target="_blank">SIDIS</a>
                                 </li>
-
+                                
+                                <li>
+                                    <a href="https://sesacrelegis.wixsite.com/diretoriajuridica" target="_blank">SESACRELEGIS</a>
+                                </li>
+                                
                                 <li>
                                     <a href="http://intranet.sesacre" target="_blank">CENTRAL DE NORMAS</a>
                                 </li>

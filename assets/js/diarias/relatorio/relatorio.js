@@ -130,8 +130,8 @@ function encapsulaDadosDoFormDestino(){
 
                 var linha =  `<tr data-destino='${JSON.stringify(Destino)}'>
                     <td>${Destino.ds_cidade_inicio}</td>
-                    <td>${Destino.dh_inicio}</td>
                     <td>${Destino.ds_cidade_fim}</td>
+                    <td>${Destino.dh_inicio}</td>
                     <td>${Destino.dh_fim}</td>
                     <td><span role="button" class="remove-destino">Remover</span> | <aspan role="button" class="edit-destino">Alterar</span></td>
                  </tr>`;
@@ -151,8 +151,8 @@ function retornaItinerario(){
     if (itinerarioOriginal != null){
         var linha = `<tr data-destino='${JSON.stringify(itinerarioOriginal)}'>
                     <td>${itinerarioOriginal.ds_cidade_inicio}</td>
-                    <td>${itinerarioOriginal.dh_inicio}</td>
                     <td>${itinerarioOriginal.ds_cidade_fim}</td>
+                    <td>${itinerarioOriginal.dh_inicio}</td>
                     <td>${itinerarioOriginal.dh_fim}</td>
                     <td><span role="button" class="remove-destino">Remover</span> | <span role="button" class="edit-destino">Alterar</span></td>
                  </tr>`;
@@ -188,6 +188,8 @@ $(document).ready(function () {
     
     $('#dh_inicio').mask("99/99/9999 99:99");
     $('#dh_fim').mask("99/99/9999 99:99");
+    
+    $('#dt_relatorio_destino').mask("99/99/9999");
     
      //datapiker, plugins para data
     $('#dt_relatorio_destino').datepicker({

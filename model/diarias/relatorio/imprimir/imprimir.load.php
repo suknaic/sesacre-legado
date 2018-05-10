@@ -24,6 +24,7 @@ $html = "
                     font-family: arial;
                     font-style: normal;
                     font-variant: normal;
+                    font-size: 9pt;
                     }
                     
                     table {
@@ -74,7 +75,7 @@ $html = "
                     }
 
                     #brasao{
-                      width: 8%;
+                      width: 9%;
                       margin: 0 auto;
 
                     }
@@ -146,7 +147,7 @@ $html = "
               <p class='cabecalho2'>
                 ESTADO DO ACRE
                 <br/>
-                DECRETO N° 6.854 DE 30 DE DEZEMBRO DE 2002
+                DECRETO Nº 6.854 DE 30 DE DEZEMBRO DE 2002
                 <br/>
                 <br/>
                 ANEXO III
@@ -162,7 +163,7 @@ $html = "
             <div class='nome_ser'><b>Nome do Servidor:</b> ".$dados['nm_proposto']."</div>
             ";
               if($dados['mt_proposto'] != null && $dados['mt_proposto'] !=""){
-           $html .="<div class='matri'><b>Matrícula:</b>".$dados['mt_proposto']."</div>";
+           $html .="<div class='matri'><b>Matrícula: </b>".$dados['mt_proposto']."</div>";
                   }
 $html .="
             
@@ -278,8 +279,8 @@ $html .="
             <div class='centro'> ___________________________, ________ de ____________________ de ________. </div>
             <br/><br/>
             
-            <div class='ass_esquerda'> ____________________________________ <br/> Relator</div> 
-            <div class='ass_direita'> _____________________________________ <br/> Chefe Imediato </div>
+            <div class='ass_esquerda'> _________________________________________________________ <br/> Relator</div> 
+            <div class='ass_direita'> _________________________________________________________ <br/> Chefe Imediato </div>
             <br/>
             
             <div class='centro'> (Alterado pelo Decreto 6.124/2013)</div>

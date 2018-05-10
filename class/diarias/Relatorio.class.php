@@ -167,8 +167,8 @@ class Relatorio {
                 foreach ($daoDiaRelatorioDestino->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-destino='" . json_encode($linha) . "' >"
                                     . "<td>".$linha['ds_cidade_inicio']."</td>"
-                                    . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['ds_cidade_fim']."</td>"
+                                    . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['dh_fim']."</td>"
                                     . "<td><span role='button' class='remove-destino'>Remover</span> | <span role='button' class='edit-destino'>Alterar</span></td>"
                               . "</tr>";
