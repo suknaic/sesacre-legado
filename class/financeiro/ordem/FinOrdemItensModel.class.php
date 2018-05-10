@@ -201,14 +201,13 @@ class FinOrdemItensModel {
 
         if ($daoFinOrdenItens->Sucesso()) {
             if ($this->tp_item == "C" || $this->tp_item == "P") {
-                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 2) >= round($this->qd_itens_pre, 2)) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round($this->qd_itens_pre, 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
             } else if ($this->tp_item == "S") {
-
-                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 2) >= round(($this->qd_itens_pre * $this->vl_itens_pre), 2)) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round(($this->qd_itens_pre * $this->vl_itens_pre), 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
@@ -216,6 +215,7 @@ class FinOrdemItensModel {
             } else {
                 $this->sucesso = false;
             }
+           
         }
     }
 
