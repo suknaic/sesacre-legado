@@ -53,4 +53,20 @@ class DaoGcoAnexo extends GconAnexoExt {
             return $e->getMessage();
         }
     }
+    
+    //verifica anexo 
+    function retornarAnexo($pdo){
+        try {
+            $verifica = $pdo->prepare(' SELECT id_processo, lk_anexo 
+                                            FROM gco_anexo
+                                        WHERE lk_anexo = :link');
+            $verifica->bindValue(":link", $this->getEndereco(), PDO::PARAM_STR);
+            $verifica->execute();
+            if ($verifica->rowCount() >= 0) {
+                return $verifica->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
 }
