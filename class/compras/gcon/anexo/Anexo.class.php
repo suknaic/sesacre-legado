@@ -208,7 +208,7 @@ class Anexo {
                         if ($cadastraAnotacao) {
                             $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
                             if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
-                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . md5($this->nomeAnexo);
+                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . md5($this->idProcesso.$this->nomeAnexo);
                                 if (unlink($link)) {
                                     $pdo->commit();
                                     return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");
@@ -233,6 +233,24 @@ class Anexo {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
+    
+    public function verificaAnexo() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $daoAnexo = new DaoGcoAnexo();
+            $daoAnexo->setIdProcesso($this->idProcesso);
+            $daoAnexo->setEndereco($this->endereco);
+            
+            $verifica = $daoAnexo->retornarAnexo($pdo);
+            var_dump($verifica);
+            return;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
