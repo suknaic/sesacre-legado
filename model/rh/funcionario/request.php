@@ -465,8 +465,12 @@ switch ($_REQUEST['acao']) {
 
     case 'listaSituacaoOption':
         try {
+            $id = $_REQUEST['id'];
+            print_r($id);
+            
             $prog = new Contrato();
-            echo $prog->retornaOptionSituacao();
+            
+            echo $prog->retornaOptionSituacao($id);
             return;
             break;
         } catch (Exception $e) {

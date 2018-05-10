@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -61,7 +61,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
                     <!--===================================================-->
                     <div id="page-content">
                         <?php
-                        require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/cha/informatica/abertura/_modalAnexaArquivo.html";
+                        require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/cha/informatica/cadastra/_modalAnexaArquivo.html";
                         ?>
                         <!-- Inicio Form -->
                         <div class="row">
@@ -299,7 +299,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/cha/abertura/cadastraChamado.js"></script>
+        <script src="/assets/js/cha/informatica/chamado/chamado.js"></script>
         <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->

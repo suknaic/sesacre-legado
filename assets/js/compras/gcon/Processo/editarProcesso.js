@@ -529,9 +529,6 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else {
             e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-
             var central = [];
             $('#centrais .centrais').each(function () {
                 var $this = $(this);
@@ -547,7 +544,6 @@ $(document).ready(function () {
                 var vlGast = $this.find('.valorTipoGasto').val();
                 tipoDeGasto.push({'id': idGast, 'tpg': tpGast, 'valor': vlGast});
             });
-            console.log(tipoDeGasto);
             
             var processo = {
                 id_processo: $("#id_processo").val(),
@@ -581,7 +577,6 @@ $(document).ready(function () {
                     "atualizaProcesso": processo
                 },
                 "success": function (response) {
-                    $this.prop("disabled", false);
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -612,12 +607,10 @@ $(document).ready(function () {
                     }
                 },
                 "error": function (response) {
-                    $this.prop("disabled", false);
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
-            $this.prop("disabled", false);
         }
     });
 });

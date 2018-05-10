@@ -35,9 +35,6 @@ switch ($_POST['acao']) {
                 $nome = $arquivo;
                 $link = $endereco.md5($nome);
                 $verifica = file_exists($link);
-//                var_dump($verifica);
-//                var_dump($link);
-//                return;
                 if ($verifica){
                     echo Metodos::retornoAjax("Erro", "alert", "Arquivo já Existe no Sistema.");
                     return;
