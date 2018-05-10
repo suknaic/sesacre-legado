@@ -9,7 +9,7 @@ $session = new Session('ajax');
 switch ($_REQUEST['acao']) {        
     case 'validaRelatorioDestino':
         try {
-            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT);
             $relatorio = new Relatorio();
             $relatorio->setDestinos($filtro);
             echo $relatorio->validaRelatorioDestino();
