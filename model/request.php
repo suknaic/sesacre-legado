@@ -11,6 +11,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/liberacaoCentral/FinC
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/CentralResponsavel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 
+
 $session = new Session('ajax');
 // header('Content-type: application/json');
 
@@ -127,6 +128,23 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
             break;
+        }
+        
+    case 'pesquisaGrafico1':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //print_r($dados);
+            $todos = $dados['todos'];
+            $dataInicio = $dados['dt_inicio'];
+            $dataFim = $dados['dt_fim'];
+            //**************************************
+            $banco = new Contrato();
+            echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 1, 0, 0);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
         }
 }
 ?>

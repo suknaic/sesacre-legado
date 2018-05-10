@@ -119,7 +119,7 @@ switch ($_REQUEST['acao']) {
 
     case 'validaDiariaDestino':
         try {
-            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT);
             $diaria = new Diaria();
             $diaria->setItinerario($filtro);
             echo $diaria->validaDiariaDestino();

@@ -66,14 +66,6 @@
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalPesqCidade.html";
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalAnexaArquivo.html";
                         ?>
-                        <div class="panel" id="relViagem">
-                            <div class="panel-heading text-center">
-                                <h3 class="panel-title">Relatório de Viagem</h3>
-                            </div>
-                            <div class="panel-body">
-                                <a href="imprimir.php?id=<?php echo $id_relatorio;?>">Anexo III - PDF</a>
-                            </div>
-                        </div>
                         <form>
                             <input type="hidden" id="id_diaria" value="<?php echo $id_diaria; ?>">
                             <input type="hidden" id="id_relatorio" value="<?php echo $id_relatorio; ?>"/>
@@ -150,19 +142,6 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-calendar inputPFa"></p>
-                                                    </span>
-                                                    <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
                                                 <input type="hidden" id="id_cidade_fim" disabled value="<?php echo $id_cidade_fim; ?>">
                                                 <div class="input-group">
@@ -170,6 +149,20 @@
                                                     <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
                                                         <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                     </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-calendar inputPFa"></p>
+                                                    </span>
+                                                    <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -245,8 +238,8 @@
                                         <thead>
                                             <tr>
                                                 <th>Origem</th>
-                                                <th>Horário da Partida</th>
                                                 <th>Destino</th>
+                                                <th>Horário da Partida</th>
                                                 <th>Horário de Chegada</th>
                                                 <th></th>
                                             </tr>
@@ -274,6 +267,14 @@
                                             <?php echo $linhasAnexos; ?>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="panel" id="relViagem">
+                                <div class="panel-heading text-center">
+                                    <h3 class="panel-title">Relatório de Viagem</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="imprimir.php?id=<?php echo $id_relatorio;?>" target="_blank">Anexo III - PDF</a>
                                 </div>
                             </div>
                             <div class="text-center">
