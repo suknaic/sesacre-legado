@@ -29,6 +29,14 @@ $(document).ready(function () {
         $('#tabelaCidades').dataTable().fnDestroy();
         $('#tabelaCidades tbody').empty();
     });
+    
+    $('body').on('keypress', '#cidadeQuery', function (e) {
+        var key = e.which;
+        if (key == 13) {
+            $("#btn-pesquisa").trigger('click');
+            return false;
+        }
+    });
 
 
     $('body').on('click', '#btn-pesquisa', function (e) {
