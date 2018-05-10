@@ -476,7 +476,7 @@ $(document).ready(function () {
                         valores = response
                     }
                 }
-                console.log(valores);
+                //console.log(valores);
                 let i = 0;
                 let informacoes = "";
                 let total = 0;
@@ -547,7 +547,7 @@ $(document).ready(function () {
         var $this = $(this);
 
         $.ajax({
-            "url": "/model/rh/relatorios/request.php",
+            "url": "/model/request.php",
             "dataType": 'html',
             "method": 'POST',
             "data": {
@@ -561,7 +561,7 @@ $(document).ready(function () {
                     console.log(response);
                     return false;
                 }
-                console.log(valores);
+                //console.log(valores);
                 let i = 0;
                 let informacoes = "";
                 let total = 0;
