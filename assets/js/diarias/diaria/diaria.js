@@ -229,6 +229,7 @@ function encapsulaDadosDoFormItinerario() {
     $.ajax({
         "url": "/model/diarias/diaria/request.php",
         "dataType": 'html',
+        "method": "post",
         "data": {
             acao: "validaDiariaDestino",
             dados: JSON.stringify(Itinerario)
@@ -249,8 +250,8 @@ function encapsulaDadosDoFormItinerario() {
 
                 var linha = `<tr data-itinerario='${JSON.stringify(Itinerario)}'>
                     <td>${Itinerario.ds_cidade_inicio}</td>
-                    <td>${Itinerario.dh_inicio}</td>
                     <td>${Itinerario.ds_cidade_fim}</td>
+                    <td>${Itinerario.dh_inicio}</td>
                     <td>${Itinerario.dh_fim}</td>
                     <td>${valorComMascara(Itinerario.vl_total)}</td>
                     <td><span role='button' class="remove-itinerario">Remover</span> | <span role='button' class="edit-itinerario">Alterar</span></td>
@@ -267,14 +268,18 @@ function encapsulaDadosDoFormItinerario() {
 
 }
 
+
+
+            
+
 function retornaItinerario() {
     var itinerarioOriginal = $("#id_diaria_destino").data('itinerario');
 
     if (itinerarioOriginal != null){
         var linha = `<tr data-itinerario='${JSON.stringify(itinerarioOriginal)}'>
                         <td>${itinerarioOriginal.ds_cidade_inicio}</td>
-                        <td>${itinerarioOriginal.dh_inicio}</td>
                         <td>${itinerarioOriginal.ds_cidade_fim}</td>
+                        <td>${itinerarioOriginal.dh_inicio}</td>
                         <td>${itinerarioOriginal.dh_fim}</td>
                         <td>${valorComMascara(itinerarioOriginal.vl_total)}</td>
                         <td><span role='button' class="remove-itinerario">Remover</span> | <span role='button' class="edit-itinerario">Alterar</span></td>
@@ -290,6 +295,8 @@ $(document).ready(function () {
 
     $('#dh_inicio').mask("99/99/9999 99:99");
     $('#dh_fim').mask("99/99/9999 99:99");
+    
+    $('#dt_criacao').mask("99/99/9999");
     
     //datapiker, plugins para data
     $('#dt_criacao').datepicker({
@@ -399,13 +406,6 @@ $(document).ready(function () {
             } else {
                 pernoite = "N";
             }
-
-            //Percorre o itinerario
-            var itinerario = [];
-            $("#itinerario tbody tr").each(function (e) {
-                var destino = $(this).data('itinerario');
-                itinerario.push(destino);
-            });
             
             //Percorre os anexos
             var anexos = [];
@@ -413,6 +413,14 @@ $(document).ready(function () {
                 var anexo = $(this).data('anexo');
                 anexos.push(anexo);
             });
+            
+            //Percorre o itinerario
+            var itinerario = [];
+            $("#itinerario tbody tr").each(function (e) {
+                var destino = $(this).data('itinerario');
+                itinerario.push(destino);
+            });
+            
 
             var Diaria = {
                 idDiaria: $("#id_diaria").val(),

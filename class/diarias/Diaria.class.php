@@ -57,6 +57,7 @@ class Diaria {
     private $vlDiariaDestino = null;
     
     private $idAnexo = null;
+    private $msgErros = null;
     
     function getIdAnexo() {
         return $this->idAnexo;
@@ -536,8 +537,8 @@ class Diaria {
                 foreach ($daoDiaDiariaDestino->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-itinerario='" . json_encode($linha) . "' >"
                                     . "<td>".$linha['ds_cidade_inicio']."</td>"
-                                    . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['ds_cidade_fim']."</td>"
+                                    . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['dh_fim']."</td>"
                                     . "<td>".number_format($linha['vl_total'], 2,',','.')."</td>"
                                     . "<td><span role='button' class='remove-itinerario'>Remover</span> | <span role='button' class='edit-itinerario'>Alterar</span></td>"
@@ -576,7 +577,7 @@ class Diaria {
                                             . "<a href='./diaria/diaria.php?id=" . $linha['id_diaria'] ."'>Editar</a> | "
                                             . "<a href='#' class='excluirDiaria'>Excluir</a> | "
                                             . "<a href='./relatorio/relatorio.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | "
-                                            . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "'>Imprimir</a>"
+                                            . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>"
                                         . "</td>"
                                      . "</tr>";
                     } else {
@@ -676,6 +677,25 @@ class Diaria {
         }
     }
     
+    
+    function validaDataCriacao(){
+        $dataCriacao = date_create_from_format('d/m/Y H:i', $this->getDtCriacao() .' 00:00' );
+        try {
+            foreach ($this->getItinerario() as $linha) {
+                $dataPartida = date_create_from_format('d/m/Y H:i',$linha['dh_inicio']);
+                if ($dataCriacao->getTimeStamp() > $dataPartida->getTimeStamp()) {
+                    $this->msgErros .= 'Data de criação não pode ser maior que a data da partida' ;
+                    return false;
+                    break;
+                }
+            }
+            
+           return true;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
  
     
     function salvarDiaria() {
@@ -685,63 +705,71 @@ class Diaria {
             $pdo->beginTransaction();
             
             $retorno = "";
-            //****************************DiaDiaria INICIO********************************************
-            $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->setIdTipo($this->getIdTipo());
             
-            if ($this->getIdDiariaPai()) {
-                $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
-            }
-            
-            $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
-            $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());
-            $daoDiaDiaria->setIdFuncaoProponente($this->getIdFuncaoProponente());
-            
-            $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
-            $daoDiaDiaria->setIdLotacaoProposto($this->getIdLotacaoProposto());
-            $daoDiaDiaria->setIdFuncaoProposto($this->getIdFuncaoProposto());
-            
-            $daoDiaDiaria->setDsServicoExecutado($this->getDsServicoExecutado());
-            $daoDiaDiaria->setDsLocaisExecutado($this->getDsLocaisExecutado());
-            
-            $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
-            
-            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
-            $daoDiaDiaria->setIdPedido($this->getIdPedido());
-            
-            if($this->getIdDiariaPai()){
-                $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
-            }
-            
-            $daoDiaDiaria->setStEstagio($this->getStEstagio());
-            $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
-            
-            $daoDiaDiaria->setDsObs($this->getDsObs());
-            
-            $daoDiaDiaria->insert($pdo);
-            if($daoDiaDiaria->getSucesso()){
-                
-                $idDiaria = $pdo->lastInsertId('dia_diaria_id_diaria_seq');
-                if (!Log::SalvaLogI('dia_diaria', $idDiaria, $pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                }
-                $this->setIdDiaria($idDiaria);
-                
-                $retorno .= $this->percorreDiariaDestinos($pdo);
-                $retorno .= $this->percorreDiariaAnexos($pdo);
-                
-                if (!$this->erros) {
-                    $pdo->commit();
-                    $retorno = Metodos::retornoAjax("ok", "html", "Diária cadastrada com sucesso.");
-                }
-                
+            //****************************Valida data de criação*************************************
+            if (!$this->validaDataCriacao()){
+                return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             } else {
-                $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                //****************************DiaDiaria INICIO********************************************
+                $daoDiaDiaria = new DaoDiaDiaria();
+                $daoDiaDiaria->setIdTipo($this->getIdTipo());
+
+                if ($this->getIdDiariaPai()) {
+                    $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
+                }
+
+                $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
+                $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());
+                $daoDiaDiaria->setIdFuncaoProponente($this->getIdFuncaoProponente());
+
+                $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
+                $daoDiaDiaria->setIdLotacaoProposto($this->getIdLotacaoProposto());
+                $daoDiaDiaria->setIdFuncaoProposto($this->getIdFuncaoProposto());
+
+                $daoDiaDiaria->setDsServicoExecutado($this->getDsServicoExecutado());
+                $daoDiaDiaria->setDsLocaisExecutado($this->getDsLocaisExecutado());
+
+                $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
+
+                $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
+                $daoDiaDiaria->setIdPedido($this->getIdPedido());
+
+                if($this->getIdDiariaPai()){
+                    $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
+                }
+
+                $daoDiaDiaria->setStEstagio($this->getStEstagio());
+                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+
+                $daoDiaDiaria->setDsObs($this->getDsObs());
+
+                $daoDiaDiaria->insert($pdo);
+                if($daoDiaDiaria->getSucesso()){
+
+                    $idDiaria = $pdo->lastInsertId('dia_diaria_id_diaria_seq');
+                    if (!Log::SalvaLogI('dia_diaria', $idDiaria, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    }
+                    $this->setIdDiaria($idDiaria);
+
+                    $retorno .= $this->percorreDiariaDestinos($pdo);
+                    $retorno .= $this->percorreDiariaAnexos($pdo);
+
+                    if (!$this->erros) {
+                        $pdo->commit();
+                        $retorno = Metodos::retornoAjax("ok", "html", "Diária cadastrada com sucesso.");
+                    }
+
+                } else {
+                    $pdo->rollBack();
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                }
+                //**********************************DiaDiaria FIM***********************************************
+                return $retorno;
             }
-            //**********************************DiaDiaria FIM***********************************************
-            return $retorno;
+            
+            
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -755,74 +783,80 @@ class Diaria {
             $pdo->beginTransaction();
             
             $retorno = "";
-            //****************************DiaDiaria INICIO********************************************
-            $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->setIdTipo($this->getIdTipo());
             
-            if ($this->getIdDiariaPai()) {
-                $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
-            }
-            
-            $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
-            $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());
-            $daoDiaDiaria->setIdFuncaoProponente($this->getIdFuncaoProponente());
-            
-            $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
-            $daoDiaDiaria->setIdLotacaoProposto($this->getIdLotacaoProposto());
-            $daoDiaDiaria->setIdFuncaoProposto($this->getIdFuncaoProposto());
-            
-            $daoDiaDiaria->setDsServicoExecutado($this->getDsServicoExecutado());
-            $daoDiaDiaria->setDsLocaisExecutado($this->getDsLocaisExecutado());
-            
-            $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
-            
-            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
-            $daoDiaDiaria->setIdPedido($this->getIdPedido());
-            
-            if($this->getIdDiariaPai()){
-                $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
-            }
-            
-            $daoDiaDiaria->setStEstagio($this->getStEstagio());
-            $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
-            
-            $daoDiaDiaria->setDsObs($this->getDsObs());
-            //Retorna os dados antes da alteração
-            $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
-            $daoDiaDiaria->select($pdo);
-
-            if (!$daoDiaDiaria->getSucesso()) {
-                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
-            }
-
-            //Se não der erro na seleção da diaria, atribui à variável
-            $reg_antigo = $daoDiaDiaria->getMsgRetorno();
-
-            //Atualiza os registros
-            $daoDiaDiaria->update($pdo);
-            if ($daoDiaDiaria->getSucesso()) {
-
-
-                if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $reg_antigo, $pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                }
-                $retorno .= $this->percorreDiariaDestinos($pdo);
-                $retorno .= $this->percorreDiariaAnexos($pdo);
-                
-                
-                if (empty($retorno)) { //Não deu nenhum erro
-                    $pdo->commit();
-                    $retorno = Metodos::retornoAjax("ok", "html", "Diária atualizada com sucesso.");
-                } else {
-                    $retorno = Metodos::retornoAjax("Erro", "console", $retorno);
-                }
+            //****************************Valida data de criação*************************************
+            if (!$this->validaDataCriacao()){
+                return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             } else {
-                $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                //****************************DiaDiaria INICIO********************************************
+                $daoDiaDiaria = new DaoDiaDiaria();
+                $daoDiaDiaria->setIdTipo($this->getIdTipo());
+
+                if ($this->getIdDiariaPai()) {
+                    $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
+                }
+
+                $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
+                $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());
+                $daoDiaDiaria->setIdFuncaoProponente($this->getIdFuncaoProponente());
+
+                $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
+                $daoDiaDiaria->setIdLotacaoProposto($this->getIdLotacaoProposto());
+                $daoDiaDiaria->setIdFuncaoProposto($this->getIdFuncaoProposto());
+
+                $daoDiaDiaria->setDsServicoExecutado($this->getDsServicoExecutado());
+                $daoDiaDiaria->setDsLocaisExecutado($this->getDsLocaisExecutado());
+
+                $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
+
+                $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
+                $daoDiaDiaria->setIdPedido($this->getIdPedido());
+
+                if($this->getIdDiariaPai()){
+                    $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
+                }
+
+                $daoDiaDiaria->setStEstagio($this->getStEstagio());
+                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+
+                $daoDiaDiaria->setDsObs($this->getDsObs());
+                //Retorna os dados antes da alteração
+                $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
+                $daoDiaDiaria->select($pdo);
+
+                if (!$daoDiaDiaria->getSucesso()) {
+                    return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                }
+
+                //Se não der erro na seleção da diaria, atribui à variável
+                $reg_antigo = $daoDiaDiaria->getMsgRetorno();
+
+                //Atualiza os registros
+                $daoDiaDiaria->update($pdo);
+                if ($daoDiaDiaria->getSucesso()) {
+
+
+                    if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $reg_antigo, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    }
+                    $retorno .= $this->percorreDiariaDestinos($pdo);
+                    $retorno .= $this->percorreDiariaAnexos($pdo);
+
+
+                    if (empty($retorno)) { //Não deu nenhum erro
+                        $pdo->commit();
+                        $retorno = Metodos::retornoAjax("ok", "html", "Diária atualizada com sucesso.");
+                    } else {
+                        $retorno = Metodos::retornoAjax("Erro", "console", $retorno);
+                    }
+                } else {
+                    $pdo->rollBack();
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                }
+                //**********************************DiaDiaria FIM***********************************************
+                return $retorno;
             }
-            //**********************************DiaDiaria FIM***********************************************
-            return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

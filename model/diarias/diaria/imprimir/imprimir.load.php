@@ -141,16 +141,16 @@ $session = new Session();
                     </div>
                     <div class='lateral'>
                         <b>Proponente</b><br/>
-                        Nome: ".$dados['nm_proponente']."<br/>
-                        Cargo, função ou emprego: ".$dados['fn_proponente']."<br/>
-                        Órgao/Setor de lotação: ".$dados['lt_proponente']."
+                        <b>Nome:</b> ".$dados['nm_proponente']."<br/>
+                        <b>Cargo, função ou emprego</b>: ".$dados['fn_proponente']."<br/>
+                        <b>Órgao/Setor de lotação:</b> ".$dados['lt_proponente']."
                     </div>
                     <br/>
                     <div class='lateral '>
                         <b>Proposto</b><br/>
-                        Nome: ".$dados['nm_proposto'].",  CPF: ".Metodos::formataCpf($dados['proposto_cpf']).", Matrícula: ".$dados['proposto_matricula']." <br/>
-                        Cargo, função ou emprego: ".$dados['fn_proposto']." <br/>
-                        Órgao/Setor de lotação: ".$dados['lt_proposto']."
+                        <b>Nome:</b> ".$dados['nm_proposto'].",  <b>CPF:</b> ".Metodos::formataCpf($dados['proposto_cpf']).", <b>Matrícula:</b> ".$dados['proposto_matricula']." <br/>
+                        <b>Cargo, função ou emprego:</b> ".$dados['fn_proposto']." <br/>
+                        <b>Órgao/Setor de lotação:</b> ".$dados['lt_proposto']."
                     </div>
                     <div class='lateral'>
                         <p align='justify'>
@@ -192,11 +192,11 @@ $session = new Session();
                     </div>
                     <br/><br/>
                     <div class='esquerda'>
-                        ..........................................<br/>
+                        ..................................................................................<br/>
                         Proponente
                     </div>
                     <div class='direita'>
-                        .............................................<br/>
+                        ..................................................................................<br/>
                         Proposto
                     </div>
                     <br/>
@@ -206,11 +206,11 @@ $session = new Session();
                     </div>
                     <br/><br/>
                     <div class='esquerda'>
-                        ..........................................<br/>
+                        ..................................................................................<br/>
                         Ordenador de Despesa
                     </div>
                     <div class='direita'>
-                        ............................................. <br/>
+                        ..................................................................................<br/>
                         Chefe do Setor Financeiro
                     </div>
                     <br/>

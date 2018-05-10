@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -143,7 +143,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/abertura/index.load.php";
     <!--JAVASCRIP da pagina-->
     <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
     <script src="/assets/lib/sesacre/funcoes.js"></script>
-    <script src="/assets/js/cha/listagem/aguardandoAprovacao.js"></script>
+    <script src="/assets/js/cha/informatica/lista/chamados.js"></script>
     <!-- select2 -->
     <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>

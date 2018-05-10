@@ -230,19 +230,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        </div>
                                        <div class="col-md-6">
                                            <div class="form-group">
-                                               <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-calendar inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
                                                <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
                                                <input type="hidden" id="id_cidade_fim" disabled value="<?php echo $id_cidade_fim; ?>">
                                                <div class="input-group">
@@ -250,6 +237,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
                                                        <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                    </span>
+                                               </div>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="row">
+                                       <div class="col-md-6">
+                                           <div class="form-group">
+                                               <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
+                                               <div class="input-group">
+                                                   <span class="input-group-addon">
+                                                       <p class="fa fa-calendar inputPFa"></p>
+                                                   </span>
+                                                   <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
                                                </div>
                                            </div>
                                        </div>
@@ -368,8 +368,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        <thead>
                                            <tr>
                                                <th>Origem</th>
-                                               <th>Horário da Partida</th>
                                                <th>Destino</th>
+                                               <th>Horário da Partida</th>
                                                <th>Horário de Chegada</th>
                                                <th>Valor total</th>
                                                <th></th>

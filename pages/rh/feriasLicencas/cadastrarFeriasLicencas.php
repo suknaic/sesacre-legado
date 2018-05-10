@@ -183,6 +183,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         <th>Situação</th>
                                                         <th>Data Inicio</th>
                                                         <th>Data Fim</th>
+                                                        <th>Observações</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

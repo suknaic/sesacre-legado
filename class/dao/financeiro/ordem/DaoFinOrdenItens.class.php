@@ -46,14 +46,17 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
                             CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
                             THEN coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
                             ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
-                            from fin_ordem_itens as itemOrdem
+                            from fin_ordem as ordem  
+                            inner join fin_ordem_itens as itemOrdem
+                            on ordem.id_ordem = itemOrdem.id_ordem
                             inner join fin_pre_ordem as preSub
                             on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
                             inner join fin_cont_itens as contItensSub
                             on contItensSub.id_cont_itens = pre.id_cont_itens
                             inner join pla_material as matSub
                             on matSub.id_material = contItensSub.id_material
-                            where itemOrdem.id_pre_ordem = pre.id_pre_ordem
+                            where ordem.sit_ordem > '0'
+                            and itemOrdem.id_pre_ordem = pre.id_pre_ordem
                             group by itemOrdem.id_pre_ordem, matSub.tp_material
                             ),0.0000) 
                          ) as saldo
