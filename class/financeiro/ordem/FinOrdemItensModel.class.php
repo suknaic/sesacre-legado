@@ -198,17 +198,16 @@ class FinOrdemItensModel {
         $daoFinOrdenItens = new DaoFinOrdenItens();
         $daoFinOrdenItens->setIdPreOrdem($this->id_pre_ordem);
         $daoFinOrdenItens->retornaSaldoItemPreOrdem($pdo, $this->id_pedido);
-       
+
         if ($daoFinOrdenItens->Sucesso()) {
             if ($this->tp_item == "C" || $this->tp_item == "P") {
-                if ($daoFinOrdenItens->getMsgRetorno()["saldo"] >= $this->qd_itens_pre) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round($this->qd_itens_pre, 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
             } else if ($this->tp_item == "S") {
-
-                if ($daoFinOrdenItens->getMsgRetorno()["saldo"] >= ($this->qd_itens_pre * $this->vl_itens_pre)) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round(($this->qd_itens_pre * $this->vl_itens_pre), 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
@@ -216,6 +215,7 @@ class FinOrdemItensModel {
             } else {
                 $this->sucesso = false;
             }
+           
         }
     }
 

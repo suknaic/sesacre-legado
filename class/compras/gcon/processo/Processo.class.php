@@ -307,6 +307,10 @@ class Processo {
 
                             if (count($this->tipoGasto) > 0) {
                                 foreach ($this->tipoGasto as $tipoGasto) {
+                                    if ($tipoGasto['valor'] == NULL) {
+                                        $pdo->rollBack();
+                                        return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+                                    }
                                     if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
                                         $pdo->rollBack();
                                         return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
@@ -517,6 +521,10 @@ class Processo {
                     if ($dadosTipoGasto == NULL) {
                         if (count($this->tipoGasto) > 0) {
                             foreach ($this->tipoGasto as $tipoGasto) {
+                                if ($tipoGasto['valor'] == NULL) {
+                                    $pdo->rollBack();
+                                    return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+                                }
                                 if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
                                     $pdo->rollBack();
                                     return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
@@ -538,8 +546,11 @@ class Processo {
                     } else {
                         $busca = $editPro->retornarTipoDeGastoDoProcesso($pdo);
                         foreach ($this->tipoGasto as $key => $tipoGastoApp) {
+                            if ($tipoGastoApp['valor'] == NULL) {
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+                            }
                             if (Metodos::ConverteValorIng($tipoGastoApp['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
-
                                 $pdo->rollBack();
                                 return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
                             }
@@ -688,7 +699,7 @@ class Processo {
                         $condicao[] = "PRO.cd_pregao ILIKE '%" . $this->numePregao . "%'";
                     }
                     if (!empty($this->centraisAtendimento)) {
-                        $condicao[] = "PRO.nm_centrais ILIKE '%" . $this->centraisAtendimento . "%'";
+                        $condicao[] = is_array($this->centraisAtendimento) == TRUE ? "SL.id_lotacao IN (" . implode(',', $this->centraisAtendimento) . ")" : "SL.id_lotacao IN (" . $this->centraisAtendimento . ")";
                     }
                     if (!empty($this->ano)) {
                         $condicao[] = "EXTRACT('Year' FROM PRO.dt_processo) IN ('" . $this->ano . "')";
@@ -703,7 +714,7 @@ class Processo {
                         $condicao[] = "PES.id_pessoa IN (" . $this->tecnico . ")";
                     }
                     if (!empty($this->tipoGasto)) {
-                        $condicao[] = "TPG.id_tipo_gasto IN (" . $this->tipoGasto . ")";
+                        $condicao[] = is_array($this->tipoGasto) == TRUE ? "TG.id_tipo_gasto IN (" . implode(',', $this->tipoGasto) . ")" : "TG.id_tipo_gasto IN (" . $this->tipoGasto . ")";
                     }
                     if (!empty($this->area)) {
                         $condicao[] = "CID.id_cidade IN (" . $this->area . ")";
