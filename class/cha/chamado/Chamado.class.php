@@ -732,7 +732,7 @@ class Chamado {
                             . "<td>" . $v['dh_agendamento'] . "</td>"
                             . "<td>" . $v['nm_status'] . "</td>"
                             . '<td style="text-align: center;">'
-                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
+                            . '<button type="button" class="btn btn-default btn-visualizar btn-xs"'
                             . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
                             . ' value=' . $idChamado . ' >
                                 <i class="fa fa-mail-forward text-success" aria-hidden="true"></i>
