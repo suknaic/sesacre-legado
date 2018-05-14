@@ -128,7 +128,7 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
              ordemItens.vl_itens_ordem, unid.nm_unidade_medida, emp.nr_empenho, desp.cd_despesa_elemento, 
              desp.ds_despesa_elemento, font.nr_fonte, local.nm_lotacao as localEntrega, local.ds_logradouro as localLogradouro,
              local.ds_bairro as localBairro, local.nr_cep as localCep, pEmissor.nm_pessoa as emissor, setorEmissor.nm_lotacao as setor, 
-             pEmissor.nr_telefone_celular, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, pe.nm_email as emailFornecedor
+             pEmissor.nr_telefone_celular, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, pe.nm_email as emailFornecedor, mat.cd_desc_material
              from fin_ordem as ordem
              inner join fin_ordem_itens as ordemItens
              on ordemItens.id_ordem = ordem .id_ordem
@@ -250,7 +250,7 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                     <td>' . $linha["nr_item"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["qt_itens_ordem"], 2), 2) . '</td>
                     <td>' . $linha["nm_unidade_medida"] . '</td>
-                    <td>' . $linha["nm_desc_material"] . '</td>
+                    <td>' . $linha["cd_desc_material"].' - '.$linha["nm_desc_material"] . '</td>
                     <td>' . $linha["nm_marca"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["vl_itens_ordem"], 2), 2) . '</td>
                     <td>' . Metodos::ConverteValorBr($totalItens, 2) . '</td>

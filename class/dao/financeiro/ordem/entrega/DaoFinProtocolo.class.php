@@ -30,10 +30,11 @@ class DaoFinProtocolo extends FinProtocoloTb {
         try {
             if($pdo != null){
                 
-                $sql = "select ordem.id_ordem, ordem.nr_ordem, p.nr_pedido, centalLotacao.nm_lotacao, 
-                        pFornecedor.nm_pessoa, modalidade.nm_modalidade, processo.cd_pregao as licitacao,
-                        cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, emp.nr_empenho,
-                        tpEmpenho.nm_tipo_empenho, emp.id_tipo_empenho, tpGasto.nm_tipo_gasto
+                $sql = "select ordem.id_ordem, ordem.nr_ordem, p.nr_pedido, centalLotacao.nm_lotacao, pFornecedor.nm_pessoa, 
+                        modalidade.nm_modalidade, processo.cd_pregao as licitacao,emp.nr_empenho, tpEmpenho.nm_tipo_empenho, 
+                        emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
+                        cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pt.cd_programa_trabalho, p.ds_pedido,
+                        pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido
                         from fin_ordem as ordem
                         inner join fin_pedido as p
                         on p.id_pedido = ordem.id_pedido
@@ -43,6 +44,12 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         on emp.id_pedido = p.id_pedido
                         inner join fin_tipo_empenho as tpEmpenho
                         on tpEmpenho.id_tipo_empenho = emp.id_tipo_empenho
+                        inner join fin_fonte as font
+                        on font.id_fonte = p.id_fonte
+                        inner join view_programa_trabalho as pt
+                        on pt.id_programa_trabalho = p.id_programa_trabalho
+                        inner join view_despesa as desp
+                        on desp.id_despesa = p.id_despesa
                         inner join ses_lotacao as centalLotacao
                         on centalLotacao.id_lotacao = p.id_lotacao
                         inner join fin_fornecedor as f
