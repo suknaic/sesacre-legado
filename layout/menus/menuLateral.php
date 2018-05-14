@@ -58,7 +58,7 @@
                                             <a href="/pages/sistema/vinculo/index.php">Vínculos</a>
                                         </li>
 <!--                                        <li>
-                                            <a href="#"></a>
+                                            <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
                                         </li>-->
                                     </ul>
                                 </li>

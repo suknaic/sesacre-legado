@@ -89,7 +89,6 @@ class DaoUsuario extends UsuarioExtd {
     function listarPerfis($pdo, $perfis){
         
         try {
-            var_dump(("SELECT id_perfil, nm_perfil FROM ses_perfil WHERE id_perfil IN $perfis"));
             $list = $pdo->prepare("SELECT id_perfil, nm_perfil FROM ses_perfil WHERE id_perfil IN $perfis");
             $list->execute();
             if ($list->rowcount() >= 0){

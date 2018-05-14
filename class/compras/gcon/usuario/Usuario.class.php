@@ -90,14 +90,12 @@ class Usuario {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $pdo->beginTransaction();
             $dao = new DaoUsuario();
 
             $perfis = "(" . PERFIL_COMPRAS_USUARIO . "," . PERFIL_COMPRAS_TECNICO . "," . PERFIL_COMPRAS_ADMINISTRADOR . ")";
             $busca = $dao->listarRegistroUsuario($pdo, $perfis);
             if (is_array($busca) == false) {
                 $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                $pdo->rollBack();
                 return $retorno;
             } else {
                 $tabela = '
