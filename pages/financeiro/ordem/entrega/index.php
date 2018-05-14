@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.load";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -142,41 +142,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                 </div>
                             </div>
                         </div>
-                        <!--===================================================-->
-                        <!--Informaçao do Itens da pre ordem-->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="panel">
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">Itens da pre-ordem</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">Nº</th>
-                                                        <th class="text-center">Item</th>
-                                                        <th class="text-center">Descrição GRP</th>
-                                                        <th class="text-center">Descrição Sesacrenet</th>
-                                                        <th class="text-center">Unid</th>
-                                                        <th class="text-center">Tipo</th>
-                                                        <th class="text-center">Elemento de despesa</th>
-                                                        <th class="text-center">QTD</th>
-                                                        <th class="text-center">Valor unit.</th>
-                                                        <th class="text-center">Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php echo $tabela; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--===================================================-->
+
+                     
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">

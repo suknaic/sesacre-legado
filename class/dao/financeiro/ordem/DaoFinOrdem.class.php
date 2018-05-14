@@ -14,7 +14,10 @@ class DaoFinOrdem extends FinOrdemTb {
     function Sucesso() {
         return $this->sucesso;
     }
-
+    /**
+     * Cadastrar ordem
+     * @param PDO $pdo
+     */
     public function cadastrarOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -40,7 +43,10 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage() . '1';
         }
     }
-
+    /**
+     * Retorna os itens da pre ordem 
+     * @param PDO $pdo
+     */
     public function listaItensPreOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -126,7 +132,11 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-
+    /**
+     * Retorna o valor da pre ordem para seta no banco
+     * @param PDO $pdo
+     * @param int $pre
+     */
     public function retornaValorPreOrdem(PDO $pdo, int $pre = 0) {
         try {
             if (!empty($pdo)) {
@@ -147,7 +157,11 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-
+    /**
+     * Retorna o numero da ultima ordem feita no sistema
+     * @param PDO $pdo
+     * @return boolean
+     */
     public function retornaNumeroMaxOrdem(PDO $pdo) {
         try {
             if ($pdo != NULL) {
@@ -167,7 +181,12 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
+    /**
+     * Retorna as ordem para tela de pesquisa da ordem 
+     * @param PDO $pdo
+     * @param string $condicao
+     * @param int $ano
+     */
     public function retornaDadosTrPesquisa(PDO $pdo, string $condicao, int $ano) {
         try {
             if (!empty($pdo)) {
@@ -212,7 +231,10 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
+    /**
+     * Retorna prazo de entrega do fornecedor
+     * @param PDO $pdo
+     */
     public function retornaPrazoEntrega(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -241,7 +263,10 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+    /**
+     * Retorna Quantidade de ordem por tipo para o grafico inical do sistema
+     * @param PDO $pdo
+     */
     public function retornaQuantidadeTipo(PDO $pdo = null) {
         try {
             $sql = "SELECT "
@@ -264,7 +289,10 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-
+    /**
+     * Atualiza o status da ordem para que ela fique desativada
+     * @param PDO $pdo
+     */
     public function deleteOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -282,7 +310,10 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
+    /**
+     * Retorna toda as informaçoes da ordem especifica informado
+     * @param PDO $pdo
+     */
     public function retornaOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -306,5 +337,5 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
+    
 }
