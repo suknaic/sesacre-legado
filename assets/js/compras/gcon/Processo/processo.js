@@ -314,7 +314,6 @@ $(document).ready(function () {
                     "cadProcesso": processo
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

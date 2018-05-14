@@ -13,12 +13,12 @@ class DaoProcesso extends ProcessoExtd {
                                                            . " VALUES (:ada_process, :nume_pregao_process, :valor_estim_process, :val_homo_process,"
                                                            . " :data_process, :id_objeto, :id_modalidade)");
 
-            $cadpro->bindValue(":ada_process", $this->getAda() === '' ? null : $this->getAda(), PDO::PARAM_STR);
-            $cadpro->bindValue(":nume_pregao_process", $this->getNumePregao() === '' ? null : $this->getNumePregao(), PDO::PARAM_STR);
-            $cadpro->bindValue(":valor_estim_process", $this->getValorEstimado() === '' ? null : $this->getValorEstimado(), PDO::PARAM_STR);
-            $cadpro->bindValue(":val_homo_process", $this->getValorHomologado() === '' ? null : $this->getValorHomologado(), PDO::PARAM_STR);
-            $cadpro->bindValue(":data_process", $this->getData() === '' ? null : $this->getData(), PDO::PARAM_STR);
-            $cadpro->bindValue(":id_objeto", $this->getObjeto() === 0 ? null : $this->getObjeto(), PDO::PARAM_INT);
+            $cadpro->bindValue(":ada_process", $this->getAda(), PDO::PARAM_STR);
+            $cadpro->bindValue(":nume_pregao_process", $this->getNumePregao() === '' ? NULL : $this->getNumePregao(), PDO::PARAM_STR);
+            $cadpro->bindValue(":valor_estim_process", $this->getValorEstimado(), PDO::PARAM_STR);
+            $cadpro->bindValue(":val_homo_process", $this->getValorHomologado(), PDO::PARAM_STR);
+            $cadpro->bindValue(":data_process", $this->getData() === '' ? NULL : $this->getData(), PDO::PARAM_STR);
+            $cadpro->bindValue(":id_objeto", $this->getObjeto() === 0 ? NULL : $this->getObjeto(), PDO::PARAM_INT);
             $cadpro->bindValue(":id_modalidade", $this->getModalidade() === 0 ? NULL : $this->getModalidade(), PDO::PARAM_INT);
             $cadpro->execute();
             return TRUE;
@@ -42,7 +42,7 @@ class DaoProcesso extends ProcessoExtd {
     function cadastrarUnidadeContemplada($pdo) {
         try {
             $uniComt = $pdo->prepare("INSERT INTO gcon_unidade_contempladas(id_processo,nm_unidades_contempladas) VALUES (:id_processo, :unidade)");
-            $uniComt->bindValue(":unidade", $this->getUni_cont_process() === '' ? null : $this->getUni_cont_process(), PDO::PARAM_STR);
+            $uniComt->bindValue(":unidade", $this->getUni_cont_process() === '' ? NULL : $this->getUni_cont_process(), PDO::PARAM_STR);
             $uniComt->bindValue(":id_processo", $this->getId_Processo(), PDO::PARAM_INT);
             $uniComt->execute();
             return true;

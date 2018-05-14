@@ -460,7 +460,7 @@ $(document).ready(function () {
                             response = JSON.parse(response);
                         } catch (e) {
 //                            console.log(response);
-                            return false;
+//                            return false;
                         }
 //                        console.log(response);
                         $(".nmPessoa").val(response[0]['nm_pessoa']);
@@ -857,7 +857,7 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'primary');
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             top.location.href = "/pages/cha/informatica/index.php?id=3";
                         });

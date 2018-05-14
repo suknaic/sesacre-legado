@@ -214,12 +214,12 @@ class Processo {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
                 $cadPro = new DaoProcesso();
-
+                
                 $cadPro->setAda($this->ada);
-                $cadPro->setValorEstimado($this->valorEstimado != "" ? Metodos::ConverteValorIng($this->valorEstimado) : "");
+                $cadPro->setValorEstimado($this->valorEstimado != "" ? Metodos::ConverteValorIng($this->valorEstimado) : 0);
                 $cadPro->setData(Metodos::ConverteDataING($this->data));
                 $cadPro->setNumePregao($this->numePregao);
-                $cadPro->setValorHomologado($this->valorHomologado != "" ? Metodos::ConverteValorIng($this->valorHomologado) : "");
+                $cadPro->setValorHomologado($this->valorHomologado != "" ? Metodos::ConverteValorIng($this->valorHomologado) : 0);
                 $cadPro->setTipoGasto($this->tipoGasto);
                 $cadPro->setObjeto($this->objeto);
                 $cadPro->setSituacao($this->situacao);
@@ -356,10 +356,10 @@ class Processo {
                 $editPro = new DaoProcesso();
                 $editPro->setIdProcesso($this->idProcesso);
                 $editPro->setAda($this->ada);
-                $editPro->setValorEstimado(Metodos::ConverteValorIng($this->valorEstimado));
+                $editPro->setValorEstimado($this->valorEstimado != "" ? Metodos::ConverteValorIng($this->valorEstimado) : 0);
                 $editPro->setData(Metodos::validaConverteDataING($this->data));
                 $editPro->setNumePregao($this->numePregao);
-                $editPro->setValorHomologado(Metodos::ConverteValorIng($this->valorHomologado));
+                $editPro->setValorHomologado($this->valorHomologado != "" ? Metodos::ConverteValorIng($this->valorHomologado) : 0);
                 $editPro->setObjeto($this->objeto);
                 $editPro->setModalidade($this->modalidade);
                 $dadosPro = $editPro->retornarProcessoLog($pdo);
