@@ -27,6 +27,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarAta':
         try {
             $ata = filter_input(INPUT_POST, 'contrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
             $finContratoModel = new FinContratoModel();
             $finContratoModel->setNrContrato($ata['num_ata']);
             $finContratoModel->setIdProcesso($ata['id_processo']);
@@ -41,6 +42,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setDtPublicacao($ata['data_publicacao']);
             $finContratoModel->setDsObsContrato($ata['obs_ata']);
             $finContratoModel->setIdLotacaoCentral($ata['central']);
+            $finContratoModel->setIdTipoGasto($ata['tipoDeGasto']);
             echo $finContratoModel->cadastraAta();
             return '';
             break;
@@ -73,6 +75,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setIdPessoaFiscalSubstituto($contrato['fiscaisSub']);
             $finContratoModel->setIdPessoaSubFiscalTitular($contrato['subFiscais']);
             $finContratoModel->setIdPessoaSubFiscalSubstituto($contrato['subFiscaisSub']);
+            $finContratoModel->setIdTipoGasto($contrato['tipoDeGasto']);
             if (isset($contrato['confCont'][0])) {
                 if ($contrato['confCont'][0] === 'S') {
                     $finContratoModel->setFlServicoContinuado($contrato['confCont'][0]);
@@ -331,6 +334,20 @@ switch ($_REQUEST['acao']) {
             return '';
             break;
         } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    
+    CASE 'retornarTipoDeGastoLicitacao':
+        try {
+            $idProcesso = filter_input(INPUT_GET, 'idProcesso', FILTER_DEFAULT);
+            $tipoDeGasto = new FinContratoModel();
+            echo $tipoDeGasto->retornaTipoDeGastoLicitacao($idProcesso);
+            return;
+            break;
+        } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
             break;

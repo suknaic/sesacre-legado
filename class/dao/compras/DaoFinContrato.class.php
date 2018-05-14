@@ -36,8 +36,8 @@ class DaoFinContrato extends FinContratoTb {
             try {
                 $sql = "INSERT INTO fin_contrato (nr_contrato, id_processo, id_pessoa, ds_objeto,
                 dt_ini_vigencia_contrato, dt_fim_vigencia_contrato, dt_assinatura, dt_publicacao,
-                ds_obs_contrato, fl_carona, tp_contrato, id_orgao_gerenciador) VALUES (:numero, :processo, :idPessoa, :ds_objeto, :dt_ini, :dt_fim, 
-                :dt_assinatura, :dt_publicacao, :ds_obs_contrato, :carona, :tipo, :orgao)";
+                ds_obs_contrato, fl_carona, tp_contrato, id_orgao_gerenciador, id_tipo_gasto) VALUES (:numero, :processo, :idPessoa, :ds_objeto, :dt_ini, :dt_fim, 
+                :dt_assinatura, :dt_publicacao, :ds_obs_contrato, :carona, :tipo, :orgao, :tipoGasto)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":processo", $this->getIdProcesso(), PDO::PARAM_INT);
@@ -51,7 +51,8 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":carona", $this->getFlCarona(), PDO::PARAM_INT);
                 $stmt->bindValue(":tipo", $this->getTpContrato(), PDO::PARAM_INT);
                 $stmt->bindValue(":orgao", $this->getIdOrgaoGerenciador(), PDO::PARAM_INT);
-
+                $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
+                
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -104,8 +105,8 @@ class DaoFinContrato extends FinContratoTb {
             try {
                 $sql = "INSERT INTO fin_contrato (nr_contrato,nr_prazo_entrega,id_processo,id_pessoa, "
                         . "ds_objeto,fl_servico_continuado,dt_ini_vigencia_contrato,dt_fim_vigencia_contrato,dt_assinatura, "
-                        . "dt_publicacao,ds_obs_contrato, tp_contrato, id_contrato_alt) VALUES (:numero,:prazo,:processo,:idPessoa,:ds_objeto,:servico, "
-                        . ":dt_ini,:dt_fim,:dt_assinatura,:dt_publicacao,:obs,:tp_contrato, :idContratoAlt)";
+                        . "dt_publicacao,ds_obs_contrato, tp_contrato, id_contrato_alt, id_tipo_gasto) VALUES (:numero,:prazo,:processo,:idPessoa,:ds_objeto,:servico, "
+                        . ":dt_ini,:dt_fim,:dt_assinatura,:dt_publicacao,:obs,:tp_contrato, :idContratoAlt, :tipoDeGasto)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":prazo", $this->getNrPrazoEntrega(), PDO::PARAM_INT);
@@ -120,6 +121,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":obs", $this->getDsObsContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":tp_contrato", $this->getTpContrato(), PDO::PARAM_INT);
                 $stmt->bindValue(":idContratoAlt", $this->getIdContratoAlt(), PDO::PARAM_INT);
+                $stmt->bindValue(":tipoDeGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -192,7 +194,7 @@ class DaoFinContrato extends FinContratoTb {
     public function retornaContratoCombo($pdo = null, $condicao = '') {
         if ($pdo != null) {
             try {
-                $sql = "SELECT f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
+                $sql = "SELECT distinct f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
                         p.nm_pessoa, cont.id_contrato
                         FROM fin_contrato AS cont
 
@@ -201,9 +203,12 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
+                        
+                        INNER JOIN gco_processo_tipo_gasto as gtpg
+                        on gtpg.id_tipo_gasto = cont.id_tipo_gasto
 
                         INNER JOIN pla_tipo_gasto as plaTipoGasto
-                        on plaTipoGasto.id_tipo_gasto =  processo.id_tipo_gasto
+                        on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
 
                         INNER JOIN gco_modalidade as modalidade
                         on modalidade.id_modalidade = processo.id_modalidade
@@ -253,17 +258,20 @@ class DaoFinContrato extends FinContratoTb {
     public function retornaProcessoCombo($pdo = null) {
         if ($pdo != null) {
             try {
-                $sql = "select p.id_processo, p.cd_ada_cpr, p.cd_pregao, p.vl_total_est,
-                        p.vl_total_hom, TO_CHAR(p.dt_processo, 'DD/MM/YYYY') as data,
-                        mod.nm_modalidade as modalidade, tpGasto.nm_tipo_gasto as tipo_gasto,
-                        obj.nm_objeto
-                        from gco_processo as p
-                        inner join gco_objeto as obj
-                        on obj.id_objeto = p.id_objeto
-                        inner join gco_modalidade as mod
-                        on mod.id_modalidade = p.id_modalidade
-                        inner join pla_tipo_gasto as tpGasto
-                        on tpGasto.id_tipo_gasto = p.id_tipo_gasto";
+                $sql = "select distinct p.id_processo, p.cd_ada_cpr, p.cd_pregao, p.vl_total_est,
+                p.vl_total_hom, TO_CHAR(p.dt_processo, 'DD/MM/YYYY') as data, 
+                mod.nm_modalidade as modalidade, array_to_string(array_agg(DISTINCT tpGasto.nm_tipo_gasto), '; ') as tipo_gasto,
+                obj.nm_objeto
+                from gco_processo as p
+                inner join gco_objeto as obj
+                on obj.id_objeto = p.id_objeto
+                inner join gco_modalidade as mod
+                on mod.id_modalidade = p.id_modalidade
+                inner join gco_processo_tipo_gasto gptg
+                on gptg.id_processo = p.id_processo
+                inner join pla_tipo_gasto as tpGasto
+                on tpGasto.id_tipo_gasto = gptg.id_tipo_gasto
+                group by p.id_processo, mod.id_modalidade, obj.id_objeto";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -363,8 +371,10 @@ class DaoFinContrato extends FinContratoTb {
                         on modalidade.id_modalidade = processo.id_modalidade
                         inner join gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
+                        inner join gco_processo_tipo_gasto as gptg
+                        on gptg.id_tipo_gasto = cont.id_tipo_gasto
                         inner join pla_tipo_gasto as tipoGasto
-                        on tipoGasto.id_tipo_gasto  = processo.id_tipo_gasto
+                        on tipoGasto.id_tipo_gasto  = gptg.id_tipo_gasto
                         inner join ses_pessoa as pessoa
                         on pessoa.id_pessoa = f.id_pessoa
                         where f.id_fornecedor = :idFornecedor";

@@ -284,7 +284,29 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                 </div>
                                 
                                 <div id="orgao"></div>
-
+                                
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tipo de Gasto</h3>
+                                </div>
+                                <div class="campoCentrais">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <div class="panel-body">
+                                                Tipo de Gasto:<span class="text-danger">*</span>
+                                                <div class="centraisCampos">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                        <select class="form-control" name="tipoDeGasto" id="tipoDeGasto" required="true">
+                                                            <option value="">Selecione um tipo de gasto</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-7"></div>
+                                    </div>
+                                </div>
+                                
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Centrais</h3>
                                 </div>

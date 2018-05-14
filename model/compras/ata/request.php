@@ -70,19 +70,6 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornarTipoDeGastoLicitacao':
-        try {
-            $idProcesso = filter_input(INPUT_GET, 'idProcesso', FILTER_DEFAULT);
-            $tipoDeGasto = new FinAtaModel();
-            echo $tipoDeGasto->retornaTipoDeGastoLicitacao($idProcesso);
-            return;
-            break;
-        } catch (Exception $ex) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-        
     CASE 'retornaCentrais':
         try {
             $centrais = new FinCentralModel();
@@ -125,7 +112,6 @@ switch ($_REQUEST['acao']) {
             $finAtaModel->setFlCarona($ata['confAta']);
             $finAtaModel->setIdLotacaoCentral($ata['central']);
             $finAtaModel->setIdFonte($ata['fonte']);
-//            $finAtaModel->set
             $finAtaModel->setIdProgramaTrabalho($ata['programa']);
             echo $finAtaModel->cadastraAta();
             return '';

@@ -27,7 +27,7 @@ $(document).ready(function () {
     $("#empresa").select2({
         placeholder: "Selecionar uma opção"
     });
-
+    $("#tipoDeGasto").select2();
     //carrega centrais
     $.ajax({
         "url": "/model/compras/ata/request.php",
@@ -332,6 +332,9 @@ $(document).ready(function () {
         $("#obejto").text($this.find("td:eq(3)").text());
         $("#modalidade").text($this.find("td:eq(4)").text());
         $('#modalItem').modal('hide');
+        //lista os tipo de gastos da licitação
+        retornaTipoDeGastoLicitacao($this.attr('processo'));
+        
         $.ajax({
             "url": "/model/compras/contrato/request.php",
             "dataType": 'html',
@@ -352,7 +355,22 @@ $(document).ready(function () {
         });
     });
     //fim de busca licitacao do gcon
-
+    
+     //carrega os tipo de gasto da licitação
+    function retornaTipoDeGastoLicitacao(idProcesso) {
+        $.ajax({
+            "url": "/model/compras/contrato/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornarTipoDeGastoLicitacao",
+                "idProcesso": idProcesso
+            },
+            "success": function (response) {
+                $("body").find("#tipoDeGasto").html(response);
+            }
+        });
+    }
+    
     //carrega fornecedor pessoa Fisica
     $("body").on("click", "#cont_pf", function () {
         $("#cnpj").val("")
@@ -495,7 +513,8 @@ $(document).ready(function () {
                 "fiscaisSub": fiscaisSub,
                 "subFiscais": subFiscais,
                 "subFiscaisSub": subFiscaisSub,
-            }
+                "tipoDeGasto": $("#tipoDeGasto").val()
+            };
 
 
             $.ajax({

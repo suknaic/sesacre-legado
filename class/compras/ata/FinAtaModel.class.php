@@ -1,7 +1,6 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinAta.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 
 class FinAtaModel {
 
@@ -256,29 +255,6 @@ class FinAtaModel {
             return $retorno;
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $e->getMessage());
-        }
-    }
-
-    public function retornaTipoDeGastoLicitacao($idProcesso) {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $licitacao = new DaoProcesso();
-            $licitacao->setIdProcesso($idProcesso);
-            $retorno = '<option value = "">Seleciona um tipo de gasto</option>';
-
-            $busca = $licitacao->retornaTiposGastoProcesso($pdo);
-            foreach ($busca as $value) {
-                if (count($busca) > 1) {
-                    $retorno .= '<option value = "' . $value["id_tipo_gasto"] . '">' . $value["nm_tipo_gasto"] . '</option>';
-                } else {
-                    $retorno .= '<option value = "' . $value["id_tipo_gasto"] . '" selected>' . $value["nm_tipo_gasto"] . '</option>';
-                }
-            }
-            return $retorno;
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
