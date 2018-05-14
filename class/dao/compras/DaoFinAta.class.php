@@ -129,17 +129,20 @@ class DaoFinAta extends FinAtaTb {
     public function retornaProcessoCombo($pdo = null) {
         if ($pdo != null) {
             try {
-                $sql = "select p.id_processo, p.cd_ada_cpr, p.cd_pregao, p.vl_total_est,
-                p.vl_total_hom, TO_CHAR(p.dt_processo, 'DD/MM/YYYY') as data,
-                mod.nm_modalidade as modalidade, tpGasto.nm_tipo_gasto as tipo_gasto,
+                $sql = "select distinct p.id_processo, p.cd_ada_cpr, p.cd_pregao, p.vl_total_est,
+                p.vl_total_hom, TO_CHAR(p.dt_processo, 'DD/MM/YYYY') as data, 
+                mod.nm_modalidade as modalidade, array_to_string(array_agg(DISTINCT tpGasto.nm_tipo_gasto), '; ') as tipo_gasto,
                 obj.nm_objeto
                 from gco_processo as p
                 inner join gco_objeto as obj
                 on obj.id_objeto = p.id_objeto
                 inner join gco_modalidade as mod
                 on mod.id_modalidade = p.id_modalidade
+                inner join gco_processo_tipo_gasto gptg
+                on gptg.id_processo = p.id_processo
                 inner join pla_tipo_gasto as tpGasto
-                on tpGasto.id_tipo_gasto = p.id_tipo_gasto";
+                on tpGasto.id_tipo_gasto = gptg.id_tipo_gasto
+                group by p.id_processo, mod.id_modalidade, obj.id_objeto";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);

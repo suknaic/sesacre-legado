@@ -1,5 +1,5 @@
 <?php
-
+//primeiro commit do notebook sesacre
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 //teste1
 //teste2

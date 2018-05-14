@@ -23,8 +23,9 @@ switch ($_REQUEST['acao']) {
     case 'cadastra_processo':
         try {
             $filtro = filter_input(INPUT_POST, 'cadProcesso', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
             $cadastra = new Processo();
-
+            
             $cadastra->setAda(trim($filtro['ada_process']));
             $cadastra->setUnidade((int) $filtro['uni_cont_process']);
             $cadastra->setValorEstimado($filtro['valor_estim_process']);

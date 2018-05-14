@@ -120,7 +120,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/ata/cad_ata.load.php";
                                         <input type="hidden" id="id_processo" value="" />
                                         <p><strong>ADA/CPR:</strong> <span id="ada_cpr"> </span></p>
                                         <p><strong>Licitação:</strong> <span id="licitacao"> </span></p>
-                                        <p><strong>Tipo de gasto:</strong> <span id="tipoGasto"> </span></p>
                                         <p><strong>Objeto:</strong> <span id="obejto"> </span></p>
                                         <p><strong>Modalidade:</strong> <span id="modalidade"> </span></p>
                                         <p><strong>Área de Abrangência:</strong> <span id="area_abragencia"> </span></p>
@@ -240,7 +239,29 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/ata/cad_ata.load.php";
                                 </div>
 
                                 <div id="orgao"></div>
-
+                                
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tipo de Gasto</h3>
+                                </div>
+                                <div class="campoCentrais">
+                                    <div class="form-group">
+                                        <div class="col-sm-5">
+                                            <div class="panel-body">
+                                                Tipo de Gasto:<span class="text-danger">*</span>
+                                                <div class="centraisCampos">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                        <select class="form-control" name="tipoDeGasto" id="tipoDeGasto" required="true">
+                                                            <option value="">Selecione um tipo de gasto</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-7"></div>
+                                    </div>
+                                </div>
+                                
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Centrais</h3>
                                 </div>
