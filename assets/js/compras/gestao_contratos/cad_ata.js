@@ -180,7 +180,7 @@ $(document).ready(function () {
     //carrega os tipo de gasto da licitação
     function retornaTipoDeGastoLicitacao(idProcesso) {
         $.ajax({
-            "url": "/model/compras/ata/request.php",
+            "url": "/model/compras/contrato/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornarTipoDeGastoLicitacao",
@@ -335,7 +335,6 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

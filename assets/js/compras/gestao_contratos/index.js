@@ -94,7 +94,7 @@ $(document).ready(function () {
             "central": $("#central option:selected").val(),
             "contratado": $("#contratado option:selected").val()
         };
-
+        
         $.ajax({
             "method": "POST",
             "url": "/model/compras/gestaoContratos/request.php",
@@ -104,6 +104,7 @@ $(document).ready(function () {
                 dados: dados
             },
             "success": function (response) {
+                console.log(response);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
                     return false;
