@@ -67,15 +67,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class='col-sm-2'><b>Nº Pedido:</b></div>
-                                            <div class='col-sm-9' id="nPedido"><?php echo $dados[0]["numero"] ?></div>
+                                            <div class='col-sm-9' id="nPedido"><?php echo $dados["nr_pedido"] ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Lotação:</b></div>
-                                            <div class='col-sm-9' id="lotacao"><?php echo $dados[0]["nm_lotacao"] ?></div>
+                                            <div class='col-sm-9' id="lotacao"><?php echo $dados["nm_lotacao"] ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Tipo de gasto:</b></div>
-                                            <div class='col-sm-9' id="tipoGasto"><?php echo $dados[0]["nm_tipo_gasto"] ?></div>
+                                            <div class='col-sm-9' id="tipoGasto"><?php echo $dados["nm_tipo_gasto"] ?></div>
                                         </div>
 
                                         <div class="row">
