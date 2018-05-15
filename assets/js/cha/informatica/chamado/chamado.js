@@ -173,6 +173,8 @@ $(document).ready(function () {
             },
             "success": function (response) {
 //                console.log(response);
+                $(".Lotacao").empty();
+                $("body").find(".Lotacao").append("<option value='0'>Selecione a Lotação</option>");
                 $(".Lotacao").append(response);
                 $(".Lotacao").select2({
                     width: " 100%"
@@ -445,6 +447,64 @@ $(document).ready(function () {
             }
         });
     }
+    //*********************************************************************************************************************
+    function returnChamadoVisualiza() {
+        var id_get = $("#id_get").val();
+        $.ajax({
+            "url": "/model/cha/informatica/chamado/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                "acao": "returnChamadoVisualiza",
+                "id_get": id_get
+
+            },
+            "success":
+                    function (response) {
+//                        console.log(response);
+                        try {
+                            response = JSON.parse(response);
+                        } catch (e) {
+//                            console.log(response);
+//                            return false;
+                        }
+//                        console.log(response);
+                        $(".nmPessoa").val(response[0]['nm_pessoa']);
+                        $(".nrTelefone").val(response[0]['nr_telefone_celular']);
+                        $(".dsEmail").val(response[0]['nm_email']);
+                        $(".nrCartaoSus").val(response[0]['nr_cns']);
+                        $(".nrCartaoSus").mask("999 9999 9999 9999");
+                        $(".nrCpf").val(response[0]['nr_cpf']);
+                        $(".nrCpf").mask("999.999.999-99");
+                        $(".nrRg").val(response[0]['nr_rg']);
+                        $(".telefoneLotacao").val(response[0]['nr_telefone']);
+                        $("#nr_telefone").mask("(99) 9999-9999");
+                        $("#nrTelefoneSetor").mask("(99) 9999-9999");
+                        $(".nrMatricula").val(response[0]['nr_matricula']);
+                        $(".estadoCivil").val(response[0]['id_estado_civil']);
+                        $("#nrTelefone").mask("(99) 9 9999-9999");
+                        $("#dt_inicial").mask("99/99/9999");
+                        $("#dt_fim").mask("99/99/9999");
+                        $("#dt_nascimento").mask("99/99/9999");
+                        $(".Vlan").mask("9999");
+//             $(".nmResponsavel").val(response[0]['id_pessoa']);
+                        $(".dtNascimento").val(response[0]['dt_nascimento']);
+                        $(".Cargo").val(response[0]['id_cargo']);
+                        $(".idFuncao").val(response[0]['id_funcao']);
+                        $(".Vinculo").val(response[0]['id_vinculo']);
+                        $(".Escolaridade").val(response[0]['id_escolaridade']);
+                        $(".Lotacao").val(response[0]['id_lotacao']);
+                        listaLotacaoCombo();
+                        listaCargoCombo();
+                        listaVinculoCombo();
+                        listaFuncaoCombo()
+                        listaEscolaridadeCombo();
+                        listaEstadoCivilCombo();
+                        return;
+                    }
+        });
+    }
+    returnChamadoVisualiza();
 //*********************************************************************************************************************
     function returnChamados() {
         $.ajax({

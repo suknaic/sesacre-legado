@@ -220,6 +220,27 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
+    case 'returnChamadoVisualiza':
+        try {
+            $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
+            
+            $cha = new Chamado();
+            $cha->setIdPessoaSolicitante($session->getIdUser());
+            echo $cha->ret($idGet);
+            
+            $cha = new FormSistemas();
+            $cha->setIdPessoaSolicitante($session->getIdUser());
+            echo $cha->retornaFormSistemas($idGet);
+            //echo $cha->retornaChamado();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
+
     case 'returnChamados':
         try {
             $cha = new Chamado();
