@@ -19,7 +19,7 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaPesquisa':
         try {
             $dao = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $gestaoContratoModel = new GestaoContratoModel();
+            $gestaoContratoModel = new FinContratoModel();
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;

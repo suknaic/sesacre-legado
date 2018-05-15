@@ -110,6 +110,7 @@ function encapsulaDadosDoFormDestino(){
     $.ajax({
         "url": "/model/diarias/relatorio/request.php",
         "dataType": 'html',
+        "method": "post",
         "data": {
             acao: "validaRelatorioDestino",
             dados: JSON.stringify(Destino)

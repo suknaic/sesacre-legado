@@ -14,7 +14,7 @@ if (!$session->vPCompras()) {
     $situacao = filter_input(INPUT_GET, 'situacao', FILTER_DEFAULT);
     $modalidade = filter_input(INPUT_GET, 'modalidade', FILTER_DEFAULT);
     $tecnico = filter_input(INPUT_GET, 'tecnico', FILTER_DEFAULT);
-    $tipoGasto = filter_input(INPUT_GET, 'categoria', FILTER_DEFAULT);
+    $tipoGasto = filter_input(INPUT_GET, 'tipoGasto', FILTER_DEFAULT);
     $area = filter_input(INPUT_GET, 'area', FILTER_DEFAULT);
     $centrais = filter_input(INPUT_GET, 'centrais', FILTER_DEFAULT);
     

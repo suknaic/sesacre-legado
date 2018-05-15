@@ -4,7 +4,8 @@ require_once $_SERVER["DOCUMENT_ROOT"] . '/class/lib/mpdf/vendor/autoload.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 
 
-$corpo = pdf($_GET['id']);
+$dados = new Dados();
+$corpo = pdf((int)$_GET['id'], $dados);
 $html = "<html>
         <head>
          <style>
@@ -88,6 +89,10 @@ $html = "<html>
                     .nomeExtenso{
                     margin-left: 49%;
                     }
+                    .tabelaRodape, .tdRodape, .trRodape{
+                        border: none;
+                        font-size: 8pt;
+                    }
             </style>
             </head>
             <body>
@@ -96,16 +101,24 @@ $html = "<html>
            </html>";
 //echo $html;
 $mpdf = new \Mpdf\Mpdf();
+$mpdf->SetHTMLFooter('<table width="100%" class="tabelaRodape"><tr class="trRodape">
+            <td width="33%" class="tdRodape">'.$dados->getNumeroDocumento().'</td>
+            <td width="33%" class="tdRodape" align="center">{PAGENO}/{nbpg}</td>
+            <td width="33%" class="tdRodape" style="text-align: right;">{DATE j/m/Y H:m:s}</td>
+        </tr></table>');
 $mpdf->WriteHTML($html);
 $mpdf->Output();
 exit();
 
 //função para gerar a tabela
-function pdf($ordem = null) {
+function pdf(int $ordem = null, Dados $dadosPdf) {
     $conexao = new Conexao();
     $pdo = $conexao->connect();
     $dados = "";
-
+    if(empty($ordem)){
+        return "";
+    }
+    
     $sql = ("select p.id_pedido, concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),
              to_char(p.dt_pedido, 'yyyy')) as pedido, ordem.nr_ordem, ordem.aa_ordem, ordem.nr_prazo_ordem, 
              cont.nr_contrato, cont.tp_contrato, gprocesso.cd_pregao, modalidade.nm_modalidade, objeto.nm_objeto, 
@@ -115,7 +128,7 @@ function pdf($ordem = null) {
              ordemItens.vl_itens_ordem, unid.nm_unidade_medida, emp.nr_empenho, desp.cd_despesa_elemento, 
              desp.ds_despesa_elemento, font.nr_fonte, local.nm_lotacao as localEntrega, local.ds_logradouro as localLogradouro,
              local.ds_bairro as localBairro, local.nr_cep as localCep, pEmissor.nm_pessoa as emissor, setorEmissor.nm_lotacao as setor, 
-             pEmissor.nr_telefone_celular, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, pe.nm_email as emailFornecedor
+             pEmissor.nr_telefone_celular, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, pe.nm_email as emailFornecedor, mat.cd_desc_material
              from fin_ordem as ordem
              inner join fin_ordem_itens as ordemItens
              on ordemItens.id_ordem = ordem .id_ordem
@@ -155,8 +168,9 @@ function pdf($ordem = null) {
              on modalidade.id_modalidade = gprocesso.id_modalidade
              left join gco_objeto as objeto
              on objeto.id_objeto = gprocesso.id_objeto
-             where ordem.id_ordem = " . $ordem);
+             where ordem.id_ordem = :ordem");
     $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":ordem", $ordem, PDO::PARAM_INT);
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -165,6 +179,8 @@ function pdf($ordem = null) {
     }
     $tabela = '';
     if ($dados != false) {
+        $dadosPdf->setNumeroDocumento('ORDEM DE EXECUÇÃO/SERVIÇO Nº ' . $dados[0]["nr_ordem"] . '/' . $dados[0]["aa_ordem"]);
+        $dadosPdf->setNumeroContrato('<b>Contrato nº:</b> ' . $dados[0]["nr_contrato"]);
         $tabela = '
             <div id="cabecalho">
               <div id="brasao"><img src="http://localhost/assets/img/acrebrasao.jpg"></div>
@@ -234,7 +250,7 @@ function pdf($ordem = null) {
                     <td>' . $linha["nr_item"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["qt_itens_ordem"], 2), 2) . '</td>
                     <td>' . $linha["nm_unidade_medida"] . '</td>
-                    <td>' . $linha["nm_desc_material"] . '</td>
+                    <td>' . $linha["cd_desc_material"].' - '.$linha["nm_desc_material"] . '</td>
                     <td>' . $linha["nm_marca"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["vl_itens_ordem"], 2), 2) . '</td>
                     <td>' . Metodos::ConverteValorBr($totalItens, 2) . '</td>
@@ -342,4 +358,25 @@ function pdf($ordem = null) {
 
     }
     return $tabela;
+}
+
+class Dados{
+    
+    private $numeroContrato = null;
+    private $numeroDocumento = null;
+    function getNumeroContrato() {
+        return $this->numeroContrato;
+    }
+
+    function getNumeroDocumento() {
+        return $this->numeroDocumento;
+    }
+
+    function setNumeroContrato($numeroContrato) {
+        $this->numeroContrato = $numeroContrato;
+    }
+
+    function setNumeroDocumento($numeroDocumento) {
+        $this->numeroDocumento = $numeroDocumento;
+    }
 }

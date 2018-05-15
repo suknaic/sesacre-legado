@@ -131,7 +131,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         desp.cd_despesa, desp.ds_despesa, p.ds_pedido, mat.nm_material, mat.nm_desc_material, item.ds_itens, mat.tp_material, 
                         item.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, cont.tp_contrato, (pre.qt_itens_pre *pre.vl_itens_pre) as total, 
                         p.id_fonte, p.id_programa_trabalho, p.id_despesa_elemento, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,
-                        p.vl_pedido
+                        p.vl_pedido, pj.nm_pessoa, gco.cd_pregao, mod.nm_modalidade, cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato
                         from fin_pedido as p
                         inner join pla_tipo_gasto as tpGasto
                         on tpGasto.id_tipo_gasto = p.id_tipo_gasto
@@ -145,16 +145,22 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         on l.id_lotacao = p.id_lotacao
                         left join fin_pre_ordem as pre
                         on pre.id_pedido = p.id_pedido
-                        left join fin_fornecedor  as f
-                        on f.id_fornecedor = p.id_fornecedor
                         left join fin_cont_itens as item
                         on item.id_cont_itens = pre.id_cont_itens 
                         left join pla_material as mat
                         on mat.id_material = item.id_material
                         left join pla_unidade_medida as unid
                         on unid.id_unidade_medida = item.id_unidade_medida
+                        left join fin_fornecedor  as f
+                        on f.id_fornecedor = p.id_fornecedor
                         left join fin_contrato as cont
                         on cont.id_contrato = f.id_contrato
+                        left join gco_processo as gco
+                        on gco.id_processo = cont.id_processo
+                        left join gco_modalidade as mod
+                        on mod.id_modalidade = gco.id_modalidade
+                        inner join ses_pessoa as pj
+                        on pj.id_pessoa = f.id_pessoa
                         where p.id_pedido = :pedido
                         order by item.nr_lote, item.nr_item";
                 $stmt = $pdo->prepare($sql);

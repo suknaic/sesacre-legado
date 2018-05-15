@@ -20,7 +20,7 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
     //Mascara do sistema
-    $('.data').mask("99/99/9999")
+    $('.data').mask("99/99/9999");
     //fim
     $(".select").select2({
         width: " 100%"
@@ -29,6 +29,8 @@ $(document).ready(function () {
     $(".selectCentrais").select2({
         width: " 100%"
     });
+    
+    $("#tipoDeGasto").select2();
 
     //carrega fornecedor pessoa juridica
     $.ajax({
@@ -103,7 +105,7 @@ $(document).ready(function () {
                 "id": $("#empresa option:selected").val()
             },
             "success": function (response) {
-                
+
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
                     return false;
@@ -167,11 +169,28 @@ $(document).ready(function () {
         $("#id_processo").val($this.attr('processo'));
         $("#ada_cpr").text($this.find("td:eq(0)").text());
         $("#licitacao").text($this.find("td:eq(1)").text());
-        $("#tipoGasto").text($this.find("td:eq(2)").text());
         $("#obejto").text($this.find("td:eq(3)").text());
         $("#modalidade").text($this.find("td:eq(4)").text());
         $('#modalItem').modal('hide');
+        
+        //lista os tipo de gastos da licitação
+        retornaTipoDeGastoLicitacao($this.attr('processo'));
     });
+
+    //carrega os tipo de gasto da licitação
+    function retornaTipoDeGastoLicitacao(idProcesso) {
+        $.ajax({
+            "url": "/model/compras/contrato/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornarTipoDeGastoLicitacao",
+                "idProcesso": idProcesso
+            },
+            "success": function (response) {
+                $("body").find("#tipoDeGasto").html(response);
+            }
+        });
+    }
 
     $("body").on('click', '#cofiguracaoAta', function (e) {
         if ($("body").find("input[name='cofiguracaoAta']:checked").length > 0) {
@@ -303,7 +322,8 @@ $(document).ready(function () {
                 "obs_ata": $("#obs_ata").val(),
                 "central": central,
                 "fonte": $("#fonte").val(),
-                "programa": $("#programa").val()
+                "programa": $("#programa").val(),
+                "tipoDeGasto": $("#tipoDeGasto").val()
             }
 
             $.ajax({
@@ -315,7 +335,6 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

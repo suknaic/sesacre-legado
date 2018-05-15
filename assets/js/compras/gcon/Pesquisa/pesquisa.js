@@ -87,7 +87,7 @@ $(document).ready(function () {
                 "acao": "retorna_tipo_de_gasto"
             },
             "success": function (response) {
-                $("#categoria_pesquisa").append(response);
+                $("#tiposDeGasto").append(response);
             }
         });
     }
@@ -143,7 +143,7 @@ $(document).ready(function () {
             var situacao = $("#sit_acom_pesquisa").val();
             var modalidade = $("#modalidade_pesquisa").val();
             var tecnico = $("#tec_pesquisa").val();
-            var categoria = $("#categoria_pesquisa").val();
+            var tipoDeGasto = $("#tiposDeGasto").val();
             var centrais = $("#centrais").val();
             var area = $("#abrang_pesquisa").val();
 
@@ -159,7 +159,7 @@ $(document).ready(function () {
                     "situacao": situacao,
                     "modalidade": modalidade,
                     "tecnico": tecnico,
-                    "categoria": categoria,
+                    "tipoDeGasto": tipoDeGasto,
                     "area": area,
                     "centrais": centrais
                 },
@@ -361,24 +361,24 @@ $(document).ready(function () {
         var situacao = $("#sit_acom_pesquisa").val();
         var modalidade = $("#modalidade_pesquisa").val();
         var tecnico = $("#tec_pesquisa").val();
-        var categoria = $("#categoria_pesquisa").val();
+        var tipoGasto = $("#tiposDeGasto").val();
         var area = $("#abrang_pesquisa").val();
         var centrais = $("#centrais").val();
-        console.log(centrais);
-        window.open('/pages/compras/gcon/imprimir/imprimirTodos.php?ada=' + ada + "&centrais=" + centrais + "&pregao=" + pregao + "&ano=" + ano + "&situacao=" + situacao + "&modalidade=" + modalidade + "&tecnico=" + tecnico + "&categoria=" + categoria + "&area=" + area, '_blank');
+        window.open('/pages/compras/gcon/imprimir/imprimirTodos.php?ada=' + ada + "&centrais=" + centrais + "&pregao=" + pregao + "&ano=" + ano + "&situacao=" + situacao + "&modalidade=" + modalidade + "&tecnico=" + tecnico + "&tipoGasto=" + tipoGasto + "&area=" + area, '_blank');
     });
 
     $("#ADA_pesquisa").prop('disabled', true);
     $("#num_pregao_pesquisa").prop('disabled', true);
     $("#centrais").prop('disabled', true);
+    $("#tiposDeGasto").prop('disabled', true);
 
     $("body").on("change", "#centrais", function () {
         var texto = $(this).val();
-        if (texto != null) {
+        if (texto != null || texto == 0) {
             $("#ano_pesquisa").select2('val', '0');
             $("#tec_pesquisa").select2('val', '0');
             $("#modalidade_pesquisa").select2('val', '0');
-            $("#categoria_pesquisa").select2('val', '0');
+            $("#tiposDeGasto").select2('val', '0');
             $("#abrang_pesquisa").select2('val', '0');
             $("#sit_acom_pesquisa").select2('val', '0');
 
@@ -388,7 +388,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', true);
             $("#modalidade_pesquisa").prop('disabled', true);
             $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', true);
             $("#centrais").prop('disabled', false);
         } else {
@@ -398,7 +398,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#modalidade_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
             $("#centrais").prop('disabled', false);
         }
@@ -412,7 +412,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', true);
             $("#modalidade_pesquisa").prop('disabled', true);
             $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         } else {
@@ -421,7 +421,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#modalidade_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
             $("#centrais").prop('disabled', false);
         }
@@ -435,7 +435,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', true);
             $("#modalidade_pesquisa").prop('disabled', true);
             $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         } else {
@@ -444,7 +444,7 @@ $(document).ready(function () {
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#modalidade_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
             $("#centrais").prop('disabled', false);
         }
@@ -452,165 +452,159 @@ $(document).ready(function () {
 
     $("body").on("change", "#ano_pesquisa", function () {
         var texto = $(this).val();
-        if ($('#ano_pesquisa').val() === 'Todos') {
+        if (texto === 'Todos') {
+            $("#tec_pesquisa").select2('val', '0');
+            $("#modalidade_pesquisa").select2('val', '0');
+            $("#tiposDeGasto").select2('val', '0');
+            $("#abrang_pesquisa").select2('val', '0');
+            $("#sit_acom_pesquisa").select2('val', '0');
+
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#sit_acom_pesquisa").prop('disabled', true);
             $("#modalidade_pesquisa").prop('disabled', true);
             $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         } else {
-            if (texto != 0 || texto == null) {
-                $("#ADA_pesquisa").prop('disabled', true);
-                $("#num_pregao_pesquisa").prop('disabled', true);
-                $("#sit_acom_pesquisa").prop('disabled', false);
-                $("#modalidade_pesquisa").prop('disabled', false);
-                $("#tec_pesquisa").prop('disabled', false);
-                $("#categoria_pesquisa").prop('disabled', false);
-                $("#abrang_pesquisa").prop('disabled', false);
-                $("#centrais").prop('disabled', true);
-            } else {
-                $("#ano_pesquisa").select2('val', '0');
-                $("#tec_pesquisa").select2('val', '0');
-                $("#modalidade_pesquisa").select2('val', '0');
-                $("#categoria_pesquisa").select2('val', '0');
-                $("#abrang_pesquisa").select2('val', '0');
-                $("#sit_acom_pesquisa").select2('val', '0');
-
+            if (texto == 0 || texto == null) {
                 $("#ADA_pesquisa").prop('disabled', false);
                 $("#num_pregao_pesquisa").prop('disabled', false);
                 $("#sit_acom_pesquisa").prop('disabled', false);
                 $("#modalidade_pesquisa").prop('disabled', false);
                 $("#tec_pesquisa").prop('disabled', false);
-                $("#categoria_pesquisa").prop('disabled', false);
+                $("#tiposDeGasto").prop('disabled', false);
                 $("#abrang_pesquisa").prop('disabled', false);
                 $("#centrais").prop('disabled', false);
+            } else {
+                $("#tec_pesquisa").select2('val', '0');
+                $("#modalidade_pesquisa").select2('val', '0');
+                $("#tiposDeGasto").select2('val', '0');
+                $("#abrang_pesquisa").select2('val', '0');
+                $("#sit_acom_pesquisa").select2('val', '0');
+
+                $("#ADA_pesquisa").prop('disabled', true);
+                $("#num_pregao_pesquisa").prop('disabled', true);
+                $("#sit_acom_pesquisa").prop('disabled', false);
+                $("#modalidade_pesquisa").prop('disabled', false);
+                $("#tec_pesquisa").prop('disabled', false);
+                $("#tiposDeGasto").prop('disabled', true);
+                $("#abrang_pesquisa").prop('disabled', false);
+                $("#centrais").prop('disabled', true);
             }
         }
     });
 
     $("body").on("change", "#sit_acom_pesquisa", function () {
         var texto = $(this).val();
-        if (texto != null) {
+        if (texto == null) {
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#ano_pesquisa").prop('disabled', false);
-            $("#modalidade_pesquisa").prop('disabled', true);
-            $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#modalidade_pesquisa").prop('disabled', false);
+            $("#tec_pesquisa").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
             $("#centrais").prop('disabled', true);
         } else {
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#ano_pesquisa").prop('disabled', false);
-            $("#modalidade_pesquisa").prop('disabled', false);
-            $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#modalidade_pesquisa").prop('disabled', true);
+            $("#tec_pesquisa").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         }
     });
 
     $("body").on("change", "#modalidade_pesquisa", function () {
         var texto = $(this).val();
-        if (texto != 0 || texto == null) {
-            $("#ADA_pesquisa").prop('disabled', true);
-            $("#num_pregao_pesquisa").prop('disabled', true);
-            $("#ano_pesquisa").prop('disabled', false);
-            $("#sit_acom_pesquisa").prop('disabled', true);
-            $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
-            $("#abrang_pesquisa").prop('disabled', true);
-            $("#centrais").prop('disabled', true);
-        } else {
+        if (texto == 0 || texto == null) {
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#ano_pesquisa").prop('disabled', false);
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', true);
+            $("#centrais").prop('disabled', true);
+        } else {
+            $("#ADA_pesquisa").prop('disabled', true);
+            $("#num_pregao_pesquisa").prop('disabled', true);
+            $("#ano_pesquisa").prop('disabled', false);
+            $("#sit_acom_pesquisa").prop('disabled', true);
+            $("#tec_pesquisa").prop('disabled', true);
+            $("#abrang_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         }
     });
     $("body").on("change", "#tec_pesquisa", function () {
         var texto = $(this).val();
-        if (texto != 0 || texto == null) {
-            $("#modalidade_pesquisa").select2('val', '0');
-            $("#categoria_pesquisa").select2('val', '0');
-            $("#abrang_pesquisa").select2('val', '0');
-            $("#sit_acom_pesquisa").select2('val', '0');
-
+        if (texto == 0 || texto == null) {
+            $("#ADA_pesquisa").prop('disabled', true);
+            $("#num_pregao_pesquisa").prop('disabled', true);
+            $("#ano_pesquisa").prop('disabled', false);
+            $("#sit_acom_pesquisa").prop('disabled', false);
+            $("#modalidade_pesquisa").prop('disabled', false);
+            $("#abrang_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', true);
+            $("#centrais").prop('disabled', true);
+        } else {
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#ano_pesquisa").prop('disabled', false);
             $("#sit_acom_pesquisa").prop('disabled', true);
             $("#modalidade_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', true);
             $("#abrang_pesquisa").prop('disabled', true);
-            $("#centrais").prop('disabled', true);
-        } else {
-            $("#ADA_pesquisa").prop('disabled', true);
-            $("#num_pregao_pesquisa").prop('disabled', true);
-            $("#ano_pesquisa").prop('disabled', false);
-            $("#sit_acom_pesquisa").prop('disabled', false);
-            $("#modalidade_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
-            $("#abrang_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         }
     });
 
-    $("body").on("change", "#categoria_pesquisa", function () {
+    $("body").on("change", "#tiposDeGasto", function () {
         var texto = $(this).val();
-        if (texto != 0 || texto == null) {
-            $("#ADA_pesquisa").prop('disabled', true);
-            $("#num_pregao_pesquisa").prop('disabled', true);
-            $("#ano_pesquisa").prop('disabled', false);
-            $("#sit_acom_pesquisa").prop('disabled', false);
-            $("#modalidade_pesquisa").prop('disabled', true);
-            $("#tec_pesquisa").prop('disabled', true);
-            $("#abrang_pesquisa").prop('disabled', false);
-            $("#centrais").prop('disabled', true);
-        } else {
-            $("#modalidade_pesquisa").select2('val', '0');
-            $("#categoria_pesquisa").select2('val', '0');
-            $("#abrang_pesquisa").select2('val', '0');
-            $("#sit_acom_pesquisa").select2('val', '0');
-
-            $("#ADA_pesquisa").prop('disabled', true);
-            $("#num_pregao_pesquisa").prop('disabled', true);
+        if (texto == 0 || texto == null) {
+            $("#ADA_pesquisa").prop('disabled', false);
+            $("#num_pregao_pesquisa").prop('disabled', false);
             $("#ano_pesquisa").prop('disabled', false);
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#modalidade_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
             $("#abrang_pesquisa").prop('disabled', false);
+            $("#centrais").prop('disabled', false);
+        } else {
+            $("#ADA_pesquisa").prop('disabled', true);
+            $("#num_pregao_pesquisa").prop('disabled', true);
+            $("#ano_pesquisa").prop('disabled', true);
+            $("#sit_acom_pesquisa").prop('disabled', true);
+            $("#modalidade_pesquisa").prop('disabled', true);
+            $("#tec_pesquisa").prop('disabled', true);
+            $("#abrang_pesquisa").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         }
     });
 
     $("body").on("change", "#abrang_pesquisa", function () {
         var texto = $(this).val();
-        if (texto != 0 || texto == null) {
-            $("#ADA_pesquisa").prop('disabled', true);
-            $("#num_pregao_pesquisa").prop('disabled', true);
-            $("#ano_pesquisa").prop('disabled', false);
-            $("#sit_acom_pesquisa").prop('disabled', false);
-            $("#modalidade_pesquisa").prop('disabled', true);
-            $("#tec_pesquisa").prop('disabled', true);
-            $("#categoria_pesquisa").prop('disabled', false);
-            $("#centrais").prop('disabled', true);
-        } else {
+        if (texto == 0 || texto == null) {
             $("#ADA_pesquisa").prop('disabled', true);
             $("#num_pregao_pesquisa").prop('disabled', true);
             $("#ano_pesquisa").prop('disabled', false);
             $("#sit_acom_pesquisa").prop('disabled', false);
             $("#modalidade_pesquisa").prop('disabled', false);
             $("#tec_pesquisa").prop('disabled', false);
-            $("#categoria_pesquisa").prop('disabled', false);
+            $("#tiposDeGasto").prop('disabled', true);
+            $("#centrais").prop('disabled', true);
+        } else {
+            $("#ADA_pesquisa").prop('disabled', true);
+            $("#num_pregao_pesquisa").prop('disabled', true);
+            $("#ano_pesquisa").prop('disabled', false);
+            $("#sit_acom_pesquisa").prop('disabled', false);
+            $("#modalidade_pesquisa").prop('disabled', true);
+            $("#tec_pesquisa").prop('disabled', true);
+            $("#tiposDeGasto").prop('disabled', true);
             $("#centrais").prop('disabled', true);
         }
     });

@@ -23,8 +23,9 @@ switch ($_REQUEST['acao']) {
     case 'cadastra_processo':
         try {
             $filtro = filter_input(INPUT_POST, 'cadProcesso', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
             $cadastra = new Processo();
-
+            
             $cadastra->setAda(trim($filtro['ada_process']));
             $cadastra->setUnidade((int) $filtro['uni_cont_process']);
             $cadastra->setValorEstimado($filtro['valor_estim_process']);
@@ -86,17 +87,17 @@ switch ($_REQUEST['acao']) {
             $idSituacao = filter_input(INPUT_POST, 'situacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $idModalidade = filter_input(INPUT_POST, 'modalidade', FILTER_DEFAULT);
             $idTecnico = filter_input(INPUT_POST, 'tecnico', FILTER_DEFAULT);
-            $idCategoria = filter_input(INPUT_POST, 'categoria', FILTER_DEFAULT);
-            $centrais = filter_input(INPUT_POST, 'centrais', FILTER_DEFAULT);
+            $tiposGasto = filter_input(INPUT_POST, 'tipoDeGasto', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $centrais = filter_input(INPUT_POST, 'centrais', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $idArea = filter_input(INPUT_POST, 'area', FILTER_DEFAULT);
-
+            print_r($tiposGasto);
             $pesquisa->setAda($ada);
             $pesquisa->setNumePregao($pregao);
             $pesquisa->setAno($ano);
             $pesquisa->setSituacao($idSituacao);
             $pesquisa->setModalidade($idModalidade);
             $pesquisa->setTecnico($idTecnico);
-            $pesquisa->setTipoGasto($idCategoria);
+            $pesquisa->setTipoGasto($tiposGasto);
             $pesquisa->setCentraisAtendimento($centrais);
             $pesquisa->setArea($idArea);
             $pesquisa->setTabelaAnexo('sim');

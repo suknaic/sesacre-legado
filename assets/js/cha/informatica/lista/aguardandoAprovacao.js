@@ -406,7 +406,14 @@ $(document).ready(function () {
         var id = $(this).val();
         $idChamado = id.split("-")[0];
         top.location.href = "/pages/cha/informatica/edita/edita.php?id=" + $idChamado;
-
+    });
+    
+    $('body').on('click', '.btn-visualiza', function (e) {
+        e.preventDefault();
+        //**********************
+        var id = $(this).val();
+        $idChamado = id.split("-")[0];
+        top.location.href = "/pages/cha/informatica/visualiza/visualiza.php?id=" + $idChamado;
     });
 
     $('body').on('click', '.btn-remover', function (e) {

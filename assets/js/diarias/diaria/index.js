@@ -249,6 +249,7 @@ function encapsulaDadosDoFormItinerario() {
     $.ajax({
         "url": "/model/diarias/diaria/request.php",
         "dataType": 'html',
+        "method": "post",
         "data": {
             acao: "validaDiariaDestino",
             dados: JSON.stringify(Itinerario)

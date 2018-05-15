@@ -31,17 +31,12 @@ switch ($_POST['acao']) {
                     echo Metodos::retornoAjax("Erro", "alert", "O tamanho do arquivo é muito grande.");
                     return;
                 }
-                
+
                 $nome = $arquivo;
-                $link = $endereco.md5($nome);
-                $verifica = file_exists($link);
-                if ($verifica){
-                    echo Metodos::retornoAjax("Erro", "alert", "Arquivo já Existe no Sistema.");
-                    return;
-                } else {
-                    $resultado = move_uploaded_file($arquivoTmp, $endereco . md5($nome));
-                }
-                
+                $nome2 = $idProcesso.$nome;
+                $link = $endereco.md5($nome2);
+                $resultado = move_uploaded_file($arquivoTmp, $link);
+
                 if (!$resultado) {
                     echo Metodos::retornoAjax("Erro", "alert", "Não Foi Possível Transferir o Arquivo.");
                     return;
@@ -49,7 +44,7 @@ switch ($_POST['acao']) {
                     $upload = new Anexo();
 
                     $upload->setIdProcesso((int) $idProcesso);
-                    $upload->setEndereco($link);
+                    $upload->setEndereco("/files/gcon/".md5($nome2));
                     $upload->setNomeAnexo($nome);
 
                     echo $upload->inserirAnexo();

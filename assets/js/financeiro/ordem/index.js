@@ -26,6 +26,16 @@ $(document).ready(function () {
         }
     });
 
+    $('body').on('click', '.entrega', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            var $this = $(this);
+            window.open("/pages/financeiro/ordem/entrega/index.php?id=" + $this.val());
+        }
+    });
+
+
     $(".select").select2({
         width: " 100%"
     });
