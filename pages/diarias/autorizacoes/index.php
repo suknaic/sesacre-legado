@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/index.load.php";
+   require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/autorizacoes/index.load.php";
 ?>
-
 <html lang="pt-br">
     <head>
         <meta charset="utf-8">
@@ -24,21 +23,23 @@
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">       
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <!--Datapicker-->
+        <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
-
     <body>
-        <div id="container" class="effect aside-float aside-bright mainnav-lg">
+        <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
-                //Modal Alert
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            //Modal Alert
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
-
             <div class="boxed">
 
                 <!--CONTENT CONTAINER-->
@@ -48,64 +49,78 @@
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Autorizações Diárias</h1>                       
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="../index.php">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <div class="col-sm-6">
-                                    <h3 class="panel-title">Lista de Diárias</h3>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="pull-right">
-                                        <a class="btn btn-primary mar-ver" href="./diaria/diaria.php" role="button">
-                                            <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                            Cadastrar Diária 
-                                        </a>
+                        
+                        
+                        <div class="modal fade" id="acao" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Observação do deferimento/indeferimento:</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" id="id_diaria"/>
+                                        <textarea id="motivo" class="form-control" rows="6"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="btn-confirmar" class="btn btn-success">Salvar</button>
+                                        <button type="button" id="btn-cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel-body">
-                                <div class="col-sm-12">
-                                    <table id="tabelaDiarias" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>Diária</th>
-                                                <th>ADA</th>
-                                                <th>Proponente</th>
-                                                <th>Proposto</th>
-                                                <th>Lotação Proposto</th>
-                                                <th>Destino / Valor</th>
-                                                <th>Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                        </div>
 
-                                        </tbody>
-                                    </table>
+                        
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Deferimento/Indeferimento de Diárias</h3>
+                            </div>
+                            <div class="panel-body">
+
+                                <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Diária</th>
+                                                        <th>ADA</th>
+                                                        <th>Proponente</th>
+                                                        <th>Proposto</th>
+                                                        <th>Lotação Proposto</th>
+                                                        <th>Destino / Valor</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
@@ -122,15 +137,9 @@
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-       
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -147,18 +156,21 @@
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> 
+        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
         <!-- DIALOG CONFIRM [OPT] -->
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/diarias/index.js"></script>
-        
-           
+        <!--Datapicker-->
+        <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+        <!-- select2 -->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        <!--MaskedInput-->
+        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
+        <script src="/assets/js/diarias/autorizacoes/index.js"></script>
         <!-- END JAVASCRIPT -->
+
 
     </body>
 </html>
-
-

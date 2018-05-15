@@ -117,12 +117,13 @@ class Relatorio {
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
             $daoDiaDiaria->setIdRelatorio($this->getIdRelatorio());
-            $daoDiaDiaria->listaDiarias($pdo);
+            $daoDiaDiaria->dadosProposto($pdo);
             if ($daoDiaDiaria->getSucesso()) {
-                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
-                    $retorno .= $linha['nm_proposto'] . "<br>" . $linha['nm_funcao_proposto']. "<br>" . $linha['nm_lotacao_proposto'];
-                    break; //Pega somente o primeiro resultado, pois aqui faz um JOIN com a tabela de destinos desta forma trazendo mais de 1 registro
-                }
+//                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
+//                    $retorno = $linha;//$retorno .= $linha['nm_proposto'] . "<br>" . $linha['nm_funcao_proposto']. "<br>" . $linha['nm_lotacao_proposto'];
+//                    break; //Pega somente o primeiro resultado, pois aqui faz um JOIN com a tabela de destinos desta forma trazendo mais de 1 registro
+//                }
+                $retorno = $daoDiaDiaria->getMsgRetorno();
             }
             return $retorno;
         } catch (Exception $exc) {

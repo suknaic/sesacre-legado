@@ -51,6 +51,23 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    
+    case 'atualizaEstagioDiaria':
+        try {
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $diaria = new Diaria();
+            $diaria->setIdDiaria($filtro['diaria']);
+            $diaria->setStEstagio($filtro['estagio']);
+            $diaria->setDsHistorico($filtro['obs']);
+            $diaria->setIdPessoaHistorico($session->getIdUser());
+            echo $diaria->atualizaEstagioDiaria();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }
 
 ?>

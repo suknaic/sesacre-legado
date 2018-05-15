@@ -18,16 +18,7 @@ class DaoDiaRelatorioDestino extends DiaRelatorioDestino {
     public function selectLinha(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "select id_relatorio_destino,"
-                            . "id_relatorio,"
-                            . "id_cidade_inicio,"
-                            . "id_cidade_fim,"
-                            . "dh_inicio,"
-                            . "dh_fim,"
-                            . "id_transporte,"
-                            . "id_transporte_tipo,"
-                            . "ds_transporte_tipo "
-                        . "from dia_relatorio_destino where id_relatorio_destino = :id_relatorio_destino";
+                $sql = "select * from dia_relatorio_destino where id_relatorio_destino = :id_relatorio_destino";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_relatorio_destino",$this->getIdRelatorioDestino(), PDO::PARAM_INT);
                 $stmt->execute();

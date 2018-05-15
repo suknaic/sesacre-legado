@@ -116,6 +116,21 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    
+    case 'listaHistoricoTexto':
+        try {
+            $filtro = filter_input(INPUT_GET,'id',FILTER_DEFAULT);
+            $prog = new Diaria();
+            $prog->setIdDiaria((int)$filtro);
+            echo $prog->retornaHistorico();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
 
     case 'validaDiariaDestino':
         try {
