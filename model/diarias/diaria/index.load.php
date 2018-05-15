@@ -35,6 +35,7 @@ $vl_diaria_destino = 0;
 $id_diaria_destino = '';
 $id_cidade_inicio = '';
 $fl_pernoite = '';
+$st_estagio = '';
 
 //Se encontrou a diária preenche as informações
 if ($jsonDiaria != ""){
@@ -60,6 +61,8 @@ if ($jsonDiaria != ""){
 
     $dt_criacao = $objDiaria->dt_criacao;
     $ds_obs = $objDiaria->ds_obs;
+    
+    $st_estagio = $objDiaria->st_estagio;
 
 } else {
 

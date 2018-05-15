@@ -8,6 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaClasse.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDecretoValor.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporte.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiaria.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiariaHistorico.class.php";
 
 
 class Diaria {
@@ -39,7 +40,16 @@ class Diaria {
     private $idPedido             = null;
     private $idDiariaPai         = null;
     private $idRelatorio          = null;
+    
     private $stEstagio            = null;
+    // 0 - CANCELADA
+    // 1 - CRIADA
+    // 2 - ENVIADA PARA APROVAÇÃO
+    // 3 - INDEFERIDO
+    // 4 - DEFERIDO
+    // 5 - VINCULADO A UM PEDIDO
+    // 6 - PEDIDO CANCELADO
+    
     private $stAtivo              = null;
     
     private $idDiariaDestino = null;
@@ -56,8 +66,28 @@ class Diaria {
     private $qtDiariaDestino = null;
     private $vlDiariaDestino = null;
     
+    private $dsHistorico = null;
+    private $idPessoaHistorico = null;
+    
     private $idAnexo = null;
     private $msgErros = null;
+    
+    function getIdPessoaHistorico() {
+        return $this->idPessoaHistorico;
+    }
+
+    function setIdPessoaHistorico($idPessoaHistorico) {
+        $this->idPessoaHistorico = $idPessoaHistorico;
+    }
+
+        
+    function getDsHistorico() {
+        return $this->dsHistorico;
+    }
+
+    function setDsHistorico($dsHistorico) {
+        $this->dsHistorico = $dsHistorico;
+    }
     
     function getIdAnexo() {
         return $this->idAnexo;
@@ -349,7 +379,32 @@ class Diaria {
         $this->vlDiariaDestino = $vlDiariaDestino;
     }
 
-    
+    function retornaHistorico(){
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoDiaDiariaHistorico = new DaoDiaDiariaHistorico();
+            $daoDiaDiariaHistorico->setIdDiaria($this->getIdDiaria());
+            
+            $daoDiaDiariaHistorico->historico($pdo);
+            
+            if ($daoDiaDiariaHistorico->getSucesso()) {
+                foreach ($daoDiaDiariaHistorico->getMsgRetorno() as $linha) {
+                    $retorno .= date('d/m/Y H:i:s', strtotime($linha['dh_diaria_historico'])) . ' - ' . $linha['nm_pessoa'] . ': ' . $linha['ds_diaria_historico'] . "\n";
+                }
+            } else {
+                $retorno = $daoDiaDiariaHistorico->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+
+        
+    }
+            
     function retornaDecretosOption(PDO $pdo = null, int $idDecreto = 0){
         $retorno = "<option value = '0'>Selecione um Decreto</option>";
         try {
@@ -561,37 +616,44 @@ class Diaria {
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->listaDiarias($pdo);
             if ($daoDiaDiaria->getSucesso()) {
-                $idDiaria = 0;
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
-                    if ($idDiaria != (int)$linha['id_diaria']) {
-                        $idDiaria = $linha['id_diaria'];
-                        $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
-                                        . "<td>" . $linha['id_diaria'] . "</td>"
-                                        . "<td></td>"
-                                        . "<td>" . $linha['nm_proponente'] . "</td>"
-                                        . "<td>" . $linha['nm_proposto'] . "</td>"
-                                        . "<td>" . $linha['nm_lotacao_proposto'] . "</td>"
-                                        . "<td>" . $linha['origem_destino'] . "</td>"
-                                        . "<td>".number_format($linha['qt_diaria_destino'], 2, ',', '.'). " X R$ ". number_format($linha['vl_diaria_destino'], 2, ',', '.') . " = R$ " . number_format($linha['valor'], 2, ',', '.') . "</td>"
-                                        . "<td>"
-                                            . "<a href='./diaria/diaria.php?id=" . $linha['id_diaria'] ."'>Editar</a> | "
-                                            . "<a href='#' class='excluirDiaria'>Excluir</a> | "
-                                            . "<a href='./relatorio/relatorio.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | "
-                                            . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>"
-                                        . "</td>"
-                                     . "</tr>";
-                    } else {
-                        $retorno .= "<tr>"
-                                    . "<td></td>"
-                                    . "<td></td>"
-                                    . "<td></td>"
-                                    . "<td></td>"
-                                    . "<td></td>"   
-                                    . "<td>" . $linha['origem_destino'] . "</td>"
-                                    . "<td>" .number_format($linha['qt_diaria_destino'], 2, ',', '.'). " X R$ ". number_format($linha['vl_diaria_destino'], 2, ',', '.') . " = R$ " . number_format($linha['valor'], 2, ',', '.') .  "</td>"
-                                    . "<td></td>"
-                                 . "</tr>";
-                    }
+                    $estagio = $linha['st_estagio'];
+                    $pedido = $linha['id_pedido'];
+                    
+                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                                . "<td>" . $linha['id_diaria'] . "</td>"
+                                . "<td></td>"
+                                . "<td>" . $linha['nm_proponente'] . "</td>"
+                                . "<td>" . $linha['nm_proposto'] . "</td>"
+                                . "<td>" . $linha['lt_proposto'] . "</td>"
+                                . "<td>" . $linha['destino'] . "</td>"
+                                . "<td>";
+                    
+                        
+                        if ($estagio == '3' || $estagio == '1') { //Indeferida e Criada permite a exclusão
+                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Editar</a> | ";
+                            $retorno .= "<span role='button' class='excluirDiaria'>Excluir</span> | ";
+                            $retorno .= "<span role='button' class='enviarDiaria' data-toggle='modal' data-target='#acao'>Enviar p/ Deferimento</span>";
+                        }
+                        
+                        if ($estagio == '2') {
+                            $retorno .= 'Aguardando deferimento...';
+                        }
+                    
+                        if ($estagio == '4') { //Deferida só permite visualização
+                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Visualizar</a>";
+                            if ($pedido > 0) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                                $retorno .= " | <a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | ";
+                                $retorno .= "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>";
+                            }
+                            
+                        }
+//                                    . "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Editar</a> | "
+//                                    . "<a href='#' class='excluirDiaria'>Excluir</a> | "
+//                                    . "<a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | "
+//                                    . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>"
+                    $retorno .=   "</td>"
+                             . "</tr>";                    
                 }
             }
             return $retorno;
@@ -1240,6 +1302,128 @@ class Diaria {
                 $retorno = $daoDiaAnexo->getMsgRetorno()[0];
             } 
             return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function atualizaEstagioDiaria(PDO $pdo = null){
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $pdo->beginTransaction();
+            
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setStEstagio($this->getStEstagio());
+            $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
+            
+            $daoDiaDiaria->selectLinha($pdo);
+
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+            }
+
+            //Se não der erro na seleção da diaria, atribui à variável
+            $reg_antigo = $daoDiaDiaria->getMsgRetorno();
+            
+            
+            $idDiaria = $daoDiaDiaria->getIdDiaria();
+            if (!Log::SalvaLogU('dia_diaria', $idDiaria,$reg_antigo ,$pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoDiaDiaria->updateEstagio($pdo);
+            
+            $retornoHistorico = $this->insereHistorico($pdo);
+            
+            if($retornoHistorico != ''){ //Erro ao inserir o histórico
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $retornoHistorico );
+            }
+            
+            if ($daoDiaDiaria->getSucesso() && $retornoHistorico == '') { //Se o retorno for vazio depois que inserir o historico, nao houve erro
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", "Diária atualizada com Sucesso.");
+            } else {
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno() );
+                $pdo->rollBack();
+            }
+            
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    function insereHistorico(PDO $pdo) {
+        $retorno = "";
+        try {
+             //insere historico da diaria
+            $daoDiaDiariaHistorico = new DaoDiaDiariaHistorico();
+            $daoDiaDiariaHistorico->setDsDiariaHistorico($this->getDsHistorico());
+            $daoDiaDiariaHistorico->setIdDiaria($this->getIdDiaria());
+            $daoDiaDiariaHistorico->setIdPessoa($this->getIdPessoaHistorico());
+            
+            $daoDiaDiariaHistorico->insert($pdo);
+            
+            if ($daoDiaDiariaHistorico->getSucesso()) {
+                $idDiariaHistorico = $pdo->lastInsertId('dia_diaria_historico_id_diaria_historico_seq');
+                if (!Log::SalvaLogI('dia_diaria_historico', $idDiariaHistorico, $pdo)) {
+                    $pdo->rollBack();
+                    $retorno = STR_ERROR;
+                }
+            } else {
+                $retorno = $daoDiaDiariaHistorico->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return  $exc->getMessage();
+        }
+    }
+    
+    
+    function retornaTrDiariasAutorizacao(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->listaDiarias($pdo);
+            if ($daoDiaDiaria->getSucesso()) {
+                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
+                    $estagio = $linha['st_estagio'];
+                    $pedido = $linha['id_pedido'];
+                    
+                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                                . "<td>" . $linha['id_diaria'] . "</td>"
+                                . "<td></td>"
+                                . "<td>" . $linha['nm_proponente'] . "</td>"
+                                . "<td>" . $linha['nm_proposto'] . "</td>"
+                                . "<td>" . $linha['lt_proposto'] . "</td>"
+                                . "<td>" . $linha['destino'] . "</td>"
+                                . "<td>";
+                        if ($estagio == '2') { //Enviado para deferimento/indeferimento
+                            $retorno .= "<span role='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>Deferir</span> | "
+                                      . "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>";
+                        }
+                        if ($estagio == '3') { //Deferido
+                            $retorno .= "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>";
+                        }
+//                                    . "<span role='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>Deferir</span> | "
+//                                    . "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>"
+                    $retorno .=  "</td>"
+                             . "</tr>";  
+                }
+            }
+            return $retorno;
+            
         } catch (Exception $exc) {
             $retorno = "";
         }

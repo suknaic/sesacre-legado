@@ -67,10 +67,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalPesqCidade.html";
                             require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/diarias/shared/modalAnexaArquivo.html";
                         ?>
+                       
 
                         <form id="diariaForm">
 
                            <input type="hidden" id="id_diaria" value="<?php echo $id_diaria; ?>"/>
+                           <input type="hidden" id="st_estagio" value="<?php echo $st_estagio; ?>"/>
+                           
+                           
+                           <div id="observacoes">
+                                <div class="panel">
+                                    <div class="panel-heading text-center">
+                                        <h2 class="panel-title">Histórico</h2>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <textarea id="historico" cols="250" rows="5" readonly class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
 
                            <div class="panel">
                                <div class="panel-heading  text-center">
@@ -434,10 +452,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                            </div>
 
                            <div class="text-center">
-                               <button class="btn btn-success btn-rounded btn-salvar" type="button">
+                               <button id="salvar_diaria" class="btn btn-success btn-rounded btn-salvar" type="button">
                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                </button>
                                <a href="../index.php" class="btn btn-rounded btn-default">Cancelar</a>
+                               <button id="enviar_diaria" class="btn btn-primary btn-rounded btn-enviar" type="button">
+                                   <i class="fa fa-share-square" aria-hidden="true"></i> Enviar p/ Deferimento
+                               </button>
                            </div>
                        </form>
 
@@ -508,7 +529,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
-        <script src="/assets/js/diarias/diaria/diaria.js"></script>
+        <script src="/assets/js/diarias/diaria/index.js"></script>
         <script src="/assets/js/diarias/anexo.js"></script>
         <script src="/assets/js/diarias/pesqCidade.js"></script>
         <!-- END JAVASCRIPT -->
