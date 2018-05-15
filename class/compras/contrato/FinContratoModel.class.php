@@ -1,5 +1,5 @@
 <?php
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContrato.class.php";
 
 class FinContratoModel {
@@ -721,7 +721,7 @@ class FinContratoModel {
     public function cadastraAta() {
         try {
 
-            if (empty($this->id_pessoaFornecedor) || empty($this->id_pessoa) || empty($this->nr_contrato) || empty($this->ds_objeto) || empty($this->id_processo) || empty($this->dt_ini_vigencia_contrato) ||
+            if (empty($this->id_pessoaFornecedor) || empty($this->id_pessoa) || empty($this->id_tipo_gasto) || empty($this->nr_contrato) || empty($this->ds_objeto) || empty($this->id_processo) || empty($this->dt_ini_vigencia_contrato) ||
                     empty($this->dt_fim_vigencia_contrato) || empty($this->dt_assinatura) || empty($this->dt_publicacao) || empty($this->tp_contrato)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
@@ -752,6 +752,7 @@ class FinContratoModel {
             $daoFinContrato->setIdOrgaoGerenciador($this->id_orgao_gerenciador);
             $daoFinContrato->setIdProgramaTrabalho($this->id_programa_trabalho);
             $daoFinContrato->setIdFonte($this->id_fonte);
+            $daoFinContrato->setIdTipoGasto($this->id_tipo_gasto);
             $daoFinContrato->setTpContrato(1);
             //chamando o metodo para cadastrar a ata
             $daoFinContrato->cadastrarAta($pdo);
@@ -1064,6 +1065,7 @@ class FinContratoModel {
             } else {
                 $daoContrato->setFlServicoContinuado(0);
             }
+            $daoContrato->setIdTipoGasto($this->id_tipo_gasto);
             //primeiro result é para verificar ser o contrato foi armazenado no banco de daods
             $daoContrato->insertContrato($pdo);
             if (!$daoContrato->sucesso()) {
@@ -1350,7 +1352,7 @@ class FinContratoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoContrato = new DaoFinContrato();
-            $filter = '';
+            $filter = array();
             //fim de variaveis
             if (!empty($dados['tipoCont'])) {
                 $filter[] = "cont.tp_contrato = '" . $dados['tipoCont'] . "'";
@@ -1364,6 +1366,7 @@ class FinContratoModel {
                 $daoContrato->setIdLotacaoCentral($dados['central']);
                 $daoContrato->retornaIdContratoPorCentrais($pdo);
                 $idContrato = '';
+                $arrayIdContrato = array();
                 if ($daoContrato->sucesso()) {
                     foreach ($daoContrato->getMsgRetorno() as $linha) {
                         $arrayIdContrato [] = $linha["id_contrato"];
@@ -1464,6 +1467,30 @@ class FinContratoModel {
             //fim de variaveis
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    
+    public function retornaTipoDeGastoLicitacao($idProcesso) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $licitacao = new DaoProcesso();
+            $licitacao->setIdProcesso($idProcesso);
+            $retorno = '<option value = "">Seleciona um tipo de gasto</option>';
+
+            $busca = $licitacao->retornaTiposGastoProcesso($pdo);
+            foreach ($busca as $value) {
+                if (count($busca) > 1) {
+                    $retorno .= '<option value = "' . $value["id_tipo_gasto"] . '">' . $value["nm_tipo_gasto"] . '</option>';
+                } else {
+                    $retorno .= '<option value = "' . $value["id_tipo_gasto"] . '" selected>' . $value["nm_tipo_gasto"] . '</option>';
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 

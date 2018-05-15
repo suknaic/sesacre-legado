@@ -254,7 +254,7 @@ class FinAtaModel {
             }
             return $retorno;
         } catch (Exception $e) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $e->getMessage());
         }
     }
 
