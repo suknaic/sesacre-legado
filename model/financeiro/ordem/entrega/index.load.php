@@ -18,4 +18,3 @@ $finProtocoloModel = new FinProtocoloModel();
 $finProtocoloModel->setIdOrdem($id);
 $dados = [];
 $dados = $finProtocoloModel->inforLoadProtocolo();
-var_dump($dados);

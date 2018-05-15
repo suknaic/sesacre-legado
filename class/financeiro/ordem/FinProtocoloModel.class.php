@@ -6,6 +6,8 @@ class FinProtocoloModel {
 
     private $id_protocolo = null;
     private $nm_representante = null;
+    private $nr_rg_cpf = null;
+    private $nm_email_representante = null;
     private $dh_recebimento_sistema = null;
     private $dh_recimento = null;
     private $ds_protocolo = null;
@@ -48,6 +50,24 @@ class FinProtocoloModel {
 
         return $this;
     }
+
+    public function getNrRgCpf() {
+        return $this->nr_rg_cpf;
+    }
+
+    public function setNrRgCpf($nr_rg_cpf) {
+        $this->nr_rg_cpf = $nr_rg_cpf;
+        return $this;
+    }
+
+    public function getNmEmailRepresentante() {
+        return $this->nm_email_representante;
+    }
+    
+    public function setNmEmailRepresentante($nm_email_representante){
+        $this->nm_email_representante = $nm_email_representante;
+        return $this;
+    }         
 
     /**
      * @return mixed
@@ -165,12 +185,16 @@ class FinProtocoloModel {
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->retornaInforLoadProtocolo($pdo);
-            if($daoFinProtocolo->sucesso()){
+            if ($daoFinProtocolo->sucesso()) {
                 return $daoFinProtocolo->getMsgRetorno();
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
+    }
+
+    public function salvaProtocolo() {
+        
     }
 
 }

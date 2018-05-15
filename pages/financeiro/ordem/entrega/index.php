@@ -62,7 +62,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                         <h3 class="panel-title">Informações do pedido</h3>
                                     </div>
 
-                                    <input type="hidden" name="pedido" id="pedido" value="<?php echo $id; ?>" />
+                                    <input type="hidden" name="ordem" id="ordem" value="<?php echo $id; ?>" />
 
                                     <div class="panel-body">
                                         <div class="row">
@@ -151,7 +151,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            Nome completo do representante da Contratada:<span class="text-danger">*</span>
+                                            Nome completo do representante da Contratada : <span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                 <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" required="true" />
@@ -161,29 +161,27 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
 
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            RG/CPF nº<span class="text-danger">*</span>
+                                            RG/CPF : <span class="text-danger">*</span>
                                             <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                <select class="form-control select" name="tpEmpenho" id="tpEmpenho" required="true">
-                                                    <option value="">Selecionar o tipo do empenho</option>
-                                                </select>
+                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            Recebida em (Data):<span class="text-danger">*</span>
+                                            Recebida em (Data) : <span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="dataRecebida" id="dataRecebida" required="true" />
+                                                <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            Email:
+                                            Email :
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-envelope-o" style="margin-bottom: -4px"></p></span>
                                                 <input class="form-control data" type="text" name="email" id="email" />
@@ -197,7 +195,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                     <div class="col-sm-6">
                                         <div class="panel-body">
                                             Observação:<span class="text-danger">*</span>
-                                            <textarea class="form-control" rows="4" id="obsEmpenho"></textarea>
+                                            <textarea class="form-control" rows="4" id="obsProtocolo"></textarea>
                                         </div>
                                     </div>
 
@@ -252,7 +250,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/orcamento/empenho/cadEmpenho.js"></script>
+        <script src="/assets/js/financeiro/ordem/entrega/index.js"></script>
         <!-- END JAVASCRIPT -->
 
     </body>

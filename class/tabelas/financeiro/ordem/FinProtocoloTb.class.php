@@ -6,6 +6,8 @@ class FinProtocoloTb {
 
     private $id_protocolo = null;
     private $nm_representante = null;
+    private $nr_rg_cpf = null;
+    private $nm_email_representante = null;
     private $dh_recebimento_sistema = null;
     private $dh_recimento = null;
     private $ds_protocolo = null;
@@ -46,6 +48,24 @@ class FinProtocoloTb {
     public function setNmRepresentante($nm_representante) {
         $this->nm_representante = $nm_representante;
 
+        return $this;
+    }
+
+    public function getNrRgCpf() {
+        return $this->nr_rg_cpf;
+    }
+
+    public function setNrRgCpf($nr_rg_cpf) {
+        $this->nr_rg_cpf = $nr_rg_cpf;
+        return $this;
+    }
+
+    public function getNmEmailRepresentante() {
+        return $this->nm_email_representante;
+    }
+
+    public function setNmEmailRepresentante($nm_email_representante) {
+        $this->nm_email_representante = $nm_email_representante;
         return $this;
     }
 
