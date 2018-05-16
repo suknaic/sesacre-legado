@@ -1,6 +1,7 @@
 <?php
 
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/usuario/Usuario.class.php";
 
     $sessão = new Session('ajax');
@@ -18,75 +19,62 @@ switch ($_REQUEST['acao']){
             $usuario = filter_input(INPUT_GET, 'cadUsuario', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY); 
             
             $novoUsuario = new Usuario();
-            $novoUsuario->setIdUsuario($usuario['id_usuario']);
-            $novoUsuario->setIdPermissao($usuario['id_permissao']);
+            $novoUsuario->setIdPessoa($usuario['id_usuario']);
+            $novoUsuario->setIdPerfil($usuario['id_permissao']);
             
-            echo $novoUsuario->cadastrarUsuario();
+            echo $novoUsuario->inserirPerfilUsuarioGCON();
             return;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-    case 'listar_Usuarios':
+    case 'listar_Todos_Usuarios':
         try {
         
             $usuario = new Usuario();
             
-            echo $usuario->listarUsuarios();
+            echo $usuario->listarUsuariosGCON();
             return;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-    case 'editar_Usuario':
-        try {
-            
-            $filtro = filter_input(INPUT_GET,'editaUsuario', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
-            $usuario = new Usuario();
-            $usuario->setIdUsuario((int)$filtro['idUsuario']);
-            $usuario->setIdPermissao((int)$filtro['idPermissao']);
-            $usuario->setIdPerfilPessoa((int)$filtro['idPerfilPessoa']);
-            
-            echo $usuario->editarRegistroUsuario();
-            return;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-        }
+
     case 'excluir_Usuario':
         try {
             
             $filtro = filter_input(INPUT_GET, 'excluir', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
+           
             $usuario = new Usuario();
-            $usuario->setIdPerfilPessoa((int)$filtro['idPerfilPessoa']);
+            $usuario->setIdPessoa($filtro['idPessoa']);
+            $usuario->setIdPerfil($filtro['idPerfil']);
             
-            echo $usuario->excluirRegistroUsuario();
+            echo $usuario->deletarPerfilUsuarioGCON();
             return;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
         
-    case 'listar_Tecnicos':
+    case 'listar_pessoas':
         try {
+            $prog = new Pessoa();
             
-            $usuario = new Usuario();
-            
-            echo $usuario->listarTecnicos();
+            echo "<option value='0' selected>Selecione um usuário</option>";
+            echo $prog->retornaOptionPessoa();
             return;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
         
-    case 'listar_Perfis':
+    case 'listar_perfis':
         try {
             
             $perfis = new Usuario();
             
-            echo $perfis->listarPerfis();
+            echo "<option value='0' selected>Selecione uma permissão</option>";
+            echo $perfis->retornarSelectOptionPerfisGCON();
             return;
         } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());

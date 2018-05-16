@@ -28,8 +28,8 @@ class DaoFinProtocolo extends FinProtocoloTb {
 
     public function retornaInforLoadProtocolo(PDO $pdo) {
         try {
-            if($pdo != null){
-                
+            if ($pdo != null) {
+
                 $sql = "select ordem.id_ordem, ordem.nr_ordem, p.nr_pedido, centalLotacao.nm_lotacao, pFornecedor.nm_pessoa, 
                         modalidade.nm_modalidade, processo.cd_pregao as licitacao,emp.nr_empenho, tpEmpenho.nm_tipo_empenho, 
                         emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
@@ -68,17 +68,35 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
-                 if ($stmt->rowCount() > 0) {
+                if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
-            }else{
+            } else {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-            
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function salvaProcotolo(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+
+                $sql = "";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;

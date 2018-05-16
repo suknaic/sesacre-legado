@@ -608,4 +608,13 @@ $(document).ready(function () {
             $("#centrais").prop('disabled', true);
         }
     });
+    
+    $('body').on('keypress', '.formPesquisa', function (e) {
+        var key = e.which;
+        if (key == 13) {
+            $(".btn-pesquisar").trigger('click');
+            return false;
+        }
+    });
+    
 });

@@ -1,22 +1,49 @@
 
-
-function listaDiarias(){
+function listaStEstagioCombo(){
     $.ajax({
         "url": "/model/diarias/autorizacoes/request.php",
         "dataType": 'html',
         "data": {
-            acao: "listaDiarias"
+            acao: "listaStEstagioOption"
         },
-        "success": function (response) {
-            func.carregaTabelaPadrao('tabela', response, [4], true);
+        "success": function(response) {
+            $("#st_estagio").html(response);
         }
     });
 }
-listaDiarias();
+listaStEstagioCombo();
+
+function listaDiarias(){
+    var estagio = $("#st_estagio option:selected").val();
+    
+    if (estagio > 0) {
+        $.ajax({
+            "url": "/model/diarias/autorizacoes/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaDiarias",
+                estagio: estagio
+            },
+            "success": function (response) {
+                func.carregaTabelaPadrao('tabela', response, [4], true);
+            }
+        });
+    }
+}
+//listaDiarias();
 
 
 $(document).ready(function () {
     func = new Funcoes();
+    
+    //Combo box dos tipos de autorizações
+    $('body').find("select").select2({
+    });
+    
+    $('body').on('change','#st_estagio',function(e){
+       e.preventDefault();
+       listaDiarias();
+    });
     
     $('#tabela').on('click', '.acao', function (e) {
         e.preventDefault();

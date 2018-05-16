@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="pull-right">
-                                        <a class="btn btn-primary mar-ver" href="./diaria/diaria.php" role="button">
+                                        <a class="btn btn-rounded btn-primary mar-ver" href="./diaria/" role="button">
                                             <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
                                             Cadastrar Diária 
                                         </a>
@@ -81,6 +81,7 @@
                                                 <th>Proposto</th>
                                                 <th>Lotação Proposto</th>
                                                 <th>Destino / Valor</th>
+                                                <th>Situação</th>
                                                 <th>Ações</th>
                                             </tr>
                                         </thead>

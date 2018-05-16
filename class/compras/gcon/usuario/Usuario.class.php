@@ -1,242 +1,129 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/usuario/DaoUsuario.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";
 
 class Usuario {
 
     private $idPerfilPessoa = null;
-    private $idUsuario = null;
-    private $idPermissao = null;
+    private $idPessoa = null;
     private $idPerfil = null;
 
-    function getIdUsuario() {
-        return $this->idUsuario;
+    function getIdPerfilPessoa() {
+        return $this->idPerfilPessoa;
     }
 
-    function getIdPermissao() {
-        return $this->idPermissao;
+    function getIdPessoa() {
+        return $this->idPessoa;
     }
 
     function getIdPerfil() {
         return $this->idPerfil;
     }
 
-    function getIdPerfilPessoa() {
-        return $this->idPerfilPessoa;
-    }
-
     function setIdPerfilPessoa($idPerfilPessoa) {
         $this->idPerfilPessoa = $idPerfilPessoa;
+    }
+
+    function setIdPessoa($idPessoa) {
+        $this->idPessoa = $idPessoa;
     }
 
     function setIdPerfil($idPerfil) {
         $this->idPerfil = $idPerfil;
     }
 
-    function setIdPermissao($idPermissao) {
-        $this->idPermissao = $idPermissao;
-    }
-
-    function setIdUsuario($idUsuario) {
-        $this->idUsuario = $idUsuario;
-    }
-
-    /*
-     * Cadastra usuário.
-     */
-
-    public function cadastrarUsuario() {
+    /************************************** Cadastra usuário **********************************/
+    public function inserirPerfilUsuarioGCON() {
         try {
-            if (empty($this->idUsuario && $this->idPermissao) == true) {
+            if (empty($this->idPessoa && $this->idPerfil)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
-                $dao = new DaoUsuario();
 
-                //setando o campo para a extensão
-                $dao->setIdUsuario($this->idUsuario);
-                $dao->setIdPermissao($this->idPermissao);
+                $perfilPessoa = new PerfilPessoa();
+                $perfilPessoa->setIdPerfil($this->idPerfil);
+                $perfilPessoa->setIdPessoa($this->idPessoa);
 
-                $cadastrar = $dao->cadastrarRegistroUsuario($pdo);
-                if (!$cadastrar) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                    $pdo->rollBack();
-                    return $retorno;
+                $inseri = $perfilPessoa->incluirPessoaPerfil($pdo);
+                if ($inseri) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
                 } else {
-                    $dao->setIdPerfil($pdo->lastInsertId('ses_perfil_pessoa_id_perfil_pessoa_seq'));
-                    if (Log::SalvaLogI('ses_perfil_pessoa', $dao->getIdPerfil(), $pdo)) {
-                        $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
-                        $pdo->commit();
-                        return $retorno;
-                    } else {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                        $pdo->rollBack();
-                        return $retorno;
-                    }
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'console', $inseri);
                 }
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    /*********************************************************************************************/
 
-    /*
-     * Lista usuário.
-     */
-
-    public function listarUsuarios() {
+    /******************************************* Lista todos os usuários do GCON ***************************************/
+    public function listarUsuariosGCON() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $dao = new DaoUsuario();
 
-            $perfis = "(" . PERFIL_COMPRAS_USUARIO . "," . PERFIL_COMPRAS_TECNICO . "," . PERFIL_COMPRAS_ADMINISTRADOR . ")";
-            $busca = $dao->listarRegistroUsuario($pdo, $perfis);
-            if (is_array($busca) == false) {
-                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                return $retorno;
+            $perfilPessoa = new PerfilPessoa();
+            
+            $perfilPessoa->retornaPessoasPorINPerfil(PERFIL_COMPRAS_ADMINISTRADOR . "," . PERFIL_COMPRAS_TECNICO . "," . PERFIL_COMPRAS_USUARIO, $pdo);
+            $tabela = "";
+            if (!$perfilPessoa->Sucesso()) {
+                return "";
             } else {
-                $tabela = '
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Lista de Usuários</h3>
-                        </div>
-                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table id="tabela_usuario" class="table table-striped table-bordered" cellspacing="0"
-                                               width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-capitalize text-center">Usuário</th>
-                                                    <th class="text-capitalize text-center">Permissão</th>
-                                                    <th class="text-capitalize text-center">Ação</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-                foreach ($busca as $linha) {
+                foreach ($perfilPessoa->getMsgRetorno() as $linha) {
                     $tabela .= '      
-                                                <tr>
-                                                    <td class="text-center">' . $linha["nm_pessoa"] . '</td>
-                                                    <td class="text-center">' . substr($linha["nm_perfil"], 14) . '</td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" perfil="' . $linha['id_perfil'] . '" usuario="' . $linha["id_pessoa"] . '"
-                                                            value="' . $linha["id_perfil_pessoa"] . '">
-                                                            <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' . $linha["id_perfil_pessoa"] . '">
-                                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>';
+                                <tr>
+                                    <td class="text-center">' . $linha["nm_pessoa"] . '</td>
+                                    <td class="text-center">' . substr($linha["nm_perfil"], 15) . '</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" Pessoa="'.$linha['id_pessoa'] . '" Perfil="'.$linha['id_perfil'].'">
+                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>';
                 }
-                $tabela .= '            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>';
-                return Metodos::retornoAjax("ok", "html", $tabela);
+                return $tabela;
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($ex));
         }
     }
-
-    /*
-     * Edita o registro de um usuário.
-     */
-
-    public function editarRegistroUsuario() {
+    /******************************************************************************************************/
+    
+    /************************************ Exclui o registro de um usário **********************************/
+    public function deletarPerfilUsuarioGCON() {
         try {
-            if (empty($this->idUsuario) == true && empty($this->idPermissao) == true) {
+            if (empty($this->idPerfil && $this->idPessoa)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
 
-                $dao = new DaoUsuario();
+                $perfilPessoa = new PerfilPessoa();
+                $perfilPessoa->setIdPerfil($this->idPerfil);
+                $perfilPessoa->setIdPessoa($this->idPessoa);
 
-                $dao->setIdUsuario($this->idUsuario);
-                $dao->setIdPermissao($this->idPermissao);
-                $dao->setIdPerfilPessoa($this->idPerfilPessoa);
-                $busca = $dao->retornaRegistroUsuario($pdo);
-
-                $verifica = $dao->verificaRegistroUsuario($pdo);
-                if ($verifica) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", "Registro já existe no sistema.");
-                    return $retorno;
+                $deleta = $perfilPessoa->removerPerfilPessoa($pdo);
+                if ($deleta) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
                 } else {
-                    $edita = $dao->editarRegistroUsuario($pdo);
-                    if (!$edita) {
-                        $retorno = Metodos::retornoAjax("Erro", "console", $edita);
-                        $pdo->rollBack();
-                        return $retorno;
-                    } else {
-                        if (Log::SalvaLogU('ses_perfil_pessoa', $dao->getIdPerfilPessoa(), $busca, $pdo)) {
-                            $retorno = Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
-                            $pdo->commit();
-                            return $retorno;
-                        } else {
-                            $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                            $pdo->rollBack();
-                            return $retorno;
-                        }
-                    }
-                }
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($ex));
-        }
-    }
-
-    /*
-     * Exclui o registro de um usário.
-     */
-
-    public function excluirRegistroUsuario() {
-        try {
-            if (empty($this->idPerfilPessoa) == true) {
-                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
-            } else {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-                $pdo->beginTransaction();
-
-                $dao = new DaoUsuario();
-                $dao->setIdPerfilPessoa($this->idPerfilPessoa);
-
-                $desativa = $dao->deletarRegistroUsuario($pdo);
-                if (!$desativa) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", $desativa);
                     $pdo->rollBack();
-                    return $retorno;
-                } else {
-                    if (Log::SalvaLogD('ses_perfil_pessoa', $dao->getIdPerfilPessoa(), $pdo)) {
-                        $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-                        $pdo->commit();
-                        return $retorno;
-                    } else {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                        $pdo->rollBack();
-                        return $retorno;
-                    }
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($ex));
         }
     }
-
-    /*
-     * Lista todos os técnicos no select option.
-     */
-
+    /*******************************************************************************************************/
+    
+    /********************************* Lista todos os técnicos no select option ****************************/
     public function listarTecnicos() {
         try {
             $conexao = new Conexao();
@@ -245,7 +132,7 @@ class Usuario {
             $dao = new DaoUsuario();
 
             $resultado = $dao->listarTecnicos($pdo);
-            if (is_array($resultado) == false) {
+            if (!is_array($resultado)) {
                 $retorno = Metodos::retornoAjax("Erro", "console", $resultado);
                 return $retorno;
             } else {
@@ -257,32 +144,34 @@ class Usuario {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
-    /*
-     * Lista todos os perfis do GCON no select option.
-     */
-
-    public function listarPerfis() {
+    /*******************************************************************************************************/
+    
+    /*************************************** Perfis GCON ***************************************/
+    private function carregarPerfisGCON() {
         try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            $dao = new DaoUsuario();
-
-            $perfis = "(" . PERFIL_COMPRAS_USUARIO . "," . PERFIL_COMPRAS_TECNICO . "," . PERFIL_COMPRAS_ADMINISTRADOR . ")";
-            $resultado = $dao->listarPerfis($pdo, $perfis);
-            if (is_array($resultado) == false) {
-                $retorno = Metodos::retornoAjax("Erro", "console", $resultado);
-                $pdo->rollBack();
-                return $retorno;
-            } else {
-                foreach ($resultado as $linha) {
-                    echo '<option value="' . $linha["id_perfil"] . '">' . trim(substr($linha["nm_perfil"], 14)) . '</option>';
-                }
-            }
+            $perfis = array(
+                PERFIL_COMPRAS_ADMINISTRADOR => "Administrador",
+                PERFIL_COMPRAS_TECNICO => "Técnico",
+                PERFIL_COMPRAS_USUARIO => "Usuário"
+            );
+            return $perfis;
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+            return $ex->getMessage();
         }
     }
+
+    public function retornarSelectOptionPerfisGCON() {
+        try {
+            $retorno = "";
+            $perfis = $this->carregarPerfisGCON();
+            foreach ($perfis as $key => $valor) {
+                $retorno .= "<option value='" . $key . "'>" . $valor . "</option>";
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+    /*******************************************************************************************/
 
 }

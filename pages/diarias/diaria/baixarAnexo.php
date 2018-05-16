@@ -9,8 +9,7 @@ $diaria = new Diaria();
 $idAnexo  = $_REQUEST['id'];
 
 if ($idAnexo) {
-    $diaria->setIdAnexo($idAnexo);
-    $arquivo = $diaria->baixarAnexo();
+    $arquivo = $diaria->baixarAnexo(null,$idAnexo);
     header('Content-type: ' . $arquivo['nm_mime_type']);
     header("Content-Disposition: attachment; filename= " .$arquivo['nm_anexo']);
     fpassthru($arquivo['aq_anexo']);

@@ -204,10 +204,10 @@ class DaoFinContrato extends FinContratoTb {
                         INNER JOIN gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
                         
-                        INNER JOIN gco_processo_tipo_gasto as gtpg
+                        LEFT JOIN gco_processo_tipo_gasto as gtpg
                         on gtpg.id_tipo_gasto = cont.id_tipo_gasto
 
-                        INNER JOIN pla_tipo_gasto as plaTipoGasto
+                        LEFT JOIN pla_tipo_gasto as plaTipoGasto
                         on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
 
                         INNER JOIN gco_modalidade as modalidade
@@ -267,9 +267,9 @@ class DaoFinContrato extends FinContratoTb {
                 on obj.id_objeto = p.id_objeto
                 inner join gco_modalidade as mod
                 on mod.id_modalidade = p.id_modalidade
-                inner join gco_processo_tipo_gasto gptg
+                left join gco_processo_tipo_gasto gptg
                 on gptg.id_processo = p.id_processo
-                inner join pla_tipo_gasto as tpGasto
+                left join pla_tipo_gasto as tpGasto
                 on tpGasto.id_tipo_gasto = gptg.id_tipo_gasto
                 group by p.id_processo, mod.id_modalidade, obj.id_objeto";
                 $stmt = $pdo->prepare($sql);
@@ -371,9 +371,9 @@ class DaoFinContrato extends FinContratoTb {
                         on modalidade.id_modalidade = processo.id_modalidade
                         inner join gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
-                        inner join gco_processo_tipo_gasto as gptg
+                        left join gco_processo_tipo_gasto as gptg
                         on gptg.id_tipo_gasto = cont.id_tipo_gasto
-                        inner join pla_tipo_gasto as tipoGasto
+                        left join pla_tipo_gasto as tipoGasto
                         on tipoGasto.id_tipo_gasto  = gptg.id_tipo_gasto
                         inner join ses_pessoa as pessoa
                         on pessoa.id_pessoa = f.id_pessoa
