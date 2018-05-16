@@ -85,6 +85,26 @@ function listaClasseCombo(decreto, classe) {
     });
 }
 
+function listaHistorico(){
+    var id = $("#id_diaria").val();
+    
+    $.ajax({
+        "url": "/model/diarias/diaria/request.php",
+        "dataType": 'html',
+        "data": {
+            acao: 'listaHistoricoTexto',
+            id: id
+        },
+        "success":
+            function(response){
+                if (response) {
+                    $("#historico").html(response);
+                    $("#observacoes").show();   
+                }
+            }
+    });
+}
+
 function atualizaCombos() {
     //Dispara a trigger do select2 para mudar os valores dos input do tipo Select
     $('#destinoForm').find('select').trigger('change');
@@ -266,11 +286,7 @@ function encapsulaDadosDoFormItinerario() {
     //********************* fim**********************
 
 
-}
-
-
-
-            
+}        
 
 function retornaItinerario() {
     var itinerarioOriginal = $("#id_diaria_destino").data('itinerario');
@@ -311,7 +327,25 @@ $(document).ready(function () {
             thousandsSeparator: '.'
         });
     });
-
+    
+    $("#observacoes").hide();
+    $("#enviar_diaria").hide();
+    
+    if ($("#id_diaria").val() > 0) {
+        listaHistorico();
+    } 
+    
+    var estagio = $("#st_estagio").val();
+    
+    if(estagio == '1' || estagio == '3'){ //Criada ou Indeferida
+        $("#enviar_diaria").show();
+    } else {
+        if(estagio == '4' || estagio == '2'){ //Deferida ou Enviada para Deferimento
+            $("#salvar_diaria").prop('disabled',true);
+        }
+    }
+    
+//    $("#observacoes").hide();
 
     $('body').on('click', '.btn-limpar', function (e) {
         limpaFormItinerario();
@@ -556,6 +590,95 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+    
+    $('body').on('click','#enviar_diaria', function(e){
+        
+        var idDiaria = $("#id_diaria").val();
+        var proponente = $("#id_pessoa_proponente option:selected").text();
+        var proposto = $("#id_pessoa_proposto option:selected").text();
+        var mensagem = "Nº: " + idDiaria + " / Proponente: " + proponente + " / Proposto: " + proposto;
+        
+        var DADOS = {
+            diaria: idDiaria,
+            estagio: '2', //Enviado para deferimento
+            obs: 'Enviado a diária para deferimento.'
+        }
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar o envio para deferimento da Diária <span class="text-danger">' + mensagem + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+
+                    $.ajax({
+                        "url": "/model/diarias/request.php",
+                        "dataType": "html",
+                        "method": "post",
+                        "data": {
+                            "acao": "atualizaEstagioDiaria",
+                            "dados": DADOS
+                        },
+                        "success": function (response) {
+//                            console.log(response);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao);
+                                console.log("Parse JSON");
+                                console.log(response);
+                                return false;
+                            }
+                            
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log('Console Mensagem');
+                                    console.log(response);
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'primary');
+                                //Reload após deletar o registro
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    location.reload();
+                                });
+                            } else {
+                                console.log('Ultimo else');
+                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
+
+
+                }
+            }
+        });
+        
     });
     
 });

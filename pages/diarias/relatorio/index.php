@@ -75,14 +75,13 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <strong>Nome do Servidor:</strong> <br>
-                                            <strong>Cargo,Função ou Emprego:</strong> <br>
-                                            <strong>Órgão/Setor de Lotação:</strong>
-                                        </div>
-                                        <div class="col-md-10 pull-left">
-                                            <?php echo $dadosProposto; ?>
-                                        </div>
+<!--                                        <div class="col-md-2">-->
+                                            <strong>Nome do Servidor: </strong><?php echo $dadosProposto['nm_proposto']; ?> <br>
+                                            <strong>Cargo,Função ou Emprego: </strong> <?php echo $dadosProposto['nm_funcao_proposto']; ?> <br>
+                                            <strong>Órgão/Setor de Lotação: </strong> <?php echo $dadosProposto['nm_lotacao_proposto']; ?>
+<!--                                        </div>-->
+<!--                                        <div class="col-md-10 pull-left">-->
+<!--                                        </div>-->
                                     </div>
                                     <br/>
                                     <div class="form-group">
@@ -339,7 +338,7 @@
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <script src="/assets/js/diarias/relatorio/relatorio.js"></script>
+        <script src="/assets/js/diarias/relatorio/index.js"></script>
         <script src="/assets/js/diarias/anexo.js"></script>
         <script src="/assets/js/diarias/pesqCidade.js"></script>
          <!-- select2 -->

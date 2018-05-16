@@ -76,10 +76,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                             <th>Equipe</th>
                                                             <th>Primária</th>
                                                             <th>Secundária</th>
-                                                            <th>Técnico</th>
                                                             <th>Data Criação</th>
-                                                            <th>Data Agendamento</th>
-                                                            <th>Status</th>
                                                             <th class="text-center">Ações</th>
                                                         </tr>
                                                     </thead>
