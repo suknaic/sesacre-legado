@@ -42,34 +42,18 @@ class Diaria {
     private $idRelatorio          = null;
     
     private $stEstagio            = null;
-    // 0 - CANCELADA
     // 1 - CRIADA
-    // 2 - ENVIADA PARA APROVAÇÃO
+    // 2 - ENVIADA PARA DEFERIMENTO
     // 3 - INDEFERIDO
     // 4 - DEFERIDO
-    // 5 - VINCULADO A UM PEDIDO
-    // 6 - PEDIDO CANCELADO
-    
+
     private $stAtivo              = null;
     
-    private $idDiariaDestino = null;
-    private $idCidadeInicio = null;
-    private $idCidadeFim = null;
-    private $origem = null;
-    private $destino = null;
-    private $dhInicio = null;
-    private $dhFim = null;
-    private $idTransporte = null;
-    private $idDecreto = null;
-    private $idClasse = null;
-    private $flPernoite = null;
-    private $qtDiariaDestino = null;
-    private $vlDiariaDestino = null;
     
     private $dsHistorico = null;
     private $idPessoaHistorico = null;
     
-    private $idAnexo = null;
+//    private $idAnexo = null;
     private $msgErros = null;
     
     function getIdPessoaHistorico() {
@@ -89,14 +73,6 @@ class Diaria {
         $this->dsHistorico = $dsHistorico;
     }
     
-    function getIdAnexo() {
-        return $this->idAnexo;
-    }
-
-    function setIdAnexo($idAnexo) {
-        $this->idAnexo = $idAnexo;
-    }
-    
     function getAnexos() {
         return $this->anexos;
     }
@@ -114,30 +90,6 @@ class Diaria {
         $this->itinerario = $itinerario;
     }
     
-    function getOrigem() {
-        return $this->origem;
-    }
-
-    function getDestino() {
-        return $this->destino;
-    }
-
-    function setOrigem($origem) {
-        $this->origem = $origem;
-    }
-
-    function setDestino($destino) {
-        $this->destino = $destino;
-    }
-
-    function getIdDiariaDestino() {
-        return $this->idDiariaDestino;
-    }
-
-    function setIdDiariaDestino($idDiariaDestino) {
-        $this->idDiariaDestino = $idDiariaDestino;
-    }
-
     function getIdDiaria() {
         return $this->idDiaria;
     }
@@ -224,24 +176,7 @@ class Diaria {
 
     function setIdTipo($idTipo) {
         $this->idTipo = $idTipo;
-    }
-    
-    function getIdDecreto() {
-        return $this->idDecreto;
-    }
-
-    function getIdClasse() {
-        return $this->idClasse;
-    }
-
-    function setIdDecreto($idDecreto) {
-        $this->idDecreto = $idDecreto;
-    }
-
-    function setIdClasse($idClasse) {
-        $this->idClasse = $idClasse;
-    }
-
+    } 
     
     function setIdPessoaProponente($idPessoaProponente) {
         $this->idPessoaProponente = $idPessoaProponente;
@@ -315,68 +250,26 @@ class Diaria {
         $this->stAtivo = $stAtivo;
     }
     
-    function getIdCidadeInicio() {
-        return $this->idCidadeInicio;
+    public function retornaStEstagioOptions() {
+        $retorno  = "<option value='0' selected>Selecione a situação</option>";
+        
+        foreach ($this->tiposStEstagios() as $indice => $valor) {
+            $retorno .= "<option value='".$indice."'>".$valor."</option>";
+        }
+        return $retorno;
     }
-
-    function getIdCidadeFim() {
-        return $this->idCidadeFim;
-    }
-
-    function getDhInicio() {
-        return $this->dhInicio;
-    }
-
-    function getDhFim() {
-        return $this->dhFim;
-    }
-
-    function getIdTransporte() {
-        return $this->idTransporte;
-    }
-
-    function getFlPernoite() {
-        return $this->flPernoite;
-    }
-
-    function getQtDiariaDestino() {
-        return $this->qtDiariaDestino;
-    }
-
-    function getVlDiariaDestino() {
-        return $this->vlDiariaDestino;
-    }
-
-    function setIdCidadeInicio($idCidadeInicio) {
-        $this->idCidadeInicio = $idCidadeInicio;
-    }
-
-    function setIdCidadeFim($idCidadeFim) {
-        $this->idCidadeFim = $idCidadeFim;
-    }
-
-    function setDhInicio($dhInicio) {
-        $this->dhInicio = $dhInicio;
-    }
-
-    function setDhFim($dhFim) {
-        $this->dhFim = $dhFim;
-    }
-
-    function setIdTransporte($idTransporte) {
-        $this->idTransporte = $idTransporte;
-    }
-
-    function setFlPernoite($flPernoite) {
-        $this->flPernoite = $flPernoite;
-    }
-
-    function setQtDiariaDestino($qtDiariaDestino) {
-        $this->qtDiariaDestino = $qtDiariaDestino;
-    }
-
-    function setVlDiariaDestino($vlDiariaDestino) {
-        $this->vlDiariaDestino = $vlDiariaDestino;
+    
+    public function tiposStEstagios() {
+        //O atributo "lotacao" indica se na tabela que irá gravar a autorização existe 
+        //a informação de lotação(id_lotacao)
+        $stEstagios = array(
+            1 => "Criada",
+            2 => "Enviada para Deferimento",
+            3 => "Indeferida",
+            4 => "Deferida",
+            9 => "Todas"
+        );
+        return $stEstagios;
     }
 
     function retornaHistorico(){
@@ -582,10 +475,7 @@ class Diaria {
             if ($this->getIdDiaria() > 0) {
                 $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
             }
-            //Um destino específico
-            if ($this->getIdDiariaDestino() > 0) {
-                $daoDiaDiariaDestino->setIdDiariaDestino($this->getIdDiariaDestino());
-            }
+
             $daoDiaDiariaDestino->select($pdo);
             
             if ($daoDiaDiariaDestino->getSucesso()) {
@@ -614,7 +504,11 @@ class Diaria {
                 $pdo = $conexao->connect();
             }
             $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
             $daoDiaDiaria->listaDiarias($pdo);
+            
+            $estagios = $this->tiposStEstagios();
+            
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
@@ -627,31 +521,29 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
+                                . "<td>" . $estagios[$estagio] . "</td>"
                                 . "<td>";
                     
                         
-                        if ($estagio == '3' || $estagio == '1') { //Indeferida e Criada permite a exclusão
-                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Editar</a> | ";
-                            $retorno .= "<span role='button' class='excluirDiaria'>Excluir</span> | ";
-                            $retorno .= "<span role='button' class='enviarDiaria' data-toggle='modal' data-target='#acao'>Enviar p/ Deferimento</span>";
-                        }
-                        
-                        if ($estagio == '2') {
-                            $retorno .= 'Aguardando deferimento...';
-                        }
-                    
-                        if ($estagio == '4') { //Deferida só permite visualização
-                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Visualizar</a>";
-                            if ($pedido > 0) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
-                                $retorno .= " | <a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | ";
-                                $retorno .= "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>";
-                            }
-                            
-                        }
-//                                    . "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Editar</a> | "
-//                                    . "<a href='#' class='excluirDiaria'>Excluir</a> | "
-//                                    . "<a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | "
-//                                    . "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>"
+                                if ($estagio == '3' || $estagio == '1') { //Indeferida e Criada permite a exclusão
+                                    $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Editar</a> | ";
+                                    $retorno .= "<span role='button' class='excluirDiaria'>Excluir</span> | ";
+                                    $retorno .= "<span role='button' class='enviarDiaria' data-toggle='modal' data-target='#acao'>Enviar p/ Deferimento</span>";
+                                }
+
+                                if ($estagio == '2') {
+                                    $retorno .= 'Aguardando deferimento...';
+                                }
+
+                                if ($estagio == '4') { //Deferida só permite visualização
+                                    $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>Visualizar</a>";
+                                    if ($pedido > 0) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                                        $retorno .= " | <a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>Relatório de Viagem</a> | ";
+                                        $retorno .= "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>Imprimir</a>";
+                                    }
+
+                                }
+
                     $retorno .=   "</td>"
                              . "</tr>";                    
                 }
@@ -686,9 +578,19 @@ class Diaria {
                 $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
                 foreach ($daoDiaDiaria->getMsgRetorno() as $destino) {
                     $daoDiaDiariaDestino->setIdDiariaDestino($destino['id_diaria_destino']);
-                    $retorno = $this->excluirDiariaDestino($pdo,$daoDiaDiariaDestino);
+                    $retorno .= $this->excluirDiariaDestino($pdo,$daoDiaDiariaDestino);
                 }
-            }
+            } 
+            
+            //Percorre todos os anexos para excluir
+            $daoDiaDiaria->selectAnexos($pdo);
+            if ($daoDiaDiaria->getSucesso()) {
+                $daoDiaAnexo = new DaoDiaAnexo();
+                foreach ($daoDiaDiaria->getMsgRetorno() as $anexo) {
+                    $daoDiaAnexo->setIdAnexo($anexo['id_anexo']);
+                    $retorno .= $this->excluirDiariaAnexo($pdo,$daoDiaAnexo);
+                }
+            } 
             
             //Se não ocorrer erro a variavel $retorno estará vazia
             if ($retorno == "") {
@@ -1287,15 +1189,21 @@ class Diaria {
         }
     }
     
-    function baixarAnexo(PDO $pdo = null) {
+    function baixarAnexo(PDO $pdo = null, int $idAnexo = 0) {
         $retorno = "";
         try {
+            
+            if ($idAnexo == 0) {
+                $retorno = 'Arquivo não informado.';
+                return $retorno;
+            }
+            
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
             $daoDiaAnexo = new DaoDiaAnexo();
-            $daoDiaAnexo->setIdAnexo($this->getIdAnexo());
+            $daoDiaAnexo->setIdAnexo($idAnexo);
             $daoDiaAnexo->select($pdo);
             
             if ($daoDiaAnexo->getSucesso()) {
@@ -1395,11 +1303,15 @@ class Diaria {
                 $pdo = $conexao->connect();
             }
             $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->listaDiarias($pdo);
+            $daoDiaDiaria->setStEstagio($this->getStEstagio());
+            $daoDiaDiaria->listaDiariasAutorizacao($pdo);
+            $estagios = $this->tiposStEstagios(); //Retorna os estágios e descritivos
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
                     $pedido = $linha['id_pedido'];
+                    
+                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
@@ -1408,16 +1320,15 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
+                                . "<td>" . $estagios[$estagio] . $info_complementar . "</td>"
                                 . "<td>";
                         if ($estagio == '2') { //Enviado para deferimento/indeferimento
                             $retorno .= "<span role='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>Deferir</span> | "
                                       . "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>";
                         }
-                        if ($estagio == '3') { //Deferido
+                        if ($estagio == '4') { //Deferido
                             $retorno .= "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>";
                         }
-//                                    . "<span role='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>Deferir</span> | "
-//                                    . "<span role='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>Indeferir</span>"
                     $retorno .=  "</td>"
                              . "</tr>";  
                 }

@@ -112,8 +112,7 @@ class DaoDiaDiaria extends DiaDiaria {
                 $sql = "delete from dia_diaria where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
-                $stmt->execute();
-                $this->sucesso = true;
+                $this->sucesso = $stmt->execute();
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -138,6 +137,31 @@ class DaoDiaDiaria extends DiaDiaria {
                                 vl_diaria_destino 
                          from dia_diaria_destino destino
                          where destino.id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function selectAnexos(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_anexo, 
+                                id_diaria, 
+                                nm_anexo, 
+                                nm_mime_type, 
+                                aq_anexo
+                         from dia_anexo anexo
+                         where anexo.id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -257,6 +281,79 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
+    public function listaDiariasAutorizacao(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT di.id_diaria, 
+                                proponente.nm_pessoa                               AS nm_proponente, 
+                                proposto.nm_pessoa                                 AS nm_proposto, 
+                                lt_proposto.nm_lotacao                             AS lt_proposto,
+                                di.st_estagio,
+                                di.id_pedido,
+                                String_agg(pais_ini.nm_pais 
+                                           || '(' 
+                                           || est_ini. nm_sigla 
+                                           || ')' 
+                                           || ci.nm_cidade 
+                                           || ' a ' 
+                                           || pais_fim.nm_pais 
+                                           || '(' 
+                                           || est_fim.nm_sigla 
+                                           || ')' 
+                                           || cf.nm_cidade 
+                                           || ' / ' 
+                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G999D99')) 
+                                           || ' X ' 
+                                           || 'R$ ' 
+                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G999D99')) 
+                                           || ' = R$ ' 
+                                           || ( Trim(To_char(dd.qt_diaria_destino * dd.vl_diaria_destino, 
+                                                     '999G999G999D99')) ), '<hr>') AS destino 
+                         FROM   dia_diaria di 
+                                INNER JOIN dia_diaria_destino dd 
+                                        ON dd.id_diaria = di.id_diaria 
+                                INNER JOIN ses_cidade ci 
+                                        ON ci.id_cidade = dd.id_cidade_inicio 
+                                INNER JOIN ses_cidade cf 
+                                        ON cf.id_cidade = dd.id_cidade_fim 
+                                INNER JOIN ses_pessoa proposto 
+                                        ON proposto.id_pessoa = di.id_pessoa_proposto 
+                                INNER JOIN ses_lotacao lt_proposto 
+                                        ON lt_proposto.id_lotacao = di.id_lotacao_proposto 
+                                INNER JOIN ses_pessoa proponente 
+                                        ON proponente.id_pessoa = di.id_pessoa_proponente 
+                                INNER JOIN ses_estado est_ini 
+                                        ON est_ini.id_estado = ci.id_estado 
+                                INNER JOIN ses_estado est_fim 
+                                        ON est_fim.id_estado = cf.id_estado 
+                                INNER JOIN ses_pais pais_ini 
+                                        ON pais_ini.id_pais = est_ini.id_pais 
+                                INNER JOIN ses_pais pais_fim 
+                                        ON pais_fim.id_pais = est_fim.id_pais
+                                WHERE (di.st_estagio = :st_estagio or '9' = :st_estagio)
+                         GROUP  BY di.id_diaria, 
+                                   proponente.nm_pessoa, 
+                                   proposto.nm_pessoa, 
+                                   lt_proposto.nm_lotacao 
+                         ORDER BY di.id_diaria desc";
+                        
+                $stmt = $pdo->prepare($sql);
+               
+                $stmt->bindValue(':st_estagio', $this->getStEstagio(),PDO::PARAM_STR);
+
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } 
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     public function listaDiarias(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
@@ -305,7 +402,8 @@ class DaoDiaDiaria extends DiaDiaria {
                                 INNER JOIN ses_pais pais_ini 
                                         ON pais_ini.id_pais = est_ini.id_pais 
                                 INNER JOIN ses_pais pais_fim 
-                                        ON pais_fim.id_pais = est_fim.id_pais 
+                                        ON pais_fim.id_pais = est_fim.id_pais
+                                WHERE (di.id_pessoa_solicitante = :id_pessoa_solicitante)
                          GROUP  BY di.id_diaria, 
                                    proponente.nm_pessoa, 
                                    proposto.nm_pessoa, 
@@ -314,12 +412,8 @@ class DaoDiaDiaria extends DiaDiaria {
                         
                 $stmt = $pdo->prepare($sql);
                
-//                if (!empty($this->getIdDiaria())) {
-//                    $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
-//                }
-//                if (!empty($this->getIdRelatorio())) {
-//                    $stmt->bindValue(":id_relatorio",$this->getIdRelatorio(), PDO::PARAM_INT);
-//                }
+                $stmt->bindValue(':id_pessoa_solicitante', $this->getIdPessoaSolicitante(),PDO::PARAM_STR);
+
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);

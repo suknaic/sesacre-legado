@@ -49,7 +49,7 @@
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Autorizações Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Autorização de Diárias</h1>                       
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="../index.php">Voltar</a></li>                        
@@ -83,13 +83,32 @@
                             </div>
                         </div>
 
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title text-center">Filtros</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="st_estagio">Situação da diária: </label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-list inputPFa"></p>
+                                            </span>
+                                            <select id="st_estagio" class="form-control">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Deferimento/Indeferimento de Diárias</h3>
+                                <h3 class="panel-title">Diárias aguardando autorização</h3>
                             </div>
                             <div class="panel-body">
-
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -102,6 +121,7 @@
                                                         <th>Proposto</th>
                                                         <th>Lotação Proposto</th>
                                                         <th>Destino / Valor</th>
+                                                        <th>Situação</th>
                                                         <th>Ações</th>
                                                     </tr>
                                                 </thead>
