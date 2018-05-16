@@ -17,25 +17,11 @@ class Relatorio {
     
     private $idDiaria = null;
     
-    private $idRelatorioDestino = null;
-    private $idRelatorioAnexo = null;
     
     private $erros = true;
     private $destinos = null;
     private $anexos = null;
-    
-    function getIdRelatorioAnexo() {
-        return $this->idRelatorioAnexo;
-    }
-
-    function setIdRelatorioAnexo($idRelatorioAnexo) {
-        $this->idRelatorioAnexo = $idRelatorioAnexo;
-    }
-
-        
-    function getIdRelatorioDestino() {
-        return $this->idRelatorioDestino;
-    }
+   
 
     function setIdRelatorioDestino($idRelatorioDestino) {
         $this->idRelatorioDestino = $idRelatorioDestino;
@@ -119,10 +105,7 @@ class Relatorio {
             $daoDiaDiaria->setIdRelatorio($this->getIdRelatorio());
             $daoDiaDiaria->dadosProposto($pdo);
             if ($daoDiaDiaria->getSucesso()) {
-//                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
-//                    $retorno = $linha;//$retorno .= $linha['nm_proposto'] . "<br>" . $linha['nm_funcao_proposto']. "<br>" . $linha['nm_lotacao_proposto'];
-//                    break; //Pega somente o primeiro resultado, pois aqui faz um JOIN com a tabela de destinos desta forma trazendo mais de 1 registro
-//                }
+
                 $retorno = $daoDiaDiaria->getMsgRetorno();
             }
             return $retorno;
@@ -259,30 +242,7 @@ class Relatorio {
             $retorno = "";
         }
         
-    }
-    
-    
-    function abreArquivo(PDO $pdo = null) {
-        $retorno = "";
-        try {
-            if (empty($pdo)) {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-            }
-            $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
-            $daoDiaRelatorioAnexo->setIdRelatorioAnexo($this->getIdRelatorioAnexo());
-            $daoDiaRelatorioAnexo->select($pdo);
-            
-            if ($daoDiaRelatorioAnexo->getSucesso()) {
-                $retorno = $daoDiaRelatorioAnexo->getMsgRetorno()[0];
-            } 
-            return $retorno;
-
-        } catch (Exception $exc) {
-            $retorno = "";
-        }
-    }
-    
+    } 
     
     function validaRelatorioDestino(){
         $retorno = "";
@@ -598,7 +558,7 @@ class Relatorio {
             if ($arrayAuxiliar) {
                 //registros que foram excluídos
                 foreach ($arrayAuxiliar as $linhaAremover) {
-                    $daoDiaRelatorioAnexo->setIdRelatorioAnexo($linhaAremover['id_anexo']);
+                    $daoDiaRelatorioAnexo->setIdRelatorioAnexo($linhaAremover['id_relatorio_anexo']);
                     $retorno .= $this->excluirRelatorioAnexo($pdo,$daoDiaRelatorioAnexo);
                 }
             }
@@ -716,15 +676,21 @@ class Relatorio {
         }
     }
     
-    function baixarAnexo(PDO $pdo = null) {
+    function baixarAnexo(PDO $pdo = null,int $idRelatorioAnexo = 0) {
         $retorno = "";
         try {
+            
+            if ($idRelatorioAnexo == 0) {
+                $retorno = 'Arquivo não informado.';
+                return $retorno;
+            }
+            
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
             $daoDiaRelatorioAnexo = new DaoDiaRelatorioAnexo();
-            $daoDiaRelatorioAnexo->setIdRelatorioAnexo($this->getIdRelatorioAnexo());
+            $daoDiaRelatorioAnexo->setIdRelatorioAnexo($idRelatorioAnexo);
             $daoDiaRelatorioAnexo->select($pdo);
             
             if ($daoDiaRelatorioAnexo->getSucesso()) {

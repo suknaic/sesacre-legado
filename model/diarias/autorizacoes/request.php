@@ -8,7 +8,9 @@ $session = new Session('ajax');
 switch ($_REQUEST['acao']) {
     case 'listaDiarias':
         try {
+            $filtro = filter_input(INPUT_GET, 'estagio', FILTER_DEFAULT);
             $diaria = new Diaria();
+            $diaria->setStEstagio($filtro);
             echo $diaria->retornaTrDiariasAutorizacao();
             return;
             break;
@@ -17,6 +19,19 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'listaStEstagioOption':
+        try {
+            $diaria = new Diaria();
+            echo $diaria->retornaStEstagioOptions();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
 
     case 'atualizaEstagioDiaria':
         try {

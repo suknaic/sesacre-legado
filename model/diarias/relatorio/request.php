@@ -57,8 +57,8 @@ switch ($_REQUEST['acao']) {
         try {
             $filtro = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
             $prog = new Relatorio();
-            $prog->setIdRelatorioAnexo((int)$filtro);
-            echo $prog->abreArquivo();
+//            $prog->setIdRelatorioAnexo((int)$filtro);
+            echo $prog->abreAnexo((int)$filtro);
             return;
             break;
         } catch (Exception $e) {
