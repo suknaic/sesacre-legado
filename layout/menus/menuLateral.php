@@ -302,10 +302,20 @@
 
                         <!--Menu list Diarias-->
                         <li>
-                            <a href="/pages/diarias/">
+                            <a href="#">
                                 <i class="fa fa-calendar" aria-hidden="true"></i>
                                 <span class="menu-title">Diárias</span>
+                                <i class="arrow"></i>
                             </a>
+                            <!--Submenu-->
+                            <ul class="collapse">
+                                <li>
+                                    <a href="/pages/diarias/autorizacoes/index.php">Autorizações</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/diarias/">Solicitação</a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li>

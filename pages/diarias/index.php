@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/index.load.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/index.load.php";
 ?>
 
 <html lang="pt-br">
@@ -80,8 +80,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/index.load.php";
                                                 <th>Proponente</th>
                                                 <th>Proposto</th>
                                                 <th>Lotação Proposto</th>
-                                                <th>Destino</th>
-                                                <th>Valor</th>
+                                                <th>Destino / Valor</th>
                                                 <th>Ações</th>
                                             </tr>
                                         </thead>

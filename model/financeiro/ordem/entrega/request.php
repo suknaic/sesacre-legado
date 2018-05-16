@@ -12,12 +12,14 @@ switch ($_REQUEST['acao']) {
             var_dump($protocolo);
             return false;
             $finProtocoloModel = new FinProtocoloModel();
+            
             $finProtocoloModel->setIdOrdem($protocolo["ordem"]);
             $finProtocoloModel->setNmRepresentante($protocolo["nomeRepresentante"]);
             $finProtocoloModel->setNrRgCpf($protocolo["rgCpf"]);
             $finProtocoloModel->setNmEmailRepresentante($protocolo["email"]);
             $finProtocoloModel->setDhRecebimentoSistema($protocolo["dataRecebimento"]);
             $finProtocoloModel->setDsProtocolo($protocolo["obsProtocolo"]);
+            
             echo $finProtocoloModel->salvaProtocolo();
             return;
             break;

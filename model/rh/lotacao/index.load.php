@@ -6,7 +6,7 @@ $session = new Session();
 $vinc = new Estado();            
 
                                                    
-if(!$session->verificaPermissao(PERFIL_RH)){
+if(!$session->vPRh() && !$session->vPContratosTecnico()){
     header("Location: /pages/index.php"); 
 }
 

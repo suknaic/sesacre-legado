@@ -149,7 +149,6 @@ class DaoChaChamado extends ChaChamado {
         ORDER BY cha.dh_abertura";
         
         $result = $pdo->prepare($sql);
-//        print_r($sql);
         $result->bindValue(":id", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
         $result->execute();
         if ($result->rowCount() >= 1) {
