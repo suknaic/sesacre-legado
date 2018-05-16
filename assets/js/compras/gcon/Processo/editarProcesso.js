@@ -613,4 +613,12 @@ $(document).ready(function () {
             });
         }
     });
+    
+     $('body').on('keypress', '.formEditar', function (e) {
+        var key = e.which;
+        if (key == 13) {
+            $(".btn-editar").trigger('click');
+            return false;
+        }
+    });
 });
