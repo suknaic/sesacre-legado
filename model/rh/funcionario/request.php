@@ -14,11 +14,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/cargo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/funcao.class.php";
 $session = new Session('ajax');
 
-if (!$session->vPRh()) {
-    echo "SessaoExpirada";
-    return;
-}
-
 switch ($_REQUEST['acao']) {
 
     case 'cadastrarContrato':
@@ -78,10 +73,6 @@ switch ($_REQUEST['acao']) {
                 echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF");
                 return;
             }
-//            print_r($dadosPessoa);
-//           print_r($dadosPessoaFisica);
-//            print_r($dadosContrato);
-//            return;
 
             $contrato = new Contrato();
             echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosContrato, $dadosContratoLotacao);

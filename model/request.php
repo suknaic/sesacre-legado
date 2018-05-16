@@ -101,7 +101,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-        
+
     case 'listaQuantidadeSituacaoPedido':
         try {
 
@@ -115,7 +115,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
+
     case 'listaQuantidadeOrdem':
         try {
 
@@ -129,7 +129,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
+
     case 'pesquisaGrafico1':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -145,6 +145,24 @@ switch ($_REQUEST['acao']) {
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
+        }
+
+    case 'aniversario':
+        try {
+            $func = new pessoaFisica();
+            $idPessoaFisica = $_SESSION['idUser'];            
+            $data = new DateTime();
+            $data = $data->format('m-d');
+            $func->setId_pessoa_fisica((int) $idPessoaFisica);
+            $func->setDt_nascimento(trim($data));
+            echo $func->retornaAniversario();
+            
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
         }
 }
 ?>

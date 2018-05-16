@@ -63,11 +63,11 @@ class FinProtocoloModel {
     public function getNmEmailRepresentante() {
         return $this->nm_email_representante;
     }
-    
-    public function setNmEmailRepresentante($nm_email_representante){
+
+    public function setNmEmailRepresentante($nm_email_representante) {
         $this->nm_email_representante = $nm_email_representante;
         return $this;
-    }         
+    }
 
     /**
      * @return mixed
@@ -194,7 +194,16 @@ class FinProtocoloModel {
     }
 
     public function salvaProtocolo() {
-        
+        try {
+            if(empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf)){
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            $daoFinProtocolo = new DaoFinProtocolo();
+            
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
     }
 
 }
