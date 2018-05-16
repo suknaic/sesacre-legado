@@ -214,7 +214,7 @@ class Processo {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
                 $cadPro = new DaoProcesso();
-                
+
                 $cadPro->setAda($this->ada);
                 $cadPro->setValorEstimado($this->valorEstimado != "" ? Metodos::ConverteValorIng($this->valorEstimado) : 0);
                 $cadPro->setData(Metodos::ConverteDataING($this->data));
@@ -465,6 +465,7 @@ class Processo {
                     }
 
                     if ($dadosCentral == NULL) {
+                        /** Insere as centrais caso o processo não tenha nehum cadastrado **/
                         if (count($this->centraisAtendimento) > 0) {
                             foreach ($this->centraisAtendimento as $centrais) {
                                 $editPro->setCentraisAtendimento($centrais);
@@ -480,7 +481,9 @@ class Processo {
                                 }
                             }
                         }
+                        /******************************************************************************/
                     } else {
+                        /******************* Verifica a direfença e edita as centrais ******************/
                         $centraisInsert = $editPro->retornarCentraisDoProcesso($pdo);
                         $insert = array_diff($this->centraisAtendimento, $centraisInsert);
                         if (count($insert) > 0) {
@@ -498,7 +501,9 @@ class Processo {
                                 }
                             }
                         }
-
+                        /**********************************************************************************/
+                        
+                        /********************* Verifica a diferença e remove as centrais ********************/
                         $delete = array_diff($centraisInsert, $this->centraisAtendimento);
                         if (count($delete) > 0) {
                             foreach ($delete as $centrais) {
@@ -516,19 +521,31 @@ class Processo {
                                 }
                             }
                         }
+                        /************************************************************************************/
                     }
 
                     if ($dadosTipoGasto == NULL) {
+                        /** Insere os tipos de gastos no processo caso ele não tenha nenhum tipo de gasto,
+                         * Verifica se os valor dos tipos de gasto são vazios e 
+                         * Verifica se o valor total dos tipos de gastos é maior que o valor homologado
+                         * **/
                         if (count($this->tipoGasto) > 0) {
                             foreach ($this->tipoGasto as $tipoGasto) {
                                 if ($tipoGasto['valor'] == NULL) {
                                     $pdo->rollBack();
                                     return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
                                 }
-                                if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
+
+                                $totalTipoGasto = 0;
+                                foreach ($this->tipoGasto as $tipoGastoValor) {
+                                    $totalTipoGasto = $totalTipoGasto + Metodos::ConverteValorIng($tipoGastoValor['valor']);
+                                }
+
+                                if ($totalTipoGasto > Metodos::ConverteValorIng($this->valorHomologado)) {
                                     $pdo->rollBack();
                                     return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
                                 }
+
                                 $editPro->setTipoGasto($tipoGasto['tpg']);
                                 $cadastraTipoGasto = $editPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGasto["valor"]));
                                 if ($cadastraTipoGasto) {
@@ -543,17 +560,29 @@ class Processo {
                                 }
                             }
                         }
+                        /***************************************************************************************/
                     } else {
                         $busca = $editPro->retornarTipoDeGastoDoProcesso($pdo);
+                        
+                        /** Total dos valores dos tipos de gastos e verifica se é maior que o valor homologado **/
+                        $totalTipoGasto = 0;
+                        foreach ($this->tipoGasto as $tipoGastoValor) {
+                            $totalTipoGasto = $totalTipoGasto + Metodos::ConverteValorIng($tipoGastoValor['valor']);
+                        }
+
+                        if ($totalTipoGasto > round(Metodos::ConverteValorIng($this->valorHomologado), 2)) {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
+                        }
+                        /******************************************************************************************/
+                        
                         foreach ($this->tipoGasto as $key => $tipoGastoApp) {
+                            /** Verifica se os valores dos tipos de gasto é vazio, insere os tipos de gasto do processo direto caso ele não esteja cadastrado no processo **/
                             if ($tipoGastoApp['valor'] == NULL) {
                                 $pdo->rollBack();
                                 return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
                             }
-                            if (Metodos::ConverteValorIng($tipoGastoApp['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
-                            }
+
                             if ($tipoGastoApp['id'] == 0) {
                                 $editPro->setTipoGasto($tipoGastoApp['tpg']);
                                 $cadastraTipoGasto = $editPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGastoApp["valor"]));
@@ -567,8 +596,28 @@ class Processo {
                                     $pdo->rollBack();
                                     return Metodos::retornoAjax('Erro', 'console', $cadastraTipoGasto);
                                 }
+                            /****************************************************************************/
+                                
                             } else {
+                                /** Verifica se os valores dos tipos de gasto estão vazios, 
+                                 * verifia se o total dos tipos de gasto é maior que o valor homologado 
+                                 * e remove o tipo de gasto do processo **/
                                 foreach ($busca as $tipoGastoBd) {
+                                    if ($tipoGastoApp['valor'] == NULL) {
+                                        $pdo->rollBack();
+                                        return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+                                    }
+
+                                    $totalTipoGasto = 0;
+                                    foreach ($this->tipoGasto as $tipoGastoValor) {
+                                        $totalTipoGasto = $totalTipoGasto + Metodos::ConverteValorIng($tipoGastoValor['valor']);
+                                    }
+
+                                    if ($totalTipoGasto > Metodos::ConverteValorIng($this->valorHomologado)) {
+                                        $pdo->rollBack();
+                                        return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
+                                    }
+
                                     if ($tipoGastoApp['id'] == $tipoGastoBd['id_processo_tipo_gasto']) {
                                         $tipoGastoBd['vl_processo_tipo_gasto'] = Metodos::ConverteValorBr($tipoGastoBd['vl_processo_tipo_gasto'], 2);
                                         if (count(array_diff_assoc($tipoGastoBd, $tipoGastoApp)) > 0) {
@@ -583,13 +632,14 @@ class Processo {
                                                 $pdo->rollBack();
                                                 return Metodos::retornoAjax('Erro', 'console', $editaProcessoTipoGasto);
                                             }
-                                            unset($busca[$key]);
                                         }
                                     }
+                                    unset($busca[$key]);
                                 }
+                                /***********************************************************************************/
                             }
                         }
-
+                        /** O restante que sobra na variável, são so tipos de gasto a serem removidos **/
                         foreach ($busca as $delete) {
                             $editPro->setTipoGasto($delete['id_processo_tipo_gasto']);
                             $deletar = $editPro->deletarTipoGasto($pdo);
@@ -603,8 +653,10 @@ class Processo {
                                 return Metodos::retornoAjax('Erro', 'console', $deletar);
                             }
                         }
+                        /**********************************************************************************/
                     }
-
+                    
+                    /** Salva a anotação e finaliza a edição do processo **/
                     $anotacao = new DaoGcoAnotacao();
                     $anotacao->setIdProcesso($this->idProcesso);
                     $anotacao->setAnotacao("Edição de dados");
@@ -623,6 +675,8 @@ class Processo {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "console", $insereAnotacao);
                     }
+                    /**********************************************************/
+                    
                 } else {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);

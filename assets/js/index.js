@@ -6,14 +6,14 @@ $(document).ready(function () {
 
     function aniversario() {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/request.php",
             "dataType": "html",
             "method": "POST",
             "data": {
                 acao: "aniversario"
             },
             "success": function (response) {
-                //console.log(response);
+                console.log(response);
 
                 $(".aniversario").html(response);
                 setTimeout(function () {

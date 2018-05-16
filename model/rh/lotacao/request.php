@@ -12,12 +12,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 
 $session = new Session('ajax');
 
-if (!$session->verificaPermissao(PERFIL_TI)) {
-    echo "SessaoExpirada";
-    return;
-}
-
-
 
 switch ($_REQUEST['acao']) {
 
@@ -50,7 +44,7 @@ switch ($_REQUEST['acao']) {
 
     case 'editarLotacao':
         try {
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -175,17 +169,6 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-//    case 'listaLotacaoOption':
-//        try {
-//            $prog = new Lotacao();
-//            echo $prog->retornaOptionLotacao();
-//            return;
-//            break;
-//        } catch (Exception $e) {
-//            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-//            return;
-//            break;
-//        }
 
     case 'listaCategoriaOption':
         try {
@@ -263,29 +246,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-//    case 'listaPessoaJuridicaOption':
-//        try {
-//            $id = $_REQUEST['id'];
-//
-//            $prog = new pessoaFisica();
-//            echo $prog->retornaOptionPj($id);
-//            return;
-//            break;
-//        } catch (Exception $e) {
-//            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-//            return;
-//        }
-//    case 'listaPessoaOption':
-//        try {
-//            $id = ($_REQUEST['id'] == NULL) ? 0 : $_REQUEST['id'];
-//            $pessoa = new Contrato();
-//            echo $pessoa->retornaOptionPessoaContrato(null, $id);
-//            return;
-//            break;
-//        } catch (Exception $e) {
-//            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-//            return;
-//        }
+
     case 'listaCidadeOptionUf':
         try {
             if (!$session->vPRh()) {

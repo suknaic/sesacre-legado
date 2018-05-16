@@ -661,10 +661,10 @@ class Chamado {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             /* @var $pdo PDO */
-//            $chamado = new Chamado();
-//            $chamado->setIdChamado($this->idPessoaSolicitante);
-//            $chamado->setMsg("contrato");
-//            $c = $chamado->retornaPessoa($pdo);
+            $pessoa = new Pessoa();
+            $pessoa->setId_pessoa($this->idPessoaSolicitante);
+            $pessoa->setMsg("contrato");
+            $p = $pessoa->retornaPessoa($pdo);
 
             //**************************************
             $pessoaFisica = new pessoaFisica();
@@ -679,9 +679,9 @@ class Chamado {
             $funcao->setId_funcao($this->idPessoaSolicitante);
             $f = $funcao->retornaFuncoes($pdo);
             //*****************************************
-//            $chamado = new DaoChaChamado();
-//            $chamado->setIdChamado($this->idPessoaSolicitante);
-//            $ch = $chamado->retornaFuncoes($pdo);
+            $sistema = new FormSistemas();
+            $sistema->setIdChamado($this->idPessoaSolicitante);
+            $s = $sistema->retornaFormSistemas($pdo);
 
             if ($p != FALSE) {
                 $retorno[] = array(
@@ -728,11 +728,7 @@ class Chamado {
                     "nr_matricula" => $c["nr_matricula"],
                     "id_cargo" => $c["id_cargo"],
                         //************************Chamado****************************************
-//                    "nmPessoa" => $l["id_lotacao"],
-//                    "id_pai" => $l["id_pai"],
-//                    "id_lotacao_categoria" => $l["id_lotacao_categoria"],
-//                    "nm_lotacao" => $l["nm_lotacao"],
-//                    "nr_telefone" => $l["nr_telefone"]
+                    "nm_solicitante" => $s["nm_solicitante"],
                 );
             }
             return json_encode($retorno);
