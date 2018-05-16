@@ -392,7 +392,7 @@ class Relatorio {
                 $daoDiaRelatorioDestino->setDhInicio($linhaAplicacao['dh_inicio']);
                 $daoDiaRelatorioDestino->setDhFim($linhaAplicacao['dh_fim']);
                 $daoDiaRelatorioDestino->setIdTransporte($linhaAplicacao['id_transporte']);
-                $daoDiaRelatorioDestino->setIdTransporteTipo($linhaAplicacao['id_transporte_tipo']);
+                $daoDiaRelatorioDestino->setIdTransporteTipo(empty($linhaAplicacao['id_transporte_tipo']) ? NULL : $linhaAplicacao['id_transporte_tipo']);
                 $daoDiaRelatorioDestino->setDsTransporteTipo($linhaAplicacao['ds_transporte_tipo']);
                 
                 if((int)$linhaAplicacao['id_relatorio_destino'] === 0){ //CADASTRO
