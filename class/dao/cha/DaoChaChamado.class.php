@@ -209,7 +209,7 @@ class DaoChaChamado extends ChaChamado {
             $sth->bindValue(":idChamado", $this->getIdChamado(), PDO::PARAM_INT);
             $sth->execute();
             if ($sth->rowCount() >= 1) {
-                return $sth->fetch(PDO::FETCH_ASSOC);
+                return $sth->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return $retorno;
             }
