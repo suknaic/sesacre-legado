@@ -115,7 +115,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                         <!--Fim Modal AddAnotacao-->
 
                         <!-- Inicio do Formulário de Edição de Processos-->
-                        <form data-toggle="validator" class="form-horizontal" id="form_process" role="form" action="#"method="post">
+                        <form data-toggle="validator" class="form-horizontal formEditar" id="form_process" role="form" action="#"method="post">
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Edição de Processo</h3>

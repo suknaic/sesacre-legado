@@ -71,15 +71,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                     <div class="col-md-3"></div>
                                     <div class="col-md-3">
                                         <div class="panel-body">Usuário: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                            <select class="form-control select" name="id_usuario" id="id_usuario">
-                                                <option value="0" selected="">Selecione um usuário</option>
+                                            <select class="form-control" name="pessoa" id="pessoa">
+                                               
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="panel-body">Permissão: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                            <select class="form-control select" name="id_permissao" id="id_permissao">
-                                                <option value="0" selected="">Selecione o tipo de permissão</option>
+                                            <select class="form-control" name="perfil" id="perfil">
 
                                             </select>
                                         </div>
@@ -103,6 +102,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                             </div>
                         </form>
                         <!-- Fim do Formulário de Cadastro de usuario-->
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Lista de Usuários</h3>
+                            </div>
+                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="tabela_usuario" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-capitalize text-center">Usuário</th>
+                                                        <th class="text-capitalize text-center">Permissão</th>
+                                                        <th class="text-capitalize text-center">Ação</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,7 +180,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <script src="/assets/js/compras/gcon/usuario/novoUsuario.js"></script>
+        <script src="/assets/js/compras/gcon/usuario/index.js"></script>
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--Select2-->

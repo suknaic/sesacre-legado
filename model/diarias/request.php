@@ -13,6 +13,7 @@ switch ($_REQUEST['acao']) {
    case 'listaDiarias':
         try {
             $prog = new Diaria();
+            $prog->setIdPessoaSolicitante($session->getIdUser());
             echo $prog->retornaTrDiarias();
             return;
             break;
@@ -36,7 +37,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
     
-    case 'listaCidades':
+   case 'listaCidades': //Esse request é utilizado pela classe Diária e Relatório, quando o usuário seleciona as cidades do itinerario. Por este motivo optou-se pela permanencia da função neste request em um nível mais 'genérico'
         
         try {
             $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);

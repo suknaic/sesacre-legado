@@ -4,6 +4,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Relatorio.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 
 $session = new Session();
+if(!$session->vPDiariasSolicitacao()){
+    header("Location: /pages/index.php"); 
+}
+
+
 $relatorio = new Relatorio();
 $diaria = new Diaria();
 
@@ -25,6 +30,11 @@ if ($id_diaria) {
  
     $diaria->setIdDiaria($id_diaria);   
     $dadosDiaria = json_decode($diaria->retornaDadosDiaria());
+    
+    //Inibir acesso ao relatório de viagem caso não esteja vinculado a um pedido de necessidade
+    if (!$dadosDiaria->id_pedido) {
+        header("Location: /pages/diarias/"); 
+    }
     
     $id_relatorio = $dadosDiaria->id_relatorio;
     $relatorio->setIdRelatorio($id_relatorio);

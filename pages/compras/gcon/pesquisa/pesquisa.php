@@ -88,7 +88,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                         <!--Fim Modal Upload-->
 
                         <!-- Inicio do Formulário de Pesquisa de Processos-->
-                        <form data-toggle="validator" class="form-horizontal" id="form_pesquisa" role="form" action="#"method="post">
+                        <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
 
                             <div class="panel">    
 

@@ -538,7 +538,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'primary');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            top.location.href = "/pages/diarias/index.php";
+                            top.location.href = "/pages/diarias/";
                         });
                         return false;
                     } else {
