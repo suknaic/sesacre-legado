@@ -204,12 +204,6 @@ class DaoFinContrato extends FinContratoTb {
                         INNER JOIN gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
                         
-                        INNER JOIN gco_processo_tipo_gasto as gtpg
-                        on gtpg.id_tipo_gasto = cont.id_tipo_gasto
-
-                        INNER JOIN pla_tipo_gasto as plaTipoGasto
-                        on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
-
                         INNER JOIN gco_modalidade as modalidade
                         on modalidade.id_modalidade = processo.id_modalidade
 
@@ -218,6 +212,12 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN ses_pessoa as p 
                         on p.id_pessoa = f.id_pessoa
+                        
+                        LEFT JOIN gco_processo_tipo_gasto as gtpg
+                        on gtpg.id_tipo_gasto = cont.id_tipo_gasto
+                        
+                        LEFT JOIN pla_tipo_gasto as plaTipoGasto
+                        on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
 
                         WHERE f.sit_fornecedor = '1' AND cont.st_ativo = '1' " . $condicao;
                 $stmt = $pdo->prepare($sql);
@@ -269,8 +269,9 @@ class DaoFinContrato extends FinContratoTb {
                 on mod.id_modalidade = p.id_modalidade
                 inner join gco_processo_tipo_gasto gptg
                 on gptg.id_processo = p.id_processo
-                inner join pla_tipo_gasto as tpGasto
+                left join pla_tipo_gasto as tpGasto
                 on tpGasto.id_tipo_gasto = gptg.id_tipo_gasto
+                where p.st_ativo = '1'
                 group by p.id_processo, mod.id_modalidade, obj.id_objeto";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();

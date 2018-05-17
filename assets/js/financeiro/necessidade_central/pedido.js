@@ -69,8 +69,8 @@ $(document).ready(function () {
 
     $("body").on("change", "#tipoSolicitacao", function (e) {
         if ($("#tipoSolicitacao").val() == '1') {
-            $(".campoForneceor").show();
-            $(".campoValor").addClass("hidden");
+            $(".campoForneceor").hide();
+            $(".campoValor").removeClass("hidden");
         }
 
         if ($("#tipoSolicitacao").val() == '2') {
@@ -344,7 +344,7 @@ $(document).ready(function () {
             }
 
 
-            if ($("#tipoSolicitacao").val() > 2) {
+            if ($("#tipoSolicitacao").val() == 1 || $("#tipoSolicitacao").val() == 3 || $("#tipoSolicitacao").val() == 4) {
                 $.ajax({
                     "url": "/model/financeiro/necessidade_central/requestPedido.php",
                     "dataType": "html",
@@ -353,6 +353,7 @@ $(document).ready(function () {
                         "dados": dados
                     },
                     "success": function (response) {
+                         console.log(response);
                         $this.prop("disabled", false);
                         if (response.trim() == "SessaoExpirada") {
                             func.modalAlert(func.msgSemPermissao);
@@ -394,6 +395,7 @@ $(document).ready(function () {
                         }
                     },
                     "error": function (response) {
+                       
                         $this.prop("disabled", false);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
