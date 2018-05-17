@@ -566,7 +566,6 @@ class DaoDiaDiaria extends DiaDiaria {
     }
     
     function selectLinha(PDO $pdo = null){
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "select * from dia_diaria where id_diaria = :id_diaria";
@@ -577,8 +576,6 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } else {
-                     $this->msgRetorno = 'erro oi';
                 }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -588,8 +585,27 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
+    function selectDiariaPedido(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from dia_diaria where id_pedido = :id_pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':id_pedido', $this->getIdPedido(), PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     function updateDiariaRelatorio(PDO $pdo = null) {
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "update dia_diaria set id_relatorio = :id_relatorio where id_diaria = :id_diaria";
@@ -607,7 +623,6 @@ class DaoDiaDiaria extends DiaDiaria {
     }
     
     function updateEstagio(PDO $pdo = null){
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "update dia_diaria set st_estagio = :st_estagio where id_diaria = :id_diaria";

@@ -56,11 +56,14 @@ switch ($_REQUEST['acao']) {
     case 'atualizaEstagioDiaria':
         try {
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
+            $historico['ds_diaria_historico'] = $filtro['obs'];
+            $historico['id_pessoa'] = $session->getIdUser();
+            
             $diaria = new Diaria();
             $diaria->setIdDiaria($filtro['diaria']);
             $diaria->setStEstagio($filtro['estagio']);
-            $diaria->setDsHistorico($filtro['obs']);
-            $diaria->setIdPessoaHistorico($session->getIdUser());
+            $diaria->setHistorico($historico);
             echo $diaria->atualizaEstagioDiaria();
             return;
             break;
