@@ -72,7 +72,7 @@ class DaoFinContrato extends FinContratoTb {
             try {
                 $sql = "update fin_contrato set nr_contrato  = :numero, id_processo = :processo, id_pessoa = :idPessoa, ds_objeto = :ds_objeto, 
                         dt_ini_vigencia_contrato = :dt_ini, dt_fim_vigencia_contrato = :dt_fim, dt_assinatura = :dt_assinatura, 
-                        dt_publicacao = :dt_publicacao, ds_obs_contrato = :ds_obs_contrato
+                        dt_publicacao = :dt_publicacao, ds_obs_contrato = :ds_obs_contrato, id_tipo_gasto = :idTipoGasto
                         where  id_contrato  = :idContrato";
                 $stmt = $pdo->prepare($sql);
 
@@ -86,6 +86,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":dt_publicacao", $this->getDtPublicacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":ds_obs_contrato", $this->getDsObsContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idTipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -162,7 +163,7 @@ class DaoFinContrato extends FinContratoTb {
             try {
                 $sql = "update fin_contrato set nr_contrato  = :numero, id_processo = :processo, id_pessoa = :idPessoa, ds_objeto = :ds_objeto, 
                         dt_ini_vigencia_contrato = :dt_ini, dt_fim_vigencia_contrato = :dt_fim, dt_assinatura = :dt_assinatura, 
-                        dt_publicacao = :dt_publicacao, ds_obs_contrato = :ds_obs_contrato
+                        dt_publicacao = :dt_publicacao, ds_obs_contrato = :ds_obs_contrato, id_tipo_gasto = :idTipoGasto
                         where  id_contrato  = :idContrato";
                 $stmt = $pdo->prepare($sql);
 
@@ -176,6 +177,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":dt_publicacao", $this->getDtPublicacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":ds_obs_contrato", $this->getDsObsContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idTipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -361,7 +363,7 @@ class DaoFinContrato extends FinContratoTb {
             if ($pdo != null) {
                 $sql = "select f.id_pessoa, cont.nr_contrato, cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, cont.dt_assinatura, 
                         cont.dt_publicacao, cont.ds_objeto, cont.ds_obs_contrato, cont.id_contrato, modalidade.nm_modalidade, obj.nm_objeto,
-                        processo.cd_ada_cpr, processo.cd_pregao, tipoGasto.nm_tipo_gasto, processo.id_processo, pessoa.nm_pessoa, cont.tp_contrato,
+                        processo.cd_ada_cpr, processo.cd_pregao, tipoGasto.id_tipo_gasto, processo.id_processo, pessoa.nm_pessoa, cont.tp_contrato,
                         cont.nr_prazo_entrega
                         from fin_fornecedor as f
                         inner join fin_contrato as cont 
