@@ -32,7 +32,8 @@ class Diaria {
     
     private $itinerario = null;
     private $anexos = null;
-    
+    private $historico = null;
+
     private $erros = true;
     
     private $idPessoaSolicitante = null;
@@ -49,13 +50,6 @@ class Diaria {
 
     private $stAtivo              = null;
     
-    
-    private $dsHistorico = null;
-    private $idPessoaHistorico = null;
-    
-//    private $idAnexo = null;
-    private $msgErros = null;
-    
     function getIdPessoaHistorico() {
         return $this->idPessoaHistorico;
     }
@@ -64,7 +58,15 @@ class Diaria {
         $this->idPessoaHistorico = $idPessoaHistorico;
     }
 
-        
+    function getHistorico() {
+        return $this->historico;
+    }
+
+    function setHistorico($historico) {
+        $this->historico = $historico;
+    }
+
+            
     function getDsHistorico() {
         return $this->dsHistorico;
     }
@@ -251,7 +253,7 @@ class Diaria {
     }
     
     public function retornaStEstagioOptions() {
-        $retorno  = "<option value='0' selected>Selecione a situação</option>";
+        $retorno  = "<option value='0'>Selecione a situação</option>";
         
         foreach ($this->tiposStEstagios() as $indice => $valor) {
             $retorno .= "<option value='".$indice."'>".$valor."</option>";
@@ -1215,13 +1217,11 @@ class Diaria {
         }
     }
     
-    function atualizaEstagioDiaria(PDO $pdo = null){
+    function atualizaEstagioDiaria(){
         $retorno = "";
         try {
-            if (empty($pdo)) {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
             $pdo->beginTransaction();
             
             $daoDiaDiaria = new DaoDiaDiaria();
@@ -1238,7 +1238,6 @@ class Diaria {
             //Se não der erro na seleção da diaria, atribui à variável
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
             
-            
             $idDiaria = $daoDiaDiaria->getIdDiaria();
             if (!Log::SalvaLogU('dia_diaria', $idDiaria,$reg_antigo ,$pdo)) {
                 $pdo->rollBack();
@@ -1247,18 +1246,12 @@ class Diaria {
             
             $daoDiaDiaria->updateEstagio($pdo);
             
-            $retornoHistorico = $this->insereHistorico($pdo);
-            
-            if($retornoHistorico != ''){ //Erro ao inserir o histórico
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $retornoHistorico );
-            }
-            
-            if ($daoDiaDiaria->getSucesso() && $retornoHistorico == '') { //Se o retorno for vazio depois que inserir o historico, nao houve erro
+            if ($this->insereHistorico($pdo) && $daoDiaDiaria->getSucesso()){ // se executou com sucesso
                 $pdo->commit();
                 $retorno = Metodos::retornoAjax("ok", "html", "Diária atualizada com Sucesso.");
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno() );
+                $msgRetorno = $daoDiaDiaria->getMsgRetorno() . $this->erros;
+                $retorno = Metodos::retornoAjax("Erro", "console", $msgRetorno );
                 $pdo->rollBack();
             }
             
@@ -1269,13 +1262,13 @@ class Diaria {
     }
     
     function insereHistorico(PDO $pdo) {
-        $retorno = "";
+        $retorno = false;
         try {
              //insere historico da diaria
             $daoDiaDiariaHistorico = new DaoDiaDiariaHistorico();
-            $daoDiaDiariaHistorico->setDsDiariaHistorico($this->getDsHistorico());
+            $daoDiaDiariaHistorico->setDsDiariaHistorico($this->getHistorico()['ds_diaria_historico']);
             $daoDiaDiariaHistorico->setIdDiaria($this->getIdDiaria());
-            $daoDiaDiariaHistorico->setIdPessoa($this->getIdPessoaHistorico());
+            $daoDiaDiariaHistorico->setIdPessoa($this->getHistorico()['id_pessoa']);
             
             $daoDiaDiariaHistorico->insert($pdo);
             
@@ -1283,14 +1276,16 @@ class Diaria {
                 $idDiariaHistorico = $pdo->lastInsertId('dia_diaria_historico_id_diaria_historico_seq');
                 if (!Log::SalvaLogI('dia_diaria_historico', $idDiariaHistorico, $pdo)) {
                     $pdo->rollBack();
-                    $retorno = STR_ERROR;
+                    $this->erros = STR_ERROR;
+                    return false;
                 }
+                $retorno = true;
             } else {
-                $retorno = $daoDiaDiariaHistorico->getMsgRetorno();
+                $this->erros = $daoDiaDiariaHistorico->getMsgRetorno();
             }
             return $retorno;
         } catch (Exception $exc) {
-            return  $exc->getMessage();
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
     
@@ -1336,7 +1331,43 @@ class Diaria {
             return $retorno;
             
         } catch (Exception $exc) {
-            $retorno = "";
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    //****************************************MÉTODOS ESTÁTICOS****************************************
+    public static function verificaDiariaPedido($idPedido){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdPedido($idPedido);
+            $daoDiaDiaria->selectDiariaPedido($pdo);
+            
+            if ($daoDiaDiaria->getSucesso()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+    
+    public static function vinculaPedidoDiaria($idPedido,$idDiaria){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdDiaria($idDiaria);
+            $daoDiaDiaria->setIdPedido($idPedido);
+            
+            //implementar no DAO a vinculação do pedido com a diária
+            
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
         }
     }
 
