@@ -88,7 +88,9 @@ class DaoFinProtocolo extends FinProtocoloTb {
         try {
             if ($pdo != null) {
 
-                $sql = "";
+                $sql = "insert into fin_protocolo (nm_representante, nr_rg_cpf, nm_email_representante, 
+                        dh_recebimento_sistema, ds_protocolo, id_ordem, id_pessoa) values (:nmRepresentante,
+                        :rgCpf, :email, :recebimento, :dsProtocolo, :ordem, :pessoa)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
