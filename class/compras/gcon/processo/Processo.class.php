@@ -201,12 +201,10 @@ class Processo {
         $this->centraisAtendimento = $centraisAtendimento;
     }
 
-    /*
-     * Cadastra um processo.
-     */
-
+    /**************************************************************** Cadastra um processo ****************************************************************/
     public function cadastraProcesso() {
         try {
+            /************** Verifica se os campos necessários estão vazios  **************/
             if (empty($this->ada && $this->unidade && $this->tecnico && $this->area && $this->situacao && $this->data && $this->tipoGasto && $this->centraisAtendimento && $this->anotacoes)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
@@ -226,21 +224,26 @@ class Processo {
                 $cadPro->setModalidade($this->modalidade);
                 $cadPro->setUnidade($this->unidade);
                 $cadPro->setCentraisAtendimento($this->centraisAtendimento);
-
+                
+                /******************* Verifica se existe um processo com mems ada ativo **********************/
                 $busca = $cadPro->verificaProcesso($pdo);
                 if ($busca["st_ativo"] == "1") {
                     return Metodos::retornoAjax("Erro", "alert", "Processo já existe no sistema!");
+                /********************************************************************************************/
                 } else {
+                    /********** Insere o processo e salvo o Log **********/
                     $cadastradaProcesso = $cadPro->cadastraProcesso($pdo);
                     if (!$cadastradaProcesso) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "console", $cadastradaProcesso);
+                        /*******************************************************/
                     } else {
                         $cadPro->setIdProcesso($pdo->lastInsertId('gco_processo_id_processo_seq'));
                         if (!Log::SalvaLogI('gco_processo', $cadPro->getIdProcesso(), $pdo)) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                         } else {
+                            /************************ Insere a anotacao do processo **********************/
                             $anotacao = new DaoGcoAnotacao();
                             $anotacao->setIdProcesso($cadPro->getIdProcesso());
                             $anotacao->setAnotacao($this->anotacoes);
@@ -259,7 +262,9 @@ class Processo {
                                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                                 }
                             }
-
+                            /**********************************************************************************/
+                            
+                            /***************************** Insere a(s) area(s) de abrangencia e faz o Log *****************************/
                             if (count($this->area) > 0) {
                                 foreach ($this->area as $area) {
                                     $cadPro->setArea($area);
@@ -288,7 +293,9 @@ class Processo {
                                 $pdo->rollBack();
                                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                             }
-
+                            /*************************************************************************************************************/
+                            
+                            /******************************************* Insere as centrais  e faz Log ***********************************/
                             if (count($this->centraisAtendimento) > 0) {
                                 foreach ($this->centraisAtendimento as $centrais) {
                                     $cadPro->setCentraisAtendimento($centrais);
@@ -304,17 +311,26 @@ class Processo {
                                     }
                                 }
                             }
-
+                            /*************************************************************************************************************/
+                            
+                            /****** Insere os tipos de gasto do processo, verifica o total dos tipos de gasto e se é maior que o valor homologado, verifica se os valores dos tipo de gasto são vazios e faz o Log ******/
                             if (count($this->tipoGasto) > 0) {
                                 foreach ($this->tipoGasto as $tipoGasto) {
                                     if ($tipoGasto['valor'] == NULL) {
                                         $pdo->rollBack();
                                         return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
                                     }
-                                    if (Metodos::ConverteValorIng($tipoGasto['valor']) > (Metodos::ConverteValorIng($this->valorHomologado) / count($this->tipoGasto))) {
+                                    
+                                    $totalTipoGasto = 0;
+                                    foreach ($this->tipoGasto as $tipoGastoValor) {
+                                        $totalTipoGasto = $totalTipoGasto + Metodos::ConverteValorIng($tipoGastoValor['valor']);
+                                    }
+                                    
+                                    if ($totalTipoGasto > Metodos::ConverteValorIng($this->valorHomologado)) {
                                         $pdo->rollBack();
                                         return Metodos::retornoAjax('Erro', 'alert', 'Valor Limite dos Tipos de Gastos Foi Ultrapassado.');
                                     }
+                                    
                                     $cadPro->setTipoGasto($tipoGasto['tpg']);
                                     $cadastraTipoGasto = $cadPro->cadastrarTipoGasto($pdo, Metodos::ConverteValorIng($tipoGasto["valor"]));
                                     if ($cadastraTipoGasto) {
@@ -331,6 +347,7 @@ class Processo {
                             }
                             $pdo->commit();
                             return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
+                            /**********************************************************************************************************************************************/
                         }
                     }
                 }
@@ -339,13 +356,12 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
-    /*
-     * Edita um processo.
-     */
-
+    /*************************************************************************************************************************************************************/
+    
+    /******************************************************************* Edita um processo ***********************************************************************/
     public function editarProcesso() {
         try {
+            /*********** Verifica se os campos necessários estão vazios ***********/
             if (empty($this->idProcesso && $this->ada && $this->data && $this->unidade && $this->tecnico && $this->area && $this->situacao && $this->tipoGasto && $this->centraisAtendimento)) {
                 return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
             } else {
@@ -367,21 +383,26 @@ class Processo {
                 $dadosArea = $editPro->retornarAreaLog($pdo);
                 $dadosCentral = $editPro->retornarProcessoCentral($pdo);
                 $dadosTipoGasto = $editPro->retornarProcessoTipoGasto($pdo);
-
+                
+                /********************* Verifica se já existe um processo ativo com o mesmo ada *****************/
                 if ($this->ada != $this->adaTemp) {
                     $buscaProcessoAda = $editPro->verificaProcesso($pdo);
                     if ($buscaProcessoAda["st_ativo"] == "1") {
                         return Metodos::retornoAjax("Erro", "alert", "Processo Com Mesmo Ada Já Existe no Sistema.");
                     }
                 }
+                /************************************************************************************************/
+                
+                /*************************** Edita o processo ****************************/
                 $editaProcesso = $editPro->editarProcesso($pdo);
                 if (!$editaProcesso) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", $editaProcesso);
                 }
-
+                /*************************************************************************/
                 if (Log::SalvaLogU('gco_processo', $this->getIdProcesso(), $dadosPro, $pdo)) {
                     if ($dadosArea == NULL) {
+                        /**************** Insere a ara de abrangencia quando o processo não possuir nenhema area ****************/
                         if (count($this->area) > 0) {
                             foreach ($this->area as $area) {
                                 $editPro->setArea($area);
@@ -398,7 +419,9 @@ class Processo {
                                 }
                             }
                         }
+                        /**********************************************************************************************************/
                     } else {
+                        /************************* Altera a area de abrangencia de um processo **************************/
                         $areasInsert = $editPro->retornarAreaCidade($pdo);
                         $insert = array_diff($this->area, $areasInsert);
                         if (count($insert) > 0) {
@@ -417,6 +440,9 @@ class Processo {
                                 }
                             }
                         }
+                        /************************************************************************************************/
+                        
+                        /************ Pega a diferença, que são os qu irão ser deletados, deleta e salva log ************/
                         $delete = array_diff($areasInsert, $this->area);
                         if (count($delete) > 0) {
                             foreach ($delete as $area) {
@@ -434,9 +460,11 @@ class Processo {
                                 }
                             }
                         }
+                        /*************************************************************************************************/
                     }
 
                     if ($dadosUni == NULL) {
+                        /************** Insere unidade no processo que não possui nenhuma unidade **************/
                         $editPro->setUnidade($this->unidade);
                         $editaUnidade = $editPro->cadastarProcessoUnidade($pdo);
                         if ($editaUnidade) {
@@ -449,7 +477,9 @@ class Processo {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", $editaUnidade);
                         }
+                        /**************************************************************************************/
                     } else {
+                        /************************* Altera a unidade de um processo ****************************/
                         $editPro->setUnidade($this->unidade);
                         $editaUnidade = $editPro->editarUnidade($pdo);
                         if ($editaUnidade) {
@@ -462,6 +492,7 @@ class Processo {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", $editaUnidade);
                         }
+                        /**************************************************************************************/
                     }
 
                     if ($dadosCentral == NULL) {
@@ -686,13 +717,15 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    /****************************************************************************************************************************************/
 
-    /*
-     * Desativa um processo.
-     */
-
+    /**************************************************************** Desativa um processo ***********************************************************/
     public function desativarProcesso() {
         try {
+            /* Verifica se os campos necessarios estão vazios, busca os dados antigos do processo, desativa o processo e salva o log*/
+            if (empty($this->idProcesso)) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+            }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -718,32 +751,31 @@ class Processo {
             } else {
                 return Metodos::retornoAjax("Erro", "alert", "Processo Não Existe.");
             }
+            /*************************************************************************************************************************/
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    /***********************************************************************************************************************************************/
 
-    /*
-     * Pesquisa um processo e possui um filtro de busca.
-     */
-
+    /**************************************************************** Pesquisa um processo ************************************************************/
     public function retornaProcesso($session) {
         try {
             $erro = false;
             if ($erro == false) {
+                /******************************************** Verifica se os campos necessários estão vazios ***************************************/
                 if (empty($this->ada) == true && empty($this->numePregao) == true && empty($this->ano) == true && empty($this->situacao) == true &&
-                        empty($this->modalidade) == true && empty($this->centraisAtendimento) == true && empty($this->tecnico) == true && empty($this->tipoGasto) == true && empty($this->area) == true) {
+                        empty($this->modalidade) == true && empty($this->centraisAtendimento) == true && empty($this->tecnico) == true && 
+                        empty($this->tipoGasto) == true && empty($this->area) == true) {
                     return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
                 }
-
+                /*************************************************************************************************************************************/
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
                 $proDao = new DaoProcesso();
                 $tabela = '';
 
-                /*
-                 * Filtro de busca.
-                 */
+                /********************************************* Filtro de busca ********************************************/
                 if ($this->ano != 'Todos') {
                     $condicao = array();
                     if (!empty($this->ada)) {
@@ -782,7 +814,8 @@ class Processo {
                 } else {
                     $filtro = "WHERE PRO.st_ativo = '1'";
                 }
-                //-----------------------------------------------------------------------------//
+                /*************************************************************************************************************/
+                /************************ Verifica se a necessidade da tabela e lista os processos ***************************/
                 if ($this->TabelaAnexo == 'sim') {
                     $anexo = ", COALESCE(json_object_agg(ANE.id_anexo, ANE.ds_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS ds_anexo,
                               COALESCE(json_object_agg(ANE.id_anexo, ANE.lk_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS lk_anexo";
@@ -855,9 +888,12 @@ class Processo {
                         }
                         return ($tabela);
                     }
+                /**************************************************************************************************************************/
                 } else {
+                    /*********** Lista os processos sem a tabela **********/
                     $anexo = "";
                     return $proDao->listarProcesso($pdo, $filtro, $anexo);
+                    /******************************************************/
                 }
             }
             return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
@@ -865,11 +901,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-
-    /*
-     * Carrega um processo.
-     */
-
+    /***************************************************************************************************************************************************/
+    
+    /********************** Carrega os dados de um processo *******************/
     public function carregarProcesso() {
         try {
             $conexao = new Conexao();
@@ -883,10 +917,11 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /**************************************************************************/
+    
+    /****************** Lista os processo os retorna em json ******************/
     public function listaProcessoJSON() {
         try {
-
             $conexao = new Conexao();
             $pdo = $conexao->connect();
 
@@ -899,11 +934,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
-    /*
-     * Lista técnicos no select option.
-     */
-
+    /***************************************************************************/
+    
+    /*********************************************** Lista técnicos no select option *******************************************/
     public function retornarTodosTecnicosProcesso() {
         try {
             $conexao = new Conexao();
@@ -925,7 +958,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /***************************************************************************************************************************/
+    
+    /************************************************ Lista os tecnicos dos processo ******************************************/
     public function retornarTecnicosProcesso() {
         try {
             $conexao = new Conexao();
@@ -941,7 +976,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /**************************************************************************************************************************/
+    
+    /************************************************ Lista as areas de abrangencia ******************************************/
     public function retornarAreas() {
         try {
             $conexao = new Conexao();
@@ -966,7 +1003,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /**************************************************************************************************************************/
+    
+    /******************* Carrega os dados do processo para o pdf **************/
     public function processoPdf() {
         try {
             $conexao = new Conexao();
@@ -983,7 +1022,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /**************************************************************************/
+    
+    /***************** Carrega o histórico do processo para o pdf *************/
     public function hitoricoProcessoPdf() {
         try {
             $conexao = new Conexao();
@@ -996,7 +1037,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /**************************************************************************/
+    
+    /*********************************************** Carrega todos processo desativados ********************************************/
     public function processosDesativados() {
         try {
             $conexao = new Conexao();
@@ -1038,7 +1081,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /*********************************************************************************************************************************/
+    
+    /********************************************** Ativa um processo desativado ******************************************/
     public function ativarProcesso() {
         try {
             $conexao = new Conexao();
@@ -1072,7 +1117,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-
+    /**********************************************************************************************************************/
+    
+    /**************************************************** Carrega os tipos de gasto de um processo *************************************************/
     public function carregarTipoGastoProcesso() {
         try {
             $conexao = new Conexao();
@@ -1110,7 +1157,9 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /*************************************************************************************************************************************************/
+    
+    /********************************************************* Carrega as centrais de um processo *******************************************************/
     public function carregarCentraisProcesso() {
         try {
             $conexao = new Conexao();
@@ -1147,5 +1196,5 @@ class Processo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-
+    /*************************************************************************************************************************************************/
 }

@@ -162,7 +162,6 @@ $(document).ready(function () {
         $("#id_processo").val($this.attr('processo'));
         $("#ada_cpr").text($this.find("td:eq(0)").text());
         $("#licitacao").text($this.find("td:eq(1)").text());
-        $("#tipoGasto").text($this.find("td:eq(2)").text());
         $("#obejto").text($this.find("td:eq(3)").text());
         $("#modalidade").text($this.find("td:eq(4)").text());
         $('#modalItem').modal('hide');
@@ -176,13 +175,11 @@ $(document).ready(function () {
                 "dataType": 'html',
                 "data": {
                     acao: "retornaOrgaoGerenciador"
-
                 },
                 "success": function (response) {
                     $("#orgao").html(response);
                 }
             });
-
         } else {
             $("#orgao").html("");
         }
@@ -297,8 +294,8 @@ $(document).ready(function () {
                 "data_assinatura": $("#data_assinatura").val(),
                 "data_publicacao": $("#data_publicacao").val(),
                 "obs_contrato": $("#obs_contrato").val(),
-                "central": central,
-            }
+                "central": central
+            };
 
             $.ajax({
                 "method": "POST",
