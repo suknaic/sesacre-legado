@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContrato.class.php";
 
@@ -1412,7 +1413,17 @@ class FinContratoModel {
                     $tabela .= $l["nm_lotacao"] . "<br/>";
                 }
                 $tabela .= '</td>
-                <td class = "text-center">
+                <td class = "text-center">';
+                if ($linha['fl_bloqueado'] == 0) {
+                    $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
+                                <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                </button >';
+                } else {
+                    $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
+                                <i class="fa fa-ban text-danger" aria-hidden="true"></i>
+                                </button >';
+                }
+                $tabela .= '
                     <button type = "button" title = "espelho do contrato" class = "espelho" value = "' . $linha['id_fornecedor'] . '">
                     <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
                     </button >
@@ -1472,7 +1483,6 @@ class FinContratoModel {
         }
     }
 
-    
     public function retornaTipoDeGastoLicitacao($idProcesso) {
         try {
             $conexao = new Conexao();
@@ -1495,5 +1505,5 @@ class FinContratoModel {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-    
+
 }

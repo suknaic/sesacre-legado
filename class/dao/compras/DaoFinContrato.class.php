@@ -197,7 +197,7 @@ class DaoFinContrato extends FinContratoTb {
         if ($pdo != null) {
             try {
                 $sql = "SELECT distinct f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
-                        p.nm_pessoa, cont.id_contrato
+                        p.nm_pessoa, cont.id_contrato, cont.fl_bloqueado
                         FROM fin_contrato AS cont
 
                         INNER JOIN gco_processo as processo
@@ -363,7 +363,7 @@ class DaoFinContrato extends FinContratoTb {
                 $sql = "select f.id_pessoa, cont.nr_contrato, cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, cont.dt_assinatura, 
                         cont.dt_publicacao, cont.ds_objeto, cont.ds_obs_contrato, cont.id_contrato, modalidade.nm_modalidade, obj.nm_objeto,
                         processo.cd_ada_cpr, processo.cd_pregao, tipoGasto.id_tipo_gasto, processo.id_processo, pessoa.nm_pessoa, cont.tp_contrato,
-                        cont.nr_prazo_entrega
+                        cont.nr_prazo_entrega, tipoGasto.nm_tipo_gasto
                         from fin_fornecedor as f
                         inner join fin_contrato as cont 
                         on cont.id_contrato = f.id_contrato
@@ -373,12 +373,12 @@ class DaoFinContrato extends FinContratoTb {
                         on modalidade.id_modalidade = processo.id_modalidade
                         inner join gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
+			inner join ses_pessoa as pessoa
+                        on pessoa.id_pessoa = f.id_pessoa
                         left join gco_processo_tipo_gasto as gptg
                         on gptg.id_tipo_gasto = cont.id_tipo_gasto
                         left join pla_tipo_gasto as tipoGasto
                         on tipoGasto.id_tipo_gasto  = gptg.id_tipo_gasto
-                        inner join ses_pessoa as pessoa
-                        on pessoa.id_pessoa = f.id_pessoa
                         where f.id_fornecedor = :idFornecedor";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idFornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
