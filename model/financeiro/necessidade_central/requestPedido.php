@@ -12,6 +12,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/liberacaoCentral/FinCentralLiberacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/CentralResponsavel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 
 $session = new Session('ajax');
 
@@ -56,6 +57,21 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'retornaOptionsDiaria':
+        try {
+            $diaria = new Diaria();
+            $diaria->setUsuarioPedido($session->getIdUser());
+            echo '<option value="">Selecione uma Diária</option>';
+            echo $diaria->retornaPedidoDiariaOption();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 
     CASE 'retornaAno':
         try {

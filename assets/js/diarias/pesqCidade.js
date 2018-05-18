@@ -11,8 +11,16 @@ $(document).ready(function () {
 
     $('#pesquisaCidade').on('shown.bs.modal', function (e) {
         e.preventDefault();
+//        $('#cidadeQuery').val('');
+//        $('#cidadeQuery').focus();
+    });
+    
+     $('#pesquisaCidade').on('hidden.bs.modal', function (e) {
+        e.preventDefault();
         $('#cidadeQuery').val('');
         $('#cidadeQuery').focus();
+        $('#tabelaCidades').dataTable().fnDestroy();
+        $('#tabelaCidades tbody').empty();
     });
 
     $('body').on('click', '.selecionaCidade', function (e) {
@@ -26,8 +34,8 @@ $(document).ready(function () {
             $("#ds_cidade_fim").val(dsCidade);
         }
         $('#pesquisaCidade').modal('hide');
-        $('#tabelaCidades').dataTable().fnDestroy();
-        $('#tabelaCidades tbody').empty();
+//        $('#tabelaCidades').dataTable().fnDestroy();
+//        $('#tabelaCidades tbody').empty();
     });
     
     $('body').on('keypress', '#cidadeQuery', function (e) {
