@@ -89,10 +89,17 @@ class DaoFinProtocolo extends FinProtocoloTb {
             if ($pdo != null) {
 
                 $sql = "insert into fin_protocolo (nm_representante, nr_rg_cpf, nm_email_representante, 
-                        dh_recebimento_sistema, ds_protocolo, id_ordem, id_pessoa) values (:nmRepresentante,
-                        :rgCpf, :email, :recebimento, :dsProtocolo, :ordem, :pessoa)";
+                        dh_recebimento_sistema, ds_protocolo, id_ordem, id_pessoa, qt_entrega) values (:nmRepresentante,
+                        :rgCpf, :email, :recebimento, :dsProtocolo, :ordem, :pessoa, :qtEntrega)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->bindValue(":nmRepresentante", $this->getNmRepresentante(), PDO::PARAM_STR);
+                $stmt->bindValue(":rgCpf", $this->getNrRgCpf(), PDO::PARAM_INT);
+                $stmt->bindValue(":email", $this->getNmEmailRepresentante(), PDO::PARAM_STR);
+                $stmt->bindValue(":recebimento", $this->getDhRecebimentoSistema(), PDO::PARAM_STR);
+                $stmt->bindValue(":dsProtocolo", $this->getDsProtocolo(), PDO::PARAM_STR);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->bindValue(":pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->bindValue(":qtEntrega", $this->getQdEntrega(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {

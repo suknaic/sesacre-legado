@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/ver_pedido.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -46,11 +46,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                 <div id="content-container">
                     <!--Page Title-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastrar Protocolo de aviso ao fornecedor</h1>
+                        <h1 class="page-header text-overflow">Pedido de necessidade</h1>
                     </div>
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li class="active"><a href="/pages/financeiro/ordem/index.php">Voltar</a></li>
+                        <li class="active"><a href="/pages/financeiro/necessidade_central/index.php">Voltar</a></li>
                     </ol>
                     <!--Page content-->
                     <div id="page-content">
@@ -62,167 +62,139 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                         <h3 class="panel-title">Informações do pedido</h3>
                                     </div>
 
-                                    <input type="hidden" name="ordem" id="ordem" value="<?php echo $id; ?>" />
+                                    <input type="hidden" name="pedido" id="pedido" value="<?php echo $id; ?>" />
 
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class='col-sm-2'><b>Nº Pedido:</b></div>
-                                            <div class='col-sm-9' id="nPedido"><?php echo $dados["nr_pedido"] ?></div>
+                                            <div class='col-sm-9' id="nPedido"><?php echo $dados[0]["numero"] ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Lotação:</b></div>
-                                            <div class='col-sm-9' id="lotacao"><?php echo $dados["nm_lotacao"] ?></div>
+                                            <div class='col-sm-9' id="lotacao"><?php echo $dados[0]["nm_lotacao"] ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Tipo de gasto:</b></div>
-                                            <div class='col-sm-9' id="tipoGasto"><?php echo $dados["nm_tipo_gasto"] ?></div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class='col-sm-2'><b>Fornecedor:</b></div>
-                                            <div class='col-sm-9' id="fornecedor"><?php echo $dados["nm_pessoa"] ?></div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class='col-sm-2'><b>Modalidade:</b></div>
-                                            <div class='col-sm-9' id="fornecedor"><?php echo $dados["nm_modalidade"] ?></div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class='col-sm-2'><b>Licitação:</b></div>
-                                            <div class='col-sm-9' id="fornecedor"><?php echo $dados["licitacao"] ?></div>
+                                            <div class='col-sm-9' id="tipoGasto"><?php echo $dados[0]["nm_tipo_gasto"] ?></div>
                                         </div>
 
                                         <?php
-                                        if ($dados["tp_contrato"] == 1) {
+                                        if ($dados[0]["tp_contrato"] == 1) {
                                             ?>
                                             <div class="row">
                                                 <div class='col-sm-2'><b>Ata:</b></div>
-                                                <div class='col-sm-9' id="ata"><?php echo $dados["nr_contrato"] ?></div>
+                                                <div class='col-sm-9' id="ata"><?php echo $dados[0]["nr_contrato"] ?></div>
                                             </div>
                                             <?php
                                         } else {
                                             ?>
                                             <div class="row">
                                                 <div class='col-sm-2'><b>Contrato:</b></div>
-                                                <div class='col-sm-9' id="contrato"><?php echo $dados["nr_contrato"] ?></div>
+                                                <div class='col-sm-9' id="contrato"><?php echo $dados[0]["nr_contrato"] ?></div>
                                             </div>
                                         <?php } ?>
                                         <div class="row">
-                                            <div class='col-sm-2'><b>Vigência:</b></div>
-                                            <div class='col-sm-9' id="vigencia_inical">
-                                                <?php echo Metodos::ConverteDataBR($dados["dt_ini_vigencia_contrato"]); ?> a 
-                                                <?php echo Metodos::ConverteDataBR($dados["dt_fim_vigencia_contrato"]); ?>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class='col-sm-2'><b>Fonte:</b></div>
-                                            <div class='col-sm-9' id="fonte"><?php echo $dados["nr_fonte"]; ?></div>
+                                            <div class='col-sm-9' id="fonte"><?php echo $dados[0]["nr_fonte"]; ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Projeto/Atividade:</b></div>
-                                            <div class='col-sm-9' id="projetoAtividade"><?php echo $dados["cd_programa_trabalho"] . "-" . $dados["ds_programa_trabalho"]; ?></div>
+                                            <div class='col-sm-9' id="projetoAtividade"><?php echo $dados[0]["cd_programa_trabalho"] . "-" . $dados[0]["ds_programa_trabalho"]; ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Despesa:</b></div>
-                                            <div class='col-sm-9' id="despesaPedido"><?php echo $dados["cd_despesa"] . "-" . $dados["ds_despesa_elemento"]; ?></div>
+                                            <div class='col-sm-9' id="despesaPedido"><?php echo $dados[0]["cd_despesa"] . "-" . $dados[0]["ds_despesa"]; ?></div>
                                         </div>
                                         <div class="row">
                                             <div class='col-sm-2'><b>Descrição do Pedido:</b></div>
-                                            <div class='col-sm-9' id="descPedido"><?php echo $dados["ds_pedido"]; ?></div>
+                                            <div class='col-sm-9' id="descPedido"><?php echo $dados[0]["ds_pedido"]; ?></div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class='col-sm-2'><b>Valor Pedido:</b></div>
-                                            <div class='col-sm-9' id="valorPedido"><?php echo Metodos::ConverteValorBr($dados["vl_pedido"], '4'); ?></div>
+                                        <?php if (empty($dados[0]["nr_item"])) { ?>
+                                            <div class="row">
+                                                <div class='col-sm-2'><b>Valor Pedido:</b></div>
+                                                <div class='col-sm-9' id="valorPedido"><?php echo Metodos::ConverteValorBr($dados[0]["vl_pedido"], '4'); ?></div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--===================================================-->
+                        <!--Informaçao do Itens da pre ordem-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel">
+                                    <div class="panel-heading ">
+                                        <h3 class="panel-title">Itens da pre-ordem</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Nº</th>
+                                                        <th class="text-center">Item</th>
+                                                        <th class="text-center">Descrição GRP</th>
+                                                        <th class="text-center">Descrição Sesacrenet</th>
+                                                        <th class="text-center">Unid</th>
+                                                        <th class="text-center">Tipo</th>
+                                                        <th class="text-center">Elemento de despesa</th>
+                                                        <th class="text-center">QTD</th>
+                                                        <th class="text-center">Valor unit.</th>
+                                                        <th class="text-center">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php echo $tabela; ?>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <?php ?>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel">
+                                    <div class="panel-heading ">
+                                        <h3 class="panel-title">Historico de autorizações</h3>
+                                    </div>
+                                    <div class="historicoAutorizacoes" style="width: 80%; margin: auto;">
+                                        <?php echo $finAutorizacao->retornaHistoricoAutorizacoes(); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--===================================================-->
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Detalhe do protocolo</h3>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Nome completo do representante da Contratada : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            RG/CPF : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Recebida em (Data) : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Email :
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-envelope-o" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control data" type="text" name="email" id="email" />
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <h3 class="panel-title">Autorização do pedido</h3>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-sm-6">
                                         <div class="panel-body">
-                                            Observação:
-                                            <textarea class="form-control" rows="4" id="obsProtocolo"></textarea>
+                                            Observação:<span class="text-danger">*</span>
+                                            <textarea class="form-control" rows="4" id="obsAutoriza">De acordo</textarea>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Quantidade de entrega programadas :
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control data" type="number" name="quantidade" id="quantidade" min="1" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-6"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-sm-2">
                                         <div class="panel-body">
-                                            <button class="btn btn-success btn-salvar btn-rounded btn-block" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
+                                            <button class="btn btn-danger btn-cancelar btn-rounded btn-block" value="<?php echo $id; ?>" type="button">
+                                                <i class="fa fa-trash" aria-hidden="true"></i></i> Cancelar
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
-                        <?php ?>
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
@@ -260,7 +232,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/financeiro/ordem/entrega/index.js"></script>
+        <script src="/assets/js/financeiro/necessidade_central/ver_pedido.js"></script>
         <!-- END JAVASCRIPT -->
 
     </body>

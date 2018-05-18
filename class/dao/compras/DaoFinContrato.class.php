@@ -292,8 +292,7 @@ class DaoFinContrato extends FinContratoTb {
                         inner join gco_processo as gco
                         on gco.id_processo = cont.id_processo
                         inner join gco_objeto as obj
-                        on obj.id_objeto = gco.id_objeto
-                        where to_char(fv.vigencia_data_fim, 'yyyy') >=  to_char(now(), 'yyyy')";
+                        on obj.id_objeto = gco.id_objeto";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
