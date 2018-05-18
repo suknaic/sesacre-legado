@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.load";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -111,8 +111,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                         <div class="row">
                                             <div class='col-sm-2'><b>Vigência:</b></div>
                                             <div class='col-sm-9' id="vigencia_inical">
-                                                <?php echo Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]); ?> a 
-                                                <?php echo Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]); ?>
+                                                <?php echo empty($dados[0]["dt_ini_vigencia_contrato"]) ? '' : Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]); ?> a 
+                                                <?php echo empty($dados[0]["dt_fim_vigencia_contrato"]) ? '' : Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]); ?>
                                             </div>
                                         </div>
                                         <div class="row">

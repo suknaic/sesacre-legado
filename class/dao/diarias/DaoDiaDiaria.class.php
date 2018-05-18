@@ -143,6 +143,8 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
                 }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -168,6 +170,31 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function selectHistorico(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select *
+                         from dia_diaria_historico hst
+                         where hst.id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
                 }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -237,6 +264,8 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
                 }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -271,7 +300,9 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } 
+                }  else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -345,7 +376,9 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } 
+                }  else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -418,7 +451,9 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } 
+                }  else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -510,6 +545,8 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
                 }
             }
         } catch (Exception $exc) {
@@ -556,7 +593,59 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } 
+                }  else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function selectDiariaPedidoUsuario(PDO $pdo = null,int $usuario = 0){ //Lista as diárias no qual o solicitante do pedido seja o solicitante, proposto ou proponente da diária
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT id_diaria, 
+                                id_tipo, 
+                                id_pessoa_proponente,
+                                (select nm_pessoa from ses_pessoa where id_pessoa = id_pessoa_proponente) as nm_proponente, 
+                                id_funcao_proponente,
+                                id_lotacao_proponente,
+                                id_pessoa_proposto,
+                                (select nm_pessoa from ses_pessoa where id_pessoa = id_pessoa_proposto) as nm_proposto, 
+                                id_funcao_proposto,
+                                id_lotacao_proposto,
+                                ds_servico_executado,
+                                ds_locais_executado,
+                                ds_obs,
+                                to_char(dt_criacao,'dd/mm/yyyy') as dt_criacao,
+                                dh_diaria,
+                                id_pessoa_solicitante,
+                                fl_retorno,
+                                id_pedido,
+                                id_diaria_pai,
+                                id_relatorio,
+                                st_estagio,
+                                st_ativo,
+                                (select trim(to_char(sum(qt_diaria_destino * vl_diaria_destino),'999G999G999D99')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total
+                         FROM dia_diaria diaria
+                         WHERE (id_pessoa_proposto = :id_usuario
+                                OR id_pessoa_proponente = :id_usuario
+                                OR id_pessoa_solicitante = :id_usuario)
+                         AND st_estagio = 4 and id_pedido is null"; //Somente as diárias deferidas
+                $stmt = $pdo->prepare($sql);
+                
+                $stmt->bindValue(":id_usuario", $usuario, PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -566,7 +655,6 @@ class DaoDiaDiaria extends DiaDiaria {
     }
     
     function selectLinha(PDO $pdo = null){
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "select * from dia_diaria where id_diaria = :id_diaria";
@@ -577,8 +665,8 @@ class DaoDiaDiaria extends DiaDiaria {
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
-                } else {
-                     $this->msgRetorno = 'erro oi';
+                }  else {
+                    $this->sucesso = false;
                 }
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -588,8 +676,29 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
+    function selectDiariaPedido(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from dia_diaria where id_pedido = :id_pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':id_pedido', $this->getIdPedido(), PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     function updateDiariaRelatorio(PDO $pdo = null) {
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "update dia_diaria set id_relatorio = :id_relatorio where id_diaria = :id_diaria";
@@ -607,7 +716,6 @@ class DaoDiaDiaria extends DiaDiaria {
     }
     
     function updateEstagio(PDO $pdo = null){
-        $retorno = "";
         try {
             if (!empty($pdo)) {
                 $sql = "update dia_diaria set st_estagio = :st_estagio where id_diaria = :id_diaria";

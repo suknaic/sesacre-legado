@@ -442,7 +442,7 @@ class Pedido {
                                 <td class = "text-center">' . Metodos::ConverteValorBr($dados["vl_pedido"], 4) . '</td>  
                                 <td class = "text-center">' . $dados["status"] . '</td>    
                                 <td class = "text-center">
-                                    <a type = "button" title = "Visualiza pedido" class = "verPedido" value = "' . $dados['id_pedido'] . '">
+                                    <a type = "button" title = "Visualiza pedido" href="/pages/financeiro/necessidade_central/ver_pedido.php?id='. $dados['id_pedido'].'" class = "verPedido" >
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
                                     </a >
                                 </td>

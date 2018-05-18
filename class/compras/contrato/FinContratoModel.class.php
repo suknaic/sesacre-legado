@@ -855,6 +855,7 @@ class FinContratoModel {
                 $daoFinContrato->setDsObsContrato($this->ds_obs_contrato);
             }
             $daoFinContrato->setTpContrato(1);
+            $daoFinContrato->setIdTipoGasto($this->id_tipo_gasto);
             //chamando o metodo para cadastrar a ata
             $daoFinContrato->editarAta($pdo);
             //verificando cadastramento da ata
@@ -962,6 +963,7 @@ class FinContratoModel {
                 $daoFinContrato->setDsObsContrato($this->ds_obs_contrato);
             }
             $daoFinContrato->setTpContrato(2);
+            $daoFinContrato->setIdTipoGasto($this->id_tipo_gasto);
             //chamando o metodo para cadastrar a ata
             $daoFinContrato->editarContrato($pdo);
             //verificando cadastramento da ata
@@ -1493,5 +1495,37 @@ class FinContratoModel {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
+    
+
+    public function retornaContratoSelectItem() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContrato();
+            $daoContrato->setNrContrato($this->nr_contrato);
+            $retorno = '';     
+            
+            $daoContrato->pesquisaContratoPorNumero($pdo);            
+            if($daoContrato->sucesso()){
+                foreach ($daoContrato->getMsgRetorno() as $value) {                    
+                    $retorno .= "<tr class='selecionaItem' data-contrato='". json_encode($value) ."' contrato='" . $value["id_contrato"] . "' style='cursor:pointer;'>";
+                    
+                    $retorno .= '<td>' . $value["nr_contrato"] . '</td>
+                        <td>asd</td>
+                        <td>' . $value["nm_tipo_gasto"] . '</td>
+                        <td>' . $value["nm_objeto"] . '</td>
+                        <td>' . $value["nm_modalidade"] . '</td>
+                        <td>' . $value["valor"] . '</td>
+                        </tr>';
+                }
+            }
+                        
+            return $retorno;
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 
 }

@@ -287,6 +287,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setDtPublicacao($ata['data_publicacao']);
             $finContratoModel->setDsObsContrato($ata['obs_ata']);
             $finContratoModel->setIdLotacaoCentral($ata['central']);
+            $finContratoModel->setIdTipoGasto($ata['idTipoGasto']);
             echo $finContratoModel->editarAta();
             return '';
             break;
@@ -299,7 +300,7 @@ switch ($_REQUEST['acao']) {
     CASE 'editarContrato':
         try {
             $contrato = filter_input(INPUT_POST, 'contrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-         
+            
             $finContratoModel = new FinContratoModel();
             $finContratoModel->setIdFornecedor($contrato['idFornecedor']);
             $finContratoModel->setIdContrato($contrato['id_contrato']);
@@ -315,6 +316,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setDtPublicacao($contrato['data_publicacao']);
             $finContratoModel->setDsObsContrato($contrato['obs_contrato']);
             $finContratoModel->setIdLotacaoCentral($contrato['central']);
+            $finContratoModel->setIdTipoGasto($contrato['idTipoGasto']);
             echo $finContratoModel->editarContrato();
             return '';
             break;

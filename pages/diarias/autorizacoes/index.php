@@ -51,9 +51,7 @@
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Autorização de Diárias</h1>                       
                     </div>
-                    <ol class="breadcrumb">
-                        <li><a href="../index.php">Voltar</a></li>                        
-                    </ol>
+                    
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
@@ -66,17 +64,18 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Observação do deferimento/indeferimento:</h5>
+                                        <h5 class="modal-title" id="acao-info"></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
                                         <input type="hidden" id="id_diaria"/>
+                                        <p id="diaria-info"></p>
                                         <textarea id="motivo" class="form-control" rows="6"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" id="btn-confirmar" class="btn btn-success">Salvar</button>
+                                        <button type="button" id="btn-confirmar" class="btn btn-primary">Salvar</button>
                                         <button type="button" id="btn-cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>
@@ -85,7 +84,7 @@
 
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title text-center">Filtros</h3>
+                                <h3 class="panel-title">Filtros</h3>
                             </div>
                             <div class="panel-body">
                                 <form>

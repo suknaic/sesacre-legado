@@ -244,7 +244,7 @@ class DaoFinQddValor extends FinsQddValorTb {
     public function retornaContratacao($pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "select * from fin_tipo_solicitacao";
+                $sql = "select * from fin_tipo_solicitacao order by id_tipo_solicitacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
