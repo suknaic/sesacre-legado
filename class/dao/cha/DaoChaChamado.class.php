@@ -147,7 +147,7 @@ class DaoChaChamado extends ChaChamado {
         WHERE cha.id_pessoa_solicitante = :id
         $filtro
         ORDER BY cha.dh_abertura";
-        
+
         $result = $pdo->prepare($sql);
         $result->bindValue(":id", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
         $result->execute();
@@ -201,7 +201,8 @@ class DaoChaChamado extends ChaChamado {
 
         $retorno = FALSE;
 
-        $sql = "SELECT *
+        $sql = "SELECT id_chamado, id_categoria_secundaria, id_pessoa_solicitante, dh_abertura, ds_chamado, nr_telefone_solicitante, ds_finalizado, dh_finalizado, 
+                    nr_avaliacao, dh_avaliacao, ds_avaliacao, vl_chamado, id_status, dh_agendamento, id_prioridade, dh_cancelamento, ds_cancelamento, dt_prazo
                 FROM cha_chamado
                 WHERE id_chamado = :idChamado";
         try {
@@ -219,7 +220,7 @@ class DaoChaChamado extends ChaChamado {
             return $retorno;
         }
     }
-    
+
     function verificaChamado($pdo) {
         try {
             $sql = $pdo->prepare('SELECT id_chamado
@@ -230,11 +231,11 @@ class DaoChaChamado extends ChaChamado {
             if ($sql->rowCount() > 0) {
                 $this->setSucesso(TRUE);
             } else {
-                $this->setSucesso( FALSE);
+                $this->setSucesso(FALSE);
             }
         } catch (Exception $ex) {
             $this->setSucesso(FALSE);
-            $this->setMensagem( 'Erro ao verificar o chamado');
+            $this->setMensagem('Erro ao verificar o chamado');
         }
     }
 

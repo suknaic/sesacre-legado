@@ -75,7 +75,7 @@
                                         <textarea id="motivo" class="form-control" rows="6"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" id="btn-confirmar" class="btn btn-success">Salvar</button>
+                                        <button type="button" id="btn-confirmar" class="btn btn-primary">Salvar</button>
                                         <button type="button" id="btn-cancelar" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                                     </div>
                                 </div>

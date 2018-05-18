@@ -415,5 +415,42 @@ class DaoFinContrato extends FinContratoTb {
             $this->sucesso = false;
         }
     }
+    
+    public function pesquisaContratoPorNumero($pdo = null) {
+        if ($pdo != null) {
+            try {
+                $sql = "SELECT C.id_contrato, C.nr_contrato, C.ds_objeto"
+                        . " , TG.nm_tipo_gasto, M.nm_modalidade, '0.0000' AS Valor"
+                        . " , PRO.cd_pregao, OBJ.nm_objeto, F.id_fornecedor"
+                        . " , to_char(C.dt_assinatura, 'DD/MM/YYYY') as dt_assinatura"
+                        . " , to_char(C.dt_publicacao, 'DD/MM/YYYY') as dt_publicacao"
+                        . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
+                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
+                        //. " , to_char()"
+                        //. " , C."
+                        . " FROM fin_contrato C"
+                        . " INNER JOIN (SELECT DISTINCT ON (id_contrato) id_contrato, id_fornecedor, id_pessoa"
+                            . " FROM fin_fornecedor"
+                            . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"                             
+                        . " LEFT JOIN gco_processo PRO ON PRO.id_processo = C.id_processo"
+                        . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"                        
+                        . " LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
+                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = C.id_modalidade"                                           
+                        . " WHERE C.nr_contrato LIKE :nrContrato AND C.st_ativo = '1' ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":nrContrato", "%".$this->getNrContrato()."%", PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (PDOException $e) {
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
 
 }

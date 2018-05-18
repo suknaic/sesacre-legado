@@ -8,6 +8,9 @@ $(document).ready(function () {
     //mascara do ada
     // $("#ada").mask("99-99-9999999");
     //fim
+    
+    //Esconde a informação da seleção da diária
+    $("#diaria").hide();
 
     //Masca para valor
     $("body").on("focus", "#valor", function () {
@@ -91,29 +94,51 @@ $(document).ready(function () {
 
     $("body").on("change", "#tipoDeGasto", function (e) {
         var tipo = 'contrato'
+        
+        var tipoDeGasto = $("#tipoDeGasto").val();
 
         if ($("input[name='contratado']:checked").val() == 1) {
             tipo = 'ata';
         }
         var dados = {
             "tipo": tipo,
-            "tipoGasto": $("#tipoDeGasto").val()
+            "tipoGasto": tipoDeGasto
         }
 
-        $.ajax({
-            "url": "/model/financeiro/necessidade_central/requestPedido.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaOptionsAtaContrato",
-                "dados": dados
+        //*************************DIARIA**************************
+        if (tipoDeGasto == '13') { 
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsDiaria"
+                },
+                "success": function(response){
+                    $("#diaria").show();
+                    $("body").find("#id_diaria").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+        //*********************FIM DIARIA**************************
+        } else {
+            $("#diaria").hide();
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsAtaContrato",
+                    "dados": dados
 
-            },
-            "success": function (response) {
-                $("body").find("#contratada").html(response);
-                $(".select").select2({
-                });
-            }
-        });
+                },
+                "success": function (response) {
+                    $("body").find("#contratada").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+        }
+        
     });
 
 
