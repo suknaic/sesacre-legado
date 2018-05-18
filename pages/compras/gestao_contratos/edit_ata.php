@@ -242,7 +242,27 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/ata/edit.load.php";
                                 </div>
 
                                 <div id="orgao"></div>
-
+                                
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tipo de Gasto</h3>
+                                </div>
+                                <div id="tipogasto">
+                                    <div class="tipoGastoCampos row">
+                                        <div class="col-sm-5">
+                                            <div class="panel-body">
+                                                Tipo de Gasto:
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select" name="tipoDeGasto" id="tipoDeGasto" required="true">
+                                                        <option value="">Selecione um tipo de gasto</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-7"></div>
+                                    </div>
+                                </div>
+                                
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Centrais</h3>
                                 </div>
