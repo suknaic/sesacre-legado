@@ -16,12 +16,11 @@ function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
     gerarSelect2(select);
 }
 
-
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
     //Mascara do sistema
-    $('.data').mask("99/99/9999")
+    $('.data').mask("99/99/9999");
     //fim
     $(".select").select2({
         width: " 100%"
@@ -52,7 +51,7 @@ $(document).ready(function () {
             var central = {
                 "idContrato": $("#idContrato").val(),
                 "idLotacao": $this.attr("idCentral")
-            }
+            };
             $.ajax({
                 "method": "POST",
                 "url": "/model/compras/contrato/request.php",
@@ -85,6 +84,21 @@ $(document).ready(function () {
                 $("body").find("#empresa").html(response);
             }
         });
+    });
+    //fim
+
+    //Listando tipo de gasto
+    $.ajax({
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornarTipoDeGastoLicitacao",
+            "idProcesso": $("#id_processo").val()
+        },
+        "success": function (response) {
+            $("body").find("#tipoDeGasto").html(response);
+            $(".select").select2({});
+        }
     });
     //fim
 
@@ -162,7 +176,6 @@ $(document).ready(function () {
         $("#id_processo").val($this.attr('processo'));
         $("#ada_cpr").text($this.find("td:eq(0)").text());
         $("#licitacao").text($this.find("td:eq(1)").text());
-        $("#tipoGasto").text($this.find("td:eq(2)").text());
         $("#obejto").text($this.find("td:eq(3)").text());
         $("#modalidade").text($this.find("td:eq(4)").text());
         $('#modalItem').modal('hide');
@@ -176,13 +189,11 @@ $(document).ready(function () {
                 "dataType": 'html',
                 "data": {
                     acao: "retornaOrgaoGerenciador"
-
                 },
                 "success": function (response) {
                     $("#orgao").html(response);
                 }
             });
-
         } else {
             $("#orgao").html("");
         }
@@ -298,7 +309,8 @@ $(document).ready(function () {
                 "data_publicacao": $("#data_publicacao").val(),
                 "obs_contrato": $("#obs_contrato").val(),
                 "central": central,
-            }
+                "idTipoGasto": $("#tipoDeGasto").val()
+            };
 
             $.ajax({
                 "method": "POST",
@@ -309,8 +321,8 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    console.log(response);
-                    return false;
+//                    console.log(response);
+//                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

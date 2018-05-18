@@ -41,7 +41,7 @@ if(!$session->vPComprasAdminTi()){
                             <li class="text-center"><a href="/pages/compras/gcon/situacao/situacao.php">Situação</a></li>
                             <li class="text-center"><a href="/pages/compras/gcon/modalidade/modalidade.php">Modalidade</a></li>
                             <li class="text-center"><a href="/pages/compras/gcon/unidade/unidade.php">Unidades Contempladas</a></li>
-                            <hr><li class="text-center"><a href="/pages/compras/gcon/usuario/usuario.php">Usuário</a></li><hr>
+                            <hr>
                         </ul>
                     </li>
                     
@@ -53,9 +53,10 @@ if(!$session->vPComprasAdminTi()){
                            <li class="text-center"><a href="/pages/compras/gcon/situacao/nova_situacao.php">Situação</a></li>
                            <li class="text-center"><a href="/pages/compras/gcon/modalidade/nova_modalidade.php">Modalidade</a></li>
                            <li class="text-center"><a href="/pages/compras/gcon/unidade/nova_unidade.php">Unidades Contempladas</a></li>
-                           <hr><li class="text-center"><a href="/pages/compras/gcon/usuario/novoUsuario.php">Usuário</a></li><hr>
+                           <hr>
                        </ul>
                     </li>
+                    
                     <li class="dropdown">
                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Desativados<b class="caret"></b></a>
                        <ul class="dropdown-menu dropdown-menu-md">
@@ -65,6 +66,10 @@ if(!$session->vPComprasAdminTi()){
                            <li class="text-center"><a href="/pages/compras/gcon/modalidade/modalidadeDesativada.php">Modalidade</a></li>
                            <li class="text-center"><a href="/pages/compras/gcon/unidade/unidadeDesativadas.php">Unidades Contempladas</a></li>
                        </ul>
+                    </li>
+                    
+                    <li class="dropdown">
+                       <a href="/pages/compras/gcon/usuario/">Usuários</a>
                     </li>
                </ul>';
 }

@@ -37,6 +37,7 @@ class PerfilRH {
         $this->idPerfil = $idPerfil;
     }
 
+    /********************************************* Insere um perfil do GCON a uma pessoa ***************************************************/
     public function inserirPerfilPessoaRH() {
         try {
 
@@ -60,7 +61,9 @@ class PerfilRH {
             return $ex->getMessage();
         }
     }
-
+    /****************************************************************************************************************************************/
+    
+    /************************************************* Lista todos os usuarios do GCON *******************************************************/
     public function listarPessoaPerfilRH() {
         try {
             $conexao = new Conexao();
@@ -91,9 +94,9 @@ class PerfilRH {
             return $ex->getMessage();
         }
     }
-    /*
-     * Deleta o perfil de uma pessoa do RH
-     */
+    /*************************************************************************************************************************************/
+    
+    /************************ Deleta o perfil de uma pessoa do RH **************************/
     public function deletarPerfilPessoaRH() {
         try {
 
@@ -117,13 +120,9 @@ class PerfilRH {
             return $ex->getMessage();
         }
     }
-
-    /* ************************************** Perfis RH ************************************** */
-
-    /**
-     * Carrega os perfis do RH
-     * Retorna um Array.
-     */
+    /***************************************************************************************/
+    
+    /*************************************** Perfis RH ***************************************/
     private function carregarPerfisRH() {
         try {
             $perfis = array(
@@ -136,10 +135,6 @@ class PerfilRH {
             return $ex->getMessage();
         }
     }
-
-    /*
-     * Retorna os perfis do RH no select option
-     */
 
     public function retornarSelectOptionPerfisRH() {
         try {
@@ -154,6 +149,5 @@ class PerfilRH {
             return $ex->getMessage();
         }
     }
-
-    /* ***************************************************************************************** */
+    /*******************************************************************************************/
 }

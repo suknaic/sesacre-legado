@@ -310,7 +310,7 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="/pages/diarias/autorizacoes/index.php">Autorizações</a>
+                                    <a href="/pages/diarias/autorizacoes/">Autorizações</a>
                                 </li>
                                 <li>
                                     <a href="/pages/diarias/">Solicitação</a>

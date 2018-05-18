@@ -560,8 +560,18 @@ class Session {
     }
     
     //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
-    public function vPDiarias() {
-        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
+    public function vPDiariasSolicitacao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_SOLICITACAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
+    public function vPDiariasAutorizacao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_AUTORIZACAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
 
             RETURN FALSE;
         } else {

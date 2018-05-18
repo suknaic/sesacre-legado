@@ -1,22 +1,50 @@
 
-
-function listaDiarias(){
+function listaStEstagioCombo(){
     $.ajax({
         "url": "/model/diarias/autorizacoes/request.php",
         "dataType": 'html',
         "data": {
-            acao: "listaDiarias"
+            acao: "listaStEstagioOption"
         },
-        "success": function (response) {
-            func.carregaTabelaPadrao('tabela', response, [4], true);
+        "success": function(response) {
+            $("#st_estagio").html(response);
+//            $("#st_estagio").val(2).trigger('change');
         }
     });
 }
-listaDiarias();
+listaStEstagioCombo();
+
+function listaDiarias(){
+    var estagio = $("#st_estagio option:selected").val();
+    
+    if (estagio > 0) {
+        $.ajax({
+            "url": "/model/diarias/autorizacoes/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaDiarias",
+                estagio: estagio
+            },
+            "success": function (response) {
+                func.carregaTabelaPadrao('tabela', response, [4], true);
+            }
+        });
+    }
+}
+//listaDiarias();
 
 
 $(document).ready(function () {
     func = new Funcoes();
+    
+    //Combo box dos tipos de autorizações
+    $('body').find("select").select2({
+    }); 
+    
+    $('body').on('change','#st_estagio',function(e){
+       e.preventDefault();
+       listaDiarias();
+    });
     
     $('#tabela').on('click', '.acao', function (e) {
         e.preventDefault();
@@ -26,14 +54,27 @@ $(document).ready(function () {
         var diaria = $this.closest('tr').data("diaria"); //A tabela possui a tag data-diaria que fornece informações gerais da diaria em cada linha da tabela do html
         
         //Campo invisivel para armazenar informações necessárias 
-        $("#id_diaria").data('id',diaria.id_diaria);
+        $("#id_diaria").val(diaria.id_diaria);
+        $("#id_diaria").data('diaria',diaria);
         $("#id_diaria").data('tipo',tipo);
         $('#btn-confirmar').html(tipo);
     });
 
     
     $('#acao').on('shown.bs.modal', function (e) {
-        e.preventDefault();        
+        e.preventDefault();
+        var diariaInfo = $("#id_diaria").data('diaria');
+        var mensagem = 'Diária Nº: <b>' + diariaInfo.id_diaria + '</b> / Proponente: <b>' + diariaInfo.nm_proponente + '</b> / Proposto: <b>' + diariaInfo.nm_proposto + '</b> - Lotação: <b>' + diariaInfo.lt_proposto + '</b>';
+        
+        var acao = $("#id_diaria").data('tipo');
+        
+        $("#diaria-info").html(mensagem);
+        
+        if (acao == 'Deferir') {
+            $("#acao-info").html('Observação do deferimento:');
+        } else {
+            $("#acao-info").html('Observação do indeferimento:');
+        }
         $('#motivo').focus();
     });
     
@@ -47,7 +88,7 @@ $(document).ready(function () {
         
         var $this = $(this);
         var estagio; 
-        
+
         $this.prop("disabled", true);
 
         if ($("#id_diaria").data('tipo') == 'Deferir') {
@@ -64,12 +105,11 @@ $(document).ready(function () {
         }
        
         var DADOS = {
-            diaria: $("#id_diaria").data('id'),
+            diaria: $("#id_diaria").val(),
             estagio: estagio,
             obs: $("#motivo").val()
         }
         
-       
        $.ajax({
             "url": "/model/diarias/autorizacoes/request.php",
             "dataType": "html",
@@ -108,7 +148,7 @@ $(document).ready(function () {
                 } else if (response.tipoMsg === "ok") {
                     func.modalAlert(response.msg, 'primary');
                     $('.modal-alert').on('hidden.bs.modal', function (e) {
-                        top.location.href = "/pages/diarias/autorizacoes/index.php";
+                        location.reload();
                     });
                     return false;
                 } else {
@@ -124,10 +164,11 @@ $(document).ready(function () {
                 return false;
             }
         });
-        $this.prop("disabled", false);
-       
+       $this.prop("disabled", false);
        $('#acao').modal('hide');
        $('#motivo').val('');
+       
     });
 });
+
 

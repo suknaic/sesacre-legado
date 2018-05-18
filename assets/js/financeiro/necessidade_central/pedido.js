@@ -8,6 +8,9 @@ $(document).ready(function () {
     //mascara do ada
     // $("#ada").mask("99-99-9999999");
     //fim
+    
+    //Esconde a informação da seleção da diária
+    $("#diaria").hide();
 
     //Masca para valor
     $("body").on("focus", "#valor", function () {
@@ -69,8 +72,8 @@ $(document).ready(function () {
 
     $("body").on("change", "#tipoSolicitacao", function (e) {
         if ($("#tipoSolicitacao").val() == '1') {
-            $(".campoForneceor").show();
-            $(".campoValor").addClass("hidden");
+            $(".campoForneceor").hide();
+            $(".campoValor").removeClass("hidden");
         }
 
         if ($("#tipoSolicitacao").val() == '2') {
@@ -91,29 +94,51 @@ $(document).ready(function () {
 
     $("body").on("change", "#tipoDeGasto", function (e) {
         var tipo = 'contrato'
+        
+        var tipoDeGasto = $("#tipoDeGasto").val();
 
         if ($("input[name='contratado']:checked").val() == 1) {
             tipo = 'ata';
         }
         var dados = {
             "tipo": tipo,
-            "tipoGasto": $("#tipoDeGasto").val()
+            "tipoGasto": tipoDeGasto
         }
 
-        $.ajax({
-            "url": "/model/financeiro/necessidade_central/requestPedido.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaOptionsAtaContrato",
-                "dados": dados
+        //*************************DIARIA**************************
+        if (tipoDeGasto == '13') { 
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsDiaria"
+                },
+                "success": function(response){
+                    $("#diaria").show();
+                    $("body").find("#id_diaria").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+        //*********************FIM DIARIA**************************
+        } else {
+            $("#diaria").hide();
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsAtaContrato",
+                    "dados": dados
 
-            },
-            "success": function (response) {
-                $("body").find("#contratada").html(response);
-                $(".select").select2({
-                });
-            }
-        });
+                },
+                "success": function (response) {
+                    $("body").find("#contratada").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+        }
+        
     });
 
 
@@ -344,7 +369,7 @@ $(document).ready(function () {
             }
 
 
-            if ($("#tipoSolicitacao").val() > 2) {
+            if ($("#tipoSolicitacao").val() == 1 || $("#tipoSolicitacao").val() == 3 || $("#tipoSolicitacao").val() == 4) {
                 $.ajax({
                     "url": "/model/financeiro/necessidade_central/requestPedido.php",
                     "dataType": "html",
@@ -353,6 +378,7 @@ $(document).ready(function () {
                         "dados": dados
                     },
                     "success": function (response) {
+                         console.log(response);
                         $this.prop("disabled", false);
                         if (response.trim() == "SessaoExpirada") {
                             func.modalAlert(func.msgSemPermissao);
@@ -394,6 +420,7 @@ $(document).ready(function () {
                         }
                     },
                     "error": function (response) {
+                       
                         $this.prop("disabled", false);
                         func.modalAlert(func.msgErroPadrao);
                         return false;

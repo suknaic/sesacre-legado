@@ -13,6 +13,7 @@ switch ($_REQUEST['acao']) {
    case 'listaDiarias':
         try {
             $prog = new Diaria();
+            $prog->setIdPessoaSolicitante($session->getIdUser());
             echo $prog->retornaTrDiarias();
             return;
             break;
@@ -36,7 +37,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
     
-    case 'listaCidades':
+   case 'listaCidades': //Esse request é utilizado pela classe Diária e Relatório, quando o usuário seleciona as cidades do itinerario. Por este motivo optou-se pela permanencia da função neste request em um nível mais 'genérico'
         
         try {
             $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
@@ -55,11 +56,14 @@ switch ($_REQUEST['acao']) {
     case 'atualizaEstagioDiaria':
         try {
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
+            $historico['ds_diaria_historico'] = $filtro['obs'];
+            $historico['id_pessoa'] = $session->getIdUser();
+            
             $diaria = new Diaria();
             $diaria->setIdDiaria($filtro['diaria']);
             $diaria->setStEstagio($filtro['estagio']);
-            $diaria->setDsHistorico($filtro['obs']);
-            $diaria->setIdPessoaHistorico($session->getIdUser());
+            $diaria->setHistorico($historico);
             echo $diaria->atualizaEstagioDiaria();
             return;
             break;

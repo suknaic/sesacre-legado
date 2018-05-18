@@ -54,7 +54,7 @@
                         <h1 class="page-header text-overflow">Relatório de Viagem </h1>                       
                     </div>
                     <ol class="breadcrumb">
-                        <li><a href="../index.php">Voltar</a></li>                        
+                        <li><a href="../">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -218,19 +218,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a role="button" class="btn btn-default mar-ver pull-right btn-limpar">
+                                    <button class="btn btn-rounded btn-default mar-ver pull-right btn-limpar">
                                         Limpar
-                                    </a>   
-                                    <a role="button" class="btn btn-default mar-ver pull-right btn-cancelar">
+                                    </button>   
+                                    <button class="btn btn-rounded btn-default mar-ver pull-right btn-cancelar">
                                         Cancelar
-                                    </a>
-                                    <a class="btn btn-primary mar-ver pull-right add-destino" role="button">
+                                    </button>
+                                    <button class="btn btn-rounded btn-primary mar-ver pull-right add-destino">
                                         <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
                                         Intinerário
-                                    </a>
-                                    <a class="btn btn-info mar-ver pull-right btn-editar" role="button">
+                                    </button>
+                                    <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
-                                    </a>
+                                    </button>
                                 </div>
                                 <div class="panel-footer">
                                     <table class="table table-striped" id="destinos">
@@ -256,7 +256,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <strong>Arquivo:</strong>
-                                        <button class="btn btn-primary btn-add-arquivo" data-target="#anexaArquivo" data-toggle="modal"" type="button">
+                                        <button class="btn btn-rounded btn-primary btn-add-arquivo" data-target="#anexaArquivo" data-toggle="modal"" type="button">
                                             <i class="fa fa-plus"></i> Adicionar
                                         </button>
                                     </div>
@@ -280,7 +280,7 @@
                                 <button class="btn btn-success btn-rounded btn-salvar" type="button">
                                     <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                 </button>
-                                <a href="../index.php" class="btn btn-rounded btn-default">Cancelar</a>
+                                <a href="../" class="btn btn-rounded btn-default">Cancelar</a>
                             </div>
                         </form>
                     </div>

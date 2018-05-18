@@ -119,7 +119,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                         <input type="hidden" id="id_processo" value="" />
                                         <p><strong>ADA/CPR:</strong> <span id="ada_cpr"> </span></p>
                                         <p><strong>Licitação:</strong> <span id="licitacao"> </span></p>
-                                        <p><strong>Tipo de gasto:</strong> <span id="categoria"> </span></p>
                                         <p><strong>Objeto:</strong> <span id="obejto"> </span></p>
                                         <p><strong>Modalidade:</strong> <span id="modalidade"> </span></p>
                                         <p><strong>Área de Abrangência:</strong> <span id="area_abragencia"> </span></p>

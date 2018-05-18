@@ -52,7 +52,7 @@ $(document).ready(function () {
             var central = {
                 "idContrato": $("#idContrato").val(),
                 "idLotacao": $this.attr("idCentral")
-            }
+            };
             $.ajax({
                 "method": "POST",
                 "url": "/model/compras/contrato/request.php",
@@ -72,6 +72,20 @@ $(document).ready(function () {
     });
     //fim
 
+    //Listando tipo de gasto
+    $.ajax({
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornarTipoDeGastoLicitacao",
+            "idProcesso": $("#id_processo").val()
+        },
+        "success": function (response) {
+            $("body").find("#tipoDeGasto").html(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
 
     //No click carrega fornecedor  Pessoa Juridica
     $("body").on("click", "#cont_pj", function () {
@@ -170,7 +184,6 @@ $(document).ready(function () {
 
     $("body").on('click', '#cofiguracaoAta', function (e) {
         if ($("body").find("input[name='cofiguracaoAta']:checked").length > 0) {
-
             $.ajax({
                 "url": "/model/compras/ata/request.php",
                 "dataType": 'html',
@@ -298,6 +311,7 @@ $(document).ready(function () {
                 "data_publicacao": $("#data_publicacao").val(),
                 "obs_ata": $("#obs_ata").val(),
                 "central": central,
+                "idTipoGasto": $("#tipoDeGasto").val()
             }
 
             $.ajax({
