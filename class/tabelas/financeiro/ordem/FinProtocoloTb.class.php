@@ -12,6 +12,7 @@ class FinProtocoloTb {
     private $dh_recimento = null;
     private $ds_protocolo = null;
     private $id_ordem = null;
+    private $qd_entrega = null;
     private $id_pessoa = null;
     private $st_ativo = null;
 
@@ -51,21 +52,39 @@ class FinProtocoloTb {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getNrRgCpf() {
         return $this->nr_rg_cpf;
     }
 
+    /**
+     * @param mixed $nr_rg_cpf
+     *
+     * @return self
+     */
     public function setNrRgCpf($nr_rg_cpf) {
         $this->nr_rg_cpf = $nr_rg_cpf;
+
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getNmEmailRepresentante() {
         return $this->nm_email_representante;
     }
 
+    /**
+     * @param mixed $nm_email_representante
+     *
+     * @return self
+     */
     public function setNmEmailRepresentante($nm_email_representante) {
         $this->nm_email_representante = $nm_email_representante;
+
         return $this;
     }
 
@@ -137,6 +156,24 @@ class FinProtocoloTb {
      */
     public function setIdOrdem($id_ordem) {
         $this->id_ordem = $id_ordem;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQdEntrega() {
+        return $this->qd_entrega;
+    }
+
+    /**
+     * @param mixed $qd_entrega
+     *
+     * @return self
+     */
+    public function setQdEntrega($qd_entrega) {
+        $this->qd_entrega = $qd_entrega;
 
         return $this;
     }

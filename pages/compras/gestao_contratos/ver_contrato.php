@@ -74,10 +74,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/ver_contrato.l
                                             <div class='col-sm-2'><b>Licitação:</b></div>
                                             <div class='col-sm-9' id="licitacao"><?php echo $array[0]["cd_pregao"]; ?></div>
                                         </div>
-                                        <div class="row">
+<!--                                        <div class="row">
                                             <div class='col-sm-2'><b>Tipo de gasto:</b></div>
                                             <div class='col-sm-9' id="tipoGasto"><?php echo $array[0]["nm_tipo_gasto"]; ?></div>
-                                        </div>
+                                        </div>-->
                                         <div class="row">
                                             <div class='col-sm-2'><b>Objeto:</b></div>
                                             <div class='col-sm-9' id="obejto"><?php echo $array[0]["nm_objeto"]; ?></div>

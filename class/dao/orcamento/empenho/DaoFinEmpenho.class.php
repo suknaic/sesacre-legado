@@ -159,7 +159,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         on gco.id_processo = cont.id_processo
                         left join gco_modalidade as mod
                         on mod.id_modalidade = gco.id_modalidade
-                        inner join ses_pessoa as pj
+                        left join ses_pessoa as pj
                         on pj.id_pessoa = f.id_pessoa
                         where p.id_pedido = :pedido
                         order by item.nr_lote, item.nr_item";

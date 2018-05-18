@@ -123,8 +123,7 @@ class DaoFinFornecedores extends FinFornecedoresTb {
                         inner join gco_objeto as obsC
                         on obsC.id_objeto = gconC.id_objeto
                         inner join fin_vigencia as vigCont
-                        on vigCont.id_contrato = f.id_contrato
-                        where ((NOW()- interval '1 year') <= vigCont.vigencia_data_fim) " . $condicao;
+                        on vigCont.id_contrato = f.id_contrato where contrato.st_ativo ='1' " . $condicao;
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
