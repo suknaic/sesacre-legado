@@ -170,7 +170,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Autorização do pedido</h3>
+                                    <h3 class="panel-title">Cancelar o pedido</h3>
                                 </div>
 
                                 <div class="form-group">
