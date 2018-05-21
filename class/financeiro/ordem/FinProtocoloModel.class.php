@@ -12,6 +12,7 @@ class FinProtocoloModel {
     private $dh_recimento = null;
     private $ds_protocolo = null;
     private $id_ordem = null;
+    private $qd_entrega = null;
     private $id_pessoa = null;
     private $st_ativo = null;
 
@@ -51,21 +52,39 @@ class FinProtocoloModel {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getNrRgCpf() {
         return $this->nr_rg_cpf;
     }
 
+    /**
+     * @param mixed $nr_rg_cpf
+     *
+     * @return self
+     */
     public function setNrRgCpf($nr_rg_cpf) {
         $this->nr_rg_cpf = $nr_rg_cpf;
+
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getNmEmailRepresentante() {
         return $this->nm_email_representante;
     }
 
+    /**
+     * @param mixed $nm_email_representante
+     *
+     * @return self
+     */
     public function setNmEmailRepresentante($nm_email_representante) {
         $this->nm_email_representante = $nm_email_representante;
+
         return $this;
     }
 
@@ -144,6 +163,24 @@ class FinProtocoloModel {
     /**
      * @return mixed
      */
+    public function getQdEntrega() {
+        return $this->qd_entrega;
+    }
+
+    /**
+     * @param mixed $qd_entrega
+     *
+     * @return self
+     */
+    public function setQdEntrega($qd_entrega) {
+        $this->qd_entrega = $qd_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdPessoa() {
         return $this->id_pessoa;
     }
@@ -195,12 +232,29 @@ class FinProtocoloModel {
 
     public function salvaProtocolo() {
         try {
-            if(empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf)){
+            if (empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf) || empty($this->qd_entrega)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
             $daoFinProtocolo = new DaoFinProtocolo();
-            
-            
+            $daoFinProtocolo->setNmRepresentante($this->nm_representante);
+            $daoFinProtocolo->setNrRgCpf($this->nr_rg_cpf);
+            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
+            $daoFinProtocolo->setNmEmailRepresentante($this->nm_email_representante);
+            $daoFinProtocolo->setDsProtocolo($this->ds_protocolo);
+            $daoFinProtocolo->setQdEntrega($this->qd_entrega);
+            $daoFinProtocolo->setIdOrdem($this->id_ordem);
+            $daoFinProtocolo->setIdPessoa($this->id_pessoa);
+            $daoFinProtocolo->salvaProcotolo($pdo);
+            if ($daoFinProtocolo->sucesso()) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

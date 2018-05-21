@@ -9,17 +9,15 @@ switch ($_REQUEST['acao']) {
     CASE 'salvaProtocolo':
         try {
             $protocolo = filter_input(INPUT_POST, 'protocolo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            var_dump($protocolo);
-            return false;
             $finProtocoloModel = new FinProtocoloModel();
-            
             $finProtocoloModel->setIdOrdem($protocolo["ordem"]);
             $finProtocoloModel->setNmRepresentante($protocolo["nomeRepresentante"]);
             $finProtocoloModel->setNrRgCpf($protocolo["rgCpf"]);
             $finProtocoloModel->setNmEmailRepresentante($protocolo["email"]);
             $finProtocoloModel->setDhRecebimentoSistema($protocolo["dataRecebimento"]);
+            $finProtocoloModel->setQdEntrega($protocolo["quantidade"]);
             $finProtocoloModel->setDsProtocolo($protocolo["obsProtocolo"]);
-            
+            $finProtocoloModel->setIdPessoa($session->getIdUser());
             echo $finProtocoloModel->salvaProtocolo();
             return;
             break;
@@ -28,6 +26,5 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-
 }
 

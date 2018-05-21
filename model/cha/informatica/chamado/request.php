@@ -223,12 +223,7 @@ switch ($_REQUEST['acao']) {
     case 'returnChamadoVisualiza':
         try {
             $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
-//            $sis = new FormSistemas();
-//            $sis->setIdPessoaSolicitante($session->getIdUser());
-//            echo $sis->retornaFormSistemas($idGet);
-            
             $cha = new Chamado();
-            
             $cha->setIdPessoaSolicitante($session->getIdUser());
             echo $cha->retornaChamadoVisualiza($idGet);
             return;

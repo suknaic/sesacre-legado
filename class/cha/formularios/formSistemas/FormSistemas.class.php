@@ -637,6 +637,7 @@ class FormSistemas {
             $sistemas = new DaoChaFormSistemas();
             $sistemas->setIdFormSistemas($this->idFormSistemas);
             $s = $sistemas->retornaFormSistemas($pdo);
+            print_r($s);
             if ($s != FALSE) {
                 if ($this->msg != "chamado") {
                     $retorno[] = array(

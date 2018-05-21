@@ -1417,7 +1417,7 @@ class Contrato {
     }
 
     public function retornaOptionPessoaContrato(PDO $pdo = null, int $idPessoa = 0) {
-        $retorno = "<option value='0'>Selecione uma pessoa</option>";
+        $retorno = "<option value='0'>Selecione Uma Pessoa</option>";
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();

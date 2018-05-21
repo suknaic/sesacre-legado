@@ -35,6 +35,7 @@ $(document).ready(function () {
                 "rgCpf": $("#rgCpf").val(),
                 "dataRecebimento": $("#dataRecebimento").val(),
                 "email": $("#email").val(),
+                "quantidade": $("#quantidade").val(),
                 "obsProtocolo": $("#obsProtocolo").val()
             }
             $.ajax({
@@ -72,7 +73,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            window.location.href = "/pages/orcamento/empenho/index.php";
+                            window.location.href = "/pages/financeiro/ordem/index.php";
                         });
                         return false;
                     } else {

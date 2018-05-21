@@ -660,12 +660,13 @@ class Chamado {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
+            $retorno = "";
             /* @var $pdo PDO */
             $pessoa = new Pessoa();
             $pessoa->setId_pessoa($this->idPessoaSolicitante);
             $pessoa->setMsg("contrato");
             $p = $pessoa->retornaPessoa($pdo);
-
+//            print_r($p);
             //**************************************
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->setId_pessoa($this->idPessoaSolicitante);
@@ -679,12 +680,14 @@ class Chamado {
             $funcao->setId_funcao($this->idPessoaSolicitante);
             $f = $funcao->retornaFuncoes($pdo);
             //*****************************************
-            $chamado = new DaoChaChamado();
+            $chamado = new Chamado();
             $chamado->setIdChamado($this->idChamado);
+            $chamado->setMsg("chamado");
             $ch = $chamado->retornaChamado($pdo);
 
             $sistema = new FormSistemas();
-            $sistema->setIdFormSistemas($this->idPessoaSolicitante);
+            $sistema->setIdFormSistemas($this->idChamado);
+            $chamado->setMsg("formSistemas");
             $s = $sistema->retornaFormSistemas($pdo);
 //            print_r($sistema);
 
@@ -742,6 +745,47 @@ class Chamado {
                     "idVinculo" => $s["id_vinculo"]);
             }
             return json_encode($retorno);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaChamado($pdo) {
+        try {
+            $chamado = new DaoChaChamado();
+            $chamado->setIdChamado($this->idChamado);
+            $ch = $chamado->retornaChamado($pdo);
+//            print_r($chamado);
+            if ($ch != FALSE) {
+                if ($this->msg != "chamado") {
+                    $retorno[] = array(
+                        "idChamado" => $ch["id_chamado"],
+                        "idCategoriaSecundaria" => $ch["id_categoria_secundaria"],
+                        "idPessoaSolicitante" => $ch["id_pessoa_solicitante"],
+                        "idPessoaServico" => $ch["id_pessoa_servico"],
+                        "dhAbertura" => $ch["dh_abertura"],
+                        "dsChamado" => $ch["ds_chamado"],
+                        "nrTelefoneSolicitante" => $ch["nr_telefone_solicitante"],
+                        "dsFinalizado" => $ch["ds_finalizado"],
+                        "dhFinalizado" => $ch["dh_finalizado"],
+                        "nrAvaliacao" => $ch["nr_avaliacao"],
+                        "dhAvaliacao" => $ch["dh_avaliacao"],
+                        "dsAvaliacao" => $ch["ds_avaliacao"],
+                        "vlChamado" => $ch["vl_chamado"],
+                        "idStatus" => $ch["id_status"],
+                        "dhAgendamento" => $ch["dh_agendamento"],
+                        "idPrioridade" => $ch["id_prioridade"],
+                        "dhCancelamento" => $ch["dh_cancelamento"],
+                        "dsCancelamento" => $ch["ds_cancelamento"],
+                        "dtPrazo" => $ch["dt_prazo"],
+                    );
+                    print_r($retorno);
+                    return json_encode($retorno);
+                } else {
+
+                    return $ch;
+                }
+            }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
