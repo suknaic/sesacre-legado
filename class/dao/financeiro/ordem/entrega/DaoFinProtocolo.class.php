@@ -112,4 +112,27 @@ class DaoFinProtocolo extends FinProtocoloTb {
         }
     }
 
+    public function retornaPrazoDeentrega(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select nr_prazo_ordem from fin_ordem where id_ordem  = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }
