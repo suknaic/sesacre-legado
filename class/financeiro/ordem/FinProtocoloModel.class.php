@@ -274,17 +274,25 @@ class FinProtocoloModel {
                 //codigo abaixo e para descobri as data da entrega
                 $data = date('d/m/Y', strtotime('+' . (($prazo["nr_prazo_ordem"] * $i) - 1) . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
                 $data = Metodos::ConverteDataING($data);
-                
+
                 $finEntregaConfirmacaoModel->setNrEntregaConfirmacao($i);
                 $finEntregaConfirmacaoModel->setDtEntrega($data);
-                
+
                 $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
-                
+
                 if (!$finEntregaConfirmacaoModel->sucesso()) {
                     $erro = true;
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
                 }
+            }
+
+            $daoFinProtocolo->updateStatusOrdem($pdo);
+
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
             }
 
             if ($erro == false) {

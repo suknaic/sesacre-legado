@@ -34,7 +34,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         modalidade.nm_modalidade, processo.cd_pregao as licitacao,emp.nr_empenho, tpEmpenho.nm_tipo_empenho, 
                         emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
                         cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pt.cd_programa_trabalho, p.ds_pedido,
-                        pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido
+                        pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido, ordem.sit_ordem
                         from fin_ordem as ordem
                         inner join fin_pedido as p
                         on p.id_pedido = ordem.id_pedido
@@ -117,7 +117,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
             if ($pdo != null) {
                 $sql = "select nr_prazo_ordem from fin_ordem where id_ordem  = :idOrdem";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_STR);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -125,6 +125,24 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 } else {
                     $this->sucesso = false;
                 }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function updateStatusOrdem(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "update fin_ordem set sit_ordem = 2 where id_ordem = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
             } else {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
