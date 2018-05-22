@@ -141,88 +141,117 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                             </div>
                         </div>
 
-                        <?php ?>
-                        <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <div class="panel">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Detalhe do protocolo</h3>
+                        <?php if ($dados["sit_ordem"] == 1) { ?>
+                            <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Detalhe do protocolo</h3>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Nome completo do representante da Contratada : <span class="text-danger">*</span>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" required="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                RG/CPF : <span class="text-danger">*</span>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Recebida em (Data) : <span class="text-danger">*</span>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Email :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-envelope-o" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control data" type="text" name="email" id="email" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <div class="panel-body">
+                                                Observação:
+                                                <textarea class="form-control" rows="4" id="obsProtocolo"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Quantidade de entrega programadas :
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control data" type="number" name="quantidade" id="quantidade" min="1" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2">
+                                            <div class="panel-body">
+                                                <button class="btn btn-success btn-salvar btn-rounded btn-block" type="button">
+                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </form>
+                            <?php
+                        } else {
+                            ?>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="panel">
+                                        <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-capitalize text-center">data do aviso</th>
+                                                    <th class="text-capitalize text-center">quantidade de entregas</th>
+                                                    <th class="text-capitalize text-center">prazo de entrega</th>
+                                                    <th class="text-capitalize text-center">prazo limite para entrega</th>
+                                                    <th class="text-capitalize text-center">entregue dia</th>
+                                                    <th class="text-capitalize text-center">dias de atraso</th>
+                                                    <th class="text-capitalize text-center">status</th>
+                                                    <th class="text-capitalize text-center">ação</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Nome completo do representante da Contratada : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </tbody>
 
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            RG/CPF : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Recebida em (Data) : <span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Email :
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-envelope-o" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control data" type="text" name="email" id="email" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <div class="panel-body">
-                                            Observação:
-                                            <textarea class="form-control" rows="4" id="obsProtocolo"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Quantidade de entrega programadas :
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control data" type="number" name="quantidade" id="quantidade" min="1" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3"></div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-2">
-                                        <div class="panel-body">
-                                            <button class="btn btn-success btn-salvar btn-rounded btn-block" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
-                                            </button>
-                                        </div>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                        <?php ?>
+                            <?php
+                        }
+                        ?>
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
