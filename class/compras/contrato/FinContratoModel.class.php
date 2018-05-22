@@ -1518,7 +1518,7 @@ class FinContratoModel {
                     $retorno .= "<tr class='selecionaItem' data-contrato='" . json_encode($value) . "' contrato='" . $value["id_contrato"] . "' style='cursor:pointer;'>";
 
                     $retorno .= '<td>' . $value["nr_contrato"] . '</td>
-                        <td>asd</td>
+                        <td>' .$value['nm_pessoa']. '</td>
                         <td>' . $value["nm_tipo_gasto"] . '</td>
                         <td>' . $value["nm_objeto"] . '</td>
                         <td>' . $value["nm_modalidade"] . '</td>

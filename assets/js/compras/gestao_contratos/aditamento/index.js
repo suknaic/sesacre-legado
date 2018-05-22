@@ -3,9 +3,24 @@ $(document).ready(function () {
     
     //instacinado fucoes js
     func = new Funcoes();
-    
-    
-
+    /*
+    var arrayDados = {
+        'dados' : new Array(),
+        'gestor_titular' : new Array()
+    }
+    var teste = new Array();
+    teste.push(1)
+    teste.push(2)
+    console.log(teste)    
+    arrayDados.dados['nome'] = 'Marcel';
+    arrayDados.dados['sobrenome'] = 'Melo';
+    arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
+    arrayDados.gestor_titular.push(1);
+    arrayDados.gestor_titular.push(2);
+    arrayDados.gestor_titular.push(2323);        
+    console.log(arrayDados.gestor_titular)    
+    console.log(arrayDados)
+*/
     
     $('.data').mask("99/99/9999")
     $("body").on("focus", "#n_valor_aditivo", function () {
@@ -64,8 +79,17 @@ $(document).ready(function () {
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select2-selection--single').remove();
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select2-container').remove();           
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select_funcionarios').select2({width: "100%"});            
-            
-            console.log(select);
+                        
+        }
+    });
+    
+    $('body').on('click', '.remove-pessoa', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            var $this = $(this);            
+            $this.closest(".input-group").remove();
         }
     });
 
@@ -145,21 +169,33 @@ $(document).ready(function () {
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
-        } else { 
+        } else {
             e.preventDefault();                        
-            var $this = $(this);            
+            var $this = $(this);          
             var arrayDados = {
-                'dados' : {
-                    
-                },
-                'gestor_titular' :{
-                    
-                }
+                dados : new Array(),
+                gestor_titular : new Array(),
+                gestor_substituto : new Array(),
+                fiscal : new Array(),
+                fiscal_substituto : new Array(),
+                fiscal_sub : new Array(),
+                fiscal_sub_substituto : new Array()
             }
             
-            $(".n_gestor_titular option:selected").each(function(){
-                console.log($(this).val());
-                arrayDados.gestor_titular.push($(this).val())
+          
+//            arrayDados.dados['nome'] = 'Marcel';
+//            arrayDados.dados['sobrenome'] = 'Melo';
+//            arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
+//            arrayDados.gestor_titular.push(1);
+//            arrayDados.gestor_titular.push(2);
+//            arrayDados.gestor_titular.push(2323);        
+//            console.log(arrayDados.gestor_titular)    
+//            console.log(arrayDados)
+//            
+            $(".n_gestor_titular option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.gestor_titular.push($(this).val())
+                }
             });
             console.log(arrayDados)
             
@@ -167,6 +203,27 @@ $(document).ready(function () {
             $("select[name=subFiscais\\[\\]]").each(function () {
                 //subFiscais.push($(this).val());
             });
+        }
+    });
+    
+    
+    
+    
+    
+    
+    //Controle da Tela, Campos habilitados ou não
+    
+    $('body').on('change', '#n_instrumento', function (e) {
+
+        $('#n_unidade_calculo option').filter(function() {              
+            return $(this).val() != 0;
+        }).attr("disabled", "");
+        $('#n_unidade_calculo').val(0);
+        if($("#n_instrumento option:selected").val() == 1){
+            $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
+            $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
+        }else if($("#n_instrumento option:selected").val() == 2){
+            $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
         }
     });
   
