@@ -194,6 +194,7 @@
                                                             </span>
                                                         <select id="n_finalidade" class="form-control">
                                                             <option value="0">Selecione a Finalidade</option>
+                                                            <?php echo $selectFinalidade; ?>
                                                         </select>                                                                
                                                     </div>                                                   
                                                 </div>
@@ -208,6 +209,7 @@
                                                             </span>
                                                         <select id="n_instrumento" class="form-control">
                                                             <option value="0">Selecione um Instrumento</option>
+                                                            <?php echo $selectInstrumento; ?>
                                                         </select>                                                                
                                                     </div>                                                   
                                                 </div>
@@ -222,6 +224,7 @@
                                                             </span>
                                                         <select id="n_base_calculo" class="form-control">
                                                             <option value="0">Selecione uma Base de Cálculo</option>
+                                                            <?php echo $selectBaseCalculo; ?>
                                                         </select>                                                                
                                                     </div>                                                   
                                                 </div>
@@ -236,6 +239,7 @@
                                                             </span>
                                                         <select id="n_unidade_calculo" class="form-control">
                                                             <option value="0">Selecione uma Unidade de Cálculo</option>
+                                                            <?php echo $selectUnidadeCalculo; ?>
                                                         </select>                                                                
                                                     </div>                                                   
                                                 </div>
@@ -250,6 +254,7 @@
                                                             </span>
                                                         <select id="n_tipo_aquisicao" class="form-control">
                                                             <option value="0">Selecione a Aquisição</option>
+                                                            <?php echo $selectTipoAquisicao; ?>
                                                         </select>                                                                
                                                     </div>                                                   
                                                 </div>
