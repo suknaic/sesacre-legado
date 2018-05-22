@@ -153,4 +153,39 @@ class DaoFinProtocolo extends FinProtocoloTb {
         }
     }
 
+    public function retornaEntregaConfirmacao(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select protocolo.dh_recebimento_sistema, entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, 
+                        entrega.dt_entrega, entrega.dt_confirmacao, 
+                        case  
+                         WHEN entrega.dt_confirmacao is null AND NOW() > protocolo.dh_recebimento_sistema THEN  DATE_PART('day', protocolo.dh_recebimento_sistema::timestamp - now())
+                         WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
+                         WHEN entrega.dt_confirmacao is not null  THEN DATE_PART('day', entrega.dt_entrega::timestamp - entrega.dt_confirmacao::timestamp)
+                        END as diasAtrazo
+                        from fin_entrega_confirmacao as entrega
+                        inner join fin_protocolo as protocolo
+                        on protocolo.id_ordem = entrega.id_ordem
+                        inner join fin_ordem as ordem
+                        on ordem.id_ordem = protocolo.id_ordem
+                        where ordem.id_ordem = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }

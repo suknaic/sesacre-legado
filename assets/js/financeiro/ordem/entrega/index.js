@@ -2,7 +2,63 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
     $("#dataRecebimento").mask("99/99/9999");
+
+    function listaEntregas() {
     
+        $.ajax({
+            "method": "GET",
+            "url": "/model/financeiro/ordem/entrega/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listaEntregas",
+                "idOrdem": $("#ordem").val()
+
+            },
+            "success": function (response) {
+                console.log(response);
+                return false;
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['cd_programa_trabalho'] + '-' + valores[i]['ds_programa_trabalho'],
+                        valores[i]['nm_lotacao'],
+                        valores[i]['cd_despesa_elemento'],
+                        valores[i]['nr_fonte'],
+                        valores[i]['nm_tipo_gasto'],
+                        Number(valores[i]['valor']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        Number(valores[i]['pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        Number(valores[i]['saldo']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabela').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Data Do Aviso"},
+                        {title: "Quantidade De Entrega"},
+                        {title: "Prazo De Entrega"},
+                        {title: "Prazo Limite Para Entrega"},
+                        {title: "Entregue dia"},
+                        {title: "Dias De Atraso"},
+                        {title: "Status"},
+                        {title: "Ação"}
+
+                    ]
+                });
+            }
+        });
+    }
+    listaEntregas();
+
+
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
