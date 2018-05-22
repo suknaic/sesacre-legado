@@ -28,6 +28,13 @@ $aditivoArray = array(
     "vp" => "Valor e Prazo"
 );
 
+$tipoAditivo = "v";
 
+$idTipoAditvo = $tipoAditivo;
+$nomeAditivo = $aditivoArray[$tipoAditivo];
+
+$motivoAditivo = "Aditivo por ".$aditivoArray[$tipoAditivo];
+$sequencialUltimoAditivo = 0;
+//$numeroAditivo = $sequencialUltimoAditivo."º Termo Aditivo ao Contrato ".$contrato;
 
 ?>
