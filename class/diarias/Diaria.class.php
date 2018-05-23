@@ -572,7 +572,7 @@ class Diaria {
                                             . '</button>';
                                 }
 
-                                if ($estagio == '4' || $estagio == '6') { //Deferida só permite visualização
+                                if ($estagio == '4' || $estagio == '5' || $estagio == '6') { //Deferida só permite visualização
                                     $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
                                                 . '<button type="button" title="Visualizar">'
                                                     . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
