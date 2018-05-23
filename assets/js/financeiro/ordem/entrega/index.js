@@ -4,7 +4,9 @@ $(document).ready(function () {
     $("#dataRecebimento").mask("99/99/9999");
 
     function listaEntregas() {
-    
+        let dataSet = [];
+        let valores = []
+       
         $.ajax({
             "method": "GET",
             "url": "/model/financeiro/ordem/entrega/request.php",
@@ -15,24 +17,23 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response);
-                return false;
+
                 if ($.trim(response)) {
                     if (response.length) {
                         valores = response
                     }
                 }
-                
+
                 for (var i = valores.length - 1; i >= 0; i--) {
                     let valor = [
-                        valores[i]['cd_programa_trabalho'] + '-' + valores[i]['ds_programa_trabalho'],
-                        valores[i]['nm_lotacao'],
-                        valores[i]['cd_despesa_elemento'],
-                        valores[i]['nr_fonte'],
-                        valores[i]['nm_tipo_gasto'],
-                        Number(valores[i]['valor']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
-                        Number(valores[i]['pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
-                        Number(valores[i]['saldo']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                        valores[i]['dh_recebimento_sistema'],
+                        valores[i]['nr_entrega_confirmacao'],
+                        valores[i]['nr_prazo_ordem'],
+                        valores[i]['dt_entrega'],
+                        valores[i]['dt_confirmacao'],
+                        valores[i]['diasatrazo'],
+                        valores[i]['status'],
+                        'teste'
                     ]
                     dataSet.push(valor)
                 }

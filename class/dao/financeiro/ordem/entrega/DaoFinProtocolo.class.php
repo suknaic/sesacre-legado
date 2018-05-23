@@ -156,19 +156,25 @@ class DaoFinProtocolo extends FinProtocoloTb {
     public function retornaEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select protocolo.dh_recebimento_sistema, entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, 
-                        entrega.dt_entrega, entrega.dt_confirmacao, 
+                $sql = "select to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema, entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem,  
+                        to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, 
                         case  
-                         WHEN entrega.dt_confirmacao is null AND NOW() > protocolo.dh_recebimento_sistema THEN  DATE_PART('day', protocolo.dh_recebimento_sistema::timestamp - now())
-                         WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
-                         WHEN entrega.dt_confirmacao is not null  THEN DATE_PART('day', entrega.dt_entrega::timestamp - entrega.dt_confirmacao::timestamp)
-                        END as diasAtrazo
+                                WHEN entrega.dt_confirmacao is null AND NOW() > protocolo.dh_recebimento_sistema THEN  DATE_PART('day', protocolo.dh_recebimento_sistema::timestamp - now())
+                                WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
+                                WHEN entrega.dt_confirmacao is not null  THEN DATE_PART('day', entrega.dt_entrega::timestamp - entrega.dt_confirmacao::timestamp)
+                        END as diasAtrazo,
+                        CASE
+                                WHEN entrega.st_entrega_confirmacao = 0 THEN 'Agurdando entrega'
+                            WHEN entrega.st_entrega_confirmacao = 1 THEN 'Entrega Total'
+                            WHEN entrega.st_entrega_confirmacao = 2 THEN 'Entrega parcial'
+                        END status
                         from fin_entrega_confirmacao as entrega
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem = entrega.id_ordem
                         inner join fin_ordem as ordem
                         on ordem.id_ordem = protocolo.id_ordem
-                        where ordem.id_ordem = :idOrdem";
+                        where ordem.id_ordem = :idOrdem
+                        order by entrega.nr_entrega_confirmacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
