@@ -28,6 +28,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--selec2-->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+        <style>
+            .rotate:hover
+            {
+                -webkit-transform: rotateZ(50deg);
+                -ms-transform: rotateZ(50deg);
+                transform: rotateZ(50deg);
+            }
+            .grow:hover
+            {
+                -webkit-transform: scale(1.3);
+                -ms-transform: scale(1.3);
+                transform: scale(1.3);
+            }
+            .hover-btn:hover
+            {
+                display: block;
+            }
+        </style>
     </head>
     <!--TIPS-->
     <body>
@@ -48,14 +66,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Gestão de Compras</h1>
+
                     </div>
+
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON-->
-                        <div id="menu_gcon"></div>
-                        <!--Fim_Menu_Gcon-->
 
                         <!--Modal upload-->
                         <div class=" modal fade modal-upload" id="upload" 
@@ -90,11 +107,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                         <!-- Inicio do Formulário de Pesquisa de Processos-->
                         <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
 
-                            <div class="panel">    
-
+                            <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Pesquisar Processo</h3>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="panel-body">
@@ -179,7 +203,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                     <div class="col-md-5"></div>
                                     <div class="col-md-2 text-center">
                                         <button class="btn btn-primary btn-pesquisar btn-block btn-rounded" type="button" title="Pesquisar">
-                                            <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
+                                            <i class="ion-search fa-lg" aria-hidden="true"></i> Pesquisar
                                         </button>
                                     </div>
                                     <div class="col-md-5"></div>
@@ -228,7 +252,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                             <div class="col-md-5"></div>
                                             <div class="col-md-2 text-center">
                                                 <button class="btn btn-info btn-imprimirTodos btn-block btn-rounded" type="button">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir
+                                                    <i class="ion-printer fa-lg" aria-hidden="true"></i> Imprimir
                                                 </button>
                                             </div>
                                             <div class="col-md-5"></div>    
@@ -286,7 +310,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/compras/gcon/Pesquisa/pesquisa.js"></script>
+        <script src="/assets/js/compras/gcon/index.js"></script>
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>

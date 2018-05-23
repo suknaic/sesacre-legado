@@ -57,9 +57,9 @@
                                         <li>
                                             <a href="/pages/sistema/vinculo/index.php">Vínculos</a>
                                         </li>
-<!--                                        <li>
-                                            <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
-                                        </li>-->
+                                        <!--                                        <li>
+                                                                                    <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
+                                                                                </li>-->
                                     </ul>
                                 </li>
                                 <li>
@@ -286,7 +286,9 @@
                                     <a href="/pages/sistema/pessoa/index.php">Fornecedores</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/compras/gcon/pesquisa/pesquisa.php">Gestão Compras</a>
+                                    <a href="/pages/compras/gcon/">
+                                        <span class="menu-title">Gestão Compras</span>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="/pages/compras/gestao_contratos/index.php">Gestão Contratos</a>
@@ -350,11 +352,11 @@
                                 <li>
                                     <a href="http://www.sidis.ac.gov.br/" target="_blank">SIDIS</a>
                                 </li>
-                                
+
                                 <li>
                                     <a href="https://sesacrelegis.wixsite.com/diretoriajuridica" target="_blank">SESACRELEGIS</a>
                                 </li>
-                                
+
                                 <li>
                                     <a href="http://intranet.sesacre" target="_blank">CENTRAL DE NORMAS</a>
                                 </li>
