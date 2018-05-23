@@ -27,6 +27,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
+     <style>
+        .rotate:hover
+        {
+            -webkit-transform: rotateZ(50deg);
+            -ms-transform: rotateZ(50deg);
+            transform: rotateZ(50deg);
+        }
+        .grow:hover
+        {
+            -webkit-transform: scale(1.3);
+            -ms-transform: scale(1.3);
+            transform: scale(1.3);
+        }
+        .hover-btn:hover
+        {
+            display: block;
+        }
+    </style>
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
@@ -52,13 +70,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon -->
-
                         <!-- Inicio do Formulário de Cadastro de Processos-->
                         <form data-toggle="validator" class="form-horizontal">
                             <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Processo</h3>
                                 </div>

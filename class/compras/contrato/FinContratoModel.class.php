@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContrato.class.php";
 
@@ -900,14 +901,7 @@ class FinContratoModel {
                 $sucesso = false;
             }
 
-//            //cadastrar vigencia
-//            $daoFinContrato->cadastrarContratoVigencia($pdo);
-//            //pegando id da vigencia
-//            $idVigencia = (is_numeric($pdo->lastInsertId('fin_vigencia_id_vigencia_seq'))) ? $pdo->lastInsertId('fin_vigencia_id_vigencia_seq') : null;
-//            //log da vigencia da ata
-//            if (!Log::SalvaLogI('fin_vigencia', $idVigencia, $pdo)) {
-//                $sucesso = false;
-//            }
+
             $daoFinContrato->retornaContrato($pdo);
             $busca = $daoFinContrato->getMsgRetorno();
 
@@ -1412,7 +1406,17 @@ class FinContratoModel {
                     $tabela .= $l["nm_lotacao"] . "<br/>";
                 }
                 $tabela .= '</td>
-                <td class = "text-center">
+                <td class = "text-center">';
+                if ($linha['fl_bloqueado'] == 0) {
+                    $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
+                                <i class="fa fa-check text-success" aria-hidden="true"></i>
+                                </button >';
+                } else {
+                    $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
+                                <i class="fa fa-ban text-danger" aria-hidden="true"></i>
+                                </button >';
+                }
+                $tabela .= '
                     <button type = "button" title = "espelho do contrato" class = "espelho" value = "' . $linha['id_fornecedor'] . '">
                     <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
                     </button >
@@ -1472,7 +1476,6 @@ class FinContratoModel {
         }
     }
 
-    
     public function retornaTipoDeGastoLicitacao($idProcesso) {
         try {
             $conexao = new Conexao();
@@ -1495,5 +1498,84 @@ class FinContratoModel {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
+
+    /**
+     * Retorna uma TR contendo os dados do contrato que será utilizado na tela do aditivo 
+     * para o usuário selecionar Qual contrato irá utilizar para aquele aditivo
+     * @return string
+     */
+    public function retornaContratoSelectItem() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContrato();
+            $daoContrato->setNrContrato($this->nr_contrato);
+            $retorno = '';                       
+            $daoContrato->pesquisaContratoPorNumero($pdo);            
+            if ($daoContrato->sucesso()) {
+                foreach ($daoContrato->getMsgRetorno() as $value) {
+                    $retorno .= "<tr class='selecionaItem' data-contrato='" . json_encode($value) . "' contrato='" . $value["id_contrato"] . "' style='cursor:pointer;'>";
+
+                    $retorno .= '<td>' . $value["nr_contrato"] . '</td>
+                        <td>' .$value['nm_pessoa']. '</td>
+                        <td>' . $value["nm_tipo_gasto"] . '</td>
+                        <td>' . $value["nm_objeto"] . '</td>
+                        <td>' . $value["nm_modalidade"] . '</td>
+                        <td>' . $value["valor"] . '</td>
+                        </tr>';
+                }
+            }                                                
+            
+            return $retorno;
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
     
+    /**
+     * Retorna Os Aditivos em formato de Tabela de um Contrato
+     * @return string
+     */
+    public function retornaAditivosDoContrato() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContrato();
+            $daoContrato->setIdContrato($this->id_contrato);
+            
+            //Precisa Verifica se o Contrato possui algum aditivo vinculado a ele e listar.
+            //Esperando definição do Banco de Dados Ainda
+            
+            $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade="0">'
+                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
+                    . '</div>';
+					                    			            
+            return $retorno;
+            
+            
+            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade="0">
+                    <thead>
+                        <tr>
+                            <th>Número do Aditivo</th>
+                            <th>Motivo do Aditamento</th>
+                            <th>Vigência</th>
+                            <th>Publicação</th>
+                            <th>Valor do Aditivo</th>
+                            <th>Opções</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>';                    
+            
+            
+            
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }

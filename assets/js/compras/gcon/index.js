@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
@@ -7,13 +9,33 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#butao").append(response);
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novoProcesso" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
+                            <i class="ion ion-plus-round" aria-hidden="true"></i> Novo Processo\n\
+                        </button>');
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-processosDsativados" style="display: block; margin-left: 245px;margin-top: -32px" type="button">\n\
+                            <i class="ion-power" aria-hidden="true"></i> Processos Desativados\n\
+                        </button>');
         }
+    });
+    
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
+    });
+    
+    $('body').on('click', '.btn-novoProcesso', function (e) {
+        top.location = "/pages/compras/gcon/processo/processo.php";
+    });
+    
+    $('body').on('click', '.btn-processosDsativados', function (e) {
+        top.location = "/pages/compras/gcon/processo/processosDesativados.php";
     });
     //escodendo botões
     $(".btn-limpar").hide();
     $(".btn-editar").hide();
-
 
     //buscando o select option
     $('body').find("select").select2({});
@@ -608,7 +630,7 @@ $(document).ready(function () {
             $("#centrais").prop('disabled', true);
         }
     });
-    
+
     $('body').on('keypress', '.formPesquisa', function (e) {
         var key = e.which;
         if (key == 13) {
@@ -616,5 +638,5 @@ $(document).ready(function () {
             return false;
         }
     });
-    
+
 });

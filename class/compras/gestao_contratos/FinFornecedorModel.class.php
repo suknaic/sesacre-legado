@@ -308,13 +308,13 @@ class FinFornecedoresModel {
             $pdo->beginTransaction();
             $daoFinFornecedores = new DaoFinFornecedores();
             $result = array();
-            $condicao = "and f.id_contrato is not null AND contrato.tp_contrato = '2' AND (gconC.id_tipo_gasto = '" . $tipoGasto . "')";
+            $condicao = "and f.id_contrato is not null AND contrato.tp_contrato = '2' AND (contrato.id_tipo_gasto = '" . $tipoGasto . "')";
 
             if ($tipo == 'contrato') {
                 $retorno = '<option value="">Selecionar um Contrato</option>';
             } else {
                 $retorno = '<option value="">Selecionar uma ATA</option>';
-                $condicao = "and f.id_contrato is not null AND contrato.tp_contrato = '1' AND (gconC.id_tipo_gasto = '" . $tipoGasto . "')";
+                $condicao = "and f.id_contrato is not null AND contrato.tp_contrato = '1' AND (contrato.id_tipo_gasto = '" . $tipoGasto . "')";
             }
 
             //fim de variaveis

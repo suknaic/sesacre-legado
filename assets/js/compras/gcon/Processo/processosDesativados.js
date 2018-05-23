@@ -7,10 +7,24 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#butao").append(response);
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novoProcesso" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
+                            <i class="ion ion-plus-round" aria-hidden="true"></i> Novo Processo\n\
+                        </button>');
         }
     });
-
+    
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
+    });
+    
+    $('body').on('click', '.btn-novoProcesso', function (e) {
+        top.location = "/pages/compras/gcon/processo/processo.php";
+    });
+    
     function listarProcessos(a) {    
         $.ajax({
             "url": "/model/compras/gcon/processo/request.php",
