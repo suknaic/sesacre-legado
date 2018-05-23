@@ -63,8 +63,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                         <p class="pad-btm text-sm">Acompanhamento rápido dos seus chamados</p>
                         <form style="margin-top: -80px; margin-bottom: 80px">
                                 <div class="btn-group dropdown" style="float: right">
-                                    <button class="btn btn-mint btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="display: block" aria-expanded="false" data-toggle="dropdown">
-                                        <i class="fa fa-plus" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px"></i>
+                                    <button class="btn btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="display: block; background-color: #25476a" aria-expanded="false" data-toggle="dropdown">
+                                        <i class="fa fa-plus" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px; color: #FFF"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right" style="opacity: 1">
                                         <li>
@@ -94,7 +94,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                             <!--//*****************************************-->
                             <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading panel-danger" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Chamados</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -106,7 +106,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                         </div>
                                         <div class="col-sm-8">
                                             <form action="/pages/cha/informatica/lista/chamados.php">
-                                                <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                                <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             </form>                                            <p class="text-xs">Clique para visualizar todos os seus chamados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -129,7 +129,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Aguardando Aprovação</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -141,7 +141,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                         </div>
                                         <div class="col-sm-8">
                                             <form action="/pages/cha/informatica/lista/aguardandoAprovacao.php">
-                                                <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                                <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             </form>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão Aguardando Aprovação.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
@@ -165,7 +165,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Em Atendimento</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -176,7 +176,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-bold text-uppercase" style="font-size: 12px">Em Atendimento</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão em atendimento.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -199,7 +199,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Cancelados</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -211,7 +211,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                         </div>
                                         <div class="col-sm-8">
                                             <form action="/pages/cha/informatica/lista/cancelados.php">
-                                                <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                                <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             </form>
                                             <p class="text-xs">Clique para visualizar seus chamados que foram cancelados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
@@ -235,7 +235,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Agendados</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -246,7 +246,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-bold text-uppercase" style="font-size: 12px">Agendados</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão agendados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -269,7 +269,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Pausados</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -280,7 +280,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-bold text-uppercase" style="font-size: 12px">Pausados</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão pausados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -303,7 +303,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-left: 5px; margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Aguardando Avaliação</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -314,7 +314,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-bold text-uppercase" style="font-size: 12px">Aguardando Avaliação</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que precisam ser avaliados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
@@ -337,7 +337,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
 
                             <div class="col-sm-6 col-lg-6" style="margin-right: -3px">
                                 <div class="panel">
-                                    <div class="panel-heading" style="background-color: #CD0000">
+                                    <div class="panel-heading" style="background-color: #25476a">
                                         <h3 class="panel-title text-center" style="color: #FFF">Finalizados</h3>
                                     </div>
                                     <div class="panel-body text-center clearfix">
@@ -348,7 +348,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                                             <p class="text-bold text-uppercase" style="font-size: 12px">Finalizados</p>
                                         </div>
                                         <div class="col-sm-8">
-                                            <button class="btn mar-ver" style="background-color: #CD0000; color: #FFF">Visualizar Chamados</button>
+                                            <button class="btn mar-ver" style="background-color: #25476a; color: #FFF">Visualizar Chamados</button>
                                             <p class="text-xs">Clique para visualizar seus chamados que estão finalizados.</p>
                                             <ul class="list-unstyled text-center bord-top pad-top mar-no row">
                                                 <li class="col-xs-4">
