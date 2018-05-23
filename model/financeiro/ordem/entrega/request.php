@@ -16,7 +16,6 @@ switch ($_REQUEST['acao']) {
             $finProtocoloModel->setNrRgCpf($protocolo["rgCpf"]);
             $finProtocoloModel->setNmEmailRepresentante($protocolo["email"]);
             $finProtocoloModel->setDhRecebimentoSistema($protocolo["dataRecebimento"]);
-            $finProtocoloModel->setQdEntrega($protocolo["quantidade"]);
             $finProtocoloModel->setDsProtocolo($protocolo["obsProtocolo"]);
             $finProtocoloModel->setIdPessoa($session->getIdUser());
             echo $finProtocoloModel->salvaProtocolo();
