@@ -7,8 +7,29 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#butao").append(response);
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novoObjeto" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
+                            <i class="ion ion-plus-round" aria-hidden="true"></i> Novo Objeto\n\
+                        </button>');
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-objetosDsativados" style="display: block; margin-left: 230px;margin-top: -32px" type="button">\n\
+                            <i class="ion-power" aria-hidden="true"></i> Objetos Desativados\n\
+                        </button>');
         }
+    });
+    
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
+    });
+    
+    $('body').on('click', '.btn-novoObjeto', function (e) {
+        top.location = "/pages/compras/gcon/objeto/novo_objeto.php";
+    });
+    
+    $('body').on('click', '.btn-objetosDsativados', function (e) {
+        top.location = "/pages/compras/gcon/objeto/objetosDesativados.php";
     });
 
     function listarObjeto(a) {

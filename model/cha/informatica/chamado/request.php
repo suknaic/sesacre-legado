@@ -50,15 +50,15 @@ switch ($_REQUEST['acao']) {
             $cha->setDsChamado($dadosChamado['dsChamado']);
             $cha->setNrTelefoneSolicitante($dadosChamado['nrTelefoneSolicitante']);
             $cha->setDsFinalizado($dadosChamado['dsFinalizado']);
-            $cha->setDhFinalizado($data);
+            $cha->setDhFinalizado($dadosChamado['dhFinalizado']);
             $cha->setNrAvaliacao($dadosChamado['nrAvaliacao']);
-            $cha->setDhAvaliacao($data);
+            $cha->setDhAvaliacao($dadosChamado['dhAvaliacao']);
             $cha->setDsAvaliacao($dadosChamado['dsAvaliacao']);
             $cha->setVlChamado($dadosChamado['vlChamado']);
             $cha->setIdStatus($dadosChamado['idStatus']);
             $cha->setDhAgendamento($dadosChamado['dhAgendamento']);
             $cha->setIdPrioridade($dadosChamado['idPrioridade']);
-            $cha->setDhCancelamento($data);
+            $cha->setDhCancelamento($dadosChamado['dhCancelamento']);
             $cha->setDsCancelamento($dadosChamado['dsCancelamento']);
             $cha->setDtPrazo($dadosChamado['dtPrazo']);
 
@@ -222,9 +222,9 @@ switch ($_REQUEST['acao']) {
 
     case 'returnChamadoVisualiza':
         try {
-            $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
             $cha = new Chamado();
-            $cha->setIdPessoaSolicitante($session->getIdUser());
+            $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
+            $cha->setIdChamado($idGet);
             echo $cha->retornaChamadoVisualiza($idGet);
             return;
             break;

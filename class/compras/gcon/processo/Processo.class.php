@@ -848,39 +848,39 @@ class Processo {
                             if (!$session->vPComprasTecAdmin()) {
                                 $tabela .= '                            <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" disabled ada="' . $linha["cd_ada_cpr"] . '"
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
+                                                                            <i class="ion-compose fa-lg text-primary" aria-hidden="true"></i>
                                                                         </button>
                                                                         <button type="button" class="btn btn-default btn-imprimir btn-xs" title="Imprimir" ada="' . $linha["cd_ada_cpr"] . '"
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-print fa-lg text-info" aria-hidden="true"></i>
+                                                                            <i class="ion-printer fa-lg text-info" aria-hidden="true"></i>
                                                                         </button>
                                                                         <button type="button" class="btn btn-default btn-anexar btn-xs" title="Anexar" disabled value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-upload fa-lg text-warning" aria-hidden="true"></i>
+                                                                            <i class="ion-upload fa-lg text-warning" aria-hidden="true"></i>
                                                                         </button>';
                             } else {
                                 $tabela .= '                            <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" ada="' . $linha["cd_ada_cpr"] . '"
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
+                                                                            <i class="ion-compose fa-lg text-primary" aria-hidden="true"></i>
                                                                         </button>
                                                                         <button type="button" class="btn btn-default btn-imprimir btn-xs" title="Imprimir" ada="' . $linha["cd_ada_cpr"] . '"
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-print fa-lg text-info" aria-hidden="true"></i>
+                                                                            <i class="ion-printer fa-lg text-info" aria-hidden="true"></i>
                                                                         </button>
                                                                         <button type="button" class="btn btn-default btn-anexar btn-xs" title="Anexar" value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-upload fa-lg text-warning" aria-hidden="true"></i>
+                                                                            <i class="ion-upload fa-lg text-warning" aria-hidden="true"></i>
                                                                         </button>';
                             }
                             if (!$session->vPComprasAdminTi()) {
                                 $tabela .= '                            <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" disabled
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                                                                            <i class="ion-trash-a fa-lg text-danger" aria-hidden="true"></i>
                                                                         </button>
                                                                     </td>
                                                                 </tr>';
                             } else {
                                 $tabela .= '                            <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover"
                                                                             value="' . $linha["id_processo"] . '">
-                                                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                                                                            <i class="ion-trash-a fa-lg text-danger" aria-hidden="true"></i>
                                                                          </button>
                                                                     </td>
                                                                 </tr>';

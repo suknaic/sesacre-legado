@@ -554,14 +554,13 @@ class Relatorio {
                     }
 
                 }
-                
+            }
             if ($arrayAuxiliar) {
                 //registros que foram excluídos
                 foreach ($arrayAuxiliar as $linhaAremover) {
                     $daoDiaRelatorioAnexo->setIdRelatorioAnexo($linhaAremover['id_relatorio_anexo']);
                     $retorno .= $this->excluirRelatorioAnexo($pdo,$daoDiaRelatorioAnexo);
                 }
-            }
             }
             return $retorno;
         } catch (Exception $exc) {
