@@ -15,7 +15,7 @@ $(document).ready(function () {
 //        $('#cidadeQuery').focus();
     });
     
-     $('#pesquisaCidade').on('hidden.bs.modal', function (e) {
+    $('#pesquisaCidade').on('hidden.bs.modal', function (e) {
         e.preventDefault();
         $('#cidadeQuery').val('');
         $('#cidadeQuery').focus();

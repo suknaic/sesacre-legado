@@ -98,6 +98,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 </div>
                                 <div class="col-sm-4"></div>
                             </div>
+                            
+                            <!--                            VINCULACAO DA DIARIA-->
+                            <div class="row" id="diaria">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-4">
+                                    <div class="panel-body">
+                                        Nº da Diária:<span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                            <select id="id_diaria" name="id_diaria" class="form-control select">
+                                            
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"></div>
+                            </div>
+<!--                                FIM VINCULACAO DIARIA-->
 
                             <div class="campoForneceor">
                                 <div class="row">
@@ -221,25 +239,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                             <div class="panel-heading">
                                 <h3 class="panel-title text-center">Especificação da Solicitação</h3>
                             </div>
-                            
-<!--                            VINCULACAO DA DIARIA-->
-                            <div class="row" id="diaria">
-                                <div class="col-sm-4"></div>
-                                <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        Nº da Diária:<span class="text-danger">*</span>
-                                        <div class="input-group">
-                                            
-                                        </div>
-                                        <select id="id_diaria" name="id_diaria" class="form-control select">
-                                            
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4"></div>
-                            </div>
-<!--                                FIM VINCULACAO DIARIA-->
-                            
                             <div class="row">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">

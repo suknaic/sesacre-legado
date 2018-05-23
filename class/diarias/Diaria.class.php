@@ -276,8 +276,8 @@ class Diaria {
         //O atributo "lotacao" indica se na tabela que irá gravar a autorização existe 
         //a informação de lotação(id_lotacao)
         $stEstagios = array(
-            1 => "Criada",
-            2 => "Enviada para Deferimento",
+            1 => "Aguardando ser enviada",
+            2 => "Aguardando deferimento",
             3 => "Indeferida",
             4 => "Deferida",
             9 => "Todas"
@@ -320,7 +320,7 @@ class Diaria {
             $daoDiaDiaria->selectDiariaPedidoUsuario($pdo, $this->getUsuarioPedido());
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
-                    $retorno .= "<option value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . " / Valor total: R$ " .$linha['vl_total']. "</option>";
+                    $retorno .= "<option data-valor='".$linha['vl_total_sm']."' value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . " / Valor total: R$ " .$linha['vl_total']. "</option>";
                 }
             }
             return $retorno;
@@ -543,9 +543,9 @@ class Diaria {
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
-                    $pedido = $linha['id_pedido'];
+                    $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
                     
-                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
+//                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
                                 . "<td></td>"
@@ -553,7 +553,7 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
-                                . "<td>" . $estagios[$estagio] . $info_complementar . "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido). "</td>"
                                 . "<td class = 'text-center'>";
                     
                         
@@ -572,30 +572,26 @@ class Diaria {
                                             . '</button>';
                                 }
 
-                                if ($estagio == '2') {
-                                    $retorno .= 'Aguardando deferimento...';
-                                }
-
-                                if ($estagio == '4') { //Deferida só permite visualização
+                                if ($estagio == '4' || $estagio == '6') { //Deferida só permite visualização
                                     $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
                                                 . '<button type="button" title="Visualizar">'
-                                                    . '<i class="fa fa-eye fa-lg text-success" aria-hidden="true"></i>'
+                                                    . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
                                                 . '</button>'
                                               . '</a>';
-                                    if ($pedido > 0) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
-                                        $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
-                                                    . '<button title="Relatório de Viagem" type="button">'
-                                                         . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
-                                                    . '</button>'
-                                                  . '</a>';
-                                        $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
-                                                    . '<button title="Imprimir Relatório de Viagem" type="button" >'
-                                                        . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
-                                                    . '</button>'
-                                                . '</a>';
-                                    }
-
                                 }
+                                if ($estagio == '5') { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                                    $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
+                                                . '<button title="Relatório de Viagem" type="button">'
+                                                     . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                    $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
+                                                . '<button title="Imprimir Relatório de Viagem" type="button" >'
+                                                    . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
+                                                . '</button>'
+                                            . '</a>';
+                                }
+
 
                     $retorno .=   "</td>"
                              . "</tr>";                    
@@ -605,6 +601,36 @@ class Diaria {
             
         } catch (Exception $exc) {
             $retorno = "";
+        }
+    }
+    
+    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0){
+        $retorno = "";
+        try {
+            switch ($st_estagio) {
+                case 1: //Criada
+                    $retorno = '<span class="label label-primary">Aguardando envio</span>';
+                    break;
+                case 2: //Enviada para deferimento
+                    $retorno = '<span class="label label-warning">Aguardando deferimento</span>';
+                    break;
+                case 3: //Indeferida
+                    $retorno = '<span class="label label-danger">Aguardando revisão</span>';
+                    break;
+                case 4: //Deferida
+                    $retorno = '<span class="label label-primary">Aguardando pedido de necessidade</span>';
+                    break;
+                case 5:
+                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'</span>';
+                    break;
+                case 6:
+                    $retorno = '<span class="label label-warning">Pedido de necessidade cancelado</span>';
+                default:
+                    break;
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return "";
         }
     }
     
@@ -1388,9 +1414,9 @@ class Diaria {
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
-                    $pedido = $linha['id_pedido'];
+                    $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
                     
-                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
+//                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
@@ -1399,7 +1425,7 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
-                                . "<td>" . $estagios[$estagio] . $info_complementar . "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido) . "</td>"
                                 . "<td class='text-center'>";
                         if ($estagio == '2') { //Enviado para deferimento/indeferimento
                             $retorno .= "<button title='Deferir' type='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>"
@@ -1409,7 +1435,7 @@ class Diaria {
                                             . '<i class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>'
                                     . "</button>";
                         }
-                        if ($estagio == '4') { //Deferido
+                        if ($estagio == '4' || $estagio == '6') { //Deferido
                             $retorno .= "<button title='Indeferir' type='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>"
                                             . '<i class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>'
                                     . "</button>";
@@ -1426,7 +1452,7 @@ class Diaria {
     }
     
     //****************************************MÉTODOS ESTÁTICOS****************************************
-    public static function verificaDiariaPedido($idPedido){
+    public static function verificaDiariaPedido(int $idPedido = 0){
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -1436,59 +1462,95 @@ class Diaria {
             $daoDiaDiaria->selectDiariaPedido($pdo);
             
             if ($daoDiaDiaria->getSucesso()) {
-               return Metodos::retornoAjax("ok", "html", true);
+                return $daoDiaDiaria->getMsgRetorno()['id_diaria'];
             } else {
-                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                return false;
             }
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return false;
         }
     }
+    //****************************************FIM MÉTODOS ESTÁTICOS*************************************
     
-    public static function vinculaPedidoDiaria($idPedido,$idDiaria,$usuario,$acao){
+    public function desvinculaPedidoDiaria(PDO $pdo = null) {
+        $retorno = "";
         try {
-            
-            //$acao: 1 - Vincula
-            //       2 - Desvincula
-            //$observacao: Texto do evento
-            $observacao  = ($acao == 1) ? 'Diária vinculada ao Pedido de necessidade nº '.$idPedido.'.' : 'Diária desvinculada do Pedido de necessidade nº '.$idPedido.'.' ;
-            
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            
+            $observacao = 'Cancelado pedido de necessidade nº '. $this->getIdPedido(). ' vinculado a esta diária.';
             $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->setIdDiaria($idDiaria);
-            $daoDiaDiaria->setIdPedido($idPedido);
+            $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
+            $daoDiaDiaria->setIdPedido($this->getIdPedido());
             
             $daoDiaDiaria->selectLinha($pdo);
-            //implementar no DAO a vinculação do pedido com a diária
             
             if (!$daoDiaDiaria->getSucesso()) {
-                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                return $daoDiaDiaria->getMsgRetorno();
             }
 
             //Se não der erro na seleção da diaria, atribui à variável
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
             //Atualiza a diária com o nº do pedido
-            $daoDiaDiaria->updateDiariaRelatorio($pdo);
+            $daoDiaDiaria->desvinculaDiariaPedido($pdo);
             
             //insere o evento no historico da diaria
-            $this->setHistorico(array('ds_diaria_historico' => $observacao, 'id_pessoa' => $usuario));
+            $this->setHistorico(array('ds_diaria_historico' => $observacao, 'id_pessoa' => $this->getUsuarioPedido()));
+            
+            if ($daoDiaDiaria->getSucesso()) {
+                if ($this->insereHistorico($pdo)) {
+                    if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $reg_antigo, $pdo)) {
+                        $pdo->rollBack();
+                        return  STR_ERROR;
+                    }
+                } else {
+                    $retorno = $this->erros;
+                }
+                return $retorno;
+            } else {
+                return $daoDiaDiaria->getMsgRetorno();
+            }
+        } catch (Exception $exc) {
+            return $exc->getMessage();
+        }
+    }
+    
+    public function vinculaPedidoDiaria(PDO $pdo = null){
+        $retorno = "";
+        try {
+            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'.' ;
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
+            $daoDiaDiaria->setIdPedido($this->getIdPedido());
+            
+            $daoDiaDiaria->selectLinha($pdo);
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                return $daoDiaDiaria->getMsgRetorno();
+            }
+
+            //Se não der erro na seleção da diaria, atribui à variável
+            $reg_antigo = $daoDiaDiaria->getMsgRetorno();
+            //Atualiza a diária com o nº do pedido
+            $daoDiaDiaria->vinculaDiariaPedido($pdo);
+            
+            //insere o evento no historico da diaria
+            $this->setHistorico(array('ds_diaria_historico' => $observacao, 'id_pessoa' => $this->getUsuarioPedido()));
 
             
-            if ($daoDiaDiaria->getSucesso() && $this->insereHistorico($pdo)) {
-                if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $reg_antigo, $pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            if ($daoDiaDiaria->getSucesso()) {
+                if ($this->insereHistorico($pdo)) {
+                    if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $reg_antigo, $pdo)) {
+                        $pdo->rollBack();
+                        return  STR_ERROR;
+                    }
+                } else {
+                    $retorno = $this->erros;
                 }
-                
-                return Metodos::retornoAjax("ok", "html", 'Pedido vinculado a diária '.$daoDiaDiaria->getIdDiaria() );
+                return $retorno;
             } else {
-                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                return $daoDiaDiaria->getMsgRetorno();
             }
             
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return $exc->getMessage();
         }
     }
 

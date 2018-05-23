@@ -629,7 +629,8 @@ class DaoDiaDiaria extends DiaDiaria {
                                 id_relatorio,
                                 st_estagio,
                                 st_ativo,
-                                (select trim(to_char(sum(qt_diaria_destino * vl_diaria_destino),'999G999G999D99')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total
+                                (select trim(to_char(sum(qt_diaria_destino * vl_diaria_destino),'999G999G999D99')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total,
+                                (select trim(to_char(round(sum(qt_diaria_destino * vl_diaria_destino),2),'999G999G999D9999')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total_sm
                          FROM dia_diaria diaria
                          WHERE (id_pessoa_proposto = :id_usuario
                                 OR id_pessoa_proponente = :id_usuario
@@ -704,6 +705,39 @@ class DaoDiaDiaria extends DiaDiaria {
                 $sql = "update dia_diaria set id_relatorio = :id_relatorio where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_relatorio",$this->getIdRelatorio(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function desvinculaDiariaPedido(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update dia_diaria set id_pedido = null, st_estagio = 6 where id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function vinculaDiariaPedido(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update dia_diaria set id_pedido = :id_pedido, st_estagio = 5 where id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pedido",$this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;

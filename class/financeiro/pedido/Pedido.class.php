@@ -22,6 +22,26 @@ class Pedido {
     private $stPedido = null;
     private $contratado = null;
     private $ano = null;
+    
+    //atributos para vincular a diaria
+    private $idUsuario = null;
+    private $idDiaria = null;
+    
+    function getIdUsuario() {
+        return $this->idUsuario;
+    }
+
+    function getIdDiaria() {
+        return $this->idDiaria;
+    }
+
+    function setIdUsuario($idUsuario) {
+        $this->idUsuario = $idUsuario;
+    }
+
+    function setIdDiaria($idDiaria) {
+        $this->idDiaria = $idDiaria;
+    }
 
     function getIdPedido() {
         return $this->idPedido;
@@ -239,7 +259,7 @@ class Pedido {
                     $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
                 } else {
                     $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
-                }
+                } 
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();
@@ -303,13 +323,24 @@ class Pedido {
             }
 
             if ($daoFinPedido->Sucesso()) {
-                $pdo->commit();
-                //verifico ser o contrato tem ata ou nao
-                if (empty($this->idFornecedor)) {
-                    $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
+                //Rotina que vincula o pedido de necessidade com a diária
+                $diaria = new Diaria();
+                $diaria->setIdDiaria($this->getIdDiaria());
+                $diaria->setIdPedido($daoFinPedido->getIdPedido());
+                $diaria->setUsuarioPedido($this->getIdUsuario());
+                $retornoDiaria = $diaria->vinculaPedidoDiaria($pdo);
+                if (!$retornoDiaria) {
+                    $pdo->commit();
+                    //verifico ser o contrato tem ata ou nao
+                    if (empty($this->idFornecedor)) {
+                        $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
+                    } else {
+                        $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
+                    }
                 } else {
-                    $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
+                    $retorno = Metodos::retornoAjax("Erro", "console", $retornoDiaria);
                 }
+                
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();

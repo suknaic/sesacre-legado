@@ -185,6 +185,11 @@ switch ($_REQUEST['acao']) {
             $pedido->setIdLotacao($dados['idLotacao']);
             $pedido->setDsPedido($dados['descPedido']);
             $pedido->setVlPedido($dados["valor"]);
+            //Para armezenar no historico da diária o usuáruio que está vinculando o pedido a diária
+            $pedido->setIdUsuario($session->getIdUser());
+            if ($dados['idDiaria'] > 0 ) {
+                $pedido->setIdDiaria($dados['idDiaria']);
+            }
             echo $pedido->salvaPedidoSemFornecedor();
             return;
             break;
