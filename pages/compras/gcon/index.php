@@ -73,7 +73,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                     <!--End page title-->
 
                     <div id="page-content">
-
                         <!--Modal upload-->
                         <div class=" modal fade modal-upload" id="upload" 
                              tabindex="-1" role="dialog" 

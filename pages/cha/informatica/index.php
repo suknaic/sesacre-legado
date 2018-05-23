@@ -62,11 +62,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
                         <h1 class="page-header text-overflow">Help Desk</h1>
                         <p class="pad-btm text-sm">Acompanhamento rápido dos seus chamados</p>
                         <form style="margin-top: -80px; margin-bottom: 80px">
-                                <div class="btn-group dropdown" style="float: right">
+                                <div class="btn-group dropdown" style="float: right" id="butao">
                                     <button class="btn btn-hover mar-ver btn-circle add-tooltip dropdown-toggle dropdown-toggle-icon rotate" style="display: block; background-color: #25476a" aria-expanded="false" data-toggle="dropdown">
                                         <i class="fa fa-plus" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px; color: #FFF"></i>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-right" style="opacity: 1">
+                                    <ul class="dropdown-menu dropdown-menu-right menuButton" style="opacity: 1">
                                         <li>
                                             <a href="cadastra/cadastra.php?id=<?php echo $id; ?>" method="post">Novo Chamado</a>
                                         </li>
@@ -423,7 +423,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-
+        <script src="/assets/js/cha/informatica/index.js"></script>
         <!-- END JAVASCRIPT -->
 
     </body>
