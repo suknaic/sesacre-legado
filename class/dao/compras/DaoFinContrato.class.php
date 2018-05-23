@@ -197,7 +197,7 @@ class DaoFinContrato extends FinContratoTb {
         if ($pdo != null) {
             try {
                 $sql = "SELECT distinct f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
-                        p.nm_pessoa, cont.id_contrato
+                        p.nm_pessoa, cont.id_contrato, cont.fl_bloqueado
                         FROM fin_contrato AS cont
 
                         INNER JOIN gco_processo as processo
@@ -363,7 +363,7 @@ class DaoFinContrato extends FinContratoTb {
                 $sql = "select f.id_pessoa, cont.nr_contrato, cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, cont.dt_assinatura, 
                         cont.dt_publicacao, cont.ds_objeto, cont.ds_obs_contrato, cont.id_contrato, modalidade.nm_modalidade, obj.nm_objeto,
                         processo.cd_ada_cpr, processo.cd_pregao, tipoGasto.id_tipo_gasto, processo.id_processo, pessoa.nm_pessoa, cont.tp_contrato,
-                        cont.nr_prazo_entrega
+                        cont.nr_prazo_entrega, tipoGasto.nm_tipo_gasto
                         from fin_fornecedor as f
                         inner join fin_contrato as cont 
                         on cont.id_contrato = f.id_contrato
@@ -373,12 +373,12 @@ class DaoFinContrato extends FinContratoTb {
                         on modalidade.id_modalidade = processo.id_modalidade
                         inner join gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
+			inner join ses_pessoa as pessoa
+                        on pessoa.id_pessoa = f.id_pessoa
                         left join gco_processo_tipo_gasto as gptg
                         on gptg.id_tipo_gasto = cont.id_tipo_gasto
                         left join pla_tipo_gasto as tipoGasto
                         on tipoGasto.id_tipo_gasto  = gptg.id_tipo_gasto
-                        inner join ses_pessoa as pessoa
-                        on pessoa.id_pessoa = f.id_pessoa
                         where f.id_fornecedor = :idFornecedor";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idFornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
@@ -420,22 +420,23 @@ class DaoFinContrato extends FinContratoTb {
         if ($pdo != null) {
             try {
                 $sql = "SELECT C.id_contrato, C.nr_contrato, C.ds_objeto"
-                        . " , TG.nm_tipo_gasto, M.nm_modalidade, '0.0000' AS Valor"
+                        . " , TG.nm_tipo_gasto, M.nm_modalidade"
+                        . " , (SELECT trim(to_char(COALESCE(SUM(CI.qt_itens*CI.vl_itens), 0), '999G999G990D9999')) FROM fin_cont_itens CI WHERE CI.id_fornecedor = F.id_fornecedor) AS Valor"
                         . " , PRO.cd_pregao, OBJ.nm_objeto, F.id_fornecedor"
+                        . " , P.nm_pessoa"
                         . " , to_char(C.dt_assinatura, 'DD/MM/YYYY') as dt_assinatura"
                         . " , to_char(C.dt_publicacao, 'DD/MM/YYYY') as dt_publicacao"
                         . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
-                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
-                        //. " , to_char()"
-                        //. " , C."
+                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"                        
                         . " FROM fin_contrato C"
                         . " INNER JOIN (SELECT DISTINCT ON (id_contrato) id_contrato, id_fornecedor, id_pessoa"
                             . " FROM fin_fornecedor"
-                            . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"                             
+                            . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"
+                        . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"                             
                         . " LEFT JOIN gco_processo PRO ON PRO.id_processo = C.id_processo"
                         . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"                        
                         . " LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
-                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = C.id_modalidade"                                           
+                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"                                           
                         . " WHERE C.nr_contrato LIKE :nrContrato AND C.st_ativo = '1' ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nrContrato", "%".$this->getNrContrato()."%", PDO::PARAM_STR);

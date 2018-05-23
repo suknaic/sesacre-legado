@@ -49,13 +49,14 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaTipoGasto':
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $tipoGasto = new TipoGasto();
-            echo "<option value = '0'>Selecione um tipo de gasto</option>";
-            echo $tipoGasto->retornaOption(0, $pdo);
+    CASE 'retornaAditivosDoContrato':
+        try {            
+            
+            $idContrato = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);            
+            $gestaoContratoModel = new FinContratoModel();
+            $gestaoContratoModel->setIdContrato($idContrato);
+            echo $gestaoContratoModel->retornaAditivosDoContrato();
+        
             return;
             break;
         } catch (Error $e) {

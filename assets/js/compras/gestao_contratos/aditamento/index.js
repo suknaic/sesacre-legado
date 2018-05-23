@@ -1,11 +1,37 @@
 
-$(document).ready(function () {        
+$(document).ready(function () {       
     
     //instacinado fucoes js
     func = new Funcoes();
-    //Mascara do sistema
+    /*
+    var arrayDados = {
+        'dados' : new Array(),
+        'gestor_titular' : new Array()
+    }
+    var teste = new Array();
+    teste.push(1)
+    teste.push(2)
+    console.log(teste)    
+    arrayDados.dados['nome'] = 'Marcel';
+    arrayDados.dados['sobrenome'] = 'Melo';
+    arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
+    arrayDados.gestor_titular.push(1);
+    arrayDados.gestor_titular.push(2);
+    arrayDados.gestor_titular.push(2323);        
+    console.log(arrayDados.gestor_titular)    
+    console.log(arrayDados)
+*/
+    
     $('.data').mask("99/99/9999")
-    //fim
+    $("body").on("focus", "#n_valor_aditivo", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+    
     $(".select").select2({
         width: " 100%"
     });    
@@ -23,6 +49,20 @@ $(document).ready(function () {
         }
     });
     //fim
+    $("#panel-novo-atitivo").hide();
+    $('body').on('click', '.btn-add-aditivo', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            if($("#id_contrato").val() != 0){
+                var qtd = parseInt($(".aditivo_quantidade").attr('quantidade')+1);
+                //$numeroAditivo = $sequencialUltimoAditivo."º Termo Aditivo ao Contrato ".$contrato;
+                $("#n_numero_aditivo").val(qtd+"º Termo Aditivo ao contrato "+$("#con_contrato").find("p").text());
+                $("#panel-novo-atitivo").show();
+            }
+            
+        }
+    });
     
     $('body').on('click', '.add-pessoa', function (e) {
         e.stopPropagation();
@@ -39,11 +79,27 @@ $(document).ready(function () {
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select2-selection--single').remove();
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select2-container').remove();           
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select_funcionarios').select2({width: "100%"});            
-            
-            console.log(select);
+                        
+        }
+    });
+    
+    $('body').on('click', '.remove-pessoa', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            var $this = $(this);            
+            $this.closest(".input-group").remove();
         }
     });
 
+    $('body').on('keypress', '#codItemPesquisa', function (e) {
+        var key = e.which;
+        if (key == 13) {
+            $("#btn-pesquisa").trigger('click');
+            return false;
+        }
+    });
 
     //busca produtos
     $('#modalItem').on('shown.bs.modal', function () {
@@ -70,70 +126,104 @@ $(document).ready(function () {
         });
     });
 
-    $('body').on('click', '.selecionaItem', function (e) {
-        
-//        var itinerarioOriginal = $("#id_diaria_destino").data('itinerario');
-//
-//    if (itinerarioOriginal != null){
-//        var linha = `<tr data-itinerario='${JSON.stringify(itinerarioOriginal)}'>
-//                        <td>${itinerarioOriginal.ds_cidade_inicio}</td>
-//                        <td>${itinerarioOriginal.ds_cidade_fim}</td>
-//                        <td>${itinerarioOriginal.dh_inicio}</td>
-//                        <td>${itinerarioOriginal.dh_fim}</td>
-//                        <td>${valorComMascara(itinerarioOriginal.vl_total)}</td>
-//                        <td><span role='button' class="remove-itinerario">Remover</span> | <span role='button' class="edit-itinerario">Alterar</span></td>
-//                     </tr>`;
-//        $("#itinerario").find("tbody").append(linha);
-//        limpaFormItinerario();
-//    }
-        var contrato = $(this).data('contrato');
-        console.log(contrato);
-        console.log(contrato.nr_contrato);
-        
-        
-        var $this = $(this);
-        var processo = $this.attr('processo');
-        $("#id_processo").val(processo);
-        $("#itemGrp").val($this.attr('item'));
-        $("#ada_cpr").text($this.find("td:eq(0)").text());
-        $("#licitacao").text($this.find("td:eq(1)").text());
-        $("#categoria").text($this.find("td:eq(2)").text());
-        $("#obejto").text($this.find("td:eq(3)").text());
-        $("#modalidade").text($this.find("td:eq(4)").text());
+    $('body').on('click', '.selecionaItem', function (e) {        
+        var contrato = $(this).data('contrato');        
+        preencheCamposContrato(contrato);                                       
         $('#modalItem').modal('hide');
-        //lista os tipo de gastos da licitação
-        //retornaTipoDeGastoLicitacao($this.attr('processo'));
+        //Busca se esse Contrato possui Aditivo
+        buscaExisteAditivos(contrato.id_contrato);
         
+        
+    });
+    
+    function preencheCamposContrato(contrato){
+        $("#con_contrato").find("p").html(contrato.nr_contrato);
+        $("#con_licitacao").find("p").html(contrato.cd_pregao);
+        $("#con_tipo_gasto").find("p").html(contrato.nm_tipo_gasto);
+        $("#con_objeto").find("p").html(contrato.nm_objeto);
+        $("#con_modalidade").find("p").html(contrato.nm_modalidade);
+        $("#con_assinatura").find("p").html(contrato.dt_assinatura);
+        $("#con_publicacao").find("p").html(contrato.dt_publicacao);
+        $("#con_vigencia").find("p").html(contrato.dt_ini_vigencia_contrato+ " - "+contrato.dt_fim_vigencia_contrato);
+        $("#con_descricao_objeto").find("p").html(contrato.ds_objeto);
+        $("#con_fornecedor").find("p").html(contrato.nm_pessoa);
+        $("#con_valor").find("p").html(contrato.valor);
+        $("#id_contrato").val("R$ "+contrato.id_contrato);
+    }
+    
+    function buscaExisteAditivos(idContrato){        
         $.ajax({
-            "url": "/model/compras/contrato/request.php",
+            "url": "/model/compras/gestaoContratos/aditamento/request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaOptionsAtas",
-                "dados": $this.find("td:eq(4)").text()
-
+                "acao": "retornaAditivosDoContrato",
+                "dados": idContrato
             },
             "success": function (response) {
-                //console.log(response);
-                if (response != 'NotSRP') {
-                    $(".campoAta").removeClass("hidden");
-                    $("body").find("#ata").html(response);
-                } else {
-                    $(".campoAta").addClass("hidden");
-                }
+                $("#panel-aditivos").find('.panel-body').html(response);                        
             }
         });
-    });
-    //fim de busca licitacao do gcon
+    }
     
-    $('body').on('click', '.salvar', function (e) {
+        
+    $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
-        } else { 
+        } else {
             e.preventDefault();                        
-            var $this = $(this);            
-            $("select[name=subFiscais\\[\\]]").each(function () {
-                subFiscais.push($(this).val());
+            var $this = $(this);          
+            var arrayDados = {
+                dados : new Array(),
+                gestor_titular : new Array(),
+                gestor_substituto : new Array(),
+                fiscal : new Array(),
+                fiscal_substituto : new Array(),
+                fiscal_sub : new Array(),
+                fiscal_sub_substituto : new Array()
+            }
+            
+          
+//            arrayDados.dados['nome'] = 'Marcel';
+//            arrayDados.dados['sobrenome'] = 'Melo';
+//            arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
+//            arrayDados.gestor_titular.push(1);
+//            arrayDados.gestor_titular.push(2);
+//            arrayDados.gestor_titular.push(2323);        
+//            console.log(arrayDados.gestor_titular)    
+//            console.log(arrayDados)
+//            
+            $(".n_gestor_titular option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.gestor_titular.push($(this).val())
+                }
             });
+            console.log(arrayDados)
+            
+            
+            $("select[name=subFiscais\\[\\]]").each(function () {
+                //subFiscais.push($(this).val());
+            });
+        }
+    });
+    
+    
+    
+    
+    
+    
+    //Controle da Tela, Campos habilitados ou não
+    
+    $('body').on('change', '#n_instrumento', function (e) {
+
+        $('#n_unidade_calculo option').filter(function() {              
+            return $(this).val() != 0;
+        }).attr("disabled", "");
+        $('#n_unidade_calculo').val(0);
+        if($("#n_instrumento option:selected").val() == 1){
+            $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
+            $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
+        }else if($("#n_instrumento option:selected").val() == 2){
+            $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
         }
     });
   

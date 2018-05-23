@@ -23,9 +23,9 @@ switch ($_REQUEST['acao']) {
     case 'cadastra_processo':
         try {
             $filtro = filter_input(INPUT_POST, 'cadProcesso', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
+
             $cadastra = new Processo();
-            
+
             $cadastra->setAda(trim($filtro['ada_process']));
             $cadastra->setUnidade((int) $filtro['uni_cont_process']);
             $cadastra->setValorEstimado($filtro['valor_estim_process']);
@@ -90,7 +90,7 @@ switch ($_REQUEST['acao']) {
             $tiposGasto = filter_input(INPUT_POST, 'tipoDeGasto', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $centrais = filter_input(INPUT_POST, 'centrais', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $idArea = filter_input(INPUT_POST, 'area', FILTER_DEFAULT);
-            print_r($tiposGasto);
+
             $pesquisa->setAda($ada);
             $pesquisa->setNumePregao($pregao);
             $pesquisa->setAno($ano);
@@ -155,7 +155,7 @@ switch ($_REQUEST['acao']) {
 
             $reTec = new Processo();
             $reTec->setTecnico($id_tecnico);
-            
+
             echo $reTec->retornarTodosTecnicosProcesso();
             return;
         } catch (Exception $ex) {
@@ -191,7 +191,7 @@ switch ($_REQUEST['acao']) {
 
     case "retorna_situacao":
         try {
-            $id_situacao =  filter_input(INPUT_POST, 'id_situacao', FILTER_DEFAULT);
+            $id_situacao = filter_input(INPUT_POST, 'id_situacao', FILTER_DEFAULT);
 
             $situacao = new Situacao;
             $situacao->setIdSituacao($id_situacao);
@@ -274,10 +274,10 @@ switch ($_REQUEST['acao']) {
     case "listar_anotacoes":
         try {
             $dados = filter_input(INPUT_POST, 'idProcesso', FILTER_DEFAULT);
-            
+
             $anotacao = new Anotacao();
-            $anotacao->setIdProcesso((int)$dados);
-            
+            $anotacao->setIdProcesso((int) $dados);
+
             echo $anotacao->retornarAnotacoes();
             return;
         } catch (Exception $ex) {
@@ -311,34 +311,34 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-        
+
     case "carrega_tipo_gasto_processo":
         try {
             $idProcesso = filter_input(INPUT_POST, 'id_processo', FILTER_DEFAULT);
-            
+
             $processo = new Processo();
             $processo->setIdProcesso($idProcesso);
-            
+
             echo $processo->carregarTipoGastoProcesso();
             return;
         } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-        
+
     case "carrega_central_processo":
         try {
             $idProcesso = filter_input(INPUT_POST, 'id_processo', FILTER_DEFAULT);
-            
+
             $processo = new Processo();
             $processo->setIdProcesso($idProcesso);
-            
+
             echo $processo->carregarCentraisProcesso();
             return;
         } catch (Exception $ex) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
-        }    
+        }
 }   
 
 

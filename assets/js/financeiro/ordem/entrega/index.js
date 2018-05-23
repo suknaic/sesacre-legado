@@ -2,7 +2,64 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
     $("#dataRecebimento").mask("99/99/9999");
-    
+
+    function listaEntregas() {
+        let dataSet = [];
+        let valores = []
+       
+        $.ajax({
+            "method": "GET",
+            "url": "/model/financeiro/ordem/entrega/request.php",
+            "dataType": "json",
+            "data": {
+                "acao": "listaEntregas",
+                "idOrdem": $("#ordem").val()
+
+            },
+            "success": function (response) {
+
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+
+                for (var i = valores.length - 1; i >= 0; i--) {
+                    let valor = [
+                        valores[i]['dh_recebimento_sistema'],
+                        valores[i]['nr_entrega_confirmacao'],
+                        valores[i]['nr_prazo_ordem'],
+                        valores[i]['dt_entrega'],
+                        valores[i]['dt_confirmacao'],
+                        valores[i]['diasatrazo'],
+                        valores[i]['status'],
+                        'teste'
+                    ]
+                    dataSet.push(valor)
+                }
+                $('#tabela').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+                    columns: [
+                        {title: "Data Do Aviso"},
+                        {title: "Quantidade De Entrega"},
+                        {title: "Prazo De Entrega"},
+                        {title: "Prazo Limite Para Entrega"},
+                        {title: "Entregue dia"},
+                        {title: "Dias De Atraso"},
+                        {title: "Status"},
+                        {title: "Ação"}
+
+                    ]
+                });
+            }
+        });
+    }
+    listaEntregas();
+
+
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

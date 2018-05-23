@@ -199,8 +199,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         case 
                          when ordem.tp_ordem = '1' THEN 'ENTREGA'
                          when ordem.tp_ordem = '2' THEN 'EXECUÇÃO/SERVIÇO'
-                         END as tipo
-
+                         END as tipo, ordem.sit_ordem
                         
                         from fin_pedido as p
                         inner join fin_ordem as ordem
