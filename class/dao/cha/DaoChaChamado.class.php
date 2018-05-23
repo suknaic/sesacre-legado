@@ -10,8 +10,8 @@ class DaoChaChamado extends ChaChamado {
                                                     dh_abertura, ds_chamado, nr_telefone_solicitante, ds_finalizado, dh_finalizado, nr_avaliacao,
                                                     dh_avaliacao, ds_avaliacao, vl_chamado,  id_status, dh_agendamento, id_prioridade, dh_cancelamento,
                                                     ds_cancelamento, dt_prazo)
-                                                    VALUES (:idCategoriaSecundaria, :idPessoaSolicitante, :idPessoaServico, :data, :dsChamado, :nrTelefoneSolicitante, :dsFinalizado, :data, :nrAvaliacao,
-                                                    :data, :dsAvaliacao, :vlChamado, :idStatus, :dhAgendamento, :idPrioridade, :data, :dsCancelamento, :dtPrazo)");
+                                                    VALUES (:idCategoriaSecundaria, :idPessoaSolicitante, :idPessoaServico, :data, :dsChamado, :nrTelefoneSolicitante, :dsFinalizado, :dhFinalizado, :nrAvaliacao,
+                                                    :dhAvaliacao, :dsAvaliacao, :vlChamado, :idStatus, :dhAgendamento, :idPrioridade, :dhCancelamento, :dsCancelamento, :dtPrazo)");
             $result->bindValue(":idCategoriaSecundaria", $this->getIdCategoriaSecundaria() === '' ? null : $this->getIdCategoriaSecundaria(), PDO::PARAM_INT);
             $result->bindValue(":idPessoaSolicitante", $this->getIdPessoaSolicitante() === '' ? null : $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
             $result->bindValue(":idPessoaServico", $this->getIdPessoaServico() === '' ? null : $this->getIdPessoaServico(), PDO::PARAM_INT);
@@ -19,15 +19,15 @@ class DaoChaChamado extends ChaChamado {
             $result->bindValue(":dsChamado", $this->getDsChamado() === '' ? null : $this->getDsChamado(), PDO::PARAM_STR);
             $result->bindValue(":nrTelefoneSolicitante", $this->getNrTelefoneSolicitante() === '' ? null : $this->getNrTelefoneSolicitante(), PDO::PARAM_STR);
             $result->bindValue(":dsFinalizado", $this->getDsFinalizado() === '' ? null : $this->getDsFinalizado(), PDO::PARAM_STR);
-            $result->bindValue(":data", $this->getDhFinalizado() === '' ? null : $this->getDhFinalizado(), PDO::PARAM_STR);
+            $result->bindValue(":dhFinalizado", $this->getDhFinalizado() === '' ? null : $this->getDhFinalizado(), PDO::PARAM_STR);
             $result->bindValue(":nrAvaliacao", $this->getNrAvaliacao() === '' ? null : $this->getNrAvaliacao(), PDO::PARAM_INT);
-            $result->bindValue(":data", $this->getDhAvaliacao() === '' ? null : $this->getDhAvaliacao(), PDO::PARAM_STR);
+            $result->bindValue(":dhAvaliacao", $this->getDhAvaliacao() === '' ? null : $this->getDhAvaliacao(), PDO::PARAM_STR);
             $result->bindValue(":dsAvaliacao", $this->getDsAvaliacao() === '' ? null : $this->getDsAvaliacao(), PDO::PARAM_STR);
             $result->bindValue(":vlChamado", $this->getVlChamado() === '' ? null : $this->getVlChamado(), PDO::PARAM_INT);
             $result->bindValue(":idStatus", $this->getIdStatus() === '' ? null : $this->getIdStatus(), PDO::PARAM_INT);
             $result->bindValue(":dhAgendamento", $this->getDhAgendamento() === '' ? null : $this->getDhAgendamento(), PDO::PARAM_STR);
             $result->bindValue(":idPrioridade", $this->getIdPrioridade() === '' ? null : $this->getIdPrioridade(), PDO::PARAM_INT);
-            $result->bindValue(":data", $this->getDhCancelamento() === '' ? null : $this->getDhCancelamento(), PDO::PARAM_STR);
+            $result->bindValue(":dhCancelamento", $this->getDhCancelamento() === '' ? null : $this->getDhCancelamento(), PDO::PARAM_STR);
             $result->bindValue(":dsCancelamento", $this->getDsCancelamento() === '' ? null : $this->getDsCancelamento(), PDO::PARAM_STR);
             $result->bindValue(":dtPrazo", $this->getDtPrazo() === '' ? null : $this->getDtPrazo(), PDO::PARAM_STR);
 

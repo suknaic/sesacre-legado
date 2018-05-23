@@ -451,7 +451,7 @@ $(document).ready(function () {
     function returnChamadoVisualiza() {
 
         var id_get = $("#id_get").val();
-            var idChamado = id_get.split("-")[1];
+//            var idChamado = id_get.split("-")[1];
 
         $.ajax({
             "url": "/model/cha/informatica/chamado/request.php",
@@ -463,13 +463,13 @@ $(document).ready(function () {
             },
             "success":
                     function (response) {
-//                        console.log(response);
                         try {
                             response = JSON.parse(response);
                         } catch (e) {
                             console.log(response);
                             return false;
                         }
+//                        console.log(response);
                         $(".nmPessoa").val(response[0]['nm_pessoa']);
                         $(".nrTelefone").val(response[0]['nr_telefone_celular']);
                         $(".dsEmail").val(response[0]['nm_email']);

@@ -1499,6 +1499,11 @@ class FinContratoModel {
         }
     }
 
+    /**
+     * Retorna uma TR contendo os dados do contrato que será utilizado na tela do aditivo 
+     * para o usuário selecionar Qual contrato irá utilizar para aquele aditivo
+     * @return string
+     */
     public function retornaContratoSelectItem() {
         try {
             //variaveis do sistema
@@ -1506,24 +1511,68 @@ class FinContratoModel {
             $pdo = $conexao->connect();
             $daoContrato = new DaoFinContrato();
             $daoContrato->setNrContrato($this->nr_contrato);
-            $retorno = '';
-
-            $daoContrato->pesquisaContratoPorNumero($pdo);
+            $retorno = '';                       
+            $daoContrato->pesquisaContratoPorNumero($pdo);            
             if ($daoContrato->sucesso()) {
                 foreach ($daoContrato->getMsgRetorno() as $value) {
                     $retorno .= "<tr class='selecionaItem' data-contrato='" . json_encode($value) . "' contrato='" . $value["id_contrato"] . "' style='cursor:pointer;'>";
 
                     $retorno .= '<td>' . $value["nr_contrato"] . '</td>
-                        <td>asd</td>
+                        <td>' .$value['nm_pessoa']. '</td>
                         <td>' . $value["nm_tipo_gasto"] . '</td>
                         <td>' . $value["nm_objeto"] . '</td>
                         <td>' . $value["nm_modalidade"] . '</td>
                         <td>' . $value["valor"] . '</td>
                         </tr>';
                 }
-            }
-
+            }                                                
+            
             return $retorno;
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    /**
+     * Retorna Os Aditivos em formato de Tabela de um Contrato
+     * @return string
+     */
+    public function retornaAditivosDoContrato() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContrato();
+            $daoContrato->setIdContrato($this->id_contrato);
+            
+            //Precisa Verifica se o Contrato possui algum aditivo vinculado a ele e listar.
+            //Esperando definição do Banco de Dados Ainda
+            
+            $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade="0">'
+                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
+                    . '</div>';
+					                    			            
+            return $retorno;
+            
+            
+            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade="0">
+                    <thead>
+                        <tr>
+                            <th>Número do Aditivo</th>
+                            <th>Motivo do Aditamento</th>
+                            <th>Vigência</th>
+                            <th>Publicação</th>
+                            <th>Valor do Aditivo</th>
+                            <th>Opções</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>';                    
+            
+            
+            
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

@@ -238,6 +238,8 @@ class FinProtocoloModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+            $erro = false;
+            $prazo = 0;
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setNmRepresentante($this->nm_representante);
             $daoFinProtocolo->setNrRgCpf($this->nr_rg_cpf);
@@ -248,7 +250,52 @@ class FinProtocoloModel {
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->setIdPessoa($this->id_pessoa);
             $daoFinProtocolo->salvaProcotolo($pdo);
-            if ($daoFinProtocolo->sucesso()) {
+
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+            //retorna prazo de entrega
+            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+
+            $prazo = $daoFinProtocolo->getMsgRetorno();
+            //instanciando a clase para cadastra a confirmacao da entrega 
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdOrdem($this->id_ordem);
+            $finEntregaConfirmacaoModel->setNrQtdEntrega(((int) $this->qd_entrega));
+
+            for ($i = 1; $i <= ((int) $this->qd_entrega); $i++) {
+                //codigo abaixo e para descobri as data da entrega
+                $data = date('d/m/Y', strtotime('+' . (($prazo["nr_prazo_ordem"] * $i) - 1) . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
+                $data = Metodos::ConverteDataING($data);
+
+                $finEntregaConfirmacaoModel->setNrEntregaConfirmacao($i);
+                $finEntregaConfirmacaoModel->setDtEntrega($data);
+
+                $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
+
+                if (!$finEntregaConfirmacaoModel->sucesso()) {
+                    $erro = true;
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
+                }
+            }
+
+            $daoFinProtocolo->updateStatusOrdem($pdo);
+
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+
+            if ($erro == false) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
@@ -257,6 +304,23 @@ class FinProtocoloModel {
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaEntregaConfirmacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdOrdem($this->id_ordem);
+            $daoFinProtocolo->retornaEntregaConfirmacao($pdo);
+            if($daoFinProtocolo->sucesso()){
+                return $daoFinProtocolo->getMsgRetorno();
+            }else{
+                return false;
+            }
+        } catch (Exception $ex) {
+            return $exc->getMessage();
         }
     }
 
