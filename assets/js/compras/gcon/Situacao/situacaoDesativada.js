@@ -7,8 +7,22 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#butao").append(response);
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novaSituacao" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
+                            <i class="ion ion-plus-round" aria-hidden="true"></i> Nova Situação\n\
+                        </button>');
         }
+    });
+
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
+    });
+
+    $('body').on('click', '.btn-novaSituacao', function (e) {
+        top.location = "/pages/compras/gcon/situacao/nova_situacao.php";
     });
 
     function listarSituacoes(a) {    

@@ -28,6 +28,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
+     <style>
+        .rotate:hover
+        {
+            -webkit-transform: rotateZ(50deg);
+            -ms-transform: rotateZ(50deg);
+            transform: rotateZ(50deg);
+        }
+        .grow:hover
+        {
+            -webkit-transform: scale(1.3);
+            -ms-transform: scale(1.3);
+            transform: scale(1.3);
+        }
+        .hover-btn:hover
+        {
+            display: block;
+        }
+    </style>
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
@@ -53,10 +71,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon --> 
-
                         <!--Modal upload-->
                         <div class=" modal fade modal-upload" id="upload" 
                              tabindex="-1" role="dialog" 
@@ -117,6 +131,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                         <!-- Inicio do Formulário de Edição de Processos-->
                         <form data-toggle="validator" class="form-horizontal formEditar" id="form_process" role="form" action="#"method="post">
                             <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Edição de Processo</h3>
                                 </div>

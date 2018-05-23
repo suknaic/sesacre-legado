@@ -37,6 +37,15 @@ switch ($_REQUEST['acao']) {
         try {
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             
+            switch ($filtro['estagio']) {
+                case 3:
+                    $filtro['obs'] = 'Diária indeferida - ' . $filtro['obs'];
+                    break;
+                case 4:
+                    $filtro['obs'] = 'Diária deferida - '. $filtro['obs'];
+                    break;
+            }
+            
             $historico['ds_diaria_historico'] = $filtro['obs'];
             $historico['id_pessoa'] = $session->getIdUser();
             

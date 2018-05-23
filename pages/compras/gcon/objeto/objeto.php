@@ -26,10 +26,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-
+        <style>
+            .rotate:hover
+            {
+                -webkit-transform: rotateZ(50deg);
+                -ms-transform: rotateZ(50deg);
+                transform: rotateZ(50deg);
+            }
+            .grow:hover
+            {
+                -webkit-transform: scale(1.3);
+                -ms-transform: scale(1.3);
+                transform: scale(1.3);
+            }
+            .hover-btn:hover
+            {
+                display: block;
+            }
+        </style>
     </head>
     <!--TIPS-->
-
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
@@ -54,13 +70,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                     <!--End page title--> 
 
                     <div id="page-content"> 
-                        <!-- Menu GCON --> 
-                        <div id="menu_gcon"></div>                                   
-                        <!-- Fim_Menu_Gcon -->
-
                         <form class="form-horizontal">
                             <input type="hidden" name="id_objeto" id="id_objeto">
                             <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Pesquisar Objeto</h3>
                                 </div>
@@ -71,7 +90,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                     <div class="col-md-6">
                                         <div class="panel-body">
                                             <p class="form-control-static">Objeto: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
-                                            <input type="text" class="form-control" name="objeto_pes" id="objeto_pes" placeholder="" required="true">
+                                                <input type="text" class="form-control" name="objeto_pes" id="objeto_pes" placeholder="" required="true">
                                         </div>
                                     </div>
 
@@ -81,7 +100,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                     <div class="col-md-5"></div>
                                     <div class="col-md-2 text-center">
                                         <button class="btn btn-primary btn-pesquisar btn-block btn-rounded" type="button">
-                                            <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
+                                            <i class="ion-search fa-lg" aria-hidden="true"></i> Pesquisar
                                         </button>
                                         <button class="btn btn-default btn-success btn-editar btn-rounded" type="button" style="display: none;">
                                             <i class="fa fa-floppy-o" aria-hidden="true"></i> Editar
@@ -95,19 +114,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                             </div>
                         </form>           
                         <div class="panel">
-<!--                            <div class="panel-heading">
-                                <h3 class="panel-title">Lista de Objetos</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table id="tabelaObjetos" class="table table-striped table-bordered display" width="100%"></table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>-->
-                                
                             <div class="panel-heading">
                                 <h3 class="panel-title">Lista de Objetos</h3>
                             </div>

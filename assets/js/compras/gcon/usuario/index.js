@@ -51,8 +51,15 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#butao").append(response);
         }
+    });
+    
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
     });
 
     $('body').on('click', '.btn-limpar', function (e) {

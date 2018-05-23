@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -26,16 +26,33 @@
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-   
+        <style>
+            .rotate:hover
+            {
+                -webkit-transform: rotateZ(50deg);
+                -ms-transform: rotateZ(50deg);
+                transform: rotateZ(50deg);
+            }
+            .grow:hover
+            {
+                -webkit-transform: scale(1.3);
+                -ms-transform: scale(1.3);
+                transform: scale(1.3);
+            }
+            .hover-btn:hover
+            {
+                display: block;
+            }
+        </style>
     </head>
     <!--TIPS-->
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -51,66 +68,68 @@
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
-                     
+
                     <div id="page-content">
-                        
-                            <!-- Menu GCON -->  
-                            <div id="menu_gcon"></div>
-                            <!-- Fim_Menu_Gcon -->
-                            
-                            <form class="form-horizontal" id="form_unidade_pesq"action="#"method="post">
-                                <input type="hidden" name="id_unidade" id="id_unidade">
-                                <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Pesquisar Unidades Contempladas</h3>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-3"></div>
-
-                                        <div class="col-md-6">
-                                            <div class="panel-body">
-                                                <p class="form-control-static">Unidade:<span class="text-danger"> *</span></p>
-                                                <input type="text" class="form-control" name="unidades_pes" id="unidade_pes" placeholder="" required="true">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-3"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-5"></div>
-                                            <div class="col-md-2 text-center">
-                                                <button class="btn btn-primary btn-pesquisar btn-block  btn-rounded" type="button">
-                                                    <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
-                                                </button>
-                                                <button class="btn btn-default btn-success btn-editar btn-rounded" type="button" style="display: none;">
-                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Editar
-                                                </button>
-                                                <button type="button" class="btn btn-default btn-rounded btn-limpar" style="display: none;">
-                                                    <i class="fa fa-remove" aria-hidden="true"></i> Cancelar
-                                                </button>
-                                            </div>
-                                        <div class="col-md-5"></div>
+                        <form class="form-horizontal" id="form_unidade_pesq"action="#"method="post">
+                            <input type="hidden" name="id_unidade" id="id_unidade">
+                            <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
                                     </div>
                                 </div>
-                            </form>
-                            <div id="retorno"></div>
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Pesquisar Unidades Contempladas</h3>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-3"></div>
+
+                                    <div class="col-md-6">
+                                        <div class="panel-body">
+                                            <p class="form-control-static">Unidade:<span class="text-danger"> *</span></p>
+                                            <input type="text" class="form-control" name="unidades_pes" id="unidade_pes" placeholder="" required="true">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3"></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-5"></div>
+                                    <div class="col-md-2 text-center">
+                                        <button class="btn btn-primary btn-pesquisar btn-block  btn-rounded" type="button">
+                                            <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
+                                        </button>
+                                        <button class="btn btn-default btn-success btn-editar btn-rounded" type="button" style="display: none;">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Editar
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-rounded btn-limpar" style="display: none;">
+                                            <i class="fa fa-remove" aria-hidden="true"></i> Cancelar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-5"></div>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="retorno"></div>
                     </div>
                 </div>                        
             </div>
-       
-                <!--===================================================-->
-                <!--END CONTENT CONTAINER-->
 
-                <!--MENU LATERAL-->
-                <?php 
-                    require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; 
-                ?>
-                <!--END MENU LATERAL-->
-        
+            <!--===================================================-->
+            <!--END CONTENT CONTAINER-->
+
+            <!--MENU LATERAL-->
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php";
+            ?>
+            <!--END MENU LATERAL-->
+
             <!-- FOOTER -->
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php";
             ?>
             <!-- END FOOTER -->
 

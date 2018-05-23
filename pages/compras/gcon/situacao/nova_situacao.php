@@ -26,6 +26,24 @@
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <style>
+            .rotate:hover
+            {
+                -webkit-transform: rotateZ(50deg);
+                -ms-transform: rotateZ(50deg);
+                transform: rotateZ(50deg);
+            }
+            .grow:hover
+            {
+                -webkit-transform: scale(1.3);
+                -ms-transform: scale(1.3);
+                transform: scale(1.3);
+            }
+            .hover-btn:hover
+            {
+                display: block;
+            }
+        </style>
     </head>
     <!--TIPS-->
 
@@ -52,13 +70,16 @@
                     <!--End page title-->
 
                     <div id="page-content"> 
-                        <!-- Menu GCON -->
-                            <div id="menu_gcon"></div> 
-                        <!-- Fim_Menu_Gcon -->
-                                    
                         <!-- Inicio do Formulário de Cadastro de Modalidade-->
                         <form data-toggle="validator" class="form-horizontal" id="form_situação" role="form" action="#" method="post">                                      
-                            <div class="panel">                                          
+                            <div class="panel">
+                                <div class="panel-footer text-left" id="menu_gcon">
+                                    <div class="btn-group dropdown" id="butao">
+                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
+                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Situação:</h3>
                                 </div>
@@ -144,7 +165,6 @@
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <!--<script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>-->
         <script src="/assets/js/compras/gcon/Situacao/nova_situacao.js"></script>
      
         <!-- END JAVASCRIPT -->

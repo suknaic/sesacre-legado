@@ -3,12 +3,26 @@ $(document).ready(function () {
     func = new Funcoes();
     
         $.ajax({
-            "url": "/layout/menus/compras/gcon/menu_gcon.php",
-            "dataType": "html",
-            "success": function (response) {
-                $("body").find("#menu_gcon").html(response);
-            }
-        });
+        "url": "/layout/menus/compras/gcon/menu_gcon.php",
+        "dataType": "html",
+        "success": function (response) {
+            $("body").find("#butao").append(response);
+            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-unidadesDesativadas" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
+                            <i class="ion-power" aria-hidden="true"></i> Unidades Desativadas\n\
+                        </button>');
+        }
+    });
+    
+    $("#butao").mouseover(function () {
+        $(".menuButton").show();
+    })
+    .mouseout(function () {
+        $(".menuButton").hide();
+    });
+    
+    $('body').on('click', '.btn-unidadesDesativadas', function (e) {
+        top.location = "/pages/compras/gcon/unidade/unidadeDesativadas.php";
+    });
         
         $('body').on('click', '.btn-salvar', function (e) {
             e.stopPropagation();
