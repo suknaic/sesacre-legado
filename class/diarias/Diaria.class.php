@@ -276,13 +276,43 @@ class Diaria {
         //O atributo "lotacao" indica se na tabela que irá gravar a autorização existe 
         //a informação de lotação(id_lotacao)
         $stEstagios = array(
-            1 => "Aguardando ser enviada",
+            1 => "Aguardando envio",
             2 => "Aguardando deferimento",
             3 => "Indeferida",
             4 => "Deferida",
             9 => "Todas"
         );
         return $stEstagios;
+    }
+    
+    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0){
+        $retorno = "";
+        try {
+            switch ($st_estagio) {
+                case 1: //Criada
+                    $retorno = '<span class="label label-primary">Aguardando envio</span>';
+                    break;
+                case 2: //Enviada para deferimento
+                    $retorno = '<span class="label label-warning">Aguardando deferimento</span>';
+                    break;
+                case 3: //Indeferida
+                    $retorno = '<span class="label label-danger">Aguardando revisão</span>';
+                    break;
+                case 4: //Deferida
+                    $retorno = '<span class="label label-primary">Aguardando pedido de necessidade</span>';
+                    break;
+                case 5:
+                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'</span>';
+                    break;
+                case 6:
+                    $retorno = '<span class="label label-danger">Pedido de necessidade cancelado</span>';
+                default:
+                    break;
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return "";
+        }
     }
 
     function retornaHistorico(){
@@ -493,6 +523,26 @@ class Diaria {
         }
     }
     
+    function retornaInfoDiariaPedido(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
+            $daoDiaDiaria->infoDiariaPeido($pdo);
+            if ($daoDiaDiaria->getSucesso()) {
+                return $daoDiaDiaria->getMsgRetorno();
+            } else {
+                return $retorno;
+            }
+            
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
   
     function retornaTrsItinerario(PDO $pdo = null) {
         $retorno = "";
@@ -603,36 +653,7 @@ class Diaria {
             $retorno = "";
         }
     }
-    
-    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0){
-        $retorno = "";
-        try {
-            switch ($st_estagio) {
-                case 1: //Criada
-                    $retorno = '<span class="label label-primary">Aguardando envio</span>';
-                    break;
-                case 2: //Enviada para deferimento
-                    $retorno = '<span class="label label-warning">Aguardando deferimento</span>';
-                    break;
-                case 3: //Indeferida
-                    $retorno = '<span class="label label-danger">Aguardando revisão</span>';
-                    break;
-                case 4: //Deferida
-                    $retorno = '<span class="label label-primary">Aguardando pedido de necessidade</span>';
-                    break;
-                case 5:
-                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'</span>';
-                    break;
-                case 6:
-                    $retorno = '<span class="label label-warning">Pedido de necessidade cancelado</span>';
-                default:
-                    break;
-            }
-            return $retorno;
-        } catch (Exception $exc) {
-            return "";
-        }
-    }
+   
     
     function excluirDiaria() {
         try {
@@ -1385,7 +1406,7 @@ class Diaria {
             if ($daoDiaDiariaHistorico->getSucesso()) {
                 $idDiariaHistorico = $pdo->lastInsertId('dia_diaria_historico_id_diaria_historico_seq');
                 if (!Log::SalvaLogI('dia_diaria_historico', $idDiariaHistorico, $pdo)) {
-                    $pdo->rollBack();
+//                    $pdo->rollBack();
                     $this->erros = STR_ERROR;
                     return false;
                 }
@@ -1542,9 +1563,9 @@ class Diaria {
                         return  STR_ERROR;
                     }
                 } else {
-                    $retorno = $this->erros;
+                    $retorno = $this->erros; //Informação é preenchida pela função 'insereHistorico'
                 }
-                return $retorno;
+                return $retorno; //Se o retorno for vazio, ocorreu tudo bem
             } else {
                 return $daoDiaDiaria->getMsgRetorno();
             }
