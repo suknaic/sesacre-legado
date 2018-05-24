@@ -11,10 +11,10 @@ $(document).ready(function () {
         "success": function (response) {
             $("body").find("#menu_gcon").append(response);
             $("body").find("#restoMenu").append('<li class="dropdown">\n\
-                                                    <a href="/pages/compras/gcon/objeto/novo_objeto.php">Novo Objeto</a>\n\
+                                                    <a href="/pages/compras/gcon/processo/processo.php">Novo Processo</a>\n\
                                                 </li>\n\
                                                 <li class="dropdown">\n\
-                                                    <a href="/pages/compras/gcon/objeto/objetosDesativados.php">Objetos Desativados</a>\n\
+                                                    <a href="/pages/compras/gcon/processo/processosDesativados.php">Processos Desativados</a>\n\
                                                 </li>');
         }
     });
