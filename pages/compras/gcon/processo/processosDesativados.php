@@ -26,27 +26,6 @@
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-   
-    </head>
-    <!--TIPS-->
-    <style>
-        .rotate:hover
-        {
-            -webkit-transform: rotateZ(50deg);
-            -ms-transform: rotateZ(50deg);
-            transform: rotateZ(50deg);
-        }
-        .grow:hover
-        {
-            -webkit-transform: scale(1.3);
-            -ms-transform: scale(1.3);
-            transform: scale(1.3);
-        }
-        .hover-btn:hover
-        {
-            display: block;
-        }
-    </style>
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
@@ -71,12 +50,12 @@
                      
                     <div id="page-content">
                             <div class="panel">
-                                <div class="panel-footer text-left" id="menu_gcon">
-                                    <div class="btn-group dropdown" id="butao">
-                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
-                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
-                                        </button>
-                                    </div>
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Processos Desativados</h3>

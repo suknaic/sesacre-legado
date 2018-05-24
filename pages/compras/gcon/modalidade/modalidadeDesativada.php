@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -26,33 +26,15 @@
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-        <style>
-            .rotate:hover
-            {
-                -webkit-transform: rotateZ(50deg);
-                -ms-transform: rotateZ(50deg);
-                transform: rotateZ(50deg);
-            }
-            .grow:hover
-            {
-                -webkit-transform: scale(1.3);
-                -ms-transform: scale(1.3);
-                transform: scale(1.3);
-            }
-            .hover-btn:hover
-            {
-                display: block;
-            }
-        </style>
     </head>
     <!--TIPS-->
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -68,16 +50,16 @@
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
-                     
+
                     <div id="page-content">
                         <div class="panel">
-                            <div class="panel-footer text-left" id="menu_gcon">
-                                    <div class="btn-group dropdown" id="butao">
-                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
-                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="row">
+                                <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                    <li class="dropdown" id="menu_gcon">
+                                        <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="panel-heading">
                                 <h3 class="panel-title">Modalidades Desativadas</h3>
                             </div>
@@ -104,57 +86,57 @@
                         </div>
                     </div>                        
                 </div>
-       
+
                 <!--===================================================
                 <!--END CONTENT CONTAINER-->
 
                 <!--MENU LATERAL-->
-                <?php 
-                    require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; 
+                <?php
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php";
                 ?>
                 <!--END MENU LATERAL-->
-        
-            <!-- FOOTER -->
-            <?php 
+
+                <!-- FOOTER -->
+                <?php
                 require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php";
-            ?>
-            <!-- END FOOTER -->
+                ?>
+                <!-- END FOOTER -->
 
-            <!-- SCROLL PAGE BUTTON -->
+                <!-- SCROLL PAGE BUTTON -->
+                <!--===================================================-->
+                <button class="scroll-top btn">
+                    <i class="pci-chevron chevron-up"></i>
+                </button>
+                <!--===================================================-->
+            </div>
             <!--===================================================-->
-            <button class="scroll-top btn">
-                <i class="pci-chevron chevron-up"></i>
-            </button>
-            <!--===================================================-->
-        </div>
-        <!--===================================================-->
-        <!-- END OF CONTAINER -->
+            <!-- END OF CONTAINER -->
 
-        <!--jQuery [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
-        <!--BootstrapJS [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/bootstrap.min.js"></script>
-        <!--NiftyJS [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
-        <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
-        <!-- DIALOG CONFIRM [OPT] -->
-        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
-        <!--JAVASCRIP da pagina-->
-        <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
-        <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/compras/gcon/Modalidade/modalidadeDesativada.js"</script>
-        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- END JAVASCRIPT -->
+            <!--jQuery [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
+            <!--BootstrapJS [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/bootstrap.min.js"></script>
+            <!--NiftyJS [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/nifty.min.js"></script>
+            <!--DataTables [OPT]-->
+            <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
+            <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+            <!-- DIALOG CONFIRM [OPT] -->
+            <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
+            <!--JAVASCRIP da pagina-->
+            <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
+            <script src="/assets/lib/sesacre/funcoes.js"></script>
+            <script src="/assets/js/compras/gcon/Modalidade/modalidadeDesativada.js"</script>
+            <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
+            <!-- END JAVASCRIPT -->
 
     </body>
 </html>

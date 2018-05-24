@@ -95,7 +95,7 @@ class Objeto {
                     if (!$session->vPComprasTecAdmin()) {
                         $tabela .= '                                      <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" disabled objeto="' . $linha["nm_objeto"] . '"
                                                                                 value="' . $linha["id_objeto"] . '">
-                                                                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
+                                                                                <i class="ion-compose fa-lg text-primary" aria-hidden="true"></i>
                                                                             </button>';
                     } else {
                         $tabela .= '                                      <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" objeto="' . $linha["nm_objeto"] . '"
@@ -111,7 +111,7 @@ class Objeto {
                                                                     </tr>';
                     } else {
                         $tabela .= '                                      <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' . $linha["id_objeto"] . '">
-                                                                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                                                                                <i class="ion-printer fa-lg text-danger" aria-hidden="true"></i>
                                                                             </button>
                                                                         </td>
                                                                     </tr>';
