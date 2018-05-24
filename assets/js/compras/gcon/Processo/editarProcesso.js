@@ -59,7 +59,7 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-cancelar', function (e) {
-        top.location = "/pages/compras/gcon/pesquisa/pesquisa.php";
+        top.location = "/pages/compras/gcon/";
     });
 
     //buscando o select option
