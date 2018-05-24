@@ -8,7 +8,7 @@ function listaStEstagioCombo(){
         },
         "success": function(response) {
             $("#st_estagio").html(response);
-//            $("#st_estagio").val(2).trigger('change');
+            $("#st_estagio").val(9).trigger('change');
         }
     });
 }
@@ -78,10 +78,11 @@ $(document).ready(function () {
         $('#motivo').focus();
     });
     
-    $('#acao').on('click','#btn-cancelar',function(e){
-       e.preventDefault();
-       $('#motivo').val('');
+    $('#acao').on('hidden.bs.modal', function (e) {
+        e.preventDefault();
+        $('#motivo').val(' ');
     });
+    
 
     $('#acao').on('click','#btn-confirmar',function(e){
         e.preventDefault();
@@ -166,7 +167,6 @@ $(document).ready(function () {
         });
        $this.prop("disabled", false);
        $('#acao').modal('hide');
-       $('#motivo').val('');
        
     });
 });

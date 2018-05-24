@@ -662,82 +662,20 @@ class Chamado {
             $pdo = $conexao->connect();
             $retorno = "";
             /* @var $pdo PDO */
-            $pessoa = new Pessoa();
-            $pessoa->setId_pessoa($this->idPessoaSolicitante);
-            $pessoa->setMsg("contrato");
-            $p = $pessoa->retornaPessoa($pdo);
-            print_r($p);
-
-            //**************************************
-            $pessoaFisica = new pessoaFisica();
-            $pessoaFisica->setId_pessoa($this->idPessoaSolicitante);
-            $pf = $pessoaFisica->retornaPf($pdo);
-            //*****************************************
-            $contrato = new DaoSesContrato();
-            $contrato->setId_contrato($this->idPessoaSolicitante);
-            $c = $contrato->retornaContrato($pdo);
-            //*****************************************
-            $funcao = new DaoSesFuncao();
-            $funcao->setId_funcao($this->idPessoaSolicitante);
-            $f = $funcao->retornaFuncoes($pdo);
-            //**************************************
-
             $chamado = new Chamado();
-            $chamado->setIdChamado($this->idPessoaSolicitante);
+            $chamado->setIdChamado($this->idChamado);
             $chamado->setMsg("chamados");
             $ch = $chamado->retornaChamado($pdo);
-            print_r($ch);
+//            print_r($ch);
 //            print_r($ch);
 
             $sistema = new FormSistemas();
             $sistema->setIdFormSistemas($this->idChamado);
-            $chamado->setMsg("formSistemas");
             $s = $sistema->retornaFormSistemas($pdo);
-//            print_r($sistema);
+//            print_r($s);
 
             if ($ch != FALSE) {
                 $retorno[] = array(
-                     "nm_pessoa" => $p['nm_pessoa'],
-                    "id_pais_naturalidade" => $p["id_pais_naturalidade"],
-                    "id_estado_naturalidade" => $p["id_estado_naturalidade"],
-                    "id_naturalidade" => $p["id_naturalidade"],
-                    "ds_logradouro" => $p["ds_logradouro"],
-                    "ds_complemento" => $p["ds_complemento"],
-                    "ds_bairro" => $p["ds_bairro"],
-                    "nr_cep" => $p["nr_cep"],
-                    "id_pais_endereco" => $p["id_pais_endereco"],
-                    "id_estado_endereco" => $p["id_estado_endereco"],
-                    "id_cidade" => $p["id_cidade_endereco"],
-                    "nr_telefone_residencial" => $p["nr_telefone_residencial"],
-                    "nr_telefone_celular" => $p["nr_telefone_celular"],
-                    "nm_email" => $p["nm_email"],
-                    "ds_observacao" => $p["ds_observacao"],
-                    //************************pessoaFisica***************************************
-                    "id_pessoa_fisica" => $pf["id_pessoa_fisica"],
-                    "id_pessoa" => $pf["id_pessoa"],
-                    "tp_sexo" => $pf["tp_sexo"],
-                    "nm_civil" => $pf["nm_civil"],
-                    "nr_cpf" => $pf["nr_cpf"],
-                    "nr_rg" => $pf["nr_rg"],
-                    "ds_orgao_expedidor" => $pf["ds_orgao_expedidor"],
-                    "id_estado_orgao_expedidor" => $pf["id_estado_orgao_expedidor"],
-                    "ds_habilidade" => $pf["ds_habilidade"],
-                    "id_estado_civil" => $pf["id_estado_civil"],
-                    "nm_mae" => $pf["nm_mae"],
-                    "nm_pai" => $pf["nm_pai"],
-                    "dt_nascimento" => $pf["dt_nascimento"] == "" ? $pf["dt_nascimento"] : date("d/m/Y", strtotime($pf["dt_nascimento"])),
-                    "nr_cns" => $pf["nr_cns"],
-                    "id_escolaridade" => $pf["id_escolaridade"],
-                    "st_ativo" => $pf["st_ativo"],
-                    //************************contrato****************************************
-                    "id_contrato" => $c["id_contrato"],
-                    "id_vinculo" => $c["id_vinculo"],
-                    "id_pessoa_juridica" => $c["id_pessoa_juridica"],
-                    "dt_admissao" => $c["dt_admissao"] == "" ? $c["dt_admissao"] : date("d/m/Y", strtotime($c["dt_admissao"])),
-                    "dt_demissao" => $c["dt_demissao"] == "" ? $c["dt_demissao"] : date("d/m/Y", strtotime($c["dt_demissao"])),
-                    "nr_carga_horaria" => $c["nr_carga_horaria"],
-                    "nr_matricula" => $c["nr_matricula"],
-                    "id_cargo" => $c["id_cargo"],
                     //************************Chamado****************************************
                     "idChamado" => $ch["id_chamado"],
                     "idCategoriaSecundaria" => $ch["id_categoria_secundaria"],
@@ -800,7 +738,7 @@ class Chamado {
             $chamado = new DaoChaChamado();
             $chamado->setIdChamado($this->idChamado);
             $ch = $chamado->retornaChamado($pdo);
-            print_r($ch);
+//            print_r($ch);
             if ($ch != FALSE) {
                 if ($this->msg != "chamado") {
                     $retorno[] = array(

@@ -224,7 +224,7 @@ switch ($_REQUEST['acao']) {
         try {
             $cha = new Chamado();
             $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
-            $cha->setIdPessoaSolicitante($session->getIdUser());
+            $cha->setIdChamado($idGet);
             echo $cha->retornaChamadoVisualiza($idGet);
             return;
             break;

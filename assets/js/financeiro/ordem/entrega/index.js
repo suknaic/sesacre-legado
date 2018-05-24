@@ -1,12 +1,11 @@
 $(document).ready(function () {
-    //instacinado fucoes js
+//instacinado fucoes js
     func = new Funcoes();
     $("#dataRecebimento").mask("99/99/9999");
-
     function listaEntregas() {
         let dataSet = [];
         let valores = []
-       
+
         $.ajax({
             "method": "GET",
             "url": "/model/financeiro/ordem/entrega/request.php",
@@ -33,7 +32,8 @@ $(document).ready(function () {
                         valores[i]['dt_confirmacao'],
                         valores[i]['diasatrazo'],
                         valores[i]['status'],
-                        'teste'
+                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['diasatrazo']+'&ordem=' + valores[i]['diasatrazo'] + 
+                         '&pre=' + valores[i]['diasatrazo'] + '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
                     ]
                     dataSet.push(valor)
                 }
@@ -42,15 +42,16 @@ $(document).ready(function () {
                     language: {
                         "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                     },
+
                     columns: [
-                        {title: "Data Do Aviso"},
-                        {title: "Quantidade De Entrega"},
-                        {title: "Prazo De Entrega"},
-                        {title: "Prazo Limite Para Entrega"},
-                        {title: "Entregue dia"},
-                        {title: "Dias De Atraso"},
-                        {title: "Status"},
-                        {title: "Ação"}
+                        {title: "Data Do Aviso", className: "text-center" },
+                        {title: "Quantidade De Entrega" , className: "text-center"},
+                        {title: "Prazo De Entrega" , className: "text-center"},
+                        {title: "Prazo Limite Para Entrega" , className: "text-center"},
+                        {title: "Entregue dia" , className: "text-center"},
+                        {title: "Dias De Atraso" , className: "text-center"},
+                        {title: "Status" , className: "text-center"},
+                        {title: "Ação" , className: "text-center"}
 
                     ]
                 });
@@ -58,8 +59,6 @@ $(document).ready(function () {
         });
     }
     listaEntregas();
-
-
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -130,7 +129,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            window.location.href = "/pages/financeiro/ordem/index.php";
+                            location.reload();
                         });
                         return false;
                     } else {

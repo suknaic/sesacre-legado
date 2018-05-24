@@ -189,14 +189,33 @@ class FinAutorizacao {
         } else {
             return Metodos::retornoAjax("Erro", "alert", "Erro na autorização2");
         }
-
-        if ($daoAutorizacaoPedido->sucesso()) {
-            $pdo->commit();
-            return Metodos::retornoAjax("ok", "html", "Pedido cancelado com sucesso.");
+        
+        //Verifica se o pedido está vinculado a uma diária
+        $idDiaria = Diaria::verificaDiariaPedido($this->id_pedido);
+        if ($idDiaria) {
+            $diaria = new Diaria();
+            $diaria->setIdDiaria($idDiaria);
+            $diaria->setIdPedido($this->getIdPedido());
+            $diaria->setUsuarioPedido($this->getIdPessoa());
+            $retornoDiaria = $diaria->desvinculaPedidoDiaria($pdo);
+            if (!$retornoDiaria) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Pedido cancelado com sucesso.");
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na autorização4");
+            }
         } else {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", "Erro na autorização3");
+            if ($daoAutorizacaoPedido->sucesso()) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Pedido cancelado com sucesso.");
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na autorização3");
+            }
         }
+
+        
         unset($conexao);
         unset($pdo);
     }

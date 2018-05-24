@@ -340,7 +340,7 @@ $(document).ready(function () {
     if(estagio == '1' || estagio == '3'){ //Criada ou Indeferida
         $("#enviar_diaria").show();
     } else {
-        if(estagio == '4' || estagio == '2'){ //Deferida ou Enviada para Deferimento
+        if(estagio == '2' || estagio == '4' || estagio == '5' || estagio == '6'){ //Deferida ou Enviada para Deferimento
             $("#salvar_diaria").prop('disabled',true);
         }
     }

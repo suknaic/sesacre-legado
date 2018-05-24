@@ -4,6 +4,7 @@ class FinEntregaConfirmacaoTb {
 
     private $id_entrega_confirmacao = null;
     private $id_ordem = null;
+    private $id_protocolo = null;
     private $nr_entrega_confirmacao = null;
     private $dt_entrega = null;
     private $dt_confirmacao = null;
@@ -43,6 +44,24 @@ class FinEntregaConfirmacaoTb {
      */
     public function setIdOrdem($id_ordem) {
         $this->id_ordem = $id_ordem;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdProtocolo() {
+        return $this->id_protocolo;
+    }
+
+    /**
+     * @param mixed $id_protocolo
+     *
+     * @return self
+     */
+    public function setIdProtocolo($id_protocolo) {
+        $this->id_protocolo = $id_protocolo;
 
         return $this;
     }
