@@ -127,10 +127,10 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         try {
             if (!empty($pdo)) {
                 $sql = "select concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as numero,
-                        l.nm_lotacao, tpGasto.nm_tipo_gasto, cont.nr_contrato, font.nr_fonte, pt.cd_programa_trabalho,  pt.ds_programa_trabalho, 
+                        l.nm_lotacao, tpGasto.id_tipo_gasto,tpGasto.nm_tipo_gasto, cont.nr_contrato, font.nr_fonte, pt.cd_programa_trabalho,  pt.ds_programa_trabalho, 
                         desp.cd_despesa, desp.ds_despesa, p.ds_pedido, mat.nm_material, mat.nm_desc_material, item.ds_itens, mat.tp_material, 
                         item.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, cont.tp_contrato, (pre.qt_itens_pre *pre.vl_itens_pre) as total, 
-                        p.id_fonte, p.id_programa_trabalho, p.id_despesa_elemento, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,
+                        p.id_pedido,p.id_fonte, p.id_programa_trabalho, p.id_despesa_elemento, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,
                         p.vl_pedido, pj.nm_pessoa, gco.cd_pregao, mod.nm_modalidade, cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato
                         from fin_pedido as p
                         inner join pla_tipo_gasto as tpGasto

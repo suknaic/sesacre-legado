@@ -321,15 +321,16 @@ class Pedido {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
+            
             if ($daoFinPedido->Sucesso()) {
-                //Rotina que vincula o pedido de necessidade com a diária
-                $diaria = new Diaria();
-                $diaria->setIdDiaria($this->getIdDiaria());
-                $diaria->setIdPedido($daoFinPedido->getIdPedido());
-                $diaria->setUsuarioPedido($this->getIdUsuario());
-                $retornoDiaria = $diaria->vinculaPedidoDiaria($pdo);
-                if (!$retornoDiaria) {
+                
+                //Se for diaria, irá vincular com o pedido
+                if ($this->idTipoGasto == 13) {
+                    $retorno2 = !$this->associaPedidoDiaria($pdo,$daoFinPedido->getIdPedido());
+                } else {
+                    $retorno2 = true;
+                }
+                if ($retorno2) {
                     $pdo->commit();
                     //verifico ser o contrato tem ata ou nao
                     if (empty($this->idFornecedor)) {
@@ -338,7 +339,7 @@ class Pedido {
                         $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
                     }
                 } else {
-                    $retorno = Metodos::retornoAjax("Erro", "console", $retornoDiaria);
+                    $retorno = Metodos::retornoAjax("Erro", "alert", 'Erro na vinculação do pedido com a diária.');
                 }
                 
             } else {
@@ -351,6 +352,18 @@ class Pedido {
         }
     }
 
+   function associaPedidoDiaria(PDO $pdo = null, int $idPedido){
+       try {
+           $diaria = new Diaria();
+           $diaria->setIdDiaria($this->getIdDiaria());
+           $diaria->setIdPedido($idPedido);
+           $diaria->setUsuarioPedido($this->getIdUsuario());
+           return $diaria->vinculaPedidoDiaria($pdo);
+       } catch (Exception $exc) {
+           return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+       }
+    }
+    
     public function retornaDadosPedido() {
         try {
             $conexao = new Conexao();
