@@ -110,31 +110,32 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#butao").append(response);
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novaSituacao" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
-                            <i class="ion ion-plus-round" aria-hidden="true"></i> Nova Situação\n\
-                        </button>');
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-situacoesDesativadas" style="display: block; margin-left: 240px;margin-top: -32px" type="button">\n\
-                            <i class="ion-power" aria-hidden="true"></i> Situações Desativadas\n\
-                        </button>');
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/situacao/nova_situacao.php">Nova Situação</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/situacao/situacaoDesativada.php">Situações Desativadas</a>\n\
+                                                </li>');
         }
     });
     
     $("#butao").mouseover(function () {
-        $(".menuButton").show();
-    })
-    .mouseout(function () {
-        $(".menuButton").hide();
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
     });
     
-    $('body').on('click', '.btn-novaSituacao', function (e) {
-        top.location = "/pages/compras/gcon/situacao/nova_situacao.php";
-    });
-    
-    $('body').on('click', '.btn-situacoesDesativadas', function (e) {
-        top.location = "/pages/compras/gcon/situacao/situacaoDesativada.php";
-    });
     //escodendo botões
     $(".btn-limpar").hide();
     $(".btn-editar").hide();

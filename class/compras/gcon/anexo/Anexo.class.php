@@ -208,7 +208,8 @@ class Anexo {
                         if ($cadastraAnotacao) {
                             $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
                             if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
-                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . md5($this->idProcesso.$this->nomeAnexo);
+                                $extencao = substr($this->nomeAnexo, -5);
+                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' .$this->idProcesso.'/'. md5($this->nomeAnexo).$extencao;
                                 if (unlink($link)) {
                                     $pdo->commit();
                                     return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");

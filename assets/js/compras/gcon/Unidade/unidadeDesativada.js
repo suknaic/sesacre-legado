@@ -6,26 +6,33 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#butao").append(response);
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novaUnidade" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
-                            <i class="ion ion-plus-round" aria-hidden="true"></i> Nova Unidade\n\
-                        </button>');
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/unidade/nova_unidade.php">Nova Unidade</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/unidade/unidadeDesativadas.php">Unidades Desativadas</a>\n\
+                                                </li>');
         }
     });
-    
+
     $("#butao").mouseover(function () {
-        $(".menuButton").show();
-    })
-    .mouseout(function () {
-        $(".menuButton").hide();
-    });
-    
-    $('body').on('click', '.btn-novaUnidade', function (e) {
-        top.location = "/pages/compras/gcon/unidade/nova_unidade.php";
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
     });
 
-    function listarUnidade(a) {    
+    function listarUnidade(a) {
         $.ajax({
             "url": "/model/compras/gcon/unidade/request.php",
             "dataType": "html",
@@ -35,20 +42,21 @@ $(document).ready(function () {
 
             "success": function (response) {
                 if (a == 0) {
-                    func.carregaTabelaPadrao('tabela_unidade', response, [10]); 
-                }else{
+                    func.carregaTabelaPadrao('tabela_unidade', response, [10]);
+                } else {
                     func.carregaTabelaPadrao('tabela_unidade', response, [10], true);
                 }
             }
         });
-    };
+    }
+    ;
     //chamando função para listar objetos
     listarUnidade(0);
-    
+
     $('body').on('click', '.btn-ativar', function (e) {
         $("#id_unidade").val($(this).val());
     });
-    
+
     $('body').on("click", ".btn-ativar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

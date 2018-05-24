@@ -5,29 +5,30 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#butao").append(response);
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novoProcesso" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
-                            <i class="ion ion-plus-round" aria-hidden="true"></i> Novo Processo\n\
-                        </button>');
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-processosDsativados" style="display: block; margin-left: 245px;margin-top: -32px" type="button">\n\
-                            <i class="ion-power" aria-hidden="true"></i> Processos Desativados\n\
-                        </button>');
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/processo/processo.php">Novo Processo</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/processo/processosDesativados.php">Processos Desativados</a>\n\
+                                                </li>');
         }
     });
     
     $("#butao").mouseover(function () {
-        $(".menuButton").show();
-    })
-    .mouseout(function () {
-        $(".menuButton").hide();
-    });
-    
-    $('body').on('click', '.btn-novoProcesso', function (e) {
-        top.location = "/pages/compras/gcon/processo/processo.php";
-    });
-    $('body').on('click', '.btn-processosDsativados', function (e) {
-        top.location = "/pages/compras/gcon/processo/processosDesativados.php";
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
     });
     
     $("#data_process").mask("99/99/9999");

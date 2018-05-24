@@ -30,10 +30,11 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         try {
             if ($pdo != null) {
 
-                $sql = "insert into fin_entrega_confirmacao(id_ordem, nr_entrega_confirmacao, dt_entrega, nr_qtd_entregas) 
-                        values(:ordem, :nrEntrega, :dtEntrega, :qtdEntrega)";
+                $sql = "insert into fin_entrega_confirmacao(id_ordem, id_protocolo, nr_entrega_confirmacao, dt_entrega, nr_qtd_entregas) 
+                        values(:ordem, :protocolo, :nrEntrega, :dtEntrega, :qtdEntrega)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->bindValue(":nrEntrega", $this->getNrEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":dtEntrega", $this->getDtEntrega(), PDO::PARAM_STR);
                 $stmt->bindValue(":qtdEntrega", $this->getNrQtdEntrega(), PDO::PARAM_INT);
