@@ -52,6 +52,8 @@ class Diaria {
     
     private $usuarioPedido = null;
     
+    private $msgErros = null;
+    
     function getUsuarioPedido() {
         return $this->usuarioPedido;
     }

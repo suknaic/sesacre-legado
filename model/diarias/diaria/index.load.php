@@ -30,6 +30,11 @@ if ($id_diaria) {
 
 $selectDecretoOption = $diaria->retornaDecretosOption();
 $selectTransporteOption = $diaria->retornaTransporteOption();
+
+$selectLotacaoProponente = '';
+$selectLotacaoProposto = '';   
+$selectFuncaoProponente = '';
+$selectFuncaoProposto = '';
 $dh_inicio = '';
 $dh_fim = '';
 $origem = '';
@@ -72,9 +77,11 @@ if ($jsonDiaria != ""){
 
     $selectTipoDiariaOption = $diaria->retornaTipoDiariaOption();
     $selectDiariaPaiOption = $diaria->retornaDiariaPaiOption();
+    
     $selectPessoaProponente = $contrato->retornaOptionPessoaContrato();
     $selectPessoaProposto = $contrato->retornaOptionPessoaContrato();
-
+    
+   
     $ds_servico_executado = '';
     $ds_locais_executado = '';
     

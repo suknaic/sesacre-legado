@@ -74,21 +74,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                            <input type="hidden" id="id_diaria" value="<?php echo $id_diaria; ?>"/>
                            <input type="hidden" id="st_estagio" value="<?php echo $st_estagio; ?>"/>
                            
-                           
-                           <div id="observacoes">
-                                <div class="panel">
-                                    <div class="panel-heading text-center">
-                                        <h2 class="panel-title">Histórico</h2>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <textarea id="historico" cols="250" rows="5" readonly class="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                           </div>
+                          
 
                            <div class="panel">
                                <div class="panel-heading  text-center">
@@ -237,7 +223,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        <div class="col-md-6">
                                            <div class="form-group">
                                                <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
-                                               <input type="hidden" id="id_cidade_inicio" disabled value="<?php echo $id_cidade_inicio; ?>">
+                                               <input type="hidden" id="id_cidade_inicio" disabled value="">
                                                <div class="input-group">
                                                    <input class="form-control" type="text" id="ds_cidade_inicio" disabled value="<?php echo $origem; ?>" />
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="origem">
@@ -249,7 +235,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        <div class="col-md-6">
                                            <div class="form-group">
                                                <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
-                                               <input type="hidden" id="id_cidade_fim" disabled value="<?php echo $id_cidade_fim; ?>">
+                                               <input type="hidden" id="id_cidade_fim" disabled value="">
                                                <div class="input-group">
                                                    <input class="form-control" type="text" id="ds_cidade_fim" disabled value="<?php echo $destino;?>"/>
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
@@ -325,7 +311,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                            </div>
                                        </div>
                                        <div class="col-md-6">
-                                           <input type="hidden" id="id_classe_default" value="<?php echo $id_classe_default; ?>"/>
+                                           <input type="hidden" id="id_classe_default" value=""/>
                                            <div class="form-group">
                                                <label for="id_classe">Classe: <span class="text-danger">*</span></label>
                                                <div class="input-group">
@@ -333,9 +319,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                        <p class="fa fa-list inputPFa"></p>
                                                    </span>
                                                    <select id="id_classe" class="form-control">
-                                                       <?php
-                                                           echo $selectClasseOption;
-                                                       ?>
+
                                                    </select>
                                                </div>
                                            </div>
@@ -448,6 +432,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                             <?php echo $linhasAnexos; ?>
                                         </div>
                                    </div>
+                                </div>
+                           </div>
+                           
+                           <div id="observacoes">
+                                <div class="panel">
+                                    <div class="panel-heading text-center">
+                                        <h2 class="panel-title">Histórico</h2>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <textarea id="historico" cols="250" rows="5" readonly class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                            </div>
 

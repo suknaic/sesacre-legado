@@ -231,11 +231,12 @@ function encapsulaDadosDoFormItinerario() {
         vl_diaria_destino: valor,
         vl_total: total
     };
+//    console.log(Itinerario.id_classe);
     
-    if (Itinerario.ds_cidade_inicio === '' || Itinerario.ds_cidade_fim === ''
-            || Itinerario.dh_inicio === '' || Itinerario.dh_fim === ''
-            || Itinerario.id_transporte === 0 || Itinerario.id_classe === 0
-            || Itinerario.qt_diaria_destino === 0 || Itinerario.vl_diaria_destino === 0) {
+    if (Itinerario.ds_cidade_inicio == '' || Itinerario.ds_cidade_fim == ''
+            || Itinerario.dh_inicio == '' || Itinerario.dh_fim == ''
+            || Itinerario.id_transporte == 0 || Itinerario.id_classe == 0
+            || Itinerario.qt_diaria_destino == 0 || Itinerario.vl_diaria_destino == 0) {
         func.modalAlert(func.msgPreencherCampos);
         return false;
     }
@@ -479,7 +480,7 @@ $(document).ready(function () {
             if (Diaria.tipo == "" || Diaria.proponente == "" ||
                     Diaria.proponenteLotacao == "" || Diaria.proponenteFuncao == "" ||
                     Diaria.proposto == "" || Diaria.propostoLotacao == "" ||
-                    Diaria.servicosExec == "" || Diaria.locaisExec == "") {
+                    Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {
 
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
@@ -658,7 +659,7 @@ $(document).ready(function () {
                                 func.modalAlert(response.msg, 'primary');
                                 //Reload após deletar o registro
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
+                                     top.location.href = "/pages/diarias/";
                                 });
                             } else {
                                 console.log('Ultimo else');
