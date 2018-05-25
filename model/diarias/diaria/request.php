@@ -153,6 +153,7 @@ switch ($_REQUEST['acao']) {
             $diaria = new Diaria();
             $diaria->setIdTipo((int)$filtro['tipo']);
             $diaria->setIdDiariaPai((int)$filtro['idDiariaPai']);
+            $diaria->setNrProtocolo($filtro['nrProtocolo']);
             
             $diaria->setIdPessoaProponente((int)$filtro['proponente']);
             $diaria->setIdLotacaoProponente((int)$filtro['proponenteLotacao']);

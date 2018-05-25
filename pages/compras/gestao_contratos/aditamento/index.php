@@ -162,7 +162,7 @@
                                         <input type="hidden" id="tipo_aditivo" value="<?php echo $idTipoAditvo; ?>" />
                                         <div class="panel-body">                                             
                                             <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Motivo do Aditamento: <span class="text-danger">*</span></label>
+                                                <label class="col-sm-2 control-label text-left">Motivo do Aditamento: <span class="text-danger">*</span> </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -201,7 +201,8 @@
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Instrumento de Equilíbrio Econômico-Financeiro: <span class="text-danger">*</span></label>
+                                                <label class="col-sm-2 control-label text-left">
+                                                    Instrumento de Equilíbrio Econômico-Financeiro: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                             <span class="input-group-addon">
@@ -231,7 +232,13 @@
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Unidade de Cálculo: <span class="text-danger">*</span></label>
+                                                <label class="col-sm-2 control-label text-left">Unidade de Cálculo: 
+                                                    <span class="text-danger">*</span>
+                                                    <span class="fa fa-question-circle add-tooltip" 
+                                                          data-original-title="Unidade de Cálculo será Habilitado de acordo com o Instrumento de Equilíbrio Econômico-Financeiro" 
+                                                        data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
+                                                    </span>                                                    
+                                                </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                             <span class="input-group-addon">
@@ -246,13 +253,19 @@
                                             </div>
                                                                                                                                     
                                             <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Tipo de Aquisição: <span class="text-danger">*</span></label>
+                                                <label class="col-sm-2 control-label text-left">Tipo de Aquisição: 
+                                                    <span class="text-danger">*</span>
+                                                    <span class="fa fa-question-circle add-tooltip" 
+                                                          data-original-title="Tipo de Aquisição somente será Habilitado Quando Instrumento de Equilíbrio Econômico-Financeiro for Revisão" 
+                                                        data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
+                                                    </span>
+                                                </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_tipo_aquisicao" class="form-control">
+                                                        <select id="n_tipo_aquisicao" class="form-control" disabled="">
                                                             <option value="0">Selecione a Aquisição</option>
                                                             <?php echo $selectTipoAquisicao; ?>
                                                         </select>                                                                
@@ -260,8 +273,14 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Percentual: <span class="text-danger">*</span></label>
+                                            <div class="form-group" id="div_percentual">
+                                                <label class="col-sm-2 control-label text-left">Percentual: 
+                                                    <span class="text-danger">*</span>
+                                                    <span class="fa fa-question-circle add-tooltip" 
+                                                          data-original-title="Campo Obrigatório Quando a Unidade de Cálculo for Percentual" 
+                                                        data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
+                                                    </span>
+                                                </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
