@@ -41,7 +41,7 @@ class Diaria {
     private $idPedido             = null;
     private $idDiariaPai         = null;
     private $idRelatorio          = null;
-    
+    private $nrProtocolo          = null;
     private $stEstagio            = null;
     // 1 - CRIADA
     // 2 - ENVIADA PARA DEFERIMENTO
@@ -191,8 +191,17 @@ class Diaria {
 
     function setIdTipo($idTipo) {
         $this->idTipo = $idTipo;
-    } 
+    }
     
+    function getNrProtocolo() {
+        return $this->nrProtocolo;
+    }
+
+    function setNrProtocolo($nrProtocolo) {
+        $this->nrProtocolo = $nrProtocolo;
+    }
+
+        
     function setIdPessoaProponente($idPessoaProponente) {
         $this->idPessoaProponente = $idPessoaProponente;
     }
@@ -637,12 +646,12 @@ class Diaria {
                                                      . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
                                                 . '</button>'
                                               . '</a>';
-                                    $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
-                                                . '<button title="Imprimir Relatório de Viagem" type="button" >'
+                                }
+                                $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
+                                                . '<button title="Imprimir proposta e concessão da Diária" type="button" >'
                                                     . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
                                                 . '</button>'
                                             . '</a>';
-                                }
 
 
                     $retorno .=   "</td>"
@@ -794,6 +803,8 @@ class Diaria {
                 if ($this->getIdDiariaPai()) {
                     $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
                 }
+                
+                $daoDiaDiaria->setNrProtocolo($this->getNrProtocolo());
 
                 $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
                 $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());
@@ -872,6 +883,8 @@ class Diaria {
                 if ($this->getIdDiariaPai()) {
                     $daoDiaDiaria->setIdDiariaPai($this->getIdDiariaPai());
                 }
+                
+                $daoDiaDiaria->setNrProtocolo($this->getNrProtocolo());
 
                 $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
                 $daoDiaDiaria->setIdLotacaoProponente($this->getIdLotacaoProponente());

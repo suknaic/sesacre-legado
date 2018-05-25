@@ -459,6 +459,7 @@ $(document).ready(function () {
 
             var Diaria = {
                 idDiaria: $("#id_diaria").val(),
+                nrProtocolo: $("#nr_protocolo").val(),
                 idDiariaPai: $("#id_diaria_pai option:selected").val(),
                 tipo: $("#id_tipo option:selected").val(),
                 proponente: $("#id_pessoa_proponente option:selected").val(),
@@ -477,7 +478,7 @@ $(document).ready(function () {
 
 
             //Validação dos campos
-            if (Diaria.tipo == "" || Diaria.proponente == "" ||
+            if (Diaria.tipo == "" || Diaria.proponente == "" || Diaria.nrProtocolo == "" ||
                     Diaria.proponenteLotacao == "" || Diaria.proponenteFuncao == "" ||
                     Diaria.proposto == "" || Diaria.propostoLotacao == "" ||
                     Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {

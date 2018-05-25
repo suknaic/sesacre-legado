@@ -81,26 +81,41 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <h2 class="panel-title">Dados da Solicitação da Diária</h2>
                                </div>
                                <div class="panel-body">
-                                   <div class="form-group">
-                                       <label for="id_tipo">Tipo da diária: <span class="text-danger">*</span></label>
-                                       <div class="input-group">
-                                           <span class="input-group-addon">
-                                               <p class="fa fa-list inputPFa"></p>
-                                           </span>
-                                           <select id="id_tipo" class="form-control">
-                                               <?php echo $selectTipoDiariaOption; ?>
-                                           </select>
+                                   <div class="row">
+                                       <div class="col-sm-6">
+                                           <div class="form-group">
+                                               <label for="nr_protocolo">Nº Protocoloco: <span class="text-danger">*</span></label>
+                                               <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                       <p class="fa fa-file-text-o inputPFa"></p>
+                                                   </span>
+                                                   <input type="text" id="nr_protocolo" class="form-control" value="<?php echo $nr_protocolo;?>"/>
+                                                </div>
+                                           </div>
                                        </div>
-                                   </div>
-                                   <div class="form-group" id="diaria_pai">
-                                       <label for="id_diaria_pai">Diária principal: <span class="text-danger">*</span></label>
-                                       <div class="input-group">
-                                           <span class="input-group-addon">
-                                               <p class="fa fa-list inputPFa"></p>
-                                           </span>
-                                           <select id="id_diaria_pai" class="form-control">
-                                               <?php echo $selectDiariaPaiOption; ?>
-                                           </select>
+                                       <div class="col-sm-6">
+                                           <div class="form-group">
+                                                <label for="id_tipo">Tipo da diária: <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-list inputPFa"></p>
+                                                    </span>
+                                                    <select id="id_tipo" class="form-control">
+                                                        <?php echo $selectTipoDiariaOption; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="diaria_pai">
+                                                <label for="id_diaria_pai">Diária principal: <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-list inputPFa"></p>
+                                                    </span>
+                                                    <select id="id_diaria_pai" class="form-control">
+                                                        <?php echo $selectDiariaPaiOption; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
                                        </div>
                                    </div>
                                    <div class="row">
@@ -225,7 +240,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
                                                <input type="hidden" id="id_cidade_inicio" disabled value="">
                                                <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_inicio" disabled value="<?php echo $origem; ?>" />
+                                                   <input class="form-control" type="text" id="ds_cidade_inicio" disabled value="" />
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="origem">
                                                        <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                    </span>
@@ -237,7 +252,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
                                                <input type="hidden" id="id_cidade_fim" disabled value="">
                                                <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_fim" disabled value="<?php echo $destino;?>"/>
+                                                   <input class="form-control" type="text" id="ds_cidade_fim" disabled value=""/>
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
                                                        <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                    </span>

@@ -23,11 +23,11 @@ class DaoDiaDiaria extends DiaDiaria {
                         . "(id_tipo, id_pessoa_proponente, id_funcao_proponente,id_lotacao_proponente,"
                         . " id_pessoa_proposto,id_funcao_proposto, id_lotacao_proposto,"
                         . " ds_servico_executado,ds_locais_executado, ds_obs, dt_criacao, "
-                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai) "
+                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai,nr_protocolo) "
                         . "values (:id_tipo, :id_pessoa_proponente, :id_funcao_proponente, :id_lotacao_proponente, "
                         . "        :id_pessoa_proposto, :id_funcao_proposto, :id_lotacao_proposto, "
                         . "        :ds_servico_executado, :ds_locais_executado, :ds_obs, :dt_criacao, "
-                        . "         :id_pessoa_solicitante, :id_pedido, :id_diaria_pai)";
+                        . "         :id_pessoa_solicitante, :id_pedido, :id_diaria_pai,:nr_protocolo)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_pessoa_proponente", $this->getIdPessoaProponente(), PDO::PARAM_INT);
@@ -43,6 +43,7 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":id_pessoa_solicitante", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_protocolo", $this->getNrProtocolo(), PDO::PARAM_STR);
 
            
                 $stmt->execute();
@@ -75,7 +76,8 @@ class DaoDiaDiaria extends DiaDiaria {
                             . "id_pessoa_solicitante = :id_pessoa_solicitante, "
                             . "fl_retorno = :fl_retorno, "
                             . "id_pedido = :id_pedido, "
-                            . "id_diaria_pai = :id_diaria_pai "
+                            . "id_diaria_pai = :id_diaria_pai, "
+                            . "nr_protocolo = :nr_protocolo "
                         . " where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
@@ -93,6 +95,7 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_protocolo", $this->getNrProtocolo(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
                 
                 $stmt->execute();
@@ -218,7 +221,8 @@ class DaoDiaDiaria extends DiaDiaria {
                                 diaria.id_funcao_proposto,
                                 diaria.ds_servico_executado, 
                                 diaria.ds_locais_executado, 
-                                diaria.ds_obs, 
+                                diaria.ds_obs,
+                                diaria.nr_protocolo,
                                 diaria.id_pessoa_solicitante,
                                 diaria.fl_retorno,
                                 diaria.id_pedido,
@@ -594,6 +598,7 @@ class DaoDiaDiaria extends DiaDiaria {
                             pf_proposto.nr_cpf as proposto_cpf,
                             cnt_proposto.nr_matricula as proposto_matricula,
                             diaria.id_tipo,
+                            diaria.nr_protocolo,
                             diaria.ds_locais_executado,
                             diaria.ds_servico_executado,
                             diaria.ds_obs,

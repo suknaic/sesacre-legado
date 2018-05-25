@@ -156,7 +156,7 @@ $html = "
               </p>
             </div>
             <div class='nome'>
-                <b>ADA: </b> 
+                <b>ADA: </b>".$dados['nr_protocolo']." 
             </div>
             <br/><br/>
             
