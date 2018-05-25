@@ -21,9 +21,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
@@ -199,7 +197,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-3">
+<!--                                        <div class="col-sm-3">
                                             <div class="panel-body">
                                                 Quantidade de entrega programadas :
                                                 <div class="input-group">
@@ -207,7 +205,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                     <input class="form-control data" type="number" name="quantidade" id="quantidade" min="1" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="col-sm-3"></div>
                                     </div>
 
@@ -228,24 +226,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="panel">
-                                        <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-capitalize text-center">data do aviso</th>
-                                                    <th class="text-capitalize text-center">quantidade de entregas</th>
-                                                    <th class="text-capitalize text-center">prazo de entrega</th>
-                                                    <th class="text-capitalize text-center">prazo limite para entrega</th>
-                                                    <th class="text-capitalize text-center">entregue dia</th>
-                                                    <th class="text-capitalize text-center">dias de atraso</th>
-                                                    <th class="text-capitalize text-center">status</th>
-                                                    <th class="text-capitalize text-center">ação</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <div class="panel-body">
+                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-capitalize text-center">data do aviso</th>
+                                                        <th class="text-capitalize text-center">quantidade de entregas</th>
+                                                        <th class="text-capitalize text-center">prazo de entrega</th>
+                                                        <th class="text-capitalize text-center">prazo limite para entrega</th>
+                                                        <th class="text-capitalize text-center">entregue dia</th>
+                                                        <th class="text-capitalize text-center">dias de atraso</th>
+                                                        <th class="text-capitalize text-center">status</th>
+                                                        <th class="text-capitalize text-center">ação</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                            </tbody>
+                                                </tbody>
 
-                                        </table>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -286,6 +286,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
+        <!--DataTables [OPT]-->
+        <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>      
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>

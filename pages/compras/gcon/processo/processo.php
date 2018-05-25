@@ -25,9 +25,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!-- Datapicker -->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
-    </head>
-    <!--TIPS-->
-
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
@@ -52,13 +49,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon -->
-
                         <!-- Inicio do Formulário de Cadastro de Processos-->
                         <form data-toggle="validator" class="form-horizontal">
                             <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Processo</h3>
                                 </div>

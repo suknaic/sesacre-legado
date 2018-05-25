@@ -27,7 +27,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
         <!-- Datapicker -->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
     </head>
-    <!--TIPS-->
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
@@ -53,10 +52,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon --> 
-
                         <!--Modal upload-->
                         <div class=" modal fade modal-upload" id="upload" 
                              tabindex="-1" role="dialog" 
@@ -117,6 +112,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                         <!-- Inicio do Formulário de Edição de Processos-->
                         <form data-toggle="validator" class="form-horizontal formEditar" id="form_process" role="form" action="#"method="post">
                             <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Edição de Processo</h3>
                                 </div>

@@ -57,13 +57,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon -->
-
                         <!-- Inicio do Formulário de Cadastro de usuario-->
                         <form data-toggle="validator" class="form-horizontal" id="form_process" role="form" action="#"method="post">
                             <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Usuário</h3>
                                 </div>
@@ -72,7 +75,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                     <div class="col-md-3">
                                         <div class="panel-body">Usuário: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
                                             <select class="form-control" name="pessoa" id="pessoa">
-                                               
+
                                             </select>
                                         </div>
                                     </div>
@@ -119,7 +122,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    
+
                                                 </tbody>
                                             </table>
                                         </div>

@@ -1,3 +1,47 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/menu/menu.gcon.load.php";
 
+$menu = $_REQUEST['menu'];
+if ($menu != 'menu_2') {
+    echo '
+<ul class="dropdown-menu" id="menu" style="margin-left: 135px">
+    <li class="text-center">
+        <a href="/pages/compras/gcon/">Processo</a><hr>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/objeto/objeto.php">Objeto</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/situacao/situacao.php">Situação</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/modalidade/modalidade.php">Modalidade</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/unidade/unidade.php">Unidades Contempladas</a><hr>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/usuario/">Usuários</a>
+    </li>
+</ul>';
+} else {
+    echo '<ul class="dropdown-menu" id="menu" style="margin-left: 135px">
+    <li class="text-center">
+        <a href="/pages/compras/gcon/">Processo</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/objeto/objeto.php">Objeto</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/situacao/situacao.php">Situação</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/modalidade/modalidade.php">Modalidade</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/unidade/unidade.php">Unidades Contempladas</a>
+    </li>
+    <li class="text-center">
+        <a href="/pages/compras/gcon/usuario/">Usuários</a>
+    </li>
+</ul>';
+}

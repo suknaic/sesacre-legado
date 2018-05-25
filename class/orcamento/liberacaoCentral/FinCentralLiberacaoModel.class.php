@@ -746,7 +746,13 @@ class FinCentralLiberacaoModel {
                     $idLotacao[] = $dados["id_lotacao"];
                 }
             }
-            $idLotacao = " and cl.id_lotacao in (" . implode(' , ', $idLotacao) . ") ";
+            if (empty($idLotacao)) {
+                $idLotacao = '';
+            } else {
+
+                $idLotacao = " and cl.id_lotacao in (" . implode(' , ', $idLotacao) . ") ";
+            }
+
 
             $daoFinCentralLiberacao->retornaLiberacaoPesquisa($pdo, $idLotacao);
             if ($daoFinCentralLiberacao->Sucesso()) {

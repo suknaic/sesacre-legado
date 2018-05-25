@@ -52,13 +52,16 @@
                     <!--End page title-->
                             
                     <div id="page-content"> 
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon -->
-                        
                         <!-- Inicio do Formulário de Cadastro de Modalidade-->
                         <form data-toggle="validator" class="form-horizontal" id="form_nova_modalidade" role="form" action="#" method="post">                                      
-                            <div class="panel">                                          
+                            <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Modalidade</h3>
                                 </div>

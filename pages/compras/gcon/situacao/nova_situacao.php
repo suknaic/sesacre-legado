@@ -52,13 +52,16 @@
                     <!--End page title-->
 
                     <div id="page-content"> 
-                        <!-- Menu GCON -->
-                            <div id="menu_gcon"></div> 
-                        <!-- Fim_Menu_Gcon -->
-                                    
                         <!-- Inicio do Formulário de Cadastro de Modalidade-->
                         <form data-toggle="validator" class="form-horizontal" id="form_situação" role="form" action="#" method="post">                                      
-                            <div class="panel">                                          
+                            <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Situação:</h3>
                                 </div>
@@ -144,7 +147,6 @@
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <!--<script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>-->
         <script src="/assets/js/compras/gcon/Situacao/nova_situacao.js"></script>
      
         <!-- END JAVASCRIPT -->

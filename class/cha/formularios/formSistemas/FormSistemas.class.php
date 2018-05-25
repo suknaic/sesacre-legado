@@ -631,15 +631,14 @@ class FormSistemas {
 //            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
 //        }
 //    }
-
     public function retornaFormSistemas($pdo) {
         try {
             $sistemas = new DaoChaFormSistemas();
             $sistemas->setIdFormSistemas($this->idFormSistemas);
             $s = $sistemas->retornaFormSistemas($pdo);
-            print_r($s);
+//            print_r($s);
             if ($s != FALSE) {
-                if ($this->msg != "chamado") {
+                if ($this->msg != "sistema") {
                     $retorno[] = array(
                         "idFormSistemas" => $s["id_form_sistemas"],
                         "idChamado" => $s["id_chamado"],

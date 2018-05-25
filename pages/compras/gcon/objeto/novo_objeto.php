@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -32,9 +32,9 @@
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -52,31 +52,34 @@
                     <!--End page title-->
 
                     <div id="page-content"> 
-                        <!-- Menu GCON -->
-                        <div id="menu_gcon"></div>
-                        <!-- Fim_Menu_Gcon -->
-                                    
                         <!-- Inicio do Formulário de Cadastro de Objeto-->
                         <form data-toggle="validator" class="form-horizontal" id="form_objeto" role="form" action="#" method="post">                                      
-                            <div class="panel">                                          
+                            <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Cadastro de Objeto</h3>
                                 </div>
                                 <div class="input_ordens">
                                     <div class="form-group">
                                         <div class="col-md-3"></div>
-                                            
-                                            <div class="col-md-6">
-                                                <div class="panel-body">
-                                                    <p class="form-control-static">Objeto: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
+
+                                        <div class="col-md-6">
+                                            <div class="panel-body">
+                                                <p class="form-control-static">Objeto: <span class="text-danger"><i class="glyphicon glyphicon-asterisk"></i></span>
                                                     <input type="text" class="form-control" rows="7" name="novo_objeto" id="novo_objeto" required="true">
-                                                </div>
                                             </div>
-                                            
+                                        </div>
+
                                         <div class="col-md-3"></div>
                                     </div>
                                 </div>                                        
-                             
+
                                 <div class="form-group">
                                     <div class="col-md-4"></div>
                                     <div class="col-md-2 text-center">
@@ -142,7 +145,7 @@
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--<script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>-->
         <script src="/assets/js/compras/gcon/Objeto/novo_objeto.js"></script>
-     
+
         <!-- END JAVASCRIPT -->
     </body>
 </html>

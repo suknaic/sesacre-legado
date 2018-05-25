@@ -662,34 +662,17 @@ class Chamado {
             $pdo = $conexao->connect();
             $retorno = "";
             /* @var $pdo PDO */
-            $pessoa = new Pessoa();
-            $pessoa->setId_pessoa($this->idPessoaSolicitante);
-            $pessoa->setMsg("contrato");
-            $p = $pessoa->retornaPessoa($pdo);
-//            print_r($p);
-            //**************************************
-            $pessoaFisica = new pessoaFisica();
-            $pessoaFisica->setId_pessoa($this->idPessoaSolicitante);
-            $pf = $pessoaFisica->retornaPf($pdo);
-            //*****************************************
-            $contrato = new DaoSesContrato();
-            $contrato->setId_contrato($this->idPessoaSolicitante);
-            $c = $contrato->retornaContrato($pdo);
-            //*****************************************
-            $funcao = new DaoSesFuncao();
-            $funcao->setId_funcao($this->idPessoaSolicitante);
-            $f = $funcao->retornaFuncoes($pdo);
-            //*****************************************
             $chamado = new Chamado();
             $chamado->setIdChamado($this->idChamado);
-            $chamado->setMsg("chamado");
+            $chamado->setMsg("chamados");
             $ch = $chamado->retornaChamado($pdo);
+//            print_r($ch);
+//            print_r($ch);
 
             $sistema = new FormSistemas();
             $sistema->setIdFormSistemas($this->idChamado);
-            $chamado->setMsg("formSistemas");
             $s = $sistema->retornaFormSistemas($pdo);
-//            print_r($sistema);
+//            print_r($s);
 
             if ($ch != FALSE) {
                 $retorno[] = array(
@@ -755,7 +738,7 @@ class Chamado {
             $chamado = new DaoChaChamado();
             $chamado->setIdChamado($this->idChamado);
             $ch = $chamado->retornaChamado($pdo);
-//            print_r($chamado);
+//            print_r($ch);
             if ($ch != FALSE) {
                 if ($this->msg != "chamado") {
                     $retorno[] = array(
@@ -779,7 +762,7 @@ class Chamado {
                         "dsCancelamento" => $ch["ds_cancelamento"],
                         "dtPrazo" => $ch["dt_prazo"],
                     );
-                    print_r($retorno);
+                    print_r($ch);
                     return json_encode($retorno);
                 } else {
 

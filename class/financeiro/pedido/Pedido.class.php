@@ -22,6 +22,26 @@ class Pedido {
     private $stPedido = null;
     private $contratado = null;
     private $ano = null;
+    
+    //atributos para vincular a diaria
+    private $idUsuario = null;
+    private $idDiaria = null;
+    
+    function getIdUsuario() {
+        return $this->idUsuario;
+    }
+
+    function getIdDiaria() {
+        return $this->idDiaria;
+    }
+
+    function setIdUsuario($idUsuario) {
+        $this->idUsuario = $idUsuario;
+    }
+
+    function setIdDiaria($idDiaria) {
+        $this->idDiaria = $idDiaria;
+    }
 
     function getIdPedido() {
         return $this->idPedido;
@@ -239,7 +259,7 @@ class Pedido {
                     $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
                 } else {
                     $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
-                }
+                } 
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();
@@ -301,15 +321,27 @@ class Pedido {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
+            
             if ($daoFinPedido->Sucesso()) {
-                $pdo->commit();
-                //verifico ser o contrato tem ata ou nao
-                if (empty($this->idFornecedor)) {
-                    $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
+                
+                //Se for diaria, irá vincular com o pedido
+                if ($this->idTipoGasto == 13) {
+                    $retorno2 = !$this->associaPedidoDiaria($pdo,$daoFinPedido->getIdPedido());
                 } else {
-                    $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
+                    $retorno2 = true;
                 }
+                if ($retorno2) {
+                    $pdo->commit();
+                    //verifico ser o contrato tem ata ou nao
+                    if (empty($this->idFornecedor)) {
+                        $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
+                    } else {
+                        $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
+                    }
+                } else {
+                    $retorno = Metodos::retornoAjax("Erro", "alert", 'Erro na vinculação do pedido com a diária.');
+                }
+                
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();
@@ -320,6 +352,18 @@ class Pedido {
         }
     }
 
+   function associaPedidoDiaria(PDO $pdo = null, int $idPedido){
+       try {
+           $diaria = new Diaria();
+           $diaria->setIdDiaria($this->getIdDiaria());
+           $diaria->setIdPedido($idPedido);
+           $diaria->setUsuarioPedido($this->getIdUsuario());
+           return $diaria->vinculaPedidoDiaria($pdo);
+       } catch (Exception $exc) {
+           return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+       }
+    }
+    
     public function retornaDadosPedido() {
         try {
             $conexao = new Conexao();

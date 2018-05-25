@@ -74,23 +74,59 @@ $(document).ready(function () {
         if ($("#tipoSolicitacao").val() == '1') {
             $(".campoForneceor").hide();
             $(".campoValor").removeClass("hidden");
+            //Controle da diaria
+            $("#diaria").hide();
+            $("#valor").prop("disabled",false);
+            $("#valor").val("");
         }
 
         if ($("#tipoSolicitacao").val() == '2') {
             $(".campoForneceor").show();
             $(".campoValor").addClass("hidden");
+            //Controle da diaria
+            $("#diaria").hide();
+            $("#valor").prop("disabled",false);
+            $("#valor").val("");
         }
 
         if ($("#tipoSolicitacao").val() == '3') {
             $(".campoForneceor").hide();
             $(".campoValor").removeClass("hidden");
+            
+            $("#tipoDeGasto").val(13).trigger('change');
+            //*************************DIARIA**************************
+            $("#valor").prop("disabled",true);
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsDiaria"
+                },
+                "success": function(response){
+                    $("#diaria").show();
+                    $("body").find("#id_diaria").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+            //*********************FIM DIARIA**************************
         }
 
         if ($("#tipoSolicitacao").val() == '4') {
             $(".campoForneceor").hide();
             $(".campoValor").removeClass("hidden");
+            //Controle da diaria
+            $("#diaria").hide();
+            $("#valor").prop("disabled",false);
+            $("#valor").val("");
         }
     });
+    
+    //-------------------Regras diaria-----------------------
+    $("body").on("change","#id_diaria", function(e){
+        $("#valor").val($("#id_diaria option:selected").data('valor'));
+    });
+    //-------------------------------------------------------
 
     $("body").on("change", "#tipoDeGasto", function (e) {
         var tipo = 'contrato'
@@ -105,39 +141,20 @@ $(document).ready(function () {
             "tipoGasto": tipoDeGasto
         }
 
-        //*************************DIARIA**************************
-        if (tipoDeGasto == '13') { 
-            $.ajax({
-                "url": "/model/financeiro/necessidade_central/requestPedido.php",
-                "dataType": 'html',
-                "data": {
-                    "acao": "retornaOptionsDiaria"
-                },
-                "success": function(response){
-                    $("#diaria").show();
-                    $("body").find("#id_diaria").html(response);
-                    $(".select").select2({
-                    });
-                }
-            });
-        //*********************FIM DIARIA**************************
-        } else {
-            $("#diaria").hide();
-            $.ajax({
-                "url": "/model/financeiro/necessidade_central/requestPedido.php",
-                "dataType": 'html',
-                "data": {
-                    "acao": "retornaOptionsAtaContrato",
-                    "dados": dados
+        $.ajax({
+            "url": "/model/financeiro/necessidade_central/requestPedido.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaOptionsAtaContrato",
+                "dados": dados
 
-                },
-                "success": function (response) {
-                    $("body").find("#contratada").html(response);
-                    $(".select").select2({
-                    });
-                }
-            });
-        }
+            },
+            "success": function (response) {
+                $("body").find("#contratada").html(response);
+                $(".select").select2({
+                });
+            }
+        });
         
     });
 
@@ -305,6 +322,13 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             //validação de campos js
 
+            //Validação da Diaria
+            if ($("#tipoSolicitacao").val() == 3 && $("#id_diaria").val() == ""){
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
             if ($("#tipoSolicitacao").val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
@@ -365,7 +389,8 @@ $(document).ready(function () {
                 "tipoDeGasto": $("#tipoDeGasto").val(),
                 "idLotacao": $("#central").val(),
                 "descPedido": $("#desc_pedido").val(),
-                "valor": $("#valor").val()
+                "valor": $("#valor").val(),
+                "idDiaria": $("#id_diaria").val()
             }
 
 

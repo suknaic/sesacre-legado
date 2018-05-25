@@ -111,10 +111,32 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/unidade/nova_unidade.php">Nova Unidade</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/unidade/unidadeDesativadas.php">Unidades Desativadas</a>\n\
+                                                </li>');
         }
     });
+
+    $("#butao").mouseover(function () {
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
+    });
+    
     //escodendo botões
     $(".btn-limpar").hide();
     $(".btn-editar").hide();

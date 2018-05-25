@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
@@ -6,14 +8,35 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#menu_gcon").html(response);
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/processo/processo.php">Novo Processo</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/processo/processosDesativados.php">Processos Desativados</a>\n\
+                                                </li>');
         }
     });
+    
+    $("#butao").mouseover(function () {
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
+    });
+
     //escodendo botões
     $(".btn-limpar").hide();
     $(".btn-editar").hide();
-
 
     //buscando o select option
     $('body').find("select").select2({});
@@ -608,7 +631,7 @@ $(document).ready(function () {
             $("#centrais").prop('disabled', true);
         }
     });
-    
+
     $('body').on('keypress', '.formPesquisa', function (e) {
         var key = e.which;
         if (key == 13) {
@@ -616,5 +639,5 @@ $(document).ready(function () {
             return false;
         }
     });
-    
+
 });

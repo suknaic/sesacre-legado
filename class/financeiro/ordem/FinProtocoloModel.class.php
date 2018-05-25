@@ -232,7 +232,7 @@ class FinProtocoloModel {
 
     public function salvaProtocolo() {
         try {
-            if (empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf) || empty($this->qd_entrega)) {
+            if (empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             $conexao = new Conexao();
@@ -246,10 +246,12 @@ class FinProtocoloModel {
             $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
             $daoFinProtocolo->setNmEmailRepresentante($this->nm_email_representante);
             $daoFinProtocolo->setDsProtocolo($this->ds_protocolo);
-            $daoFinProtocolo->setQdEntrega($this->qd_entrega);
+            $daoFinProtocolo->setQdEntrega(1);
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->setIdPessoa($this->id_pessoa);
             $daoFinProtocolo->salvaProcotolo($pdo);
+            //pegando id do protocolo
+            $this->id_protocolo = ($pdo->lastInsertId('fin_protocolo_id_protocolo_seq'));
 
             if (!$daoFinProtocolo->sucesso()) {
                 $erro = true;
@@ -268,24 +270,19 @@ class FinProtocoloModel {
             //instanciando a clase para cadastra a confirmacao da entrega 
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $finEntregaConfirmacaoModel->setIdOrdem($this->id_ordem);
-            $finEntregaConfirmacaoModel->setNrQtdEntrega(((int) $this->qd_entrega));
-
-            for ($i = 1; $i <= ((int) $this->qd_entrega); $i++) {
-                //codigo abaixo e para descobri as data da entrega
-                $data = date('d/m/Y', strtotime('+' . (($prazo["nr_prazo_ordem"] * $i) - 1) . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
-                $data = Metodos::ConverteDataING($data);
-
-                $finEntregaConfirmacaoModel->setNrEntregaConfirmacao($i);
-                $finEntregaConfirmacaoModel->setDtEntrega($data);
-
-                $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
-
-                if (!$finEntregaConfirmacaoModel->sucesso()) {
-                    $erro = true;
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
-                }
+            $finEntregaConfirmacaoModel->setNrQtdEntrega(1);
+            $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
+            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
+            $data = Metodos::ConverteDataING($data);
+            $finEntregaConfirmacaoModel->setNrEntregaConfirmacao(1);
+            $finEntregaConfirmacaoModel->setDtEntrega($data);
+            $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
             }
+
 
             $daoFinProtocolo->updateStatusOrdem($pdo);
 
@@ -304,6 +301,23 @@ class FinProtocoloModel {
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaEntregaConfirmacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdOrdem($this->id_ordem);
+            $daoFinProtocolo->retornaEntregaConfirmacao($pdo);
+            if ($daoFinProtocolo->sucesso()) {
+                return $daoFinProtocolo->getMsgRetorno();
+            } else {
+                return false;
+            }
+        } catch (Exception $ex) {
+            return $exc->getMessage();
         }
     }
 

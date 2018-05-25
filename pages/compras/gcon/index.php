@@ -43,20 +43,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Gestão de Compras</h1>
                     </div>
+
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <div id="page-content">
-                        <!-- Menu GCON-->
-                        <div id="menu_gcon"></div>
-                        <!--Fim_Menu_Gcon-->
-
                         <!--Modal upload-->
                         <div class=" modal fade modal-upload" id="upload" 
                              tabindex="-1" role="dialog" 
@@ -89,12 +85,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
 
                         <!-- Inicio do Formulário de Pesquisa de Processos-->
                         <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
-
-                            <div class="panel">    
-
+                            <div class="panel">
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Pesquisar Processo</h3>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="panel-body">
@@ -179,7 +181,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                     <div class="col-md-5"></div>
                                     <div class="col-md-2 text-center">
                                         <button class="btn btn-primary btn-pesquisar btn-block btn-rounded" type="button" title="Pesquisar">
-                                            <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
+                                            <i class="ion-search fa-lg" aria-hidden="true"></i> Pesquisar
                                         </button>
                                     </div>
                                     <div class="col-md-5"></div>
@@ -228,7 +230,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                             <div class="col-md-5"></div>
                                             <div class="col-md-2 text-center">
                                                 <button class="btn btn-info btn-imprimirTodos btn-block btn-rounded" type="button">
-                                                    <i class="fa fa-print" aria-hidden="true"></i> Imprimir
+                                                    <i class="ion-printer fa-lg" aria-hidden="true"></i> Imprimir
                                                 </button>
                                             </div>
                                             <div class="col-md-5"></div>    
@@ -286,7 +288,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/compras/gcon/Pesquisa/pesquisa.js"></script>
+        <script src="/assets/js/compras/gcon/index.js"></script>
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>
