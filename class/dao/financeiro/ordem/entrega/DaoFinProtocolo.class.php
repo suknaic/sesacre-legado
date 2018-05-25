@@ -55,7 +55,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         inner join fin_fornecedor as f
                         on f.id_fornecedor = p.id_fornecedor
                         inner join ses_pessoa as pFornecedor
-                        on pFornecedor.id_pessoa  = f.id_fornecedor
+                        on pFornecedor.id_pessoa  = f.id_pessoa
                         inner join fin_contrato as cont
                         on cont.id_contrato = f.id_contrato
                         inner join gco_processo as processo
@@ -156,8 +156,9 @@ class DaoFinProtocolo extends FinProtocoloTb {
     public function retornaEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema, entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem,  
-                        to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, 
+                $sql = "select entrega.id_entrega_confirmacao, protocolo.id_ordem, to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema,
+                        entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
+                        to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, 
                         case  
                                 WHEN entrega.dt_confirmacao is null AND NOW() > protocolo.dh_recebimento_sistema THEN  DATE_PART('day', protocolo.dh_recebimento_sistema::timestamp - now())
                                 WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
@@ -193,5 +194,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
             $this->sucesso = false;
         }
     }
+    
+    
 
 }
