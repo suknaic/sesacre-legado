@@ -1,8 +1,19 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloModel.class.php";
+$session = new Session();
+
+$token = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
+
+if (empty($token)) {
+    header("location: /index.php");
+} else {
+    $id = (int) ($token);
+    if ($id == 0) {
+        header("location: /index.php");
+    }
+}
+
+
 
