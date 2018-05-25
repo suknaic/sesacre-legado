@@ -20,8 +20,3 @@ $finProtocoloModel->setIdOrdem($id);
 $dados = [];
 $dados = $finProtocoloModel->inforLoadProtocolo();
 
-$tabela = "";
-
-if ($dados["sit_ordem"] == 2) {
-    
-}

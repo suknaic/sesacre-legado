@@ -32,8 +32,8 @@ $(document).ready(function () {
                         valores[i]['dt_confirmacao'],
                         valores[i]['diasatrazo'],
                         valores[i]['status'],
-                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['diasatrazo']+'&ordem=' + valores[i]['diasatrazo'] + 
-                         '&pre=' + valores[i]['diasatrazo'] + '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
+                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao']+ '&ordem='+valores[i]['id_ordem']+
+                        '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
                     ]
                     dataSet.push(valor)
                 }
