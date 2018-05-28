@@ -123,12 +123,13 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
              to_char(p.dt_pedido, 'yyyy')) as pedido, ordem.nr_ordem, ordem.aa_ordem, ordem.nr_prazo_ordem, 
              cont.nr_contrato, cont.tp_contrato, gprocesso.cd_pregao, modalidade.nm_modalidade, objeto.nm_objeto, 
              cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pe.nm_pessoa, pe.nm_email, pj.nr_cnpj, 
-             pe.ds_logradouro, pe.ds_bairro, pe.nr_telefone_celular, contItens.nr_item, mat.nm_material, 
+             pe.ds_logradouro, pe.ds_bairro, pe.nr_telefone_residencial as telefoneCredor, contItens.nr_item, mat.nm_material, 
              mat.nm_desc_material, contItens.nm_marca, contItens.nm_modelo, ordemItens.qt_itens_ordem, 
              ordemItens.vl_itens_ordem, unid.nm_unidade_medida, emp.nr_empenho, desp.cd_despesa_elemento, 
              desp.ds_despesa_elemento, font.nr_fonte, local.nm_lotacao as localEntrega, local.ds_logradouro as localLogradouro,
              local.ds_bairro as localBairro, local.nr_cep as localCep, pEmissor.nm_pessoa as emissor, setorEmissor.nm_lotacao as setor, 
-             pEmissor.nr_telefone_celular, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, pe.nm_email as emailFornecedor, mat.cd_desc_material
+             pEmissor.nr_telefone_residencial as telefoneEmissor, pEmissor.nm_email, ordem.dh_ordem, pj.nr_safira, 
+             pe.nm_email as emailFornecedor, mat.cd_desc_material
              from fin_ordem as ordem
              inner join fin_ordem_itens as ordemItens
              on ordemItens.id_ordem = ordem .id_ordem
@@ -148,8 +149,6 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
              on pEmissor.id_pessoa = ordem.id_pessoa
              inner join ses_pessoa as pe
              on pe.id_pessoa = f.id_pessoa
-             inner join ses_pessoa_juridica as pj
-             on pj.id_pessoa = pe.id_pessoa
              inner join fin_pedido as p            
              on p.id_pedido = ordem.id_pedido
              inner join ses_lotacao as setorEmissor
@@ -162,6 +161,8 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
              on font.id_fonte = p.id_fonte 
              inner join ses_lotacao as local
              on local.id_lotacao = ordem.id_lotacao
+             left join ses_pessoa_juridica as pj
+             on pj.id_pessoa = pe.id_pessoa
              left join gco_processo as gprocesso
              on gprocesso.id_processo = cont.id_processo
              left join gco_modalidade as modalidade
@@ -201,7 +202,7 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                 </td>
                 <td><b>Emissor:</b> ' .$dados[0]["emissor"].'<br/>
                     <b>Setor:</b> ' .$dados[0]["setor"].'<br/>
-                    <b>Telefone/Fax:</b> ' .$dados[0]["nr_telefone_celular"].'<br/>
+                    <b>Telefone/Fax:</b> ' .$dados[0]["telefoneEmissor"].'<br/>
                     <b>E-mail:</b> ' .$dados[0]["nm_email"].'<br/>
                     <b>Data de Emissão:</b> ' .Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
                     <b>Sol. de Necessidade nº:</b> ' .$dados[0]["id_pedido"].' 

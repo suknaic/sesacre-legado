@@ -241,7 +241,6 @@ class Lotacao {
                 $sucesso = false;
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $result);
-                ;
             }
 
             $this->setId_lotacao($pdo->lastInsertId('ses_lotacao_id_lotacao_seq'));
