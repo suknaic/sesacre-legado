@@ -451,6 +451,7 @@ class FinCentralLiberacaoModel {
         $idTipoGasto = empty($dados['tipoDeGasto']) ? NULL : $dados['tipoDeGasto'];
         $idDespesaElemento = empty($dados['despesa']) ? NULL : $dados['despesa'];
         $idFonte = empty($dados['fonte']) ? NULL : $dados['fonte'];
+        
         $daoFinCentralLiberacao = new DaoFinCentralLiberacao();
         $daoFinCentralLiberacao->retornaDadosLiberacao($qdd->getIdQdd(), $idProgramaTrabalho
                 , $idLotacao, $idTipoGasto, $idDespesaElemento, $idFonte, $pdo);
@@ -477,11 +478,19 @@ class FinCentralLiberacaoModel {
                         <td class="text-center">' . Metodos::ConverteDataBR($v["data"]) . '</td>
                         <td class="text-center">' . $v["ds_central_liberacao"] . '</td>
                         <td class="text-right">' . Metodos::ConverteValorBr($v["vl_central_liberacao_trans"], 4) . '</td>
-                    </tr>';
+                        <td>';
+                     if($v['st_central_liberacao'] == '0'){
+                          $tr.= '<span class="label label-danger">Não validado</span>';
+                     }else if($v['st_central_liberacao'] == '1'){
+                         $tr.= '<span class="label label-warning">Esperando Validação</span>';
+                     }else if($v['st_central_liberacao'] == '2'){
+                         $tr.= '<span class="label label-success">Validado</span>';
+                     }       
+                    '</td></tr>';
         }
         $tr .= '<tr>
                     <td colspan="8" class="text-right"><strong>Total</strong></td>
-                    <td  class="text-right"><strong>' . Metodos::ConverteValorBr($total, 4) . '</strong></td>
+                    <td class="text-left" colspan="2"><strong>' . Metodos::ConverteValorBr($total, 4) . '</strong></td>
               </tr>';
         return Metodos::retornoAjax("ok", "html", $tr);
     }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEntrega.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -52,7 +52,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/ordem/index.php">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/ordem/entrega/index.php?id=<?php echo $_GET["ordem"];?>">Voltar</a></li>                        
                     </ol>
                     <!--Page content-->
                     <!--===================================================-->
@@ -68,14 +68,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                         <input type="hidden" id="id_pedido" value="" />
                                         <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
                                         <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
-                                        <p><strong>Tipo de gasto:</strong> <span id="tipo_gasto"> </span></p>
-                                        <p><strong>Fonte:</strong> <span id="fonte"> </span></p>
-                                        <p><strong>Elemento Despesa:</strong> <span id="despesa"> </span></p>
-                                        <p><strong>Valor:</strong> <span id="valor"> </span></p>
                                         <p><strong>Ata:</strong> <span id="ata"> </span></p>
                                         <p><strong>Contrato:</strong> <span id="contrato"> </span></p>
-                                        <p><strong>Modalidade:</strong> <span id="modalidade"> </span></p>
-                                        <p><strong>Projeto/Atividade:</strong> <span id="projeto"> </span></p>
                                         <p><strong>Empenho:</strong> <span id="empenho"> </span></p>
                                         <p><strong>Ordem:</strong> <span id="ordem"> </span></p>
                                     </div>
@@ -117,8 +111,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <th class="text-center">Nº</th>
                                                                 <th class="text-center">Item</th>
                                                                 <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Grupo</th>
-                                                                <th class="text-center">Sub Grupo</th>
                                                                 <th class="text-center">Unid</th>
                                                                 <th class="text-center">Elemento de Despesa</th>
                                                                 <th class="text-center">Tipo</th>
@@ -126,8 +118,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <th class="text-center">QTD</th>
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Total</th>
-                                                                <th class="text-center">Utilizado</th>
-                                                                <th class="text-center">Saldo</th>
+                                                                <th class="text-center">Entregue</th>
+                                                                <th class="text-center">Aguardando Entrega</th>
                                                                 <th class="text-center">Ação</th>
                                                             </tr>
                                                         </thead>

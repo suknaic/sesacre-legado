@@ -15,8 +15,5 @@ if (empty($token)) {
     }
 }
 
-$finProtocoloModel = new FinProtocoloModel();
-$finProtocoloModel->setIdOrdem($id);
-$dados = [];
-$dados = $finProtocoloModel->inforLoadProtocolo();
+
 

@@ -49,7 +49,9 @@ $(document).ready(function () {
         }
     });
     //fim
+    //Página terá o Panel de Novo aditivo escondido até ser clicar no botão "Adicionar Aditivo"
     $("#panel-novo-atitivo").hide();
+    
     $('body').on('click', '.btn-add-aditivo', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -131,9 +133,7 @@ $(document).ready(function () {
         preencheCamposContrato(contrato);                                       
         $('#modalItem').modal('hide');
         //Busca se esse Contrato possui Aditivo
-        buscaExisteAditivos(contrato.id_contrato);
-        
-        
+        buscaExisteAditivos(contrato.id_contrato);                
     });
     
     function preencheCamposContrato(contrato){
@@ -206,26 +206,95 @@ $(document).ready(function () {
         }
     });
     
-    
-    
-    
-    
+          
     
     //Controle da Tela, Campos habilitados ou não
+    //O Campo Percentual, ficará escondido até que a Regra para o tipo dele seja selecionado pelo usuário
+    $("#div_percentual").hide();
     
     $('body').on('change', '#n_instrumento', function (e) {
-
-        $('#n_unidade_calculo option').filter(function() {              
+        //Regras para a Unidade de Cálculo
+        $('#n_unidade_calculo option').filter(function() {         
             return $(this).val() != 0;
         }).attr("disabled", "");
-        $('#n_unidade_calculo').val(0);
+        $('#n_unidade_calculo').val(0).trigger('change');
+        //Se o instrumento for Revisão, então irá liberar para selecionar
+        //Moeda e Quantidade
         if($("#n_instrumento option:selected").val() == 1){
             $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
             $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
+        //Se o instrumento for Reajuste, então irá liberar para selecionar
+        //Percentual, Indice de Correção e Moeda
         }else if($("#n_instrumento option:selected").val() == 2){
             $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
+            $('#n_unidade_calculo option[value=2]').removeAttr("disabled");
+            $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
         }
+        //Tipo de Aquisição somente será habilitado se o Instrumento de Equilibrio
+        //For Revisão
+        $("#n_tipo_aquisicao").val(0).attr("disabled", "");
+        if($("#n_instrumento option:selected").val() == 1){
+            $("#n_tipo_aquisicao").removeAttr("disabled");
+        }        
     });
+    
+        
+    $('body').on('change', '#n_unidade_calculo', function (e){    
+        $("#div_percentual").hide();
+        $("#n_percentual").val("");
+        //Se a Unidade de Calculo for Percentual
+        //Então o Campo Percentual deverá Aparecer
+        if($("#n_unidade_calculo option:selected").val() == 1){
+            $("#div_percentual").show();
+        }                
+    });
+    
+    
+    
+    
+    
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /*** TESTE ***/
+  
+        $.ajax({
+            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "pesquisaContrato",
+                "dados": '261'
+
+            },
+            "success": function (response) {                
+                func.carregaTabelaPadrao('tabelaItens', response, [], true);
+                $(".selecionaItem").first().trigger('click');
+                $(".btn-add-aditivo").trigger('click');
+            }
+            
+        });  
 
 });
