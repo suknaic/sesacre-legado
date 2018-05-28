@@ -94,11 +94,13 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
 
         try {
             if (!empty($pdo)) {
-                $sql = "select cl.id_central_liberacao, pt.cd_programa_trabalho
-                        , pt.ds_programa_trabalho, l.nm_lotacao, tp.nm_tipo_gasto,
+                $sql = "select cl.id_central_liberacao, pt.cd_programa_trabalho, pt.ds_programa_trabalho, l.nm_lotacao, tp.nm_tipo_gasto,
                         dl.cd_despesa_elemento, dl.ds_despesa_categoria, f.nr_fonte, ct.vl_central_liberacao_trans, 
-                        cl.dh_central_liberacao as data,cl.ds_central_liberacao, p.nm_pessoa, cl.tp_central_liberacao,
-                        cl.st_central_liberacao
+                        cl.dh_central_liberacao as data,cl.ds_central_liberacao, p.nm_pessoa, 
+                        case 
+                                when cl.tp_central_liberacao = '1' then 'Liberação'
+                                when cl.tp_central_liberacao = '2' then 'Redução'
+                        end as tipo, cl.st_central_liberacao
                         from fin_central_liberacao as cl
                         inner join fin_central_liberacao_trans as ct
                             on ct.id_central_liberacao = cl.id_central_liberacao

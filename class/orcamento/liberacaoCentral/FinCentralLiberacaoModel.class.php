@@ -439,7 +439,7 @@ class FinCentralLiberacaoModel {
         $qdd = new Qdd();
         $qdd->setAaQdd($dados["ano"]);
         $qdd->verificaExisteCarregaDados($pdo);
-
+        $resultado = array();
         if (empty($qdd->getIdQdd())) {
             return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar QDD para esse Ano.");
         }
@@ -451,7 +451,7 @@ class FinCentralLiberacaoModel {
         $idTipoGasto = empty($dados['tipoDeGasto']) ? NULL : $dados['tipoDeGasto'];
         $idDespesaElemento = empty($dados['despesa']) ? NULL : $dados['despesa'];
         $idFonte = empty($dados['fonte']) ? NULL : $dados['fonte'];
-        
+
         $daoFinCentralLiberacao = new DaoFinCentralLiberacao();
         $daoFinCentralLiberacao->retornaDadosLiberacao($qdd->getIdQdd(), $idProgramaTrabalho
                 , $idLotacao, $idTipoGasto, $idDespesaElemento, $idFonte, $pdo);
@@ -477,22 +477,32 @@ class FinCentralLiberacaoModel {
                         <td class="text-center">' . $v["nr_fonte"] . '</td>
                         <td class="text-center">' . Metodos::ConverteDataBR($v["data"]) . '</td>
                         <td class="text-center">' . $v["ds_central_liberacao"] . '</td>
-                        <td class="text-right">' . Metodos::ConverteValorBr($v["vl_central_liberacao_trans"], 4) . '</td>
+                        <td class="text-center">';
+            if ($v["tipo"] == 'Redução') {
+                $tr .= '<span class="text-danger">' . $v["tipo"] . '</span>';
+            } else {
+                $tr .= '<span class="text-success">' . $v["tipo"] . '</span>';
+            }
+
+            $tr .= '</td>   
+                        <td class="text-center">' . Metodos::ConverteValorBr($v["vl_central_liberacao_trans"], 4) . '</td>
                         <td>';
-                     if($v['st_central_liberacao'] == '0'){
-                          $tr.= '<span class="label label-danger">Não validado</span>';
-                     }else if($v['st_central_liberacao'] == '1'){
-                         $tr.= '<span class="label label-warning">Esperando Validação</span>';
-                     }else if($v['st_central_liberacao'] == '2'){
-                         $tr.= '<span class="label label-success">Validado</span>';
-                     }       
-                    '</td></tr>';
+            if ($v['st_central_liberacao'] == '0') {
+                $tr .= '<span class="label label-danger">Não validado</span>';
+            } else if ($v['st_central_liberacao'] == '1') {
+                $tr .= '<span class="label label-warning">Esperando Validação</span>';
+            } else if ($v['st_central_liberacao'] == '2') {
+                $tr .= '<span class="label label-success">Validado</span>';
+            }
+            '</td></tr>';
         }
-        $tr .= '<tr>
-                    <td colspan="8" class="text-right"><strong>Total</strong></td>
-                    <td class="text-left" colspan="2"><strong>' . Metodos::ConverteValorBr($total, 4) . '</strong></td>
-              </tr>';
-        return Metodos::retornoAjax("ok", "html", $tr);
+        $resultado[] = $tr;
+        $resultado[] = '<tr>
+                            <td colspan="9" class="text-right"><strong>Total</strong></td>
+                            <td class="text-center"><strong>' . Metodos::ConverteValorBr($total, 4) . '</strong></td>
+                           <td></td>     
+                        </tr>';
+        return Metodos::retornoAjax("ok", "html", $resultado);
     }
 
     public function trPesquisaReducao(array $dados) {

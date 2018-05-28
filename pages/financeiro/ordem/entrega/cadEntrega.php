@@ -186,6 +186,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/financeiro/ordem/cadOrdem.js"></script>
+        <script src="/assets/js/financeiro/ordem/entrega/cadEntrega.js"></script>
     </body>
 </html>

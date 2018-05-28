@@ -189,11 +189,7 @@
 
                                     <ul class="collapse">
                                         <li>
-                                            <a href="/pages/orcamento/liberacaoCentral/index.php">Adicionar Liberação</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="/pages/orcamento/liberacaoCentral/index_reducao.php">Redução da Liberação</a>
+                                            <a href="/pages/orcamento/liberacaoCentral/index.php">Recurso para Central</a>
                                         </li>
 
                                         <li>
@@ -268,7 +264,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/central_responsavel/index.php">Liberação Central</a>
+                                    <a href="/pages/financeiro/central_responsavel/index.php">Vinculação Central</a>
                                 </li>
 
                             </ul>
