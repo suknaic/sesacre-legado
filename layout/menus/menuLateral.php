@@ -51,15 +51,15 @@
                                         <li>
                                             <a href="/pages/rh/lotacao/index.php">Lotação</a>
                                         </li>
-                                        <li>
-                                            <a href="#">Lotação Detalhe</a>
-                                        </li>
+<!--                                        <li>
+                                            <a href="/pages/rh/lotacaoDetalhe/">Lotação Detalhe</a>
+                                        </li>-->
                                         <li>
                                             <a href="/pages/sistema/vinculo/index.php">Vínculos</a>
                                         </li>
-                                        <!--                                        <li>
-                                                                                    <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
-                                                                                </li>-->
+<!--                                        <li>
+                                            <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
+                                        </li>-->
                                     </ul>
                                 </li>
                                 <li>
@@ -307,9 +307,9 @@
                             </a>
                             <!--Submenu-->
                             <ul class="collapse">
-<!--                                <li>
+                                <li>
                                     <a href="/pages/diarias/permissoes/">Permissões</a>
-                                </li>-->
+                                </li>
                                 <li>
                                     <a href="/pages/diarias/autorizacoes/">Autorizações</a>
                                 </li>

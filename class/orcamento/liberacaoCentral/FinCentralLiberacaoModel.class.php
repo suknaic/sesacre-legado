@@ -672,6 +672,7 @@ class FinCentralLiberacaoModel {
                         <td class="text-center">' . Metodos::ConverteDataBR($v["dh_central_liberacao"]) . '</td>
                         <td class="text-center">' . $v["ds_central_liberacao"] . '</td>
                         <td class="text-right">' . Metodos::ConverteValorBr($v["vl_central_liberacao_trans"], 4) . '</td>
+                        <td class="text-center "><b>'.$v["tipo"].'</b></td>
                         <td class="text-center">
                             <button type="button" class="btn btn-default btn-nao-validar btn-xs" title="Não Validar" value="' . $v["id_qdd_valor"] . '" '
                         . 'idLiberacao = "' . $v["id_central_liberacao"] . '">
@@ -688,6 +689,7 @@ class FinCentralLiberacaoModel {
             $resultado[] = '<tr>
                             <td colspan="7" class="text-right"><strong>Total</strong></td>
                             <td  class="text-right"><strong>' . Metodos::ConverteValorBr($total, 4) . '</strong></td>
+                            <td></td>
                             <td></td>
                         </tr>';
             return Metodos::retornoAjax("ok", "html", $resultado);

@@ -357,7 +357,11 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
                 $sql = "select pro.cd_programa_trabalho, pro.ds_programa_trabalho, lotacao.nm_lotacao, tg.nm_tipo_gasto, 
                         desp.cd_despesa_elemento, desp.ds_despesa_elemento, font.nr_fonte, lib.dh_central_liberacao, 
                         lib.ds_central_liberacao, libTrans.vl_central_liberacao_trans, qddValor.id_qdd_valor,
-                        libTrans.id_central_liberacao_trans, lib.id_central_liberacao 
+                        libTrans.id_central_liberacao_trans, lib.id_central_liberacao,
+                        case
+                            when tp_central_liberacao = '1' then 'Liberação'
+                            when tp_central_liberacao = '2' then 'Redução'
+                        end as tipo
                         from fin_central_liberacao as lib
                         inner join fin_central_liberacao_trans as libTrans
                         on lib.id_central_liberacao = libTrans.id_central_liberacao

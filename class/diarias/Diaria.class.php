@@ -37,6 +37,7 @@ class Diaria {
     private $erros = true;
     
     private $idPessoaSolicitante = null;
+    private $idLotacaoSolicitante = null;
     private $flRetorno            = null;
     private $idPedido             = null;
     private $idDiariaPai         = null;
@@ -48,11 +49,12 @@ class Diaria {
     // 3 - INDEFERIDO
     // 4 - DEFERIDO
 
-    private $stAtivo              = null;
+    private $stAtivo = null;
     
     private $usuarioPedido = null;
-    
     private $msgErros = null;
+    private $idPessoaFiltro = null;
+    private $idLotacaoFiltro = null;
     
     function getUsuarioPedido() {
         return $this->usuarioPedido;
@@ -201,6 +203,30 @@ class Diaria {
         $this->nrProtocolo = $nrProtocolo;
     }
 
+    function getIdLotacaoSolicitante() {
+        return $this->idLotacaoSolicitante;
+    }
+
+    function getIdPessoaFiltro() {
+        return $this->idPessoaFiltro;
+    }
+
+    function getIdLotacaoFiltro() {
+        return $this->idLotacaoFiltro;
+    }
+
+    function setIdPessoaFiltro($idPessoaFiltro) {
+        $this->idPessoaFiltro = $idPessoaFiltro;
+    }
+
+    function setIdLotacaoFiltro($idLotacaoFiltro) {
+        $this->idLotacaoFiltro = $idLotacaoFiltro;
+    }
+
+        
+    function setIdLotacaoSolicitante($idLotacaoSolicitante) {
+        $this->idLotacaoSolicitante = $idLotacaoSolicitante;
+    }
         
     function setIdPessoaProponente($idPessoaProponente) {
         $this->idPessoaProponente = $idPessoaProponente;
@@ -296,7 +322,7 @@ class Diaria {
         return $stEstagios;
     }
     
-    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0){
+    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0, int $ano_pedido = 0){
         $retorno = "";
         try {
             switch ($st_estagio) {
@@ -313,7 +339,7 @@ class Diaria {
                     $retorno = '<span class="label label-primary">Aguardando pedido de necessidade</span>';
                     break;
                 case 5:
-                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'</span>';
+                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'/'.$ano_pedido.'</span>';
                     break;
                 case 6:
                     $retorno = '<span class="label label-danger">Pedido de necessidade cancelado</span>';
@@ -358,7 +384,9 @@ class Diaria {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->selectDiariaPedidoUsuario($pdo, $this->getUsuarioPedido());
+            $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
+            $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
+            $daoDiaDiaria->selectDiariaPedidoOption($pdo);
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $retorno .= "<option data-valor='".$linha['vl_total_sm']."' value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . " / Valor total: R$ " .$linha['vl_total']. "</option>";
@@ -596,8 +624,8 @@ class Diaria {
                 $pdo = $conexao->connect();
             }
             $daoDiaDiaria = new DaoDiaDiaria();
-            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
-            $daoDiaDiaria->listaDiarias($pdo);
+//            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaFiltro());
+            $daoDiaDiaria->listaDiarias($pdo, $this->getIdPessoaFiltro(), $this->getIdLotacaoFiltro());
             
             $estagios = $this->tiposStEstagios();
             
@@ -605,6 +633,7 @@ class Diaria {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
                     $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
+                    $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
 //                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
@@ -614,7 +643,7 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
-                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido). "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido,$ano_pedido). "</td>"
                                 . "<td class = 'text-center'>";
                     
                         
@@ -820,6 +849,7 @@ class Diaria {
                 $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
 
                 $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
+                $daoDiaDiaria->setIdLotacaoSolicitante($this->getIdLotacaoSolicitante());
                 $daoDiaDiaria->setIdPedido($this->getIdPedido());
 
                 if($this->getIdDiariaPai()){
@@ -900,6 +930,7 @@ class Diaria {
                 $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
 
                 $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
+                $daoDiaDiaria->setIdLotacaoSolicitante($this->getIdLotacaoSolicitante());
                 $daoDiaDiaria->setIdPedido($this->getIdPedido());
 
                 if($this->getIdDiariaPai()){
@@ -1451,6 +1482,7 @@ class Diaria {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
                     $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
+                    $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
 //                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     
@@ -1461,19 +1493,19 @@ class Diaria {
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
-                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido) . "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido,$ano_pedido) . "</td>"
                                 . "<td class='text-center'>";
                         if ($estagio == '2') { //Enviado para deferimento/indeferimento
                             $retorno .= "<button title='Deferir' type='button' class='acao' data-tipo='Deferir' data-toggle='modal' data-target='#acao'>"
-                                            . '<i class="fa fa-check fa-lg text-success" aria-hidden="true"></i>'
+                                            . '<i class="fa fa-thumbs-o-up fa-lg text-success" aria-hidden="true"></i>'
                                     . "</button>"
                                       . "<button title='Indeferir' type='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>"
-                                            . '<i class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>'
+                                            . '<i class="fa fa-thumbs-o-down fa-lg text-danger" aria-hidden="true"></i>'
                                     . "</button>";
                         }
                         if ($estagio == '4' || $estagio == '6') { //Deferido
                             $retorno .= "<button title='Indeferir' type='button' class='acao' data-tipo='Indeferir' data-toggle='modal' data-target='#acao'>"
-                                            . '<i class="fa fa-ban fa-lg text-danger" aria-hidden="true"></i>'
+                                            . '<i class="fa fa-thumbs-o-down fa-lg text-danger" aria-hidden="true"></i>'
                                     . "</button>";
                         }
                     $retorno .=  "</td>"

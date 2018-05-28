@@ -265,6 +265,158 @@ class Log {
 
     }
 
+    
+    /**
+     * Cria o Log para o INSERT SEM OS ARQUIVOS BINARIOS
+     * @param type $ds_tabela nome da tabela que foi afetada
+     * @param type $id_tabela_pk chave primária da tabela afetada          
+     * @param type $pdo instancia do pdo
+     * @return Boolean retorno true ou false
+     */
+    public static function SalvaLogIBinario($ds_tabela, $id_tabela_pk, $pdo) {
+
+        $ds_tabela = $ds_tabela;
+        $id_tabela_pk = $id_tabela_pk;
+        $tp_log = "I";
+        $id_pessoa = $_SESSION['idUser'];
+        $ds_ip = self::getIp();
+        $pref = explode("_", $ds_tabela);
+        $pref = $pref[0];
+        $where = preg_replace('/'.$pref.'/', 'id', $ds_tabela, 1);
+        
+        //Busca as Colunas da Tabela que serão utilizadas, menos o campo bytea
+        $colunasSql = "SELECT string_agg(column_name, ', ') AS colunas "
+                . " FROM information_schema.columns"
+                . " WHERE table_name = :tabela and data_type <> :bytea";      
+        
+        $stmt = $pdo->prepare($colunasSql);        
+        $stmt->bindValue(":tabela", $where, PDO::PARAM_STR);
+        $stmt->bindValue(":tipo", 'bytea', PDO::PARAM_STR);        
+        $stmt->execute();        
+        if ($stmt->rowCount() < 1) {
+            return false;            
+        }
+        $colunas = $stmt->fetch(PDO::FETCH_ASSOC);            
+        
+        
+        $row = $pdo->query("SELECT ".$colunas." FROM " . $ds_tabela . "  WHERE " . $where . " = $id_tabela_pk");
+        $reg = $row->fetch(PDO::FETCH_ASSOC);
+
+        $ds_campos_atual = $reg;
+
+        $ds_campos_atual = json_encode($ds_campos_atual, JSON_UNESCAPED_UNICODE);
+        $ds_campos_antigos = NULL;
+        try {
+
+            $log = $pdo->prepare("INSERT INTO ses_log("
+                    . "ds_tabela, "
+                    . "id_tabela_pk, "
+                    . "tp_log, "
+                    . "id_pessoa, "
+                    . "ds_ip, "
+                    . "ds_campos_atuais, "
+                    . "ds_campos_antigos) VALUES("
+                    . ":ds_tabela, "
+                    . ":id_tabela_pk, "
+                    . ":tp_log, "
+                    . ":id_pessoa, "
+                    . ":ds_ip, "
+                    . ":ds_campos_atual, "
+                    . ":ds_campos_antigos)");
+
+            $log->bindParam(":ds_tabela", $ds_tabela);
+            $log->bindParam(":id_tabela_pk", $id_tabela_pk);
+            $log->bindParam(":tp_log", $tp_log);
+            $log->bindParam(":id_pessoa", $id_pessoa);
+            $log->bindParam(":ds_ip", $ds_ip);
+            $log->bindParam(":ds_campos_atual", $ds_campos_atual);
+            $log->bindParam(":ds_campos_antigos", $ds_campos_antigos);
+            $log->execute();
+
+
+            return true;
+        } catch (PDOException $ex) {
+            return false;
+        }
+    }
+    
+    /**
+     * Cria o Log para o DELETE SEM OS ARQUIVOS BINARIOS
+     * @param type $ds_tabela nome da tabela que foi afetada
+     * @param type $id_tabela_pk chave primária da tabela afetada          
+     * @param type $pdo instancia do pdo
+     * @return Boolean retorno true ou false
+     */
+    public static function SalvaLogDBinario($ds_tabela, $id_tabela_pk, $pdo) {
+
+        $ds_tabela = $ds_tabela;
+        $id_tabela_pk = $id_tabela_pk;
+        $tp_log = "D";
+        $id_pessoa = $_SESSION['idUser'];
+        $ds_ip = self::getIp();
+        $pref = explode("_", $ds_tabela);
+        $pref = $pref[0];
+        $where = preg_replace('/'.$pref.'/', 'id', $ds_tabela, 1);
+        
+        //Busca as Colunas da Tabela que serão utilizadas, menos o campo bytea
+        $colunasSql = "SELECT string_agg(column_name, ', ') AS colunas "
+                . " FROM information_schema.columns"
+                . " WHERE table_name = :tabela and data_type <> :bytea";      
+        
+        $stmt = $pdo->prepare($colunasSql);        
+        $stmt->bindValue(":tabela", $where, PDO::PARAM_STR);
+        $stmt->bindValue(":tipo", 'bytea', PDO::PARAM_STR);        
+        $stmt->execute();        
+        if ($stmt->rowCount() < 1) {
+            return false;            
+        }
+        $colunas = $stmt->fetch(PDO::FETCH_ASSOC);        
+                
+        $row = $pdo->query("SELECT ".$colunas." FROM " . $ds_tabela . "  WHERE " . $where . " = $id_tabela_pk");
+        $reg = $row->fetch(PDO::FETCH_ASSOC);
+
+        $ds_campos_atual = $reg;
+
+        $ds_campos_atual = json_encode($ds_campos_atual, JSON_UNESCAPED_UNICODE);
+
+        $ds_campos_antigos = NULL;
+
+
+        try {
+
+            $log = $pdo->prepare("INSERT INTO ses_log("
+                    . "ds_tabela, "
+                    . "id_tabela_pk, "
+                    . "tp_log, "
+                    . "id_pessoa, "
+                    . "ds_ip, "
+                    . "ds_campos_atuais, "
+                    . "ds_campos_antigos) VALUES("
+                    . ":ds_tabela, "
+                    . ":id_tabela_pk, "
+                    . ":tp_log, "
+                    . ":id_pessoa, "
+                    . ":ds_ip, "
+                    . ":ds_campos_atual, "
+                    . ":ds_campos_antigos)");
+
+            $log->bindParam(":ds_tabela", $ds_tabela);
+            $log->bindParam(":id_tabela_pk", $id_tabela_pk);
+            $log->bindParam(":tp_log", $tp_log);
+            $log->bindParam(":id_pessoa", $id_pessoa);
+            $log->bindParam(":ds_ip", $ds_ip);
+            $log->bindParam(":ds_campos_atual", $ds_campos_antigos);
+            $log->bindParam(":ds_campos_antigos", $ds_campos_atual);
+            $log->execute();
+
+
+            return true;
+        } catch (PDOException $ex) {
+            return false;
+        }
+    }
+    
+    
 
     /**
      * Retornas as informações do Log em TR

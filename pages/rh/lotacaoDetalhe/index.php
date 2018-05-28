@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -23,16 +23,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <!--Datapicker-->
+        <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+
     </head>
     <!--TIPS-->
 
     <body>
-        <div id="container" class="effect aside-float aside-bright mainnav-lg">
+        <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; ?>
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            //Modal Alert
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            ?>
 
             <div class="boxed">
 
@@ -43,7 +50,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Permissões do módulo de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Lotação Detalhe</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -56,95 +63,84 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel">
+                                    <div class="panel-footer text-left">
+                                        <button class="btn btn-primary btn-rounded btn-novo" type="button">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Nova Lotação Detalhe
+                                        </button>
+                                    </div>
                                     <div class="panel-heading ">
-                                        <h3 class="panel-title">Formulário</h3>
+                                        <h3 class="panel-title">Formulário de Pesquisa
+
+                                        </h3>
                                     </div>
 
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal form">
+                                    <form class="form-horizontal formPesquisaFuncionario">
                                         <div class="panel-body">
                                             <div class="form-group">
-
-                                                <div class="col-md-6">
-                                                    <div class="panel-body">
-                                                        <label for="pessoa">
-                                                            Responsável: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="pessoa" class="form-control">
-                                                                <option value="0">Selecione um Responsável</option>                                                                
-                                                                <?php
-                                                                    echo $selectPessoa;
-                                                                ?>
-                                                            </select>
-                                                        </div>
+                                                <div class="col-md-4">
+                                                    Nome da Lotação: 
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control" name="nm_lotacao" id="nm_lotacao" required="true">
                                                     </div>
                                                 </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="panel-body">
-                                                        <label for="perfil">
-                                                            Perfil: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="perfil" class="form-control">
-                                                                <option value="0">Selecione um Perfil</option>                                                                
-                                                                <?php
-                                                                    echo $selectPerfis;
-                                                                ?>
-                                                            </select>
-                                                        </div>
+                                                <div class="col-md-4">
+                                                    Categoria:
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="id_categoria" class="form-control">
+                                                            <option value="0">Selecione Categoria</option>                                                                
+                                                            <?php
+                                                            // echo $lotacoes;
+                                                            ?>
+                                                        </select>
                                                     </div>
                                                 </div>
-
-                                                
-
-
-
-                                            </div>
+                                                <div class="col-md-4">
+                                                    Pai da Lotação:
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="id_pai" class="form-control">
+                                                            <option value="0">Selecione Pai da Lotação</option>                                                                
+                                                            <?php
+                                                            // echo $lotacoes;
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>    
                                             <!-- End <div class="form-group"> -->
-                                       
-
                                         </div>
                                         <!-- <div class="panel-body"> -->
-
-
                                         <!-- Footer Form -->
-                                        <div class="panel-footer text-right">
+                                        <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
                                                 Limpar
-                                            </button>                                  
-                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
-                                            </button>
-                                            <button class="btn btn-success btn-rounded btn-salvar" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>     
+                                            <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
+                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
                                             </button>
                                         </div>
                                         <!-- End Form -->
+
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
-
                                 </div>
                             </div>
                         </div>
                         <!-- Fim Form -->
-                        
-                        
-                        
-                        
-                        
-                         <div class="panel">
+                        <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Pessoas</h3>
+                                <h3 class="panel-title">Funcionários</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -152,14 +148,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                                         <div class="col-sm-12">
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Nome</th>
-                                                        <th>Perfil</th>
+                                                    <tr>                                                        
+                                                        <th>Lotação</th>
+                                                        <th>Cidade</th>
+                                                        <th>Logradouro</th>
+                                                        <th>Bairro</th>
+                                                        <th>Responsável</th>
+                                                        <th>Telefone</th>
+                                                        <th>Lotação Pai</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                                                                                                                                                                                                                    
+
                                                 </tbody>
                                             </table>            
                                         </div>
@@ -168,6 +169,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                     <!--===================================================-->
@@ -205,7 +207,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <!--===================================================-->
         <!-- END OF CONTAINER -->
 
-       
+
 
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
@@ -222,15 +224,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
         <!-- DIALOG CONFIRM [OPT] -->
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-         <script src="/assets/js/diarias/permissoes/index.js"></script>
-           
+        <script src="/assets/js/rh/lotacaoDetalhe/index.js"></script>
+        <!--Datapicker-->
+        <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+        <!--MaskedInput-->
+        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
 
     </body>
