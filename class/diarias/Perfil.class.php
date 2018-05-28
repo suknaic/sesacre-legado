@@ -36,12 +36,13 @@ class Perfil{
     }
         
     private function getPerfisDiarias(){
-//        $array = array(
-//            PERFIL_DIARIA_SOLICITACAO => "Perfil Solicitação de Diária", 
-//            PERFIL_DIARIA_AUTORIZACAO => "Perfil Autoriza"
-//            PERFIL_DIARIA_ZEUS
-//            );   
-//        return $array;
+        $array = array(
+            PERFIL_DIARIA_SOLICITACAO => "Perfil Diária Solicitação", 
+            PERFIL_DIARIA_AUTORIZACAO => "Perfil Diária Autorização",
+            PERFIL_DIARIA_PERMISSAO => "Perfil Diária Permissão",
+            PERFIL_DIARIA_ZEUS => "Perfil Diária Zeus",
+            );   
+        return $array;
     }
         
                               
@@ -117,7 +118,7 @@ class Perfil{
                 $pdo = $conexao->connect();
             }
             
-            $array = $this->getPerfisPlanejamento();    
+            $array = $this->getPerfisDiarias();    
            
             foreach ($array as $key => $value) {
                 $retorno .= "<option value=".$key.">".$value."</option>";    
@@ -136,7 +137,7 @@ class Perfil{
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $perfilPessoa = new PerfilPessoa();                 
-            $perfis = implode(",", array_keys($this->getPerfisPlanejamento()));                                    
+            $perfis = implode(",", array_keys($this->getPerfisDiarias()));                                    
             $perfilPessoa->retornaPessoasPorINPerfil($perfis, $pdo);
                         
             if($perfilPessoa->Sucesso()){                

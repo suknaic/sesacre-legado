@@ -60,8 +60,10 @@ switch ($_REQUEST['acao']) {
         
     CASE 'retornaOptionsDiaria':
         try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $diaria = new Diaria();
-            $diaria->setUsuarioPedido($session->getIdUser());
+            $diaria->setIdPessoaProponente($dados['proponente'] ?? 0);
+            $diaria->setIdPessoaProposto($dados['proposto'] ?? 0);       
             echo '<option value="">Selecione uma Diária</option>';
             echo $diaria->retornaPedidoDiariaOption();
             return;
@@ -71,6 +73,18 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    CASE 'retornaOptionContratos':
+        try {
+            $contrato = new Contrato();
+            echo $contrato->retornaOptionPessoaContrato();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 
 
     CASE 'retornaAno':

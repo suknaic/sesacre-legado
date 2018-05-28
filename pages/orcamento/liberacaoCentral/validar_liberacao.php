@@ -125,7 +125,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/vali
                                                         <th class="text-center">Data</th>
                                                         <th class="text-center">observação</th>
                                                         <th class="text-center">Valor</th>
-                                                         <th class="text-center">Ação</th>
+                                                        <th class="text-center">Tipo</th>
+                                                        <th class="text-center">Ação</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

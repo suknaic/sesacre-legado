@@ -311,9 +311,9 @@
                             </a>
                             <!--Submenu-->
                             <ul class="collapse">
-<!--                                <li>
+                                <li>
                                     <a href="/pages/diarias/permissoes/">Permissões</a>
-                                </li>-->
+                                </li>
                                 <li>
                                     <a href="/pages/diarias/autorizacoes/">Autorizações</a>
                                 </li>
