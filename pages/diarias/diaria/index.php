@@ -426,6 +426,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                             </div>
                                         </div>
                                    </div>
+                                   <div class="row">
+                                        <div class="form-group">
+                                            <label for="id_lotacao_solicitante">Lotação do Solicitante: <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="id_lotacao_solicitante" class="form-control">
+                                                    <?php
+                                                        echo $selectLotacaoSolicitante;
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                   </div>
                                </div>
                            </div>
                            

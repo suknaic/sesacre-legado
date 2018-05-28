@@ -52,7 +52,122 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--===================================================-->
                     <div id="page-content">
 
+                        <!-- Inicio Form -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel">
+                                    <div class="panel-heading ">
+                                        <h3 class="panel-title">Formulário</h3>
+                                    </div>
 
+                                    <!--Horizontal Form-->
+                                    <!--===================================================-->
+                                    <form class="form-horizontal form">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+
+                                                <div class="col-md-6">
+                                                    <div class="panel-body">
+                                                        <label for="pessoa">
+                                                            Responsável: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="pessoa" class="form-control">
+                                                                <option value="0">Selecione um Responsável</option>                                                                
+                                                                <?php
+                                                                    echo $selectPessoa;
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="panel-body">
+                                                        <label for="perfil">
+                                                            Perfil: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="perfil" class="form-control">
+                                                                <option value="0">Selecione um Perfil</option>                                                                
+                                                                <?php
+                                                                    echo $selectPerfis;
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                
+
+
+
+                                            </div>
+                                            <!-- End <div class="form-group"> -->
+                                       
+
+                                        </div>
+                                        <!-- <div class="panel-body"> -->
+
+
+                                        <!-- Footer Form -->
+                                        <div class="panel-footer text-right">
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
+                                                Limpar
+                                            </button>                                  
+                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                            </button>
+                                            <button class="btn btn-success btn-rounded btn-salvar" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
+                                        </div>
+                                        <!-- End Form -->
+                                    </form>
+                                    <!--===================================================-->
+                                    <!--End Horizontal Form-->
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fim Form -->
+                        
+                        
+                        
+                        
+                        
+                         <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Pessoas</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nome</th>
+                                                        <th>Perfil</th>
+                                                        <th class="text-center">Ações</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                                                                                                                                                                                                                    
+                                                </tbody>
+                                            </table>            
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <!--===================================================-->
@@ -114,6 +229,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
+         <script src="/assets/js/diarias/permissoes/index.js"></script>
            
         <!-- END JAVASCRIPT -->
 

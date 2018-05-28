@@ -21,6 +21,7 @@ class DiaDiaria {
     private $dhDiaria  = null;
     
     private $idPessoaSolicitante = null;
+    private $idLotacaoSolicitante = null;
     private $flRetorno           = null;
     private $idPedido            = null;
     private $idDiariaPai         = null;
@@ -125,7 +126,15 @@ class DiaDiaria {
         $this->nrProtocolo = $nrProtocolo;
     }
 
-    
+    function getIdLotacaoSolicitante() {
+        return $this->idLotacaoSolicitante;
+    }
+
+    function setIdLotacaoSolicitante($idLotacaoSolicitante) {
+        $this->idLotacaoSolicitante = $idLotacaoSolicitante;
+    }
+
+        
     function setIdPessoaProponente($idPessoaProponente) {
         $this->idPessoaProponente = $idPessoaProponente;
     }
