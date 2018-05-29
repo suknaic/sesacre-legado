@@ -122,6 +122,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                             </div>
                                         </div>
 
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Data de entrega:<span class="text-danger">*</span>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -165,7 +175,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel ">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Entrega realizadas</h3>
+                                        <h3 class="panel-title">Itens Entregue</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -183,7 +193,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">QTD</th>
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Entregue</th>
-                                                                <th class="text-center">Aguardando Entrega</th>
+                                                                <th class="text-center">Tipo da entrega</th>
                                                                 <th class="text-center">Ação</th>
                                                             </tr>
                                                         </thead>

@@ -2,6 +2,8 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
 
+    $('.data').mask("99/99/9999");
+
     $.ajax({
         "url": "/model/financeiro/ordem/entrega/request.php",
         "dataType": "json",
@@ -42,13 +44,10 @@ $(document).ready(function () {
 
                     for (var i = valores.length - 1; i >= 0; i--) {
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="" tp="C" class="form-control input-sm qtd">';
                         } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
-                                    '<br/><br/>Valor' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm valor">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
+                                    '<br/>Valor' + '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm valor">';
                         }
                         let valor = [
                             valores[i]['nr_item'],
@@ -91,18 +90,16 @@ $(document).ready(function () {
                     let dataSet = [];
                     var oTable = $('#tabela').dataTable();
                     oTable.fnDestroy();
-                    $('#tabela').empty();
+
                     for (var i = valores.length - 1; i >= 0; i--) {
 
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        value="' + valores[i]['qt_itens_ordem'] + '" class="form-control input-sm qtd" disabled="true">';
                         } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
-                                    '" value="' + valores[i]['qt_itens_ordem'] + '" class="form-control input-sm qtd" disabled="true">' +
-                                    '<br/><br/>Valor' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        value="' + valores[i]['qt_itens_ordem'] + '" class="form-control input-sm qtd" disabled="true">' +
+                                    '<br/>Valor' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
                                     '" value="' + valores[i]['vl_itens_ordem'] + '" class="form-control input-sm valor" disabled="true">';
                         }
                         let valor = [
