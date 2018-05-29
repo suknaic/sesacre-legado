@@ -40,6 +40,7 @@ class Diaria {
     private $idLotacaoSolicitante = null;
     private $flRetorno            = null;
     private $idPedido             = null;
+    private $anoPedido           = null;
     private $idDiariaPai         = null;
     private $idRelatorio          = null;
     private $nrProtocolo          = null;
@@ -213,6 +214,14 @@ class Diaria {
 
     function getIdLotacaoFiltro() {
         return $this->idLotacaoFiltro;
+    }
+    
+    function getAnoPedido() {
+        return $this->anoPedido;
+    }
+
+    function setAnoPedido($anoPedido) {
+        $this->anoPedido = $anoPedido;
     }
 
     function setIdPessoaFiltro($idPessoaFiltro) {
@@ -864,7 +873,7 @@ class Diaria {
                 }
 
                 $daoDiaDiaria->setStEstagio($this->getStEstagio());
-                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+//                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
 
                 $daoDiaDiaria->setDsObs($this->getDsObs());
 
@@ -945,7 +954,7 @@ class Diaria {
                 }
 
                 $daoDiaDiaria->setStEstagio($this->getStEstagio());
-                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+//                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
 
                 $daoDiaDiaria->setDsObs($this->getDsObs());
                 //Retorna os dados antes da alteração
@@ -1600,7 +1609,7 @@ class Diaria {
     public function vinculaPedidoDiaria(PDO $pdo = null){
         $retorno = "";
         try {
-            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'.' ;
+            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'/'.$this->getAnoPedido().'.' ;
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
             $daoDiaDiaria->setIdPedido($this->getIdPedido());
