@@ -29,11 +29,26 @@ switch ($_REQUEST['acao']) {
 
     CASE 'listaEntregas':
         try {
-            
+
             $protocolo = filter_input(INPUT_GET, 'idOrdem', FILTER_DEFAULT);
             $finProtocoloModel = new FinProtocoloModel();
             $finProtocoloModel->setIdOrdem($protocolo);
             echo json_encode($finProtocoloModel->retornaEntregaConfirmacao());
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'itensCadEntrega':
+        try {
+
+            $protocolo = filter_input(INPUT_GET, 'protocolo', FILTER_DEFAULT);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdProtocolo($protocolo);
+            echo json_encode($finEntregaConfirmacaoModel->retornaItensCadEntrega());
             return;
             break;
         } catch (Error $e) {

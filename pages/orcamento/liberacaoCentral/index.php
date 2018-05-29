@@ -196,7 +196,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="table-responsive">
-                                                <table class="table table-striped table-bordered table-condensed table-hover" id="tabela">
+                                                <table class="table table-striped table-bordered table-condensed table-hover" id="tabela" style="width:100%">
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center"><?php echo STR_FUNCIONAL_PROGRAMATICA; ?></th>

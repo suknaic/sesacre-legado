@@ -1,7 +1,130 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+$(document).ready(function () {
+    //instacinado fucoes js
+    func = new Funcoes();
+
+    $.ajax({
+        "url": "/model/financeiro/ordem/entrega/request.php",
+        "dataType": "json",
+        "data": {
+            "acao": "itensCadEntrega",
+            "protocolo": $("#protocolo").val()
+        },
+        "success": function (response) {
+            let valores = [];
+            if ($.trim(response)) {
+                if (response.length) {
+                    valores = response
+                }
+            }
+
+            $("#pedido").text(valores[0]["nr_pedido"]);
+            $("#desc_pedido").text(valores[0]["ds_pedido"]);
+            $("#desc_pedido").text(valores[0]["ds_pedido"]);
+            if (valores[0]["tp_contrato"] === '1') {
+                $("#ata").text(valores[0]["nr_contrato"]);
+            } else if (valores[0]["tp_contrato"] === '2') {
+                $("#contrato").text(valores[0]["nr_contrato"]);
+            }
+            $("#empenho").text(valores[0]["nr_empenho"]);
+            $("#ordem").text(valores[0]["nr_ordem"] + '/' + valores[0]["aa_ordem"]);
 
 
+            $("body").on("change", "#tipoEntrega", function () {
+                var $this = $(this).val();
+
+
+                if ($this === '1') {
+                    let dataSet = [];
+                    var oTable = $('#tabela').dataTable();
+                    oTable.fnDestroy();
+
+                    for (var i = valores.length - 1; i >= 0; i--) {
+                        let valor = [
+                            valores[i]['nr_item'],
+                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+                            valores[i]['nm_desc_material'],
+                            valores[i]['cd_despesa'],
+                            valores[i]['tp_material'],
+                            valores[i]['nr_lote'],
+                            valores[i]['qt_itens_ordem'],
+                            valores[i]['vl_itens_ordem'],
+                            valores[i]['entregue'],
+                            valores[i]['aguardandoentrega'],
+                            '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao'] + '&ordem=' + valores[i]['id_ordem'] +
+                                    '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
+                        ]
+                        dataSet.push(valor)
+                    }
+
+                    $('#tabela').DataTable({
+                        data: dataSet,
+                        language: {
+                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                        },
+
+                        columns: [
+                            {title: "Nº", className: "text-center"},
+                            {title: "Item", className: "text-center"},
+                            {title: "Descrição", className: "text-center"},
+                            {title: "Elemento de Despesa", className: "text-center"},
+                            {title: "Tipo", className: "text-center"},
+                            {title: "Lote", className: "text-center"},
+                            {title: "QTD", className: "text-center"},
+                            {title: "Valor unit", className: "text-center"},
+                            {title: "Entregue", className: "text-center"},
+                            {title: "Aguardando Entrega", className: "text-center"},
+                            {title: "Ação", className: "text-center"}
+
+                        ]
+                    });
+                } else if ($this === '2') {
+                    let dataSet = [];
+                    var oTable = $('#tabela').dataTable();
+                    oTable.fnDestroy();
+                    $('#tabela').empty();
+                    for (var i = valores.length - 1; i >= 0; i--) {
+                        let valor = [
+                            valores[i]['nr_item'],
+                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+                            valores[i]['nm_desc_material'],
+                            valores[i]['cd_despesa'],
+                            valores[i]['tp_material'],
+                            valores[i]['nr_lote'],
+                            valores[i]['qt_itens_ordem'],
+                            valores[i]['vl_itens_ordem'],
+                            valores[i]['entregue'],
+                            valores[i]['aguardandoentrega'],
+                            'Quantidade' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">'
+                        ]
+                        dataSet.push(valor)
+                    }
+
+                    $('#tabela').DataTable({
+                        data: dataSet,
+                        language: {
+                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                        },
+
+                        columns: [
+                            {title: "Nº", className: "text-center"},
+                            {title: "Item", className: "text-center"},
+                            {title: "Descrição", className: "text-center"},
+                            {title: "Elemento de Despesa", className: "text-center"},
+                            {title: "Tipo", className: "text-center"},
+                            {title: "Lote", className: "text-center"},
+                            {title: "QTD", className: "text-center"},
+                            {title: "Valor unit", className: "text-center"},
+                            {title: "Entregue", className: "text-center"},
+                            {title: "Aguardando Entrega", className: "text-center"},
+                            {title: "Ação", className: "text-center"}
+
+                        ]
+                    });
+                }
+
+            });
+        }
+    });
+
+});

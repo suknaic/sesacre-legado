@@ -52,7 +52,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/ordem/entrega/index.php?id=<?php echo $_GET["ordem"];?>">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/ordem/entrega/index.php?id=<?php echo $ordem;?>">Voltar</a></li>                        
                     </ol>
                     <!--Page content-->
                     <!--===================================================-->
@@ -65,7 +65,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="id_pedido" value="" />
+                                        <input type="hidden" id="protocolo" value="<?php echo $id;?>" />
                                         <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
                                         <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
                                         <p><strong>Ata:</strong> <span id="ata"> </span></p>
@@ -85,7 +85,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="tipoOrdem" class="form-control">    
+                                                    <select id="tipoEntrega" class="form-control">    
                                                         <option value="0">Selecione um tipo</option>
                                                         <option value="1">Parcial</option>
                                                         <option value="2">Total</option>
@@ -111,13 +111,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">Nº</th>
                                                                 <th class="text-center">Item</th>
                                                                 <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Unid</th>
                                                                 <th class="text-center">Elemento de Despesa</th>
                                                                 <th class="text-center">Tipo</th>
                                                                 <th class="text-center">Lote</th>
                                                                 <th class="text-center">QTD</th>
                                                                 <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Total</th>
                                                                 <th class="text-center">Entregue</th>
                                                                 <th class="text-center">Aguardando Entrega</th>
                                                                 <th class="text-center">Ação</th>

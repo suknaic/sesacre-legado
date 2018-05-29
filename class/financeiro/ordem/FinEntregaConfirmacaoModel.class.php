@@ -213,4 +213,20 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function retornaItensCadEntrega() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->retornaInforParaEntrega($pdo);
+            if($daoFinEntregaConfirmacao->sucesso()){
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }
