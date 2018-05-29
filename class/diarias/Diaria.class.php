@@ -647,7 +647,7 @@ class Diaria {
 //                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
-                                . "<td></td>"
+                                . "<td>" . $linha['nr_protocolo'] . "</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
@@ -1514,7 +1514,7 @@ class Diaria {
                     
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
-                                . "<td></td>"
+                                . "<td>". $linha['nr_protocolo']."</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
