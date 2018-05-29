@@ -9,6 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDecretoValor.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporte.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiariaHistorico.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesLotacao.class.php";
 
 
 class Diaria {
@@ -387,15 +388,27 @@ class Diaria {
         
     }
     
-    function retornaPedidoDiariaOption(){
+    function retornaPedidoDiariaOption(int $idUsuario){
         $retorno = "";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
+            
+            //Percorre as lotações do usuario que está efetuando o pedido de necessidade, para permitir apenas as diárias da mesma lotação
+            $lotacao = new DaoSesLotacao();
+            $lotacao->setId_pessoa($idUsuario);
+            $result = $lotacao->buscaLotacaoPorPessoa($pdo);
+            $filtro = array();
+            foreach ($result as $linha) {
+                $filtro[] = $linha['id_lotacao'];
+            }
+            $filtroLotacaoSql = implode(',', $filtro);
+            
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
             $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
-            $daoDiaDiaria->selectDiariaPedidoOption($pdo);
+            
+            $daoDiaDiaria->selectDiariaPedidoOption($pdo,$filtroLotacaoSql);
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $retorno .= "<option data-valor='".$linha['vl_total_sm']."' value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . " / Valor total: R$ " .$linha['vl_total']. "</option>";
@@ -804,9 +817,10 @@ class Diaria {
     
     function validaDataCriacao(){
         if (empty($this->getIdLotacaoSolicitante()) or empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or 
-            empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
-            empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
-            empty($this->getDtCriacao()) or empty($this->getIdPessoaSolicitante()) or empty($this->getNrProtocolo()) ) {
+                empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
+                empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
+                empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or empty($this->getDtCriacao()) or 
+                empty($this->getIdPessoaSolicitante()) or empty($this->getNrProtocolo()) or empty($this->getIdTipo()) ) {
             $this->msgErros .= 'Por favor preencha os campos obrigatórios.';
             return false;
         }
