@@ -10,6 +10,7 @@ $(document).ready(function () {
             "protocolo": $("#protocolo").val()
         },
         "success": function (response) {
+
             let valores = [];
             if ($.trim(response)) {
                 if (response.length) {
@@ -27,6 +28,7 @@ $(document).ready(function () {
             }
             $("#empenho").text(valores[0]["nr_empenho"]);
             $("#ordem").text(valores[0]["nr_ordem"] + '/' + valores[0]["aa_ordem"]);
+            $("#anotacoes").text(valores[0]["ds_protocolo"]);
 
 
             $("body").on("change", "#tipoEntrega", function () {
@@ -39,6 +41,15 @@ $(document).ready(function () {
                     oTable.fnDestroy();
 
                     for (var i = valores.length - 1; i >= 0; i--) {
+                        if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
+                            var acao = 'Quantidade' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                        } else if (valores[i]['tp_material'] === 'S') {
+                            var acao = 'Quantidade' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
+                                    '<br/><br/>Valor' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm valor">';
+                        }
                         let valor = [
                             valores[i]['nr_item'],
                             valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
@@ -50,8 +61,7 @@ $(document).ready(function () {
                             valores[i]['vl_itens_ordem'],
                             valores[i]['entregue'],
                             valores[i]['aguardandoentrega'],
-                            '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao'] + '&ordem=' + valores[i]['id_ordem'] +
-                                    '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
+                            acao
                         ]
                         dataSet.push(valor)
                     }
@@ -83,6 +93,18 @@ $(document).ready(function () {
                     oTable.fnDestroy();
                     $('#tabela').empty();
                     for (var i = valores.length - 1; i >= 0; i--) {
+
+                        if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
+                            var acao = 'Quantidade' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                        } else if (valores[i]['tp_material'] === 'S') {
+                            var acao = 'Quantidade' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
+                                    '" value="' + valores[i]['qt_itens_ordem'] + '" class="form-control input-sm qtd" disabled="true">' +
+                                    '<br/><br/>Valor' +
+                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
+                                    '" value="' + valores[i]['vl_itens_ordem'] + '" class="form-control input-sm valor" disabled="true">';
+                        }
                         let valor = [
                             valores[i]['nr_item'],
                             valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
@@ -94,8 +116,7 @@ $(document).ready(function () {
                             valores[i]['vl_itens_ordem'],
                             valores[i]['entregue'],
                             valores[i]['aguardandoentrega'],
-                            'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">'
+                            acao
                         ]
                         dataSet.push(valor)
                     }
@@ -117,7 +138,7 @@ $(document).ready(function () {
                             {title: "Valor unit", className: "text-center"},
                             {title: "Entregue", className: "text-center"},
                             {title: "Aguardando Entrega", className: "text-center"},
-                            {title: "Ação", className: "text-center"}
+                            {title: "Ação", className: "text-center itens"}
 
                         ]
                     });
@@ -125,6 +146,10 @@ $(document).ready(function () {
 
             });
         }
+    });
+
+    $('body').on('click', '.btn-addAnotacao', function (e) {
+        $('#adAnotacao').modal();
     });
 
 });
