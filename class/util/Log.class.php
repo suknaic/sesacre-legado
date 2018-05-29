@@ -287,17 +287,17 @@ class Log {
         //Busca as Colunas da Tabela que serão utilizadas, menos o campo bytea
         $colunasSql = "SELECT string_agg(column_name, ', ') AS colunas "
                 . " FROM information_schema.columns"
-                . " WHERE table_name = :tabela and data_type <> :bytea";      
+                . " WHERE table_name = :tabela and data_type <> :tipo";      
         
         $stmt = $pdo->prepare($colunasSql);        
-        $stmt->bindValue(":tabela", $where, PDO::PARAM_STR);
+        $stmt->bindValue(":tabela", $ds_tabela, PDO::PARAM_STR);
         $stmt->bindValue(":tipo", 'bytea', PDO::PARAM_STR);        
         $stmt->execute();        
         if ($stmt->rowCount() < 1) {
             return false;            
         }
-        $colunas = $stmt->fetch(PDO::FETCH_ASSOC);            
-        
+        $colunas = $stmt->fetch(PDO::FETCH_ASSOC);              
+        $colunas = $colunas['colunas'];
         
         $row = $pdo->query("SELECT ".$colunas." FROM " . $ds_tabela . "  WHERE " . $where . " = $id_tabela_pk");
         $reg = $row->fetch(PDO::FETCH_ASSOC);
@@ -361,17 +361,18 @@ class Log {
         //Busca as Colunas da Tabela que serão utilizadas, menos o campo bytea
         $colunasSql = "SELECT string_agg(column_name, ', ') AS colunas "
                 . " FROM information_schema.columns"
-                . " WHERE table_name = :tabela and data_type <> :bytea";      
+                . " WHERE table_name = :tabela and data_type <> :tipo";      
         
         $stmt = $pdo->prepare($colunasSql);        
-        $stmt->bindValue(":tabela", $where, PDO::PARAM_STR);
+        $stmt->bindValue(":tabela", $ds_tabela, PDO::PARAM_STR);
         $stmt->bindValue(":tipo", 'bytea', PDO::PARAM_STR);        
         $stmt->execute();        
         if ($stmt->rowCount() < 1) {
             return false;            
         }
         $colunas = $stmt->fetch(PDO::FETCH_ASSOC);        
-                
+        $colunas = $colunas['colunas'];
+        
         $row = $pdo->query("SELECT ".$colunas." FROM " . $ds_tabela . "  WHERE " . $where . " = $id_tabela_pk");
         $reg = $row->fetch(PDO::FETCH_ASSOC);
 

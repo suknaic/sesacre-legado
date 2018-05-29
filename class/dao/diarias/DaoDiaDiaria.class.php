@@ -23,7 +23,7 @@ class DaoDiaDiaria extends DiaDiaria {
                         . "(id_tipo, id_pessoa_proponente, id_funcao_proponente,id_lotacao_proponente,"
                         . " id_pessoa_proposto,id_funcao_proposto, id_lotacao_proposto,"
                         . " ds_servico_executado,ds_locais_executado, ds_obs, dt_criacao, "
-                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai,nr_protocolo) "
+                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai,nr_protocolo, id_lotacao_solicitante) "
                         . "values (:id_tipo, :id_pessoa_proponente, :id_funcao_proponente, :id_lotacao_proponente, "
                         . "        :id_pessoa_proposto, :id_funcao_proposto, :id_lotacao_proposto, "
                         . "        :ds_servico_executado, :ds_locais_executado, :ds_obs, :dt_criacao, "

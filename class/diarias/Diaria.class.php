@@ -794,6 +794,13 @@ class Diaria {
     
     
     function validaDataCriacao(){
+        if (empty($this->getIdLotacaoSolicitante()) or empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or 
+            empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
+            empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
+            empty($this->getDtCriacao()) or empty($this->getIdPessoaSolicitante()) or empty($this->getNrProtocolo()) ) {
+            $this->msgErros .= 'Por favor preencha os campos obrigatórios.';
+            return false;
+        }
         $dataCriacao = date_create_from_format('d/m/Y H:i', $this->getDtCriacao() .' 00:00' );
         try {
             foreach ($this->getItinerario() as $linha) {
@@ -1112,7 +1119,7 @@ class Diaria {
             
             if (!Log::SalvaLogD('dia_diaria_destino', $daoDiaDiariaDestino->getIdDiariaDestino(), $pdo)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                return STR_ERROR;
             }
             
             $daoDiaDiariaDestino->delete($pdo);
@@ -1203,6 +1210,11 @@ class Diaria {
             $daoDiaAnexo->insert($pdo);
             
             if ($daoDiaAnexo->getSucesso()){
+                $idDiaAnexo = $pdo->lastInsertId('dia_anexo_id_anexo_seq');
+                if (!Log::SalvaLogIBinario('dia_anexo', $idDiaAnexo, $pdo)) {;
+                    $pdo->rollBack();
+                    return STR_ERROR;
+                }
                  unlink($arquivoPath);                
                 $this->erros = false;
             } else {
@@ -1243,6 +1255,11 @@ class Diaria {
     
     function excluirDiariaAnexo(PDO $pdo, DaoDiaAnexo $daoDiaAnexo) {
         try {
+            
+            if (!Log::SalvaLogDBinario('dia_anexo', $daoDiaAnexo->getIdAnexo(), $pdo)) {
+                $pdo->rollBack();
+                return STR_ERROR;
+            }
             
             $daoDiaAnexo->delete($pdo);
             
