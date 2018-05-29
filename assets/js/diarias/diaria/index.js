@@ -495,7 +495,7 @@ $(document).ready(function () {
             //Validação dos campos
             if (Diaria.tipo == "" || Diaria.proponente == "" || Diaria.nrProtocolo == "" ||
                     Diaria.proponenteLotacao == "" || Diaria.proponenteFuncao == "" ||
-                    Diaria.proposto == "" || Diaria.propostoLotacao == "" || Diaria.solicitanteLotacao == "" ||
+                    Diaria.proposto == "" || Diaria.propostoLotacao == "" || Diaria.solicitanteLotacao == 0 ||
                     Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {
 
                 func.modalAlert(func.msgPreencherCampos);

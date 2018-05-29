@@ -582,6 +582,11 @@ class Relatorio {
             $daoDiaRelatorioAnexo->insert($pdo);
             
             if ($daoDiaRelatorioAnexo->getSucesso()){
+                $idDiaRelatorioAnexo = $pdo->lastInsertId('dia_relatorio_anexo_id_relatorio_anexo_seq');
+                if (!Log::SalvaLogIBinario('dia_relatorio_anexo', $idDiaRelatorioAnexo, $pdo)) {;
+                    $pdo->rollBack();
+                    return STR_ERROR;
+                }
                  unlink($arquivoPath);                
                 $this->erros = false;
             } else {
@@ -622,6 +627,11 @@ class Relatorio {
     
     function excluirRelatorioAnexo(PDO $pdo, DaoDiaRelatorioAnexo $daoDiaRelatorioAnexo) {
         try {
+            
+            if (!Log::SalvaLogDBinario('dia_relatorio_anexo', $daoDiaRelatorioAnexo->getIdRelatorioAnexo(), $pdo)) {
+                $pdo->rollBack();
+                return STR_ERROR;
+            }
             
             $daoDiaRelatorioAnexo->delete($pdo);
             
