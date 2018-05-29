@@ -776,8 +776,8 @@ class DaoDiaDiaria extends DiaDiaria {
                          FROM dia_diaria diaria
                          WHERE ((id_pessoa_proposto = :id_pessoa_proposto and :id_pessoa_proponente = 0)
                                 OR (id_pessoa_proponente = :id_pessoa_proponente and :id_pessoa_proposto = 0)
-                                OR (id_pessoa_proposto = :id_pessoa_proposto and id_pessoa_proponente = :id_pessoa_proponente )
-                                OR (id_lotacao_proponente in (:lotacao))
+                                OR (id_pessoa_proposto = :id_pessoa_proposto and id_pessoa_proponente = :id_pessoa_proponente ))
+                         AND ((id_lotacao_proponente in (:lotacao))
                                 OR (id_lotacao_proposto in (:lotacao))
                                 OR (id_lotacao_solicitante in(:lotacao)))
                          AND st_estagio in (4,6) and id_pedido is null"; //Somente as diárias deferidas
