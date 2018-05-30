@@ -26,6 +26,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+         <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
@@ -233,7 +235,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-         <script src="/assets/js/diarias/permissoes/index.js"></script>
+        <script src="/assets/js/diarias/permissoes/index.js"></script>
+        <!-- select2 -->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            
         <!-- END JAVASCRIPT -->
 

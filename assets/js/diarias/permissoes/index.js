@@ -15,6 +15,9 @@ $(document).ready(function () {
         });
     }
     lista();
+    
+    $('body').find("select").select2({
+    });
 
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();

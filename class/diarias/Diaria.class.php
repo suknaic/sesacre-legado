@@ -627,9 +627,14 @@ class Diaria {
                                     . "<td>".$linha['ds_cidade_fim']."</td>"
                                     . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['dh_fim']."</td>"
-                                    . "<td>".number_format($linha['vl_total'], 2,',','.')."</td>"
-                                    . "<td><span role='button' class='remove-itinerario'>Remover</span> | <span role='button' class='edit-itinerario'>Alterar</span></td>"
-                              . "</tr>";
+                                    . "<td>".number_format($linha['vl_total'], 2,',','.')."</td>";
+                                    
+                                    if ($linha['st_estagio'] == '2' || $linha['st_estagio'] == '4' || $linha['st_estagio'] == '5' || $linha['st_estagio'] == '6') {
+                                       $retorno .= "<td></td>";
+                                    } else {
+                                       $retorno .=  "<td><span role='button' class='remove-itinerario'>Remover</span> | <span role='button' class='edit-itinerario'>Alterar</span></td>"; 
+                                    }
+                      $retorno .= "</tr>";
                 }
             }
             return $retorno;

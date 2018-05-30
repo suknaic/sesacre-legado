@@ -357,6 +357,8 @@ $(document).ready(function () {
     } else {
         if(estagio == '2' || estagio == '4' || estagio == '5' || estagio == '6'){ //Deferida ou Enviada para Deferimento
             $("#salvar_diaria").prop('disabled',true);
+            $(".add-itinerario").prop('disabled',true);
+            $(".btn-add-arquivo").prop('disabled',true);
         }
     }
     
