@@ -194,6 +194,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Entregue</th>
                                                                 <th class="text-center">Tipo da entrega</th>
+                                                                <th class="text-center">Data de entrega</th>
                                                                 <th class="text-center">Ação</th>
                                                             </tr>
                                                         </thead>
