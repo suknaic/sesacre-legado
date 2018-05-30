@@ -132,6 +132,7 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT dest.id_diaria_destino, 
+                                di.st_estagio,
                                 (cid_ori.nm_cidade || ' - ' || est_ori.nm_sigla )as ds_cidade_inicio,
                                 dest.id_cidade_inicio, 
                                 to_char(dest.dh_inicio,'dd/mm/yyyy hh24:mi')     as dh_inicio, 
@@ -145,7 +146,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
                                 dest.qt_diaria_destino, 
                                 dest.vl_diaria_destino,
                                 round((dest.qt_diaria_destino * dest.vl_diaria_destino) ,2) as vl_total 
-                         FROM   dia_diaria_destino dest 
+                         FROM   dia_diaria_destino dest
+                                JOIN dia_diaria di
+                                  ON di.id_diaria = dest.id_diaria
                                 JOIN ses_cidade cid_ori 
                                   ON cid_ori.id_cidade = dest.id_cidade_inicio 
                                 JOIN ses_estado est_ori 

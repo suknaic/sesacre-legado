@@ -26,13 +26,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+         <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
-            <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; ?>
+            <?php 
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            ?>
 
             <div class="boxed">
 
@@ -43,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Permissões do módulo de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Permissões de Acesso do módulo de Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -229,7 +235,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-         <script src="/assets/js/diarias/permissoes/index.js"></script>
+        <script src="/assets/js/diarias/permissoes/index.js"></script>
+        <!-- select2 -->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            
         <!-- END JAVASCRIPT -->
 

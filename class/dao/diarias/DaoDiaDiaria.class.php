@@ -452,6 +452,7 @@ class DaoDiaDiaria extends DiaDiaria {
                                 proponente.nm_pessoa                               AS nm_proponente, 
                                 proposto.nm_pessoa                                 AS nm_proposto, 
                                 lt_proposto.nm_lotacao                             AS lt_proposto,
+                                di.nr_protocolo,
                                 di.st_estagio,
                                 di.id_pedido,
                                 (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
@@ -521,6 +522,81 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
+    public function listaTodasDiarias(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT di.id_diaria, 
+                                proponente.nm_pessoa                               AS nm_proponente, 
+                                proposto.nm_pessoa                                 AS nm_proposto, 
+                                lt_proposto.nm_lotacao                             AS lt_proposto,
+                                di.st_estagio,
+                                di.id_pedido,
+                                di.nr_protocolo,
+                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
+                                String_agg(pais_ini.nm_pais 
+                                           || '(' 
+                                           || est_ini. nm_sigla 
+                                           || ')' 
+                                           || ci.nm_cidade 
+                                           || ' a ' 
+                                           || pais_fim.nm_pais 
+                                           || '(' 
+                                           || est_fim.nm_sigla 
+                                           || ')' 
+                                           || cf.nm_cidade 
+                                           || ' / ' 
+                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G999D99')) 
+                                           || ' X ' 
+                                           || 'R$ ' 
+                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G999D99')) 
+                                           || ' = R$ ' 
+                                           || ( Trim(To_char(dd.qt_diaria_destino * dd.vl_diaria_destino, 
+                                                     '999G999G999D99')) ), '<hr>') AS destino 
+                         FROM   dia_diaria di 
+                                INNER JOIN dia_diaria_destino dd 
+                                        ON dd.id_diaria = di.id_diaria 
+                                INNER JOIN ses_cidade ci 
+                                        ON ci.id_cidade = dd.id_cidade_inicio 
+                                INNER JOIN ses_cidade cf 
+                                        ON cf.id_cidade = dd.id_cidade_fim 
+                                INNER JOIN ses_pessoa proposto 
+                                        ON proposto.id_pessoa = di.id_pessoa_proposto 
+                                INNER JOIN ses_lotacao lt_proposto 
+                                        ON lt_proposto.id_lotacao = di.id_lotacao_proposto 
+                                INNER JOIN ses_pessoa proponente 
+                                        ON proponente.id_pessoa = di.id_pessoa_proponente 
+                                INNER JOIN ses_estado est_ini 
+                                        ON est_ini.id_estado = ci.id_estado 
+                                INNER JOIN ses_estado est_fim 
+                                        ON est_fim.id_estado = cf.id_estado 
+                                INNER JOIN ses_pais pais_ini 
+                                        ON pais_ini.id_pais = est_ini.id_pais 
+                                INNER JOIN ses_pais pais_fim 
+                                        ON pais_fim.id_pais = est_fim.id_pais
+                         GROUP  BY di.id_diaria, 
+                                   proponente.nm_pessoa, 
+                                   proposto.nm_pessoa, 
+                                   lt_proposto.nm_lotacao 
+                         ORDER BY di.id_diaria desc";
+                        
+                $stmt = $pdo->prepare($sql);
+               
+
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     public function listaDiarias(PDO $pdo = null,int $idUsuario = 0, string $lotacoes = "") {
         try {
             if (!empty($pdo)) {
@@ -530,6 +606,7 @@ class DaoDiaDiaria extends DiaDiaria {
                                 lt_proposto.nm_lotacao                             AS lt_proposto,
                                 di.st_estagio,
                                 di.id_pedido,
+                                di.nr_protocolo,
                                 (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
