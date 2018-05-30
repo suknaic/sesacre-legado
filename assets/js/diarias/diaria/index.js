@@ -357,6 +357,8 @@ $(document).ready(function () {
     } else {
         if(estagio == '2' || estagio == '4' || estagio == '5' || estagio == '6'){ //Deferida ou Enviada para Deferimento
             $("#salvar_diaria").prop('disabled',true);
+            $(".add-itinerario").prop('disabled',true);
+            $(".btn-add-arquivo").prop('disabled',true);
         }
     }
     
@@ -493,9 +495,9 @@ $(document).ready(function () {
 
 
             //Validação dos campos
-            if (Diaria.tipo == "" || Diaria.proponente == "" || Diaria.nrProtocolo == "" ||
-                    Diaria.proponenteLotacao == "" || Diaria.proponenteFuncao == "" ||
-                    Diaria.proposto == "" || Diaria.propostoLotacao == "" || Diaria.solicitanteLotacao == 0 ||
+            if (Diaria.tipo == 0 || Diaria.tipo == "" || Diaria.proponente == "" || Diaria.proponente == 0 || Diaria.nrProtocolo == "" ||
+                    Diaria.proponenteLotacao == "" || Diaria.proponenteLotacao == 0 || Diaria.proponenteFuncao == "" || Diaria.proponenteFuncao == 0 ||
+                    Diaria.proposto == "" || Diaria.proposto == 0 || Diaria.propostoLotacao == "" || Diaria.propostoLotacao == 0 || Diaria.solicitanteLotacao == 0 ||
                     Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {
 
                 func.modalAlert(func.msgPreencherCampos);
@@ -503,7 +505,7 @@ $(document).ready(function () {
                 return false;
             }
 
-            if (Diaria.tipo > 1 && Diaria.idDiariaPai === "") {
+            if (Diaria.tipo > 1 && (Diaria.idDiariaPai == "" || Diaria.idDiariaPai == 0)) {
                 func.modalAlert("É necessário informar a diária principal.");
                 $this.prop("disabled", false);
                 return false;

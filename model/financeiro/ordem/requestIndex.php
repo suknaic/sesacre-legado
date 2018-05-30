@@ -6,10 +6,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.
 
 $session = new Session('ajax');
 
-if (!$session->vPContratos()) {
-    echo "SessaoExpirada";
-    return;
-}
 
 switch ($_REQUEST['acao']) {
 

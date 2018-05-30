@@ -1,7 +1,7 @@
 $(document).ready(function () {
-
+    
     func = new Funcoes();
-  
+
     function lista() {
         $.ajax({
             "url": "/model/diarias/permissoes/request.php",
@@ -15,6 +15,9 @@ $(document).ready(function () {
         });
     }
     lista();
+    
+    $('body').find("select").select2({
+    });
 
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -98,7 +101,7 @@ $(document).ready(function () {
 
         var $this = $(this);
         var perfil = $this.val();
-        var pessoa = $(this).attr('dataid');
+        var pessoa = $(this).data('id');
         var item = $this.closest('tr').find('td:eq(0)').text()+" - "+$this.closest('tr').find('td:eq(1)').text();
 
         bootbox.confirm({
@@ -160,6 +163,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
+                                console.log('testando');
                                 func.modalAlert(response.msg, 'primary');
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
                                     location.reload();

@@ -308,13 +308,13 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="/pages/diarias/permissoes/">Permissões</a>
+                                    <a href="/pages/diarias/permissoes/">Permissões de Acesso</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/diarias/">Solicitações</a>
                                 </li>
                                 <li>
                                     <a href="/pages/diarias/autorizacoes/">Autorizações</a>
-                                </li>
-                                <li>
-                                    <a href="/pages/diarias/">Solicitação</a>
                                 </li>
                             </ul>
                         </li>

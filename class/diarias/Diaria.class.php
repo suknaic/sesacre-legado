@@ -9,6 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDecretoValor.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaTransporte.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/diarias/DaoDiaDiariaHistorico.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesLotacao.class.php";
 
 
 class Diaria {
@@ -40,6 +41,7 @@ class Diaria {
     private $idLotacaoSolicitante = null;
     private $flRetorno            = null;
     private $idPedido             = null;
+    private $anoPedido           = null;
     private $idDiariaPai         = null;
     private $idRelatorio          = null;
     private $nrProtocolo          = null;
@@ -214,6 +216,14 @@ class Diaria {
     function getIdLotacaoFiltro() {
         return $this->idLotacaoFiltro;
     }
+    
+    function getAnoPedido() {
+        return $this->anoPedido;
+    }
+
+    function setAnoPedido($anoPedido) {
+        $this->anoPedido = $anoPedido;
+    }
 
     function setIdPessoaFiltro($idPessoaFiltro) {
         $this->idPessoaFiltro = $idPessoaFiltro;
@@ -378,15 +388,27 @@ class Diaria {
         
     }
     
-    function retornaPedidoDiariaOption(){
+    function retornaPedidoDiariaOption(int $idUsuario){
         $retorno = "";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
+            
+            //Percorre as lotações do usuario que está efetuando o pedido de necessidade, para permitir apenas as diárias da mesma lotação
+            $lotacao = new DaoSesLotacao();
+            $lotacao->setId_pessoa($idUsuario);
+            $result = $lotacao->buscaLotacaoPorPessoa($pdo);
+            $filtro = array();
+            foreach ($result as $linha) {
+                $filtro[] = $linha['id_lotacao'];
+            }
+            $filtroLotacaoSql = implode(',', $filtro);
+            
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdPessoaProposto($this->getIdPessoaProposto());
             $daoDiaDiaria->setIdPessoaProponente($this->getIdPessoaProponente());
-            $daoDiaDiaria->selectDiariaPedidoOption($pdo);
+            
+            $daoDiaDiaria->selectDiariaPedidoOption($pdo,$filtroLotacaoSql);
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $retorno .= "<option data-valor='".$linha['vl_total_sm']."' value = '" . $linha['id_diaria'] . "'>Nº: ". $linha['id_diaria']." / Data criação: " . $linha['dt_criacao'] . " / Proponente: " . $linha['nm_proponente'] . " / Proposto: " . $linha['nm_proposto'] . " / Valor total: R$ " .$linha['vl_total']. "</option>";
@@ -605,9 +627,14 @@ class Diaria {
                                     . "<td>".$linha['ds_cidade_fim']."</td>"
                                     . "<td>".$linha['dh_inicio']."</td>"
                                     . "<td>".$linha['dh_fim']."</td>"
-                                    . "<td>".number_format($linha['vl_total'], 2,',','.')."</td>"
-                                    . "<td><span role='button' class='remove-itinerario'>Remover</span> | <span role='button' class='edit-itinerario'>Alterar</span></td>"
-                              . "</tr>";
+                                    . "<td>".number_format($linha['vl_total'], 2,',','.')."</td>";
+                                    
+                                    if ($linha['st_estagio'] == '2' || $linha['st_estagio'] == '4' || $linha['st_estagio'] == '5' || $linha['st_estagio'] == '6') {
+                                       $retorno .= "<td></td>";
+                                    } else {
+                                       $retorno .=  "<td><span role='button' class='remove-itinerario'>Remover</span> | <span role='button' class='edit-itinerario'>Alterar</span></td>"; 
+                                    }
+                      $retorno .= "</tr>";
                 }
             }
             return $retorno;
@@ -616,7 +643,7 @@ class Diaria {
         }
     }
     
-    function retornaTrDiarias(PDO $pdo = null) {
+    function retornaTrDiariasTodas(PDO $pdo = null){
         $retorno = "";
         try {
             if (empty($pdo)) {
@@ -624,7 +651,82 @@ class Diaria {
                 $pdo = $conexao->connect();
             }
             $daoDiaDiaria = new DaoDiaDiaria();
-//            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaFiltro());
+            $daoDiaDiaria->listaTodasDiarias($pdo);
+            
+            $estagios = $this->tiposStEstagios();
+            
+            if ($daoDiaDiaria->getSucesso()) {
+                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
+                    $estagio = $linha['st_estagio'];
+                    $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
+                    $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
+                    
+                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                                . "<td>" . $linha['id_diaria'] . "</td>"
+                                . "<td>" . $linha['nr_protocolo'] . "</td>"
+                                . "<td>" . $linha['nm_proponente'] . "</td>"
+                                . "<td>" . $linha['nm_proposto'] . "</td>"
+                                . "<td>" . $linha['lt_proposto'] . "</td>"
+                                . "<td>" . $linha['destino'] . "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido,$ano_pedido). "</td>"
+                                . "<td class = 'text-center'>";
+                    
+                        
+                                if ($estagio == '3' || $estagio == '1') { //Indeferida e Criada permite a exclusão
+                                    $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
+                                                . '<button title="Editar" type="button">'
+                                                    . '<i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                    
+                                    $retorno .= '<button title="Excluir" type="button" class="text-danger excluirDiaria">'
+                                                . '<i class="fa fa-trash fa-lg" aria-hidden="true"></i>'
+                                              . '</button>';
+                                    $retorno .= '<button title="Enviar p/ Deferimento" type="button" class="enviarDiaria" data-toggle="modal" data-target="#acao">'
+                                                . '<i class="fa fa-share-square fa-lg text-warning" aria-hidden="true"></i>'
+                                            . '</button>';
+                                }
+
+                                if ($estagio == '4' || $estagio == '5' || $estagio == '6') { //Deferida só permite visualização
+                                    $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
+                                                . '<button type="button" title="Visualizar">'
+                                                    . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                }
+                                if ($estagio == '5') { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                                    $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
+                                                . '<button title="Relatório de Viagem" type="button">'
+                                                     . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                }
+                                $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
+                                                . '<button title="Imprimir proposta e concessão da Diária" type="button" >'
+                                                    . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
+                                                . '</button>'
+                                            . '</a>';
+
+
+                    $retorno .=   "</td>"
+                             . "</tr>";                    
+                }
+            }
+            return $retorno;
+            
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+            
+    function retornaTrDiariasPessoaLotacao(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->listaDiarias($pdo, $this->getIdPessoaFiltro(), $this->getIdLotacaoFiltro());
             
             $estagios = $this->tiposStEstagios();
@@ -635,10 +737,9 @@ class Diaria {
                     $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
                     $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
-//                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
-                                . "<td></td>"
+                                . "<td>" . $linha['nr_protocolo'] . "</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
@@ -795,9 +896,10 @@ class Diaria {
     
     function validaDataCriacao(){
         if (empty($this->getIdLotacaoSolicitante()) or empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or 
-            empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
-            empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
-            empty($this->getDtCriacao()) or empty($this->getIdPessoaSolicitante()) or empty($this->getNrProtocolo()) ) {
+                empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
+                empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
+                empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or empty($this->getDtCriacao()) or 
+                empty($this->getIdPessoaSolicitante()) or empty($this->getNrProtocolo()) or empty($this->getIdTipo()) ) {
             $this->msgErros .= 'Por favor preencha os campos obrigatórios.';
             return false;
         }
@@ -864,7 +966,7 @@ class Diaria {
                 }
 
                 $daoDiaDiaria->setStEstagio($this->getStEstagio());
-                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+//                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
 
                 $daoDiaDiaria->setDsObs($this->getDsObs());
 
@@ -945,7 +1047,7 @@ class Diaria {
                 }
 
                 $daoDiaDiaria->setStEstagio($this->getStEstagio());
-                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
+//                $daoDiaDiaria->setFlRetorno($this->getFlRetorno());
 
                 $daoDiaDiaria->setDsObs($this->getDsObs());
                 //Retorna os dados antes da alteração
@@ -1505,7 +1607,7 @@ class Diaria {
                     
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
-                                . "<td></td>"
+                                . "<td>". $linha['nr_protocolo']."</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"
                                 . "<td>" . $linha['nm_proposto'] . "</td>"
                                 . "<td>" . $linha['lt_proposto'] . "</td>"
@@ -1600,7 +1702,7 @@ class Diaria {
     public function vinculaPedidoDiaria(PDO $pdo = null){
         $retorno = "";
         try {
-            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'.' ;
+            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'/'.$this->getAnoPedido().'.' ;
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
             $daoDiaDiaria->setIdPedido($this->getIdPedido());

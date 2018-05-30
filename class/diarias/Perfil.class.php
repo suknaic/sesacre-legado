@@ -147,7 +147,7 @@ class Perfil{
                     $retorno .= "<td>".$v['nm_pessoa']."</td>"
                             . "<td>" . $v['nm_perfil'].  "</td>"                            
                             . '<td style="text-align: center;">'                                                                                
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_perfil'] . ' dataid='.$v['id_pessoa'].'>
+                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_perfil'] . ' data-id='.$v['id_pessoa'].'>
                                 <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
                               </button>'
                             . '</td>'

@@ -44,15 +44,43 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
+                    <!--Modal addAnotacao-->
+                    <div class=" modal fade modal-footer" id="adAnotacao"
+                         tabindex="-1" role="dialog"
+                         aria-labelledby="mySmallModalLabel"
+                         data-keyboard="false" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close"
+                                            data-dismiss="modal"
+                                            aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Anotação</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                        <input type="hidden" name="id_processo_anotacao" id="id_processo_anotacao" value="<?php echo $dados['id_processo']; ?>">
+                                        <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                    <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Fim Modal AddAnotacao-->
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Nova Ordem</h1> 
+                        <h1 class="page-header text-overflow">Nova Entrega</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/ordem/entrega/index.php?id=<?php echo $ordem;?>">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/ordem/entrega/index.php?id=<?php echo $ordem; ?>">Voltar</a></li>                        
                     </ol>
                     <!--Page content-->
                     <!--===================================================-->
@@ -65,7 +93,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="protocolo" value="<?php echo $id;?>" />
+                                        <input type="hidden" id="protocolo" value="<?php echo $id; ?>" />
                                         <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
                                         <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
                                         <p><strong>Ata:</strong> <span id="ata"> </span></p>
@@ -93,13 +121,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                 </div>
                                             </div>
                                         </div>
-                                 
+
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                Data de entrega:<span class="text-danger">*</span>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Itens Cadastrados</h3>
+                                        <h3 class="panel-title">Itens para Entrega</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -132,6 +170,61 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                         <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
                                             <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                         </button>
+                                    </div>
+                                </div>
+
+                                <div class="panel ">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Itens Entregue</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-striped table-bordered" id="tabela2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Nº</th>
+                                                                <th class="text-center">Item</th>
+                                                                <th class="text-center">Descrição</th>
+                                                                <th class="text-center">Elemento de Despesa</th>
+                                                                <th class="text-center">Tipo</th>
+                                                                <th class="text-center">Lote</th>
+                                                                <th class="text-center">QTD</th>
+                                                                <th class="text-center">Valor unit</th>
+                                                                <th class="text-center">Entregue</th>
+                                                                <th class="text-center">Tipo da entrega</th>
+                                                                <th class="text-center">Data de entrega</th>
+                                                                <th class="text-center">Ação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Anotações
+                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </h3>
+                                    </div>
+                                    <div class="input_ordens">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="panel-body">
+                                                    <textarea class="form-control" rows="6" readonly name="anotacoes" id="anotacoes"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

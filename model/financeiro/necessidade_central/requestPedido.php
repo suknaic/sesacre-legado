@@ -14,6 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/CentralRespo
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 
+
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -63,9 +64,9 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $diaria = new Diaria();
             $diaria->setIdPessoaProponente($dados['proponente'] ?? 0);
-            $diaria->setIdPessoaProposto($dados['proposto'] ?? 0);       
+            $diaria->setIdPessoaProposto($dados['proposto'] ?? 0);   
             echo '<option value="">Selecione uma Diária</option>';
-            echo $diaria->retornaPedidoDiariaOption();
+            echo $diaria->retornaPedidoDiariaOption($session->getIdUser());
             return;
             break;
         } catch (Error $e) {
