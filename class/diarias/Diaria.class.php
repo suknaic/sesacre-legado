@@ -638,7 +638,7 @@ class Diaria {
         }
     }
     
-    function retornaTrDiarias(PDO $pdo = null) {
+    function retornaTrDiariasTodas(PDO $pdo = null){
         $retorno = "";
         try {
             if (empty($pdo)) {
@@ -646,7 +646,82 @@ class Diaria {
                 $pdo = $conexao->connect();
             }
             $daoDiaDiaria = new DaoDiaDiaria();
-//            $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaFiltro());
+            $daoDiaDiaria->listaTodasDiarias($pdo);
+            
+            $estagios = $this->tiposStEstagios();
+            
+            if ($daoDiaDiaria->getSucesso()) {
+                foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
+                    $estagio = $linha['st_estagio'];
+                    $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
+                    $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
+                    
+                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                                . "<td>" . $linha['id_diaria'] . "</td>"
+                                . "<td>" . $linha['nr_protocolo'] . "</td>"
+                                . "<td>" . $linha['nm_proponente'] . "</td>"
+                                . "<td>" . $linha['nm_proposto'] . "</td>"
+                                . "<td>" . $linha['lt_proposto'] . "</td>"
+                                . "<td>" . $linha['destino'] . "</td>"
+                                . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido,$ano_pedido). "</td>"
+                                . "<td class = 'text-center'>";
+                    
+                        
+                                if ($estagio == '3' || $estagio == '1') { //Indeferida e Criada permite a exclusão
+                                    $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
+                                                . '<button title="Editar" type="button">'
+                                                    . '<i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                    
+                                    $retorno .= '<button title="Excluir" type="button" class="text-danger excluirDiaria">'
+                                                . '<i class="fa fa-trash fa-lg" aria-hidden="true"></i>'
+                                              . '</button>';
+                                    $retorno .= '<button title="Enviar p/ Deferimento" type="button" class="enviarDiaria" data-toggle="modal" data-target="#acao">'
+                                                . '<i class="fa fa-share-square fa-lg text-warning" aria-hidden="true"></i>'
+                                            . '</button>';
+                                }
+
+                                if ($estagio == '4' || $estagio == '5' || $estagio == '6') { //Deferida só permite visualização
+                                    $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
+                                                . '<button type="button" title="Visualizar">'
+                                                    . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                }
+                                if ($estagio == '5') { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                                    $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
+                                                . '<button title="Relatório de Viagem" type="button">'
+                                                     . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
+                                                . '</button>'
+                                              . '</a>';
+                                }
+                                $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
+                                                . '<button title="Imprimir proposta e concessão da Diária" type="button" >'
+                                                    . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
+                                                . '</button>'
+                                            . '</a>';
+
+
+                    $retorno .=   "</td>"
+                             . "</tr>";                    
+                }
+            }
+            return $retorno;
+            
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+            
+    function retornaTrDiariasPessoaLotacao(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->listaDiarias($pdo, $this->getIdPessoaFiltro(), $this->getIdLotacaoFiltro());
             
             $estagios = $this->tiposStEstagios();
@@ -657,7 +732,6 @@ class Diaria {
                     $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
                     $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
-//                    $info_complementar = ($pedido > 0) ? ' - Vinculada a um pedido de necessidade.' : '';
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
                                 . "<td>" . $linha['nr_protocolo'] . "</td>"

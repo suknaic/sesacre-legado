@@ -32,7 +32,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
-            <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; ?>
+            <?php 
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            ?>
 
             <div class="boxed">
 
@@ -43,7 +47,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Permissões do módulo de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Permissões de Acesso do módulo de Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
