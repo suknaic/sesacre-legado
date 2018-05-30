@@ -2,6 +2,27 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
 
+    $('.data').mask("99/99/9999");
+
+        //Masca para valor
+    $("body").on("focus", "#qtd", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+
+    $("body").on("focus", "#vl", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+
     $.ajax({
         "url": "/model/financeiro/ordem/entrega/request.php",
         "dataType": "json",
@@ -41,14 +62,12 @@ $(document).ready(function () {
                     oTable.fnDestroy();
 
                     for (var i = valores.length - 1; i >= 0; i--) {
+                        
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="C" class="form-control input-sm qtd">';
                         } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
-                                    '<br/><br/>Valor' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm valor">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
+                                    '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm vl">';
                         }
                         let valor = [
                             valores[i]['nr_item'],
@@ -91,19 +110,17 @@ $(document).ready(function () {
                     let dataSet = [];
                     var oTable = $('#tabela').dataTable();
                     oTable.fnDestroy();
-                    $('#tabela').empty();
-                    for (var i = valores.length - 1; i >= 0; i--) {
 
+                    for (var i = valores.length - 1; i >= 0; i--) {
+                      
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="C" value="2" class="form-control input-sm qtd">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">';
                         } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
-                                    '" value="' + valores[i]['qt_itens_ordem'] + '" class="form-control input-sm qtd" disabled="true">' +
-                                    '<br/><br/>Valor' +
-                                    '<input type="text" name="qtd" id="qtd" itemid="" tp="' + valores[i]['tp_material'] +
-                                    '" value="' + valores[i]['vl_itens_ordem'] + '" class="form-control input-sm valor" disabled="true">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">' +
+                                    '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
+                                    '" value="' + valores[i]['vl_itens_ordem'].trim() + '" class="form-control input-sm vl" disabled="true">';
                         }
                         let valor = [
                             valores[i]['nr_item'],
@@ -151,5 +168,111 @@ $(document).ready(function () {
     $('body').on('click', '.btn-addAnotacao', function (e) {
         $('#adAnotacao').modal();
     });
+    
+    //Cadastrar item entrega
+    $("body").on("click", ".btn-salvar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+
+            if ($("#data_entrega").val() == "") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+            
+            if ($("#tipoEntrega").val() == 0) {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+            
+            
+            var $this = $(this);
+            var itens = [];
+            // $this.prop("disabled", true);
+            $(".itens").each(function () {
+                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
+                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
+                            'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
+                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+                    }
+                }
+
+                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
+                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
+                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
+                            'id': $("body").find("#id").val(),
+                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
+                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+                    }
+                }
+            });
+
+            var enc = JSON.stringify(itens);
+
+            $.ajax({
+                "type": "POST",
+                "url": "/model/financeiro/ordem/request.php",
+                "dataType": "html",
+                "data": {
+                    "acao": "cadastroOrdem",
+                    "itens": enc
+                },
+                "success": function (response) {
+                    console.log(response);
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log(response);
+                            console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert('Itens cadastros com Sucesso', 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            window.location.href = "/pages/financeiro/ordem/index.php";
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+
+            $this.prop("disabled", false);
+        }
+    });
+    //fim
 
 });

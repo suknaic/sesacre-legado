@@ -59,34 +59,40 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                             else mat.nm_desc_material
                         end nm_desc_material, desp.cd_despesa, desp.ds_despesa, mat.tp_material, itens.fl_valor_variavel, pro.ds_protocolo,
                         itens.nr_lote, pessoa.nm_pessoa, p.nr_pedido, p.ds_pedido, cont.nr_contrato, cont.tp_contrato,
-                        ordem.nr_ordem, ordem.aa_ordem, emp.nr_empenho, ordemItens.qt_itens_ordem, ordemItens.vl_itens_ordem,
+                        ordem.nr_ordem, ordem.aa_ordem, emp.nr_empenho, to_char(ordemItens.qt_itens_ordem, '9G999G990D9999')as qt_itens_ordem,
+					   to_char(ordemItens.vl_itens_ordem, '9G999G990D9999')as vl_itens_ordem,
+						
                         case 
                                 when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0'
-                            then (select coalesce(sum(qt_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao) 
+                            then (select coalesce(to_char(sum(qt_itens_entrega), '9G999G990D9999'),'0,0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao) 
 
                                 when mat.tp_material = 'C' and itens.fl_valor_variavel = '1'
-                            then (select coalesce(sum(qt_itens_entrega * vl_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
+                            then (select coalesce(to_char(sum(qt_itens_entrega * vl_itens_entrega), '9G999G990D9999'),'0,0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
 
                             when mat.tp_material = 'S' 
-                            then (select coalesce(sum(qt_itens_entrega * vl_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
+                            then (select coalesce(to_char(sum(qt_itens_entrega * vl_itens_entrega), '9G999G990D9999'),'0,0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
                             end as entregue,
 
                         case 
-                                when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0'
-                            then ordemItens.qt_itens_ordem 
+                            when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0'
+                            then to_char(( 
+						   ordemItens.qt_itens_ordem 
                             - 
                             (select coalesce(sum(qt_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
-
+							),'9G999G990D9999')
+							
                             when mat.tp_material = 'C' and itens.fl_valor_variavel = '1'
-                            then  
+                            then to_char(( 
                             round((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem),4)
                             -
                             (select coalesce(sum(qt_itens_entrega * vl_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
-                                when mat.tp_material = 'S' 
-                            then 
+							),'9G999G990D9999')
+                            when mat.tp_material = 'S' 
+                            then to_char(( 
                             round((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem),4)
                             -
                             (select coalesce(sum(qt_itens_entrega * vl_itens_entrega),'0.0000') from fin_entrega_itens where id_entrega_confirmacao = entregaC.id_entrega_confirmacao)
+							),'9G999G990D9999')
                         end as aguardandoEntrega
 
                         from fin_entrega_confirmacao as entregaC
