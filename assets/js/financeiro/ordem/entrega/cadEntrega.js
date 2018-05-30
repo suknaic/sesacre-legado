@@ -197,7 +197,7 @@ $(document).ready(function () {
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
                         itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
-                            'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+                            'tp': $(this).find(".qtd").attr("tp"), 'idOrdem': $(this).find(".qtd").attr("idPreOrdem"),
                             'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
                             'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
                     }
