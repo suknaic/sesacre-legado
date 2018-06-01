@@ -131,7 +131,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
 
                                                     <div id="demo-bv-tab1" class="tab-pane active in">
                                                         <div class="form-group has-feedback">
-                                                            <label class="col-lg-3 control-label">Nome <span class="text-danger">*</span></label>
+                                                            <label class="col-lg-3 control-label">Nome: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
                                                                 <input type="text" class="form-control nmPessoa" name="nm_usuario" id="nm_usuario"  data-bv-field="Nome" style="background: #FFF" disabled>
                                                                 <i class="form-control-feedback" data-bv-icon-for="nome" style="display: none;"></i>
@@ -141,7 +141,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         <div class="form-group has-feedback">
                                                             <label class="col-lg-3 control-label">Contato: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
-                                                                <input type="text" class="form-control" name="nrTelefoneSolicitante" id="nrTelefoneSolicitante"  placeholder="(    ) _ ____-____"  data-bv-field="telefone" required>
+                                                                <input type="text" class="form-control" name="nrTelefoneSolicitante" id="nrTelefoneSolicitante"  placeholder="(    ) _ ____-____"  data-bv-field="telefone" required disabled style="background-color: #FFF">
                                                                 <i class="form-control-feedback" data-bv-icon-for="telefone" style="display: none;"></i>
                                                                 <small class="help-block" data-bv-validator="notEmpty" data-bv-for="telefone" data-bv-result="INVÁLIDO" style="display:none;">O telefone para contato é obrigatório</small>
                                                                 <small class="help-block" data-bv-validator="digits" data-bv-for="telefone" data-bv-result="INVÁLIDO" style="display:none;">Este campo só pode conter números</small>
@@ -150,8 +150,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         <div class="form-group">
                                                             <label class="col-lg-3 control-label">Lotação: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
-                                                                <select class="form-control Lotacao" id="id_lotacao" name="id_lotacao">
-                                                                    <option value="0">Selecione Lotação</option>
+                                                                <select class="form-control Lotacao" id="id_lotacao" name="id_lotacao" disabled>
+                                                                    <option value="0" >Selecione Lotação</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -164,7 +164,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         <div class="form-group">
                                                             <label class="col-lg-3 control-label">Tipo: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
-                                                                <select id="idCategoriaTipo" class="form-control tipo">
+                                                                <select id="idCategoriaTipo" class="form-control tipo" disabled>
                                                                     <option value="0">Selecione a Categoria Tipo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -175,7 +175,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         <div class="form-group">
                                                             <label class="col-lg-3 control-label">Primária: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
-                                                                <select id="idCategoriaPrimaria" class="form-control primaria">
+                                                                <select id="idCategoriaPrimaria" class="form-control primaria"  disabled>
                                                                     <option value="0">Selecione a Categoria Primária</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -186,7 +186,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         <div class="form-group">
                                                             <label class="col-lg-3 control-label">Secundária: <span class="text-danger">*</span></label>
                                                             <div class="col-lg-7">
-                                                                <select id="idCategoriaSecundaria" class="form-control secundaria">
+                                                                <select id="idCategoriaSecundaria" class="form-control secundaria" disabled>
                                                                     <option value="0">Selecione a Categoria Secundária</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -196,7 +196,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/cha/informatica/chamado/index.l
                                                         </div>
                                                     </div>
 
-                                                    <div id="demo-bv-tab3" class="tab-pane camposformulario">
+                                                    <div id="demo-bv-tab3" class="tab-pane camposformulario"  disabled>
 
                                                     </div>
 
