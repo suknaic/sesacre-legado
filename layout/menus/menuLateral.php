@@ -311,6 +311,9 @@
                                     <a href="/pages/diarias/permissoes/">Permissões de Acesso</a>
                                 </li>
                                 <li>
+                                    <a href="/pages/diarias/decreto_valor/">Parâmetros de Valores</a>
+                                </li>
+                                <li>
                                     <a href="/pages/diarias/">Solicitações</a>
                                 </li>
                                 <li>
