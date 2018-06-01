@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/ordem/entrega/DaoFinEntregaItens.class.php";
 
 class FinEntregaItensModel {
@@ -144,12 +145,42 @@ class FinEntregaItensModel {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
                 $daoFinEntregaItens = new DaoFinEntregaItens();
-                foreach ($dados as $valor){
-                    $daoFinEntregaItens->setIdEntregaConfirmacao($valor);
-                    $daoFinEntregaItens->setIdOrdemItens($valor);
-                    $daoFinEntregaItens->setQtItensEntrega($valor);
-                    $daoFinEntregaItens->setVlItensEntrega($valor);
-                    $daoFinEntregaItens->setTpEntrega($valor);
+                $valorItens = 0;
+                foreach ($dados as $valor) {
+                    $daoFinEntregaItens->setIdOrdemItens($valor->itemId);
+                    $daoFinEntregaItens->retornaValorItenOrdem($pdo);
+                    $valorItens = $daoFinEntregaItens->getMsgRetorno();
+
+                    if ($valor->tp == 'C' || $valor->tp == 'P') {
+                        $daoFinEntregaItens->setIdEntregaConfirmacao($valor->id_entrega);
+                        $daoFinEntregaItens->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                        $daoFinEntregaItens->setVlItensEntrega($valorItens["vl_itens_ordem"]);
+                        $daoFinEntregaItens->setTpEntrega($valor->tipoEntrega);
+                        $daoFinEntregaItens->setDhEntrega(Metodos::ConverteDataING($valor->data));
+                        $daoFinEntregaItens->insertentregaItens($pdo);
+                        if ($daoFinEntregaItens->sucesso()) {
+                            $pdo->commit();
+                            return "deu certo";
+                        } else {
+                            $pdo->rollBack();
+                            return $daoFinEntregaItens->getMsgRetorno();
+                        }
+                    } else {
+                        $daoFinEntregaItens->setIdEntregaConfirmacao($valor->id_entrega);
+                        $daoFinEntregaItens->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                        $daoFinEntregaItens->setVlItensEntrega(Metodos::ConverteValorIng($valor->vl));
+                        $daoFinEntregaItens->setTpEntrega($valor->tipoEntrega);
+                        $daoFinEntregaItens->setDhEntrega(Metodos::ConverteDataING($valor->data));
+                        $daoFinEntregaItens->insertentregaItens($pdo);
+                        if ($daoFinEntregaItens->sucesso()) {
+                            $pdo->commit();
+                            return Metodos::retornoAjax("ok", "html","deu certo");
+                        } else {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+//                            return $daoFinEntregaItens->getMsgRetorno();
+                        }
+                    }
                 }
                 return false;
             }
