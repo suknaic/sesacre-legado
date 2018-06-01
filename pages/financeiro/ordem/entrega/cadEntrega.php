@@ -60,7 +60,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                 </div>
                                 <div class="modal-body">
                                     <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
-                                        <input type="hidden" name="id_processo_anotacao" id="id_processo_anotacao" value="<?php echo $dados['id_processo']; ?>">
+                                        <input type="hidden" name="id_processo_anotacao" id="id_processo_anotacao" value="<?php echo $protocolo["id_protocolo"]; ?>">
                                         <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
                                     </form>
                                 </div>
@@ -141,6 +141,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                             <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <table class="table table-striped table-bordered" id="tabela">
