@@ -93,7 +93,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="protocolo" value="<?php echo $id; ?>" />
+                                        <input type="hidden" id="protocolo" value="<?php echo $protocolo["id_protocolo"]; ?>" />
                                         <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
                                         <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
                                         <p><strong>Ata:</strong> <span id="ata"> </span></p>
@@ -127,7 +127,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                 Data de entrega:<span class="text-danger">*</span>
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
+                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" value="01/01/2018" required="true" />
                                                 </div>
                                             </div>
                                         </div>
@@ -141,7 +141,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                             <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
+                                            <input type="hidden" name="id_entrega" id="id_entrega" value="<?php echo $id ?>">
+                                            <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <table class="table table-striped table-bordered" id="tabela">
@@ -194,9 +195,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">QTD</th>
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Entregue</th>
-                                                                <th class="text-center">Tipo da entrega</th>
-                                                                <th class="text-center">Data de entrega</th>
+                                                                <th class="text-center">Aguardando Entrega</th>
                                                                 <th class="text-center">Ação</th>
+<!--                                                                <th class="text-center">Nº</th>
+                                                                <th class="text-center">Item</th>
+                                                                <th class="text-center">Descrição</th>
+                                                                <th class="text-center">Elemento de Despesa</th>
+                                                                <th class="text-center">Tipo</th>
+                                                                <th class="text-center">Lote</th>
+                                                                <th class="text-center">QTD</th>
+                                                                <th class="text-center">Valor unit</th>
+                                                                <th class="text-center">Entregue</th>-->
+<!--                                                                <th class="text-center">Tipo da entrega</th>
+                                                                <th class="text-center">Data de entrega</th>-->
+<!--                                                                <th class="text-center">Ação</th>-->
                                                             </tr>
                                                         </thead>
                                                         <tbody>

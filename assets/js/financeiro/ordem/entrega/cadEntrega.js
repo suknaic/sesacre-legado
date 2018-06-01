@@ -31,7 +31,6 @@ $(document).ready(function () {
             "protocolo": $("#protocolo").val()
         },
         "success": function (response) {
-
             let valores = [];
             if ($.trim(response)) {
                 if (response.length) {
@@ -64,7 +63,8 @@ $(document).ready(function () {
                     for (var i = valores.length - 1; i >= 0; i--) {
 
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="C" class="form-control input-sm qtd">';
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '"\n\
+                                        class="form-control input-sm qtd">';
                         } else if (valores[i]['tp_material'] === 'S') {
                             var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
                                     '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm vl">';
@@ -102,7 +102,7 @@ $(document).ready(function () {
                             {title: "Valor unit", className: "text-center"},
                             {title: "Entregue", className: "text-center"},
                             {title: "Aguardando Entrega", className: "text-center"},
-                            {title: "Ação", className: "text-center"}
+                            {title: "Ação", className: "text-center itens"}
 
                         ]
                     });
@@ -165,9 +165,6 @@ $(document).ready(function () {
         }
     });
 
-    $('body').on('click', '.btn-addAnotacao', function (e) {
-        $('#adAnotacao').modal();
-    });
 
     //Cadastrar item entrega
     $("body").on("click", ".btn-salvar", function (e) {
@@ -189,15 +186,14 @@ $(document).ready(function () {
                 return false;
             }
 
-
-            var $this = $(this);
             var itens = [];
             // $this.prop("disabled", true);
             $(".itens").each(function () {
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
                         itens.push({'qtd': $(this).find(".qtd").val(), 'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp"),
-                            'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val()});
+                            'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val(),
+                            'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
                     }
                 }
 
@@ -205,7 +201,8 @@ $(document).ready(function () {
                     if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
                             $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
                         itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'id': $("body").find("#id").val(),
-                            'tp': $(this).find(".qtd").attr("tp"), 'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val()});
+                            'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(),
+                            'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
                     }
                 }
             });
@@ -221,8 +218,6 @@ $(document).ready(function () {
                     "itens": enc
                 },
                 "success": function (response) {
-                    console.log(response);
-                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -270,5 +265,14 @@ $(document).ready(function () {
         }
     });
     //fim
+
+    $('body').on('click', '.btn-addAnotacao', function (e) {
+        $('#adAnotacao').modal();
+    });
+    
+       $('body').on('click', '.btn-enviarAnotacao', function (e) {
+       $("#anotacoes").append('\n' + $("#anotacao").val());
+        
+    });
 
 });
