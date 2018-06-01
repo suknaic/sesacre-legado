@@ -195,20 +195,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">QTD</th>
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Entregue</th>
-                                                                <th class="text-center">Aguardando Entrega</th>
-                                                                <th class="text-center">Ação</th>
-<!--                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Entregue</th>-->
-<!--                                                                <th class="text-center">Tipo da entrega</th>
-                                                                <th class="text-center">Data de entrega</th>-->
-<!--                                                                <th class="text-center">Ação</th>-->
+                                                                <th class="text-center">Tipo da entrega</th>
+                                                                <th class="text-center">Data de entrega</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

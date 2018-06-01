@@ -269,10 +269,79 @@ $(document).ready(function () {
     $('body').on('click', '.btn-addAnotacao', function (e) {
         $('#adAnotacao').modal();
     });
-    
-       $('body').on('click', '.btn-enviarAnotacao', function (e) {
-       $("#anotacoes").append('\n' + $("#anotacao").val());
-        
+
+    $('body').on('click', '.btn-enviarAnotacao', function (e) {
+        $("#anotacoes").append('\n' + $("#anotacao").val());
+
     });
 
+    function carregaItensEntregue() {
+        $.ajax({
+            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+            "dataType": "json",
+            "data": {
+                "acao": "ListaItensEntregue",
+                "id_entrega": $("#id_entrega").val()
+            },
+            "success": function (response) {
+                console.log(response);
+                let valores = [];
+                if ($.trim(response)) {
+                    if (response.length) {
+                        valores = response
+                    }
+                }
+                let dataSet = [];
+                var oTable = $('#tabela2').dataTable();
+                oTable.fnDestroy();
+
+                for (var i = valores.length - 1; i >= 0; i--) {
+
+                    let valor = [
+                        valores[i]['nr_item'],
+                        valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+                        valores[i]['dsdsdsd'],
+                        valores[i]['cd_despesa'],
+                        valores[i]['tp_material'],
+                        valores[i]['nr_lote'],
+                        valores[i]['qt_itens_ordem'],
+                        valores[i]['vl_itens_ordem'],
+                        valores[i]['qt_itens_entrega'],
+                        valores[i]['tipo'],
+                        valores[i]['dt_entrega']
+                    ]
+                    dataSet.push(valor)
+                }
+
+                $('#tabela2').DataTable({
+                    data: dataSet,
+                    language: {
+                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                    },
+
+                    columns: [
+                        {title: "Nº", className: "text-center"},
+                        {title: "Item", className: "text-center"},
+                        {title: "Descrição", className: "text-center"},
+                        {title: "Elemento de Despesa", className: "text-center"},
+                        {title: "Tipo", className: "text-center"},
+                        {title: "Lote", className: "text-center"},
+                        {title: "QTD", className: "text-center"},
+                        {title: "Valor unit", className: "text-center"},
+                        {title: "Entregue", className: "text-center"},
+                        {title: "Tipo Entrega", className: "text-center"},
+                        {title: "Data de Entrega", className: "text-center itens"}
+
+                    ]
+                });
+            }
+        });
+    }
+    carregaItensEntregue();
+
 });
+
+
+
+
+    

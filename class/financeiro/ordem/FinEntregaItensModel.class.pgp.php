@@ -174,7 +174,7 @@ class FinEntregaItensModel {
                         $daoFinEntregaItens->insertentregaItens($pdo);
                         if ($daoFinEntregaItens->sucesso()) {
                             $pdo->commit();
-                            return Metodos::retornoAjax("ok", "html","deu certo");
+                            return Metodos::retornoAjax("ok", "html", "deu certo");
                         } else {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
@@ -187,6 +187,22 @@ class FinEntregaItensModel {
         } catch (Exception $ex) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
+
+    public function t() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaItens = new DaoFinEntregaItens();
+            $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaItens->t($pdo);
+            if ($daoFinEntregaItens->sucesso()) {
+
+                return $daoFinEntregaItens->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 
