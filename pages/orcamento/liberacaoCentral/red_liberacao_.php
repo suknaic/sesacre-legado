@@ -55,7 +55,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/orcamento/liberacaoCentral/index_reducao.php">Voltar</a></li>                        
+                        <li><a href="/pages/orcamento/liberacaoCentral/index.php">Voltar</a></li>                        
                     </ol>
                     <!--Page content-->
                     <!--===================================================-->

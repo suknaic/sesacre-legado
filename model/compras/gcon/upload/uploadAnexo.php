@@ -17,10 +17,10 @@ switch ($_POST['acao']) {
             $tipo = $_FILES['file']['type'];
             $tamanho = $_FILES['file']['size'];
             $erro = $_FILES['file']['error'];
-            $tiposPermitidos = array('application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation');
+            $tiposPermitidos = array('application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
             $tamanhoPermitido = 1024 * 1024 * 7; // 7Mb
             $endereco = $_SERVER["DOCUMENT_ROOT"] . "/files/gcon/" . $idProcesso . "/";
-
+            
             if ($erro == 0) {
                 /************************** Verifica se o arquivo é válido ************************/
                 if (array_search($tipo, $tiposPermitidos) === false) {

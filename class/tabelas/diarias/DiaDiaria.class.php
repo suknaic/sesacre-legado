@@ -21,12 +21,14 @@ class DiaDiaria {
     private $dhDiaria  = null;
     
     private $idPessoaSolicitante = null;
-    private $flRetorno            = null;
-    private $idPedido             = null;
+    private $idLotacaoSolicitante = null;
+    private $flRetorno           = null;
+    private $idPedido            = null;
     private $idDiariaPai         = null;
-    private $idRelatorio          = null;
-    private $stEstagio            = null;
-    private $stAtivo              = null;
+    private $idRelatorio         = null;
+    private $stEstagio           = null;
+    private $stAtivo             = null;
+    private $nrProtocolo         = null;
     
     function getIdDiaria() {
         return $this->idDiaria;
@@ -115,7 +117,24 @@ class DiaDiaria {
     function setIdTipo($idTipo) {
         $this->idTipo = $idTipo;
     }
+    
+    function getNrProtocolo() {
+        return $this->nrProtocolo;
+    }
 
+    function setNrProtocolo($nrProtocolo) {
+        $this->nrProtocolo = $nrProtocolo;
+    }
+
+    function getIdLotacaoSolicitante() {
+        return $this->idLotacaoSolicitante;
+    }
+
+    function setIdLotacaoSolicitante($idLotacaoSolicitante) {
+        $this->idLotacaoSolicitante = $idLotacaoSolicitante;
+    }
+
+        
     function setIdPessoaProponente($idPessoaProponente) {
         $this->idPessoaProponente = $idPessoaProponente;
     }

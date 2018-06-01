@@ -6,23 +6,30 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#butao").append(response);
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novoObjeto" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
-                            <i class="ion ion-plus-round" aria-hidden="true"></i> Novo Objeto\n\
-                        </button>');
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/objeto/novo_objeto.php">Novo Objeto</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/objeto/objetosDesativados.php">Objetos Desativados</a>\n\
+                                                </li>');
         }
     });
     
     $("#butao").mouseover(function () {
-        $(".menuButton").show();
-    })
-    .mouseout(function () {
-        $(".menuButton").hide();
-    });
-    
-    $('body').on('click', '.btn-novoObjeto', function (e) {
-        top.location = "/pages/compras/gcon/objeto/novo_objeto.php";
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
     });
     
 

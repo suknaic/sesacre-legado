@@ -156,7 +156,7 @@ $html = "
               </p>
             </div>
             <div class='nome'>
-                <b>ADA: </b> 
+                <b>ADA: </b>".$dados['nr_protocolo']." 
             </div>
             <br/><br/>
             
@@ -205,9 +205,12 @@ $html .="
                     $ds_transporte = '';
                 }
 //                $check = ($linha['id_transporte_tipo'] == $padrao['id_transporte_tipo'] && $linha['id_transporte'] == $padrao['id_transporte']) ? '&#9745; ' : '&#9744; ' ;
-
-                $html   .=    "<div class='sub_lista'><b>" . $check . $padrao['nm_transporte_tipo'].": </b>".$ds_transporte."<br/></div><br/>";
                 
+                if ($padrao['id_transporte'] == 1) {
+                    $html   .=    "<div class='sub_lista'>".$ds_transporte."<br/></div><br/>";
+                } else {
+                    $html   .=    "<div class='sub_lista'><b>" . $check . $padrao['nm_transporte_tipo'].": </b>".$ds_transporte."<br/></div><br/>";
+                }
                 $trpAux = $padrao['id_transporte'];
             }
         }

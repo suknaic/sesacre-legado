@@ -126,7 +126,7 @@ $session = new Session();
                     <div class='centro'><b>ANEXO II</b></div>
                     <div class='centro'><b>PROPOSTA E CONCESSÃO DE DIÁRIAS</b></div>
                     <div class='nome'>
-                        <b>ADA: </b> 
+                        <b>ADA: </b>".$dados['nr_protocolo']." 
                     </div>
                     <div class='lateralDireita'>
                         Inicial (".$tpInicial.")

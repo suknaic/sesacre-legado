@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/anexo/DaoGcoAnexo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/anotacao/DaoGcoAnotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
@@ -9,12 +10,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoPr
  * @author elivelton
  */
 class Anexo {
-    
+
     private $idProcesso = null;
     private $idAnexo = null;
     private $nomeAnexo = null;
     private $endereco = null;
-    
+
     function getIdProcesso() {
         return $this->idProcesso;
     }
@@ -26,6 +27,7 @@ class Anexo {
     function getEndereco() {
         return $this->endereco;
     }
+
     function getIdAnexo() {
         return $this->idAnexo;
     }
@@ -46,7 +48,6 @@ class Anexo {
         $this->endereco = $endereco;
     }
 
-    
     public function inserirAnexo() {
         try {
             $conexao = new Conexao();
@@ -57,7 +58,7 @@ class Anexo {
             $daoAnexo->setIdProcesso($this->idProcesso);
             $daoAnexo->setEndereco($this->endereco);
             $daoAnexo->setNomeAnexo($this->nomeAnexo);
-            
+
             $cadastraAnexo = $daoAnexo->cadastrarAnexo($pdo);
 
             if ($cadastraAnexo) {
@@ -66,7 +67,7 @@ class Anexo {
                     $processo = new DaoProcesso();
                     $processo->setIdProcesso($this->idProcesso);
                     $dados = $processo->acharProcessoUpload($pdo);
-                    
+
                     if ($dados != FALSE) {
                         $anotacao = new DaoGcoAnotacao();
                         $anotacao->setIdProcesso($this->idProcesso);
@@ -105,8 +106,7 @@ class Anexo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-    
-    
+
     public function carregarAnexos() {
         try {
             $conexao = new Conexao();
@@ -180,7 +180,7 @@ class Anexo {
         }
     }
 
-     public function excluirAnexo() {
+    public function excluirAnexo() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -189,6 +189,7 @@ class Anexo {
             $dao = new DaoGcoAnexo();
             $dao->setIdAnexo($this->idAnexo);
             $dao->setIdProcesso($this->idProcesso);
+            $extencao = substr($this->nomeAnexo, -5);
 
             if (Log::SalvaLogD('gco_anexo', $dao->getIdAnexo(), $pdo)) {
                 $deletaAnexo = $dao->excluirAnexo($pdo);
@@ -208,8 +209,15 @@ class Anexo {
                         if ($cadastraAnotacao) {
                             $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
                             if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
-                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . md5($this->idProcesso.$this->nomeAnexo);
-                                if (unlink($link)) {
+                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . $this->idProcesso . '/' . md5($this->nomeAnexo) . $extencao;
+
+                                if (file_exists($link)) {
+                                    $removeArquivo = unlink($link);
+                                } else {
+                                    $removeArquivo = TRUE;
+                                }
+                                
+                                if ($removeArquivo) {
                                     $pdo->commit();
                                     return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");
                                 } else {
@@ -237,7 +245,7 @@ class Anexo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-    
+
     public function verificaAnexo() {
         try {
             $conexao = new Conexao();
@@ -247,7 +255,7 @@ class Anexo {
             $daoAnexo = new DaoGcoAnexo();
             $daoAnexo->setIdProcesso($this->idProcesso);
             $daoAnexo->setEndereco($this->endereco);
-            
+
             $verifica = $daoAnexo->retornarAnexo($pdo);
             var_dump($verifica);
             return;
@@ -255,4 +263,5 @@ class Anexo {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
+
 }

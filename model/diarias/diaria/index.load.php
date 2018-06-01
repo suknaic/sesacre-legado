@@ -30,10 +30,17 @@ if ($id_diaria) {
 
 $selectDecretoOption = $diaria->retornaDecretosOption();
 $selectTransporteOption = $diaria->retornaTransporteOption();
+
+$selectLotacaoProponente = '';
+$selectLotacaoProposto = '';   
+$selectFuncaoProponente = '';
+$selectFuncaoProposto = '';
+$selectLotacaoSolicitante = '<option value="0">Selecione a lotação do solicitante</option>';
 $dh_inicio = '';
 $dh_fim = '';
-$origem = '';
-$destino = '';
+//$origem = '';
+//$destino = '';
+$nr_protocolo = '';
 $qt_diaria_destino = 0;
 $vl_diaria_destino = 0;
 $id_diaria_destino = '';
@@ -58,10 +65,15 @@ if ($jsonDiaria != ""){
     //
     $selectFuncaoProponente = $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proponente, $objDiaria->id_funcao_proponente);
     $selectFuncaoProposto= $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proposto, $objDiaria->id_funcao_proposto);
+    
+    $lotacao->setId_pessoa($objDiaria->id_pessoa_solicitante);
+    $lotacaoSolicitante = $objDiaria->id_lotacao_solicitante ?? 0;
+    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa($lotacaoSolicitante);
      
 //    $id_classe_default = $objDiaria->id_classe;
     $ds_servico_executado = $objDiaria->ds_servico_executado;
     $ds_locais_executado = $objDiaria->ds_locais_executado;
+    $nr_protocolo = $objDiaria->nr_protocolo;
 
     $dt_criacao = $objDiaria->dt_criacao;
     $ds_obs = $objDiaria->ds_obs;
@@ -69,12 +81,16 @@ if ($jsonDiaria != ""){
     $st_estagio = $objDiaria->st_estagio;
 
 } else {
-
+    $lotacao->setId_pessoa($session->getIdUser());
+    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa();
+    
     $selectTipoDiariaOption = $diaria->retornaTipoDiariaOption();
     $selectDiariaPaiOption = $diaria->retornaDiariaPaiOption();
+    
     $selectPessoaProponente = $contrato->retornaOptionPessoaContrato();
     $selectPessoaProposto = $contrato->retornaOptionPessoaContrato();
-
+    
+   
     $ds_servico_executado = '';
     $ds_locais_executado = '';
     

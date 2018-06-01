@@ -21,12 +21,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
         <!--Select2-->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
-        <!--DataTables [ OPT ]-->
+        <!--DataTables -->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
-
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">     
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
     </head>
@@ -63,7 +62,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel-footer text-left">
-                                    <button class="btn btn-primary btn-rounded btn-novo" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Nova Liberação</button>
+                                    <button class="btn btn-primary btn-rounded btn-novo-liberacao" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Nova Liberação</button>
+                                    <button class="btn btn-primary btn-rounded btn-novo-reducao" type="button"><i class="fa fa-plus" aria-hidden="true"></i> Nova Redução</button>
                                 </div>
                                 <div class="panel">
                                     <div class="panel-heading ">
@@ -118,7 +118,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <div class="panel-body">
                                                     <label for="tipoDeGasto">
@@ -196,7 +196,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="table-responsive">
-                                                <table class="table table-striped table-bordered table-condensed table-hover" id="tabela">
+                                                <table class="table table-striped table-bordered table-condensed table-hover" id="tabela" style="width:100%">
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center"><?php echo STR_FUNCIONAL_PROGRAMATICA; ?></th>
@@ -207,13 +207,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
                                                             <th class="text-center">Fonte</th>
                                                             <th class="text-center">Data</th>
                                                             <th class="text-center">observação</th>
+                                                            <th class="text-center">Tipo</th>
                                                             <th class="text-center">Valor</th>
+                                                            <th class="text-center">Validação</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
 
                                                     </tbody>
+                                                    <tfoot>
 
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
@@ -252,8 +256,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/inde
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
-
+        <!--DataTables-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>       
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>   

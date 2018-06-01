@@ -579,6 +579,17 @@ class Session {
         }
         RETURN FALSE;
     }
+    
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
+    public function vPDiariasPermissoes() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_PERMISSAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
 
 }
 

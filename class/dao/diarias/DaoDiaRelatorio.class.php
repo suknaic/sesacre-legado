@@ -116,7 +116,8 @@ class DaoDiaRelatorio extends DiaRelatorio {
                                AND pf.id_pessoa_fisica = c.id_pessoa_fisica
                                AND p.id_pessoa = dia.id_pessoa_proposto) as mt_proposto,
                             rel.ds_servico_executado,
-                            rel.ds_locais_executado
+                            rel.ds_locais_executado,
+                            dia.nr_protocolo
                      from dia_relatorio rel, dia_diaria dia 
                      where dia.id_relatorio = :id_relatorio";
                 $stmt = $pdo->prepare($sql);

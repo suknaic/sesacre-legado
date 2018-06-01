@@ -121,39 +121,99 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                             </div>
                         </div>
                         <!--===================================================-->
-                        <!--Informaçao do Itens da pre ordem-->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="panel">
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">Itens da pre-ordem</h3>
+                        <?php if($dados[0]['id_tipo_gasto'] != 13) {?>
+                            <!--Informaçao do Itens da pre ordem-->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="panel">
+                                        <div class="panel-heading ">
+                                            <h3 class="panel-title">Itens da pre-ordem</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                                <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Nº</th>
+                                                            <th class="text-center">Item</th>
+                                                            <th class="text-center">Descrição GRP</th>
+                                                            <th class="text-center">Descrição Sesacrenet</th>
+                                                            <th class="text-center">Unid</th>
+                                                            <th class="text-center">Tipo</th>
+                                                            <th class="text-center">Elemento de despesa</th>
+                                                            <th class="text-center">QTD</th>
+                                                            <th class="text-center">Valor unit.</th>
+                                                            <th class="text-center">Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php echo $tabela; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                </div>
+                            </div>
+                        <?php } else { ?>
+                            <!--Informaçao da diária-->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="panel">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Dados da diária</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <b>Proponente:</b><br>
+                                                            <b>Lotação Proponente:</b><br>
+                                                            <b>Função Proponente:</b><br>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <?php echo $diariaObj[0]['nm_proponente']; ?><br>
+                                                            <?php echo $diariaObj[0]['lt_proponente']; ?><br>
+                                                            <?php echo $diariaObj[0]['fn_proponente']; ?><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <b>Proposto:</b><br>
+                                                            <b>Lotação Proposto:</b><br>
+                                                            <b>Função Proposto:</b><br>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <?php echo $diariaObj[0]['nm_proposto']; ?><br>
+                                                            <?php echo $diariaObj[0]['lt_proposto']; ?><br>
+                                                            <?php echo $diariaObj[0]['nm_proposto']; ?><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-footer">
+                                            <table class="table">
                                                 <thead>
-                                                    <tr>
-                                                        <th class="text-center">Nº</th>
-                                                        <th class="text-center">Item</th>
-                                                        <th class="text-center">Descrição GRP</th>
-                                                        <th class="text-center">Descrição Sesacrenet</th>
-                                                        <th class="text-center">Unid</th>
-                                                        <th class="text-center">Tipo</th>
-                                                        <th class="text-center">Elemento de despesa</th>
-                                                        <th class="text-center">QTD</th>
-                                                        <th class="text-center">Valor unit.</th>
-                                                        <th class="text-center">Total</th>
-                                                    </tr>
+                                                    <th>Origem</th>
+                                                    <th>Destino</th>
+                                                    <th>Horário Partida</th>
+                                                    <th>Horário Chegada</th>
+                                                    <th>Qtd. Diárias</th>
+                                                    <th>Valor unit.</th>
                                                 </thead>
                                                 <tbody>
-                                                    <?php echo $tabela; ?>
+                                                    <?php echo $destinos;?>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel">

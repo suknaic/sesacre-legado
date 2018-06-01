@@ -23,11 +23,11 @@ class DaoDiaDiaria extends DiaDiaria {
                         . "(id_tipo, id_pessoa_proponente, id_funcao_proponente,id_lotacao_proponente,"
                         . " id_pessoa_proposto,id_funcao_proposto, id_lotacao_proposto,"
                         . " ds_servico_executado,ds_locais_executado, ds_obs, dt_criacao, "
-                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai) "
+                        . " id_pessoa_solicitante, id_pedido,id_diaria_pai,nr_protocolo, id_lotacao_solicitante) "
                         . "values (:id_tipo, :id_pessoa_proponente, :id_funcao_proponente, :id_lotacao_proponente, "
                         . "        :id_pessoa_proposto, :id_funcao_proposto, :id_lotacao_proposto, "
                         . "        :ds_servico_executado, :ds_locais_executado, :ds_obs, :dt_criacao, "
-                        . "         :id_pessoa_solicitante, :id_pedido, :id_diaria_pai)";
+                        . "         :id_pessoa_solicitante, :id_pedido, :id_diaria_pai,:nr_protocolo, :id_lotacao_solicitante)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_pessoa_proponente", $this->getIdPessoaProponente(), PDO::PARAM_INT);
@@ -43,6 +43,8 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":id_pessoa_solicitante", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_protocolo", $this->getNrProtocolo(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_lotacao_solicitante", $this->getIdLotacaoSolicitante(), PDO::PARAM_INT);
 
            
                 $stmt->execute();
@@ -73,9 +75,11 @@ class DaoDiaDiaria extends DiaDiaria {
                             . "ds_obs = :ds_obs , "
                             . "dt_criacao = :dt_criacao , "
                             . "id_pessoa_solicitante = :id_pessoa_solicitante, "
-                            . "fl_retorno = :fl_retorno, "
+//                            . "fl_retorno = :fl_retorno, "
                             . "id_pedido = :id_pedido, "
-                            . "id_diaria_pai = :id_diaria_pai "
+                            . "id_diaria_pai = :id_diaria_pai, "
+                            . "nr_protocolo = :nr_protocolo, "
+                            . "id_lotacao_solicitante = :id_lotacao_solicitante "
                         . " where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
@@ -90,10 +94,12 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":ds_obs", $this->getDsObs(),PDO::PARAM_STR);
                 $stmt->bindValue(":dt_criacao", $this->getDtCriacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pessoa_solicitante", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
-                $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
+//                $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_protocolo", $this->getNrProtocolo(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_lotacao_solicitante", $this->getIdLotacaoSolicitante(), PDO::PARAM_INT);
                 
                 $stmt->execute();
                 $this->sucesso = true;
@@ -210,12 +216,139 @@ class DaoDiaDiaria extends DiaDiaria {
                 $sql = "SELECT  diaria.id_tipo, 
                                 diaria.id_diaria,
                                 diaria.id_diaria_pai, 
-                                diaria.id_pessoa_proponente, 
+                                diaria.id_pessoa_proponente,
                                 diaria.id_lotacao_proponente, 
                                 diaria.id_funcao_proponente, 
                                 diaria.id_pessoa_proposto, 
                                 diaria.id_lotacao_proposto, 
                                 diaria.id_funcao_proposto,
+                                diaria.ds_servico_executado, 
+                                diaria.ds_locais_executado, 
+                                diaria.ds_obs,
+                                diaria.nr_protocolo,
+                                diaria.id_pessoa_solicitante,
+                                diaria.id_lotacao_solicitante,
+                                diaria.fl_retorno,
+                                diaria.id_pedido,
+                                diaria.id_diaria_pai,
+                                diaria.id_relatorio,
+                                diaria.st_estagio,
+                                diaria.st_ativo,
+                                To_char(diaria.dt_criacao, 'dd/mm/yyyy')         AS dt_criacao, 
+                                destino.id_cidade_inicio, 
+                                cid_ini.nm_cidade 
+                                || ' - ' 
+                                || est_ini.nm_sigla                              AS origem, 
+                                cid_fim.nm_cidade 
+                                || ' - ' 
+                                || est_fim.nm_sigla                              AS destino, 
+                                destino.id_cidade_fim, 
+                                To_char(destino.dh_inicio, 'dd/mm/yyyy hh24:mi') AS dh_inicio, 
+                                To_char(destino.dh_fim, 'dd/mm/yyyy hh24:mi')    AS dh_fim, 
+                                destino.id_diaria_destino,
+                                destino.id_transporte, 
+                                destino.fl_pernoite, 
+                                destino.id_decreto, 
+                                destino.id_classe, 
+                                destino.qt_diaria_destino, 
+                                destino.vl_diaria_destino 
+                         FROM   dia_diaria diaria, 
+                                dia_diaria_destino destino 
+                                left join ses_cidade cid_ini 
+                                       ON cid_ini.id_cidade = destino.id_cidade_inicio 
+                                join ses_estado est_ini 
+                                  ON est_ini.id_estado = cid_ini.id_estado 
+                                left join ses_cidade cid_fim 
+                                       ON cid_fim.id_cidade = destino.id_cidade_fim 
+                                join ses_estado est_fim 
+                                  ON est_fim.id_estado = cid_fim.id_estado 
+                         WHERE  diaria.id_diaria = destino.id_diaria 
+                            AND diaria.id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                
+                $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function infoDiariaPeido(PDO $pdo = null) {
+        try{
+            if (!empty($pdo)) {
+                $sql = "SELECT  diaria.id_tipo, 
+                                diaria.id_diaria,
+                                diaria.id_diaria_pai, 
+                                diaria.id_pessoa_proponente,
+                                diaria.id_lotacao_proponente, 
+                                diaria.id_funcao_proponente,
+                                (
+                                    select
+                                       nm_pessoa 
+                                    from
+                                       ses_pessoa proponente 
+                                    where
+                                       proponente.id_pessoa = diaria.id_pessoa_proponente
+                                 )
+                                 as nm_proponente,
+                                 (
+                                    select
+                                       nm_lotacao 
+                                    from
+                                       ses_lotacao lt_proponente 
+                                    where
+                                       lt_proponente.id_lotacao = diaria.id_lotacao_proponente
+                                 )
+                                 as lt_proponente,
+                                 (
+                                    select
+                                       nm_funcao 
+                                    from
+                                       ses_funcao fn_proponente 
+                                    where
+                                       fn_proponente.id_funcao = diaria.id_funcao_proponente
+                                 )
+                                 as fn_proponente,
+                                diaria.id_pessoa_proposto, 
+                                diaria.id_lotacao_proposto, 
+                                diaria.id_funcao_proposto,
+                                (
+                                    select
+                                       nm_pessoa 
+                                    from
+                                       ses_pessoa proposto 
+                                    where
+                                       proposto.id_pessoa = diaria.id_pessoa_proposto
+                                 )
+                                 as nm_proposto,
+                                 (
+                                    select
+                                       nm_lotacao 
+                                    from
+                                       ses_lotacao lt_proposto 
+                                    where
+                                       lt_proposto.id_lotacao = diaria.id_lotacao_proposto
+                                 )
+                                 as lt_proposto,
+                                 (
+                                    select
+                                       nm_funcao 
+                                    from
+                                       ses_funcao fn_proposto 
+                                    where
+                                       fn_proposto.id_funcao = diaria.id_funcao_proposto
+                                 )
+                                 as fn_proposto,
                                 diaria.ds_servico_executado, 
                                 diaria.ds_locais_executado, 
                                 diaria.ds_obs, 
@@ -262,7 +395,7 @@ class DaoDiaDiaria extends DiaDiaria {
                 
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
-                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
@@ -319,8 +452,10 @@ class DaoDiaDiaria extends DiaDiaria {
                                 proponente.nm_pessoa                               AS nm_proponente, 
                                 proposto.nm_pessoa                                 AS nm_proposto, 
                                 lt_proposto.nm_lotacao                             AS lt_proposto,
+                                di.nr_protocolo,
                                 di.st_estagio,
                                 di.id_pedido,
+                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
                                            || est_ini. nm_sigla 
@@ -387,7 +522,7 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
-    public function listaDiarias(PDO $pdo = null) {
+    public function listaTodasDiarias(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT di.id_diaria, 
@@ -396,6 +531,8 @@ class DaoDiaDiaria extends DiaDiaria {
                                 lt_proposto.nm_lotacao                             AS lt_proposto,
                                 di.st_estagio,
                                 di.id_pedido,
+                                di.nr_protocolo,
+                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
                                            || est_ini. nm_sigla 
@@ -436,7 +573,6 @@ class DaoDiaDiaria extends DiaDiaria {
                                         ON pais_ini.id_pais = est_ini.id_pais 
                                 INNER JOIN ses_pais pais_fim 
                                         ON pais_fim.id_pais = est_fim.id_pais
-                                WHERE (di.id_pessoa_solicitante = :id_pessoa_solicitante)
                          GROUP  BY di.id_diaria, 
                                    proponente.nm_pessoa, 
                                    proposto.nm_pessoa, 
@@ -445,7 +581,89 @@ class DaoDiaDiaria extends DiaDiaria {
                         
                 $stmt = $pdo->prepare($sql);
                
-                $stmt->bindValue(':id_pessoa_solicitante', $this->getIdPessoaSolicitante(),PDO::PARAM_STR);
+
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function listaDiarias(PDO $pdo = null,int $idUsuario = 0, string $lotacoes = "") {
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT di.id_diaria, 
+                                proponente.nm_pessoa                               AS nm_proponente, 
+                                proposto.nm_pessoa                                 AS nm_proposto, 
+                                lt_proposto.nm_lotacao                             AS lt_proposto,
+                                di.st_estagio,
+                                di.id_pedido,
+                                di.nr_protocolo,
+                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
+                                String_agg(pais_ini.nm_pais 
+                                           || '(' 
+                                           || est_ini. nm_sigla 
+                                           || ')' 
+                                           || ci.nm_cidade 
+                                           || ' a ' 
+                                           || pais_fim.nm_pais 
+                                           || '(' 
+                                           || est_fim.nm_sigla 
+                                           || ')' 
+                                           || cf.nm_cidade 
+                                           || ' / ' 
+                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G999D99')) 
+                                           || ' X ' 
+                                           || 'R$ ' 
+                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G999D99')) 
+                                           || ' = R$ ' 
+                                           || ( Trim(To_char(dd.qt_diaria_destino * dd.vl_diaria_destino, 
+                                                     '999G999G999D99')) ), '<hr>') AS destino 
+                         FROM   dia_diaria di 
+                                INNER JOIN dia_diaria_destino dd 
+                                        ON dd.id_diaria = di.id_diaria 
+                                INNER JOIN ses_cidade ci 
+                                        ON ci.id_cidade = dd.id_cidade_inicio 
+                                INNER JOIN ses_cidade cf 
+                                        ON cf.id_cidade = dd.id_cidade_fim 
+                                INNER JOIN ses_pessoa proposto 
+                                        ON proposto.id_pessoa = di.id_pessoa_proposto 
+                                INNER JOIN ses_lotacao lt_proposto 
+                                        ON lt_proposto.id_lotacao = di.id_lotacao_proposto 
+                                INNER JOIN ses_pessoa proponente 
+                                        ON proponente.id_pessoa = di.id_pessoa_proponente 
+                                INNER JOIN ses_estado est_ini 
+                                        ON est_ini.id_estado = ci.id_estado 
+                                INNER JOIN ses_estado est_fim 
+                                        ON est_fim.id_estado = cf.id_estado 
+                                INNER JOIN ses_pais pais_ini 
+                                        ON pais_ini.id_pais = est_ini.id_pais 
+                                INNER JOIN ses_pais pais_fim 
+                                        ON pais_fim.id_pais = est_fim.id_pais
+                                WHERE (di.id_pessoa_solicitante = :id_pessoa
+                                        or di.id_pessoa_proposto = :id_pessoa
+                                        or di.id_pessoa_proponente = :id_pessoa
+                                        or di.id_lotacao_proposto in (:id_lotacao)
+                                        or di.id_lotacao_proposto in (:id_lotacao)
+                                        or di.id_lotacao_solicitante in (:id_lotacao))
+                         GROUP  BY di.id_diaria, 
+                                   proponente.nm_pessoa, 
+                                   proposto.nm_pessoa, 
+                                   lt_proposto.nm_lotacao 
+                         ORDER BY di.id_diaria desc";
+                        
+                $stmt = $pdo->prepare($sql);
+               
+                $stmt->bindValue(':id_pessoa', $idUsuario,PDO::PARAM_INT);
+                $stmt->bindValue(':id_lotacao', $lotacoes,PDO::PARAM_STR);
 
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
@@ -469,6 +687,7 @@ class DaoDiaDiaria extends DiaDiaria {
                             pf_proposto.nr_cpf as proposto_cpf,
                             cnt_proposto.nr_matricula as proposto_matricula,
                             diaria.id_tipo,
+                            diaria.nr_protocolo,
                             diaria.ds_locais_executado,
                             diaria.ds_servico_executado,
                             diaria.ds_obs,
@@ -604,7 +823,7 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
-    function selectDiariaPedidoUsuario(PDO $pdo = null,int $usuario = 0){ //Lista as diárias no qual o solicitante do pedido seja o solicitante, proposto ou proponente da diária
+    function selectDiariaPedidoOption(PDO $pdo = null,string $filtroLotacao){ 
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT id_diaria, 
@@ -632,13 +851,18 @@ class DaoDiaDiaria extends DiaDiaria {
                                 (select trim(to_char(sum(qt_diaria_destino * vl_diaria_destino),'999G999G999D99')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total,
                                 (select trim(to_char(round(sum(qt_diaria_destino * vl_diaria_destino),2),'999G999G999D9999')) from dia_diaria_destino dd where dd.id_diaria = diaria.id_diaria ) as vl_total_sm
                          FROM dia_diaria diaria
-                         WHERE (id_pessoa_proposto = :id_usuario
-                                OR id_pessoa_proponente = :id_usuario
-                                OR id_pessoa_solicitante = :id_usuario)
-                         AND st_estagio = 4 and id_pedido is null"; //Somente as diárias deferidas
+                         WHERE ((id_pessoa_proposto = :id_pessoa_proposto and :id_pessoa_proponente = 0)
+                                OR (id_pessoa_proponente = :id_pessoa_proponente and :id_pessoa_proposto = 0)
+                                OR (id_pessoa_proposto = :id_pessoa_proposto and id_pessoa_proponente = :id_pessoa_proponente ))
+                         AND ((id_lotacao_proponente in (:lotacao))
+                                OR (id_lotacao_proposto in (:lotacao))
+                                OR (id_lotacao_solicitante in(:lotacao)))
+                         AND st_estagio in (4,6) and id_pedido is null"; //Somente as diárias deferidas
                 $stmt = $pdo->prepare($sql);
                 
-                $stmt->bindValue(":id_usuario", $usuario, PDO::PARAM_INT);
+                $stmt->bindValue(":id_pessoa_proponente", $this->getIdPessoaProponente(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_pessoa_proposto", $this->getIdPessoaProposto(), PDO::PARAM_INT);
+                $stmt->bindValue(":lotacao", $filtroLotacao, PDO::PARAM_STR);
                 
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
@@ -780,11 +1004,6 @@ class DaoDiaDiaria extends DiaDiaria {
             $filtro_sql .= (empty($filtro_sql) ? " where" : " and");
             $filtro_sql .= " diaria.id_relatorio = :id_relatorio";
         }
-        
-//        if (!empty($this->getStEstagio())) {
-//            $filtro_sql .= (empty($filtro_sql) ? " where" : " and");
-//            $filtro_sql .= " diaria.st_estagio = :st_relatorio";
-//        }
 
         return $filtro_sql;
     }

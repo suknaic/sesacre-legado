@@ -109,30 +109,30 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
+        "data" : {
+            "menu" : 'menu_1'
+        },
         "success": function (response) {
-            $("body").find("#butao").append(response);
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-novaModalidade" style="display: block; margin-left: 100px;margin-top: -32px" type="button">\n\
-                            <i class="ion ion-plus-round" aria-hidden="true"></i> Nova Modalidade\n\
-                        </button>');
-            $("body").find("#menu_gcon").append('<button class="btn btn-primary btn-rounded btn-modalidadesDesativadas" style="display: block; margin-left: 258px;margin-top: -32px" type="button">\n\
-                            <i class="ion-power" aria-hidden="true"></i> Modalidades Desativadas\n\
-                        </button>');
+            $("body").find("#menu_gcon").append(response);
+            $("body").find("#restoMenu").append('<li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/modalidade/nova_modalidade.php">Nova Modalidade</a>\n\
+                                                </li>\n\
+                                                <li class="dropdown">\n\
+                                                    <a href="/pages/compras/gcon/modalidade/modalidadeDesativada.php">Modalidades Desativadas</a>\n\
+                                                </li>');
         }
     });
     
     $("#butao").mouseover(function () {
-        $(".menuButton").show();
-    })
-    .mouseout(function () {
-        $(".menuButton").hide();
-    });
-    
-    $('body').on('click', '.btn-novaModalidade', function (e) {
-        top.location = "/pages/compras/gcon/modalidade/nova_modalidade.php";
-    });
-    
-    $('body').on('click', '.btn-modalidadesDesativadas', function (e) {
-        top.location = "/pages/compras/gcon/modalidade/modalidadeDesativada.php";
+        $('#menu').css('display', 'block');
+    }).mouseout(function () {
+        $("#menu").mouseover(function () {
+            $("#menu").css('display', 'block');
+        }).mouseout(function () {
+            $("#menu").css('display', 'none');
+        });
+    }).mouseout(function () {
+        $("#menu").css('display', 'none');
     });
     
     //escodendo botões e tabela

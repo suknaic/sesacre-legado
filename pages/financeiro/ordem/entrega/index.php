@@ -192,12 +192,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                     <div class="form-group">
                                         <div class="col-sm-6">
                                             <div class="panel-body">
-                                                Observação:
+                                                Anotações:
                                                 <textarea class="form-control" rows="4" id="obsProtocolo"></textarea>
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-3">
+<!--                                        <div class="col-sm-3">
                                             <div class="panel-body">
                                                 Quantidade de entrega programadas :
                                                 <div class="input-group">
@@ -205,7 +205,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                     <input class="form-control data" type="number" name="quantidade" id="quantidade" min="1" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="col-sm-3"></div>
                                     </div>
 

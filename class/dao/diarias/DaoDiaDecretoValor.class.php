@@ -85,9 +85,19 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
     public function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "select dv.id_decreto_valor ,dv.id_decreto, dv.id_classe, dc.nm_classe, dc.cd_classe "
-                        . "from dia_decreto_valor dv, dia_classe dc "
-                        . "where dv.id_classe = dc.id_classe "
+                $sql = "SELECT dv.id_decreto_valor,
+                                dv.id_decreto,
+                                dcr.nm_decreto,
+                                dv.id_classe,
+                                dcl.nm_classe,
+                                dcl.cd_classe,
+                                dv.tp_decreto_valor,
+                                trim(to_char(dv.vl_decreto_valor,'999G999G990D99')) as vl_decreto_valor
+                         FROM dia_decreto_valor dv,
+                              dia_classe dcl,
+                              dia_decreto dcr
+                         WHERE dv.id_classe = dcl.id_classe
+                           AND dv.id_decreto = dcr.id_decreto "
                         . $this->montaFiltro();
                 
                 $stmt = $pdo->prepare($sql);

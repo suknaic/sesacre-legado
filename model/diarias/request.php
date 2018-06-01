@@ -13,8 +13,22 @@ switch ($_REQUEST['acao']) {
    case 'listaDiarias':
         try {
             $prog = new Diaria();
-            $prog->setIdPessoaSolicitante($session->getIdUser());
-            echo $prog->retornaTrDiarias();
+            $lotacao = new Lotacao();
+            $usuario = $session->getIdUser();
+            if ($session->vPGeral()) {
+                echo $prog->retornaTrDiariasTodas();
+            } else {
+                //Aqui percorre as lotações do usuário que está acessando as solicitações de diárias
+                $lotacao->retornaLotacaoPorPessoa($usuario);
+                $filtroLotacao = array();
+                foreach ($lotacao->getMsgRetorno() as $value) {
+                    $filtroLotacao[] = $value['id_lotacao'];
+                }
+                $prog->setIdLotacaoFiltro(implode(",", $filtroLotacao));
+                $prog->setIdPessoaFiltro($usuario);
+                echo $prog->retornaTrDiariasPessoaLotacao();
+            }
+            
             return;
             break;
         } catch (Exception $exc) {

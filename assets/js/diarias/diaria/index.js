@@ -45,6 +45,20 @@ function listaLotacaoCombo(idPessoa, proponenteProposto) {
     });
 }
 
+function listaLotacaoSolicitanteCombo(idSolicitante){
+    $.ajax({
+        "url": "/model/diarias/diaria/request.php",
+        "dataType": 'html',
+        "data": {
+            acao: "listaLotacaoOption",
+            pessoa: idSolicitante,
+        },
+        "success": function (response) {
+            $("#id_lotacao_solicitante").html(response);
+        }
+    });
+}
+
 function listaContratoFuncao(idPessoa, proponenteProposto) {
     $.ajax({
         "url": "/model/diarias/diaria/request.php",
@@ -231,11 +245,12 @@ function encapsulaDadosDoFormItinerario() {
         vl_diaria_destino: valor,
         vl_total: total
     };
+//    console.log(Itinerario.id_classe);
     
-    if (Itinerario.ds_cidade_inicio === '' || Itinerario.ds_cidade_fim === ''
-            || Itinerario.dh_inicio === '' || Itinerario.dh_fim === ''
-            || Itinerario.id_transporte === 0 || Itinerario.id_classe === 0
-            || Itinerario.qt_diaria_destino === 0 || Itinerario.vl_diaria_destino === 0) {
+    if (Itinerario.ds_cidade_inicio == '' || Itinerario.ds_cidade_fim == ''
+            || Itinerario.dh_inicio == '' || Itinerario.dh_fim == ''
+            || Itinerario.id_transporte == 0 || Itinerario.id_classe == 0
+            || Itinerario.qt_diaria_destino == 0 || Itinerario.vl_diaria_destino == 0) {
         func.modalAlert(func.msgPreencherCampos);
         return false;
     }
@@ -342,6 +357,8 @@ $(document).ready(function () {
     } else {
         if(estagio == '2' || estagio == '4' || estagio == '5' || estagio == '6'){ //Deferida ou Enviada para Deferimento
             $("#salvar_diaria").prop('disabled',true);
+            $(".add-itinerario").prop('disabled',true);
+            $(".btn-add-arquivo").prop('disabled',true);
         }
     }
     
@@ -458,6 +475,7 @@ $(document).ready(function () {
 
             var Diaria = {
                 idDiaria: $("#id_diaria").val(),
+                nrProtocolo: $("#nr_protocolo").val(),
                 idDiariaPai: $("#id_diaria_pai option:selected").val(),
                 tipo: $("#id_tipo option:selected").val(),
                 proponente: $("#id_pessoa_proponente option:selected").val(),
@@ -466,6 +484,7 @@ $(document).ready(function () {
                 proposto: $("#id_pessoa_proposto option:selected").val(),
                 propostoLotacao: $("#id_lotacao_proposto option:selected").val(),
                 propostoFuncao: $("#id_funcao_proposto option:selected").val(),
+                solicitanteLotacao: $("#id_lotacao_solicitante option:selected").val(),
                 servicosExec: $("#ds_servico_executado").val(),
                 locaisExec: $("#ds_locais_executado").val(),
                 obs: $("#ds_obs").val(),
@@ -476,17 +495,17 @@ $(document).ready(function () {
 
 
             //Validação dos campos
-            if (Diaria.tipo == "" || Diaria.proponente == "" ||
-                    Diaria.proponenteLotacao == "" || Diaria.proponenteFuncao == "" ||
-                    Diaria.proposto == "" || Diaria.propostoLotacao == "" ||
-                    Diaria.servicosExec == "" || Diaria.locaisExec == "") {
+            if (Diaria.tipo == 0 || Diaria.tipo == "" || Diaria.proponente == "" || Diaria.proponente == 0 || Diaria.nrProtocolo == "" ||
+                    Diaria.proponenteLotacao == "" || Diaria.proponenteLotacao == 0 || Diaria.proponenteFuncao == "" || Diaria.proponenteFuncao == 0 ||
+                    Diaria.proposto == "" || Diaria.proposto == 0 || Diaria.propostoLotacao == "" || Diaria.propostoLotacao == 0 || Diaria.solicitanteLotacao == 0 ||
+                    Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {
 
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
             }
 
-            if (Diaria.tipo > 1 && Diaria.idDiariaPai === "") {
+            if (Diaria.tipo > 1 && (Diaria.idDiariaPai == "" || Diaria.idDiariaPai == 0)) {
                 func.modalAlert("É necessário informar a diária principal.");
                 $this.prop("disabled", false);
                 return false;
@@ -658,7 +677,7 @@ $(document).ready(function () {
                                 func.modalAlert(response.msg, 'primary');
                                 //Reload após deletar o registro
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
+                                     top.location.href = "/pages/diarias/";
                                 });
                             } else {
                                 console.log('Ultimo else');

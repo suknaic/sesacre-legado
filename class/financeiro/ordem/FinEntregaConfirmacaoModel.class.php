@@ -6,6 +6,7 @@ class FinEntregaConfirmacaoModel {
 
     private $id_entrega_confirmacao = null;
     private $id_ordem = null;
+    private $id_protocolo = null;
     private $nr_entrega_confirmacao = null;
     private $dt_entrega = null;
     private $dt_confirmacao = null;
@@ -47,6 +48,24 @@ class FinEntregaConfirmacaoModel {
      */
     public function setIdOrdem($id_ordem) {
         $this->id_ordem = $id_ordem;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdProtocolo() {
+        return $this->id_protocolo;
+    }
+
+    /**
+     * @param mixed $id_protocolo
+     *
+     * @return self
+     */
+    public function setIdProtocolo($id_protocolo) {
+        $this->id_protocolo = $id_protocolo;
 
         return $this;
     }
@@ -178,16 +197,33 @@ class FinEntregaConfirmacaoModel {
         try {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($this->nr_entrega_confirmacao);
             $daoFinEntregaConfirmacao->setDtEntrega($this->dt_entrega);
             $daoFinEntregaConfirmacao->setNrQtdEntrega($this->nr_qtd_entrega);
             $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso =  true;
+                $this->sucesso = true;
             } else {
-                $this->sucesso =  false;
+                $this->sucesso = false;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
             }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaItensCadEntrega() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->retornaInforParaEntrega($pdo);
+            if($daoFinEntregaConfirmacao->sucesso()){
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+            
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

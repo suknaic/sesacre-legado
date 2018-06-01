@@ -28,24 +28,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--selec2-->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
-        <style>
-            .rotate:hover
-            {
-                -webkit-transform: rotateZ(50deg);
-                -ms-transform: rotateZ(50deg);
-                transform: rotateZ(50deg);
-            }
-            .grow:hover
-            {
-                -webkit-transform: scale(1.3);
-                -ms-transform: scale(1.3);
-                transform: scale(1.3);
-            }
-            .hover-btn:hover
-            {
-                display: block;
-            }
-        </style>
     </head>
     <!--TIPS-->
     <body>
@@ -61,12 +43,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Gestão de Compras</h1>
-
                     </div>
 
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -105,14 +85,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
 
                         <!-- Inicio do Formulário de Pesquisa de Processos-->
                         <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
-
                             <div class="panel">
-                                <div class="panel-footer text-left" id="menu_gcon">
-                                    <div class="btn-group dropdown" id="butao">
-                                        <button class="btn btn-dark btn-hover add-tooltip dropdown-toggle dropdown-toggle-icon btn-rounded" style="display: block" aria-expanded="false" data-toggle="dropdown" type="button">
-                                            <i class="ion-chevron-right" style="margin-bottom: 6px; margin-left: 7px; margin-right: 7px; margin-top: 6px" id="icone" aria-hidden="true"></i> Menu
-                                        </button>
-                                    </div>
+                                <div class="row">
+                                    <ul class="nav nav-tabs nav-justified botaoDocumentoAcoes" id="restoMenu">
+                                        <li class="dropdown" id="menu_gcon">
+                                            <a href="#" data-toggle="dropdown" id="butao" class="dropdown-toggle">Menu <b class="caret"></b></a>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Pesquisar Processo</h3>

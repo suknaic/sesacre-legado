@@ -94,10 +94,13 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
 
         try {
             if (!empty($pdo)) {
-                $sql = "select cl.id_central_liberacao, pt.cd_programa_trabalho
-                        , pt.ds_programa_trabalho, l.nm_lotacao, tp.nm_tipo_gasto,
+                $sql = "select cl.id_central_liberacao, pt.cd_programa_trabalho, pt.ds_programa_trabalho, l.nm_lotacao, tp.nm_tipo_gasto,
                         dl.cd_despesa_elemento, dl.ds_despesa_categoria, f.nr_fonte, ct.vl_central_liberacao_trans, 
-                        cl.dh_central_liberacao as data,cl.ds_central_liberacao, p.nm_pessoa
+                        cl.dh_central_liberacao as data,cl.ds_central_liberacao, p.nm_pessoa, 
+                        case 
+                                when cl.tp_central_liberacao = '1' then 'Liberação'
+                                when cl.tp_central_liberacao = '2' then 'Redução'
+                        end as tipo, cl.st_central_liberacao
                         from fin_central_liberacao as cl
                         inner join fin_central_liberacao_trans as ct
                             on ct.id_central_liberacao = cl.id_central_liberacao
@@ -118,8 +121,6 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
                         where 
                             qddv.id_qdd = :idQdd
                             " . $filtro . "
-                            AND cl.tp_central_liberacao = '1'
-                            AND cl.st_central_liberacao in ('1','2')
                         ORDER BY cl.dh_central_liberacao DESC";
 
                 $stmt = $pdo->prepare($sql);
@@ -356,7 +357,11 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
                 $sql = "select pro.cd_programa_trabalho, pro.ds_programa_trabalho, lotacao.nm_lotacao, tg.nm_tipo_gasto, 
                         desp.cd_despesa_elemento, desp.ds_despesa_elemento, font.nr_fonte, lib.dh_central_liberacao, 
                         lib.ds_central_liberacao, libTrans.vl_central_liberacao_trans, qddValor.id_qdd_valor,
-                        libTrans.id_central_liberacao_trans, lib.id_central_liberacao 
+                        libTrans.id_central_liberacao_trans, lib.id_central_liberacao,
+                        case
+                            when tp_central_liberacao = '1' then 'Liberação'
+                            when tp_central_liberacao = '2' then 'Redução'
+                        end as tipo
                         from fin_central_liberacao as lib
                         inner join fin_central_liberacao_trans as libTrans
                         on lib.id_central_liberacao = libTrans.id_central_liberacao

@@ -105,19 +105,15 @@ class DaoDiaTransporteTemTipo extends DiaTransporteTemTipo {
     function infoLocomocao(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "SELECT id_transporte,
+                $sql = "SELECT t.id_transporte,
                                 id_transporte_tipo,
-
-                           (SELECT nm_transporte
-                            FROM dia_transporte t
-                            WHERE t.id_transporte = ttt.id_transporte ) AS nm_transporte,
-
+                                nm_transporte,
                            (SELECT nm_transporte_tipo
                             FROM dia_transporte_tipo tt
                             WHERE tt.id_transporte_tipo = ttt.id_transporte_tipo ) AS nm_transporte_tipo
-                         FROM dia_transporte_tem_tipo ttt
-                         ORDER BY id_transporte,
-                                  id_transporte_tipo";
+                         FROM dia_transporte t
+                         LEFT JOIN dia_transporte_tem_tipo ttt ON ttt.id_transporte = t.id_transporte
+                         ORDER BY t.id_transporte";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
