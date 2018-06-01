@@ -631,49 +631,136 @@ class FormSistemas {
 //            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
 //        }
 //    }
-    public function retornaFormSistemas($pdo) {
+//    public function retornaFormSistemas($pdo) {
+//
+//        try {
+//
+//            $sistema = new DaoChaFormSistemas();
+//            $sistema->setIdFormSistemas($this->idFormSistemas);
+//
+//            $s = $sistema->retornaFormSistemas($pdo);
+//            if ($s != FALSE) {
+//                return $s;
+//            }
+//            return FALSE;
+//        } catch (Exception $exc) {
+//            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+//        }
+//    }
+
+
+    public function retornaFormSistemas($idGet) {
         try {
-            $sistemas = new DaoChaFormSistemas();
-            $sistemas->setIdFormSistemas($this->idFormSistemas);
-            $s = $sistemas->retornaFormSistemas($pdo);
-//            print_r($s);
+            $sistemas = new FormSistemas();
+            $sistemas->setIdFormSistemas($idGet);
+            $s = $sistemas->retornaFormSistema($pdo);
+
+            $chamado = new Chamado();
+            $chamado->setIdChamado($this->idChamado);
+            $chamado->setMsg("chamados");
+            $ch = $chamado->retornaChamado($pdo);
+
             if ($s != FALSE) {
-                if ($this->msg != "sistema") {
-                    $retorno[] = array(
-                        "idFormSistemas" => $s["id_form_sistemas"],
-                        "idChamado" => $s["id_chamado"],
-                        "nmPessoa" => $s["nm_pessoa"],
-                        "dsEmail" => $s["ds_email"],
-                        "nrTelefone" => $s["nr_telefone"],
-                        "nrCartaoSus" => $s["nr_cartao_sus"],
-                        "nrCpf" => $s["nr_cpf"],
-                        "nrRg" => $s["nr_rg"],
-                        "nrTelefoneSetor" => $s["nr_telefone_setor"],
-                        "nrMatricula" => $s["nr_matricula"],
-                        "nmModulo" => $s["nm_modulo"],
-                        "nrPortaria" => $s["nr_portaria"],
-                        "nmSetor" => $s["nm_setor"],
-                        "cdSetor" => $s["cd_setor"],
-                        "nmResponsavel" => $s["nm_responsavel"],
-                        "nrParticipantes" => $s["nr_participantes"],
-                        "dsSenhaDesejada" => $s["ds_senha_desejada"],
-                        "nmExame" => $s["nm_exame"],
-                        "dsExameParametro" => $s["ds_exame_parametro"],
-                        "nmPermissao" => $s["nm_permissao"],
-                        "nmConselho" => $s["nm_conselho"],
-                        "nrConselho" => $s["nr_conselho"],
-                        "dtInicial" => $s["dt_inicial"],
-                        "dtFim" => $s["dt_fim"],
-                        "dtNascimento" => $s["dt_nascimento"],
-                        "idCargo" => $s["id_cargo"],
-                        "idFuncao" => $s["id_funcao"],
-                        "idLotacao" => $s["id_lotacao"],
-                        "idVinculo" => $s["id_vinculo"]
-                    );
-                    return json_encode($retorno);
-                } else {
-                    return $s;
-                }
+                $retorno[] = array(
+                    "idFormSistemas" => $s["id_form_sistema"],
+                    "idChamado" => $s["id_chamado"],
+                    "nmPessoa" => $s["nm_pessoa"],
+                    "dsEmail" => $s["ds_email"],
+                    "nrTelefone" => $s["nr_telefone"],
+                    "nrCartaoSus" => $s["nr_cartao_sus"],
+                    "nrCpf" => $s["nr_cpf"],
+                    "nrRg" => $s["nr_rg"],
+                    "nrTelefoneSetor" => $s["nr_telefone_setor"],
+                    "nrMatricula" => $s["nr_matricula"],
+                    "nmModulo" => $s["nm_modulo"],
+                    "nrPortaria" => $s["nr_portaria"],
+                    "nmSetor" => $s["nm_setor"],
+                    "cdSetor" => $s["cd_setor"],
+                    "nmResponsavel" => $s["nm_responsavel"],
+                    "nrParticipantes" => $s["nr_participante"],
+                    "dsSenhaDesejada" => $s["ds_senha_desejada"],
+                    "nmExame" => $s["nm_exame"],
+                    "dsExameParametro" => $s["ds_exame_parametro"],
+                    "nmPermissao" => $s["nm_permissao"],
+                    "nmConselho" => $s["nm_conselho"],
+                    "nrConselho" => $s["nr_conselho"],
+                    "dtInicial" => $s["dt_inicial"],
+                    "dtFim" => $s["dt_fim"],
+                    "dtNascimento" => $s["dt_nascimento"],
+                    "idCargo" => $s["id_cargo"],
+                    "idFuncao" => $s["id_funcao"],
+                    "idLotacao" => $s["id_lotacao"],
+                    "idVinculo" => $s["id_vinculo"],
+                    //*********************************Chamado********************************
+                    "idChamado" => $ch["id_chamado"],
+                    "idCategoriaSecundaria" => $ch["id_categoria_secundaria"],
+                    "idPessoaSolicitante" => $ch["id_pessoa_solicitante"],
+                    "idPessoaServico" => $ch["id_pessoa_servico"],
+                    "dhAbertura" => $ch["dh_abertura"],
+                    "dsChamado" => $ch["ds_chamado"],
+                    "nrTelefoneSolicitante" => $ch["nr_telefone_solicitante"],
+                    "dsFinalizado" => $ch["ds_finalizado"],
+                    "dhFinalizado" => $ch["dh_finalizado"],
+                    "nrAvaliacao" => $ch["nr_avaliacao"],
+                    "dhAvaliacao" => $ch["dh_avaliacao"],
+                    "dsAvaliacao" => $ch["ds_avaliacao"],
+                    "vlChamado" => $ch["vl_chamado"],
+                    "idStatus" => $ch["id_status"],
+                    "dhAgendamento" => $ch["dh_agendamento"],
+                    "idPrioridade" => $ch["id_prioridade"],
+                    "dhCancelamento" => $ch["dh_cancelamento"],
+                    "dsCancelamento" => $ch["ds_cancelamento"],
+                    "dtPrazo" => $ch["dt_prazo"]
+                );
+                return json_encode($retorno);
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaFormSistema($pdo) {
+        try {
+            $sistema = new DaoChaFormSistemas();
+            $sistema->setIdFormSistemas($this->idFormSistemas);
+//            print_r($sistema);
+            $s = $sistema->retornaFormSistemas($pdo);
+            print_r($s);
+            if ($s != FALSE) {
+                $retorno[] = array(
+                    "idFormSistemas" => $s["id_form_sistema"],
+                    "idChamado" => $s["id_chamado"],
+                    "nmPessoa" => $s["nm_pessoa"],
+                    "dsEmail" => $s["ds_email"],
+                    "nrTelefone" => $s["nr_telefone"],
+                    "nrCartaoSus" => $s["nr_cartao_sus"],
+                    "nrCpf" => $s["nr_cpf"],
+                    "nrRg" => $s["nr_rg"],
+                    "nrTelefoneSetor" => $s["nr_telefone_setor"],
+                    "nrMatricula" => $s["nr_matricula"],
+                    "nmModulo" => $s["nm_modulo"],
+                    "nrPortaria" => $s["nr_portaria"],
+                    "nmSetor" => $s["nm_setor"],
+                    "cdSetor" => $s["cd_setor"],
+                    "nmResponsavel" => $s["nm_responsavel"],
+                    "nrParticipantes" => $s["nr_participante"],
+                    "dsSenhaDesejada" => $s["ds_senha_desejada"],
+                    "nmExame" => $s["nm_exame"],
+                    "dsExameParametro" => $s["ds_exame_parametro"],
+                    "nmPermissao" => $s["nm_permissao"],
+                    "nmConselho" => $s["nm_conselho"],
+                    "nrConselho" => $s["nr_conselho"],
+                    "dtInicial" => $s["dt_inicial"],
+                    "dtFim" => $s["dt_fim"],
+                    "dtNascimento" => $s["dt_nascimento"],
+                    "idCargo" => $s["id_cargo"],
+                    "idFuncao" => $s["id_funcao"],
+                    "idLotacao" => $s["id_lotacao"],
+                    "idVinculo" => $s["id_vinculo"],
+                );
+                print_r($retorno);
+
+                return json_encode($retorno);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
