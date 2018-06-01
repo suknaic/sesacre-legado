@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     $('.data').mask("99/99/9999");
 
-        //Masca para valor
+    //Masca para valor
     $("body").on("focus", "#qtd", function () {
         $(this).priceFormat({
             centsLimit: 4,
@@ -24,7 +24,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        "url": "/model/financeiro/ordem/entrega/request.php",
+        "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
         "dataType": "json",
         "data": {
             "acao": "itensCadEntrega",
@@ -62,7 +62,7 @@ $(document).ready(function () {
                     oTable.fnDestroy();
 
                     for (var i = valores.length - 1; i >= 0; i--) {
-                        
+
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
                             var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="C" class="form-control input-sm qtd">';
                         } else if (valores[i]['tp_material'] === 'S') {
@@ -112,7 +112,7 @@ $(document).ready(function () {
                     oTable.fnDestroy();
 
                     for (var i = valores.length - 1; i >= 0; i--) {
-                      
+
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
                             var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
                                         value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">';
@@ -168,7 +168,7 @@ $(document).ready(function () {
     $('body').on('click', '.btn-addAnotacao', function (e) {
         $('#adAnotacao').modal();
     });
-    
+
     //Cadastrar item entrega
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
@@ -182,35 +182,30 @@ $(document).ready(function () {
                 $this.prop("disabled", false);
                 return false;
             }
-            
+
             if ($("#tipoEntrega").val() == 0) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
             }
-            
-            
+
+
             var $this = $(this);
             var itens = [];
             // $this.prop("disabled", true);
             $(".itens").each(function () {
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
-                            'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp"),
+                            'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val()});
                     }
                 }
 
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
                     if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
                             $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
-                            'id': $("body").find("#id").val(),
-                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'id': $("body").find("#id").val(),
+                            'tp': $(this).find(".qtd").attr("tp"), 'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val()});
                     }
                 }
             });
@@ -219,14 +214,15 @@ $(document).ready(function () {
 
             $.ajax({
                 "type": "POST",
-                "url": "/model/financeiro/ordem/request.php",
+                "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
                 "dataType": "html",
                 "data": {
-                    "acao": "cadastroOrdem",
+                    "acao": "cadastroItensEntrega",
                     "itens": enc
                 },
                 "success": function (response) {
                     console.log(response);
+                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -252,9 +248,9 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert('Itens cadastros com Sucesso', 'success');
+                        func.modalAlert('Itens da entrega cadastros com Sucesso', 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            window.location.href = "/pages/financeiro/ordem/index.php";
+                            location.reload();
                         });
                         return false;
                     } else {

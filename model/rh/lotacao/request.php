@@ -95,7 +95,7 @@ switch ($_REQUEST['acao']) {
     case 'returnLotacaoEditar':
         try {
             //fazendo
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -113,7 +113,7 @@ switch ($_REQUEST['acao']) {
         }
     case 'inserirTelefones':
         try {
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -137,7 +137,7 @@ switch ($_REQUEST['acao']) {
         }
     case 'returnTelefones':
         try {
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -155,7 +155,7 @@ switch ($_REQUEST['acao']) {
     case 'excluirTelefone':
         try {
 
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -249,7 +249,7 @@ switch ($_REQUEST['acao']) {
 
     case 'listaCidadeOptionUf':
         try {
-            if (!$session->vPRh()) {
+            if (!$session->vPRh() && !$session->vPContratosTecnico()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }

@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloModel.class.php";
 $session = new Session();
 
 $token = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
@@ -14,6 +15,10 @@ if (empty($token) && empty($token2)) {
     if ($id == 0 || $ordem == 0) {
         header("location: /index.php");
     }
+ 
+ $finProtocoloModel = new FinProtocoloModel();
+ $finProtocoloModel->setIdOrdem($ordem);
+ $protocolo = $finProtocoloModel->retornaIdProtocoloPorOrdem();
 }
 
 
