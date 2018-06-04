@@ -844,7 +844,7 @@ class Diaria {
     }
     
     
-    function validaDataCriacao(){
+    function validaDados(){
         if (empty($this->getIdLotacaoSolicitante()) or empty($this->getDsLocaisExecutado()) or empty($this->getDsServicoExecutado()) or 
                 empty($this->getIdPessoaProponente()) or empty($this->getIdFuncaoProponente()) or empty($this->getIdLotacaoProponente()) or 
                 empty($this->getIdPessoaProposto()) or empty($this->getIdFuncaoProposto()) or empty($this->getIdLotacaoProposto()) or 
@@ -866,7 +866,8 @@ class Diaria {
             
            return true;
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            $this->msgErros = $exc->getMessage();
+            return false;
         }
     }
     
@@ -874,16 +875,16 @@ class Diaria {
     
     function salvarDiaria() {
         try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
             $retorno = "";
-            
             //****************************Valida data de criação*************************************
-            if (!$this->validaDataCriacao()){
+            if (!$this->validaDados()){
                 return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             } else {
+                
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+                
                 //****************************DiaDiaria INICIO********************************************
                 $daoDiaDiaria = new DaoDiaDiaria();
                 $daoDiaDiaria->setIdTipo($this->getIdTipo());
@@ -955,16 +956,17 @@ class Diaria {
     
     function atualizarDiaria() {
         try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            
+                        
             $retorno = "";
             
             //****************************Valida data de criação*************************************
-            if (!$this->validaDataCriacao()){
+            if (!$this->validaDados()){
                 return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             } else {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+                
                 //****************************DiaDiaria INICIO********************************************
                 $daoDiaDiaria = new DaoDiaDiaria();
                 $daoDiaDiaria->setIdTipo($this->getIdTipo());

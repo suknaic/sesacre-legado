@@ -13,6 +13,9 @@ class DecretoValor {
     private $tpDecretoValor = null;
     private $vlDecretoValor = null;
     
+    //mensagem de erro dos eventos
+    private $msgErros = null;
+    
     function getIdDecretoValor() {
         return $this->idDecretoValor;
     }
@@ -52,8 +55,15 @@ class DecretoValor {
     function setVlDecretoValor($vlDecretoValor) {
         $this->vlDecretoValor = $vlDecretoValor;
     }
+    
+    function __construct(int $idDecreto = 0, int $idClasse = 0, string $tpDecretoValor = "",  string $vlDecretoValor = "") {
+        $this->idDecreto = $idDecreto;
+        $this->idClasse = $idClasse;
+        $this->tpDecretoValor = $tpDecretoValor;
+        $this->vlDecretoValor = $vlDecretoValor;
+    }
 
-    function optionsDecreto(){
+        function optionsDecreto(){
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -113,10 +123,11 @@ class DecretoValor {
             
             if ($daoDiaDecretoValor->getSucesso()) {
                 foreach ($daoDiaDecretoValor->getMsgRetorno() as $linha) {
+                    $dentro_ou_fora_estado = ($linha['tp_decreto_valor'] == 'F') ? 'Fora do Estado' : 'Dentro do Estado';
                     $retorno .= '<tr>'
                                     . '<td>'.$linha['nm_decreto'].'</td>'
                                     . '<td>'.$linha['cd_classe'].' - '.$linha['nm_classe'].'</td>'
-                                    . '<td>'.$linha['tp_decreto_valor'].'</td>'
+                                    . '<td>'.$dentro_ou_fora_estado.'</td>'
                                     . '<td>'.$linha['vl_decreto_valor'].'</td>'
                                     . '<td class="text-center">Excluir | Alterar</td>'
                              . '</tr>';
@@ -127,6 +138,57 @@ class DecretoValor {
             
         } catch (Exception $exc) {
             return $exc->getMessage();
+        }
+    }
+    
+    function salvarDecretoValor(){
+        try {
+            $retorno = "";
+            if ($this->validaDados()) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+                
+                $daoDiaDecretoValor = new DaoDiaDecretoValor();
+                $daoDiaDecretoValor->setIdDecreto($this->getIdDecreto());
+                $daoDiaDecretoValor->setIdClasse($this->getIdClasse());
+                $daoDiaDecretoValor->setTpDecretoValor($this->getTpDecretoValor());
+                $daoDiaDecretoValor->setVlDecretoValor($this->getVlDecretoValor());
+                $daoDiaDecretoValor->insert($pdo);
+                
+                if ($daoDiaDecretoValor->getSucesso()) {
+                    $idDecretoValor = $pdo->lastInsertId('dia_decreto_valor_id_decreto_valor_seq');
+                    if (!Log::SalvaLogI('dia_decreto_valor', $idDecretoValor, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    }
+                    $this->setIdDecretoValor($idDecretoValor);
+                    
+                    $pdo->commit();
+                    $retorno = Metodos::retornoAjax("ok", "html", "Diária cadastrada com sucesso.");
+                } else {
+                    $pdo->rollBack();
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDecretoValor->getMsgRetorno());
+                }
+                return $retorno;
+            } else {
+                return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
+            }
+        } catch (Exception $exc) {
+            return $exc->getMessage();
+        }
+    }
+    
+    function validaDados(){
+        try {
+            if (empty($this->getIdClasse() or empty($this->getIdDecreto() or empty($this->getTpDecretoValor()) or empty($this->getVlDecretoValor())))) {
+                $this->msgErros = 'Por favor preencha todos os campos necessários.';
+                return false;
+            }
+            return true;
+        } catch (Exception $exc) {
+            $this->msgErros = $exc->getMessage();
+            return false;
         }
     }
 
