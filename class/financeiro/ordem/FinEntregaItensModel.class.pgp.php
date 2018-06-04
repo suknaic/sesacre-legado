@@ -7,6 +7,7 @@ class FinEntregaItensModel {
     private $id_entrega_itens = null;
     private $id_entrega_confirmacao = null;
     private $id_ordem_itens = null;
+    private $fl_valor_variavel = null;
     private $qt_itens_entrega = null;
     private $vl_itens_entrega = null;
     private $tp_entrega = null;
@@ -62,6 +63,24 @@ class FinEntregaItensModel {
      */
     public function setIdOrdemItens($id_ordem_itens) {
         $this->id_ordem_itens = $id_ordem_itens;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlValorVariavel() {
+        return $this->fl_valor_variavel;
+    }
+
+    /**
+     * @param mixed $fl_valor_variavel
+     *
+     * @return self
+     */
+    public function setFlValorVariavel($fl_valor_variavel) {
+        $this->fl_valor_variavel = $fl_valor_variavel;
 
         return $this;
     }
@@ -146,10 +165,12 @@ class FinEntregaItensModel {
                 $pdo->beginTransaction();
                 $daoFinEntregaItens = new DaoFinEntregaItens();
                 $valorItens = 0;
+                $erro = false;
                 foreach ($dados as $valor) {
                     $daoFinEntregaItens->setIdOrdemItens($valor->itemId);
                     $daoFinEntregaItens->retornaValorItenOrdem($pdo);
                     $valorItens = $daoFinEntregaItens->getMsgRetorno();
+
 
                     if ($valor->tp == 'C' || $valor->tp == 'P') {
                         $daoFinEntregaItens->setIdEntregaConfirmacao($valor->id_entrega);
@@ -158,12 +179,11 @@ class FinEntregaItensModel {
                         $daoFinEntregaItens->setTpEntrega($valor->tipoEntrega);
                         $daoFinEntregaItens->setDhEntrega(Metodos::ConverteDataING($valor->data));
                         $daoFinEntregaItens->insertentregaItens($pdo);
-                        if ($daoFinEntregaItens->sucesso()) {
-                            $pdo->commit();
-                            return "deu certo";
-                        } else {
+                        //verificar ser deu tudo certo no cadastramento do entrega
+                        if (!$daoFinEntregaItens->sucesso()) {
+                            $erro = true;
                             $pdo->rollBack();
-                            return $daoFinEntregaItens->getMsgRetorno();
+                            return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
                         }
                     } else {
                         $daoFinEntregaItens->setIdEntregaConfirmacao($valor->id_entrega);
@@ -172,17 +192,43 @@ class FinEntregaItensModel {
                         $daoFinEntregaItens->setTpEntrega($valor->tipoEntrega);
                         $daoFinEntregaItens->setDhEntrega(Metodos::ConverteDataING($valor->data));
                         $daoFinEntregaItens->insertentregaItens($pdo);
-                        if ($daoFinEntregaItens->sucesso()) {
-                            $pdo->commit();
-                            return Metodos::retornoAjax("ok", "html", "deu certo");
-                        } else {
+                        //verificar ser deu tudo certo no cadastramento do entrega
+                        if (!$daoFinEntregaItens->sucesso()) {
+                            $erro = true;
                             $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-//                            return $daoFinEntregaItens->getMsgRetorno();
+                            return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
+                            
                         }
                     }
                 }
-                return false;
+                
+                $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+                //atualiza a data de confirmacao da entrega   
+                $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
+                $finEntregaConfirmacaoModel->setDtConfirmacao(Metodos::ConverteDataING($valor->data));
+                $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+                //verificar ser a data foi atualiza corretamente 
+                if (!$finEntregaConfirmacaoModel->sucesso()) {
+                    $erro = true;
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
+                }
+                
+                //atualiza a situacao da entrega
+                $finEntregaConfirmacaoModel->setSitEntrega($valor->tipoEntrega);
+                $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+                //verificar ser a situacao foi atulizada corretamente 
+                if (!$finEntregaConfirmacaoModel->sucesso()) {
+                    $erro = true;
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
+                }
+                
+                
+                if (!$erro) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax("ok", "html", "deu certo");
+                }
             }
         } catch (Exception $ex) {
             $pdo->rollBack();

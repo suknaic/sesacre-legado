@@ -82,6 +82,10 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                         to_char(ordemItens.vl_itens_ordem, '9G999G990D9999')as vl_itens_ordem, desp.cd_despesa, desp.ds_despesa, mat.tp_material, itens.fl_valor_variavel, pro.ds_protocolo,
                         itens.nr_lote, to_char(entegaitens.qt_itens_entrega , '9G999G990D9999')as  qt_itens_entrega,
                         case 
+                                when itens.ds_itens is not null then itens.ds_itens
+                                else mat.nm_desc_material
+                        end nm_desc_material,
+                        case 
                                 when entegaitens.tp_entrega = '1' then 'Parcial'
                                 when entegaitens.tp_entrega = '2' then 'Total'
                         end as tipo, to_char(entegaitens.dt_entrega, 'DD/MM/YYYY') as dt_entrega		

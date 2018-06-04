@@ -114,13 +114,36 @@ $(document).ready(function () {
                     for (var i = valores.length - 1; i >= 0; i--) {
 
                         if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
-                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+
+                            if (valores[i]['entregue'] === '0,0000') {
+
+                                var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
                                         value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">';
+                            } else {
+                                var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        value="' + valores[i]['aguardandoentrega'].trim() + '" class="form-control input-sm qtd" disabled="true">';
+                            }
+
+
+
                         } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+
+
+                            if (valores[i]['entregue'] === '0,0000') {
+                                var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
                                         value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">' +
-                                    '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
-                                    '" value="' + valores[i]['vl_itens_ordem'].trim() + '" class="form-control input-sm vl" disabled="true">';
+                                        '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
+                                        '" value="' + valores[i]['vl_itens_ordem'].trim() + '" class="form-control input-sm vl" disabled="true">';
+                            } else {
+
+                                var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        class="form-control input-sm qtd">' +
+                                        '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
+                                        '"  class="form-control input-sm vl" >';
+                            }
+
+
+
                         }
                         let valor = [
                             valores[i]['nr_item'],
@@ -189,17 +212,20 @@ $(document).ready(function () {
             var itens = [];
             // $this.prop("disabled", true);
             $(".itens").each(function () {
+
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
+
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+
                         itens.push({'qtd': $(this).find(".qtd").val(), 'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp"),
                             'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val(),
                             'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
                     }
-                }
 
-                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
-                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
-                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+                } else if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
+
+                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' && $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+
                         itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'id': $("body").find("#id").val(),
                             'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(),
                             'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
@@ -212,6 +238,7 @@ $(document).ready(function () {
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+//                "dataType": "json",
                 "dataType": "html",
                 "data": {
                     "acao": "cadastroItensEntrega",
@@ -228,6 +255,7 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao);
+                        console.log(response);
                         console.log("Parse JSON");
                         return false;
                     }
@@ -284,56 +312,56 @@ $(document).ready(function () {
                 "id_entrega": $("#id_entrega").val()
             },
             "success": function (response) {
-                console.log(response);
-                let valores = [];
-                if ($.trim(response)) {
-                    if (response.length) {
-                        valores = response
+                if (response != 'Nenhum registro encontrado') {
+                    let valores = [];
+                    if ($.trim(response)) {
+                        if (response.length) {
+                            valores = response
+                        }
                     }
+                    let dataSet = [];
+                    var oTable2 = $('#tabela2').dataTable();
+                    oTable2.fnDestroy();
+                    for (var i = valores.length - 1; i >= 0; i--) {
+
+                        let valor = [
+                            valores[i]['nr_item'],
+                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+                            valores[i]['nm_desc_material'],
+                            valores[i]['cd_despesa'],
+                            valores[i]['tp_material'],
+                            valores[i]['nr_lote'],
+                            valores[i]['qt_itens_ordem'],
+                            valores[i]['vl_itens_ordem'],
+                            valores[i]['qt_itens_entrega'],
+                            valores[i]['tipo'],
+                            valores[i]['dt_entrega']
+                        ]
+                        dataSet.push(valor)
+                    }
+
+                    $('#tabela2').DataTable({
+                        data: dataSet,
+                        language: {
+                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                        },
+
+                        columns: [
+                            {title: "Nº", className: "text-center"},
+                            {title: "Item", className: "text-center"},
+                            {title: "Descrição", className: "text-center"},
+                            {title: "Elemento de Despesa", className: "text-center"},
+                            {title: "Tipo", className: "text-center"},
+                            {title: "Lote", className: "text-center"},
+                            {title: "QTD", className: "text-center"},
+                            {title: "Valor unit", className: "text-center"},
+                            {title: "Entregue", className: "text-center"},
+                            {title: "Tipo Entrega", className: "text-center"},
+                            {title: "Data de Entrega", className: "text-center itens"}
+
+                        ]
+                    });
                 }
-                let dataSet = [];
-                var oTable = $('#tabela2').dataTable();
-                oTable.fnDestroy();
-
-                for (var i = valores.length - 1; i >= 0; i--) {
-
-                    let valor = [
-                        valores[i]['nr_item'],
-                        valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
-                        valores[i]['dsdsdsd'],
-                        valores[i]['cd_despesa'],
-                        valores[i]['tp_material'],
-                        valores[i]['nr_lote'],
-                        valores[i]['qt_itens_ordem'],
-                        valores[i]['vl_itens_ordem'],
-                        valores[i]['qt_itens_entrega'],
-                        valores[i]['tipo'],
-                        valores[i]['dt_entrega']
-                    ]
-                    dataSet.push(valor)
-                }
-
-                $('#tabela2').DataTable({
-                    data: dataSet,
-                    language: {
-                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-                    },
-
-                    columns: [
-                        {title: "Nº", className: "text-center"},
-                        {title: "Item", className: "text-center"},
-                        {title: "Descrição", className: "text-center"},
-                        {title: "Elemento de Despesa", className: "text-center"},
-                        {title: "Tipo", className: "text-center"},
-                        {title: "Lote", className: "text-center"},
-                        {title: "QTD", className: "text-center"},
-                        {title: "Valor unit", className: "text-center"},
-                        {title: "Entregue", className: "text-center"},
-                        {title: "Tipo Entrega", className: "text-center"},
-                        {title: "Data de Entrega", className: "text-center itens"}
-
-                    ]
-                });
             }
         });
     }

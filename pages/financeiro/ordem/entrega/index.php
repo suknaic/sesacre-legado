@@ -235,8 +235,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                         <th class="text-capitalize text-center">prazo de entrega</th>
                                                         <th class="text-capitalize text-center">prazo limite para entrega</th>
                                                         <th class="text-capitalize text-center">entregue dia</th>
+                                                        <th class="text-capitalize text-center">situação</th>
                                                         <th class="text-capitalize text-center">dias de atraso</th>
-                                                        <th class="text-capitalize text-center">status</th>
                                                         <th class="text-capitalize text-center">ação</th>
                                                     </tr>
                                                 </thead>
