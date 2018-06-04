@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
