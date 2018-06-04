@@ -161,15 +161,14 @@ class DaoChaFormSistemas extends ChaFormSistemas {
 
         $retorno = FALSE;
 
-        $sql = "SELECT *
+        $result = $pdo->prepare("SELECT *
                 FROM cha_form_sistema
-                WHERE id_form_sistema = :idFormSistema";
+                WHERE id_form_sistema = :idFormSistema");
         try {
-            $sth = $pdo->prepare($sql);
-            $sth->bindValue(":idFormSistema", $this->getIdFormSistemas(), PDO::PARAM_INT);
-            $sth->execute();
-            if ($sth->rowCount() >= 1) {
-                return $sth->fetch(PDO::FETCH_ASSOC);
+            $result->bindValue(":idFormSistema", $this->getIdFormSistemas(), PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                return $result->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return $retorno;
             }

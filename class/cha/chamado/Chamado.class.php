@@ -580,7 +580,6 @@ class Chamado {
             $pessoa->setId_pessoa($this->idPessoaSolicitante);
             $pessoa->setMsg("contrato");
             $p = $pessoa->retornaPessoa($pdo);
-
             //**************************************
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->setId_pessoa($this->idPessoaSolicitante);
@@ -660,19 +659,19 @@ class Chamado {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
+//            $idFormSistemas = explode("/", $idGet)[2];
             $retorno = "";
-            /* @var $pdo PDO */
+//            print_r($idGet);
+
+            $sistema = new FormSistemas();
+            $sistema->setIdFormSistemas($idGet);
+            $s = $sistema->retornaFormSistemas($pdo);
+//            print_r($sistema);
+
             $chamado = new Chamado();
             $chamado->setIdChamado($this->idChamado);
             $chamado->setMsg("chamados");
             $ch = $chamado->retornaChamado($pdo);
-//            print_r($ch);
-//            print_r($ch);
-
-            $sistema = new FormSistemas();
-            $sistema->setIdFormSistemas($this->idChamado);
-            $s = $sistema->retornaFormSistemas($pdo);
-//            print_r($s);
 
             if ($ch != FALSE) {
                 $retorno[] = array(
@@ -740,34 +739,30 @@ class Chamado {
             $ch = $chamado->retornaChamado($pdo);
 //            print_r($ch);
             if ($ch != FALSE) {
-                if ($this->msg != "chamado") {
-                    $retorno[] = array(
-                        "idChamado" => $ch["id_chamado"],
-                        "idCategoriaSecundaria" => $ch["id_categoria_secundaria"],
-                        "idPessoaSolicitante" => $ch["id_pessoa_solicitante"],
-                        "idPessoaServico" => $ch["id_pessoa_servico"],
-                        "dhAbertura" => $ch["dh_abertura"],
-                        "dsChamado" => $ch["ds_chamado"],
-                        "nrTelefoneSolicitante" => $ch["nr_telefone_solicitante"],
-                        "dsFinalizado" => $ch["ds_finalizado"],
-                        "dhFinalizado" => $ch["dh_finalizado"],
-                        "nrAvaliacao" => $ch["nr_avaliacao"],
-                        "dhAvaliacao" => $ch["dh_avaliacao"],
-                        "dsAvaliacao" => $ch["ds_avaliacao"],
-                        "vlChamado" => $ch["vl_chamado"],
-                        "idStatus" => $ch["id_status"],
-                        "dhAgendamento" => $ch["dh_agendamento"],
-                        "idPrioridade" => $ch["id_prioridade"],
-                        "dhCancelamento" => $ch["dh_cancelamento"],
-                        "dsCancelamento" => $ch["ds_cancelamento"],
-                        "dtPrazo" => $ch["dt_prazo"],
-                    );
-                    print_r($ch);
-                    return json_encode($retorno);
-                } else {
-
-                    return $ch;
-                }
+//                print_r($ch);
+                $retorno[] = array(
+                    "idChamado" => $ch["id_chamado"],
+                    "idCategoriaSecundaria" => $ch["id_categoria_secundaria"],
+                    "idPessoaSolicitante" => $ch["id_pessoa_solicitante"],
+                    "idPessoaServico" => $ch["id_pessoa_servico"],
+                    "dhAbertura" => $ch["dh_abertura"],
+                    "dsChamado" => $ch["ds_chamado"],
+                    "nrTelefoneSolicitante" => $ch["nr_telefone_solicitante"],
+                    "dsFinalizado" => $ch["ds_finalizado"],
+                    "dhFinalizado" => $ch["dh_finalizado"],
+                    "nrAvaliacao" => $ch["nr_avaliacao"],
+                    "dhAvaliacao" => $ch["dh_avaliacao"],
+                    "dsAvaliacao" => $ch["ds_avaliacao"],
+                    "vlChamado" => $ch["vl_chamado"],
+                    "idStatus" => $ch["id_status"],
+                    "dhAgendamento" => $ch["dh_agendamento"],
+                    "idPrioridade" => $ch["id_prioridade"],
+                    "dhCancelamento" => $ch["dh_cancelamento"],
+                    "dsCancelamento" => $ch["ds_cancelamento"],
+                    "dtPrazo" => $ch["dt_prazo"]
+                );
+//                    print_r($ch);
+                return json_encode($retorno);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -839,7 +834,7 @@ class Chamado {
             } else {
                 foreach ($result as $v) {
                     $idChamado = $v['id_chamado'];
-                    $idFromSistema = $v['id_form_sistema'];
+                    $idFormSistema = $v['id_form_sistema'];
                     $retorno .= "<tr>";
                     $retorno .= "<td>" . $v['id_chamado'] . "</td>"
                             . "<td>" . $v['nm_solicitante'] . "</td>"
@@ -851,7 +846,7 @@ class Chamado {
                             . '<td style="text-align: center;">'
                             . '<button type="button" class="btn btn-default btn-visualiza btn-xs"'
                             . ' title="Visualizar" nome="' . $v['nm_solicitante'] . '" '
-                            . ' value=' . $idChamado . ' >
+                            . ' value=' . $idFormSistema . ' >
                                 <i class="fa fa-mail-forward text-success" aria-hidden="true"></i>
                               </button> '
                             . '<button type="button" class="btn btn-default btn-edit btn-xs"'
@@ -859,7 +854,7 @@ class Chamado {
                             . ' value=' . $idChamado . ' >
                                 <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
                               </button> '
-                            . '<button type="button" class="btn btn-default btn-cancelar btn-xs" title="Cancelar" value=' . $idChamado . "-" . $idFromSistema . ' >
+                            . '<button type="button" class="btn btn-default btn-cancelar btn-xs" title="Cancelar" value=' . $idChamado . "-" . $idFormSistema . ' >
                                 <i class="fa fa-ban text-danger" aria-hidden="true"></i>
                               </button>'
 //                             . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idChamado . "-" . $idFromSistema . ' >

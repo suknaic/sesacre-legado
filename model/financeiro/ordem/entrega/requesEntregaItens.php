@@ -36,5 +36,21 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+        CASE 'ListaItensEntregue':
+        try {
+
+            $itens = filter_input(INPUT_GET, 'id_entrega', FILTER_DEFAULT);
+            
+            $finEntregaItensModel = new FinEntregaItensModel();
+            $finEntregaItensModel->setIdEntregaConfirmacao($itens);
+            echo json_encode($finEntregaItensModel->t());
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }    
 }
 

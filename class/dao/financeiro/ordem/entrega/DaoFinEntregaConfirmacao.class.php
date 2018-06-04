@@ -133,7 +133,61 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 }
             }
         } catch (Exception $ex) {
-            
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function updateDataConfirmacao(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "update fin_entrega_confirmacao set dt_confirmacao = :dtConfirmacao where id_entrega_confirmacao = :entrega";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":dtConfirmacao", $this->getDtConfirmacao(), PDO::PARAM_STR);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function atualizaSituacao(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "update fin_entrega_confirmacao set sit_entrega = :situacao where id_entrega_confirmacao = :entrega";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaDados(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select * from fin_entrega_confirmacao where id_entrega_confirmacao = :entrega";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
         }
     }
 
