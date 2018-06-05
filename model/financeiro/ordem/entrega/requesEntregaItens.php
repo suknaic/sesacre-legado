@@ -31,8 +31,8 @@ switch ($_REQUEST['acao']) {
             echo $finEntregaItensModel->cadastraEntregaItens($dados);
             return;
             break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", $ex->getMessage());
             return;
             break;
         }

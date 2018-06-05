@@ -140,9 +140,9 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                         inner join fin_empenho as emp
                         on emp.id_pedido = p.id_pedido
 
-                        where entegaitens.id_entrega_confirmacao = :ordemItens";
+                        where entegaitens.id_entrega_confirmacao = :entrega";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":ordemItens", $this->getIdEntregaConfirmacao());
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao());
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;

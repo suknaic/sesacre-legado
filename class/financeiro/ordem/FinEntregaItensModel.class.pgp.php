@@ -169,6 +169,8 @@ class FinEntregaItensModel {
                 $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
                 $valorItens = 0;
                 $erro = false;
+                $contTotal = 0;
+                $contParcial = 0;
                 //verificar ser ja existem entrega parciais lançadas
                 $daoFinEntregaItens->setIdEntregaConfirmacao($dados[0]->id_entrega);
                 $daoFinEntregaItens->verificarEntregaParcial($pdo);
@@ -176,7 +178,7 @@ class FinEntregaItensModel {
                 if ($daoFinEntregaItens->sucesso() && $dados[0]->tipoEntrega == 2) {
                     return Metodos::retornoAjax("Erro", "alert", "Como já existe uma entrega parcial cadastrada não e possível lança uma total.");
                 }
-
+                //primeira verificaçao para situaçao
                 $daoFinEntregaItens->retornaAgurdandoEntrega($pdo);
                 if ($daoFinEntregaItens->sucesso()) {
                     $aguardandoentrega = $daoFinEntregaItens->getMsgRetorno();
@@ -194,27 +196,15 @@ class FinEntregaItensModel {
                                 $saldo = 0;
                                 $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]), 4) - round(Metodos::ConverteValorIng($valor->qtd), 4);
                                 if ($saldo == 0) {
-                                    //atualiza a situacao da entrega
-                                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
-                                    $finEntregaConfirmacaoModel->setSitEntrega(2);
-                                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
-                                    //verificar ser a situacao foi atulizada corretamente 
-                                    if (!$finEntregaConfirmacaoModel->sucesso()) {
-                                        $erro = true;
-                                        $pdo->rollBack();
-                                        return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
-                                    }
-                                } else {
-                                    //atualiza a situacao da entrega
-                                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
-                                    $finEntregaConfirmacaoModel->setSitEntrega(1);
-                                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
-                                    //verificar ser a situacao foi atulizada corretamente 
-                                    if (!$finEntregaConfirmacaoModel->sucesso()) {
-                                        $erro = true;
-                                        $pdo->rollBack();
-                                        return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
-                                    }
+                                    $contTotal ++;
+                                }
+
+                                if ($saldo > 0) {
+                                    $contParcial ++;
+                                }
+
+                                if ($saldo < 0) {
+                                    return Metodos::retornoAjax("Erro", "alert", "Não existem saldo para entrega por favor verifique os itens.");
                                 }
                             }
                         }
@@ -240,30 +230,17 @@ class FinEntregaItensModel {
                         foreach ($aguardandoentrega as $v) {
                             if ($v["id_ordem_itens"] == $valor->itemId) {
                                 $saldo = 0;
-                                $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]), 4) -
-                                        round((Metodos::ConverteValorIng($valor->qtd) * Metodos::ConverteValorIng($valor->vl)), 4);
+                                $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]), 4) - round((Metodos::ConverteValorIng($valor->qtd) * Metodos::ConverteValorIng($valor->vl)), 4);
                                 if ($saldo == 0) {
-                                    //atualiza a situacao da entrega
-                                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
-                                    $finEntregaConfirmacaoModel->setSitEntrega(2);
-                                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
-                                    //verificar ser a situacao foi atulizada corretamente 
-                                    if (!$finEntregaConfirmacaoModel->sucesso()) {
-                                        $erro = true;
-                                        $pdo->rollBack();
-                                        return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
-                                    }
-                                } else {
-                                    //atualiza a situacao da entrega
-                                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
-                                    $finEntregaConfirmacaoModel->setSitEntrega(1);
-                                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
-                                    //verificar ser a situacao foi atulizada corretamente 
-                                    if (!$finEntregaConfirmacaoModel->sucesso()) {
-                                        $erro = true;
-                                        $pdo->rollBack();
-                                        return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
-                                    }
+                                    $contTotal ++;
+                                }
+
+                                if ($saldo > 0) {
+                                    $contParcial ++;
+                                }
+
+                                if ($saldo < 0) {
+                                    return Metodos::retornoAjax("Erro", "alert", "Não existem saldo para entrega por favor verifique os itens.");
                                 }
                             }
                         }
@@ -293,7 +270,38 @@ class FinEntregaItensModel {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
                 }
+                //segunda verficaçao para a situaçao
+                $daoFinEntregaItens->retornaAgurdandoEntrega($pdo);
+                if ($daoFinEntregaItens->sucesso()) {
+                    $aguardandoentrega = $daoFinEntregaItens->getMsgRetorno();
+                } else {
+                    $erro = true;
+                    return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
+                }
+                foreach ($aguardandoentrega as $v) {
+                    if ($v["aguardandoentrega"] > 0) {
+                        $contParcial ++;
+                    }
+                }
 
+                
+                if ($contTotal > 0 && $contParcial == 0) {
+                    //atualiza a situacao da entrega
+                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
+                    $finEntregaConfirmacaoModel->setSitEntrega(2);
+                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+                } else if ($contParcial > 0) {
+                    //atualiza a situacao da entrega
+                    $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
+                    $finEntregaConfirmacaoModel->setSitEntrega(1);
+                    $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+                }
+                //verificar ser a situacao foi atulizada corretamente 
+                if (!$finEntregaConfirmacaoModel->sucesso()) {
+                    $erro = true;
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
+                }
 
 
 

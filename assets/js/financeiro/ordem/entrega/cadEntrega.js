@@ -242,7 +242,6 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
-                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
