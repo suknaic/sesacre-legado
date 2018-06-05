@@ -43,5 +43,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'cadastrarDecretoValor':
+        try {
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //cria um objeto da classe decreto_valor
+            $prog = new DecretoValor((int)$filtro['decreto'],(int)$filtro['classe'],$filtro['tipo'],$filtro['valor']);
+            echo $prog->salvarDecretoValor();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
 
 }
