@@ -177,7 +177,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel ">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Situação da Entregue</h3>
+                                        <h3 class="panel-title">Situação da Entrega</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">

@@ -125,7 +125,6 @@ $(document).ready(function () {
                             }
 
 
-
                         } else if (valores[i]['tp_material'] === 'S') {
 
 
@@ -141,8 +140,6 @@ $(document).ready(function () {
                                         '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
                                         '"  class="form-control input-sm vl" >';
                             }
-
-
 
                         }
                         let valor = [
@@ -187,7 +184,6 @@ $(document).ready(function () {
             });
         }
     });
-
 
     //Cadastrar item entrega
     $("body").on("click", ".btn-salvar", function (e) {
@@ -245,6 +241,8 @@ $(document).ready(function () {
                     "itens": enc
                 },
                 "success": function (response) {
+                    console.log(response);
+                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -333,7 +331,7 @@ $(document).ready(function () {
                             valores[i]['nr_lote'],
                             valores[i]['qt_itens_ordem'],
                             valores[i]['vl_itens_ordem'],
-                            valores[i]['qt_itens_entrega'],
+                            valores[i]['entregue'],
                             valores[i]['tipo'],
                             valores[i]['dt_entrega']
                         ]
