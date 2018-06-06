@@ -218,4 +218,23 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
+    public function verificaSerAEntregaTotal(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select * from fin_entrega_confirmacao where id_entrega_confirmacao = :entrega and sit_entrega = 2";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }

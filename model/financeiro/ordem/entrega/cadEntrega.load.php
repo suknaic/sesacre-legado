@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 $session = new Session();
 
 $token = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
@@ -19,6 +20,11 @@ if (empty($token) && empty($token2)) {
  $finProtocoloModel = new FinProtocoloModel();
  $finProtocoloModel->setIdOrdem($ordem);
  $protocolo = $finProtocoloModel->retornaIdProtocoloPorOrdem();
+ 
+ $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+ $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($id);
+ $situacao = 0;
+ $situacao = $finEntregaConfirmacaoModel->verificaSerAEntregaTotal(null);
 }
 
 

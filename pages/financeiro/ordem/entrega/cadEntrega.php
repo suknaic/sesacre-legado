@@ -103,84 +103,86 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="panel-body">
-                                                <label for="tipoOrdem">
-                                                    Tipo da entrega: <span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="tipoEntrega" class="form-control">    
-                                                        <option value="0">Selecione um tipo</option>
-                                                        <option value="1">Parcial</option>
-                                                        <option value="2">Total</option>
-                                                    </select>
+                                    <?php if (!$situacao) { ?>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="panel-body">
+                                                    <label for="tipoOrdem">
+                                                        Tipo da entrega: <span class="text-danger">*</span>
+                                                    </label>                                                        
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="tipoEntrega" class="form-control">    
+                                                            <option value="0">Selecione um tipo</option>
+                                                            <option value="1">Parcial</option>
+                                                            <option value="2">Total</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-sm-3">
-                                            <div class="panel-body">
-                                                Data de entrega:<span class="text-danger">*</span>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" value="01/01/2018" required="true" />
+                                            <div class="col-sm-3">
+                                                <div class="panel-body">
+                                                    Data de entrega:<span class="text-danger">*</span>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                        <input class="form-control data" type="text" name="data_entrega" id="data_entrega" value="01/01/2018" required="true" />
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         </div>
-
                                     </div>
-                                </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Itens para Entrega</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <input type="hidden" name="id_entrega" id="id_entrega" value="<?php echo $id ?>">
-                                            <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <table class="table table-striped table-bordered" id="tabela">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Entregue</th>
-                                                                <th class="text-center">Aguardando Entrega</th>
-                                                                <th class="text-center">Ação</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Itens para Entrega</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
 
-                                                        </tbody>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table class="table table-striped table-bordered" id="tabela">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-center">Nº</th>
+                                                                    <th class="text-center">Item</th>
+                                                                    <th class="text-center">Descrição</th>
+                                                                    <th class="text-center">Elemento de Despesa</th>
+                                                                    <th class="text-center">Tipo</th>
+                                                                    <th class="text-center">Lote</th>
+                                                                    <th class="text-center">QTD</th>
+                                                                    <th class="text-center">Valor unit</th>
+                                                                    <th class="text-center">Entregue</th>
+                                                                    <th class="text-center">Aguardando Entrega</th>
+                                                                    <th class="text-center">Ação</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                                    </table>
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
                                         </div>
-                                        <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                        </button>
                                     </div>
-                                </div>
-
+                                <?php } ?>
                                 <div class="panel ">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Situação da Entrega</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                            <input type="hidden" name="id_entrega" id="id_entrega" value="<?php echo $id ?>">
+                                            <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <table class="table table-striped table-bordered" id="tabela2">

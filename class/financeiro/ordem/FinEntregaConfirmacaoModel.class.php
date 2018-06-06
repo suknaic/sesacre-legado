@@ -307,4 +307,20 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function verificaSerAEntregaTotal($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->verificaSerAEntregaTotal($pdo);
+            return $daoFinEntregaConfirmacao->sucesso();
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }

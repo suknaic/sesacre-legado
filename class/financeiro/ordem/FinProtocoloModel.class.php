@@ -320,9 +320,9 @@ class FinProtocoloModel {
             return $exc->getMessage();
         }
     }
-    
-    public function retornaIdProtocoloPorOrdem(){
-            try {
+
+    public function retornaIdProtocoloPorOrdem() {
+        try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinProtocolo = new DaoFinProtocolo();

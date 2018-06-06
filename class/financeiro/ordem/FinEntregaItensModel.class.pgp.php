@@ -194,7 +194,7 @@ class FinEntregaItensModel {
                         foreach ($aguardandoentrega as $v) {
                             if ($v["id_ordem_itens"] == $valor->itemId) {
                                 $saldo = 0;
-                                $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]), 4) - round(Metodos::ConverteValorIng($valor->qtd), 4);
+                                $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]) - Metodos::ConverteValorIng($valor->qtd), 4);
                                 if ($saldo == 0) {
                                     $contTotal ++;
                                 }
@@ -279,12 +279,11 @@ class FinEntregaItensModel {
                     return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
                 }
                 foreach ($aguardandoentrega as $v) {
-                    if ($v["aguardandoentrega"] > 0) {
+                    if ((Metodos::ConverteValorIng($v["aguardandoentrega"])) > 0) {
                         $contParcial ++;
                     }
                 }
-
-                
+              
                 if ($contTotal > 0 && $contParcial == 0) {
                     //atualiza a situacao da entrega
                     $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
