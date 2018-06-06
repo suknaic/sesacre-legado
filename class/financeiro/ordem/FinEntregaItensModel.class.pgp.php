@@ -283,7 +283,7 @@ class FinEntregaItensModel {
                         $contParcial ++;
                     }
                 }
-              
+
                 if ($contTotal > 0 && $contParcial == 0) {
                     //atualiza a situacao da entrega
                     $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
@@ -315,18 +315,59 @@ class FinEntregaItensModel {
         }
     }
 
-    public function t() {
+    public function listaSituacaoDaEntrega() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinEntregaItens = new DaoFinEntregaItens();
             $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-            $daoFinEntregaItens->t($pdo);
+            $daoFinEntregaItens->retornaSituacaoDaEntrega($pdo);
             if ($daoFinEntregaItens->sucesso()) {
 
                 return $daoFinEntregaItens->getMsgRetorno();
             }
         } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function removeItemEntrega() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $daoFinEntregaItens = new DaoFinEntregaItens();
+            $daoFinEntregaItens->setIdEntregaItens($this->id_entrega_itens);
+            $daoFinEntregaItens->removeItemEntrega($pdo);
+            $erro = false;
+
+            if (!$daoFinEntregaItens->sucesso()) {
+                $erro = true;
+            }
+
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $finEntregaConfirmacaoModel->setSitEntrega(1);
+            $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $erro = true;
+            }
+
+            if (!Log::SalvaLogD("fin_entrega_itens", $this->id_entrega_itens, $pdo)) {
+                $erro = true;
+            }
+
+            if (!$erro) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+        } catch (Exception $ex) {
+            $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }

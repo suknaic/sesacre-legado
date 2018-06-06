@@ -74,12 +74,13 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
         }
     }
 
-    public function t(PDO $pdo) {
+    public function retornaSituacaoDaEntrega(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select distinct on(entegaitens.id_entrega_itens) entegaitens.id_entrega_itens, itens.nr_item, mat.nm_material, mat.cd_desc_material, 
-                        to_char(ordemItens.qt_itens_ordem, '9G999G990D9999')as qt_itens_ordem, to_char(ordemItens.vl_itens_ordem, '9G999G990D9999')as vl_itens_ordem, 
-                        desp.cd_despesa, desp.ds_despesa, mat.tp_material, itens.fl_valor_variavel, pro.ds_protocolo,itens.nr_lote, 
+                $sql = "select distinct on(entegaitens.id_entrega_itens) entegaitens.id_entrega_itens, entregaC.id_entrega_confirmacao, itens.nr_item, mat.nm_material, 
+                        mat.cd_desc_material, to_char(ordemItens.qt_itens_ordem, '9G999G990D9999')as qt_itens_ordem, 
+                        to_char(ordemItens.vl_itens_ordem, '9G999G990D9999')as vl_itens_ordem,  desp.cd_despesa, desp.ds_despesa, mat.tp_material, itens.fl_valor_variavel, 
+                        pro.ds_protocolo,itens.nr_lote, 
                         case 	
                                 when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0'
                                 then to_char(entegaitens.qt_itens_entrega , '9G999G990D9999')
@@ -183,10 +184,10 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
         }
     }
 
-    public function retornaAgurdandoEntrega(PDO $pdo){
-              try {
+    public function retornaAgurdandoEntrega(PDO $pdo) {
+        try {
             if (!empty($pdo)) {
-                    $sql = "select ordemItens.id_ordem_itens, 
+                $sql = "select ordemItens.id_ordem_itens, 
                             case 
                                     when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0'
                                 then to_char((ordemItens.qt_itens_ordem 
@@ -265,4 +266,21 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
         }
     }
 
+    public function removeItemEntrega(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "delete from fin_entrega_itens where id_entrega_itens = :entrega";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":entrega", $this->getIdEntregaItens());
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro PDO";
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
 }
