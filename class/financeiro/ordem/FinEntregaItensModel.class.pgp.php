@@ -302,8 +302,6 @@ class FinEntregaItensModel {
                     return Metodos::retornoAjax("Erro", "console", $finEntregaConfirmacaoModel->getMsgRetorno());
                 }
 
-
-
                 if (!$erro) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", "deu certo");
@@ -345,11 +343,35 @@ class FinEntregaItensModel {
             if (!$daoFinEntregaItens->sucesso()) {
                 $erro = true;
             }
-
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            //atualiza a data de confirmacao da entrega   
             $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-            $finEntregaConfirmacaoModel->setSitEntrega(1);
-            $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+            //verificar ser deu tudo certo no retorno da maio data 
+            if ($finEntregaConfirmacaoModel->sucesso()) {
+                $finEntregaConfirmacaoModel->setDtConfirmacao($finEntregaConfirmacaoModel->getMsgRetorno()["max"]);
+                $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+            }
+
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $erro = true;
+            }
+            
+            //seto o id da entrega confirmacao para pode realiza a pesquisa
+            $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            //verificar ser e a ultima entrega ser for false e a ultima sendo assim
+            //tenho que volta o status da confirmacao da entrega para 0
+            $daoFinEntregaItens->verificarUltimaEntrega($pdo);
+            
+            if ($daoFinEntregaItens->sucesso()) {
+                $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+                $finEntregaConfirmacaoModel->setSitEntrega(1);
+                $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+            } else {
+                $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+                $finEntregaConfirmacaoModel->setSitEntrega(0);
+                $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+            }
 
             if (!$finEntregaConfirmacaoModel->sucesso()) {
                 $erro = true;

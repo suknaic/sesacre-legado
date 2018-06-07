@@ -323,4 +323,24 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function retornaUltimaDataEntrega($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaUltimaDataEntrega($pdo);
+            if($daoFinEntregaConfirmacao->sucesso()){
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }else{
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }

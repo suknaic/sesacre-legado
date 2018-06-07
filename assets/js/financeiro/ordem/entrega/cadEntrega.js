@@ -320,7 +320,7 @@ $(document).ready(function () {
                             valores[i]['tipo'],
                             valores[i]['dt_entrega'],
                             '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' + valores[i]['id_entrega_itens'] + '" \n\
-                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="'+valores[i]['id_entrega_confirmacao']+'" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
+                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="' + valores[i]['id_entrega_confirmacao'] + '" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
                              </button>'
                         ]
                         dataSet.push(valor)
@@ -358,7 +358,7 @@ $(document).ready(function () {
     $('body').on('click', '.btn-remover', function (e) {
         var $this = $(this);
         var id = $this.val();
-        var idEntrega  = $this.closest('td').find('.btn-remover').attr("idEntrega");
+        var idEntrega = $this.closest('td').find('.btn-remover').attr("idEntrega");
         var item = $this.closest('td').find('.btn-remover').attr("nomeitem");
         bootbox.confirm({
             title: func.msgCaixaDeConfirmacao,
@@ -395,6 +395,7 @@ $(document).ready(function () {
                             "dados": dados
                         },
                         "success": function (response) {
+                           
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;

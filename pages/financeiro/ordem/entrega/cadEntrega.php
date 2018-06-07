@@ -126,7 +126,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                     Data de entrega:<span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                        <input class="form-control data" type="text" name="data_entrega" id="data_entrega" value="01/01/2018" required="true" />
+                                                        <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
                                                     </div>
                                                 </div>
                                             </div>
