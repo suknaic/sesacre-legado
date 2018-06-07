@@ -262,8 +262,17 @@ class FinEntregaItensModel {
 
                 //atualiza a data de confirmacao da entrega   
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($valor->id_entrega);
-                $finEntregaConfirmacaoModel->setDtConfirmacao(Metodos::ConverteDataING($valor->data));
-                $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+                $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+                $dataMaior = null;
+                $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
+                if ($finEntregaConfirmacaoModel->sucesso() && strtotime($dataMaior) > strtotime(Metodos::ConverteDataING($valor->data))) {
+                    $finEntregaConfirmacaoModel->setDtConfirmacao($dataMaior);
+                    $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+                } else {
+                    $finEntregaConfirmacaoModel->setDtConfirmacao(Metodos::ConverteDataING($valor->data));
+                    $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+                }
+
                 //verificar ser a data foi atualiza corretamente 
                 if (!$finEntregaConfirmacaoModel->sucesso()) {
                     $erro = true;
@@ -334,35 +343,56 @@ class FinEntregaItensModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-
+            $dataMaior = null;
+            $dataItem = null;
+            //instanciando objetos 
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $daoFinEntregaItens = new DaoFinEntregaItens();
+            //fim
+            //buscando a maior data no banco
+            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+            $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
+            //buscando a data do item a ser removido no banco
             $daoFinEntregaItens->setIdEntregaItens($this->id_entrega_itens);
+            $daoFinEntregaItens->retornaDataEntregaItens($pdo);
+
+            if ($daoFinEntregaItens->sucesso()) {
+                $dataItem = $daoFinEntregaItens->getMsgRetorno();
+            } else {
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            if (strtotime($dataMaior) > strtotime($dataItem["dt_entrega"])) {
+                return Metodos::retornoAjax("Erro", "alert", "Exclua o item que tem a maior data");
+            }
+
             $daoFinEntregaItens->removeItemEntrega($pdo);
             $erro = false;
 
             if (!$daoFinEntregaItens->sucesso()) {
                 $erro = true;
             }
-            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            //atualiza a data de confirmacao da entrega   
-            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+
             $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+            $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
+
             //verificar ser deu tudo certo no retorno da maio data 
             if ($finEntregaConfirmacaoModel->sucesso()) {
-                $finEntregaConfirmacaoModel->setDtConfirmacao($finEntregaConfirmacaoModel->getMsgRetorno()["max"]);
+                $finEntregaConfirmacaoModel->setDtConfirmacao($dataMaior);
                 $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
             }
 
             if (!$finEntregaConfirmacaoModel->sucesso()) {
                 $erro = true;
             }
-            
+
             //seto o id da entrega confirmacao para pode realiza a pesquisa
             $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             //verificar ser e a ultima entrega ser for false e a ultima sendo assim
             //tenho que volta o status da confirmacao da entrega para 0
             $daoFinEntregaItens->verificarUltimaEntrega($pdo);
-            
+
             if ($daoFinEntregaItens->sucesso()) {
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
                 $finEntregaConfirmacaoModel->setSitEntrega(1);

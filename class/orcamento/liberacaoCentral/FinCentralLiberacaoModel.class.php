@@ -739,6 +739,7 @@ class FinCentralLiberacaoModel {
         $dadosLiberacao = $this->dadosLiberacao($pdo);
         $qddValor->setIdQddValor($dados["id"]);
         $dadosQdd = $qddValor->retornaQddValorPorId($pdo);
+        
         if ($dados["validacao"] == 1) {
             $qddValor->setVlLiberado(($dadosLiberacao[0]["vl_central_liberacao_trans"] + $dadosQdd["vl_liberado"]));
             $daoFinCentralLiberacao->setIdCentralLiberacao($dados["idLiberacao"]);

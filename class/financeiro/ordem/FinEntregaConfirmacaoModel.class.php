@@ -332,10 +332,33 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->retornaUltimaDataEntrega($pdo);
-            if($daoFinEntregaConfirmacao->sucesso()){
+            if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }else{
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function verificaMaiorItem($pdo,int $idEntregaItens = 0) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaMaiorIdEntregaItens($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+                var_dump($daoFinEntregaConfirmacao->getMsgRetorno());
+               
+            } else {
                 $this->sucesso = false;
             }
         } catch (Exception $ex) {

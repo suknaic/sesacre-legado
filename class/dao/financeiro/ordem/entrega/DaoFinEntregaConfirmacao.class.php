@@ -240,9 +240,9 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
     public function retornaUltimaDataEntrega(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select max(dt_entrega) from fin_entrega_itens where id_entrega_confirmacao = :entrega";
+                $sql = "select max(dt_entrega) from fin_entrega_itens where id_entrega_confirmacao = :confirmacao";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;

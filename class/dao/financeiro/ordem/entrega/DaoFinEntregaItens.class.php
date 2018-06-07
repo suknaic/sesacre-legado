@@ -141,9 +141,9 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                         inner join fin_empenho as emp
                         on emp.id_pedido = p.id_pedido
 
-                        where entegaitens.id_entrega_confirmacao = :entrega";
+                        where entegaitens.id_entrega_confirmacao = :confirmacao";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
@@ -165,9 +165,9 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
     public function verificarEntregaParcial(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select * from fin_entrega_itens where id_entrega_confirmacao = :entrega  and tp_entrega = '1'";
+                $sql = "select * from fin_entrega_itens where id_entrega_confirmacao = :confirmacao  and tp_entrega = '1'";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
@@ -245,9 +245,9 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                             inner join pla_material as mat
                             on mat.id_material = itens.id_material
 
-                            where entregaC.id_entrega_confirmacao = :entrega";
+                            where entregaC.id_entrega_confirmacao = :confirmacao";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
@@ -295,6 +295,30 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro PDO";
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaDataEntregaItens(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select dt_entrega from fin_entrega_itens where id_entrega_itens = :entrega";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":entrega", $this->getIdEntregaItens(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
                 }
             } else {
                 $this->sucesso = false;
