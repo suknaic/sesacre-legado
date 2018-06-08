@@ -222,10 +222,10 @@ switch ($_REQUEST['acao']) {
 
     case 'returnChamadoVisualiza':
         try {
-            $cha = new Chamado();
+            $cha = new FormSistemas();
             $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
-            $cha->setIdChamado($idGet);
-            echo $cha->retornaChamadoVisualiza($idGet);
+            $cha->setIdFormSistemas($idGet);
+            echo $cha->retornaFormSistemas($idGet);
             return;
             break;
         } catch (Exception $e) {

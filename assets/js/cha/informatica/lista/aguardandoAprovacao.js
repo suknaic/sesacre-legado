@@ -412,8 +412,8 @@ $(document).ready(function () {
         e.preventDefault();
         //**********************
         var id = $(this).val();
-        $idChamado = id.split("-")[0];
-        top.location.href = "/pages/cha/informatica/visualiza/visualiza.php?id=" + $idChamado;
+        $idFormSistemas = id;
+        top.location.href = "/pages/cha/informatica/visualiza/visualiza.php?id=" + $idFormSistemas;
     });
 
     $('body').on('click', '.btn-remover', function (e) {

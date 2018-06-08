@@ -210,7 +210,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         on f.id_fonte = p.id_fonte
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
-                        where ordem.sit_ordem > '0' and ordem.aa_ordem = :ano " . $condicao . "";
+                        where ordem.sit_ordem > '0' and ordem.aa_ordem = :ano " . $condicao . " order by ordem.nr_ordem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ano", $ano, PDO::PARAM_INT);
                 $stmt->execute();

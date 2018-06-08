@@ -321,4 +321,21 @@ class FinProtocoloModel {
         }
     }
 
+    public function retornaIdProtocoloPorOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdOrdem($this->id_ordem);
+            $daoFinProtocolo->retornaProtocoloPorOrdem($pdo);
+            if ($daoFinProtocolo->sucesso()) {
+                return $daoFinProtocolo->getMsgRetorno();
+            } else {
+                return false;
+            }
+        } catch (Exception $ex) {
+            return $exc->getMessage();
+        }
+    }
+
 }

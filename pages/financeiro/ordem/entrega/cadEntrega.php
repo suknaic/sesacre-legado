@@ -17,8 +17,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <!-- themify icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">
-        <!--Select2-->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
@@ -60,7 +58,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                 </div>
                                 <div class="modal-body">
                                     <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
-                                        <input type="hidden" name="id_processo_anotacao" id="id_processo_anotacao" value="<?php echo $dados['id_processo']; ?>">
+                                        <input type="hidden" name="id_processo_anotacao" id="id_processo_anotacao" value="<?php echo $protocolo["id_protocolo"]; ?>">
                                         <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
                                     </form>
                                 </div>
@@ -93,7 +91,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="protocolo" value="<?php echo $id; ?>" />
+                                        <input type="hidden" id="protocolo" value="<?php echo $protocolo["id_protocolo"]; ?>" />
                                         <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
                                         <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
                                         <p><strong>Ata:</strong> <span id="ata"> </span></p>
@@ -103,82 +101,86 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="panel-body">
-                                                <label for="tipoOrdem">
-                                                    Tipo da entrega: <span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="tipoEntrega" class="form-control">    
-                                                        <option value="0">Selecione um tipo</option>
-                                                        <option value="1">Parcial</option>
-                                                        <option value="2">Total</option>
-                                                    </select>
+                                    <?php if (!$situacao) { ?>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="panel-body">
+                                                    <label for="tipoOrdem">
+                                                        Tipo da entrega: <span class="text-danger">*</span>
+                                                    </label>                                                        
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="tipoEntrega" class="form-control">    
+                                                            <option value="0">Selecione um tipo</option>
+                                                            <option value="1">Parcial</option>
+                                                            <option value="2">Total</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-sm-3">
-                                            <div class="panel-body">
-                                                Data de entrega:<span class="text-danger">*</span>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                    <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
+                                            <div class="col-sm-3">
+                                                <div class="panel-body">
+                                                    Data de entrega:<span class="text-danger">*</span>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                        <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         </div>
-
                                     </div>
-                                </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Itens para Entrega</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <table class="table table-striped table-bordered" id="tabela">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Entregue</th>
-                                                                <th class="text-center">Aguardando Entrega</th>
-                                                                <th class="text-center">Ação</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Itens para Entrega</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
 
-                                                        </tbody>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <table class="table table-striped table-bordered" id="tabela">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-center">Nº</th>
+                                                                    <th class="text-center">Item</th>
+                                                                    <th class="text-center">Descrição</th>
+                                                                    <th class="text-center">Elemento de Despesa</th>
+                                                                    <th class="text-center">Tipo</th>
+                                                                    <th class="text-center">Lote</th>
+                                                                    <th class="text-center">QTD</th>
+                                                                    <th class="text-center">Valor unit</th>
+                                                                    <th class="text-center">Entregue</th>
+                                                                    <th class="text-center">Aguardando Entrega</th>
+                                                                    <th class="text-center">Ação</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                                    </table>
+                                                            </tbody>
+
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
                                         </div>
-                                        <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                        </button>
                                     </div>
-                                </div>
-
+                                <?php } ?>
                                 <div class="panel ">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Itens Entregue</h3>
+                                        <h3 class="panel-title">Situação da Entrega</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                            <input type="hidden" name="id_entrega" id="id_entrega" value="<?php echo $id ?>">
+                                            <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <table class="table table-striped table-bordered" id="tabela2">
@@ -194,7 +196,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                                 <th class="text-center">Valor unit</th>
                                                                 <th class="text-center">Entregue</th>
                                                                 <th class="text-center">Tipo da entrega</th>
-                                                                <th class="text-center">Data de entrega</th>
+                                                                <th class="text-center">Data da entrega</th>
                                                                 <th class="text-center">Ação</th>
                                                             </tr>
                                                         </thead>
@@ -262,14 +264,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ RECOMMENDED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--Datapicker-->
-        <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
-        <!--Select2-->
-        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>

@@ -469,7 +469,6 @@ $(document).ready(function () {
                             console.log(response);
                             return false;
                         }
-//                        console.log(response);
                         $(".nmPessoa").val(response[0]['nm_pessoa']);
                         $(".nrTelefone").val(response[0]['nr_telefone_celular']);
                         $(".dsEmail").val(response[0]['nm_email']);
@@ -744,7 +743,7 @@ $(document).ready(function () {
             var nrPortaria = ($("#nrPortaria").val() ? $("#nrPortaria").val() : "");
             var nmSetor = ($("#nmSetor").val() ? $("#nmSetor").val() : "");
             var cdSetor = ($("#cdSetor").val() ? $("#cdSetor").val() : "");
-            var nmResponsavel = ($("#nm_pessoa").val() ? $("#nm_pessoa").val() : "");
+            var nmResponsavel = ($("#nm_responsavel").val() ? $("#nm_responsavel").val() : "");
             var nrParticipantes = ($("#nrParticipantes").val() ? $("#nrParticipantes").val() : "");
             var dsSenhaDesejada = ($("#dsSenhaDesejada").val() ? $("#dsSenhaDesejada").val() : "");
             var nmExame = ($("#nmExame").val() ? $("#nmExame").val() : "");
