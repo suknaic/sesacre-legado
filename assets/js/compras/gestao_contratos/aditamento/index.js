@@ -23,14 +23,26 @@ $(document).ready(function () {
 */
     
     $('.data').mask("99/99/9999")
-    $("body").on("focus", "#n_valor_aditivo", function () {
+    $("body").on("focus", ".quatro_casas", function () {
         $(this).priceFormat({
             centsLimit: 4,
             prefix: '',
             centsSeparator: ',',
-            thousandsSeparator: '.',
+            thousandsSeparator: '.',            
         });
     });
+    
+    $("body").on("focus", "#n_percentual", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',            
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 7
+        });
+    });
+        
+    
     
     $(".select").select2({
         width: " 100%"
@@ -211,22 +223,24 @@ $(document).ready(function () {
     //Controle da Tela, Campos habilitados ou não
     //O Campo Percentual, ficará escondido até que a Regra para o tipo dele seja selecionado pelo usuário
     $("#div_percentual").hide();
+    $("#div_indice_correcao").hide();
+    $("#btn_itens_abrir_modal").hide();
     
     $('body').on('change', '#n_instrumento', function (e) {
         //Regras para a Unidade de Cálculo
-        $('#n_unidade_calculo option').filter(function() {         
+        $('#n_unidade_calculo option').filter(function() {        
             return $(this).val() != 0;
         }).attr("disabled", "");
         $('#n_unidade_calculo').val(0).trigger('change');
         //Se o instrumento for Revisão, então irá liberar para selecionar
-        //Moeda e Quantidade
+        //Moeda, Quantidade, Percentual
         if($("#n_instrumento option:selected").val() == 1){
             $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
             $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
-        //Se o instrumento for Reajuste, então irá liberar para selecionar
-        //Percentual, Indice de Correção e Moeda
-        }else if($("#n_instrumento option:selected").val() == 2){
             $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
+        //Se o instrumento for Reajuste, então irá liberar para selecionar
+        //Indice de Correção, Moeda
+        }else if($("#n_instrumento option:selected").val() == 2){            
             $('#n_unidade_calculo option[value=2]').removeAttr("disabled");
             $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
         }
@@ -235,21 +249,64 @@ $(document).ready(function () {
         $("#n_tipo_aquisicao").val(0).attr("disabled", "");
         if($("#n_instrumento option:selected").val() == 1){
             $("#n_tipo_aquisicao").removeAttr("disabled");
-        }        
+        }     
     });
     
         
-    $('body').on('change', '#n_unidade_calculo', function (e){    
+    $('body').on('change', '#n_unidade_calculo', function (e){
         $("#div_percentual").hide();
         $("#n_percentual").val("");
+        $("#div_indice_correcao").hide();
+        $("#n_indice_correcao").val("");
         //Se a Unidade de Calculo for Percentual
         //Então o Campo Percentual deverá Aparecer
         if($("#n_unidade_calculo option:selected").val() == 1){
             $("#div_percentual").show();
-        }                
+        } 
+        //Se a Unidade de Calculo for Indice de Correção
+        //Então o Campo Indice de correção deverá Aparecer
+        if($("#n_unidade_calculo option:selected").val() == 2){
+            $("#div_indice_correcao").show();
+        } 
     });
     
     
+    $('body').on('change', '#n_base_calculo', function (e) {
+        $("#btn_itens_abrir_modal").hide();
+        if($("#n_base_calculo option:selected").val() == 2){
+            $("#btn_itens_abrir_modal").show();
+        } 
+    });
+    
+    $('body').on('change', '#n_finalidade', function (e) {
+       if($("#n_finalidade option:selected").val() == 1){
+           var valor = $("#n_percentual").val().replace(",", ".");
+            if($("#n_tipo_aquisicao option:selected").val() == 1){
+                if(valor > 25.0000){          
+                    $("#n_percentual").val("25,0000");
+                }
+            }
+            if($("#n_tipo_aquisicao option:selected").val() == 2){
+                if(valor > 50.0000){                  
+                    $("#n_percentual").val("50,0000");
+                }
+            }            
+        }
+    });
+    
+    $("body").on("change keydown keyup", "#n_percentual", function (){        
+        $("#n_finalidade").trigger("change");
+    });
+    
+    
+//    $('body').on('click', '#btn_itens_abrir_modal', function (e) {
+//        e.stopPropagation();
+//        if (e.isDefaultPrevented()) {
+//        } else { 
+//            e.preventDefault();                        
+//                        
+//        }
+//    });
     
     
     

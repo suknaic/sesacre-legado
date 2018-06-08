@@ -663,7 +663,7 @@ class QddValor {
                 $valorDotInicial += $v['vl_qdd_inicial'];
                 $valorSuplementado += $v['vl_qdd_suplementado'];
                 $valorReduzido += $v['vl_qdd_reduzido'];
-                $valorAtual += ($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido']);
+                $valorAtual += ($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']);
                 $valorEmpenhado += $v['vl_empenhado'];
                 $valorLiberado += $v['vl_liberado'];
                 $valorBloqueado += $v['vl_bloqueado'];
@@ -674,7 +674,7 @@ class QddValor {
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_inicial'], 2) . '</td>'
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_suplementado'], 2) . '</td>'
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_reduzido'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido']), 2) . '</td>'
+                        . '<td class="text-right">' . Metodos::ConverteValorBr(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']), 2) . '</td>'
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_liberado'], 2) . '</td>'
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_empenhado'], 2) . '</td>'
                         . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_bloqueado'], 2) . '</td>'
