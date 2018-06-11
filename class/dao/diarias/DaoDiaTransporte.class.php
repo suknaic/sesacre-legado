@@ -78,7 +78,7 @@ class DaoDiaTransporte extends DiaTransporte {
     public function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "select dtr.id_transporte ,dtr.nm_transporte, dtr.st_ativo from dia_transporte dtr " . $this->montaFiltro();
+                $sql = "select dtr.id_transporte ,dtr.nm_transporte, dtr.st_ativo from dia_transporte dtr " . $this->montaFiltro() . " order by dtr.nm_transporte";
                 
                 $stmt = $pdo->prepare($sql);
                

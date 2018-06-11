@@ -27,6 +27,16 @@
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css" rel="stylesheet">
+        <style>
+            /* Important part */
+            .modal-dialog{
+                overflow-y: initial !important
+            }
+            .modal-body{
+                height: 600px;
+                overflow-y: auto;
+        </style>
+    
     </head>    
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
@@ -90,6 +100,100 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="modal fade modal-fullscreen  footer-to-bottom" id="myModalFullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog animated zoomInLeft modal-lg" role="document" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Modal title</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-striped table-bordered" id="tabela">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Nº</th>
+                                                                <th class="text-center">Item</th>
+                                                                <th class="text-center">Descrição</th>
+                                                                <th class="text-center">Grupo</th>
+                                                                <th class="text-center">Sub Grupo</th>
+                                                                <th class="text-center">Unid</th>
+                                                                <th class="text-center">Elemento de Despesa</th>
+                                                                <th class="text-center">Tipo</th>
+                                                                <th class="text-center">Lote</th>
+                                                                <th class="text-center">QTD</th>
+                                                                <th class="text-center">Valor unit</th>
+                                                                <th class="text-center">Total</th>
+                                                                <th class="text-center">Utilizado</th>
+                                                                <th class="text-center">Saldo</th>
+                                                                <th class="text-center">Ação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody><tr>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">ARROZ</td>
+                                        <td class="text-center">ARROZ AGULHINHA, LONGO FINO, POLIDO, TIPO 1, EMBALAGEM PRIMARIAPLASTICA</td>
+                                        <td class="text-center">SUBSISTENCIA</td>
+                                        <td class="text-center">PRODUTOS DE PANIFICACAO E CEREAIS</td>
+                                        <td class="text-center">QUILOGRAMA</td>    
+                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
+                                        <td class="text-center">C</td>
+                                        <td class="text-center">0</td>
+                                        <td class="text-center">2.844,0000</td>
+                                        <td class="text-center">3,4900</td>
+                                        <td class="text-center">2.844,0000</td>
+                                        <td class="text-center">0,0000</td>
+                                        <td class="text-center">2.844,0000</td>
+                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="4" tp="C" class="form-control input-sm qtd"></td></tr><tr>
+                                        <td class="text-center">76</td>
+                                        <td class="text-center">CARNE BOVINA;</td>
+                                        <td class="text-center">CARNE BOVINA; CONTRA-FILÉ, DE 1° QUALIDADE, RESFRIADA DE 0° À 5°, COR AVERMELHADA VIVA, TEXTURA FIRME</td>
+                                        <td class="text-center">SUBSISTENCIA</td>
+                                        <td class="text-center">CARNES, AVES E PEIXES</td>
+                                        <td class="text-center">QUILOGRAMA</td>    
+                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
+                                        <td class="text-center">C</td>
+                                        <td class="text-center">0</td>
+                                        <td class="text-center">1.463,0000</td>
+                                        <td class="text-center">25,9300</td>
+                                        <td class="text-center">1.463,0000</td>
+                                        <td class="text-center">0,0000</td>
+                                        <td class="text-center">1.463,0000</td>
+                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="5" tp="C" class="form-control input-sm qtd"></td></tr><tr>
+                                        <td class="text-center">84</td>
+                                        <td class="text-center">FRANGO;</td>
+                                        <td class="text-center">FRANGO; EM CORTES; COXA E SOBRECOXA; SEM TEMPERO; CONGELADO; VALIDADE DE 12 MESES; ACONDICIONADA EM SACO PLASTICO.</td>
+                                        <td class="text-center">SUBSISTENCIA</td>
+                                        <td class="text-center">CARNES, AVES E PEIXES</td>
+                                        <td class="text-center">QUILOGRAMA</td>    
+                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
+                                        <td class="text-center">C</td>
+                                        <td class="text-center">0</td>
+                                        <td class="text-center">2.169,0000</td>
+                                        <td class="text-center">11,7800</td>
+                                        <td class="text-center">2.169,0000</td>
+                                        <td class="text-center">0,0000</td>
+                                        <td class="text-center">2.169,0000</td>
+                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="6" tp="C" class="form-control input-sm qtd"></td></tr></tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
                     <!--Page content-->
                     <!--===================================================-->                    
                      <div id="page-title">
@@ -291,7 +395,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_indice_correcao">
                                                 <label class="col-sm-2 control-label text-left">Índice de Correção: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
@@ -310,9 +414,9 @@
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                         </span>
-                                                        <input class="form-control" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="R$ 0.000,00">
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-primary add-itens" type="button">
+                                                        <input class="form-control quatro_casas" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="R$ 0.000,00">
+                                                        <span class="input-group-btn" id="btn_itens_abrir_modal">
+                                                            <button class="btn btn-primary add-itens" data-toggle="modal" data-target="#myModalFullscreen" type="button">
                                                                 Itens
                                                             </button>
                                                         </span>  

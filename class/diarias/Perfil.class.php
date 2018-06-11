@@ -36,12 +36,13 @@ class Perfil{
     }
         
     private function getPerfisDiarias(){
-//        $array = array(
-//            PERFIL_DIARIA_SOLICITACAO => "Perfil Solicitação de Diária", 
-//            PERFIL_DIARIA_AUTORIZACAO => "Perfil Autoriza"
-//            PERFIL_DIARIA_ZEUS
-//            );   
-//        return $array;
+        $array = array(
+            PERFIL_DIARIA_SOLICITACAO => "Perfil Diária Solicitação", 
+            PERFIL_DIARIA_AUTORIZACAO => "Perfil Diária Autorização",
+            PERFIL_DIARIA_PERMISSAO => "Perfil Diária Permissão",
+            PERFIL_DIARIA_ZEUS => "Perfil Diária Zeus",
+            );   
+        return $array;
     }
         
                               
@@ -117,7 +118,7 @@ class Perfil{
                 $pdo = $conexao->connect();
             }
             
-            $array = $this->getPerfisPlanejamento();    
+            $array = $this->getPerfisDiarias();    
            
             foreach ($array as $key => $value) {
                 $retorno .= "<option value=".$key.">".$value."</option>";    
@@ -136,7 +137,7 @@ class Perfil{
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $perfilPessoa = new PerfilPessoa();                 
-            $perfis = implode(",", array_keys($this->getPerfisPlanejamento()));                                    
+            $perfis = implode(",", array_keys($this->getPerfisDiarias()));                                    
             $perfilPessoa->retornaPessoasPorINPerfil($perfis, $pdo);
                         
             if($perfilPessoa->Sucesso()){                
@@ -146,7 +147,7 @@ class Perfil{
                     $retorno .= "<td>".$v['nm_pessoa']."</td>"
                             . "<td>" . $v['nm_perfil'].  "</td>"                            
                             . '<td style="text-align: center;">'                                                                                
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_perfil'] . ' dataid='.$v['id_pessoa'].'>
+                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_perfil'] . ' data-id='.$v['id_pessoa'].'>
                                 <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
                               </button>'
                             . '</td>'

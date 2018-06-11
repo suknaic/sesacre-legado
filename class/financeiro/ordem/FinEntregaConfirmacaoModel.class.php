@@ -13,6 +13,7 @@ class FinEntregaConfirmacaoModel {
     private $dh_cadastramento = null;
     private $nr_qtd_entrega = null;
     private $st_entrega_confirmacao = null;
+    private $sit_entrega = null;
     private $sucesso = false;
     private $msgRetorno = null;
 
@@ -181,16 +182,33 @@ class FinEntregaConfirmacaoModel {
     /**
      * @return mixed
      */
-    public function getMsgRetorno() {
-        return $this->msgRetorno;
+    public function getSitEntrega() {
+        return $this->sit_entrega;
     }
 
     /**
-     * [sucesso e responsavel ]
-     * @return [type]
+     * @param mixed $sit_entrega
+     *
+     * @return self
+     */
+    public function setSitEntrega($sit_entrega) {
+        $this->sit_entrega = $sit_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
      */
     public function sucesso() {
         return $this->sucesso;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
     }
 
     public function salvaInsertEntregaProtocolo(PDO $pdo) {
@@ -207,6 +225,141 @@ class FinEntregaConfirmacaoModel {
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaItensCadEntrega() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->retornaInforParaEntrega($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function atualizaDataConfirmacao(PDO $pdo) {
+        try {
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setDtConfirmacao($this->dt_confirmacao);
+            //chama a funçao para lista os dados antes do update
+            $daoFinEntregaConfirmacao->retornaDados($pdo);
+            $busca = [];
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $busca = $daoFinEntregaConfirmacao->getMsgRetorno();
+                //ser tudo de certo chamo a funçao de updatae da data de 
+                $daoFinEntregaConfirmacao->updateDataConfirmacao($pdo);
+            }
+            if (!Log::SalvaLogU("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function atualizaSituacao(PDO $pdo) {
+        try {
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
+            //chama a funçao para lista os dados antes do update
+            $daoFinEntregaConfirmacao->retornaDados($pdo);
+            $busca = [];
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $busca = $daoFinEntregaConfirmacao->getMsgRetorno();
+                //ser tudo de certo chamo a funçao de updatae da situacao
+                $daoFinEntregaConfirmacao->atualizaSituacao($pdo);
+            }
+
+            if (!Log::SalvaLogU("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function verificaSerAEntregaTotal($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->verificaSerAEntregaTotal($pdo);
+            return $daoFinEntregaConfirmacao->sucesso();
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaUltimaDataEntrega($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaUltimaDataEntrega($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function verificaMaiorItem($pdo,int $idEntregaItens = 0) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaMaiorIdEntregaItens($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+                var_dump($daoFinEntregaConfirmacao->getMsgRetorno());
+               
+            } else {
+                $this->sucesso = false;
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

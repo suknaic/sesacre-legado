@@ -189,11 +189,7 @@
 
                                     <ul class="collapse">
                                         <li>
-                                            <a href="/pages/orcamento/liberacaoCentral/index.php">Adicionar Liberação</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="/pages/orcamento/liberacaoCentral/index_reducao.php">Redução da Liberação</a>
+                                            <a href="/pages/orcamento/liberacaoCentral/index.php">Recurso para Central</a>
                                         </li>
 
                                         <li>
@@ -268,7 +264,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/central_responsavel/index.php">Liberação Central</a>
+                                    <a href="/pages/financeiro/central_responsavel/index.php">Vinculação Central</a>
                                 </li>
 
                             </ul>
@@ -311,14 +307,17 @@
                             </a>
                             <!--Submenu-->
                             <ul class="collapse">
-<!--                                <li>
-                                    <a href="/pages/diarias/permissoes/">Permissões</a>
-                                </li>-->
                                 <li>
-                                    <a href="/pages/diarias/autorizacoes/">Autorizações</a>
+                                    <a href="/pages/diarias/permissoes/">Permissões de Acesso</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/diarias/">Solicitação</a>
+                                    <a href="/pages/diarias/decreto_valor/">Parâmetros de Valores</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/diarias/">Solicitações</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/diarias/autorizacoes/">Autorizações</a>
                                 </li>
                             </ul>
                         </li>

@@ -198,7 +198,7 @@ class QddSupRed {
             //Caso exista, abortar.
             $valorTotalRegistros = 0;
             if($contemRegistros){
-                foreach ($registros as $value) {
+                foreach ($registros as $value){
                     $valorTotalRegistros += Metodos::ConverteValorIng($value['valor']);
                     if($value['programa'] == $qddValor->getIdProgramaTrabalho()
                             && $value['fonte'] == $qddValor->getIdFonte()
@@ -215,15 +215,19 @@ class QddSupRed {
             
             //Se suplementado for false, então ele irá reduzir
             //Assim precisamos verificar se o saldo não irá ficar negativo.
-            if(!$suplementado){
+            //Com a inclusão do Liberado, é necessário verificar também se o Liberado não irá ficar negativo
+            if(!$suplementado){                
                 if( ($qddValor->getVlSaldo() - $this->vlQddSupRedTrans) < 0 ){
                     return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
                             . " de Reduzido o Saldo de R$ ". Metodos::ConverteValorBr($qddValor->getVlSaldo(), 2)." irá ficar Negativo.");
-                }
-            }
-            
-            
-            
+                }                
+                if( ($qddValor->getVlAtual() - $this->vlQddSupRedTrans - $qddValor->getVlLiberado()) < 0 ){
+                    return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
+                            . " de Redução o Valor Atual irá ficar Menor que o Valor que já foi Liberado para a Central."
+                            . "  Valor Liberado para as Centrais R$ ". Metodos::ConverteValorBr($qddValor->getVlLiberado(), 2)
+                            . "; Valor Atual R$ ". Metodos::ConverteValorBr($qddValor->getVlAtual(), 2));
+                }                
+            }            
             
             //Arruma os Registros 
             if($contemRegistros){             
@@ -243,18 +247,25 @@ class QddSupRed {
                     //Se o inicial for suplementado, então os Registros serão os reduzidos
                     //Se os Registros forem Redução
                     //Precisa Verificar se eles não ficarão negativos
-                    if($suplementado){   
+                    if($suplementado){
                         if( ($qddValorAux->getVlSaldo() - $qddValorAux->getValor()) < 0 ){
                             return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
                                 . " de Reduzido o Saldo de R$ ". Metodos::ConverteValorBr($qddValorAux->getVlSaldo(), 2)." irá ficar Negativo.");
-                        }
+                        }                        
+                        if( ($qddValorAux->getVlAtual() - $qddValorAux->getValor() - $qddValorAux->getVlLiberado()) < 0 ){
+                            return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
+                                    . " de Suplementação, Os Registros que estão sendo utlizados para a Redução terão seu Valor Atual Menor que o Valor que já foi Liberado para a Central."
+                                    . "  Valor Liberado para as Centrais R$ ". Metodos::ConverteValorBr($qddValorAux->getVlLiberado(), 2)
+                                    . "; Valor Atual R$ ". Metodos::ConverteValorBr($qddValorAux->getVlAtual(), 2));
+                        } 
                     }
                     $classeRegistros[] = $qddValorAux;
                 }                
             }
-                                    
+                         
             
-            //Tudas as Validações foram Feitas, Rodar os  Inserts
+            
+            //Todas as Validações foram Feitas, Rodar os  Inserts
             
             $daoSupRed = new DaoFinQddSupRed();
             $daoSupRed->setIdPessoa($this->idPessoa);
@@ -270,7 +281,7 @@ class QddSupRed {
             
             $daoSupRed->setIdQddSupRed($pdo->lastInsertId('fin_qdd_sup_red_id_qdd_sup_red_seq'));            
 
-            if (!Log::SalvaLogI('fin_qdd_sup_red', $daoSupRed->getIdQddSupRed(), $pdo)) {
+            if (!Log::SalvaLogI('fin_qdd_sup_red', $daoSupRed->getIdQddSupRed(), $pdo)){
                 $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
@@ -323,9 +334,9 @@ class QddSupRed {
                 $arrayParaAtualizar[] = $qddValor->getIdQddValor();
             }
             
-                                    
+                          
             //Dao para os Registros
-            if($contemRegistros){ 
+            if($contemRegistros){
                 foreach ($classeRegistros as $value) {
                     $daoSupRedTrans = new DaoFinQddSupRedTrans();                
                     $daoSupRedTrans->setIdQddSupRed($daoSupRed->getIdQddSupRed());

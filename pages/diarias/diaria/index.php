@@ -373,7 +373,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        </button>  
                                        <button class="btn btn-rounded btn-primary mar-ver pull-right add-itinerario">
                                            <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                           Intinerário
+                                           Itinerário
                                        </button>                               
                                        <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
@@ -423,6 +423,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     <p class="fa fa-calendar inputPFa"></p>
                                                 </span>
                                                 <input type="text" class="form-control" name="dt_criacao" id="dt_criacao" value="<?php echo $dt_criacao; ?>" required="true">
+                                            </div>
+                                        </div>
+                                   </div>
+                                   <div class="row">
+                                        <div class="form-group">
+                                            <label for="id_lotacao_solicitante">Lotação do Solicitante: <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="id_lotacao_solicitante" class="form-control">
+                                                    <?php
+                                                        echo $selectLotacaoSolicitante;
+                                                    ?>
+                                                </select>
                                             </div>
                                         </div>
                                    </div>

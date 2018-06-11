@@ -29,7 +29,7 @@ switch ($_REQUEST['acao']) {
 
     CASE 'listaEntregas':
         try {
-            
+
             $protocolo = filter_input(INPUT_GET, 'idOrdem', FILTER_DEFAULT);
             $finProtocoloModel = new FinProtocoloModel();
             $finProtocoloModel->setIdOrdem($protocolo);
@@ -42,4 +42,3 @@ switch ($_REQUEST['acao']) {
             break;
         }
 }
-

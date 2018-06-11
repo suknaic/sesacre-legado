@@ -104,6 +104,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">
                                     <div class="panel-body">
+                                        Proponente:<span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                            <select id="id_proponente" name="id_proponente" class="form-control select">
+                                            
+                                            </select>
+                                        </div>
+                                        Proposto:<span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                            <select id="id_proposto" name="id_proposto" class="form-control select">
+                                            
+                                            </select>
+                                        </div>
                                         Nº da Diária:<span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>

@@ -226,7 +226,7 @@
                                     </button>
                                     <button class="btn btn-rounded btn-primary mar-ver pull-right add-destino">
                                         <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                        Intinerário
+                                        Itinerário
                                     </button>
                                     <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição

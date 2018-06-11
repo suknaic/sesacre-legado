@@ -6,7 +6,6 @@ $(document).ready(function () {
         width: " 100%"
     });
 
-
     //carrega centrais
     $.ajax({
         "url": "/model/orcamento/liberacaoCentral/request.php",
@@ -81,11 +80,20 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('click', '.btn-novo', function (e) {
+    $('body').on('click', '.btn-novo-liberacao', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
             window.location.href = "/pages/orcamento/liberacaoCentral/cad_liberacao.php";
+
+        }
+    });
+
+    $('body').on('click', '.btn-novo-reducao', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            window.location.href = "/pages/orcamento/liberacaoCentral/red_liberacao_.php";
 
         }
     });
@@ -140,7 +148,8 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        $("#tabela").find("tbody").html(response.msg);
+                        console.log(response);
+                        func.carregaTabelaPadraoFoot('tabela', response.msg[0], response.msg[1], [], true);
                         return false;
                     } else {
                         console.log('Ultimo else');

@@ -16,7 +16,6 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-
                 if ($.trim(response)) {
                     if (response.length) {
                         valores = response
@@ -30,10 +29,10 @@ $(document).ready(function () {
                         valores[i]['nr_prazo_ordem'],
                         valores[i]['dt_entrega'],
                         valores[i]['dt_confirmacao'],
+                        valores[i]['situacao'],
                         valores[i]['diasatrazo'],
-                        valores[i]['status'],
-                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao']+ '&ordem='+valores[i]['id_ordem']+
-                        '" title="lançar confirmação"><span class="fa fa-upload text-success"></span></a>'
+                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao'] + '&ordem=' + valores[i]['id_ordem'] +
+                                '" title="lançar confirmação"><span class="fa fa-search-plus fa-lg text-info"></span></a>'
                     ]
                     dataSet.push(valor)
                 }
@@ -44,14 +43,14 @@ $(document).ready(function () {
                     },
 
                     columns: [
-                        {title: "Data Do Aviso", className: "text-center" },
-                        {title: "Quantidade De Entrega" , className: "text-center"},
-                        {title: "Prazo De Entrega" , className: "text-center"},
-                        {title: "Prazo Limite Para Entrega" , className: "text-center"},
-                        {title: "Entregue dia" , className: "text-center"},
-                        {title: "Dias De Atraso" , className: "text-center"},
-                        {title: "Status" , className: "text-center"},
-                        {title: "Ação" , className: "text-center"}
+                        {title: "Data Do Aviso", className: "text-center"},
+                        {title: "Quantidade De Entrega", className: "text-center"},
+                        {title: "Prazo De Entrega", className: "text-center"},
+                        {title: "Prazo Limite Para Entrega", className: "text-center"},
+                        {title: "Entregue dia", className: "text-center"},
+                        {title: "Situação", className: "text-center"},
+                        {title: "Dias De Atraso", className: "text-center"},
+                        {title: "Ação", className: "text-center"}
 
                     ]
                 });

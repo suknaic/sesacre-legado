@@ -158,17 +158,18 @@ class DaoFinProtocolo extends FinProtocoloTb {
             if ($pdo != null) {
                 $sql = "select entrega.id_entrega_confirmacao, protocolo.id_ordem, to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema,
                         entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
-                        to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, 
+                        to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, entrega.st_entrega_confirmacao as status,
                         case  
                                 WHEN entrega.dt_confirmacao is null AND NOW() > protocolo.dh_recebimento_sistema THEN  DATE_PART('day', protocolo.dh_recebimento_sistema::timestamp - now())
-                                WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
-                                WHEN entrega.dt_confirmacao is not null  THEN DATE_PART('day', entrega.dt_entrega::timestamp - entrega.dt_confirmacao::timestamp)
+                            WHEN entrega.dt_confirmacao is null AND NOW() < protocolo.dh_recebimento_sistema THEN null
+                            WHEN entrega.dt_confirmacao is not null  THEN DATE_PART('day', entrega.dt_entrega::timestamp - entrega.dt_confirmacao::timestamp)
                         END as diasAtrazo,
-                        CASE
-                                WHEN entrega.st_entrega_confirmacao = 0 THEN 'Agurdando entrega'
-                            WHEN entrega.st_entrega_confirmacao = 1 THEN 'Entrega Total'
-                            WHEN entrega.st_entrega_confirmacao = 2 THEN 'Entrega parcial'
-                        END status
+                       
+                        CASE 
+                                WHEN entrega.sit_entrega = 0 THEN 'Nehuma entrega informada'
+                                WHEN entrega.sit_entrega = 1 THEN 'Entrega Parcial'
+                                WHEN entrega.sit_entrega = 2 THEN 'Entrega Total'
+                        END situacao
                         from fin_entrega_confirmacao as entrega
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem = entrega.id_ordem
@@ -194,7 +195,28 @@ class DaoFinProtocolo extends FinProtocoloTb {
             $this->sucesso = false;
         }
     }
-    
-    
+
+    public function retornaProtocoloPorOrdem(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select id_protocolo from fin_protocolo where id_ordem = :idOrdem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
 
 }

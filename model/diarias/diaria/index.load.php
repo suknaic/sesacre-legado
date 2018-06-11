@@ -35,6 +35,7 @@ $selectLotacaoProponente = '';
 $selectLotacaoProposto = '';   
 $selectFuncaoProponente = '';
 $selectFuncaoProposto = '';
+$selectLotacaoSolicitante = '<option value="0">Selecione a lotação do solicitante</option>';
 $dh_inicio = '';
 $dh_fim = '';
 //$origem = '';
@@ -64,6 +65,10 @@ if ($jsonDiaria != ""){
     //
     $selectFuncaoProponente = $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proponente, $objDiaria->id_funcao_proponente);
     $selectFuncaoProposto= $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proposto, $objDiaria->id_funcao_proposto);
+    
+    $lotacao->setId_pessoa($objDiaria->id_pessoa_solicitante);
+    $lotacaoSolicitante = $objDiaria->id_lotacao_solicitante ?? 0;
+    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa($lotacaoSolicitante);
      
 //    $id_classe_default = $objDiaria->id_classe;
     $ds_servico_executado = $objDiaria->ds_servico_executado;
@@ -76,7 +81,9 @@ if ($jsonDiaria != ""){
     $st_estagio = $objDiaria->st_estagio;
 
 } else {
-
+    $lotacao->setId_pessoa($session->getIdUser());
+    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa();
+    
     $selectTipoDiariaOption = $diaria->retornaTipoDiariaOption();
     $selectDiariaPaiOption = $diaria->retornaDiariaPaiOption();
     

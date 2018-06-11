@@ -115,7 +115,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Diária</th>
-                                                        <th>ADA</th>
+                                                        <th>Nº Protocolo</th>
                                                         <th>Proponente</th>
                                                         <th>Proposto</th>
                                                         <th>Lotação Proposto</th>

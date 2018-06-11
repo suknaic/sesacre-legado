@@ -577,7 +577,7 @@ class Lotacao {
         }
     }
 
-    public function retornaOptionLotacaoPessoa() {
+    public function retornaOptionLotacaoPessoa(int $idLotacao = 0) {
         $retorno = "";
         try {
             $conexao = new Conexao();
@@ -589,7 +589,11 @@ class Lotacao {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    $retorno .= "<option value = '" . $v['id_lotacao'] . "'>" . $v['nm_lotacao'] . "</option>";
+                    if ($idLotacao > 0 && $idLotacao == $v['id_lotacao']) {
+                        $retorno .= "<option value = '" . $v['id_lotacao'] . "' selected>" . $v['nm_lotacao'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_lotacao'] . "'>" . $v['nm_lotacao'] . "</option>";
+                    }
                 }
             }
             return $retorno;

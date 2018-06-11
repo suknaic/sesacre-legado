@@ -10,6 +10,7 @@ class FinEntregaConfirmacaoTb {
     private $dt_confirmacao = null;
     private $dh_cadastramento = null;
     private $nr_qtd_entrega = null;
+    private $sit_entrega = null;
     private $st_entrega_confirmacao = null;
 
     /**
@@ -152,6 +153,24 @@ class FinEntregaConfirmacaoTb {
      */
     public function setNrQtdEntrega($nr_qtd_entrega) {
         $this->nr_qtd_entrega = $nr_qtd_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSitEntrega() {
+        return $this->sit_entrega;
+    }
+
+    /**
+     * @param mixed $sit_entrega
+     *
+     * @return self
+     */
+    public function setSitEntrega($sit_entrega) {
+        $this->sit_entrega = $sit_entrega;
 
         return $this;
     }

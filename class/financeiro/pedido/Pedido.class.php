@@ -326,7 +326,10 @@ class Pedido {
                 
                 //Se for diaria, irá vincular com o pedido
                 if ($this->idTipoGasto == 13) {
-                    $retorno2 = !$this->associaPedidoDiaria($pdo,$daoFinPedido->getIdPedido());
+                    //pega o ano do pedido para adicionar esta informação no historico da diaria
+                    $daoFinPedido->retornaDadosPedido($pdo);
+                    $dataPedido = new DateTime($daoFinPedido->getMsgRetorno()['dt_pedido']);
+                    $retorno2 = !$this->associaPedidoDiaria($pdo,$daoFinPedido->getIdPedido(),(int)$dataPedido->format('Y'));
                 } else {
                     $retorno2 = true;
                 }
@@ -352,11 +355,12 @@ class Pedido {
         }
     }
 
-   function associaPedidoDiaria(PDO $pdo = null, int $idPedido){
+   function associaPedidoDiaria(PDO $pdo = null, int $idPedido, int $anoPedido){
        try {
            $diaria = new Diaria();
            $diaria->setIdDiaria($this->getIdDiaria());
            $diaria->setIdPedido($idPedido);
+           $diaria->setAnoPedido($anoPedido);
            $diaria->setUsuarioPedido($this->getIdUsuario());
            return $diaria->vinculaPedidoDiaria($pdo);
        } catch (Exception $exc) {

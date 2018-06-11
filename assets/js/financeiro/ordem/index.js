@@ -31,7 +31,7 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else {
             var $this = $(this);
-            window.open("/pages/financeiro/ordem/entrega/index.php?id=" + $this.val());
+            window.location.href = "/pages/financeiro/ordem/entrega/index.php?id=" + $this.val();
         }
     });
 
