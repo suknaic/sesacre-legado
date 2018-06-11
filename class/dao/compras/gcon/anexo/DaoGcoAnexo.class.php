@@ -24,7 +24,7 @@ class DaoGcoAnexo extends GconAnexoExt {
     //carrega os anexos de um processo
     function retornarAnexosProcesso($pdo) {
         try {
-            $dados = $pdo->prepare(" SELECT id_anexo, ds_anexo 
+            $dados = $pdo->prepare(" SELECT id_anexo, ds_anexo, id_processo 
                                         FROM gco_anexo
                                         WHERE id_processo=:id_processo
                                     GROUP BY id_anexo");

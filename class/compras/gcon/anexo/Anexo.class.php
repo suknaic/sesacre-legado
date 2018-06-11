@@ -139,11 +139,16 @@ class Anexo {
                 foreach ($dados as $linha) {
                     $anexos .= '                 <div id="anexo_' . $cont . '">   
                                                     <div class="panel-body">Anexo ' . $cont . ':
-                                                        <div class="input-group">
-                                                            <input class="form-control" name="anexo" readonly id="anexo_' . $cont . '" value="' . $linha['ds_anexo'] . '">
-                                                            <div class="input-group-btn">
-                                                                <button type="button" class="btn btn-ExluirAnexo" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '">
-                                                                    <i class="fa fa-remove fa-lg text-danger"></i>
+                                                        <div class="row">
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" name="anexo" readonly id="anexo_' . $cont . '" value="' . $linha['ds_anexo'] . '">
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <button type="button" class="btn btn-primary btn-verAnexo" title="Ver" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '" id_processo="' . $linha['id_processo'] . '">
+                                                                    <i class="ion-eye"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-danger btn-ExluirAnexo" title="Remover" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '">
+                                                                    <i class="ion-close-round"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
