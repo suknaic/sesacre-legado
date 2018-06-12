@@ -178,5 +178,38 @@ class DaoFinFornecedores extends FinFornecedoresTb {
             }
         }
     }
+    
+    
+    /**
+     * Retorna o Id Do Fornecedor de um Contrato
+     * Utilizada pois quando foi implementado a funcionalidade, não tinhamos a certeza 
+     * como iriamos buscar o ID do fornecedor do contrato, pois as ATAS estavam duplicado o id do Contrato
+     * na tabela de fornecedor, por isso a SQL utilizada tem limit 1 e order by asc
+     * para buscar o primeiro fornecedor criado com aquele contrato  
+     * @param type $pdo
+     */
+    public function retornaDadosPrimeiroFornecedorContrato($pdo = null) {
+        if (!empty($pdo)) {
+            try {
+                $sql = "SELECT id_fornecedor, id_pessoa, id_contrato, sit_fornecedor"
+                    . " FROM fin_fornecedor"
+                    . " WHERE id_contrato = :idContrato"
+                    . " ORDER BY id_fornecedor ASC"
+                    . " LIMIT 1";                
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (PDOException $e) {
+                $this->sucesso = false;
+                $this->msgRetorno = $e->getMessage();
+            }
+        }
+    }
 
 }

@@ -335,5 +335,41 @@ class FinFornecedoresModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    
+    
+    //
+    
+    
+    /**
+     * Retorna o Id Do Fornecedor de um Contrato
+     * Utilizada pois quando foi implementado a funcionalidade, não tinhamos a certeza 
+     * como iriamos buscar o ID do fornecedor do contrato, pois as ATAS estavam duplicado o id do Contrato
+     * na tabela de fornecedor, por isso a SQL utilizada tem limit 1 e order by asc
+     * para buscar o primeiro fornecedor criado com aquele contrato    
+     * @param type $pdo
+     */
+    public function retornaPrimeiroFornecedorDoContrato($pdo = null) {
+        try {
+            if (!empty($this->id_contrato)) {
+                $daoFornecedores = new DaoFinFornecedores();
+                $daoFornecedores->setIdContrato($this->id_contrato);
+                $daoFornecedores->retornaDadosPrimeiroFornecedorContrato($pdo);
+                if ($daoFornecedores->getSucesso()) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $daoFornecedores->getMsgRetorno();
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = $daoFornecedores->getMsgRetorno();
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Id Nao informado';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
 }

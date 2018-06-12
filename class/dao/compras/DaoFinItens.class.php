@@ -747,5 +747,38 @@ class DaoFinItens extends FinItensTb {
             $this->msgRetorno = 'Sem conexão com o banco de dados';
         }
     }
+    
+    public function retornaItensFornecedor($pdo){
+        if (!empty($pdo)){
+            try{
+                $sql = "SELECT F.id_fornecedor"
+                    . " , ITEM.id_cont_itens, ITEM.nr_lote, ITEM.qt_itens, ITEM.vl_itens"
+                    . " , ITEM.pc_desconto, ITEM.nr_item"
+                    . " , MAT.nm_material, MAT.nm_desc_material, MAT.nm_grupo, MAT.nm_sub_grupo"
+                    . " , MAT.cd_elemento_despesa, MAT.tp_material"
+                    . " , UNID.nm_unidade_medida, MAT.cd_desc_material"
+                    . " FROM fin_fornecedor F"
+                    . " INNER JOIN fin_cont_itens AS ITEM ON ITEM.id_fornecedor = F.id_fornecedor"
+                    . " INNER JOIN pla_material AS MAT ON MAT.id_material = ITEM.id_material"
+                    . " INNER JOIN pla_unidade_medida AS UNID ON UNID.id_unidade_medida = ITEM.id_unidade_medida"
+                    . " WHERE F.id_fornecedor = :fornecedor"
+                    . " ORDER BY ITEM.nr_lote, ITEM.nr_item";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":fornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (Error $e){
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
+    
 
 }
