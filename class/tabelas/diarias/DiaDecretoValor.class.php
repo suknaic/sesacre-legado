@@ -7,6 +7,13 @@ class DiaDecretoValor {
     private $tpDecretoValor = null;
     private $vlDecretoValor = null;
     
+    function __construct(int $idDecreto = 0, int $idClasse = 0, string $tpDecretoValor = "",  string $vlDecretoValor = "") {
+        $this->idDecreto = $idDecreto;
+        $this->idClasse = $idClasse;
+        $this->tpDecretoValor = $tpDecretoValor;
+        $this->vlDecretoValor = $vlDecretoValor;
+    }
+    
     function getIdDecretoValor() {
         return $this->idDecretoValor;
     }

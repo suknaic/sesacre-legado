@@ -18,10 +18,11 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
     function insert($pdo) {
         try {
             $result = $pdo->prepare("INSERT INTO fin_central_responsavel (id_pessoa"
-                    . " , id_lotacao) "
-                    . " VALUES (:idPessoa, :idLotacao)");
+                    . " , id_lotacao, id_tipo_solicitacao) "
+                    . " VALUES (:idPessoa, :idLotacao, :idTipoSolicitacao)");
             $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $result->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+            $result->bindValue(":idTipoSolicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
             $result->execute();
             $this->sucesso = true;
         } catch (PDOException $e) {
@@ -51,7 +52,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
 
         $this->sucesso = false;
 
-        $sql = " SELECT id_central_responsavel, id_pessoa, id_lotacao"
+        $sql = " SELECT id_central_responsavel, id_pessoa, id_lotacao, id_tipo_solicitacao"
                 . " FROM fin_central_responsavel"
                 . " WHERE id_central_responsavel = :idCentralResponsavel";
         try {
@@ -76,13 +77,13 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
      * @param type $pdo
      * @return boolean
      */
-    function retornaPorPessoa($pdo) {
+    function retornaPorPessoaDiaria($pdo) {
 
         $this->sucesso = false;
 
-        $sql = " SELECT id_central_responsavel, id_pessoa, id_lotacao"
+        $sql = " SELECT id_central_responsavel, id_pessoa, id_lotacao, id_tipo_solicitacao"
                 . " FROM fin_central_responsavel"
-                . " WHERE id_pessoa = :idPessoa";
+                . " WHERE id_pessoa = :idPessoa and id_tipo_solicitacao in (3)";
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
@@ -99,7 +100,63 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    function retornaPorPessoa($pdo) {
 
+        $this->sucesso = false;
+
+        $sql = " SELECT id_central_responsavel, id_pessoa, id_lotacao, id_tipo_solicitacao"
+                . " FROM fin_central_responsavel"
+                . " WHERE id_pessoa = :idPessoa and id_tipo_solicitacao in (1,2,4)";
+        try {
+            $result = $pdo->prepare($sql);
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
+    function verificaPessoaCentralSolicitacao($pdo, int $idTipoSolicitacao) {
+
+        if ($pdo == null) {
+            $conexao = new Conexao();
+            /* @var $pdo PDO */
+            $pdo = $conexao->connect();
+        }
+
+        $this->sucesso = false;
+
+        $sql = " SELECT id_central_responsavel"
+                . " FROM fin_central_responsavel"
+                . " WHERE id_pessoa = :idPessoa AND id_lotacao = :idLotacao AND id_tipo_solicitacao = :idTipoSolicitacao";
+        try {
+            $result = $pdo->prepare($sql);
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+            $result->bindValue(":idTipoSolicitacao", $idTipoSolicitacao, PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = false;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
     function verificaPessoaCentral($pdo) {
 
         if ($pdo == null) {
@@ -141,13 +198,20 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
 
         $this->sucesso = false;
 
-        $sql = " SELECT CR.id_central_responsavel"
-                . " , P.id_pessoa, P.nm_pessoa"
-                . " , L.id_lotacao, L.nm_lotacao"
-                . " FROM fin_central_responsavel CR"
-                . " INNER JOIN ses_pessoa P ON P.id_pessoa = CR.id_pessoa"
-                . " INNER JOIN ses_lotacao L ON L.id_lotacao = CR.id_lotacao"
-                . " ORDER BY P.nm_pessoa, L.nm_lotacao";
+        $sql = "SELECT CR.id_central_responsavel ,
+                        T.id_tipo_solicitacao,
+                        T.nm_tipo_solicitacao ,
+                        P.id_pessoa,
+                        P.nm_pessoa ,
+                        L.id_lotacao,
+                        L.nm_lotacao
+                 FROM fin_central_responsavel CR
+                 INNER JOIN ses_pessoa P ON P.id_pessoa = CR.id_pessoa
+                 INNER JOIN ses_lotacao L ON L.id_lotacao = CR.id_lotacao
+                 INNER JOIN fin_tipo_solicitacao T ON T.id_tipo_solicitacao = CR.id_tipo_solicitacao
+                 ORDER BY P.nm_pessoa,
+                          L.nm_lotacao,
+                          T.nm_tipo_solicitacao";
         try {
             $result = $pdo->prepare($sql);
             $result->execute();
@@ -175,7 +239,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
         $this->sucesso = false;
 
         $sql = " SELECT CR.id_central_responsavel"
-                . " , L.id_lotacao, L.nm_lotacao"
+                . " , L.id_lotacao, L.nm_lotacao, CR.id_tipo_solicitacao"
                 . " FROM fin_central_responsavel CR"
                 . " INNER JOIN ses_lotacao L ON L.id_lotacao = CR.id_lotacao"
                 . " WHERE CR.id_pessoa = :idPessoa"

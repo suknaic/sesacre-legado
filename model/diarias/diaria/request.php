@@ -169,7 +169,7 @@ switch ($_REQUEST['acao']) {
             
             $diaria->setDtCriacao($filtro['dtCriacao']);
             $diaria->setIdPessoaSolicitante($session->getIdUser());
-            $diaria->setIdLotacaoSolicitante((int)$filtro['solicitanteLotacao']);
+            $diaria->setIdCentralSolicitante((int)$filtro['solicitanteCentral']);
             
             $diaria->setItinerario($filtro['itinerario']);
             
