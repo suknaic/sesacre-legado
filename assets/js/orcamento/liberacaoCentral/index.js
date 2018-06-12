@@ -149,7 +149,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         console.log(response);
-                        func.carregaTabelaPadraoFoot('tabela', response.msg[0], response.msg[1], [4], true);
+                        func.carregaTabelaPadraoFoot('tabela', response.msg[0], response.msg[1], [], true);
                         return false;
                     } else {
                         console.log('Ultimo else');

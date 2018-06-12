@@ -78,7 +78,7 @@ $(document).ready(function () {
                                         </div><br>\n\
                                         <div class="col-md-3">\n\
                                             <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerCentral"></button>\n\
+                                                <button class="ion-close-round btn btn-danger btn-removerCentral"></button>\n\
                                             </div>\n\
                                         <div>\n\
                                     </div>');
@@ -130,7 +130,7 @@ $(document).ready(function () {
                                     </div><br>\n\
                                     <div class="col-md-3">\n\
                                         <div class="panel-body">\n\
-                                            <button class="fa fa-remove btn btn-danger btn-removerTipoGasto"></button>\n\
+                                            <button class="ion-close-round btn btn-danger btn-removerTipoGasto"></button>\n\
                                         </div>\n\
                                     </div>\n\
                                 </div>');
@@ -360,7 +360,13 @@ $(document).ready(function () {
     carregarCentraisProcesso();
     retornaTipoDeGasto();
     retornarCentrais();
-
+    
+    $('body').on('click', '.btn-verAnexo', function (e) {
+        var idProcesso = $(this).attr('id_processo');
+        var idAnexo = $(this).attr('id_anexo');
+        window.open('/pages/compras/gcon/upload/printUpload.php?idAnexo='+idAnexo+'&idProcesso='+idProcesso, "_blank");
+    });
+    
     $('body').on('click', '.btn-ExluirAnexo', function (e) {
         var id_anexo = $(this).attr('id_anexo');
         var anexo = $(this).attr('anexo');

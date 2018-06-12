@@ -31,26 +31,41 @@ switch ($_REQUEST['acao']) {
             echo $finEntregaItensModel->cadastraEntregaItens($dados);
             return;
             break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+            return;
+            break;
+        }
+
+    CASE 'ListaItensEntregue':
+        try {
+
+            $itens = filter_input(INPUT_GET, 'id_entrega', FILTER_DEFAULT);
+
+            $finEntregaItensModel = new FinEntregaItensModel();
+            $finEntregaItensModel->setIdEntregaConfirmacao($itens);
+            echo json_encode($finEntregaItensModel->listaSituacaoDaEntrega());
+            return;
+            break;
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
             break;
         }
-        
-        CASE 'ListaItensEntregue':
-        try {
 
-            $itens = filter_input(INPUT_GET, 'id_entrega', FILTER_DEFAULT);
-            
+    CASE 'excluirItemEntrega':
+        try {
+            $itens = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finEntregaItensModel = new FinEntregaItensModel();
-            $finEntregaItensModel->setIdEntregaConfirmacao($itens);
-            echo json_encode($finEntregaItensModel->t());
+            $finEntregaItensModel->setIdEntregaItens($itens["idItem"]);
+            $finEntregaItensModel->setIdEntregaConfirmacao($itens["idEntrega"]);
+            echo $finEntregaItensModel->removeItemEntrega();
             return;
             break;
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
             break;
-        }    
+        }
 }
 

@@ -125,7 +125,6 @@ $(document).ready(function () {
                             }
 
 
-
                         } else if (valores[i]['tp_material'] === 'S') {
 
 
@@ -141,8 +140,6 @@ $(document).ready(function () {
                                         '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
                                         '"  class="form-control input-sm vl" >';
                             }
-
-
 
                         }
                         let valor = [
@@ -187,7 +184,6 @@ $(document).ready(function () {
             });
         }
     });
-
 
     //Cadastrar item entrega
     $("body").on("click", ".btn-salvar", function (e) {
@@ -239,26 +235,13 @@ $(document).ready(function () {
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
 //                "dataType": "json",
-                "dataType": "html",
+                "dataType": "json",
                 "data": {
                     "acao": "cadastroItensEntrega",
                     "itens": enc
                 },
                 "success": function (response) {
                     $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log(response);
-                        console.log("Parse JSON");
-                        return false;
-                    }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
@@ -303,7 +286,7 @@ $(document).ready(function () {
 
     });
 
-    function carregaItensEntregue() {
+    function carregaSituacaoDaEntregue() {
         $.ajax({
             "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
             "dataType": "json",
@@ -333,9 +316,12 @@ $(document).ready(function () {
                             valores[i]['nr_lote'],
                             valores[i]['qt_itens_ordem'],
                             valores[i]['vl_itens_ordem'],
-                            valores[i]['qt_itens_entrega'],
+                            valores[i]['entregue'],
                             valores[i]['tipo'],
-                            valores[i]['dt_entrega']
+                            valores[i]['dt_entrega'],
+                            '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' + valores[i]['id_entrega_itens'] + '" \n\
+                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="' + valores[i]['id_entrega_confirmacao'] + '" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
+                             </button>'
                         ]
                         dataSet.push(valor)
                     }
@@ -357,7 +343,8 @@ $(document).ready(function () {
                             {title: "Valor unit", className: "text-center"},
                             {title: "Entregue", className: "text-center"},
                             {title: "Tipo Entrega", className: "text-center"},
-                            {title: "Data de Entrega", className: "text-center itens"}
+                            {title: "Data de Entrega", className: "text-center itens"},
+                            {title: "Ação", className: "text-center"}
 
                         ]
                     });
@@ -365,8 +352,91 @@ $(document).ready(function () {
             }
         });
     }
-    carregaItensEntregue();
+    carregaSituacaoDaEntregue();
 
+
+    $('body').on('click', '.btn-remover', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        var idEntrega = $this.closest('td').find('.btn-remover').attr("idEntrega");
+        var item = $this.closest('td').find('.btn-remover').attr("nomeitem");
+        bootbox.confirm({
+            title: func.msgCaixaDeConfirmacao,
+            message: 'Você tem Certeza que deseja continuar com a Exclusão do Item: <span class="text-danger">' + item + '</span> ?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var dados = {
+                        "idItem": id,
+                        "idEntrega": idEntrega
+                    }
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+                        "method": "GET",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "excluirItemEntrega",
+                            "dados": dados
+                        },
+                        "success": function (response) {
+                            console.log(response);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao);
+                                console.log("Parse JSON");
+                                return false;
+                            }
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log('Console Mensagem');
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'primary');
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    location.reload();
+                                });
+                                return false;
+                            } else {
+                                console.log('Ultimo else');
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
 });
 
 

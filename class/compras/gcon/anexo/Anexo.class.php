@@ -14,38 +14,47 @@ class Anexo {
     private $idProcesso = null;
     private $idAnexo = null;
     private $nomeAnexo = null;
-    private $endereco = null;
+    private $binAnexo = null;
+    private $tipoAnexo = null;
 
     function getIdProcesso() {
         return $this->idProcesso;
-    }
-
-    function getNomeAnexo() {
-        return $this->nomeAnexo;
-    }
-
-    function getEndereco() {
-        return $this->endereco;
     }
 
     function getIdAnexo() {
         return $this->idAnexo;
     }
 
-    function setIdAnexo($idAnexo) {
-        $this->idAnexo = $idAnexo;
+    function getNomeAnexo() {
+        return $this->nomeAnexo;
+    }
+
+    function getBinAnexo() {
+        return $this->binAnexo;
+    }
+
+    function getTipoAnexo() {
+        return $this->tipoAnexo;
     }
 
     function setIdProcesso($idProcesso) {
         $this->idProcesso = $idProcesso;
     }
 
+    function setIdAnexo($idAnexo) {
+        $this->idAnexo = $idAnexo;
+    }
+
     function setNomeAnexo($nomeAnexo) {
         $this->nomeAnexo = $nomeAnexo;
     }
 
-    function setEndereco($endereco) {
-        $this->endereco = $endereco;
+    function setBinAnexo($binAnexo) {
+        $this->binAnexo = $binAnexo;
+    }
+
+    function setTipoAnexo($tipoAnexo) {
+        $this->tipoAnexo = $tipoAnexo;
     }
 
     public function inserirAnexo() {
@@ -56,8 +65,9 @@ class Anexo {
 
             $daoAnexo = new DaoGcoAnexo();
             $daoAnexo->setIdProcesso($this->idProcesso);
-            $daoAnexo->setEndereco($this->endereco);
             $daoAnexo->setNomeAnexo($this->nomeAnexo);
+            $daoAnexo->setBinAnexo($this->binAnexo);
+            $daoAnexo->setTipoAnexo($this->tipoAnexo);
 
             $cadastraAnexo = $daoAnexo->cadastrarAnexo($pdo);
 
@@ -129,11 +139,16 @@ class Anexo {
                 foreach ($dados as $linha) {
                     $anexos .= '                 <div id="anexo_' . $cont . '">   
                                                     <div class="panel-body">Anexo ' . $cont . ':
-                                                        <div class="input-group">
-                                                            <input class="form-control" name="anexo" readonly id="anexo_' . $cont . '" value="' . $linha['ds_anexo'] . '">
-                                                            <div class="input-group-btn">
-                                                                <button type="button" class="btn btn-ExluirAnexo" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '">
-                                                                    <i class="fa fa-remove fa-lg text-danger"></i>
+                                                        <div class="row">
+                                                            <div class="col-sm-10">
+                                                                <input class="form-control" name="anexo" readonly id="anexo_' . $cont . '" value="' . $linha['ds_anexo'] . '">
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <button type="button" class="btn btn-primary btn-verAnexo" title="Ver" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '" id_processo="' . $linha['id_processo'] . '">
+                                                                    <i class="ion-eye"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-danger btn-ExluirAnexo" title="Remover" anexo="' . $linha['ds_anexo'] . '" id_anexo="' . $linha['id_anexo'] . '">
+                                                                    <i class="ion-close-round"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -246,19 +261,17 @@ class Anexo {
         }
     }
 
-    public function verificaAnexo() {
+    public function carregarAnexo() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $pdo->beginTransaction();
 
             $daoAnexo = new DaoGcoAnexo();
+            $daoAnexo->setIdAnexo($this->idAnexo);
             $daoAnexo->setIdProcesso($this->idProcesso);
-            $daoAnexo->setEndereco($this->endereco);
 
-            $verifica = $daoAnexo->retornarAnexo($pdo);
-            var_dump($verifica);
-            return;
+            $anexo = $daoAnexo->retornarAnexo($pdo);
+            return $anexo;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
