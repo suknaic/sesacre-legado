@@ -22,6 +22,7 @@ class DiaDiaria {
     
     private $idPessoaSolicitante = null;
     private $idLotacaoSolicitante = null;
+    private $idCentralSolicitante = null;
     private $flRetorno           = null;
     private $idPedido            = null;
     private $idDiariaPai         = null;
@@ -108,6 +109,14 @@ class DiaDiaria {
 
     function getStAtivo() {
         return $this->stAtivo;
+    }
+    
+    function getIdCentralSolicitante() {
+        return $this->idCentralSolicitante;
+    }
+
+    function setIdCentralSolicitante($idCentralSolicitante) {
+        $this->idCentralSolicitante = $idCentralSolicitante;
     }
 
     function setIdDiaria($idDiaria) {

@@ -69,63 +69,14 @@ $(document).ready(function () {
         }
     });
     //fim
-    
-    function carregaPessoasDiaria(){
-        if ($('#id_proposto option').size() > 0 || $('#id_proponente option').size() > 0) {
-
-        } else {
-            $.ajax({
-            "url": "/model/financeiro/necessidade_central/requestPedido.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaOptionContratos"
-            },
-            "success": function(response){
-                $("body").find("#id_proponente").html(response);
-                $("body").find("#id_proposto").html(response);
-            }
-        });
-        }
-    }
-    
-    //carrega diárias
-    function carregaDiarias(){
-        var DADOS = {
-            proponente: $("#id_proponente option:selected").val(),
-            proposto: $("#id_proposto option:selected").val()
-        };
-        //*************************DIARIA**************************
-        $.ajax({
-            "url": "/model/financeiro/necessidade_central/requestPedido.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaOptionsDiaria",
-                "dados": DADOS
-            },
-            "success": function(response){
-                $("body").find("#id_diaria").html(response);
-                $(".select").select2({
-                });
-            }
-        });
-        //*********************FIM DIARIA**************************
-    }
-    //fim
-    
-    $("body").on("change","#id_proponente", function(e){
-       e.preventDefault();
-       carregaDiarias();
-    });
-    $("body").on("change","#id_proposto", function(e){
-       e.preventDefault();
-       carregaDiarias();
-    });
 
     $("body").on("change", "#tipoSolicitacao", function (e) {
         if ($("#tipoSolicitacao").val() == '1') {
             $(".campoForneceor").hide();
             $(".campoValor").removeClass("hidden");
+            $("#tipoDeGasto").val(0).trigger('change');
             //Controle da diaria
+            $("#id_diaria").val("");
             $("#diaria").hide();
             $("#valor").prop("disabled",false);
             $("#valor").val("");
@@ -134,7 +85,9 @@ $(document).ready(function () {
         if ($("#tipoSolicitacao").val() == '2') {
             $(".campoForneceor").show();
             $(".campoValor").addClass("hidden");
+            $("#tipoDeGasto").val(0).trigger('change');
             //Controle da diaria
+            $("#id_diaria").val("");
             $("#diaria").hide();
             $("#valor").prop("disabled",false);
             $("#valor").val("");
@@ -147,14 +100,15 @@ $(document).ready(function () {
             $("#tipoDeGasto").val(13).trigger('change');
             $("#valor").prop("disabled",true);
             $("#diaria").show();
-            carregaPessoasDiaria();
             
         }
 
         if ($("#tipoSolicitacao").val() == '4') {
             $(".campoForneceor").hide();
             $(".campoValor").removeClass("hidden");
+            $("#tipoDeGasto").val(0).trigger('change');
             //Controle da diaria
+            $("#id_diaria").val("");
             $("#diaria").hide();
             $("#valor").prop("disabled",false);
             $("#valor").val("");
@@ -166,6 +120,31 @@ $(document).ready(function () {
         $("#valor").val($("#id_diaria option:selected").data('valor'));
     });
     //-------------------------------------------------------
+
+    $("body").on("change","#central", function(e){
+        var tipoSolicitacao = $("#tipoSolicitacao option:selected").val();
+
+        var dados = {
+            lotacao: $("#central option:selected").val()
+        }
+        
+        if (tipoSolicitacao == 3) {
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "retornaOptionsDiaria",
+                    "dados": dados
+                },
+                "success": function(response){
+                    $("body").find("#id_diaria").html(response);
+//                    $(".select").select2({
+//                        width: '100%'
+//                    });
+                }
+            });
+        }
+    });
 
     $("body").on("change", "#tipoDeGasto", function (e) {
         var tipo = 'contrato'
@@ -231,7 +210,24 @@ $(document).ready(function () {
 
     });
 
-
+    //Carrega dados da diaria no modal
+    $('body').on('change',"#id_diaria",function(e){
+       var idDiaria = $("#id_diaria option:selected").val();
+       
+        if (idDiaria > 0) {
+            $.ajax({
+               "url": "/model/financeiro/necessidade_central/requestPedido.php",
+               "dataType": 'html',
+               "data": {
+                   "acao": "retornaDadosDiaria",
+                   "dados": idDiaria
+               },
+               "success": function(response){
+                   $("body").find("#diaria_dados").html(response);
+               }
+            });
+        }
+    });
 
     //carrega programa de trabalho
     $("body").on("change", "#ano", function () {

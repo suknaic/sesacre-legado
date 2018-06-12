@@ -230,7 +230,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                     <div class="col-md-3">
                                         <div class="panel-body">
                                             <button  type="button" class="btn btn-primary addTipoGastoValorHomologado">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                <i class="ion-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -247,7 +247,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                     <div class="col-md-3">
                                         <div class="panel-body">
                                             <button  type="button" class="btn btn-primary addCentrais">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                <i class="ion-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -260,7 +260,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Anotações
                                         <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                            <i class="ion-plus" aria-hidden="true"></i>
                                         </button>
                                     </h3>
                                 </div>

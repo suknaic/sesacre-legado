@@ -237,14 +237,29 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                         </div>
                                     </div>                                           
                                 </div>
-                                <!--<div id="retorno_pesq"></div>-->
                             </div>
                         </div>
+                        <!-- *********** Temporário ********* -->
+                        <?php
+                        if ($_SESSION['idUser'] == '6' || $_SESSION['1763']) {
+                            echo ' 
+                                    <div class="form-group">
+                                        <div class="col-md-2 text-left">
+                                            <button class="btn btn-warning btn-migrar btn-block btn-rounded" type="button" title="Pesquisar">
+                                                <i class="ion-upload fa-lg" aria-hidden="true"></i> Migrar Uploads
+                                            </button>
+                                        </div>
+                                        <div class="col-md-5"></div>
+                                        <div class="col-md-5"></div>
+                                    </div>';
+                        }
+                        ?>
+                        <!-- ********************************* -->
                     </div>
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
+                
                 <!--MENU LATERAL-->
                 <?php
                 require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php";

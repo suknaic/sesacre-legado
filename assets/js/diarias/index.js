@@ -8,7 +8,7 @@ function carregaTabela(){
         },
         "success": 
             function (response) {
-                func.carregaTabelaPadrao('tabelaDiarias', response, [7], true);
+                func.carregaTabelaPadrao('tabelaDiarias', response, [8], true);
         }
     });   
 }

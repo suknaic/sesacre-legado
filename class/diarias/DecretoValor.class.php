@@ -63,7 +63,7 @@ class DecretoValor {
         $this->vlDecretoValor = $vlDecretoValor;
     }
 
-        function optionsDecreto(){
+    function optionsDecreto(){
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -149,11 +149,7 @@ class DecretoValor {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
                 
-                $daoDiaDecretoValor = new DaoDiaDecretoValor();
-                $daoDiaDecretoValor->setIdDecreto($this->getIdDecreto());
-                $daoDiaDecretoValor->setIdClasse($this->getIdClasse());
-                $daoDiaDecretoValor->setTpDecretoValor($this->getTpDecretoValor());
-                $daoDiaDecretoValor->setVlDecretoValor($this->getVlDecretoValor());
+                $daoDiaDecretoValor = new DaoDiaDecretoValor($this->getIdDecreto(),$this->getIdClasse(),$this->getTpDecretoValor(),$this->getVlDecretoValor());
                 $daoDiaDecretoValor->insert($pdo);
                 
                 if ($daoDiaDecretoValor->getSucesso()) {

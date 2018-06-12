@@ -306,12 +306,18 @@
                                 <i class="arrow"></i>
                             </a>
                             <!--Submenu-->
+                            
                             <ul class="collapse">
                                 <li>
-                                    <a href="/pages/diarias/permissoes/">Permissões de Acesso</a>
-                                </li>
-                                <li>
-                                    <a href="/pages/diarias/decreto_valor/">Parâmetros de Valores</a>
+                                    <a href="#">
+                                        Administração
+                                        <i class="arrow"></i>
+                                    </a>
+                                    <ul>
+                                        <li><a href="/pages/diarias/permissoes/">Permissões de Acesso</a></li>
+                                        <li><a href="/pages/diarias/decreto_valor/">Parâmetros de Valores</a></li>
+                                    </ul>
+                                    
                                 </li>
                                 <li>
                                     <a href="/pages/diarias/">Solicitações</a>
