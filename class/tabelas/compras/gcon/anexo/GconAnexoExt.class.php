@@ -10,38 +10,47 @@ class GconAnexoExt {
     private $idProcesso = null;
     private $idAnexo = null;
     private $nomeAnexo = null;
-    private $endereco = null;
+    private $binAnexo = null;
+    private $tipoAnexo = null;
     
     function getIdProcesso() {
         return $this->idProcesso;
+    }
+
+    function getIdAnexo() {
+        return $this->idAnexo;
     }
 
     function getNomeAnexo() {
         return $this->nomeAnexo;
     }
 
-    function getEndereco() {
-        return $this->endereco;
-    }
-    function getIdAnexo() {
-        return $this->idAnexo;
+    function getBinAnexo() {
+        return $this->binAnexo;
     }
 
-    function setIdAnexo($idAnexo) {
-        $this->idAnexo = $idAnexo;
+    function getTipoAnexo() {
+        return $this->tipoAnexo;
     }
 
     function setIdProcesso($idProcesso) {
         $this->idProcesso = $idProcesso;
     }
 
+    function setIdAnexo($idAnexo) {
+        $this->idAnexo = $idAnexo;
+    }
+
     function setNomeAnexo($nomeAnexo) {
         $this->nomeAnexo = $nomeAnexo;
     }
 
-    function setEndereco($endereco) {
-        $this->endereco = $endereco;
+    function setBinAnexo($binAnexo) {
+        $this->binAnexo = $binAnexo;
     }
 
+    function setTipoAnexo($tipoAnexo) {
+        $this->tipoAnexo = $tipoAnexo;
+    }
 
 }

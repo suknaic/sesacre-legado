@@ -154,7 +154,13 @@ $(document).ready(function () {
         var id_processo = $(this).val();
         top.location = "/pages/compras/gcon/processo/editarProcesso.php?idProcesso=" + id_processo;
     });
-
+    
+    //***** Temporário *****
+    $('body').on('click', '.btn-migrar', function (e) {
+        top.location = "/model/compras/gcon/upload/migrarUploads.php";
+    });
+    //**********************
+    
     $('body').on('click', '.btn-pesquisar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

@@ -298,7 +298,7 @@ class DaoFinQddValor extends FinsQddValorTb {
                         . " , QV.vl_qdd_suplementado, QV.vl_qdd_reduzido"
                         . " , QV.vl_empenhado, QV.vl_bloqueado"
                         . " , QV.vl_liberado, QV.vl_saldo"
-                        . " , coalesce((QV.vl_qdd_inicial + QV.vl_qdd_suplementado - QV.vl_qdd_reduzido),0.0000) AS vl_atual"
+                        . " , coalesce((QV.vl_qdd_inicial + QV.vl_qdd_suplementado - QV.vl_qdd_reduzido - QV.vl_bloqueado),0.0000) AS vl_atual"
                         . " , PT.cd_programa_trabalho, PT.ds_programa_trabalho"
                         . " , DE.cd_despesa_elemento"
                         . " , F.nr_fonte"

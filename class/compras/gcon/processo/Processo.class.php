@@ -818,7 +818,7 @@ class Processo {
                 /************************ Verifica se a necessidade da tabela e lista os processos ***************************/
                 if ($this->TabelaAnexo == 'sim') {
                     $anexo = ", COALESCE(json_object_agg(ANE.id_anexo, ANE.ds_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS ds_anexo,
-                              COALESCE(json_object_agg(ANE.id_anexo, ANE.lk_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS lk_anexo";
+                              COALESCE(json_object_agg(ANE.id_anexo, ANE.id_anexo) FILTER (WHERE ANE.id_anexo IS NOT NULL), '[]') AS id_anexo";
                     $resultado = $proDao->listarProcesso($pdo, $filtro, $anexo);
                     if (!is_array($resultado)) {
                         $erro = true;
@@ -840,7 +840,7 @@ class Processo {
                                                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_total_hom"], 2) . '</td>
                                                                     <td class="text-center">';
                             foreach ((json_decode($linha["ds_anexo"], true)) as $key => $value) {
-                                $tabela .= '          <a href="' . json_decode($linha["lk_anexo"], true)[$key] . '">' . $value . '</a></br>';
+                                $tabela .= '          <a href="/pages/compras/gcon/upload/printUpload.php?idAnexo=' . json_decode($linha["id_anexo"], true)[$key] . '&idProcesso='.$linha['id_processo'].'"target="_blank">' . $value . '</a></br>';
                             }
                             $tabela .= '                            </td>
                                                                     <td class="text-center">' . $linha["nm_pessoa"] . '</td>
@@ -1146,7 +1146,7 @@ class Processo {
                                         </div><br>
                                         <div class="col-md-3">
                                             <div class="panel-body">
-                                                <button class="fa fa-remove btn btn-danger btn-removerTipoGasto"></button>
+                                                <button class="ion-close-round btn btn-danger btn-removerTipoGasto"></button>
                                             </div>
                                         </div>
                                     </div>';
