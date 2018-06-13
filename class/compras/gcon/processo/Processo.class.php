@@ -1184,7 +1184,7 @@ class Processo {
                                             </div><br>
                                             <div class="col-md-3">
                                                 <div class="panel-body">
-                                                    <button class="fa fa-remove btn btn-danger btn-removerCentral"></button>
+                                                    <button class="ion-close-round btn btn-danger btn-removerCentral"></button>
                                                 </div>
                                             </div>
                                         </div>

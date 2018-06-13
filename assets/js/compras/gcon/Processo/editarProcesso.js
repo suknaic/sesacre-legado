@@ -625,7 +625,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.href = "/pages/compras/gcon/pesquisa/pesquisa.php";
+                            location.href = "/pages/compras/gcon/";
                         });
                         return false;
                     } else {
