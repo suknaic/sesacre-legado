@@ -6,13 +6,25 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/anexo/Anexo.class.
 $session = new Session();
 
 try {
-
-    if ($_SESSION['idUser'] != NULL && $session->vPComprasTecAdmin() && $session->vPComprasAdminTi()) {
+    $idAnexo = $_REQUEST['idAnexo'];
+    $idProcesso = $_REQUEST['idProcesso'];
+    
+    if (empty($idAnexo && $idProcesso)) {
+        echo '<font color="red"> ' . STR_PREENCHER_CAMPOS . '</font>';
+        return;
+    }
+    
+    if ($session->vPComprasTecAdmin() && $session->vPComprasAdminTi()) {
         $anexo = new Anexo();
-        $anexo->setIdAnexo($_REQUEST['idAnexo']);
-        $anexo->setIdProcesso($_REQUEST['idProcesso']);
+        $anexo->setIdAnexo($idAnexo);
+        $anexo->setIdProcesso($idProcesso);
 
         $dados = $anexo->carregarAnexo();
+        if (empty($dados)) {
+            echo 'Anexo Não Encontrado.';
+            return;
+        }
+        
         if ($dados['aq_anexo'] == NULL) {
             echo "<script>
                     alert('Arquivo Nao Encontrado.');
