@@ -177,7 +177,7 @@ class Relatorio {
             if ($daoDiaRelatorioAnexo->getSucesso()) {
                 foreach ($daoDiaRelatorioAnexo->getMsgRetorno() as $linha) {
                     $array_anexo = array('id_anexo' => $linha['id_relatorio_anexo'],'path_anexo' => '', 'nm_anexo' => $linha['nm_relatorio_anexo'] , 'nm_mime_type' => $linha['nm_mime_type']);
-                    $retorno .= "<div class='form-group' data-anexo='". json_encode($array_anexo) ."'><div class='col-sm-5'><input type='text' value='". $array_anexo['nm_anexo'] ."' class='form-control' disabled></div><div class='col-sm-3'><a href='../relatorio/baixarAnexo.php?id=" . $array_anexo['id_anexo'] . "' class='ver-anexo btn btn-info'>Ver</a><a href='#' class='remove-anexo btn btn-danger'>X</a></div><br/><br/></div>";
+                    $retorno .= "<div class='form-group' data-anexo='". json_encode($array_anexo) ."'><div class='col-sm-5'><input type='text' value='". $array_anexo['nm_anexo'] ."' class='form-control' disabled></div><div class='col-sm-3'><a target='_blank' href='../relatorio/baixarAnexo.php?id=" . $array_anexo['id_anexo'] . "' class='ver-anexo btn btn-info'>Ver</a><a href='#' class='remove-anexo btn btn-danger'>X</a></div><br/><br/></div>";
 
                 }
             } else {

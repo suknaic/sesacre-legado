@@ -1,7 +1,6 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/lotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/cidade/Cidade.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
@@ -13,20 +12,11 @@ switch ($_REQUEST['acao']) {
    case 'listaDiarias':
         try {
             $prog = new Diaria();
-            $lotacao = new Lotacao();
-            $usuario = $session->getIdUser();
+            $prog->setUsuarioSessao($session);
             if ($session->vPGeral()) {
                 echo $prog->retornaTrDiariasTodas();
             } else {
-                //Aqui percorre as lotações do usuário que está acessando as solicitações de diárias
-                $lotacao->retornaLotacaoPorPessoa($usuario);
-                $filtroLotacao = array();
-                foreach ($lotacao->getMsgRetorno() as $value) {
-                    $filtroLotacao[] = $value['id_lotacao'];
-                }
-                $prog->setIdLotacaoFiltro(implode(",", $filtroLotacao));
-                $prog->setIdPessoaFiltro($usuario);
-                echo $prog->retornaTrDiariasPessoaLotacao();
+                echo $prog->retornaTrDiariasSolicitacao();
             }
             
             return;

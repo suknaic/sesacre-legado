@@ -45,19 +45,6 @@ function listaLotacaoCombo(idPessoa, proponenteProposto) {
     });
 }
 
-function listaLotacaoSolicitanteCombo(idSolicitante){
-    $.ajax({
-        "url": "/model/diarias/diaria/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaLotacaoOption",
-            pessoa: idSolicitante,
-        },
-        "success": function (response) {
-            $("#id_lotacao_solicitante").html(response);
-        }
-    });
-}
 
 function listaContratoFuncao(idPessoa, proponenteProposto) {
     $.ajax({
@@ -92,10 +79,10 @@ function listaClasseCombo(decreto, classe) {
             acao: "listaClasseOption",
             dados: PARAMETROS
         },
-        "success":
-                function (response) {
-                    $("#id_classe").html(response);
-                }
+        "success":                
+            function (response) {
+                $("#id_classe").html(response);
+            }
     });
 }
 
@@ -484,7 +471,7 @@ $(document).ready(function () {
                 proposto: $("#id_pessoa_proposto option:selected").val(),
                 propostoLotacao: $("#id_lotacao_proposto option:selected").val(),
                 propostoFuncao: $("#id_funcao_proposto option:selected").val(),
-                solicitanteLotacao: $("#id_lotacao_solicitante option:selected").val(),
+                solicitanteCentral: $("#id_central_solicitante option:selected").val(),
                 servicosExec: $("#ds_servico_executado").val(),
                 locaisExec: $("#ds_locais_executado").val(),
                 obs: $("#ds_obs").val(),
@@ -493,13 +480,11 @@ $(document).ready(function () {
                 anexos: anexos
             };
 
-
             //Validação dos campos
             if (Diaria.tipo == 0 || Diaria.tipo == "" || Diaria.proponente == "" || Diaria.proponente == 0 || Diaria.nrProtocolo == "" ||
                     Diaria.proponenteLotacao == "" || Diaria.proponenteLotacao == 0 || Diaria.proponenteFuncao == "" || Diaria.proponenteFuncao == 0 ||
-                    Diaria.proposto == "" || Diaria.proposto == 0 || Diaria.propostoLotacao == "" || Diaria.propostoLotacao == 0 || Diaria.solicitanteLotacao == 0 ||
+                    Diaria.proposto == "" || Diaria.proposto == 0 || Diaria.propostoLotacao == "" || Diaria.propostoLotacao == 0 || Diaria.solicitanteCentral == 0 ||
                     Diaria.servicosExec == "" || Diaria.locaisExec == "" || Diaria.dtCriacao == "") {
-
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;

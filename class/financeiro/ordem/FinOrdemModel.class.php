@@ -290,17 +290,14 @@ class FinOrdemModel {
 
         return $this;
     }
-    
+
     public function getTipoOrdem(): array {
         $arr_tipo = array(
             '1' => 'Entrega',
-            '2' => 'Execução/Serviço'               
+            '2' => 'Execução/Serviço'
         );
         return $arr_tipo;
     }
-    
-    
-    
 
     public function cadastrarOrdem($ordem) {
         try {
@@ -331,8 +328,13 @@ class FinOrdemModel {
             $daoFinOrdem->setAaOrdem($date->format('Y'));
 
             if ($ordem[0]->pergunta == 1) {
-                $daoFinOrdem->setDtIniOrdem(Metodos::ConverteDataING($ordem[0]->vig_inicial));
-                $daoFinOrdem->setDtFimOrdem(Metodos::ConverteDataING($ordem[0]->vig_final));
+                if (Metodos::validaConverteDataING($ordem[0]->vig_inicial) != '' && Metodos::validaConverteDataING($ordem[0]->vig_inicial) != "") {
+                    $daoFinOrdem->setDtIniOrdem(Metodos::validaConverteDataING($ordem[0]->vig_inicial));
+                }
+
+                if (Metodos::validaConverteDataING($ordem[0]->vig_final) != '' && Metodos::validaConverteDataING($ordem[0]->vig_final) != "") {
+                    $daoFinOrdem->setDtFimOrdem(Metodos::validaConverteDataING($ordem[0]->vig_final));
+                }
             }
             $daoFinOrdem->setIdPessoa($this->id_pessoa);
             $daoFinOrdem->setTpOrdem($ordem[0]->tipoOrdem);
@@ -514,39 +516,39 @@ class FinOrdemModel {
                             </tr>";
             }
             return Metodos::retornoAjax("ok", "html", $tabela);
-        }else{
+        } else {
             return Metodos::retornoAjax("Erro", "alert", "Nenhum registro encontrado");
         }
     }
-    
+
     public function listaTipoQuantidadeJSON() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $dao = new DaoFinOrdem();
             $dao->retornaQuantidadeTipo($pdo);
-            
+
             $arrayTipo = array();
-                                    
+
             foreach ($this->getTipoOrdem() as $key => $value) {
                 $arrayTipo[$key] = array(
                     "tipo" => $value,
                     "quantidade" => 0
                 );
             }
-                      
+
             $arrayQuantidade = array();
             foreach ($dao->getMsgRetorno() as $value) {
-                if(array_key_exists($value['tp_ordem'], $arrayTipo)){
+                if (array_key_exists($value['tp_ordem'], $arrayTipo)) {
                     $arrayTipo[$value['tp_ordem']]['quantidade'] = $value['quantidade'];
-                }                
+                }
             }
-            
+
             foreach ($arrayTipo as $key => $value) {
                 $arrayQuantidade[] = $value;
             }
-                        
-            return json_encode($arrayQuantidade);             
+
+            return json_encode($arrayQuantidade);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -565,9 +567,9 @@ class FinOrdemModel {
             return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         }
 
-       
+
         $daoFinOrdem->retornaOrdem($pdo);
-        $busca = $daoFinOrdem->getMsgRetorno();        
+        $busca = $daoFinOrdem->getMsgRetorno();
         if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", STR_ERROR);

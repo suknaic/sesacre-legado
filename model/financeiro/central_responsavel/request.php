@@ -28,7 +28,7 @@ switch ($_REQUEST['acao']) {
             
             $central->setIdPessoa((int)$get['pessoa']);
             $central->setIdLotacao((int)$get['central']);
-            
+            $central->setTiposSolicitacoes($get['tipo_solicitacao']);
             echo $central->cadastrar();
             return;
             break;

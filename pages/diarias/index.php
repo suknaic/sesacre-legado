@@ -80,6 +80,7 @@
                                                 <th>Proponente</th>
                                                 <th>Proposto</th>
                                                 <th>Lotação Proposto</th>
+                                                <th>Central de Demanda</th>
                                                 <th>Destino / Valor</th>
                                                 <th>Situação</th>
                                                 <th>Ações</th>

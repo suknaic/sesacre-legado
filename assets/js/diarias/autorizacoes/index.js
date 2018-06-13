@@ -26,7 +26,7 @@ function listaDiarias(){
                 estagio: estagio
             },
             "success": function (response) {
-                func.carregaTabelaPadrao('tabela', response, [4], true);
+                func.carregaTabelaPadrao('tabela', response, [8], true);
             }
         });
     }

@@ -10,9 +10,18 @@ class CentralResponsavel {
     private $idCentralResponsavel = null;
     private $idPessoa = null;
     private $idLotacao = null;
+    private $tiposSolicitacoes = null;
     private $sucesso = null;
     private $msgRetorno = null;
 
+    function getTiposSolicitacoes() {
+        return $this->tiposSolicitacoes;
+    }
+
+    function setTiposSolicitacoes($tiposSolicitacoes) {
+        $this->tiposSolicitacoes = $tiposSolicitacoes;
+    }
+    
     function getIdCentralResponsavel() {
         return $this->idCentralResponsavel;
     }
@@ -45,9 +54,23 @@ class CentralResponsavel {
         return $this->sucesso;
     }
 
+    function descritivoGestor($idSolicitacao){
+        switch ($idSolicitacao) {
+            case 1:
+                return "Gestor Compras (Administrativa)";
+            case 2:
+                return "Gestor Contratos (Administrativa por Licitação)";
+            case 3:
+                return "Gestor de Diárias (Diárias)";
+            case 4:
+                return "Gestor TFD (Ajuda de Custo)";
+
+        }
+    }
+    
     public function cadastrar() {
         try {
-            if ($this->idLotacao == "" || $this->idPessoa == "") {
+            if ($this->idLotacao == "" || $this->idPessoa == "" || empty($this->getTiposSolicitacoes())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -60,45 +83,93 @@ class CentralResponsavel {
             $dao->setIdLotacao($this->idLotacao);
             $dao->setIdPessoa($this->idPessoa);
 
-            //Verifica se já está cadastrado, para não duplicar
-            $dao->verificaPessoaCentral($pdo);
-            if ($dao->Sucesso()) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Usuário já possui Permissão para esta Central.");
-                $pdo->rollback();
-                return $retorno;
-            }
+            //Percorre os tipos de solicitações para cadastrar
+            foreach ($this->getTiposSolicitacoes() as $linha) {
+                $dao->verificaPessoaCentralSolicitacao($pdo,(int)$linha);
+                $dao->setIdTipoSolicitacao((int)$linha);
+                
+                if ($dao->Sucesso()) {
+                    $retorno = Metodos::retornoAjax("Erro", "alert", "Usuário já possui Permissão para esta Central e para o Tipo de Solicitação.");
+                    $pdo->rollback();
+                    return $retorno;
+                    break;
+                }
+                
+                $dao->insert($pdo);
+                if (!$dao->Sucesso()) {
+                    $retorno = Metodos::retornoAjax("Erro", "console", $dao->getMsgRetorno());
+                    $pdo->rollBack();
+                    return $retorno;
+                    break;
+                }
+                
+                $dao->setIdCentralResponsavel($pdo->lastInsertId('fin_central_responsavel_id_central_responsavel_seq'));
 
-            $dao->insert($pdo);
-            if (!$dao->Sucesso()) {
-                $retorno = Metodos::retornoAjax("Erro", "console", $dao->getMsgRetorno());
-                $pdo->rollBack();
-                return $retorno;
-            }
-
-            $dao->setIdCentralResponsavel($pdo->lastInsertId('fin_central_responsavel_id_central_responsavel_seq'));
-
-            if (Log::SalvaLogI('fin_central_responsavel', $dao->getIdCentralResponsavel(), $pdo)) {
-                $sucesso = true;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
-            }
-
-            //Cadastra o Perfil necessário do Financeiro Central, para o usuário
-
-            $perfilPessoa = new PerfilPessoa();
-            $perfilPessoa->setIdPerfil(PERFIL_FINANCEIRO_CENTRAL);
-            $perfilPessoa->setIdPessoa($dao->getIdPessoa());
-            if (!$perfilPessoa->verificaPessoaPerfilExiste($pdo)) {
-                $result = $perfilPessoa->incluirPessoaPerfil($pdo);
-                if (!$result) {
+                if (Log::SalvaLogI('fin_central_responsavel', $dao->getIdCentralResponsavel(), $pdo)) {
+                    $sucesso = true;
+                } else {
                     $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
                     return $retorno;
+                    break;
                 }
             }
+            
+            //Verifica se já está cadastrado, para não duplicar
+//            $dao->verificaPessoaCentral($pdo);
+//            if ($dao->Sucesso()) {
+//                $retorno = Metodos::retornoAjax("Erro", "alert", "Usuário já possui Permissão para esta Central.");
+//                $pdo->rollback();
+//                return $retorno;
+//            }
 
+//            $dao->insert($pdo);
+//            if (!$dao->Sucesso()) {
+//                $retorno = Metodos::retornoAjax("Erro", "console", $dao->getMsgRetorno());
+//                $pdo->rollBack();
+//                return $retorno;
+//            }
+
+//            $dao->setIdCentralResponsavel($pdo->lastInsertId('fin_central_responsavel_id_central_responsavel_seq'));
+//
+//            if (Log::SalvaLogI('fin_central_responsavel', $dao->getIdCentralResponsavel(), $pdo)) {
+//                $sucesso = true;
+//            } else {
+//                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+//                $pdo->rollBack();
+//                return $retorno;
+//            }
+
+            //Cadastra o Perfil necessário do Financeiro Central, para o usuário
+            if (in_array(1, $this->getTiposSolicitacoes()) or in_array(2, $this->getTiposSolicitacoes()) or in_array(4, $this->getTiposSolicitacoes())) {
+                $perfilPessoa = new PerfilPessoa();
+                $perfilPessoa->setIdPerfil(PERFIL_FINANCEIRO_CENTRAL);
+                $perfilPessoa->setIdPessoa($dao->getIdPessoa());
+                if (!$perfilPessoa->verificaPessoaPerfilExiste($pdo)) {
+                    $result = $perfilPessoa->incluirPessoaPerfil($pdo);
+                    if (!$result) {
+                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            }
+            
+            
+            //Cadastra o Perfil necessário da Solicitação de Diária, para o usuário
+            if (in_array(3, $this->getTiposSolicitacoes())) {
+                $perfilPessoa = new PerfilPessoa();
+                $perfilPessoa->setIdPerfil(PERFIL_DIARIA_SOLICITACAO);
+                $perfilPessoa->setIdPessoa($dao->getIdPessoa());
+                if (!$perfilPessoa->verificaPessoaPerfilExiste($pdo)) {
+                    $result = $perfilPessoa->incluirPessoaPerfil($pdo);
+                    if (!$result) {
+                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            }
 
             if ($sucesso) {
                 $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
@@ -154,11 +225,24 @@ class CentralResponsavel {
             }
 
 
-            //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. 
-            $dao->retornaPorPessoa($pdo);
+            $perfil = "";
+            //Se for a ultima unidade referente ao tipo de solicitação do financeiro
+            if ($dao->getMsgRetorno()['id_tipo_solicitacao'] == 1 || $dao->getMsgRetorno()['id_tipo_solicitacao'] == 2 || $dao->getMsgRetorno()['id_tipo_solicitacao'] == 4) {
+                $perfil = PERFIL_FINANCEIRO_CENTRAL;
+                //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. Financeiro
+                $dao->retornaPorPessoa($pdo);
+                
+            } elseif ($dao->getMsgRetorno()['id_tipo_solicitacao'] == 3) { //Se for a ultima unidade referente ao tipo de solicitação da diária
+                $perfil = PERFIL_DIARIA_SOLICITACAO;
+                //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. Diária
+                $dao->retornaPorPessoaDiaria($pdo);
+            }
+            
+//            //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. 
+//            $dao->retornaPorPessoa($pdo);
             if (!$dao->Sucesso()) {
                 $perfilPessoa = new PerfilPessoa();
-                $perfilPessoa->setIdPerfil(PERFIL_FINANCEIRO_CENTRAL);
+                $perfilPessoa->setIdPerfil($perfil);
                 $perfilPessoa->setIdPessoa($dao->getIdPessoa());
                 $result = $perfilPessoa->removerPerfilPessoa($pdo);
                 if (!$result) {
@@ -167,6 +251,7 @@ class CentralResponsavel {
                     return $retorno;
                 }
             }
+            
 
             $sucesso = true;
 
@@ -270,6 +355,7 @@ class CentralResponsavel {
                     $retorno .= "<tr>";
                     $retorno .= "<td>" . $v['nm_pessoa'] . "</td>"
                             . "<td>" . $v['nm_lotacao'] . "</td>"
+                            . "<td>".$this->descritivoGestor($v['id_tipo_solicitacao'])."</td>"
                             . '<td style="text-align: center;">'
                             . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_central_responsavel'] . ' >
                                 <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
