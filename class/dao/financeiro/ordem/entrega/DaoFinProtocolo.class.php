@@ -160,13 +160,13 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
                         to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, entrega.st_entrega_confirmacao as status,
                         CASE  
-                                WHEN entrega.dt_confirmacao is null	   THEN  (entrega.dt_entrega -  (SELECT CURRENT_DATE )) 
+                            WHEN entrega.dt_confirmacao is null	   THEN  (entrega.dt_entrega -  (SELECT CURRENT_DATE )) 
                             WHEN entrega.dt_confirmacao is not null  THEN  (entrega.dt_entrega - entrega.dt_confirmacao)
                         END as diasAtrazo,
                         CASE 
-                        WHEN entrega.sit_entrega = 0 THEN 'Nehuma entrega informada'
-                        WHEN entrega.sit_entrega = 1 THEN 'Entrega Parcial'
-                        WHEN entrega.sit_entrega = 2 THEN 'Entrega Total'
+                            WHEN entrega.sit_entrega = 0 THEN 'Nehuma entrega informada'
+                            WHEN entrega.sit_entrega = 1 THEN 'Entrega Parcial'
+                            WHEN entrega.sit_entrega = 2 THEN 'Entrega Total'
                         END situacao
                         from fin_entrega_confirmacao as entrega
                         inner join fin_protocolo as protocolo
