@@ -22,6 +22,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
 
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        
+        <style>
+
+            /* Important part */
+            .modal-diaria{
+                overflow-y: initial !important
+            }
+            .modal-diaria-corpo{
+                height: 650px;
+                overflow-y: auto;
+            }
+        </style>
     </head>
     <!--TIPS-->
 
@@ -42,10 +54,33 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                 <!--===================================================-->
                 <div id="content-container">
                     <!--End page title-->
-
+                    
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+                        
+                        <!-- Modal -->
+                        <div id="diaria_info" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-diaria" role="document" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Informações da Diária</h4>
+                                    </div>
+                                    <div class="modal-body modal-diaria-corpo" id="diaria_dados">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        
+                        
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title text-center">Informações sobre a Solicitação de necessidade</h3>
@@ -104,26 +139,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4">
                                     <div class="panel-body">
-                                        Proponente:<span class="text-danger">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                            <select id="id_proponente" name="id_proponente" class="form-control select">
-                                            
-                                            </select>
-                                        </div>
-                                        Proposto:<span class="text-danger">*</span>
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                            <select id="id_proposto" name="id_proposto" class="form-control select">
-                                            
-                                            </select>
-                                        </div>
                                         Nº da Diária:<span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                             <select id="id_diaria" name="id_diaria" class="form-control select">
                                             
                                             </select>
+                                            <span class="input-group-btn">
+                                                <button data-toggle="modal" data-target="#diaria_info" class="btn btn-primary" type="button">Detalhes</button>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

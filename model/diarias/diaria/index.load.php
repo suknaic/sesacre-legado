@@ -5,13 +5,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/lotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 
 $session = new Session();
-if(!$session->vPDiariasSolicitacao()){
-    header("Location: /pages/index.php"); 
-}
 
 $contrato = new Contrato();
 $lotacao = new Lotacao();
 $diaria = new Diaria();
+
+$diaria->setUsuarioSessao($session);
+
+if(!$session->vPDiariasSolicitacao() and !$diaria->checaUsuarioDiaria()){
+    header("Location: /pages/index.php"); 
+}
+
 
 $id_diaria = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
 $jsonDiaria = "";
@@ -35,11 +39,9 @@ $selectLotacaoProponente = '';
 $selectLotacaoProposto = '';   
 $selectFuncaoProponente = '';
 $selectFuncaoProposto = '';
-$selectLotacaoSolicitante = '<option value="0">Selecione a lotação do solicitante</option>';
+
 $dh_inicio = '';
 $dh_fim = '';
-//$origem = '';
-//$destino = '';
 $nr_protocolo = '';
 $qt_diaria_destino = 0;
 $vl_diaria_destino = 0;
@@ -66,11 +68,9 @@ if ($jsonDiaria != ""){
     $selectFuncaoProponente = $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proponente, $objDiaria->id_funcao_proponente);
     $selectFuncaoProposto= $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proposto, $objDiaria->id_funcao_proposto);
     
-    $lotacao->setId_pessoa($objDiaria->id_pessoa_solicitante);
-    $lotacaoSolicitante = $objDiaria->id_lotacao_solicitante ?? 0;
-    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa($lotacaoSolicitante);
-     
-//    $id_classe_default = $objDiaria->id_classe;
+    $selectCentralSolicitante = $diaria->retornaCentraisOption($objDiaria->id_pessoa_solicitante,$objDiaria->id_central_solicitante);
+    $nm_usuario = $objDiaria->nm_solicitante;
+    
     $ds_servico_executado = $objDiaria->ds_servico_executado;
     $ds_locais_executado = $objDiaria->ds_locais_executado;
     $nr_protocolo = $objDiaria->nr_protocolo;
@@ -81,8 +81,6 @@ if ($jsonDiaria != ""){
     $st_estagio = $objDiaria->st_estagio;
 
 } else {
-    $lotacao->setId_pessoa($session->getIdUser());
-    $selectLotacaoSolicitante .= $lotacao->retornaOptionLotacaoPessoa();
     
     $selectTipoDiariaOption = $diaria->retornaTipoDiariaOption();
     $selectDiariaPaiOption = $diaria->retornaDiariaPaiOption();
@@ -90,6 +88,8 @@ if ($jsonDiaria != ""){
     $selectPessoaProponente = $contrato->retornaOptionPessoaContrato();
     $selectPessoaProposto = $contrato->retornaOptionPessoaContrato();
     
+    $selectCentralSolicitante = $diaria->retornaCentraisOption($session->getIdUser());
+    $nm_usuario = $_SESSION['nmPessoa'];
    
     $ds_servico_executado = '';
     $ds_locais_executado = '';

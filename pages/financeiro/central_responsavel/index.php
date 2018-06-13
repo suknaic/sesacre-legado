@@ -26,6 +26,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
@@ -57,8 +59,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                     <div id="page-content">
                         
                         <!-- Inicio Form -->
-                        <div class="row">
-                            <div class="col-sm-12">
+<!--                        <div class="row">-->
+<!--                            <div class="col-sm-12">-->
                                 <div class="panel">
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
@@ -66,12 +68,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
 
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal form">
+                                    <form class="form">
                                         <div class="panel-body">
-                                            <div class="form-group">
-
+                                            
+                                            <div class="row">
                                                 <div class="col-md-6">
-                                                    <div class="panel-body">
+                                                    <div class="form-group">
+<!--                                                    <div class="panel-body">-->
                                                         <label for="pessoa">
                                                             Responsável: <span class="text-danger">*</span>
                                                         </label>                                                        
@@ -80,17 +83,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="pessoa" class="form-control">
-                                                                <option value="0">Selecione um Responsável</option>                                                                
+<!--                                                                <option value="0">Selecione um Responsável</option>                                                                -->
                                                                 <?php
                                                                     echo $selectPessoa;
                                                                 ?>
                                                             </select>
+<!--                                                        </div>-->
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-6">
-                                                    <div class="panel-body">
+                                                    <div class="form-group">
+<!--                                                    <div class="panel-body">-->
                                                         <label for="central">
                                                             Central de Demanda: <span class="text-danger">*</span>
                                                         </label>                                                        
@@ -106,15 +111,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                
-
-
-
                                             </div>
                                             <!-- End <div class="form-group"> -->
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+<!--                                                    <div class="panel-body">-->
+                                                        <label for="tipo_solicitacao">
+                                                            Tipo da administração: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="tipo_solicitacao" class="form-control" multiple="multiple">                                                                                                                             
+                                                                <?php
+                                                                    echo $selectTipoSolicitacao;
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                        
 
+                                        
                                         </div>
                                         <!-- <div class="panel-body"> -->
 
@@ -137,8 +158,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                     <!--End Horizontal Form-->
 
                                 </div>
-                            </div>
-                        </div>
+<!--                            </div>-->
+<!--                        </div>-->
                         <!-- Fim Form -->
                         
                         
@@ -158,6 +179,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                     <tr>
                                                         <th>Nome</th>
                                                         <th>Central de Demanda</th>
+                                                        <th>Tipo da administração</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
@@ -234,6 +256,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/js/financeiro/central_responsavel/index.js"></script>
+        <!-- select2 -->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            
         <!-- END JAVASCRIPT -->
 

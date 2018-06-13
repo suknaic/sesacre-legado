@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    
+    $('body').find('select').select2({
+        width: '100%'
+    });
 
     func = new Funcoes();
   
@@ -25,10 +29,11 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var Dados = {
                 pessoa: $("#pessoa option:selected").val(),
-                central: $("#central option:selected").val()                
+                central: $("#central option:selected").val(),
+                tipo_solicitacao: $("#tipo_solicitacao").val()
             }
 
-            if ($("#pessoa option:selected").val() == 0 || $("#lotacao option:selected").val() == 0) {
+            if ($("#pessoa option:selected").val() == 0 || $("#lotacao option:selected").val() == 0 || $('#tipo_solicitacao').val() == null) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;

@@ -11,14 +11,12 @@ $(document).ready(function () {
 
     $('#pesquisaCidade').on('shown.bs.modal', function (e) {
         e.preventDefault();
-//        $('#cidadeQuery').val('');
-//        $('#cidadeQuery').focus();
+        $('#cidadeQuery').focus();
     });
     
     $('#pesquisaCidade').on('hidden.bs.modal', function (e) {
         e.preventDefault();
         $('#cidadeQuery').val('');
-        $('#cidadeQuery').focus();
         $('#tabelaCidades').dataTable().fnDestroy();
         $('#tabelaCidades tbody').empty();
     });

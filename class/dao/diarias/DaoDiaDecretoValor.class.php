@@ -15,6 +15,9 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         return $this->msgRetorno;
     }
 
+    function __construct(int $idDecreto = 0, int $idClasse = 0,string $tpDecretoValor = "" , string $vlDecretoValor = "") {
+        parent::__construct($idDecreto,$idClasse,$tpDecretoValor,$vlDecretoValor);
+    }
 
     public function insert(PDO $pdo = null) {
         try {

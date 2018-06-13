@@ -234,6 +234,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <input type="hidden" id="id_diaria_destino" disabled />
                                </div>
                                <div class="panel-body" id="destinoForm">
+                                   <?php if ($session->vPDiariasSolicitacao()) {  ?>
                                    <div class="row">
                                        <div class="col-md-6">
                                            <div class="form-group">
@@ -365,20 +366,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                        </div>
                                    </div>
                                    <div class="row">
-                                       <button class="btn btn-rounded btn-default mar-ver pull-right btn-limpar">
-                                           Limpar
-                                       </button>   
-                                       <button class="btn btn-rounded btn-default mar-ver pull-right btn-cancelar">
-                                           Cancelar
-                                       </button>  
-                                       <button class="btn btn-rounded btn-primary mar-ver pull-right add-itinerario">
-                                           <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                           Itinerário
-                                       </button>                               
-                                       <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
-                                           <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
-                                       </button>
+                                        <button class="btn btn-rounded btn-default mar-ver pull-right btn-limpar">
+                                            Limpar
+                                        </button>   
+                                        <button class="btn btn-rounded btn-default mar-ver pull-right btn-cancelar">
+                                            Cancelar
+                                        </button>  
+                                        <button class="btn btn-rounded btn-primary mar-ver pull-right add-itinerario">
+                                            <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
+                                            Itinerário
+                                        </button>                               
+                                        <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                        </button>
                                    </div>
+                                   <?php } ?>
                                </div>
                                <div class="panel-footer">
                                    <table class="table table-striped" id="itinerario">
@@ -427,19 +429,30 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                         </div>
                                    </div>
                                    <div class="row">
-                                        <div class="form-group">
-                                            <label for="id_lotacao_solicitante">Lotação do Solicitante: <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-list inputPFa"></p>
-                                                </span>
-                                                <select id="id_lotacao_solicitante" class="form-control">
-                                                    <?php
-                                                        echo $selectLotacaoSolicitante;
-                                                    ?>
-                                                </select>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="id_central_solicitante">Nome do Solicitante:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-file-text-o inputPFa"></p></span>
+                                                    <input class="form-control" type="text" id="id_pessoa_solicitante" disabled value="<?php echo $nm_usuario ?>">
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="id_central_solicitante">Central de Demanda do Solicitante: <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-list inputPFa"></p>
+                                                    </span>
+                                                    <select id="id_central_solicitante" class="form-control">
+                                                        <?php
+                                                            echo $selectCentralSolicitante;
+                                                        ?>
+                                                    </select>
+                                               </div>
+                                            </div>
+                                       </div>
                                    </div>
                                </div>
                            </div>
@@ -450,10 +463,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                </div>
                                <div class="panel-body">
                                    <div class="row">
-                                        <strong>Arquivo:</strong>
-                                        <button class="btn btn-rounded btn-primary btn-add-arquivo" data-target="#anexaArquivo" data-toggle="modal"" type="button">
-                                            <i class="fa fa-plus"></i> Adicionar
-                                        </button>
+                                        <?php if ($session->vPDiariasSolicitacao()) {  ?>
+                                            <strong>Arquivo:</strong>
+                                            <button class="btn btn-rounded btn-primary btn-add-arquivo" data-target="#anexaArquivo" data-toggle="modal" type="button">
+                                                <i class="fa fa-plus"></i> Adicionar
+                                            </button>
+                                        <?php } ?>
                                     </div>
                                </div>
                                <div class="panel-footer">
@@ -479,16 +494,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                     </div>
                                 </div>
                            </div>
-
-                           <div class="text-center">
-                               <button id="salvar_diaria" class="btn btn-success btn-rounded btn-salvar" type="button">
-                                   <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                               </button>
-                               <a href="../" class="btn btn-rounded btn-default">Cancelar</a>
-                               <button id="enviar_diaria" class="btn btn-primary btn-rounded btn-enviar" type="button">
-                                   <i class="fa fa-share-square" aria-hidden="true"></i> Enviar p/ Deferimento
-                               </button>
-                           </div>
+                           
+                           <?php if ($session->vPDiariasSolicitacao()) {  ?>
+                                <div class="text-center">
+                                    <button id="salvar_diaria" class="btn btn-success btn-rounded btn-salvar" type="button">
+                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                    </button>
+                                    <a href="../" class="btn btn-rounded btn-default">Cancelar</a>
+                                    <button id="enviar_diaria" class="btn btn-primary btn-rounded btn-enviar" type="button">
+                                        <i class="fa fa-share-square" aria-hidden="true"></i> Enviar p/ Deferimento
+                                    </button>
+                                </div>
+                           <?php } ?>
                        </form>
 
                     </div>

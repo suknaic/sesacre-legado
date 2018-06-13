@@ -777,5 +777,72 @@ class ItemModel {
             return $tabela;
         }
     }
+    
+    
+    
+    public function retornaTrItensParaAditamento(int $idContrato){
+        //conexao com banco dedados
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        //pega id do fornecedor
+        $finFornecedoresModel = new FinFornecedoresModel();
+        $finFornecedoresModel->setIdContrato($idContrato);
+        
+        //Retorna o id do Fornecedor, o primeiro, do contrato para buscar os itens dele
+        $finFornecedoresModel->retornaPrimeiroFornecedorDoContrato($pdo);
+        if(!$finFornecedoresModel->sucesso()){
+            return "Não foi possível Localizar o Fornecedor do Contrato.";
+        }                
+               
+        //criando objeto do Dao dos itens da ata
+        $daoFinItens = new DaoFinItens();
+        //chamando o metodo que lista os itens da ata
+        if (!empty($finFornecedoresModel->getMsgRetorno()['id_fornecedor'])) {
+            $daoFinItens->setIdFornecedor($finFornecedoresModel->getMsgRetorno()['id_fornecedor']);
+            $daoFinItens->retornaItensFornecedor($pdo);
+        } else {
+            return 'Não foi possível Localizar os Itens do Contrato';
+        }
+        
+//        echo "<pre>";
+//        print_r($daoFinItens);
+//        echo "</pre>";
+//        
+//        return;
+        
+        //verificando se deu tudo certo na busca dos itens da ata
+        if ($daoFinItens->Sucesso() && !empty($daoFinItens->getMsgRetorno())) {
+            $tabela = '';
+            $total = 0;
+            foreach ($daoFinItens->getMsgRetorno() as $value) {
+                //$total += $value["total"];
+                $tabela .= '<tr>
+                                <td>' . $value["nr_item"] . '</td>
+				<td>' . $value["nm_material"] . '</td>
+				<td>' . $value["cd_desc_material"] . ' - ' . $value["nm_desc_material"] . '</td>
+				<td>' . $value["nm_grupo"] . '</td>
+				<td>' . $value["nm_sub_grupo"] . '</td>
+                                <td>' . $value["nm_unidade_medida"] . '</td>    
+				<td>' . $value["cd_elemento_despesa"] . '</td>
+				<td>' . $value["tp_material"] . '</td>
+				<td class="text-center">' . $value["nr_lote"] . '</td>
+				<td class="text-center">' . Metodos::ConverteValorBr($value["qt_itens"], 4) . '</td>
+				<td class="text-center">' . Metodos::ConverteValorBr($value["vl_itens"], 4) . '</td>								
+				<td class="text-center">
+                                    <span class="label-aditivo">Quantidade</span>
+                                    <input type="text" name="qtd_aditivo" class="form-control input-sm qtd_aditivo quatro_casas" />
+                                </td>				
+				<td class="text-center itens">Total</td>
+                                <td>Saldo</td>
+                                </tr>';                               
+            }
+            return $tabela.$tabela.$tabela.$tabela.$tabela;
+        }
+    }
+    
+    
+    
+    
+    
 
 }

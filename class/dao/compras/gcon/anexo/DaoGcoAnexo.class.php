@@ -10,9 +10,10 @@ class DaoGcoAnexo extends GconAnexoExt {
     //método para salvar dados do anexo
     function cadastrarAnexo($pdo) {
         try {
-            $upload = $pdo->prepare("INSERT INTO gco_anexo(ds_anexo, lk_anexo, id_processo) VALUES (:nome, :endereco, :id_processo)");
+            $upload = $pdo->prepare("INSERT INTO gco_anexo(ds_anexo, nm_mime_type, aq_anexo, id_processo) VALUES (:nome, :mimeType, :binAnexo, :id_processo)");
             $upload->bindValue(":nome", $this->getNomeAnexo() === '' ? null : $this->getNomeAnexo(), PDO::PARAM_STR);
-            $upload->bindValue(":endereco", $this->getEndereco() === '' ? null : $this->getEndereco(), PDO::PARAM_STR);
+            $upload->bindValue(":mimeType", $this->getTipoAnexo() === '' ? null : $this->getTipoAnexo(), PDO::PARAM_STR);
+            $upload->bindValue(":binAnexo", $this->getBinAnexo() === '' ? null : $this->getBinAnexo(), PDO::PARAM_LOB);
             $upload->bindValue("id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $upload->execute();
             return TRUE;
