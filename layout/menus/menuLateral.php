@@ -315,12 +315,12 @@
                                     </a>
                                     <ul>
                                         <li><a href="/pages/diarias/permissoes/">Permissões de Acesso</a></li>
-                                        <li><a href="/pages/diarias/decreto_valor/">Parâmetros de Valores</a></li>
+                                        <li><a href="/pages/diarias/decreto_valor/">Tabelas Gerenciais</a></li>
                                     </ul>
                                     
                                 </li>
                                 <li>
-                                    <a href="/pages/diarias/">Solicitações</a>
+                                    <a href="/pages/diarias/">Proposta e Concessão de Diárias</a>
                                 </li>
                                 <li>
                                     <a href="/pages/diarias/autorizacoes/">Autorizações</a>

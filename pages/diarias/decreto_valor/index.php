@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Valores das diárias por Decreto</h1>                       
+                        <h1 class="page-header text-overflow">Valores das diárias por Decreto e Classe</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -61,7 +61,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                         <!-- Inicio Form -->
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel">
+                                <div class="panel" id="formTop">
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
                                     </div>
@@ -70,6 +70,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                     <!--===================================================-->
                                     <form class="form">
                                         <div class="panel-body">
+                                            <input type="hidden" id="id_decreto_valor" disabled>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -88,6 +89,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+                                                        <input type="hidden" id="id_classe_default" disabled>
                                                         <label for="id_classe">
                                                             Classe: <span class="text-danger">*</span>
                                                         </label>                                                        
@@ -114,7 +116,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="tp_decreto_valor" class="form-control">
-                                                                <option value="">Selecione se é dentro ou fora do estado</option>                                                                
+                                                                <option value="0">Selecione se é dentro ou fora do estado</option>                                                                
                                                                 <option value="F">Fora do estado</option>                                                                
                                                                 <option value="D">Dentro do estado</option>                                                                
                                                             </select>
@@ -130,7 +132,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-sort-numeric-desc inputPFa"></p>
                                                             </span>
-                                                            <input type="text" id="vl_decreto_valor" class="form-control"/>
+                                                            <input type="text" id="vl_decreto_valor" class="form-control decimal"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,6 +256,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
         <script src="/assets/js/diarias/decreto_valor/index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
            
         <!-- END JAVASCRIPT -->
 

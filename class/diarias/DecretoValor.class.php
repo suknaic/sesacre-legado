@@ -119,17 +119,20 @@ class DecretoValor {
             $pdo = $conexao->connect();
             
             $daoDiaDecretoValor = new DaoDiaDecretoValor();
-            $daoDiaDecretoValor->select($pdo);
+            $daoDiaDecretoValor->selectDCValorCompleto($pdo);
             
             if ($daoDiaDecretoValor->getSucesso()) {
                 foreach ($daoDiaDecretoValor->getMsgRetorno() as $linha) {
                     $dentro_ou_fora_estado = ($linha['tp_decreto_valor'] == 'F') ? 'Fora do Estado' : 'Dentro do Estado';
-                    $retorno .= '<tr>'
-                                    . '<td>'.$linha['nm_decreto'].'</td>'
-                                    . '<td>'.$linha['cd_classe'].' - '.$linha['nm_classe'].'</td>'
-                                    . '<td>'.$dentro_ou_fora_estado.'</td>'
-                                    . '<td>'.$linha['vl_decreto_valor'].'</td>'
-                                    . '<td class="text-center">Excluir | Alterar</td>'
+                    $retorno .= "<tr data-registro='". json_encode($linha)."'>"
+                                    . "<td>".$linha['nm_decreto']."</td>"
+                                    . "<td>".$linha['cd_classe'].' - '.$linha['nm_classe']."</td>"
+                                    . "<td>".$dentro_ou_fora_estado."</td>"
+                                    . "<td>".$linha['vl_decreto_valor']."</td>"
+                                    . "<td class='text-center'>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-alterar'><i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i></button>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i></button>"
+                                    . '</td>'
                              . '</tr>';
                 }
             }
@@ -137,7 +140,7 @@ class DecretoValor {
             return $retorno;
             
         } catch (Exception $exc) {
-            return $exc->getMessage();
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
     }
     
@@ -161,7 +164,7 @@ class DecretoValor {
                     $this->setIdDecretoValor($idDecretoValor);
                     
                     $pdo->commit();
-                    $retorno = Metodos::retornoAjax("ok", "html", "Diária cadastrada com sucesso.");
+                    $retorno = Metodos::retornoAjax("ok", "html", "Valor incluído com sucesso.");
                 } else {
                     $pdo->rollBack();
                     $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDecretoValor->getMsgRetorno());
@@ -171,13 +174,63 @@ class DecretoValor {
                 return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             }
         } catch (Exception $exc) {
-            return $exc->getMessage();
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function alteraDecretoValor(){
+        try {
+            $retorno = "";
+            if ($this->validaDados()) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+                
+               
+                return $retorno;
+            } else {
+                return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function excluirDecretoValor(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoDiaDecretoValor = new DaoDiaDecretoValor();
+            $daoDiaDecretoValor->setIdDecretoValor($this->getIdDecretoValor());
+            
+            $idDiaDecretoValor = $daoDiaDecretoValor->getIdDecretoValor();
+            if (!Log::SalvaLogD('dia_decreto_valor', $idDiaDecretoValor, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoDiaDecretoValor->delete($pdo);
+            if ($daoDiaDecretoValor->getSucesso()) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
+            } else {
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDecretoValor->getMsgRetorno());
+                $pdo->rollBack();
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
     }
     
     function validaDados(){
         try {
-            if (empty($this->getIdClasse() or empty($this->getIdDecreto() or empty($this->getTpDecretoValor()) or empty($this->getVlDecretoValor())))) {
+            if (empty($this->getIdClasse()) or empty($this->getIdDecreto()) or empty($this->getTpDecretoValor()) or empty($this->getVlDecretoValor())) {
                 $this->msgErros = 'Por favor preencha todos os campos necessários.';
                 return false;
             }
