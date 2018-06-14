@@ -7,7 +7,7 @@ try {
     $pdo = $conexao->connect();
     $pdo->beginTransaction();
 
-    $sql = $pdo->prepare('SELECT id_anexo, ds_anexo, lk_anexo FROM gco_anexo');
+    $sql = $pdo->prepare('SELECT id_anexo, ds_anexo, lk_anexo FROM gco_anexo WHERE aq_anexo IS NULL');
     $sql->execute();
     $dados = $sql->fetchAll(PDO::FETCH_ASSOC);
 
