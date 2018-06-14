@@ -73,8 +73,7 @@ $(document).ready(function () {
                 //$numeroAditivo = $sequencialUltimoAditivo."º Termo Aditivo ao Contrato ".$contrato;
                 $("#n_numero_aditivo").val(qtd+"º Termo Aditivo ao contrato "+$("#con_contrato").find("p").text());
                 $("#panel-novo-atitivo").show();
-            }
-            
+            }            
         }
     });
     
@@ -100,7 +99,7 @@ $(document).ready(function () {
     $('body').on('click', '.remove-pessoa', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
-        } else { 
+        } else {
             e.preventDefault();                        
             var $this = $(this);            
             $this.closest(".input-group").remove();
@@ -109,7 +108,7 @@ $(document).ready(function () {
 
     $('body').on('keypress', '#codItemPesquisa', function (e) {
         var key = e.which;
-        if (key == 13) {
+        if (key == 13){
             $("#btn-pesquisa").trigger('click');
             return false;
         }
@@ -132,7 +131,6 @@ $(document).ready(function () {
             "data": {
                 "acao": "pesquisaContrato",
                 "dados": dados
-
             },
             "success": function (response) {                
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
@@ -145,7 +143,8 @@ $(document).ready(function () {
         preencheCamposContrato(contrato);                                       
         $('#modalItem').modal('hide');
         //Busca se esse Contrato possui Aditivo
-        buscaExisteAditivos(contrato.id_contrato);                
+        buscaExisteAditivos(contrato.id_contrato); 
+        buscaItensDoContrato(contrato.id_contrato);
     });
     
     function preencheCamposContrato(contrato){
@@ -160,7 +159,7 @@ $(document).ready(function () {
         $("#con_descricao_objeto").find("p").html(contrato.ds_objeto);
         $("#con_fornecedor").find("p").html(contrato.nm_pessoa);
         $("#con_valor").find("p").html(contrato.valor);
-        $("#id_contrato").val("R$ "+contrato.id_contrato);
+        $("#id_contrato").val(contrato.id_contrato);
     }
     
     function buscaExisteAditivos(idContrato){        
@@ -175,6 +174,20 @@ $(document).ready(function () {
                 $("#panel-aditivos").find('.panel-body').html(response);                        
             }
         });
+    }
+    
+    function buscaItensDoContrato(){        
+        $.ajax({
+            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "pesquisaItens",
+                "id": $("#id_contrato").val()
+            },
+            "success": function (response) {                                                     
+                $("#tabelaFu").find('tbody').html(response);
+            }
+        });  
     }
     
         
@@ -260,7 +273,8 @@ $(document).ready(function () {
         $("#n_indice_correcao").val("");
         //Se a Unidade de Calculo for Percentual
         //Então o Campo Percentual deverá Aparecer
-        if($("#n_unidade_calculo option:selected").val() == 1){
+        if($("#n_unidade_calculo option:selected").val() == 1
+                && $("#n_base_calculo option:selected").val() == 1){
             $("#div_percentual").show();
         } 
         //Se a Unidade de Calculo for Indice de Correção
@@ -273,19 +287,24 @@ $(document).ready(function () {
     
     $('body').on('change', '#n_base_calculo', function (e) {
         $("#btn_itens_abrir_modal").hide();
+        //Sempre que a Base de Calculo for Valor Unitario, então irá habilitar o Botão Itens ao lado do Valor Aditivo
         if($("#n_base_calculo option:selected").val() == 2){
             $("#btn_itens_abrir_modal").show();
         } 
+        $("#n_unidade_calculo").trigger('change');
     });
     
     $('body').on('change', '#n_finalidade', function (e) {
+       //Se a Finalidade for Adição, teremos que fazer alguma Verificação com relação ao máximo de percentual
        if($("#n_finalidade option:selected").val() == 1){
            var valor = $("#n_percentual").val().replace(",", ".");
+           //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
             if($("#n_tipo_aquisicao option:selected").val() == 1){
                 if(valor > 25.0000){          
                     $("#n_percentual").val("25,0000");
                 }
             }
+            //Se Tipo de Aquisicao for Reforma de Edifício, o Valor Percentual máximo será de 50%
             if($("#n_tipo_aquisicao option:selected").val() == 2){
                 if(valor > 50.0000){                  
                     $("#n_percentual").val("50,0000");
@@ -294,19 +313,48 @@ $(document).ready(function () {
         }
     });
     
+    //Sempre que a Aquisicao for modificada, teremos que ver a Regra para a finalidade, por causa do percentual
+    $('body').on('change', '#n_tipo_aquisicao', function (e) {
+        $("#n_finalidade").trigger("change");
+    });
+    //Percentual sempre leva em consideração a regra da finalidade
     $("body").on("change keydown keyup", "#n_percentual", function (){        
         $("#n_finalidade").trigger("change");
     });
     
+    //$("#n_base_calculo").val(2).change();
     
-//    $('body').on('click', '#btn_itens_abrir_modal', function (e) {
-//        e.stopPropagation();
-//        if (e.isDefaultPrevented()) {
-//        } else { 
-//            e.preventDefault();                        
-//                        
-//        }
-//    });
+    $('body').on('click', '#btn_itens_abrir_modal', function (e){
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();    
+            
+            if($("#n_unidade_calculo").val() != 3
+                    && $("#n_unidade_calculo").val() != 4){
+                func.modalAlert("É Necessário Escolher Uma Unidade de Cálculo Quantidade ou Moeda.");
+                return false;
+            }
+            
+            if($("#n_unidade_calculo").val() == 0){
+                func.modalAlert("É Necessário Escolher um Tipo de Aquisição.");
+                return false;
+            }
+            
+            
+            if($("#n_unidade_calculo").val() == 3){
+                $(".label-aditivo").text("Valor Unit. Aditivado");
+            }else if($("#n_unidade_calculo").val() == 4){
+                $(".label-aditivo").text("Qtd. Aditivada");
+            }else{
+                $(".label-aditivo").text("Sem Opção de Texto");
+            }
+            
+            $("#myModalFu").modal('show');
+                                    
+                                  
+        }
+    });
     
     
     
@@ -344,14 +392,12 @@ $(document).ready(function () {
             "data": {
                 "acao": "pesquisaContrato",
                 "dados": '261'
-
             },
             "success": function (response) {                
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
                 $(".selecionaItem").first().trigger('click');
-                $(".btn-add-aditivo").trigger('click');
-            }
-            
+                $(".btn-add-aditivo").trigger('click');                
+            }            
         });  
 
 });

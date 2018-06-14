@@ -229,7 +229,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                 <div class="form-group">
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <button  type="button" class="btn btn-primary addTipoGastoValorHomologado">
+                                            <button  type="button" class="btn btn-primary addTipoGastoValorHomologado"title="Adicionar Tipo de Gasto">
                                                 <i class="ion-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
@@ -246,7 +246,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                 <div class="form-group">
                                     <div class="col-md-3">
                                         <div class="panel-body">
-                                            <button  type="button" class="btn btn-primary addCentrais">
+                                            <button  type="button" class="btn btn-primary addCentrais" title="Adicionar Centrais">
                                                 <i class="ion-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
@@ -259,7 +259,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Anotações
-                                        <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
+                                        <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar Anotação">
                                             <i class="ion-plus" aria-hidden="true"></i>
                                         </button>
                                     </h3>
@@ -281,7 +281,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/processo/processo.
                                         </button>
                                     </div>
                                     <div class="col-md-2 text-center">
-                                        <button  type="button" class="btn btn-default btn-rounded btn-block btn-cancelar" title="Editar">
+                                        <button  type="button" class="btn btn-default btn-rounded btn-block btn-cancelar" title="Cancelar">
                                             <i class="fa fa-remove" aria-hidden="true"></i> Cancelar
                                         </button>
                                     </div>

@@ -57,7 +57,8 @@ class Anexo {
         $this->tipoAnexo = $tipoAnexo;
     }
 
-    public function inserirAnexo() {
+    // ************************************ Salva Anexo de Um processo ****************************************
+    public function inserirAnexo($link) {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -69,54 +70,65 @@ class Anexo {
             $daoAnexo->setBinAnexo($this->binAnexo);
             $daoAnexo->setTipoAnexo($this->tipoAnexo);
 
-            $cadastraAnexo = $daoAnexo->cadastrarAnexo($pdo);
+            // ************* Verifica a existencia do processo *****************
+            $processo = new DaoProcesso();
+            $processo->setIdProcesso($this->idProcesso);
+            $dados = $processo->acharProcessoUpload($pdo);
+            // *****************************************************************
+            if (empty($dados)) {
+                return Metodos::retornoAjax('Erro', 'alert', 'Processo Não Encontrado.');
+            } else {
+                // *************** Cadastra um anexo **************
+                $cadastraAnexo = $daoAnexo->cadastrarAnexo($pdo);
+                // ************************************************
+                
+                //************** Insere na tabela gco_anotação o cadastro do anexo ****************
+                if ($cadastraAnexo) {
+                    // ******************** Salva Log do Anexo ********************
+                    $daoAnexo->setIdAnexo($pdo->lastInsertId('gco_anexo_id_anexo_seq'));
+                    if (!Log::SalvaLogIBinario('gco_anexo', $daoAnexo->getIdAnexo(), $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                    }
+                    // ************************************************************
 
-            if ($cadastraAnexo) {
-                $daoAnexo->setIdAnexo($pdo->lastInsertId('gco_anexo_id_anexo_seq'));
-                if (Log::SalvaLogI('gco_anexo', $daoAnexo->getIdAnexo(), $pdo)) {
-                    $processo = new DaoProcesso();
-                    $processo->setIdProcesso($this->idProcesso);
-                    $dados = $processo->acharProcessoUpload($pdo);
+                    $anotacao = new DaoGcoAnotacao();
+                    $anotacao->setIdProcesso($this->idProcesso);
+                    $anotacao->setSituacao($dados['id_situacao']);
+                    $anotacao->setTecnico($dados['id_pessoa']);
+                    $anotacao->setUser($_SESSION['idUser']);
+                    $anotacao->setAnotacao("Anexo " . $this->nomeAnexo . " adicionado.");
 
-                    if ($dados != FALSE) {
-                        $anotacao = new DaoGcoAnotacao();
-                        $anotacao->setIdProcesso($this->idProcesso);
-                        $anotacao->setSituacao($dados['id_situacao']);
-                        $anotacao->setTecnico($dados['id_pessoa']);
-                        $anotacao->setUser($_SESSION['idUser']);
-                        $anotacao->setAnotacao("Anexo " . $this->nomeAnexo . " adicionado.");
-
-                        $cadastraAnotacao = $anotacao->cadastrarAnotacao($pdo);
-                        if ($cadastraAnotacao) {
-                            $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                            if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
-                                $pdo->commit();
-                                return Metodos::retornoAjax("ok", "html", "Anexo salvo com sucesso.");
-                            } else {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                            }
+                    $cadastraAnotacao = $anotacao->cadastrarAnotacao($pdo);
+                    if ($cadastraAnotacao) {
+                        // ********************** Salva log da anotação ***************************
+                        $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
+                        if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
+                            unlink($link);
+                            $pdo->commit();
+                            return Metodos::retornoAjax("ok", "html", "Anexo salvo com sucesso.");
                         } else {
                             $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "console", $cadastraAnotacao);
+                            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                         }
+                        // ***********************************************************************
                     } else {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                        return Metodos::retornoAjax("Erro", "console", $cadastraAnotacao);
                     }
                 } else {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    return Metodos::retornoAjax('Erro', 'console', $cadastraAnexo);
                 }
-            } else {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $cadastraAnexo);
+                // ***********************************************************************************
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
+// ****************************************************************************************************************
+// ************************************* Carrega os anexos de um processo *****************************************
     public function carregarAnexos() {
         try {
             $conexao = new Conexao();
@@ -195,6 +207,8 @@ class Anexo {
         }
     }
 
+// ************************************************************************************************************
+// ***************************************** Exclui um anexo de um processo ***********************************
     public function excluirAnexo() {
         try {
             $conexao = new Conexao();
@@ -204,63 +218,60 @@ class Anexo {
             $dao = new DaoGcoAnexo();
             $dao->setIdAnexo($this->idAnexo);
             $dao->setIdProcesso($this->idProcesso);
-            $extencao = substr($this->nomeAnexo, -5);
 
-            if (Log::SalvaLogD('gco_anexo', $dao->getIdAnexo(), $pdo)) {
+            //********** Procurando o processo **********
+            $processo = new DaoProcesso();
+            $processo->setIdProcesso($this->idProcesso);
+            $dados = $processo->acharProcessoUpload($pdo);
+            //********************************************
+            if (empty($dados)) {
+                return Metodos::retornoAjax('Erro', 'alert', 'Processo Não Encontrado.');
+            } else {
+                // ******** Salva o log do anexo **********
+                if (!Log::SalvaLogDBinario('gco_anexo', $dao->getIdAnexo(), $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                }
+                //****************************************
+                // ******* Deleta o anexo ********
                 $deletaAnexo = $dao->excluirAnexo($pdo);
+                //********************************
+                //************ Insere na tabela gco_anotação a exclusão do anexo **************
                 if ($deletaAnexo) {
-                    $processo = new DaoProcesso();
-                    $processo->setIdProcesso($this->idProcesso);
-                    $dados = $processo->acharProcessoUpload($pdo);
-                    if ($dados != FALSE) {
-                        $anotacao = new DaoGcoAnotacao();
-                        $anotacao->setIdProcesso($this->idProcesso);
-                        $anotacao->setSituacao($dados['id_situacao']);
-                        $anotacao->setTecnico($dados['id_pessoa']);
-                        $anotacao->setUser($_SESSION['idUser']);
-                        $anotacao->setAnotacao("Anexo " . $this->nomeAnexo . " removido.");
+                    $anotacao = new DaoGcoAnotacao();
+                    $anotacao->setIdProcesso($this->idProcesso);
+                    $anotacao->setSituacao($dados['id_situacao']);
+                    $anotacao->setTecnico($dados['id_pessoa']);
+                    $anotacao->setUser($_SESSION['idUser']);
+                    $anotacao->setAnotacao("Anexo " . $this->nomeAnexo . " removido.");
 
-                        $cadastraAnotacao = $anotacao->cadastrarAnotacao($pdo);
-                        if ($cadastraAnotacao) {
-                            $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
-                            if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
-                                $link = $_SERVER["DOCUMENT_ROOT"] . '/files/gcon/' . $this->idProcesso . '/' . md5($this->nomeAnexo) . $extencao;
-
-                                if (file_exists($link)) {
-                                    $removeArquivo = unlink($link);
-                                } else {
-                                    $removeArquivo = TRUE;
-                                }
-                                
-                                if ($removeArquivo) {
-                                    $pdo->commit();
-                                    return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");
-                                } else {
-                                    $pdo->rollBack();
-                                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                                }
-                            } else {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                            }
+                    $cadastraAnotacao = $anotacao->cadastrarAnotacao($pdo);
+                    if ($cadastraAnotacao) {
+                        $anotacao->setAnotacao($pdo->lastInsertId('gco_anotacao_id_anotacao_seq'));
+                        if (Log::SalvaLogI('gco_anotacao', $anotacao->getAnotacao(), $pdo)) {
+                            $pdo->commit();
+                            return Metodos::retornoAjax("ok", "html", "Anexo Removido com Sucesso.");
                         } else {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                         }
+                    } else {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                     }
                 } else {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", $deletaAnexo);
+                    return Metodos::retornoAjax('Erro', 'console', $deletaAnexo);
                 }
-            } else {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                //****************************************************************************
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
+// ************************************************************************************************************
+// ************************ Carrega um anexo de um processo *********************
     public function carregarAnexo() {
         try {
             $conexao = new Conexao();
@@ -277,4 +288,5 @@ class Anexo {
         }
     }
 
+// *******************************************************************************
 }

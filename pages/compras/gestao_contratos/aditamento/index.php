@@ -29,12 +29,28 @@
         <link rel="stylesheet" href="/assets/css/estilo.css" rel="stylesheet">
         <style>
             /* Important part */
-            .modal-dialog{
-                overflow-y: initial !important
+            .modal-fu{
+                /*overflow-y: initial !important
+                overflow-y: scroll; */
+                max-height:85%;                  
+                bottom: 0;
+                left: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+                margin: 0;
+                width: 100%;
+                animation-duration:0.6s;
+                height: 80%;
             }
-            .modal-body{
-                height: 600px;
+            .modal-fu-body{
+                /*height: 100px;*/
+                max-height: calc(100vh - 212px);
                 overflow-y: auto;
+            }
+            .modal.modal-fu .modal-footer {
+                bottom: 0;
+            }                                   
         </style>
     
     </head>    
@@ -99,100 +115,54 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>                                                            
                     
-                    <div class="modal fade modal-fullscreen  footer-to-bottom" id="myModalFullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog animated zoomInLeft modal-lg" role="document" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
+                    <div class="modal fade footer-to-bottom" id="myModalFu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-fu animated zoomInLeft modal-lg" role="document" >
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title">Modal title</h4>
+                                        <h4 class="modal-title">Itens do Contrato</h4>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body modal-fu-body">
                                     <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <table class="table table-striped table-bordered" id="tabela">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Grupo</th>
-                                                                <th class="text-center">Sub Grupo</th>
-                                                                <th class="text-center">Unid</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Total</th>
-                                                                <th class="text-center">Utilizado</th>
-                                                                <th class="text-center">Saldo</th>
-                                                                <th class="text-center">Ação</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody><tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">ARROZ</td>
-                                        <td class="text-center">ARROZ AGULHINHA, LONGO FINO, POLIDO, TIPO 1, EMBALAGEM PRIMARIAPLASTICA</td>
-                                        <td class="text-center">SUBSISTENCIA</td>
-                                        <td class="text-center">PRODUTOS DE PANIFICACAO E CEREAIS</td>
-                                        <td class="text-center">QUILOGRAMA</td>    
-                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
-                                        <td class="text-center">C</td>
-                                        <td class="text-center">0</td>
-                                        <td class="text-center">2.844,0000</td>
-                                        <td class="text-center">3,4900</td>
-                                        <td class="text-center">2.844,0000</td>
-                                        <td class="text-center">0,0000</td>
-                                        <td class="text-center">2.844,0000</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="4" tp="C" class="form-control input-sm qtd"></td></tr><tr>
-                                        <td class="text-center">76</td>
-                                        <td class="text-center">CARNE BOVINA;</td>
-                                        <td class="text-center">CARNE BOVINA; CONTRA-FILÉ, DE 1° QUALIDADE, RESFRIADA DE 0° À 5°, COR AVERMELHADA VIVA, TEXTURA FIRME</td>
-                                        <td class="text-center">SUBSISTENCIA</td>
-                                        <td class="text-center">CARNES, AVES E PEIXES</td>
-                                        <td class="text-center">QUILOGRAMA</td>    
-                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
-                                        <td class="text-center">C</td>
-                                        <td class="text-center">0</td>
-                                        <td class="text-center">1.463,0000</td>
-                                        <td class="text-center">25,9300</td>
-                                        <td class="text-center">1.463,0000</td>
-                                        <td class="text-center">0,0000</td>
-                                        <td class="text-center">1.463,0000</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="5" tp="C" class="form-control input-sm qtd"></td></tr><tr>
-                                        <td class="text-center">84</td>
-                                        <td class="text-center">FRANGO;</td>
-                                        <td class="text-center">FRANGO; EM CORTES; COXA E SOBRECOXA; SEM TEMPERO; CONGELADO; VALIDADE DE 12 MESES; ACONDICIONADA EM SACO PLASTICO.</td>
-                                        <td class="text-center">SUBSISTENCIA</td>
-                                        <td class="text-center">CARNES, AVES E PEIXES</td>
-                                        <td class="text-center">QUILOGRAMA</td>    
-                                        <td class="text-center"> MATERIAL DE CONSUMO</td>
-                                        <td class="text-center">C</td>
-                                        <td class="text-center">0</td>
-                                        <td class="text-center">2.169,0000</td>
-                                        <td class="text-center">11,7800</td>
-                                        <td class="text-center">2.169,0000</td>
-                                        <td class="text-center">0,0000</td>
-                                        <td class="text-center">2.169,0000</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idpedido="1" idpreordem="6" tp="C" class="form-control input-sm qtd"></td></tr></tbody>
-
-                                                    </table>
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table class="table table-striped table-bordered" id="tabelaFu">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Nº</th>
+                                                            <th class="text-center">Item</th>
+                                                            <th class="text-center">Descrição</th>
+                                                            <th class="text-center">Grupo</th>
+                                                            <th class="text-center">Sub Grupo</th>
+                                                            <th class="text-center">Unid</th>
+                                                            <th class="text-center">Elemento de Despesa</th>
+                                                            <th class="text-center">Tipo</th>
+                                                            <th class="text-center">Lote</th>
+                                                            <th class="text-center">QTD</th>
+                                                            <th class="text-center">Valor unit</th>
+                                                            <th class="text-center">Aditivo</th>
+                                                            <th class="text-center">Total</th>
+                                                            <th class="text-center">Saldo</th>                                                         
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>                                    
                                 </div>
-                            </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
+                            </div>                            
+                        </div>                        
                     </div>
+                    
+                    
+                    
                     <!-- /.modal -->
                     <!--Page content-->
                     <!--===================================================-->                    
