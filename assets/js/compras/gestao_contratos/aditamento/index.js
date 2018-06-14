@@ -273,7 +273,8 @@ $(document).ready(function () {
         $("#n_indice_correcao").val("");
         //Se a Unidade de Calculo for Percentual
         //Então o Campo Percentual deverá Aparecer
-        if($("#n_unidade_calculo option:selected").val() == 1){
+        if($("#n_unidade_calculo option:selected").val() == 1
+                && $("#n_base_calculo option:selected").val() == 1){
             $("#div_percentual").show();
         } 
         //Se a Unidade de Calculo for Indice de Correção
@@ -290,6 +291,7 @@ $(document).ready(function () {
         if($("#n_base_calculo option:selected").val() == 2){
             $("#btn_itens_abrir_modal").show();
         } 
+        $("#n_unidade_calculo").trigger('change');
     });
     
     $('body').on('change', '#n_finalidade', function (e) {
@@ -320,7 +322,7 @@ $(document).ready(function () {
         $("#n_finalidade").trigger("change");
     });
     
-    $("#n_base_calculo").val(2).change();
+    //$("#n_base_calculo").val(2).change();
     
     $('body').on('click', '#btn_itens_abrir_modal', function (e){
         e.stopPropagation();
