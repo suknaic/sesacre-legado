@@ -309,6 +309,7 @@ $(document).ready(function () {
                     for (var i = valores.length - 1; i >= 0; i--) {
 
                         let valor = [
+                            '1',
                             valores[i]['nr_item'],
                             valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
                             valores[i]['nm_desc_material'],
@@ -334,6 +335,7 @@ $(document).ready(function () {
                         },
 
                         columns: [
+                            {title: "Nº da entrega", className: "text-center"},
                             {title: "Nº", className: "text-center"},
                             {title: "Item", className: "text-center"},
                             {title: "Descrição", className: "text-center"},
