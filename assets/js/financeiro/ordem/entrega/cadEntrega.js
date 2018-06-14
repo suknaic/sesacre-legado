@@ -236,7 +236,6 @@ $(document).ready(function () {
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-//                "dataType": "json",
                 "dataType": "json",
                 "data": {
                     "acao": "cadastroItensEntrega",
