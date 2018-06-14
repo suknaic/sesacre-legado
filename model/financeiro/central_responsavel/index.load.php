@@ -13,7 +13,7 @@ if(!$session->vPFinanceiro()){
 $conexao = new Conexao();
 $pdo = $conexao->connect();
 $contrato = new Contrato();
-$selectPessoa = $contrato->retornaOptionPessoaContrato($pdo);
+$selectPessoa = $contrato->retornaOptionUsuarioContrato($pdo);
 
 $lotacao = new FinCentralModel();
 $selectCentral = $lotacao->retornaOptionsCentrais($pdo);
