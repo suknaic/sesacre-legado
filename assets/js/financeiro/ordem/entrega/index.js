@@ -58,7 +58,7 @@ $(document).ready(function () {
         });
     }
     listaEntregas();
-    $("body").on("click", ".btn-salvar", function (e) {
+    $("body").on("click", ".btn-salvar", function (e) {F
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
