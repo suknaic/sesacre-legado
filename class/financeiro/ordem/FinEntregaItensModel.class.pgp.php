@@ -189,7 +189,7 @@ class FinEntregaItensModel {
 
                 foreach ($dados as $valor) {
 
-                    if ($valor->tp == 'C' || $valor->tp == 'P') {
+                    if ($valor->tp == 'C' || $valor->tp == 'P' && $valor->fl_valor = '0') {
 
                         foreach ($aguardandoentrega as $v) {
                             if ($v["id_ordem_itens"] == $valor->itemId) {
@@ -226,7 +226,38 @@ class FinEntregaItensModel {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
                         }
-                    } else {
+                    } else if ($valor->tp == 'C' || $valor->tp == 'P' && $valor->fl_valor = '1') {
+                        foreach ($aguardandoentrega as $v) {
+                            if ($v["id_ordem_itens"] == $valor->itemId) {
+                                $saldo = 0;
+                                $saldo = round(Metodos::ConverteValorIng($v["aguardandoentrega"]), 4) - round((Metodos::ConverteValorIng($valor->qtd) * Metodos::ConverteValorIng($valor->vl)), 4);
+                                if ($saldo == 0) {
+                                    $contTotal ++;
+                                }
+
+                                if ($saldo > 0) {
+                                    $contParcial ++;
+                                }
+
+                                if ($saldo < 0) {
+                                    return Metodos::retornoAjax("Erro", "alert", "Não existem saldo para entrega por favor verifique os itens.");
+                                }
+                            }
+                        }
+                        $daoFinEntregaItens->setIdOrdemItens($valor->itemId);
+                        $daoFinEntregaItens->setIdEntregaConfirmacao($valor->id_entrega);
+                        $daoFinEntregaItens->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                        $daoFinEntregaItens->setVlItensEntrega(Metodos::ConverteValorIng($valor->vl));
+                        $daoFinEntregaItens->setTpEntrega($valor->tipoEntrega);
+                        $daoFinEntregaItens->setDhEntrega(Metodos::ConverteDataING($valor->data));
+                        $daoFinEntregaItens->insertentregaItens($pdo);
+                        //verificar ser deu tudo certo no cadastramento do entrega
+                        if (!$daoFinEntregaItens->sucesso()) {
+                            $erro = true;
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro", "console", $daoFinEntregaItens->getMsgRetorno());
+                        }
+                    } else if ($valor->tp == 'S' && $valor->fl_valor = '1') {
                         foreach ($aguardandoentrega as $v) {
                             if ($v["id_ordem_itens"] == $valor->itemId) {
                                 $saldo = 0;

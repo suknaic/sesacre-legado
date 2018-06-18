@@ -62,12 +62,14 @@ $(document).ready(function () {
 
                     for (var i = valores.length - 1; i >= 0; i--) {
 
-                        if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
+                        if ((valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P') && valores[i]['fl_valor_variavel'] === '0') {
                             var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '"\n\
-                                        class="form-control input-sm qtd">';
-                        } else if (valores[i]['tp_material'] === 'S') {
-                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm qtd">' +
-                                    '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" class="form-control input-sm vl">';
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd">';
+                        } else {
+                            var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd">' +
+                                    '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm vl">';
                         }
                         let valor = [
                             valores[i]['nr_item'],
@@ -113,32 +115,32 @@ $(document).ready(function () {
 
                     for (var i = valores.length - 1; i >= 0; i--) {
 
-                        if (valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P' && valores[i]['fl_valor_variavel'] === '0') {
+                        if ((valores[i]['tp_material'] === 'C' || valores[i]['tp_material'] === 'P') && valores[i]['fl_valor_variavel'] === '0') {
 
                             if (valores[i]['entregue'] === '0,0000') {
 
                                 var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
-                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">';
+                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd" disabled="true">';
                             } else {
                                 var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
-                                        value="' + valores[i]['aguardandoentrega'].trim() + '" class="form-control input-sm qtd" disabled="true">';
+                                        value="' + valores[i]['aguardandoentrega'].trim() + '" fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd" disabled="true">';
                             }
 
 
-                        } else if (valores[i]['tp_material'] === 'S') {
+                        } else {
 
 
                             if (valores[i]['entregue'] === '0,0000') {
                                 var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
-                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" class="form-control input-sm qtd" disabled="true">' +
+                                        value="' + valores[i]['qt_itens_ordem'].trim() + '" fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd" disabled="true">' +
                                         '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
-                                        '" value="' + valores[i]['vl_itens_ordem'].trim() + '" class="form-control input-sm vl" disabled="true">';
+                                        '" value="' + valores[i]['vl_itens_ordem'].trim() + '" fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm vl" disabled="true">';
                             } else {
 
                                 var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
-                                        class="form-control input-sm qtd">' +
-                                        '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] +
-                                        '"  class="form-control input-sm vl" >';
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd">' +
+                                        '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '"  \n\
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm vl" >';
                             }
 
                         }
@@ -213,28 +215,27 @@ $(document).ready(function () {
 
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
 
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp"),
-                            'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(), 'data': $("#data_entrega").val(),
-                            'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"),
+                            'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(),
+                            'id_entrega': $("#id_entrega").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
 
                 } else if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
 
                     if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' && $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
 
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'id': $("body").find("#id").val(),
-                            'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $(this).find("#idOrdem").val(),
-                            'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val()});
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'tp': $(this).find(".qtd").attr("tp"),
+                            'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(),
+                            'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
                 }
             });
 
             var enc = JSON.stringify(itens);
-
+            
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-//                "dataType": "json",
                 "dataType": "json",
                 "data": {
                     "acao": "cadastroItensEntrega",
@@ -308,6 +309,7 @@ $(document).ready(function () {
                     for (var i = valores.length - 1; i >= 0; i--) {
 
                         let valor = [
+                            '1',
                             valores[i]['nr_item'],
                             valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
                             valores[i]['nm_desc_material'],
@@ -333,6 +335,7 @@ $(document).ready(function () {
                         },
 
                         columns: [
+                            {title: "Nº da entrega", className: "text-center"},
                             {title: "Nº", className: "text-center"},
                             {title: "Item", className: "text-center"},
                             {title: "Descrição", className: "text-center"},

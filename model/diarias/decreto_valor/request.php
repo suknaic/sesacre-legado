@@ -21,9 +21,9 @@ switch ($_REQUEST['acao']) {
 
     case 'returnClasseOption':
         try {
-            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $prog = new DecretoValor();
-            echo $prog->optionsClasse((int)$filtro);
+            echo $prog->optionsClasse((int)$filtro['decreto'],(int)$filtro['classe']);
             return;
             break;
             
@@ -57,6 +57,39 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'alteraDecretoValor':
+        try {
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //cria um objeto da classe decreto_valor
+            $prog = new DecretoValor((int)$filtro['decreto'],(int)$filtro['classe'],$filtro['tipo'],$filtro['valor']);
+            $prog->setIdDecretoValor((int)$filtro['id']);
+            echo $prog->alteraDecretoValor();
+            return;
+            break;
+            
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
+
+
+    case 'excluirDecretoValor':
+        try {
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $prog = new DecretoValor();
+            $prog->setIdDecretoValor((int)$filtro['id']);
+            echo $prog->excluirDecretoValor();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
 
 
 }

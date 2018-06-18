@@ -76,7 +76,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                     <div class="form-group">
 <!--                                                    <div class="panel-body">-->
                                                         <label for="pessoa">
-                                                            Responsável: <span class="text-danger">*</span>
+                                                            Usuário: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -118,7 +118,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                     <div class="form-group">
 <!--                                                    <div class="panel-body">-->
                                                         <label for="tipo_solicitacao">
-                                                            Tipo da administração: <span class="text-danger">*</span>
+                                                            Tipo da Administração: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -168,7 +168,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Pessoas</h3>
+                                <h3 class="panel-title">Usuários</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -179,7 +179,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                     <tr>
                                                         <th>Nome</th>
                                                         <th>Central de Demanda</th>
-                                                        <th>Tipo da administração</th>
+                                                        <th>Tipo da Administração</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

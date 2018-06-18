@@ -1442,6 +1442,33 @@ class Contrato {
             $retorno = "";
         }
     }
+    
+   public function retornaOptionUsuarioContrato(PDO $pdo = null, int $idUsuario = 0) {
+        $retorno = "<option value='0'>Selecione um Usuário</option>";
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $cargo = new DaoSesContrato();
+            $result = $cargo->retornaTodasPessoas($pdo);
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    if ($idUsuario == $v['id_pessoa']) {
+                        $retorno .= "<option value = '" . $v['id_pessoa'] . "' selected>" . $v['nm_pessoa'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                    }
+                }
+            }
+
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    } 
 
     public function retornaOptionPessoaChamado(PDO $pdo = null, int $idPessoa = 0) {
 //        $retorno = "<option value='0'>Selecione uma pessoa</option>";
