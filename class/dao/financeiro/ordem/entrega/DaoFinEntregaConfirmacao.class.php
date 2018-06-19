@@ -26,6 +26,25 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         return $this->sucesso;
     }
 
+    public function retornaLoadCadEntrega(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+
+                $sql = "";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
     public function salvaEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {

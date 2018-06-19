@@ -25,13 +25,13 @@ $(document).ready(function () {
                 for (var i = valores.length - 1; i >= 0; i--) {
                     let valor = [
                         valores[i]['dh_recebimento_sistema'],
-                        valores[i]['nr_entrega_confirmacao'],
+                        valores[i]['qt_entrega'],
                         valores[i]['nr_prazo_ordem'],
                         valores[i]['dt_entrega'],
                         valores[i]['dt_confirmacao'],
                         valores[i]['situacao'],
                         valores[i]['diasatrazo'],
-                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_entrega_confirmacao'] + '&ordem=' + valores[i]['id_ordem'] +
+                        '<a href="/pages/financeiro/ordem/entrega/cadEntrega.php?id=' + valores[i]['id_protocolo'] + '&ordem=' + valores[i]['id_ordem'] +
                                 '" title="lançar confirmação"><span class="fa fa-search-plus fa-lg text-info"></span></a>'
                     ]
                     dataSet.push(valor)

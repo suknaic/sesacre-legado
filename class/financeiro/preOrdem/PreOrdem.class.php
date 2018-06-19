@@ -395,9 +395,9 @@ class PreOrdem {
             //verifica o saldo do item
             $daoFinPreOrdem->retornaSaldoPreOrdem($pdo, $condicao, $subCondicao);
 
-            if ($this->tipoMaterial == 'C' || $this->tipoMaterial == 'P' && $daoFinPreOrdem->Sucesso()) {
+            if (($this->tipoMaterial == 'C' || $this->tipoMaterial == 'P') && $daoFinPreOrdem->Sucesso()) {
 
-                if ($daoFinPreOrdem->getMsgRetorno()[0]["saldo"] < Metodos::ConverteValorIng($this->qtItensPre) && !empty($this->qtItensPre)) {
+                if (($daoFinPreOrdem->getMsgRetorno()[0]["saldo"] < Metodos::ConverteValorIng($this->qtItensPre)) && !empty($this->qtItensPre)) {
                     return false;
                 }
             } else if ($this->tipoMaterial == 'S' && $daoFinPreOrdem->Sucesso() && !empty($this->qtItensPre) && !empty($this->qtItensPre)) {
