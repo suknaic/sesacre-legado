@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Valores das diárias por Decreto e Classe</h1>                       
+                        <h1 class="page-header text-overflow">Tabela de Valores das Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -75,7 +75,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="id_decreto">
-                                                            Decreto: <span class="text-danger">*</span>
+                                                            Base Legal: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">

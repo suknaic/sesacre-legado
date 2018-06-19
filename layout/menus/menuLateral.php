@@ -302,7 +302,7 @@
                         <li>
                             <a href="#">
                                 <i class="fa fa-calendar" aria-hidden="true"></i>
-                                <span class="menu-title">Diárias</span>
+                                <span class="menu-title"><strong>Diárias</strong></span>
                                 <i class="arrow"></i>
                             </a>
                             <!--Submenu-->
@@ -314,8 +314,24 @@
                                         <i class="arrow"></i>
                                     </a>
                                     <ul>
-                                        <li><a href="/pages/diarias/permissoes/">Permissões de Acesso</a></li>
-                                        <li><a href="/pages/diarias/decreto_valor/">Tabelas Gerenciais</a></li>
+                                        <li>
+                                            <a href="#">Centrais de Demanda <i class="arrow"></i></a>
+                                            <ul>
+                                                <li><a href="#">Vincular Central de Demanda do Módulo de Diárias</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Perfil de Acesso <i class="arrow"></i></a>
+                                            <ul>
+                                                <li><a href="/pages/diarias/permissoes/">Vincular Perfil de Acesso do Módulo de Diárias</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#">Tabelas Gerenciais <i class="arrow"></i></a>
+                                            <ul>
+                                                <li><a href="/pages/diarias/decreto_valor/">Valores das Diárias</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                     
                                 </li>
