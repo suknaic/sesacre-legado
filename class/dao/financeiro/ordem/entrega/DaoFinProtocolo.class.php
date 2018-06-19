@@ -89,8 +89,9 @@ class DaoFinProtocolo extends FinProtocoloTb {
             if ($pdo != null) {
 
                 $sql = "insert into fin_protocolo (nm_representante, nr_rg_cpf, nm_email_representante, 
-                        dh_recebimento_sistema, ds_protocolo, id_ordem, id_pessoa, qt_entrega) values (:nmRepresentante,
-                        :rgCpf, :email, :recebimento, :dsProtocolo, :ordem, :pessoa, :qtEntrega)";
+                        dh_recebimento_sistema, ds_protocolo, id_ordem, id_pessoa, qt_entrega, dt_entrega) 
+                        values (:nmRepresentante, :rgCpf, :email, :recebimento, :dsProtocolo, :ordem, 
+                        :pessoa, :qtEntrega, :dtEntrega)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nmRepresentante", $this->getNmRepresentante(), PDO::PARAM_STR);
                 $stmt->bindValue(":rgCpf", $this->getNrRgCpf(), PDO::PARAM_INT);
@@ -99,7 +100,8 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $stmt->bindValue(":dsProtocolo", $this->getDsProtocolo(), PDO::PARAM_STR);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->bindValue(":pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
-                $stmt->bindValue(":qtEntrega", $this->getQdEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":qtEntrega", $this->getQtEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":dtEntrega", $this->getDtEntrega(), PDO::PARAM_STR);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -156,25 +158,23 @@ class DaoFinProtocolo extends FinProtocoloTb {
     public function retornaEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select entrega.id_entrega_confirmacao, protocolo.id_ordem, to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema,
-                        entrega.nr_entrega_confirmacao, ordem.nr_prazo_ordem, to_char(entrega.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
-                        to_char(entrega.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, entrega.st_entrega_confirmacao as status,
+                $sql = "select protocolo.id_protocolo, protocolo.id_ordem, to_char(protocolo.dh_recebimento_sistema, 'DD/MM/YYYY') as dh_recebimento_sistema,
+                        protocolo.qt_entrega, ordem.nr_prazo_ordem, to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
+                        to_char(protocolo.dt_confirmacao, 'DD/MM/YYYY') as dt_confirmacao, protocolo.st_protocolo as status,
                         CASE  
-                            WHEN entrega.dt_confirmacao is null	   THEN  (entrega.dt_entrega -  (SELECT CURRENT_DATE )) 
-                            WHEN entrega.dt_confirmacao is not null  THEN  (entrega.dt_entrega - entrega.dt_confirmacao)
+                                WHEN protocolo.dt_confirmacao is null	  THEN  (protocolo.dt_entrega -  (SELECT CURRENT_DATE )) 
+                            WHEN protocolo.dt_confirmacao is not null  THEN  (protocolo.dt_entrega - protocolo.dt_confirmacao)
                         END as diasAtrazo,
                         CASE 
-                            WHEN entrega.sit_entrega = 0 THEN 'Nehuma entrega informada'
-                            WHEN entrega.sit_entrega = 1 THEN 'Entrega Parcial'
-                            WHEN entrega.sit_entrega = 2 THEN 'Entrega Total'
+                                WHEN protocolo.st_protocolo = 0 THEN 'Nehuma entrega informada'
+                            WHEN protocolo.st_protocolo = 1 THEN 'Entrega Parcial'
+                            WHEN protocolo.st_protocolo = 2 THEN 'Entrega Total'
                         END situacao
-                        from fin_entrega_confirmacao as entrega
-                        inner join fin_protocolo as protocolo
-                        on protocolo.id_ordem = entrega.id_ordem
+                        from fin_protocolo as protocolo
+
                         inner join fin_ordem as ordem
                         on ordem.id_ordem = protocolo.id_ordem
-                        where ordem.id_ordem = :idOrdem
-                        order by entrega.nr_entrega_confirmacao";
+                        where ordem.id_ordem = :idOrdem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();

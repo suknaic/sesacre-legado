@@ -184,13 +184,6 @@ class FinProtocoloModel {
     }
 
     /**
-     * @return mixed
-     */
-    public function getIdPessoa() {
-        return $this->id_pessoa;
-    }
-
-    /**
      * @param mixed $id_pessoa
      *
      * @return self
@@ -206,17 +199,6 @@ class FinProtocoloModel {
      */
     public function getIdPessoa() {
         return $this->id_pessoa;
-    }
-
-    /**
-     * @param mixed $id_pessoa
-     *
-     * @return self
-     */
-    public function setIdPessoa($id_pessoa) {
-        $this->id_pessoa = $id_pessoa;
-
-        return $this;
     }
 
     /**
@@ -331,7 +313,6 @@ class FinProtocoloModel {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $pdo->beginTransaction();
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->retornaInforLoadProtocolo($pdo);
@@ -339,7 +320,7 @@ class FinProtocoloModel {
                 return $daoFinProtocolo->getMsgRetorno();
             }
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
@@ -356,12 +337,25 @@ class FinProtocoloModel {
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setNmRepresentante($this->nm_representante);
             $daoFinProtocolo->setNrRgCpf($this->nr_rg_cpf);
-            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
             $daoFinProtocolo->setNmEmailRepresentante($this->nm_email_representante);
+            $daoFinProtocolo->setQtEntrega(1);
+            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
             $daoFinProtocolo->setDsProtocolo($this->ds_protocolo);
-            $daoFinProtocolo->setQdEntrega(1);
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->setIdPessoa($this->id_pessoa);
+
+            //retorna prazo de entrega
+            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+            $prazo = $daoFinProtocolo->getMsgRetorno();
+            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
+            $data = Metodos::ConverteDataING($data);
+            $daoFinProtocolo->setDtEntrega($data);
+
             $daoFinProtocolo->salvaProcotolo($pdo);
             //pegando id do protocolo
             $this->id_protocolo = ($pdo->lastInsertId('fin_protocolo_id_protocolo_seq'));
@@ -371,31 +365,6 @@ class FinProtocoloModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
             }
-            //retorna prazo de entrega
-            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
-            if (!$daoFinProtocolo->sucesso()) {
-                $erro = true;
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
-            }
-
-            $prazo = $daoFinProtocolo->getMsgRetorno();
-            //instanciando a clase para cadastra a confirmacao da entrega 
-            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacaoModel->setIdOrdem($this->id_ordem);
-            $finEntregaConfirmacaoModel->setNrQtdEntrega(1);
-            $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
-            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
-            $data = Metodos::ConverteDataING($data);
-            $finEntregaConfirmacaoModel->setNrEntregaConfirmacao(1);
-            $finEntregaConfirmacaoModel->setDtEntrega($data);
-            $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
-            if (!$finEntregaConfirmacaoModel->sucesso()) {
-                $erro = true;
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
-            }
-
 
             $daoFinProtocolo->updateStatusOrdem($pdo);
 
