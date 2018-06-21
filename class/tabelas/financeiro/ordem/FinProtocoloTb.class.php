@@ -8,13 +8,18 @@ class FinProtocoloTb {
     private $nm_representante = null;
     private $nr_rg_cpf = null;
     private $nm_email_representante = null;
+    private $qt_entrega = null;
     private $dh_recebimento_sistema = null;
     private $dh_recimento = null;
     private $ds_protocolo = null;
     private $id_ordem = null;
-    private $qd_entrega = null;
     private $id_pessoa = null;
     private $st_ativo = null;
+    private $nr_entrega_protocolo = null;
+    private $dt_entrega = null;
+    private $dt_confirmacao = null;
+    private $nr_qtd_entrega = null;
+    private $st_protocolo = null;
 
     /**
      * @return mixed
@@ -84,6 +89,24 @@ class FinProtocoloTb {
      */
     public function setNmEmailRepresentante($nm_email_representante) {
         $this->nm_email_representante = $nm_email_representante;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQtEntrega() {
+        return $this->qt_entrega;
+    }
+
+    /**
+     * @param mixed $qt_entrega
+     *
+     * @return self
+     */
+    public function setQtEntrega($qt_entrega) {
+        $this->qt_entrega = $qt_entrega;
 
         return $this;
     }
@@ -161,19 +184,12 @@ class FinProtocoloTb {
     }
 
     /**
-     * @return mixed
-     */
-    public function getQdEntrega() {
-        return $this->qd_entrega;
-    }
-
-    /**
-     * @param mixed $qd_entrega
+     * @param mixed $id_pessoa
      *
      * @return self
      */
-    public function setQdEntrega($qd_entrega) {
-        $this->qd_entrega = $qd_entrega;
+    public function setIdPessoa($id_pessoa) {
+        $this->id_pessoa = $id_pessoa;
 
         return $this;
     }
@@ -183,17 +199,6 @@ class FinProtocoloTb {
      */
     public function getIdPessoa() {
         return $this->id_pessoa;
-    }
-
-    /**
-     * @param mixed $id_pessoa
-     *
-     * @return self
-     */
-    public function setIdPessoa($id_pessoa) {
-        $this->id_pessoa = $id_pessoa;
-
-        return $this;
     }
 
     /**
@@ -210,6 +215,96 @@ class FinProtocoloTb {
      */
     public function setStAtivo($st_ativo) {
         $this->st_ativo = $st_ativo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNrEntregaProtocolo() {
+        return $this->nr_entrega_protocolo;
+    }
+
+    /**
+     * @param mixed $nr_entrega_protocolo
+     *
+     * @return self
+     */
+    public function setNrEntregaProtocolo($nr_entrega_protocolo) {
+        $this->nr_entrega_protocolo = $nr_entrega_protocolo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDtEntrega() {
+        return $this->dt_entrega;
+    }
+
+    /**
+     * @param mixed $dt_entrega
+     *
+     * @return self
+     */
+    public function setDtEntrega($dt_entrega) {
+        $this->dt_entrega = $dt_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDtConfirmacao() {
+        return $this->dt_confirmacao;
+    }
+
+    /**
+     * @param mixed $dt_confirmacao
+     *
+     * @return self
+     */
+    public function setDtConfirmacao($dt_confirmacao) {
+        $this->dt_confirmacao = $dt_confirmacao;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNrQtdEntrega() {
+        return $this->nr_qtd_entrega;
+    }
+
+    /**
+     * @param mixed $nr_qtd_entrega
+     *
+     * @return self
+     */
+    public function setNrQtdEntrega($nr_qtd_entrega) {
+        $this->nr_qtd_entrega = $nr_qtd_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStProtocolo() {
+        return $this->st_protocolo;
+    }
+
+    /**
+     * @param mixed $st_protocolo
+     *
+     * @return self
+     */
+    public function setStProtocolo($st_protocolo) {
+        $this->st_protocolo = $st_protocolo;
 
         return $this;
     }

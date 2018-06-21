@@ -52,7 +52,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Manutenção de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Cadastro de Proposta de Concessão de Diárias</h1>                       
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="../">Voltar</a></li>                        
@@ -241,7 +241,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
                                                <input type="hidden" id="id_cidade_inicio" disabled value="">
                                                <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_inicio" disabled value="" />
+                                                   <input class="form-control" type="text" id="ds_cidade_inicio" readonly value="" />
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="origem">
                                                        <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                    </span>
@@ -253,7 +253,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
                                                <input type="hidden" id="id_cidade_fim" disabled value="">
                                                <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_fim" disabled value=""/>
+                                                   <input class="form-control" type="text" id="ds_cidade_fim" readonly value=""/>
                                                    <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
                                                        <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                    </span>
@@ -313,7 +313,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <div class="row">
                                        <div class="col-md-6">
                                            <div class="form-group">
-                                               <label for="id_decreto">Decreto: <span class="text-danger">*</span></label>
+                                               <label for="id_decreto">Base Legal: <span class="text-danger">*</span></label>
                                                <div class="input-group">
                                                    <span class="input-group-addon">
                                                        <p class="fa fa-list inputPFa"></p>
@@ -360,7 +360,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                    <span class="input-group-addon">
                                                        <p class="fa fa-file-text-o inputPFa"></p>
                                                    </span>
-                                                   <input type="text" id="vl_diaria_destino" class="form-control decimal" value="<?php echo $vl_diaria_destino; ?>" />
+                                                   <input type="text" id="vl_diaria_destino" class="form-control decimal" value="<?php echo $vl_diaria_destino; ?>" readonly />
                                                </div>
                                            </div>
                                        </div>
@@ -434,7 +434,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                 <label for="id_central_solicitante">Nome do Solicitante:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><p class="fa fa-file-text-o inputPFa"></p></span>
-                                                    <input class="form-control" type="text" id="id_pessoa_solicitante" disabled value="<?php echo $nm_usuario ?>">
+                                                    <input class="form-control" type="text" id="id_pessoa_solicitante" readonly value="<?php echo $nm_usuario ?>">
                                                 </div>
                                             </div>
                                         </div>

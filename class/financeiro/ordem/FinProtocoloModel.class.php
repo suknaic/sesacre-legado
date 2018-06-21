@@ -8,13 +8,18 @@ class FinProtocoloModel {
     private $nm_representante = null;
     private $nr_rg_cpf = null;
     private $nm_email_representante = null;
+    private $qt_entrega = null;
     private $dh_recebimento_sistema = null;
     private $dh_recimento = null;
     private $ds_protocolo = null;
     private $id_ordem = null;
-    private $qd_entrega = null;
     private $id_pessoa = null;
     private $st_ativo = null;
+    private $nr_entrega_protocolo = null;
+    private $dt_entrega = null;
+    private $dt_confirmacao = null;
+    private $nr_qtd_entrega = null;
+    private $st_protocolo = null;
 
     /**
      * @return mixed
@@ -74,7 +79,7 @@ class FinProtocoloModel {
      * @return mixed
      */
     public function getNmEmailRepresentante() {
-        return $this->nm_email_representante;
+        return $this->nm_email_repªresentante;
     }
 
     /**
@@ -84,6 +89,24 @@ class FinProtocoloModel {
      */
     public function setNmEmailRepresentante($nm_email_representante) {
         $this->nm_email_representante = $nm_email_representante;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQtEntrega() {
+        return $this->qt_entrega;
+    }
+
+    /**
+     * @param mixed $qt_entrega
+     *
+     * @return self
+     */
+    public function setQtEntrega($qt_entrega) {
+        $this->qt_entrega = $qt_entrega;
 
         return $this;
     }
@@ -161,19 +184,12 @@ class FinProtocoloModel {
     }
 
     /**
-     * @return mixed
-     */
-    public function getQdEntrega() {
-        return $this->qd_entrega;
-    }
-
-    /**
-     * @param mixed $qd_entrega
+     * @param mixed $id_pessoa
      *
      * @return self
      */
-    public function setQdEntrega($qd_entrega) {
-        $this->qd_entrega = $qd_entrega;
+    public function setIdPessoa($id_pessoa) {
+        $this->id_pessoa = $id_pessoa;
 
         return $this;
     }
@@ -183,17 +199,6 @@ class FinProtocoloModel {
      */
     public function getIdPessoa() {
         return $this->id_pessoa;
-    }
-
-    /**
-     * @param mixed $id_pessoa
-     *
-     * @return self
-     */
-    public function setIdPessoa($id_pessoa) {
-        $this->id_pessoa = $id_pessoa;
-
-        return $this;
     }
 
     /**
@@ -214,11 +219,100 @@ class FinProtocoloModel {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNrEntregaProtocolo() {
+        return $this->nr_entrega_protocolo;
+    }
+
+    /**
+     * @param mixed $nr_entrega_protocolo
+     *
+     * @return self
+     */
+    public function setNrEntregaProtocolo($nr_entrega_protocolo) {
+        $this->nr_entrega_protocolo = $nr_entrega_protocolo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDtEntrega() {
+        return $this->dt_entrega;
+    }
+
+    /**
+     * @param mixed $dt_entrega
+     *
+     * @return self
+     */
+    public function setDtEntrega($dt_entrega) {
+        $this->dt_entrega = $dt_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDtConfirmacao() {
+        return $this->dt_confirmacao;
+    }
+
+    /**
+     * @param mixed $dt_confirmacao
+     *
+     * @return self
+     */
+    public function setDtConfirmacao($dt_confirmacao) {
+        $this->dt_confirmacao = $dt_confirmacao;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNrQtdEntrega() {
+        return $this->nr_qtd_entrega;
+    }
+
+    /**
+     * @param mixed $nr_qtd_entrega
+     *
+     * @return self
+     */
+    public function setNrQtdEntrega($nr_qtd_entrega) {
+        $this->nr_qtd_entrega = $nr_qtd_entrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStProtocolo() {
+        return $this->st_protocolo;
+    }
+
+    /**
+     * @param mixed $st_protocolo
+     *
+     * @return self
+     */
+    public function setStProtocolo($st_protocolo) {
+        $this->st_protocolo = $st_protocolo;
+
+        return $this;
+    }
+
     public function inforLoadProtocolo() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $pdo->beginTransaction();
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->retornaInforLoadProtocolo($pdo);
@@ -226,7 +320,7 @@ class FinProtocoloModel {
                 return $daoFinProtocolo->getMsgRetorno();
             }
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
@@ -243,12 +337,25 @@ class FinProtocoloModel {
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setNmRepresentante($this->nm_representante);
             $daoFinProtocolo->setNrRgCpf($this->nr_rg_cpf);
-            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
             $daoFinProtocolo->setNmEmailRepresentante($this->nm_email_representante);
+            $daoFinProtocolo->setQtEntrega(1);
+            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
             $daoFinProtocolo->setDsProtocolo($this->ds_protocolo);
-            $daoFinProtocolo->setQdEntrega(1);
             $daoFinProtocolo->setIdOrdem($this->id_ordem);
             $daoFinProtocolo->setIdPessoa($this->id_pessoa);
+
+            //retorna prazo de entrega
+            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
+            if (!$daoFinProtocolo->sucesso()) {
+                $erro = true;
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+            $prazo = $daoFinProtocolo->getMsgRetorno();
+            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
+            $data = Metodos::ConverteDataING($data);
+            $daoFinProtocolo->setDtEntrega($data);
+
             $daoFinProtocolo->salvaProcotolo($pdo);
             //pegando id do protocolo
             $this->id_protocolo = ($pdo->lastInsertId('fin_protocolo_id_protocolo_seq'));
@@ -258,31 +365,6 @@ class FinProtocoloModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
             }
-            //retorna prazo de entrega
-            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
-            if (!$daoFinProtocolo->sucesso()) {
-                $erro = true;
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
-            }
-
-            $prazo = $daoFinProtocolo->getMsgRetorno();
-            //instanciando a clase para cadastra a confirmacao da entrega 
-            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacaoModel->setIdOrdem($this->id_ordem);
-            $finEntregaConfirmacaoModel->setNrQtdEntrega(1);
-            $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
-            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
-            $data = Metodos::ConverteDataING($data);
-            $finEntregaConfirmacaoModel->setNrEntregaConfirmacao(1);
-            $finEntregaConfirmacaoModel->setDtEntrega($data);
-            $finEntregaConfirmacaoModel->salvaInsertEntregaProtocolo($pdo);
-            if (!$finEntregaConfirmacaoModel->sucesso()) {
-                $erro = true;
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", $finEntregaConfirmacaoModel->getMsgRetorno());
-            }
-
 
             $daoFinProtocolo->updateStatusOrdem($pdo);
 

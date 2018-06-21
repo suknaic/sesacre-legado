@@ -48,7 +48,7 @@
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Proposta e Concessão de Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -59,7 +59,7 @@
                         <div class="panel">
                             <div class="panel-heading">
                                 <div class="col-sm-6">
-                                    <h3 class="panel-title">Lista de Diárias</h3>
+                                    <h3 class="panel-title">Lista de Proposta e Concessão de Diárias</h3>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="pull-right">

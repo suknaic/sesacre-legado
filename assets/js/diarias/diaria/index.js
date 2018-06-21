@@ -356,6 +356,7 @@ $(document).ready(function () {
     });
     //Combo box dos tipos de autorizações
     $("#diariaForm").find("select").select2({
+        
     });
 
     if ($("#id_tipo option:selected").val() > 1) {

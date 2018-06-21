@@ -65,7 +65,11 @@ switch ($_REQUEST['acao']) {
             $diaria = new Diaria();
             $diaria->setIdCentralSolicitante((int)$dados['lotacao']);
             echo '<option value="0">Selecione uma Diária</option>';
-            echo $diaria->retornaPedidoDiariaOption();
+            
+            //So irá listar as diárias da central selecionada se o usuário tiver o tipo de administração 'Gestor de Diárias'
+            if ($session->vPDiariasSolicitacao()) {
+                echo $diaria->retornaPedidoDiariaOption();
+            }
             return;
             break;
         } catch (Error $e) {

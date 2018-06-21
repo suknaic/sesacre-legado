@@ -28,7 +28,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
                 $stmt->bindValue(":id_decreto", $this->getIdDecreto(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_classe", $this->getIdClasse(), PDO::PARAM_INT);
                 $stmt->bindValue(":tp_decreto_valor", $this->getTpDecretoValor(), PDO::PARAM_INT);
-                $stmt->bindValue(":vl_decreto_valor", $this->getVlDecretoValor(), PDO::PARAM_INT);
+                $stmt->bindValue(":vl_decreto_valor", Metodos::ConverteValorIng($this->getVlDecretoValor()), PDO::PARAM_INT);
            
                 $stmt->execute();
                 $this->sucesso = true;
@@ -55,7 +55,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
                 $stmt->bindValue(":id_decreto", $this->getIdDecreto(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_classe", $this->getIdClasse(), PDO::PARAM_INT);
                 $stmt->bindValue(":tp_decreto_valor", $this->getTpDecretoValor(), PDO::PARAM_INT);
-                $stmt->bindValue(":vl_decreto_valor", $this->getVlDecretoValor(), PDO::PARAM_INT);
+                $stmt->bindValue(":vl_decreto_valor", Metodos::ConverteValorIng($this->getVlDecretoValor()), PDO::PARAM_INT);
                 $stmt->bindValue(":id_decreto_valor", $this->getIdDecretoValor(), PDO::PARAM_INT);
                 
                 $stmt->execute();
@@ -85,23 +85,57 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
     }
     
-    public function select(PDO $pdo = null) {
+    public function selectDCValorCompleto(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "SELECT dv.id_decreto_valor,
-                                dv.id_decreto,
+                $sql = "SELECT dv.id_decreto_valor,dv.id_decreto,
                                 dcr.nm_decreto,
                                 dv.id_classe,
                                 dcl.nm_classe,
                                 dcl.cd_classe,
                                 dv.tp_decreto_valor,
-                                trim(to_char(dv.vl_decreto_valor,'999G999G990D99')) as vl_decreto_valor
+                                trim(to_char(dv.vl_decreto_valor,'999G999G999G990D99')) as vl_decreto_valor
                          FROM dia_decreto_valor dv,
                               dia_classe dcl,
                               dia_decreto dcr
                          WHERE dv.id_classe = dcl.id_classe
-                           AND dv.id_decreto = dcr.id_decreto "
-                        . $this->montaFiltro();
+                           AND dv.id_decreto = dcr.id_decreto ".
+                $this->montaFiltro()." order by dcr.nm_decreto, dcl.cd_classe";
+                
+                $stmt = $pdo->prepare($sql);
+                
+                if (!empty($this->getIdDecreto())) {
+                    $stmt->bindValue(":id_decreto",$this->getIdDecreto(), PDO::PARAM_INT);
+                }
+                if (!empty($this->getIdClasse())) {
+                    $stmt->bindValue(":id_classe",$this->getIdClasse(), PDO::PARAM_INT);
+                }
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } 
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function select(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT distinct dv.id_decreto,
+                                        dcr.nm_decreto,
+                                        dv.id_classe,
+                                        dcl.nm_classe,
+                                        dcl.cd_classe
+                                 FROM dia_decreto_valor dv,
+                                      dia_classe dcl,
+                                      dia_decreto dcr
+                                 WHERE dv.id_classe = dcl.id_classe
+                                   AND dv.id_decreto = dcr.id_decreto ". $this->montaFiltro()." order by dcr.nm_decreto, dcl.cd_classe";
                 
                 $stmt = $pdo->prepare($sql);
                
@@ -114,6 +148,29 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } 
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function selectLinha(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "SELECT id_decreto_valor, id_decreto, id_classe,tp_decreto_valor,vl_decreto_valor
+                        FROM dia_decreto_valor
+                        WHERE id_decreto_valor = :idDecretoValor";
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':idDecretoValor', $this->getIdDecretoValor(), PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } 
             } else {

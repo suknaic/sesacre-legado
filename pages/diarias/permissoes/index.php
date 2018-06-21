@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Permissões de Acesso do módulo de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Cadastro de Perfil de Acesso do Módulo de Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -75,14 +75,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                                                 <div class="col-md-6">
                                                     <div class="panel-body">
                                                         <label for="pessoa">
-                                                            Responsável: <span class="text-danger">*</span>
+                                                            Usuário: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="pessoa" class="form-control">
-                                                                <option value="0">Selecione um Responsável</option>                                                                
+                                                                <option value="0">Selecione um Usuário</option>                                                                
                                                                 <?php
                                                                     echo $selectPessoa;
                                                                 ?>
@@ -150,7 +150,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Pessoas</h3>
+                                <h3 class="panel-title">Usuários</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">

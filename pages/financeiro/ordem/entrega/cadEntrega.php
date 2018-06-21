@@ -91,13 +91,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="protocolo" value="<?php echo $protocolo["id_protocolo"]; ?>" />
-                                        <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
-                                        <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
-                                        <p><strong>Ata:</strong> <span id="ata"> </span></p>
-                                        <p><strong>Contrato:</strong> <span id="contrato"> </span></p>
-                                        <p><strong>Empenho:</strong> <span id="empenho"> </span></p>
-                                        <p><strong>Ordem:</strong> <span id="ordem"> </span></p>
+                                        <input type="hidden" id="protocolo" value="<?php echo $id; ?>" />
+                                        <p><strong>Pedido:</strong> <?php echo $dados["nr_pedido"]; ?></p>
+                                        <p><strong>Descrição:</strong> <?php echo $dados["ds_pedido"]; ?>/p>
+                                        <?php
+                                        if ($dados["tp_contrato"] == 1) {
+                                            ?>
+                                            <p><strong>ATA:</strong> <?php echo $dados["nr_contrato"]; ?></p>
+                                            <?php } else {  ?>
+                                            <p><strong>Contrato:</strong> <?php echo $dados["nr_contrato"]; ?></p>
+                                            <?php } ?>
+                                        <p><strong>Empenho:</strong> <?php echo $dados["nr_empenho"]; ?></p>
+                                        <p><strong>Ordem:</strong> <?php echo $dados["nr_ordem"]; ?></p>
                                     </div>
                                 </div>
                                 <div class="panel-body">
