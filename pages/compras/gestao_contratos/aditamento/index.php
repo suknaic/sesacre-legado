@@ -309,7 +309,7 @@
                                                 <label class="col-sm-2 control-label text-left">Unidade de Cálculo: 
                                                     <span class="text-danger">*</span>
                                                     <span class="fa fa-question-circle add-tooltip" 
-                                                          data-original-title="Unidade de Cálculo será Habilitado de acordo com o Instrumento de Equilíbrio Econômico-Financeiro" 
+                                                          data-original-title="Unidade de Cálculo será Habilitado de acordo com o Instrumento de Equilíbrio Econômico-Financeiro e a Base de Cálculo" 
                                                         data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
                                                     </span>                                                    
                                                 </label>
@@ -384,7 +384,7 @@
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                         </span>
-                                                        <input class="form-control quatro_casas" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="R$ 0.000,00">
+                                                        <input class="form-control quatro_casas" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="R$ 0.000,00" readonly="true">
                                                         <span class="input-group-btn" id="btn_itens_abrir_modal">
                                                             <button class="btn btn-primary add-itens" data-toggle="modal" data-target="#myModalFullscreen" type="button">
                                                                 Itens
