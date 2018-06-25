@@ -19,7 +19,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         parent::__construct($idDecreto,$idClasse,$tpDecretoValor,$vlDecretoValor);
     }
 
-    public function insert(PDO $pdo = null) {
+    function insert(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "insert into dia_decreto_valor (id_decreto,id_classe,tp_decreto_valor, vl_decreto_valor) "
@@ -41,21 +41,21 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
     }
     
-    public function update(PDO $pdo = null) {
+    function update(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "update dia_decreto_valor "
                         . "set "
-                            . "id_decreto = :id_decreto , "
-                            . "id_classe = :id_classe "
-                            . "tp_decreto_valor = :tp_decreto_valor "
+                            . "id_decreto = :id_decreto, "
+                            . "id_classe = :id_classe, "
+                            . "tp_decreto_valor = :tp_decreto_valor, "
                             . "vl_decreto_valor = :vl_decreto_valor "
                         . " where id_decreto_valor = :id_decreto_valor";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_decreto", $this->getIdDecreto(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_classe", $this->getIdClasse(), PDO::PARAM_INT);
-                $stmt->bindValue(":tp_decreto_valor", $this->getTpDecretoValor(), PDO::PARAM_INT);
-                $stmt->bindValue(":vl_decreto_valor", Metodos::ConverteValorIng($this->getVlDecretoValor()), PDO::PARAM_INT);
+                $stmt->bindValue(":tp_decreto_valor", $this->getTpDecretoValor(), PDO::PARAM_STR);
+                $stmt->bindValue(":vl_decreto_valor", Metodos::ConverteValorIng($this->getVlDecretoValor()), PDO::PARAM_STR);
                 $stmt->bindValue(":id_decreto_valor", $this->getIdDecretoValor(), PDO::PARAM_INT);
                 
                 $stmt->execute();
@@ -69,7 +69,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
     }
     
-    public function delete(PDO $pdo = null) {
+    function delete(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "delete from dia_decreto_valor where id_decreto_valor = :id_decreto_valor";
@@ -85,7 +85,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
     }
     
-    public function selectDCValorCompleto(PDO $pdo = null) {
+    function selectDCValorCompleto(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT dv.id_decreto_valor,dv.id_decreto,
@@ -110,6 +110,9 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
                 if (!empty($this->getIdClasse())) {
                     $stmt->bindValue(":id_classe",$this->getIdClasse(), PDO::PARAM_INT);
                 }
+                if (!empty($this->getTpDecretoValor())) {
+                    $stmt->bindValue(":tp_decreto_valor",$this->getTpDecretoValor(), PDO::PARAM_STR);
+                }
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -123,7 +126,7 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
     }
     
-    public function select(PDO $pdo = null) {
+    function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT distinct dv.id_decreto,
@@ -145,6 +148,9 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
                 if (!empty($this->getIdClasse())) {
                     $stmt->bindValue(":id_classe",$this->getIdClasse(), PDO::PARAM_INT);
                 }
+                if (!empty($this->getTpDecretoValor())) {
+                    $stmt->bindValue(":tp_decreto_valor",$this->getTpDecretoValor(), PDO::PARAM_STR);
+                }
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -157,8 +163,8 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    public function selectLinha(PDO $pdo = null) {
+         
+    function selectLinha(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "SELECT id_decreto_valor, id_decreto, id_classe,tp_decreto_valor,vl_decreto_valor
@@ -189,6 +195,9 @@ class DaoDiaDecretoValor extends DiaDecretoValor {
         }
         if (!empty($this->getIdClasse())) {
             $filtro_sql .= " and dv.id_classe = :id_classe";
+        }
+        if (!empty($this->getTpDecretoValor())) {
+            $filtro_sql .= " and dv.tp_decreto_valor = :tp_decreto_valor";
         }
 
         return $filtro_sql;

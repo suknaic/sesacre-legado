@@ -137,6 +137,7 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
                                 dest.id_cidade_inicio, 
                                 to_char(dest.dh_inicio,'dd/mm/yyyy hh24:mi')     as dh_inicio, 
                                 (cid_dest.nm_cidade || ' - ' || est_dest.nm_sigla )as ds_cidade_fim,
+                                CASE est_dest.nm_sigla WHEN 'AC' THEN 'Estadual' ELSE 'Nacional' END as estadual_nacional,
                                 dest.id_cidade_fim, 
                                 to_char(dest.dh_fim,'dd/mm/yyyy hh24:mi') as dh_fim,
                                 dest.fl_pernoite, 

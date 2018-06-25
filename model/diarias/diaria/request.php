@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/lotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/cidade/Cidade.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/DecretoValor.class.php";
 
 
 $session = new Session('ajax');
@@ -198,6 +199,22 @@ switch ($_REQUEST['acao']) {
             $prog = new Diaria();
             $prog->setIdDiaria($id_diaria);
             echo $prog->retornaDadosDiaria();
+            return;
+            break;
+        } catch (Exception $exc) {
+            echo Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return;
+            break;
+        }
+
+    case 'retornaValorDiaria':
+        try {
+            $filtro = filter_input(INPUT_GET,'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $prog = new DecretoValor();
+            $prog->setIdDecreto((int)$filtro['decreto']);
+            $prog->setIdClasse((int)$filtro['classe']);
+            $prog->setTpDecretoValor($filtro['local']);
+            echo $prog->retornaValorDiaria();
             return;
             break;
         } catch (Exception $exc) {

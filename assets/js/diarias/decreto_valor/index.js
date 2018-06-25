@@ -298,14 +298,15 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/model/financeiro/autorizacoes/request.php",
+                "url": "/model/diarias/decreto_valor/request.php",
                 "dataType": "html",
+                "method": "post",
                 "data": {
-                    "acao": "atualizar_autorizacao",
+                    "acao": "alteraDecretoValor",
                     "dados": Dados
                 },
                 "success": function (response) {
-//                    console.log(response);
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -335,7 +336,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'primary');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            top.location.href = "/pages/financeiro/autorizacoes/index.php";
+                            location.reload();
                         });
                         return false;
                     } else {
