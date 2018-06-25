@@ -240,23 +240,9 @@ $(document).ready(function () {
     $("#btn_itens_abrir_modal").hide();
     
     $('body').on('change', '#n_instrumento', function (e) {
-        //Regras para a Unidade de Cálculo
-        $('#n_unidade_calculo option').filter(function() {        
-            return $(this).val() != 0;
-        }).attr("disabled", "");
-        $('#n_unidade_calculo').val(0).trigger('change');
-        //Se o instrumento for Revisão, então irá liberar para selecionar
-        //Moeda, Quantidade, Percentual
-        if($("#n_instrumento option:selected").val() == 1){
-            $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
-            $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
-            $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
-        //Se o instrumento for Reajuste, então irá liberar para selecionar
-        //Indice de Correção, Moeda
-        }else if($("#n_instrumento option:selected").val() == 2){            
-            $('#n_unidade_calculo option[value=2]').removeAttr("disabled");
-            $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
-        }
+                
+        $('#n_base_calculo').val(0).trigger('change');                        
+        
         //Tipo de Aquisição somente será habilitado se o Instrumento de Equilibrio
         //For Revisão
         $("#n_tipo_aquisicao").val(0).attr("disabled", "");
@@ -265,27 +251,40 @@ $(document).ready(function () {
         }     
     });
     
-        
-    $('body').on('change', '#n_unidade_calculo', function (e){
-        $("#div_percentual").hide();
-        $("#n_percentual").val("");
-        $("#div_indice_correcao").hide();
-        $("#n_indice_correcao").val("");
-        //Se a Unidade de Calculo for Percentual
-        //Então o Campo Percentual deverá Aparecer
-        if($("#n_unidade_calculo option:selected").val() == 1
-                && $("#n_base_calculo option:selected").val() == 1){
-            $("#div_percentual").show();
-        } 
-        //Se a Unidade de Calculo for Indice de Correção
-        //Então o Campo Indice de correção deverá Aparecer
-        if($("#n_unidade_calculo option:selected").val() == 2){
-            $("#div_indice_correcao").show();
-        } 
-    });
-    
     
     $('body').on('change', '#n_base_calculo', function (e) {
+        
+        //Regras para a Unidade de Cálculo
+        $('#n_unidade_calculo option').filter(function() {      
+            return $(this).val() != 0;
+        }).attr("disabled", "");
+        $('#n_unidade_calculo').val(0).trigger('change');
+        
+        //Se o Instrumento for Revisão
+        if($("#n_instrumento option:selected").val() == 1){
+            //Se a Base de Cálculo For Global 
+            //Somente será liberado Unidade de Calculo Percentual            
+            if($("#n_base_calculo option:selected").val() == 1){
+                $('#n_unidade_calculo option[value=1]').removeAttr("disabled");
+
+            //Se a Base de Cálculo For Unitário 
+            //Somente será liberado Unidade de Calculo Moeda e Quantidade            
+            }else if($("#n_base_calculo option:selected").val() == 2){
+                $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
+                $('#n_unidade_calculo option[value=4]').removeAttr("disabled");
+            }                         
+        //Se o Instrumento for Reajuste
+        }else if($("#n_instrumento option:selected").val() == 2){
+            //Se a Base de Cálculo for Global
+            //somente será liberado Unidade de Cálculo Índice de Correção
+            if($("#n_base_calculo option:selected").val() == 1){
+                $('#n_unidade_calculo option[value=2]').removeAttr("disabled");
+            //Se a Base de Cálculo For Unitário 
+            //Somente será liberado Unidade de Calculo Moeda
+            }else if($("#n_base_calculo option:selected").val() == 2){
+                $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
+            }
+        }                                                                                    
         $("#btn_itens_abrir_modal").hide();
         //Sempre que a Base de Calculo for Valor Unitario, então irá habilitar o Botão Itens ao lado do Valor Aditivo
         if($("#n_base_calculo option:selected").val() == 2){
@@ -293,6 +292,28 @@ $(document).ready(function () {
         } 
         $("#n_unidade_calculo").trigger('change');
     });
+        
+    $('body').on('change', '#n_unidade_calculo', function (e){
+        $("#div_percentual").hide();
+        $("#n_percentual").val("");
+        $("#div_indice_correcao").hide();
+        $("#n_indice_correcao").val("");
+        //Se a Unidade de Calculo for Percentual e a Base de Cálculo for Global
+        //Então o Campo Percentual deverá Aparecer
+        if($("#n_unidade_calculo option:selected").val() == 1
+                && $("#n_base_calculo option:selected").val() == 1 ){
+            $("#div_percentual").show();
+        } 
+        //Se a Unidade de Calculo for Indice de Correção e a Base de Cálculo for Global
+        //Então o Campo Indice de correção deverá Aparecer
+        if($("#n_unidade_calculo option:selected").val() == 2
+                && $("#n_base_calculo option:selected").val() == 1 ){
+            $("#div_indice_correcao").show();
+        } 
+    });
+    
+    
+  
     
     $('body').on('change', '#n_finalidade', function (e) {
        //Se a Finalidade for Adição, teremos que fazer alguma Verificação com relação ao máximo de percentual
@@ -328,31 +349,27 @@ $(document).ready(function () {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else { 
-            e.preventDefault();    
-            
+            e.preventDefault();                
             if($("#n_unidade_calculo").val() != 3
                     && $("#n_unidade_calculo").val() != 4){
                 func.modalAlert("É Necessário Escolher Uma Unidade de Cálculo Quantidade ou Moeda.");
                 return false;
-            }
-            
+            }            
             if($("#n_unidade_calculo").val() == 0){
                 func.modalAlert("É Necessário Escolher um Tipo de Aquisição.");
                 return false;
-            }
-            
-            
+            }               
+            //Quando a unidade de cálculo for Moeda
+            //Então o usuário deverá informar o Valor Unitário Aditivada
             if($("#n_unidade_calculo").val() == 3){
                 $(".label-aditivo").text("Valor Unit. Aditivado");
+            //Se por acaso for Quantidade, então deverá ser informado a Quantidade Aditivada
             }else if($("#n_unidade_calculo").val() == 4){
                 $(".label-aditivo").text("Qtd. Aditivada");
             }else{
                 $(".label-aditivo").text("Sem Opção de Texto");
-            }
-            
-            $("#myModalFu").modal('show');
-                                    
-                                  
+            }            
+            $("#myModalFu").modal('show');                                                                      
         }
     });
     
