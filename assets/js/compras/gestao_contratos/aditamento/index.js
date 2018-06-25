@@ -313,7 +313,7 @@ $(document).ready(function () {
     });
     
     
-   a
+  
     
     $('body').on('change', '#n_finalidade', function (e) {
        //Se a Finalidade for Adição, teremos que fazer alguma Verificação com relação ao máximo de percentual
