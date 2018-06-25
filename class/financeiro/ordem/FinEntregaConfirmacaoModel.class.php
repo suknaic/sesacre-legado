@@ -364,14 +364,11 @@ class FinEntregaConfirmacaoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-
-
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->retornaMaiorIdEntregaItens($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
-                var_dump($daoFinEntregaConfirmacao->getMsgRetorno());
             } else {
                 $this->sucesso = false;
             }
