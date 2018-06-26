@@ -10,8 +10,6 @@ class FinEntregaItensModel {
     private $fl_valor_variavel = null;
     private $qt_itens_entrega = null;
     private $vl_itens_entrega = null;
-    private $tp_entrega = null;
-    private $dh_entrega = null;
 
     /**
      * @return mixed
@@ -117,42 +115,6 @@ class FinEntregaItensModel {
      */
     public function setVlItensEntrega($vl_itens_entrega) {
         $this->vl_itens_entrega = $vl_itens_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTpEntrega() {
-        return $this->tp_entrega;
-    }
-
-    /**
-     * @param mixed $tp_entrega
-     *
-     * @return self
-     */
-    public function setTpEntrega($tp_entrega) {
-        $this->tp_entrega = $tp_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDhEntrega() {
-        return $this->dh_entrega;
-    }
-
-    /**
-     * @param mixed $dh_entrega
-     *
-     * @return self
-     */
-    public function setDhEntrega($dh_entrega) {
-        $this->dh_entrega = $dh_entrega;
 
         return $this;
     }

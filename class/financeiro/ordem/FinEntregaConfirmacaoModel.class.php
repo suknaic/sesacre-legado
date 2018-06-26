@@ -9,10 +9,7 @@ class FinEntregaConfirmacaoModel {
     private $id_protocolo = null;
     private $nr_entrega_confirmacao = null;
     private $dt_entrega = null;
-    private $dt_confirmacao = null;
     private $dh_cadastramento = null;
-    private $nr_qtd_entrega = null;
-    private $st_entrega_confirmacao = null;
     private $sit_entrega = null;
     private $sucesso = false;
     private $msgRetorno = null;
@@ -110,24 +107,6 @@ class FinEntregaConfirmacaoModel {
     /**
      * @return mixed
      */
-    public function getDtConfirmacao() {
-        return $this->dt_confirmacao;
-    }
-
-    /**
-     * @param mixed $dt_confirmacao
-     *
-     * @return self
-     */
-    public function setDtConfirmacao($dt_confirmacao) {
-        $this->dt_confirmacao = $dt_confirmacao;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDhCadastramento() {
         return $this->dh_cadastramento;
     }
@@ -139,42 +118,6 @@ class FinEntregaConfirmacaoModel {
      */
     public function setDhCadastramento($dh_cadastramento) {
         $this->dh_cadastramento = $dh_cadastramento;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNrQtdEntrega() {
-        return $this->nr_qtd_entrega;
-    }
-
-    /**
-     * @param mixed $nr_qtd_entrega
-     *
-     * @return self
-     */
-    public function setNrQtdEntrega($nr_qtd_entrega) {
-        $this->nr_qtd_entrega = $nr_qtd_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStEntregaConfirmacao() {
-        return $this->st_entrega_confirmacao;
-    }
-
-    /**
-     * @param mixed $st_entrega_confirmacao
-     *
-     * @return self
-     */
-    public function setStEntregaConfirmacao($st_entrega_confirmacao) {
-        $this->st_entrega_confirmacao = $st_entrega_confirmacao;
 
         return $this;
     }
@@ -197,9 +140,6 @@ class FinEntregaConfirmacaoModel {
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function sucesso() {
         return $this->sucesso;
     }
