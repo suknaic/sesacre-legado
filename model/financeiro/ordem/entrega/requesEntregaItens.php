@@ -10,9 +10,9 @@ switch ($_REQUEST['acao']) {
     CASE 'itensCadEntrega':
         try {
 
-            $protocolo = filter_input(INPUT_GET, 'protocolo', FILTER_DEFAULT);
+            $ordem = filter_input(INPUT_GET, 'ordem', FILTER_DEFAULT);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacaoModel->setIdProtocolo($protocolo);
+            $finEntregaConfirmacaoModel->setIdOrdem($ordem);
             echo json_encode($finEntregaConfirmacaoModel->retornaItensCadEntrega());
             return;
             break;

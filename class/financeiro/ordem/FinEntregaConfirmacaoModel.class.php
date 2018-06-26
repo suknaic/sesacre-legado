@@ -166,32 +166,12 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
-    public function salvaInsertEntregaProtocolo(PDO $pdo) {
-        try {
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
-            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
-            $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($this->nr_entrega_confirmacao);
-            $daoFinEntregaConfirmacao->setDtEntrega($this->dt_entrega);
-            $daoFinEntregaConfirmacao->setNrQtdEntrega($this->nr_qtd_entrega);
-            $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
     public function retornaItensCadEntrega() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
             $daoFinEntregaConfirmacao->retornaInforParaEntrega($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 return $daoFinEntregaConfirmacao->getMsgRetorno();

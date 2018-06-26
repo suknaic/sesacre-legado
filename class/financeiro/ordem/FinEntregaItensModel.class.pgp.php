@@ -122,6 +122,7 @@ class FinEntregaItensModel {
     public function cadastraEntregaItens(array $dados) {
         try {
             if (!empty($dados)) {
+             
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
