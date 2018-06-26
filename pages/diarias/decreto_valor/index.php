@@ -116,9 +116,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="tp_decreto_valor" class="form-control">
-                                                                <option value="0">Selecione se é dentro ou fora do estado</option>                                                                
-                                                                <option value="F">Fora do estado</option>                                                                
-                                                                <option value="D">Dentro do estado</option>                                                                
+                                                                <option value="0">Selecione se é estadual ou nacional</option>                                                                
+                                                                <option value="N">Nacional</option>                                                                
+                                                                <option value="E">Estadual</option>                                                                
                                                             </select>
                                                         </div>
                                                     </div>
@@ -173,7 +173,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                                 <tr>
                                                                     <th>Decreto</th>
                                                                     <th>Classe</th>
-                                                                    <th>Dentro ou Fora do Estado</th>
+                                                                    <th>Estadual ou Nacional</th>
                                                                     <th>Valor</th>
                                                                     <th class="text-center">Ações</th> 
                                                                 </tr>
@@ -257,8 +257,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
-           
+        
         <!-- END JAVASCRIPT -->
-
+        
     </body>
 </html>

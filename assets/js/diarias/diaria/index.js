@@ -169,17 +169,18 @@ function limpaFormItinerario() {
     $("#id_diaria_destino").val(0);
     $("#id_classe_default").val(0);
     $("#id_cidade_inicio").val(0);
-    $("#ds_cidade_inicio").val('');
+    $("#ds_cidade_inicio").val("");
     $("#id_cidade_fim").val(0);
-    $("#ds_cidade_fim").val('');
-    $("#dh_inicio").val('');
-    $("#dh_fim").val('');
+    $("#ds_cidade_fim").val("");
+    $("#dh_inicio").val("");
+    $("#dh_fim").val("");
     $("#id_transporte").val(0);
     $("#id_decreto_default").val(0);
     $("#id_decreto").val(0);
     $("#id_classe").val(0);
     $("#qt_diaria_destino").val(0);
     $("#vl_diaria_destino").val(0);
+    $("#estadual_nacional").val("");
 
     $(".btn-editar").hide();
     $(".btn-cancelar").hide();
@@ -307,6 +308,29 @@ function retornaItinerario() {
     }
 }
 
+function retornaValorDiaria(){
+    var Dados = {
+        local: $("#estadual_nacional").data('tipo'),
+        decreto: $("#id_decreto option:selected").val(),
+        classe: $("#id_classe option:selected").val()
+    }
+    
+    
+    //Checa se os parametros para verificar o valor da diária foram preenchidos
+    if (Dados.decreto > 0 && Dados.classe > 0 && Dados.local != "") {
+        $.ajax({
+            "url": "/model/diarias/diaria/request.php",
+            "dataType": "html",
+            "data": {
+                "acao": "retornaValorDiaria",
+                "dados": Dados
+            },
+            "success": function (response) {
+                $("#vl_diaria_destino").val(response);
+            }
+        });
+    }
+}
 
 $(document).ready(function () {
     func = new Funcoes();
@@ -364,6 +388,20 @@ $(document).ready(function () {
     } else {
         $("#diaria_pai").hide();
     }
+    
+    
+    $('body').on('change','#id_cidade_fim',function(e){
+        //Aqui atribui ao input '#estadual_nacional' se é uma diária no Estado ou Fora do Estado(Nacional)
+        if ($("#id_cidade_fim").data('estado') == 'AC') {
+            $("#estadual_nacional").val("Estadual");
+            $("#estadual_nacional").data('tipo','E');
+        } else {
+            $("#estadual_nacional").val("Nacional");
+            $("#estadual_nacional").data('tipo','N');
+        }
+        
+        retornaValorDiaria();
+    });
 
     $('body').on('change', "#id_pessoa_proponente", function (e) {
         e.preventDefault();
@@ -390,6 +428,12 @@ $(document).ready(function () {
         } else {
             $("#id_classe").html('<option value="0">Selecione a classe</option>');
         }
+        
+        retornaValorDiaria();
+    });
+    
+    $('body').on('change',"#id_classe", function(e){
+       retornaValorDiaria(); 
     });
 
     //Esconde o campo da diaria PAI quando for solicitação de COMPLEMENTO ou PRORROGAÇÃO

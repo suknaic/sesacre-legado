@@ -28,7 +28,8 @@ $(document).ready(function () {
             $("#id_cidade_inicio").val($this.data('cidade'));
             $("#ds_cidade_inicio").val(dsCidade);
         } else {
-            $("#id_cidade_fim").val($this.data('cidade'));
+            $("#id_cidade_fim").data('estado',$this.find("td:eq(1)").text()); //Salva o estado de destino para verificar se a diária é Estadual ou Nacional
+            $("#id_cidade_fim").val($this.data('cidade')).trigger('change'); //Dispara o evento 'change' para mostrar para o usuário se é uma diária Estadual ou Nacional
             $("#ds_cidade_fim").val(dsCidade);
         }
         $('#pesquisaCidade').modal('hide');
