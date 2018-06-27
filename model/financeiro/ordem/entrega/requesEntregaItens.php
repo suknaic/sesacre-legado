@@ -24,11 +24,11 @@ switch ($_REQUEST['acao']) {
 
     CASE 'cadastroItensEntrega':
         try {
-
             $itens = filter_input(INPUT_POST, 'itens', FILTER_DEFAULT);
             $dados = json_decode($itens);
-            $finEntregaItensModel = new FinEntregaItensModel();
-            echo $finEntregaItensModel->cadastraEntregaItens($dados);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->salvaEntregaConfirmacao($dados);
+//            echo $finEntregaItensModel->cadastraEntregaItens($dados);
             return;
             break;
         } catch (Exception $ex) {

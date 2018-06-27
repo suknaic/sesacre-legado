@@ -297,4 +297,24 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function salvaEntregaConfirmacao($dados) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            var_dump($dados);
+            return false;
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }
