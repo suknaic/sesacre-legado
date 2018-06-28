@@ -303,10 +303,24 @@ class FinEntregaConfirmacaoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            var_dump($dados);
-            return false;
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            
+            $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
+            $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
+            //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
+            $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
+            //verificar ser deu tudo certo na busca do numero da entrega confirmacao ser sim vai seta o resto dos dados
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+                $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
+                $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
+                $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
+                foreach ($dados as $valor) {
+                    var_dump($valor);
+                }
+            }
+
+            return false;
+
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
             } else {

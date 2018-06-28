@@ -26,37 +26,18 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         return $this->sucesso;
     }
 
-    public function retornaLoadCadEntrega(PDO $pdo) {
-        try {
-            if ($pdo != null) {
-
-                $sql = "";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
-                $stmt->execute();
-                $this->sucesso = true;
-            } else {
-                $this->msgRetorno = "Sem conexao";
-                $this->sucesso = false;
-            }
-        } catch (Exception $ex) {
-            $this->msgRetorno = $ex->getMessage();
-            $this->sucesso = false;
-        }
-    }
-
     public function salvaEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {
 
-                $sql = "insert into fin_entrega_confirmacao(id_ordem, id_protocolo, nr_entrega_confirmacao, dt_entrega, nr_qtd_entregas) 
-                        values(:ordem, :protocolo, :nrEntrega, :dtEntrega, :qtdEntrega)";
+                $sql = "insert into fin_entrega_confirmacao(id_ordem, id_protocolo, nr_entrega_confirmacao, dt_entrega, sit_entrega) 
+                        values(:ordem, :protocolo, :nrEntrega, :dtEntrega, :situacao)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->bindValue(":nrEntrega", $this->getNrEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":dtEntrega", $this->getDtEntrega(), PDO::PARAM_STR);
-                $stmt->bindValue(":qtdEntrega", $this->getNrQtdEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -252,5 +233,29 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $this->sucesso = false;
         }
     }
-
+    
+    public function retornaNumeroEntregaConfirmacao(PDO $pdo){
+        try{
+            if(!empty($pdo)){
+                $sql = "select 
+                        case 
+                                when max(nr_entrega_confirmacao) is not null then max(nr_entrega_confirmacao)
+                                when max(nr_entrega_confirmacao) is null then '0'
+                        end nr_entrega_confirmacao
+                        from fin_entrega_confirmacao 
+                        where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
+            }else{
+                $this->sucesso = true;
+                $this->msgRetorno = "Erro PDO";
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
 }

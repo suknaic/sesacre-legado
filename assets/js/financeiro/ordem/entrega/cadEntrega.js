@@ -204,7 +204,7 @@ $(document).ready(function () {
 
                         itens.push({'qtd': $(this).find(".qtd").val(), 'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"),
                             'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(),
-                            'id_entrega': $("#id_entrega").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
+                            'id_protocolo': $("#id_protocolo").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
 
                 } else if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
@@ -213,7 +213,7 @@ $(document).ready(function () {
 
                         itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'tp': $(this).find(".qtd").attr("tp"),
                             'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(),
-                            'tipoEntrega': $("#tipoEntrega").val(), 'id_entrega': $("#id_entrega").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
+                            'tipoEntrega': $("#tipoEntrega").val(), 'id_protocolo': $("#id_protocolo").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
                 }
             });
@@ -276,159 +276,159 @@ $(document).ready(function () {
 
     });
 
-    function carregaSituacaoDaEntregue() {
-        $.ajax({
-            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-            "dataType": "json",
-            "data": {
-                "acao": "ListaItensEntregue",
-                "id_entrega": $("#id_entrega").val()
-            },
-            "success": function (response) {
-                if (response != 'Nenhum registro encontrado') {
-                    let valores = [];
-                    if ($.trim(response)) {
-                        if (response.length) {
-                            valores = response
-                        }
-                    }
-                    let dataSet = [];
-                    var oTable2 = $('#tabela2').dataTable();
-                    oTable2.fnDestroy();
-                    for (var i = valores.length - 1; i >= 0; i--) {
+//    function carregaSituacaoDaEntregue() {
+//        $.ajax({
+//            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+//            "dataType": "json",
+//            "data": {
+//                "acao": "ListaItensEntregue",
+//                "id_entrega": $("#id_entrega").val()
+//            },
+//            "success": function (response) {
+//                if (response != 'Nenhum registro encontrado') {
+//                    let valores = [];
+//                    if ($.trim(response)) {
+//                        if (response.length) {
+//                            valores = response
+//                        }
+//                    }
+//                    let dataSet = [];
+//                    var oTable2 = $('#tabela2').dataTable();
+//                    oTable2.fnDestroy();
+//                    for (var i = valores.length - 1; i >= 0; i--) {
+//
+//                        let valor = [
+//                            '1',
+//                            valores[i]['nr_item'],
+//                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+//                            valores[i]['nm_desc_material'],
+//                            valores[i]['cd_despesa'],
+//                            valores[i]['tp_material'],
+//                            valores[i]['nr_lote'],
+//                            valores[i]['qt_itens_ordem'],
+//                            valores[i]['vl_itens_ordem'],
+//                            valores[i]['entregue'],
+//                            valores[i]['tipo'],
+//                            valores[i]['dt_entrega'],
+//                            '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' + valores[i]['id_entrega_itens'] + '" \n\
+//                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="' + valores[i]['id_entrega_confirmacao'] + '" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
+//                             </button>'
+//                        ]
+//                        dataSet.push(valor)
+//                    }
+//
+//                    $('#tabela2').DataTable({
+//                        data: dataSet,
+//                        language: {
+//                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+//                        },
+//
+//                        columns: [
+//                            {title: "Nº da entrega", className: "text-center"},
+//                            {title: "Nº", className: "text-center"},
+//                            {title: "Item", className: "text-center"},
+//                            {title: "Descrição", className: "text-center"},
+//                            {title: "Elemento de Despesa", className: "text-center"},
+//                            {title: "Tipo", className: "text-center"},
+//                            {title: "Lote", className: "text-center"},
+//                            {title: "QTD", className: "text-center"},
+//                            {title: "Valor unit", className: "text-center"},
+//                            {title: "Entregue", className: "text-center"},
+//                            {title: "Tipo Entrega", className: "text-center"},
+//                            {title: "Data de Entrega", className: "text-center itens"},
+//                            {title: "Ação", className: "text-center"}
+//
+//                        ]
+//                    });
+//                }
+//            }
+//        });
+//    }
+//    carregaSituacaoDaEntregue();
 
-                        let valor = [
-                            '1',
-                            valores[i]['nr_item'],
-                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
-                            valores[i]['nm_desc_material'],
-                            valores[i]['cd_despesa'],
-                            valores[i]['tp_material'],
-                            valores[i]['nr_lote'],
-                            valores[i]['qt_itens_ordem'],
-                            valores[i]['vl_itens_ordem'],
-                            valores[i]['entregue'],
-                            valores[i]['tipo'],
-                            valores[i]['dt_entrega'],
-                            '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' + valores[i]['id_entrega_itens'] + '" \n\
-                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="' + valores[i]['id_entrega_confirmacao'] + '" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
-                             </button>'
-                        ]
-                        dataSet.push(valor)
-                    }
-
-                    $('#tabela2').DataTable({
-                        data: dataSet,
-                        language: {
-                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-                        },
-
-                        columns: [
-                            {title: "Nº da entrega", className: "text-center"},
-                            {title: "Nº", className: "text-center"},
-                            {title: "Item", className: "text-center"},
-                            {title: "Descrição", className: "text-center"},
-                            {title: "Elemento de Despesa", className: "text-center"},
-                            {title: "Tipo", className: "text-center"},
-                            {title: "Lote", className: "text-center"},
-                            {title: "QTD", className: "text-center"},
-                            {title: "Valor unit", className: "text-center"},
-                            {title: "Entregue", className: "text-center"},
-                            {title: "Tipo Entrega", className: "text-center"},
-                            {title: "Data de Entrega", className: "text-center itens"},
-                            {title: "Ação", className: "text-center"}
-
-                        ]
-                    });
-                }
-            }
-        });
-    }
-    carregaSituacaoDaEntregue();
-
-
-    $('body').on('click', '.btn-remover', function (e) {
-        var $this = $(this);
-        var id = $this.val();
-        var idEntrega = $this.closest('td').find('.btn-remover').attr("idEntrega");
-        var item = $this.closest('td').find('.btn-remover').attr("nomeitem");
-        bootbox.confirm({
-            title: func.msgCaixaDeConfirmacao,
-            message: 'Você tem Certeza que deseja continuar com a Exclusão do Item: <span class="text-danger">' + item + '</span> ?',
-            buttons: {
-                'cancel': {
-                    label: 'Não',
-                    className: 'btn-default btn-rounded'
-                },
-                'confirm': {
-                    label: 'Sim',
-                    className: 'btn-primary btn-rounded'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    var dados = {
-                        "idItem": id,
-                        "idEntrega": idEntrega
-                    }
-
-                    if (id == "") {
-                        func.modalAlert(func.msgPreencherCampos);
-                        $this.prop("disabled", false);
-                        return false;
-                    }
-
-                    $.ajax({
-                        "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-                        "method": "GET",
-                        "dataType": "html",
-                        "data": {
-                            "acao": "excluirItemEntrega",
-                            "dados": dados
-                        },
-                        "success": function (response) {
-                            console.log(response);
-                            if (response.trim() == "SessaoExpirada") {
-                                func.modalAlert(func.msgSemPermissao);
-                                return false;
-                            }
-                            try {
-                                response = JSON.parse(response);
-                            } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                return false;
-                            }
-                            if (response.tipoMsg === "Erro") {
-                                if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                } else if (response.tipoExibicao === "alert") {
-                                    func.modalAlert(response.msg);
-                                    return false;
-                                }
-                            } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
-                                return false;
-                            } else {
-                                console.log('Ultimo else');
-                                func.modalAlert(func.msgErroPadrao);
-                                return false;
-                            }
-                        },
-                        "error": function (response) {
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        }
-                    });
-                }
-            }
-        });
-    });
+//
+//    $('body').on('click', '.btn-remover', function (e) {
+//        var $this = $(this);
+//        var id = $this.val();
+//        var idEntrega = $this.closest('td').find('.btn-remover').attr("idEntrega");
+//        var item = $this.closest('td').find('.btn-remover').attr("nomeitem");
+//        bootbox.confirm({
+//            title: func.msgCaixaDeConfirmacao,
+//            message: 'Você tem Certeza que deseja continuar com a Exclusão do Item: <span class="text-danger">' + item + '</span> ?',
+//            buttons: {
+//                'cancel': {
+//                    label: 'Não',
+//                    className: 'btn-default btn-rounded'
+//                },
+//                'confirm': {
+//                    label: 'Sim',
+//                    className: 'btn-primary btn-rounded'
+//                }
+//            },
+//            callback: function (result) {
+//                if (result) {
+//                    var dados = {
+//                        "idItem": id,
+//                        "idEntrega": idEntrega
+//                    }
+//
+//                    if (id == "") {
+//                        func.modalAlert(func.msgPreencherCampos);
+//                        $this.prop("disabled", false);
+//                        return false;
+//                    }
+//
+//                    $.ajax({
+//                        "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+//                        "method": "GET",
+//                        "dataType": "html",
+//                        "data": {
+//                            "acao": "excluirItemEntrega",
+//                            "dados": dados
+//                        },
+//                        "success": function (response) {
+//                            console.log(response);
+//                            if (response.trim() == "SessaoExpirada") {
+//                                func.modalAlert(func.msgSemPermissao);
+//                                return false;
+//                            }
+//                            try {
+//                                response = JSON.parse(response);
+//                            } catch (e) {
+//                                func.modalAlert(func.msgErroPadrao);
+//                                console.log("Parse JSON");
+//                                return false;
+//                            }
+//                            if (response.tipoMsg === "Erro") {
+//                                if (response.tipoExibicao === "console") {
+//                                    console.log('Console Mensagem');
+//                                    func.modalAlert(func.msgErroPadrao);
+//                                    return false;
+//                                } else if (response.tipoExibicao === "alert") {
+//                                    func.modalAlert(response.msg);
+//                                    return false;
+//                                }
+//                            } else if (response.tipoMsg === "ok") {
+//                                func.modalAlert(response.msg, 'primary');
+//                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+//                                    location.reload();
+//                                });
+//                                return false;
+//                            } else {
+//                                console.log('Ultimo else');
+//                                func.modalAlert(func.msgErroPadrao);
+//                                return false;
+//                            }
+//                        },
+//                        "error": function (response) {
+//                            func.modalAlert(func.msgErroPadrao);
+//                            return false;
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    });
 });
 
 
