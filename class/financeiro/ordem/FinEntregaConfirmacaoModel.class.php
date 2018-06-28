@@ -213,7 +213,6 @@ class FinEntregaConfirmacaoModel {
     public function atualizaSituacao(PDO $pdo) {
         try {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
             //chama a funçao para lista os dados antes do update
@@ -249,7 +248,6 @@ class FinEntregaConfirmacaoModel {
                 $pdo = $conexao->connect();
             }
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->verificaSerAEntregaTotal($pdo);
             return $daoFinEntregaConfirmacao->sucesso();
@@ -299,10 +297,11 @@ class FinEntregaConfirmacaoModel {
 
     public function salvaEntregaConfirmacao($dados) {
         try {
-            if (empty($pdo)) {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
@@ -314,8 +313,20 @@ class FinEntregaConfirmacaoModel {
                 $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
                 $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
                 $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
-                foreach ($dados as $valor) {
-                    var_dump($valor);
+                //verificar ser salvou a entrega confirmacao 
+                if($daoFinEntregaConfirmacao->sucesso()){
+                    //pega o id daa entrega confirmacao
+                    $finEntregaItensModel = new FinEntregaItensModel();
+                    $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
+                    foreach ($dados as $valor) {
+                        var_dump($valor);
+                        $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
+                        $finEntregaItensModel->setQtItensEntrega($valor->qtd);
+                        if(($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0){
+                           $finEntregaItensModel->autoSetVlItemOrdem($pdo);
+                           echo ($finEntregaItensModel->getVlItensEntrega());
+                        }
+                    }
                 }
             }
 

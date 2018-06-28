@@ -233,29 +233,21 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $this->sucesso = false;
         }
     }
-    
-    public function retornaNumeroEntregaConfirmacao(PDO $pdo){
-        try{
-            if(!empty($pdo)){
-                $sql = "select 
-                        case 
-                                when max(nr_entrega_confirmacao) is not null then max(nr_entrega_confirmacao)
-                                when max(nr_entrega_confirmacao) is null then '0'
-                        end nr_entrega_confirmacao
-                        from fin_entrega_confirmacao 
-                        where id_protocolo = :protocolo";
+
+    public function retornaNumeroEntregaConfirmacao(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select max(nr_entrega_confirmacao) as nr_entrega_confirmacao from fin_entrega_confirmacao where id_protocolo = :protocolo";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
                 $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
-            }else{
-                $this->sucesso = true;
-                $this->msgRetorno = "Erro PDO";
             }
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
     }
+
 }

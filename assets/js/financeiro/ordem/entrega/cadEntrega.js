@@ -202,7 +202,7 @@ $(document).ready(function () {
 
                     if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
 
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'tp': $(this).find(".qtd").attr("tp"), 'itemId': $(this).find(".qtd").attr("itemid"),
+                        itens.push({'qtd': $(this).find(".qtd").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idOrdemItens': $(this).find(".qtd").attr("itemid"),
                             'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(), 'tipoEntrega': $("#tipoEntrega").val(),
                             'id_protocolo': $("#id_protocolo").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
@@ -212,7 +212,7 @@ $(document).ready(function () {
                     if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' && $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
 
                         itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'tp': $(this).find(".qtd").attr("tp"),
-                            'itemId': $(this).find(".qtd").attr("itemid"), 'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(),
+                            'idOrdemItens': $(this).find(".qtd").attr("itemid"), 'idOrdem': $("#idOrdem").val(), 'data': $("#data_entrega").val(),
                             'tipoEntrega': $("#tipoEntrega").val(), 'id_protocolo': $("#id_protocolo").val(), 'fl_valor': $(this).find(".qtd").attr("fl_valor")});
                     }
                 }

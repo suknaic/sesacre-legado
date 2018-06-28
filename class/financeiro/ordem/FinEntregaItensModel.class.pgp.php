@@ -122,7 +122,7 @@ class FinEntregaItensModel {
     public function cadastraEntregaItens(array $dados) {
         try {
             if (!empty($dados)) {
-             
+
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
@@ -416,6 +416,25 @@ class FinEntregaItensModel {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
+    }
+
+    public function autoSetVlItemOrdem(PDO $pdo) {
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+        $daoFinEntregaItens = new DaoFinEntregaItens();
+        $daoFinEntregaItens->setIdOrdemItens($this->id_ordem_itens);
+        $daoFinEntregaItens->retornaValorItenOrdem($pdo);
+        if($daoFinEntregaItens->sucesso()){
+            var_dump($daoFinEntregaItens->getMsgRetorno());
+//            $this->vl_itens_entrega = $daoFinEntregaItens->getMsgRetorno()->vl_itens_ordem;
+            return true;
+        }else{
+            return false;
+        }
+        
+        
     }
 
 }
