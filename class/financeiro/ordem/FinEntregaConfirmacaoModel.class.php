@@ -324,8 +324,11 @@ class FinEntregaConfirmacaoModel {
                         $finEntregaItensModel->setQtItensEntrega($valor->qtd);
                         if(($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0){
                            $finEntregaItensModel->autoSetVlItemOrdem($pdo);
-                           echo ($finEntregaItensModel->getVlItensEntrega());
+                           
+                        }else if($valor->tp == "C" || $valor->fl_valor == 1){
+                            $finEntregaItensModel->setVlItensEntrega($valor->vl);
                         }
+                        $finEntregaItensModel->cadastraEntregaItens();
                     }
                 }
             }
