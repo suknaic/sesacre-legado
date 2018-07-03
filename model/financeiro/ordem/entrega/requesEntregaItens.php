@@ -1,8 +1,9 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaItensModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaItensModel.class.pgp.php";
+
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -27,8 +28,7 @@ switch ($_REQUEST['acao']) {
             $itens = filter_input(INPUT_POST, 'itens', FILTER_DEFAULT);
             $dados = json_decode($itens);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacaoModel->salvaEntregaConfirmacao($dados);
-//            echo $finEntregaItensModel->cadastraEntregaItens($dados);
+            echo $finEntregaConfirmacaoModel->salvaEntregaConfirmacao($dados);
             return;
             break;
         } catch (Exception $ex) {
