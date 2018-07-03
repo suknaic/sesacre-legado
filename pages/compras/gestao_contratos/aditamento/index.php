@@ -167,7 +167,7 @@
                     <!--Page content-->
                     <!--===================================================-->                    
                      <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro do Aditivo de <?php echo $nomeAditivo; ?></h1>                     
+                        <h1 class="page-header text-overflow">Cadastro do <?php echo $motivoAditivo; ?></h1>                     
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="../index.php">Voltar</a></li>
@@ -208,7 +208,7 @@
                                                             <p></p>
                                                         </div>
                                                     </div>';
-                                            }
+                                            }                                                                                      
                                         ?>                                        
                                     </div>
                                 </div>
@@ -384,7 +384,7 @@
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                         </span>
-                                                        <input class="form-control quatro_casas" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="R$ 0.000,00" readonly="true">
+                                                        <input class="form-control quatro_casas" type="text" name="n_valor_aditivo" id="n_valor_aditivo" placeholder="0.000,00" readonly="true">
                                                         <span class="input-group-btn" id="btn_itens_abrir_modal">
                                                             <button class="btn btn-primary add-itens" data-toggle="modal" data-target="#myModalFullscreen" type="button">
                                                                 Itens
@@ -593,7 +593,7 @@
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
-        <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
+        <script src="/assets/lib/jquerypriceformat/jquery.priceformat.min.js"></script>
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--DataTables [OPT]-->

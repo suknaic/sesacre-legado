@@ -1,12 +1,11 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/TipoAdministracao.class.php";
 
 $session = new Session();
-
-if(!$session->vPFinanceiro()){
+if(!$session->vPGeral()){
     header("Location: /pages/index.php"); 
 }
 
@@ -18,7 +17,5 @@ $selectPessoa = $contrato->retornaOptionUsuarioContrato($pdo);
 $lotacao = new FinCentralModel();
 $selectCentral = $lotacao->retornaOptionsCentrais($pdo);
 
-$tipoAdministracao = new TipoAdministracao();
-$selectTipoAdministracao = $tipoAdministracao->tipoAdministracaoOptions();
 
-?>
+
