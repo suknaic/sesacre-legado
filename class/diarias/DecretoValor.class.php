@@ -123,11 +123,11 @@ class DecretoValor {
             
             if ($daoDiaDecretoValor->getSucesso()) {
                 foreach ($daoDiaDecretoValor->getMsgRetorno() as $linha) {
-                    $dentro_ou_fora_estado = ($linha['tp_decreto_valor'] == 'F') ? 'Fora do Estado' : 'Dentro do Estado';
+                    $estadual_ou_nacional = ($linha['tp_decreto_valor'] == 'N') ? 'Nacional' : 'Estadual';
                     $retorno .= "<tr data-registro='". json_encode($linha)."'>"
                                     . "<td>".$linha['nm_decreto']."</td>"
                                     . "<td>".$linha['cd_classe'].' - '.$linha['nm_classe']."</td>"
-                                    . "<td>".$dentro_ou_fora_estado."</td>"
+                                    . "<td>".$estadual_ou_nacional."</td>"
                                     . "<td>".$linha['vl_decreto_valor']."</td>"
                                     . "<td class='text-center'>"
                                         . "<button type='button' class='btn btn-default btn-xs btn-alterar'><i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i></button>"
@@ -138,6 +138,27 @@ class DecretoValor {
             }
             
             return $retorno;
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function retornaValorDiaria(){
+        try {
+            
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoDiaDecretoValor = new DaoDiaDecretoValor();
+            $daoDiaDecretoValor->setIdDecreto($this->getIdDecreto());
+            $daoDiaDecretoValor->setIdClasse($this->getIdClasse());
+            $daoDiaDecretoValor->setTpDecretoValor($this->getTpDecretoValor());
+            
+            $daoDiaDecretoValor->selectDCValorCompleto($pdo);
+            
+            return $daoDiaDecretoValor->getMsgRetorno()[0]['vl_decreto_valor'];
             
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
@@ -186,6 +207,33 @@ class DecretoValor {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
                 
+                $daoDiaDecretoValor = new DaoDiaDecretoValor($this->getIdDecreto(),$this->getIdClasse(), $this->getTpDecretoValor(), $this->getVlDecretoValor());
+                $daoDiaDecretoValor->setIdDecretoValor($this->getIdDecretoValor());
+                
+                //Retorna os dados antes da alteração
+                $daoDiaDecretoValor->selectLinha($pdo);
+                
+                if (!$daoDiaDecretoValor->getSucesso()) {
+                    return Metodos::retornoAjax("Erro", "console", $daoDiaDecretoValor->getMsgRetorno());
+                }
+                
+                //Se não der erro na seleção do registro do decreto valor, atribui à variável
+                $reg_antigo = $daoDiaDecretoValor->getMsgRetorno();
+                
+                $daoDiaDecretoValor->update($pdo);
+                
+                if ($daoDiaDecretoValor->getSucesso()) {
+                    
+                    //Registra no log
+                    if (!Log::SalvaLogU('dia_decreto_valor', $daoDiaDecretoValor->getIdDecretoValor(), $reg_antigo, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    }
+                    $pdo->commit();
+                    $retorno = Metodos::retornoAjax("ok", "html", "Alteração realizada com sucesso.");
+                } else {
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDiaDecretoValor->getMsgRetorno());
+                }
                
                 return $retorno;
             } else {

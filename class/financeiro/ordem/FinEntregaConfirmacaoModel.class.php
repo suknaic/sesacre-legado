@@ -9,10 +9,7 @@ class FinEntregaConfirmacaoModel {
     private $id_protocolo = null;
     private $nr_entrega_confirmacao = null;
     private $dt_entrega = null;
-    private $dt_confirmacao = null;
     private $dh_cadastramento = null;
-    private $nr_qtd_entrega = null;
-    private $st_entrega_confirmacao = null;
     private $sit_entrega = null;
     private $sucesso = false;
     private $msgRetorno = null;
@@ -110,24 +107,6 @@ class FinEntregaConfirmacaoModel {
     /**
      * @return mixed
      */
-    public function getDtConfirmacao() {
-        return $this->dt_confirmacao;
-    }
-
-    /**
-     * @param mixed $dt_confirmacao
-     *
-     * @return self
-     */
-    public function setDtConfirmacao($dt_confirmacao) {
-        $this->dt_confirmacao = $dt_confirmacao;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDhCadastramento() {
         return $this->dh_cadastramento;
     }
@@ -139,42 +118,6 @@ class FinEntregaConfirmacaoModel {
      */
     public function setDhCadastramento($dh_cadastramento) {
         $this->dh_cadastramento = $dh_cadastramento;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNrQtdEntrega() {
-        return $this->nr_qtd_entrega;
-    }
-
-    /**
-     * @param mixed $nr_qtd_entrega
-     *
-     * @return self
-     */
-    public function setNrQtdEntrega($nr_qtd_entrega) {
-        $this->nr_qtd_entrega = $nr_qtd_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStEntregaConfirmacao() {
-        return $this->st_entrega_confirmacao;
-    }
-
-    /**
-     * @param mixed $st_entrega_confirmacao
-     *
-     * @return self
-     */
-    public function setStEntregaConfirmacao($st_entrega_confirmacao) {
-        $this->st_entrega_confirmacao = $st_entrega_confirmacao;
 
         return $this;
     }
@@ -197,9 +140,6 @@ class FinEntregaConfirmacaoModel {
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function sucesso() {
         return $this->sucesso;
     }
@@ -226,32 +166,12 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
-    public function salvaInsertEntregaProtocolo(PDO $pdo) {
-        try {
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
-            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
-            $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($this->nr_entrega_confirmacao);
-            $daoFinEntregaConfirmacao->setDtEntrega($this->dt_entrega);
-            $daoFinEntregaConfirmacao->setNrQtdEntrega($this->nr_qtd_entrega);
-            $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
     public function retornaItensCadEntrega() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
             $daoFinEntregaConfirmacao->retornaInforParaEntrega($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 return $daoFinEntregaConfirmacao->getMsgRetorno();
@@ -293,7 +213,6 @@ class FinEntregaConfirmacaoModel {
     public function atualizaSituacao(PDO $pdo) {
         try {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
             //chama a funçao para lista os dados antes do update
@@ -329,7 +248,6 @@ class FinEntregaConfirmacaoModel {
                 $pdo = $conexao->connect();
             }
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->verificaSerAEntregaTotal($pdo);
             return $daoFinEntregaConfirmacao->sucesso();
@@ -364,14 +282,61 @@ class FinEntregaConfirmacaoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-
-
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->retornaMaiorIdEntregaItens($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
-                var_dump($daoFinEntregaConfirmacao->getMsgRetorno());
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function salvaEntregaConfirmacao($dados) {
+        try {
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
+            $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
+            //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
+            $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
+            //verificar ser deu tudo certo na busca do numero da entrega confirmacao ser sim vai seta o resto dos dados
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+                $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
+                $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
+                $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
+                //verificar ser salvou a entrega confirmacao 
+                if($daoFinEntregaConfirmacao->sucesso()){
+                    //pega o id daa entrega confirmacao
+                    $finEntregaItensModel = new FinEntregaItensModel();
+                    $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
+                    foreach ($dados as $valor) {
+                        var_dump($valor);
+                        $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
+                        $finEntregaItensModel->setQtItensEntrega($valor->qtd);
+                        if(($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0){
+                           $finEntregaItensModel->autoSetVlItemOrdem($pdo);
+                           
+                        }else if($valor->tp == "C" || $valor->fl_valor == 1){
+                            $finEntregaItensModel->setVlItensEntrega($valor->vl);
+                        }
+                        $finEntregaItensModel->cadastraEntregaItens();
+                    }
+                }
+            }
+
+            return false;
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
             } else {
                 $this->sucesso = false;
             }

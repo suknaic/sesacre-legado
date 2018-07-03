@@ -233,155 +233,166 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <h2 class="panel-title">Dados da Viagem</h2>
                                    <input type="hidden" id="id_diaria_destino" disabled />
                                </div>
-                               <div class="panel-body" id="destinoForm">
-                                   <?php if ($session->vPDiariasSolicitacao()) {  ?>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
-                                               <input type="hidden" id="id_cidade_inicio" disabled value="">
-                                               <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_inicio" readonly value="" />
-                                                   <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="origem">
-                                                       <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                   </span>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
-                                               <input type="hidden" id="id_cidade_fim" disabled value="">
-                                               <div class="input-group">
-                                                   <input class="form-control" type="text" id="ds_cidade_fim" readonly value=""/>
-                                                   <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
-                                                       <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                   </span>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-calendar inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="dh_fim">Horário da chegada: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-calendar inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" class="form-control" name="dh_fim" id="dh_fim" required="true" value="<?php echo $dh_fim ?>">
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="id_transporte">Meio de locomoção: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-list inputPFa"></p>
-                                                   </span>
-                                                   <select id="id_transporte" class="form-control">
-                                                       <?php
-                                                           echo $selectTransporteOption;
-                                                       ?>
-                                                   </select>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="fl_pernoite">Pernoite: </label>
-                                               <div class="input-group">
-                                                   <input style="width: 25px; height: 25px;"  type="checkbox" id="fl_pernoite" <?php echo $fl_pernoite;?> /> 
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="id_decreto">Base Legal: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-list inputPFa"></p>
-                                                   </span>
-                                                   <select id="id_decreto" class="form-control">
-                                                       <?php
-                                                           echo $selectDecretoOption;
-                                                       ?>
-                                                   </select>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <input type="hidden" id="id_classe_default" value=""/>
-                                           <div class="form-group">
-                                               <label for="id_classe">Classe: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-list inputPFa"></p>
-                                                   </span>
-                                                   <select id="id_classe" class="form-control">
+                               <?php if ($session->vPDiariasSolicitacao()) {  ?>
+                                    <div class="panel-body" id="destinoForm">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
+                                                    <input type="hidden" id="id_cidade_inicio" readonly value="">
+                                                    <div class="input-group">
+                                                        <input class="form-control" type="text" id="ds_cidade_inicio" readonly value="" />
+                                                        <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="origem">
+                                                            <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
+                                                    <input type="hidden" id="id_cidade_fim" readonly value="">
+                                                    <div class="input-group">
+                                                        <input class="form-control" type="text" id="ds_cidade_fim" readonly value=""/>
+                                                        <span class="input-group-btn abre-ModalCidade" data-target="#pesquisaCidade" data-toggle="modal" data-id="destino">
+                                                            <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="estadual_nacional">Estadual ou Nacional: </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input class="form-control"  type="text" id="estadual_nacional" readonly value="" /> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="dh_inicio">Horário da partida: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-calendar inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control" name="dh_inicio" id="dh_inicio" required="true" value="<?php echo $dh_inicio ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="dh_fim">Horário da chegada: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-calendar inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control" name="dh_fim" id="dh_fim" required="true" value="<?php echo $dh_fim ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="id_transporte">Meio de locomoção: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="id_transporte" class="form-control">
+                                                            <?php
+                                                                echo $selectTransporteOption;
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="fl_pernoite">Pernoite: </label>
+                                                    <div class="input-group">
+                                                        <input style="width: 25px; height: 25px;"  type="checkbox" id="fl_pernoite" <?php echo $fl_pernoite;?> /> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="id_decreto">Base Legal: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="id_decreto" class="form-control">
+                                                            <?php
+                                                                echo $selectDecretoOption;
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="hidden" id="id_classe_default" value=""/>
+                                                <div class="form-group">
+                                                    <label for="id_classe">Classe: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                        <select id="id_classe" class="form-control">
 
-                                                   </select>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="qt_diaria_destino">Quantidades de diária: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-file-text-o inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" id="qt_diaria_destino" class="form-control decimal" value="<?php echo $qt_diaria_destino; ?>"/>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-md-6">
-                                           <div class="form-group">
-                                               <label for="vl_diaria_destino">Valor unitário da diária: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                   <span class="input-group-addon">
-                                                       <p class="fa fa-file-text-o inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" id="vl_diaria_destino" class="form-control decimal" value="<?php echo $vl_diaria_destino; ?>" readonly />
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <div class="row">
-                                        <button class="btn btn-rounded btn-default mar-ver pull-right btn-limpar">
-                                            Limpar
-                                        </button>   
-                                        <button class="btn btn-rounded btn-default mar-ver pull-right btn-cancelar">
-                                            Cancelar
-                                        </button>  
-                                        <button class="btn btn-rounded btn-primary mar-ver pull-right add-itinerario">
-                                            <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                            Itinerário
-                                        </button>                               
-                                        <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
-                                        </button>
-                                   </div>
-                                   <?php } ?>
-                               </div>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="qt_diaria_destino">Quantidades de diária: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" id="qt_diaria_destino" class="form-control decimal" value="<?php echo $qt_diaria_destino; ?>"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="vl_diaria_destino">Valor unitário da diária: <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" id="vl_diaria_destino" class="form-control decimal" value="<?php echo $vl_diaria_destino; ?>" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                             <button class="btn btn-rounded btn-default mar-ver pull-right btn-limpar">
+                                                 Limpar
+                                             </button>   
+                                             <button class="btn btn-rounded btn-default mar-ver pull-right btn-cancelar">
+                                                 Cancelar
+                                             </button>  
+                                             <button class="btn btn-rounded btn-primary mar-ver pull-right add-itinerario">
+                                                 <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
+                                                 Itinerário
+                                             </button>                               
+                                             <button class="btn btn-rounded btn-info mar-ver pull-right btn-editar">
+                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                             </button>
+                                        </div>
+                                    </div>
+                               <?php } ?>
                                <div class="panel-footer">
                                    <table class="table table-striped" id="itinerario">
                                        <thead>

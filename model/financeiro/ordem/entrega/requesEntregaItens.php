@@ -10,9 +10,9 @@ switch ($_REQUEST['acao']) {
     CASE 'itensCadEntrega':
         try {
 
-            $protocolo = filter_input(INPUT_GET, 'protocolo', FILTER_DEFAULT);
+            $ordem = filter_input(INPUT_GET, 'ordem', FILTER_DEFAULT);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacaoModel->setIdProtocolo($protocolo);
+            $finEntregaConfirmacaoModel->setIdOrdem($ordem);
             echo json_encode($finEntregaConfirmacaoModel->retornaItensCadEntrega());
             return;
             break;
@@ -24,11 +24,11 @@ switch ($_REQUEST['acao']) {
 
     CASE 'cadastroItensEntrega':
         try {
-
             $itens = filter_input(INPUT_POST, 'itens', FILTER_DEFAULT);
             $dados = json_decode($itens);
-            $finEntregaItensModel = new FinEntregaItensModel();
-            echo $finEntregaItensModel->cadastraEntregaItens($dados);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->salvaEntregaConfirmacao($dados);
+//            echo $finEntregaItensModel->cadastraEntregaItens($dados);
             return;
             break;
         } catch (Exception $ex) {

@@ -10,8 +10,6 @@ class FinEntregaItensModel {
     private $fl_valor_variavel = null;
     private $qt_itens_entrega = null;
     private $vl_itens_entrega = null;
-    private $tp_entrega = null;
-    private $dh_entrega = null;
 
     /**
      * @return mixed
@@ -121,48 +119,9 @@ class FinEntregaItensModel {
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTpEntrega() {
-        return $this->tp_entrega;
-    }
-
-    /**
-     * @param mixed $tp_entrega
-     *
-     * @return self
-     */
-    public function setTpEntrega($tp_entrega) {
-        $this->tp_entrega = $tp_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDhEntrega() {
-        return $this->dh_entrega;
-    }
-
-    /**
-     * @param mixed $dh_entrega
-     *
-     * @return self
-     */
-    public function setDhEntrega($dh_entrega) {
-        $this->dh_entrega = $dh_entrega;
-
-        return $this;
-    }
-
-    public function cadastraEntregaItens(array $dados) {
+    public function cadastraEntregaItens(PDO $pdo) {
         try {
-            if (!empty($dados)) {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-                $pdo->beginTransaction();
+            if (!empty($pdo)) {
                 //dao do fin entrega Itens
                 $daoFinEntregaItens = new DaoFinEntregaItens();
                 //instanciando classe de entregaConfirmacaoModel para usa metodos de atualiza Situaçao e a data de confirmaçao
@@ -452,6 +411,22 @@ class FinEntregaItensModel {
         } catch (Exception $ex) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function autoSetVlItemOrdem(PDO $pdo) {
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+        $daoFinEntregaItens = new DaoFinEntregaItens();
+        $daoFinEntregaItens->setIdOrdemItens($this->id_ordem_itens);
+        $daoFinEntregaItens->retornaValorItenOrdem($pdo);
+        if ($daoFinEntregaItens->sucesso()) {
+            $this->vl_itens_entrega = $daoFinEntregaItens->getMsgRetorno()->vl_itens_ordem;
+            return true;
+        } else {
+            return false;
         }
     }
 

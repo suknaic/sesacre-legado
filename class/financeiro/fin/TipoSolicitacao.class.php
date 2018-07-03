@@ -55,7 +55,7 @@ class TipoSolicitacao {
             }
             return $retorno;
         } catch (Exception $exc) {
-            return $exc->getTraceAsString();
+            return $exc->getMessage();
         }
     }
 }

@@ -10,16 +10,16 @@ class CentralResponsavel {
     private $idCentralResponsavel = null;
     private $idPessoa = null;
     private $idLotacao = null;
-    private $tiposSolicitacoes = null;
+    private $tiposAdministracoes = null;
     private $sucesso = null;
     private $msgRetorno = null;
 
-    function getTiposSolicitacoes() {
-        return $this->tiposSolicitacoes;
+    function getTiposAdministracoes() {
+        return $this->tiposAdministracoes;
     }
 
-    function setTiposSolicitacoes($tiposSolicitacoes) {
-        $this->tiposSolicitacoes = $tiposSolicitacoes;
+    function setTiposAdministracoes($tiposAdministracoes) {
+        $this->tiposAdministracoes = $tiposAdministracoes;
     }
     
     function getIdCentralResponsavel() {
@@ -53,24 +53,10 @@ class CentralResponsavel {
     function Sucesso() {
         return $this->sucesso;
     }
-
-    function descritivoGestor($idSolicitacao){
-        switch ($idSolicitacao) {
-            case 1:
-                return "Gestor Compras (Administrativa)";
-            case 2:
-                return "Gestor Contratos (Administrativa por Licitação)";
-            case 3:
-                return "Gestor de Diárias (Diárias)";
-            case 4:
-                return "Gestor TFD (Ajuda de Custo)";
-
-        }
-    }
     
     public function cadastrar() {
         try {
-            if ($this->idLotacao == "" || $this->idPessoa == "" || empty($this->getTiposSolicitacoes())) {
+            if ($this->idLotacao == "" || $this->idPessoa == "" || empty($this->getTiposAdministracoes())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -84,9 +70,9 @@ class CentralResponsavel {
             $dao->setIdPessoa($this->idPessoa);
 
             //Percorre os tipos de solicitações para cadastrar
-            foreach ($this->getTiposSolicitacoes() as $linha) {
+            foreach ($this->getTiposAdministracoes() as $linha) {
                 $dao->verificaPessoaCentralSolicitacao($pdo,(int)$linha);
-                $dao->setIdTipoSolicitacao((int)$linha);
+                $dao->setIdTipoAdministracao((int)$linha);
                 
                 if ($dao->Sucesso()) {
                     $retorno = Metodos::retornoAjax("Erro", "alert", "Usuário já possui Permissão para esta Central e para o Tipo de Solicitação.");
@@ -141,7 +127,7 @@ class CentralResponsavel {
 //            }
 
             //Cadastra o Perfil necessário do Financeiro Central, para o usuário
-            if (in_array(1, $this->getTiposSolicitacoes()) or in_array(2, $this->getTiposSolicitacoes()) or in_array(4, $this->getTiposSolicitacoes())) {
+            if (in_array(1, $this->getTiposAdministracoes()) or in_array(2, $this->getTiposAdministracoes()) or in_array(4, $this->getTiposAdministracoes())) {
                 $perfilPessoa = new PerfilPessoa();
                 $perfilPessoa->setIdPerfil(PERFIL_FINANCEIRO_CENTRAL);
                 $perfilPessoa->setIdPessoa($dao->getIdPessoa());
@@ -157,7 +143,7 @@ class CentralResponsavel {
             
             
             //Cadastra o Perfil necessário da Solicitação de Diária, para o usuário
-            if (in_array(3, $this->getTiposSolicitacoes())) {
+            if (in_array(3, $this->getTiposAdministracoes())) {
                 $perfilPessoa = new PerfilPessoa();
                 $perfilPessoa->setIdPerfil(PERFIL_DIARIA_SOLICITACAO);
                 $perfilPessoa->setIdPessoa($dao->getIdPessoa());
@@ -227,12 +213,12 @@ class CentralResponsavel {
 
             $perfil = "";
             //Se for a ultima unidade referente ao tipo de solicitação do financeiro
-            if ($dao->getMsgRetorno()['id_tipo_solicitacao'] == 1 || $dao->getMsgRetorno()['id_tipo_solicitacao'] == 2 || $dao->getMsgRetorno()['id_tipo_solicitacao'] == 4) {
+            if ($dao->getMsgRetorno()['id_tipo_administracao'] == 1 || $dao->getMsgRetorno()['id_tipo_administracao'] == 2 || $dao->getMsgRetorno()['id_tipo_administracao'] == 4) {
                 $perfil = PERFIL_FINANCEIRO_CENTRAL;
                 //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. Financeiro
                 $dao->retornaPorPessoa($pdo);
                 
-            } elseif ($dao->getMsgRetorno()['id_tipo_solicitacao'] == 3) { //Se for a ultima unidade referente ao tipo de solicitação da diária
+            } elseif ($dao->getMsgRetorno()['id_tipo_administracao'] == 3) { //Se for a ultima unidade referente ao tipo de solicitação da diária
                 $perfil = PERFIL_DIARIA_SOLICITACAO;
                 //Verifica se é a última unidade da Pessoa, caso seja irá remover o Perfil dele. Diária
                 $dao->retornaPorPessoaDiaria($pdo);
@@ -355,7 +341,7 @@ class CentralResponsavel {
                     $retorno .= "<tr>";
                     $retorno .= "<td>" . $v['nm_pessoa'] . "</td>"
                             . "<td>" . $v['nm_lotacao'] . "</td>"
-                            . "<td>".$this->descritivoGestor($v['id_tipo_solicitacao'])."</td>"
+                            . "<td>".$v['nm_tipo_administracao']."</td>"
                             . '<td style="text-align: center;">'
                             . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_central_responsavel'] . ' >
                                 <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>

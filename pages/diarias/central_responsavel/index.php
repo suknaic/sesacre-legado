@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] ."/model/diarias/central_responsavel/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -113,28 +113,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                 </div>
                                             </div>
                                             <!-- End <div class="form-group"> -->
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-<!--                                                    <div class="panel-body">-->
-                                                        <label for="tipo_administracao">
-                                                            Tipo da Administração: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="tipo_administracao" class="form-control" multiple="multiple">                                                                                                                             
-                                                                <?php
-                                                                    echo $selectTipoAdministracao;
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                       
-
+                                           
                                         
                                         </div>
                                         <!-- <div class="panel-body"> -->
@@ -179,7 +158,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
                                                     <tr>
                                                         <th>Nome</th>
                                                         <th>Central de Demanda</th>
-                                                        <th>Tipo da Administração</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
@@ -255,7 +233,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/financeiro/central_responsavel/index.js"></script>
+        <script src="/assets/js/diarias/central_responsavel/index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            
@@ -263,3 +241,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/financeiro/central_responsavel/i
 
     </body>
 </html>
+
+

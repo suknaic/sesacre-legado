@@ -63,6 +63,12 @@ switch ($_REQUEST['acao']) {
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //cria um objeto da classe decreto_valor
             $prog = new DecretoValor((int)$filtro['decreto'],(int)$filtro['classe'],$filtro['tipo'],$filtro['valor']);
+//            $prog = new DecretoValor();
+//            $prog->setIdDecreto((int)$filtro['decreto']);
+//            $prog->setIdClasse((int)$filtro['classe']);
+//            $prog->setTpDecretoValor($filtro['tipo']);
+//            $prog->setVlDecretoValor($filtro['valor']);
+            
             $prog->setIdDecretoValor((int)$filtro['id']);
             echo $prog->alteraDecretoValor();
             return;

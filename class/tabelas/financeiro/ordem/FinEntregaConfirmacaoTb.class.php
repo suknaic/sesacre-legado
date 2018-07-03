@@ -7,11 +7,8 @@ class FinEntregaConfirmacaoTb {
     private $id_protocolo = null;
     private $nr_entrega_confirmacao = null;
     private $dt_entrega = null;
-    private $dt_confirmacao = null;
     private $dh_cadastramento = null;
-    private $nr_qtd_entrega = null;
     private $sit_entrega = null;
-    private $st_entrega_confirmacao = null;
 
     /**
      * @return mixed
@@ -106,24 +103,6 @@ class FinEntregaConfirmacaoTb {
     /**
      * @return mixed
      */
-    public function getDtConfirmacao() {
-        return $this->dt_confirmacao;
-    }
-
-    /**
-     * @param mixed $dt_confirmacao
-     *
-     * @return self
-     */
-    public function setDtConfirmacao($dt_confirmacao) {
-        $this->dt_confirmacao = $dt_confirmacao;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDhCadastramento() {
         return $this->dh_cadastramento;
     }
@@ -142,24 +121,6 @@ class FinEntregaConfirmacaoTb {
     /**
      * @return mixed
      */
-    public function getNrQtdEntrega() {
-        return $this->nr_qtd_entrega;
-    }
-
-    /**
-     * @param mixed $nr_qtd_entrega
-     *
-     * @return self
-     */
-    public function setNrQtdEntrega($nr_qtd_entrega) {
-        $this->nr_qtd_entrega = $nr_qtd_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSitEntrega() {
         return $this->sit_entrega;
     }
@@ -171,24 +132,6 @@ class FinEntregaConfirmacaoTb {
      */
     public function setSitEntrega($sit_entrega) {
         $this->sit_entrega = $sit_entrega;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStEntregaConfirmacao() {
-        return $this->st_entrega_confirmacao;
-    }
-
-    /**
-     * @param mixed $st_entrega_confirmacao
-     *
-     * @return self
-     */
-    public function setStEntregaConfirmacao($st_entrega_confirmacao) {
-        $this->st_entrega_confirmacao = $st_entrega_confirmacao;
 
         return $this;
     }
