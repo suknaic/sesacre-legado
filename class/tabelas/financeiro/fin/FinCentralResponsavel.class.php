@@ -5,7 +5,7 @@ class FinCentralResponsavel{
     private $id_central_responsavel = null;
     private $id_lotacao = null;
     private $id_pessoa = null;
-    private $id_tipo_solicitacao = null;
+    private $id_tipo_administracao = null;
                 
 
     /**
@@ -80,14 +80,14 @@ class FinCentralResponsavel{
         return $this;
     }
     
-    public function getIdTipoSolicitacao()
+    public function getIdTipoAdministracao()
     {
-        return $this->id_tipo_solicitacao;
+        return $this->id_tipo_administracao;
     }
     
-    public function setIdTipoSolicitacao($id_tipo_solicitacao)
+    public function setIdTipoAdministracao($id_tipo_administracao)
     {
-        $this->id_tipo_solicitacao = $id_tipo_solicitacao;
+        $this->id_tipo_administracao = $id_tipo_administracao;
         return $this;
     }
 
