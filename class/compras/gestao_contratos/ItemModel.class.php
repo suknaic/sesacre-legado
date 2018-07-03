@@ -201,7 +201,7 @@ class ItemModel {
         if ($daoFinItens->Sucesso() && empty($daoFinItens->getMsgRetorno()) == false) {
             $tabela = '';
             $total = 0;
-            
+
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
                 $tabela .= '<tr>
@@ -507,7 +507,7 @@ class ItemModel {
                         if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor['id_fornecedor'] . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
                             $daoFinItens->setNrItem($result[$i]["nr_item"]);
                             $daoFinItens->setNrLote($result[$i]["nr_lote"]);
-                            $daoFinItens->setDescItem($result[$i]["ds_itens"]);    
+                            $daoFinItens->setDescItem($result[$i]["ds_itens"]);
                             $daoFinItens->setNmMarca($result[$i]["nm_marca"]);
                             $daoFinItens->setNmModelo($result[$i]["nm_modelo"]);
                             $daoFinItens->setQtItens(Metodos::ConverteValorIng($array[$i]->qtd));
@@ -527,7 +527,7 @@ class ItemModel {
                         if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor['id_fornecedor'] . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
                             $daoFinItens->setNrItem($result[$i]["nr_item"]);
                             $daoFinItens->setNrLote($result[$i]["nr_lote"]);
-                            $daoFinItens->setDescItem($result[$i]["ds_itens"]);    
+                            $daoFinItens->setDescItem($result[$i]["ds_itens"]);
                             $daoFinItens->setNmMarca($result[$i]["nm_marca"]);
                             $daoFinItens->setNmModelo($result[$i]["nm_modelo"]);
                             $daoFinItens->setQtItens(Metodos::ConverteValorIng($array[$i]->qtd));
@@ -693,7 +693,7 @@ class ItemModel {
                     return false;
                 }
             } else if ($tipo == 'S' && $daoFinItens->Sucesso() && !empty($this->qtItens) && !empty($this->vlItens)) {
-                if ((float) $daoFinItens->getMsgRetorno()[0]["saldo"] < (Metodos::ConverteValorIng($this->qtItens) * Metodos::ConverteValorIng($this->vlItens))) {
+                if (round((float) $daoFinItens->getMsgRetorno()[0]["saldo"], 4) < round((Metodos::ConverteValorIng($this->qtItens) * Metodos::ConverteValorIng($this->vlItens)), 4)) {
                     return false;
                 }
             }
@@ -777,23 +777,21 @@ class ItemModel {
             return $tabela;
         }
     }
-    
-    
-    
-    public function retornaTrItensParaAditamento(int $idContrato){
+
+    public function retornaTrItensParaAditamento(int $idContrato) {
         //conexao com banco dedados
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         //pega id do fornecedor
         $finFornecedoresModel = new FinFornecedoresModel();
         $finFornecedoresModel->setIdContrato($idContrato);
-        
+
         //Retorna o id do Fornecedor, o primeiro, do contrato para buscar os itens dele
         $finFornecedoresModel->retornaPrimeiroFornecedorDoContrato($pdo);
-        if(!$finFornecedoresModel->sucesso()){
+        if (!$finFornecedoresModel->sucesso()) {
             return "Não foi possível Localizar o Fornecedor do Contrato.";
-        }                
-               
+        }
+
         //criando objeto do Dao dos itens da ata
         $daoFinItens = new DaoFinItens();
         //chamando o metodo que lista os itens da ata
@@ -803,13 +801,12 @@ class ItemModel {
         } else {
             return 'Não foi possível Localizar os Itens do Contrato';
         }
-        
+
 //        echo "<pre>";
 //        print_r($daoFinItens);
 //        echo "</pre>";
 //        
 //        return;
-        
         //verificando se deu tudo certo na busca dos itens da ata
         if ($daoFinItens->Sucesso() && !empty($daoFinItens->getMsgRetorno())) {
             $tabela = '';
@@ -834,15 +831,10 @@ class ItemModel {
                                 </td>				
 				<td class="text-center itens">Total</td>
                                 <td>Saldo</td>
-                                </tr>';                               
+                                </tr>';
             }
-            return $tabela.$tabela.$tabela.$tabela.$tabela;
+            return $tabela . $tabela . $tabela . $tabela . $tabela;
         }
     }
-    
-    
-    
-    
-    
 
 }

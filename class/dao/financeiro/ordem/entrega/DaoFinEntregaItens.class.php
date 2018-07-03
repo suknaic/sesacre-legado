@@ -59,7 +59,7 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
-                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
                 } else {
                     $this->sucesso = false;
                     $this->msgRetorno = "Nenhum registro encontrado";

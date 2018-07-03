@@ -166,12 +166,11 @@ class DaoFinProtocolo extends FinProtocoloTb {
                             WHEN protocolo.dt_confirmacao is not null  THEN  (protocolo.dt_entrega - protocolo.dt_confirmacao)
                         END as diasAtrazo,
                         CASE 
-                                WHEN protocolo.st_protocolo = 0 THEN 'Nehuma entrega informada'
-                            WHEN protocolo.st_protocolo = 1 THEN 'Entrega Parcial'
-                            WHEN protocolo.st_protocolo = 2 THEN 'Entrega Total'
+                            WHEN protocolo.st_protocolo = '0' THEN 'Nehuma entrega informada'
+                                WHEN protocolo.st_protocolo = '1' THEN 'Entrega Parcial'
+                            WHEN protocolo.st_protocolo = '2' THEN 'Entrega Total'
                         END situacao
                         from fin_protocolo as protocolo
-
                         inner join fin_ordem as ordem
                         on ordem.id_ordem = protocolo.id_ordem
                         where ordem.id_ordem = :idOrdem";

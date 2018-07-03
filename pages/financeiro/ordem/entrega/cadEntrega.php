@@ -184,7 +184,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <input type="hidden" name="id_entrega" id="id_entrega" value="<?php echo $id; ?>">
+                                            <input type="hidden" name="id_protocolo" id="id_protocolo" value="<?php echo $id; ?>">
                                             <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem; ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
