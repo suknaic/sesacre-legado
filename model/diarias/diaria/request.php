@@ -135,10 +135,10 @@ switch ($_REQUEST['acao']) {
 
     case 'validaDiariaDestino':
         try {
-            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
             $diaria = new Diaria();
-            $diaria->setItinerario($filtro);
-            echo $diaria->validaDiariaDestino();
+            $diaria->setItinerario($filtro['itinerario']);
+            echo $diaria->validaDiariaDestino($filtro['novoDestino']);
             return;
             break;
         } catch (Exception $e) {

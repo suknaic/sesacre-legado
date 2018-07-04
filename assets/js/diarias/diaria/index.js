@@ -248,6 +248,14 @@ function encapsulaDadosDoFormItinerario() {
         return false;
     }
     
+    var destinos = retornaDestinos();
+//    console.log(JSON.stringify(destinos));
+//    console.log(JSON.stringify(Itinerario));
+    var Dados = {
+        itinerario: JSON.stringify(destinos),
+        novoDestino: JSON.stringify(Itinerario)
+    }
+    
     //Validar data e hora de início e fim***********
     $.ajax({
         "url": "/model/diarias/diaria/request.php",
@@ -255,7 +263,7 @@ function encapsulaDadosDoFormItinerario() {
         "method": "post",
         "data": {
             acao: "validaDiariaDestino",
-            dados: JSON.stringify(Itinerario)
+            dados: Dados
         },
         "success": function (response) {
             try {
@@ -330,6 +338,26 @@ function retornaValorDiaria(){
             }
         });
     }
+}
+
+function retornaDestinos(){
+    var itinerario = new Array();
+    var destino;
+    $("#itinerario tbody tr").each(function (e) {
+        destino = $(this).data('itinerario');
+        itinerario.push(destino);
+    });
+    return itinerario;
+}
+
+function retornaAnexos(){
+    var anexos = new Array();
+    var anexo;
+    $('#arquivos .form-group').each(function(e){
+        anexo = $(this).data('anexo');
+        anexos.push(anexo);
+    });
+    return anexos;
 }
 
 $(document).ready(function () {
@@ -491,18 +519,18 @@ $(document).ready(function () {
             }
             
             //Percorre os anexos
-            var anexos = [];
-            $('#arquivos .form-group').each(function(e){
-                var anexo = $(this).data('anexo');
-                anexos.push(anexo);
-            });
+            var anexos = retornaAnexos();
+//            $('#arquivos .form-group').each(function(e){
+//                var anexo = $(this).data('anexo');
+//                anexos.push(anexo);
+//            });
             
             //Percorre o itinerario
-            var itinerario = [];
-            $("#itinerario tbody tr").each(function (e) {
-                var destino = $(this).data('itinerario');
-                itinerario.push(destino);
-            });
+            var itinerario = retornaDestinos();
+//            $("#itinerario tbody tr").each(function (e) {
+//                var destino = $(this).data('itinerario');
+//                itinerario.push(destino);
+//            });
             
 
             var Diaria = {

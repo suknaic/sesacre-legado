@@ -11,6 +11,6 @@ $idAnexo  = $_REQUEST['id'];
 if ($idAnexo) {
     $arquivo = $diaria->baixarAnexo(null,$idAnexo);
     header('Content-type: ' . $arquivo['nm_mime_type']);
-    header("Content-Disposition: inline; filename= " .$arquivo['nm_anexo']);
+    header('Content-Disposition: attachment; filename= "' .$arquivo['nm_anexo'].'"');
     fpassthru($arquivo['aq_anexo']);
 }

@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/CentralResponsavel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";
+//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";    (O IMPORT DA CLASSE FOI DECLARADO DENTRO DA CLASSE 'CENTRAL RESPONSAVEL', POIS A INSTANCIA SÓ É CRIADA DENTRO DA CLASSE CENTRAL RESPONSAVEL)
 
 $session = new Session('ajax');
 
