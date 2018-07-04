@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/central/DaoFinCentralResponsavel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";
 
 /**
  * Representa se os Usuários que São de Alguma Central
@@ -325,11 +326,10 @@ class CentralResponsavel {
                 /* @var $pdo PDO */
                 $pdo = $conexao->connect();
             }
-
+            
             $dao = new DaoFinCentralResponsavel();
-
             $dao->retornaTodos($pdo);
-
+            
             if (!$dao->Sucesso()) {
                 $this->sucesso = false;
                 return $dao->getMsgRetorno();
@@ -342,6 +342,54 @@ class CentralResponsavel {
                     $retorno .= "<td>" . $v['nm_pessoa'] . "</td>"
                             . "<td>" . $v['nm_lotacao'] . "</td>"
                             . "<td>".$v['nm_tipo_administracao']."</td>"
+                            . '<td style="text-align: center;">'
+                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_central_responsavel'] . ' >
+                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                              </button>'
+                            . '</td>'
+                            . "</tr>";
+                    $retorno .= "</tr>";
+                }
+            }
+
+            return $retorno;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            return $ex->getMessage();
+            return $retorno;
+        }
+    }
+    
+    public function retornaTrCentralRespDiaria(PDO $pdo = null) {
+        $retorno = "";
+        try {
+
+            if ($pdo == null) {
+                $conexao = new Conexao();
+                /* @var $pdo PDO */
+                $pdo = $conexao->connect();
+            }
+            
+            //Monta filtro dos tipos de administrações
+            $filtro = "";
+            if ($this->getTiposAdministracoes()) {
+                $filtro = "where CR.id_tipo_administracao in (". implode(",", $this->getTiposAdministracoes()).")"; //CR: Alias da tabela CentralResponsavel
+            }
+            
+            $dao = new DaoFinCentralResponsavel();
+            $dao->retornaTodos($pdo,$filtro);
+            
+            if (!$dao->Sucesso()) {
+                $this->sucesso = false;
+                return $dao->getMsgRetorno();
+            } else {
+                $result = $dao->getMsgRetorno();
+                $this->sucesso = true;
+
+                foreach ($result as $v) {
+                    $retorno .= "<tr>";
+                    $retorno .= "<td>" . $v['nm_pessoa'] . "</td>"
+                            . "<td>" . $v['nm_lotacao'] . "</td>"
                             . '<td style="text-align: center;">'
                             . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $v['id_central_responsavel'] . ' >
                                 <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>

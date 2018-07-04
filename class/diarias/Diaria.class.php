@@ -846,7 +846,7 @@ class Diaria {
             $daoFinCentralResponsavel->retornaLotacaoPorPessoa($pdo);
             if ($daoFinCentralResponsavel->Sucesso()) {
                 foreach ($daoFinCentralResponsavel->getMsgRetorno() as $linha) {
-                    if ($linha['id_tipo_solicitacao'] == 3) { //Somente as centrais do tipo DIARIA: 3
+                    if ($linha['id_tipo_administracao'] == 3) { //Somente as centrais do tipo DIARIA: 3
                         $centrais[] = $linha['id_lotacao'];
                     }
                 }
@@ -1003,11 +1003,11 @@ class Diaria {
        
    
     
-    function validaDiariaDestino(){
+    function validaDiariaDestino($novoDestino){
         $retorno = "";
         $msgErro = "";
         try {
-            $destino = json_decode($this->getItinerario());
+            $destino = json_decode($novoDestino);
 
             $data_inicio = date_create_from_format('d/m/Y H:i', $destino->dh_inicio);
             $data_fim = date_create_from_format('d/m/Y H:i', $destino->dh_fim);
@@ -1018,6 +1018,12 @@ class Diaria {
             
             if ($data_inicio->getTimeStamp() >= $data_fim->getTimeStamp()) {
                 $msgErro .= ' Data e hora de chegada não pode ser menor ou igual a data e hora de saída.';
+            }
+            
+            //Verifica se há período concomitante
+            $itinerario = json_decode($this->getItinerario());
+            foreach ($itinerario as $linha) {
+                
             }
             
             if(empty($msgErro)){

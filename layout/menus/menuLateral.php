@@ -317,7 +317,7 @@
                                         <li>
                                             <a href="#">Centrais de Demanda <i class="arrow"></i></a>
                                             <ul>
-                                                <li><a href="#">Vincular Central de Demanda do Módulo de Diárias</a></li>
+                                                <li><a href="/pages/diarias/central_responsavel/">Vincular Central de Demanda do Módulo de Diárias</a></li>
                                             </ul>
                                         </li>
                                         <li>

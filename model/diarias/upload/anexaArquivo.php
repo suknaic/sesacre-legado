@@ -12,7 +12,14 @@ try {
 //    $extensao = pathinfo($arquivo,PATHINFO_EXTENSION);
     $tamanho = $_FILES['arquivo']['size'];
     $erro = $_FILES['arquivo']['error'];
-    $tiposPermitidos = array('image/jpeg', 'image/pjpeg', 'image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.openxmlformats-officedocument.presentationml.presentation');
+    $tiposPermitidos = array('image/jpeg', 
+                             'image/pjpeg', 
+                             'image/png','application/pdf',
+                             'application/msword',
+                             'application/vnd.ms-excel',
+                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                             'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     $tamanhoPermitido = 1024*1024*7; // 7Mb
 //    $endereco = $_SERVER["DOCUMENT_ROOT"] .'/files/diarias/';
 
