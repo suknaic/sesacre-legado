@@ -802,18 +802,13 @@ class ItemModel {
             return 'Não foi possível Localizar os Itens do Contrato';
         }
 
-//        echo "<pre>";
-//        print_r($daoFinItens);
-//        echo "</pre>";
-//        
-//        return;
         //verificando se deu tudo certo na busca dos itens da ata
         if ($daoFinItens->Sucesso() && !empty($daoFinItens->getMsgRetorno())) {
             $tabela = '';
             $total = 0;
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 //$total += $value["total"];
-                $tabela .= '<tr>
+                $tabela .= '<tr data-id='.$value['id_cont_itens'].'>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
 				<td>' . $value["cd_desc_material"] . ' - ' . $value["nm_desc_material"] . '</td>
@@ -833,7 +828,7 @@ class ItemModel {
                                 <td class="">Saldo</td>
                                 </tr>';                               
             }
-            return $tabela . $tabela . $tabela . $tabela . $tabela;
+            return $tabela;
         }
     }
 

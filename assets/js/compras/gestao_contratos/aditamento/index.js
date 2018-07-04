@@ -3,6 +3,7 @@ $(document).ready(function () {
     
     //instacinado fucoes js
     func = new Funcoes();
+    var url = "/model/compras/gestaoContratos/aditamento/request.php";
     /*
     var arrayDados = {
         'dados' : new Array(),
@@ -51,7 +52,7 @@ $(document).ready(function () {
 
     //Carrega Gestores, Fiscais, Sub-Fiscais
     $.ajax({
-        "url": "/model/compras/gestaoContratos/aditamento/request.php",
+        "url": url,
         "dataType": 'html',
         "data": {
             "acao": "retornaOptionsGestores"
@@ -67,11 +68,11 @@ $(document).ready(function () {
     $('body').on('click', '.btn-add-aditivo', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
-        } else { 
+        } else {
             if($("#id_contrato").val() != 0){
-                let qtd = parseInt($(".aditivo_quantidade").attr('quantidade')+1);
-                //$numeroAditivo = $sequencialUltimoAditivo."º Termo Aditivo ao Contrato ".$contrato;
+                let qtd = parseInt($(".aditivo_quantidade").attr('quantidade'))+1;            
                 $("#n_numero_aditivo").val(qtd+"º Termo Aditivo ao contrato "+$("#con_contrato").find("p").text());
+                $("#numero_novo_aditivo").val(qtd);
                 $("#panel-novo-atitivo").show();
             }            
         }
@@ -126,7 +127,7 @@ $(document).ready(function () {
             return;
         }
         $.ajax({
-            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "pesquisaContrato",
@@ -145,6 +146,7 @@ $(document).ready(function () {
         //Busca se esse Contrato possui Aditivo
         buscaExisteAditivos(contrato.id_contrato); 
         buscaItensDoContrato(contrato.id_contrato);
+        buscaGestoresDoContrato();
     });
     
     function preencheCamposContrato(contrato){
@@ -165,7 +167,7 @@ $(document).ready(function () {
     
     function buscaExisteAditivos(idContrato){        
         $.ajax({
-            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "retornaAditivosDoContrato",
@@ -179,7 +181,7 @@ $(document).ready(function () {
     
     function buscaItensDoContrato(){        
         $.ajax({
-            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "pesquisaItens",
@@ -191,47 +193,180 @@ $(document).ready(function () {
         });  
     }
     
+    function buscaGestoresDoContrato(){     
+        $.ajax({
+            "url": url,
+            "dataType": 'json',
+            "data": {
+                "acao": "retornaGestoresDoContrato",
+                "id": $("#id_contrato").val()
+            },
+            "success": function (response) {                                                     
+                console.log(response);
+            }
+        });  
+    }
+    
+    
+    
+    
+    //========================================================================================================
+    
         
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
             e.preventDefault();                        
-            var $this = $(this);          
+            var $this = $(this);              
+            $this.prop("disabled", true);
+            
             var arrayDados = {
-                dados : new Array(),
+                dados : '',
+                itens: new Array(),
                 gestor_titular : new Array(),
                 gestor_substituto : new Array(),
                 fiscal : new Array(),
                 fiscal_substituto : new Array(),
-                fiscal_sub : new Array(),
-                fiscal_sub_substituto : new Array()
+                sub_fiscal : new Array(),
+                sub_fiscal_substituto : new Array()
             }
             
+            var itens = [];
+            
+            $(".qtd_aditivo").each(function(){     
+                var valor_informado = func.converteValorIngFloat($(this).val());                  
+                if( !(valor_informado == 0 || isNaN(valor_informado) ) ){
+                    itens.push({
+                        id: $(this).closest("tr").data("id"),
+                        valor_aditivado : valor_informado
+                    })                    
+                }
+            });
+            arrayDados['itens'] = itens;
           
-//            arrayDados.dados['nome'] = 'Marcel';
-//            arrayDados.dados['sobrenome'] = 'Melo';
-//            arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
-//            arrayDados.gestor_titular.push(1);
-//            arrayDados.gestor_titular.push(2);
-//            arrayDados.gestor_titular.push(2323);        
-//            console.log(arrayDados.gestor_titular)    
-//            console.log(arrayDados)
-//            
+            arrayDados['dados'] = {
+                contrato: $("#id_contrato").val(),
+                numero_novo_aditivo: $("#numero_novo_aditivo").val(),
+                motivo : $("#motivo").val(),
+                finalidade: $("#n_finalidade option:selected").val(),
+                instrumento: $("#n_instrumento option:selected").val(),
+                base_calculo: $("#n_base_calculo option:selected").val(),
+                tipo_aquisicao: $("#n_tipo_aquisicao option:selected").val(),
+                percentual: $("#n_percentual").val(),
+                indice_correcao: $("#n_indice_correcao").val(),
+                periodo_inicial: $("#n_periodo_inicial").val(),
+                periodo_final: $("#n_periodo_final").val(),
+                data_publicacao: $("#n_data_publicacao").val()                                                
+            };          
+                  
             $(".n_gestor_titular option:selected").each(function(){                
                 if($(this).val() != 0){
                     arrayDados.gestor_titular.push($(this).val())
                 }
             });
+            $(".n_gestor_sub option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.gestor_substituto.push($(this).val())
+                }
+            });            
+            $(".n_fiscal option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.fiscal.push($(this).val())
+                }
+            });
+            $(".n_fiscal_sub option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.fiscal_substituto.push($(this).val())
+                }
+            });
+            $(".n_sub_fiscal option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.sub_fiscal.push($(this).val())
+                }
+            });
+            $(".n_sub_fiscal_sub option:selected").each(function(){                
+                if($(this).val() != 0){
+                    arrayDados.sub_fiscal_substituto.push($(this).val())
+                }
+            });
+                                                            
             console.log(arrayDados)
             
-            
-            $("select[name=subFiscais\\[\\]]").each(function () {
-                //subFiscais.push($(this).val());
+            $.ajax({
+                "url": url,
+                "dataType": "html",
+                "method": "post",
+                "data": {
+                    "acao": "salvar",
+                    "dados": arrayDados
+                },
+                "success": function (response) {
+                    console.log(response);
+                    $this.prop("disabled", false);
+                    return false;
+                    if (response.trim() === "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            top.location = "/pages/index.php";
+                        });
+                        return false;
+                    }
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        console.log(response);
+                        return false;
+                    }
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'primary');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            //top.location.href = "/pages/diarias/";
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
             });
+            $this.prop("disabled", false);
+            
+            
+            
+           
         }
     });
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //================================================================================================================
           
     
     //Controle da Tela, Campos habilitados ou não
@@ -242,18 +377,25 @@ $(document).ready(function () {
     $('#n_unidade_calculo option').filter(function() {      
         return $(this).val() != 0;
     }).attr("disabled", "");
-    
+    $("#div_periodo_inicial").hide();
+    $("#div_periodo_final").hide();
     
     $('body').on('change', '#n_instrumento', function (e) {
                 
         $('#n_base_calculo').val(0).trigger('change');                        
+        $("#div_periodo_inicial").hide();
+        $("#div_periodo_final").hide();
         
         //Tipo de Aquisição somente será habilitado se o Instrumento de Equilibrio
         //For Revisão
         $("#n_tipo_aquisicao").val(0).attr("disabled", "");
         if($("#n_instrumento option:selected").val() == 1){
             $("#n_tipo_aquisicao").removeAttr("disabled");
-        }     
+            //Quando o Instrumento for Reajuste, então deverá ser habilitado os campos de Periodo Inicial e Final
+        }else if($("#n_instrumento option:selected").val() == 2){
+            $("#div_periodo_inicial").show();
+            $("#div_periodo_final").show();
+        } 
     });
     
     
@@ -356,7 +498,7 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else { 
             e.preventDefault();                
-            if($("#n_unidade_calculo").val() != 3
+            if($("#n_unidade_calculo option:selected").val() != 3
                     && $("#n_unidade_calculo").val() != 4){
                 func.modalAlert("É Necessário Escolher Uma Unidade de Cálculo Quantidade ou Moeda.");
                 return false;
@@ -364,7 +506,14 @@ $(document).ready(function () {
             if($("#n_unidade_calculo").val() == 0){
                 func.modalAlert("É Necessário Escolher um Tipo de Aquisição.");
                 return false;
-            }               
+            }           
+            
+            if($("#n_instrumento option:selected").val() == 1 
+                    && $("#n_tipo_aquisicao option:selected").val() == 0){
+                func.modalAlert("É Necessário Escolher um Tipo de Aquisição.");
+                return false;
+            }
+            
             //Quando a unidade de cálculo for Moeda
             //Então o usuário deverá informar o Valor Unitário Aditivada
             if($("#n_unidade_calculo").val() == 3){
@@ -398,12 +547,9 @@ $(document).ready(function () {
         }else{
             
         }
-                      
-        valor = valor.replace('.' , '');        
-        valor = parseFloat(valor.replace(',' , '.'));
-
-        qtd = qtd.replace('.' , '');        
-        qtd = parseFloat(qtd.replace(',' , '.'));
+            
+        valor = func.converteValorIngFloat(valor);   
+        qtd = func.converteValorIngFloat(qtd);        
         
         $(elemento).closest("tr").find(".td_total").text((qtd*valor).toFixed(4));
         $(elemento).closest("tr").find(".td_total").priceFormat({
@@ -421,9 +567,10 @@ $(document).ready(function () {
   
     //Calculo do Valor do Aditivo
     function calculoValorAditivo(){
-        let valorAditivo = 0; 
+        let valorAditivo = 0;
         $(".td_total").each(function(index){            
-            valorAditivo = valorAditivo + parseFloat($(this).text());            
+            let valorInformado = func.converteValorIngFloat($(this).text());            
+            valorAditivo = valorAditivo + valorInformado;
         });
         $("#n_valor_aditivo").val(valorAditivo.toFixed(4));
         $("#n_valor_aditivo").priceFormat({
@@ -431,8 +578,7 @@ $(document).ready(function () {
             centsSeparator: ',',
             thousandsSeparator: '.',
             centsLimit: 4
-        }); 
-        
+        });        
     }
    
     $('#myModalFu').on('hidden.bs.modal', function (e) {
@@ -462,7 +608,7 @@ $(document).ready(function () {
   /*** TESTE ***/
   
         $.ajax({
-            "url": "/model/compras/gestaoContratos/aditamento/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "pesquisaContrato",
@@ -471,8 +617,25 @@ $(document).ready(function () {
             "success": function (response) {                
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
                 $(".selecionaItem").first().trigger('click');
-                $(".btn-add-aditivo").trigger('click');                
+                $(".btn-add-aditivo").trigger('click');  
+                carregaDadosEdicao();
+                
             }            
         });  
+
+        function carregaDadosEdicao(){
+            $("#n_finalidade").val(1).change();
+            $("#n_instrumento").val(1).change();
+            $("#n_base_calculo").val(2).change();
+            $("#n_unidade_calculo").val(4).change();
+            $("#n_tipo_aquisicao").val(1).change();
+            $("#numero_novo_aditivo").val(1);
+            $("#n_data_publicacao").val("01/01/2018");
+            $('.select_funcionarios').val(1).trigger('change');
+            
+            $(".add-pessoa").trigger('click');
+            $('.select_funcionarios').val(1).trigger('change');
+            
+        }
 
 });
