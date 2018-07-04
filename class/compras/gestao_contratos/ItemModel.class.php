@@ -823,15 +823,15 @@ class ItemModel {
 				<td>' . $value["cd_elemento_despesa"] . '</td>
 				<td>' . $value["tp_material"] . '</td>
 				<td class="text-center">' . $value["nr_lote"] . '</td>
-				<td class="text-center">' . Metodos::ConverteValorBr($value["qt_itens"], 4) . '</td>
-				<td class="text-center">' . Metodos::ConverteValorBr($value["vl_itens"], 4) . '</td>								
+				<td class="text-center td_quantidade">' . Metodos::ConverteValorBr($value["qt_itens"], 4) . '</td>
+				<td class="text-center td_valor_unitario">' . Metodos::ConverteValorBr($value["vl_itens"], 4) . '</td>								
 				<td class="text-center">
                                     <span class="label-aditivo">Quantidade</span>
                                     <input type="text" name="qtd_aditivo" class="form-control input-sm qtd_aditivo quatro_casas" />
                                 </td>				
-				<td class="text-center itens">Total</td>
-                                <td>Saldo</td>
-                                </tr>';
+				<td class="text-center td_total">0.0000</td>
+                                <td class="">Saldo</td>
+                                </tr>';                               
             }
             return $tabela . $tabela . $tabela . $tabela . $tabela;
         }

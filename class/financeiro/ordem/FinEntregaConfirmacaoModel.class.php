@@ -297,50 +297,57 @@ class FinEntregaConfirmacaoModel {
 
     public function salvaEntregaConfirmacao($dados) {
         try {
-
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $finEntregaItensModel = new FinEntregaItensModel();
+
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
             //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
             //verificar ser deu tudo certo na busca do numero da entrega confirmacao ser sim vai seta o resto dos dados
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
-                $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
-                $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
-                $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
-                //verificar ser salvou a entrega confirmacao 
-                if($daoFinEntregaConfirmacao->sucesso()){
-                    //pega o id daa entrega confirmacao
-                    $finEntregaItensModel = new FinEntregaItensModel();
-                    $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
-                    foreach ($dados as $valor) {
-                        var_dump($valor);
-                        $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
-                        $finEntregaItensModel->setQtItensEntrega($valor->qtd);
-                        if(($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0){
-                           $finEntregaItensModel->autoSetVlItemOrdem($pdo);
-                           
-                        }else if($valor->tp == "C" || $valor->fl_valor == 1){
-                            $finEntregaItensModel->setVlItensEntrega($valor->vl);
-                        }
-                        $finEntregaItensModel->cadastraEntregaItens();
-                    }
+            if (!$daoFinEntregaConfirmacao->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+            
+            $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+            $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
+            $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
+            $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
+            
+            //verificar ser salvou a entrega confirmacao 
+            if (!$daoFinEntregaConfirmacao->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+            
+            //pega o id daa entrega confirmacao
+            $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
+            
+            foreach ($dados as $valor) {
+                $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
+                $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                //verificar ser precisa pega o valor dos itens
+                if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
+                    $finEntregaItensModel->autoSetVlItemOrdem($pdo);
+                } else if ($valor->tp == "S" || $valor->fl_valor == 1) {
+                    $finEntregaItensModel->setVlItensEntrega(Metodos::ConverteValorIng($valor->vl));
+                }
+
+                if (!$finEntregaItensModel->cadastraEntregaItens($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
             }
 
-            return false;
-
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-            }
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
+            $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }

@@ -1,5 +1,12 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoAditivo.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMotivo.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoFinalidade.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoAquisicao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoBaseCalculo.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoInstrumento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoUnidadeCalculo.class.php";
 
 $session = new Session();
 
@@ -21,69 +28,52 @@ $dadosContrato = array(
     "con_valor" => "Valor Atual"
 );
 
+$motivoAditamentoGet = filter_input(INPUT_GET, 'm', FILTER_DEFAULT);
 
-$aditivoArray = array(
-    "v" => "Valor",
-    "p" => "Prazo",
-    "vp" => "Valor e Prazo"
-);
+if(empty($motivoAditamentoGet)){
+    header("Location: /pages/index.php?permi=false");
+}
 
-$tipoAditivo = "v";
 
-$idTipoAditvo = $tipoAditivo;
-$nomeAditivo = $aditivoArray[$tipoAditivo];
 
-$motivoAditivo = "Aditivo por ".$aditivoArray[$tipoAditivo];
 $sequencialUltimoAditivo = 0;
-//$numeroAditivo = $sequencialUltimoAditivo."º Termo Aditivo ao Contrato ".$contrato;
+$conexao = new Conexao();
+$pdo = $conexao->connect();
+
+
+//Motivo
+$motivo = new FinContratoMotivo();
+$motivo->setIdContratoMotivo($motivoAditamentoGet);
+$motivo->carregaDados($pdo);
+if(empty($motivo->getIdContratoMotivo())){
+    header("Location: /pages/index.php");
+}
+$motivoAditivo = $motivo->getMotivoAditamentoTexto();
+
 
 //Finalidade
-$arrayFinalidade = array(
-    1 => "Adição",
-    2 => "Supressão"
-);
-$selectFinalidade = "";
-foreach ($arrayFinalidade as $key => $value) {
-    $selectFinalidade .= "<option value=".$key.">".$value."</option>";
-}
+$finalidade = new FinContratoFinalidade();
+$selectFinalidade = $finalidade->retornaOption();
 
-$selectInstrumento = "";
-$arrayInstrumento = array(
-    1 => "Revisão",
-    2 => "Reajuste"
-);
-foreach ($arrayInstrumento as $key => $value) {
-    $selectInstrumento .= "<option value=".$key.">".$value."</option>";
-}
 
-$selectBaseCalculo = "";
-$arrayBaseCalculo = array(
-    1 => "Valor Global",
-    2 => "Valor Unitário"
-);
-foreach ($arrayBaseCalculo as $key => $value) {
-    $selectBaseCalculo .= "<option value=".$key.">".$value."</option>";
-}
+//Instrumento
+$instrumento = new FinContratoInstrumento();
+$selectInstrumento = $instrumento->retornaOption();
 
-$selectUnidadeCalculo = "";
-$arrayUnidadeCalculo = array(
-    1 => "Percentual",
-    2 => "Índice de Correção",
-    3 => "Moeda",
-    4 => "Quantidade"
-);
-foreach ($arrayUnidadeCalculo as $key => $value) {
-    $selectUnidadeCalculo .= "<option value=".$key." disabled>".$value."</option>";
-}
 
-$selectTipoAquisicao = "";
-$arrayTipoAquisicao = array(
-    1 => "Obras, Serviços ou Compras",
-    2 => "Reforma de Edifício ou de Equipamento"
-);
-foreach ($arrayTipoAquisicao as $key => $value) {
-    $selectTipoAquisicao .= "<option value=".$key.">".$value."</option>";
-}
+//Base de Calculo
+$baseCalculo = new FinContratoBaseCalculo();
+$selectBaseCalculo = $baseCalculo->retornaOption();
+
+
+//Unidade de Calculo
+$unidadeCalculo = new FinContratoUnidadeCalculo();
+$selectUnidadeCalculo = $unidadeCalculo->retornaOption();
+
+
+//Aquisicao
+$aquisicao = new FinContratoAquisicao();
+$selectTipoAquisicao = $aquisicao->retornaOption();
 
 
 
