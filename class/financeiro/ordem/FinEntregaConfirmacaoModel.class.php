@@ -313,28 +313,35 @@ class FinEntregaConfirmacaoModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
             $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
             $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
             $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
             $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
-            
+
             //verificar ser salvou a entrega confirmacao 
             if (!$daoFinEntregaConfirmacao->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
             //pega o id daa entrega confirmacao
             $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
-            
+            //instancio a classe ordem itens para pega a quantida e valores antes do insert
+            $finOrdemItensModel = new FinOrdemItensModel();
+            $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
+            $resultQtdVlOrdem = $finOrdemItensModel->verificarSaldoOrdemItens($pdo);
+            var_dump($resultQtdVlOrdem);
+            return false;
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
-                $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
                 //verificar ser precisa pega o valor dos itens
                 if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
+                    
+                    $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
                     $finEntregaItensModel->autoSetVlItemOrdem($pdo);
                 } else if ($valor->tp == "S" || $valor->fl_valor == 1) {
+                    
                     $finEntregaItensModel->setVlItensEntrega(Metodos::ConverteValorIng($valor->vl));
                 }
 
@@ -348,6 +355,29 @@ class FinEntregaConfirmacaoModel {
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaEntregaConfirmacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            
+            if (!empty($this->id_ordem)) {
+                $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
+            }
+            
+            $daoFinEntregaConfirmacao->retornaEntregaConfirmacao($pdo);
+            
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+            
+            return false;
+            
+        } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
