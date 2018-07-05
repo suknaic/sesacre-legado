@@ -169,6 +169,7 @@ $(document).ready(function () {
         $.ajax({
             "url": url,
             "dataType": 'html',
+            "method": "get",
             "data": {
                 "acao": "retornaAditivosDoContrato",
                 "dados": idContrato
@@ -183,6 +184,7 @@ $(document).ready(function () {
         $.ajax({
             "url": url,
             "dataType": 'html',
+            "method": "get",
             "data": {
                 "acao": "pesquisaItens",
                 "id": $("#id_contrato").val()
@@ -197,6 +199,7 @@ $(document).ready(function () {
         $.ajax({
             "url": url,
             "dataType": 'json',
+            "method": "get",
             "data": {
                 "acao": "retornaGestoresDoContrato",
                 "id": $("#id_contrato").val()
@@ -251,13 +254,16 @@ $(document).ready(function () {
                 motivo : $("#motivo").val(),
                 finalidade: $("#n_finalidade option:selected").val(),
                 instrumento: $("#n_instrumento option:selected").val(),
+                unidade_calculo: $("#n_unidade_calculo").val(),
                 base_calculo: $("#n_base_calculo option:selected").val(),
                 tipo_aquisicao: $("#n_tipo_aquisicao option:selected").val(),
                 percentual: $("#n_percentual").val(),
                 indice_correcao: $("#n_indice_correcao").val(),
                 periodo_inicial: $("#n_periodo_inicial").val(),
                 periodo_final: $("#n_periodo_final").val(),
-                data_publicacao: $("#n_data_publicacao").val()                                                
+                data_publicacao: $("#n_data_publicacao").val(),
+                data_assinatura : $("#n_data_assinatura").val(),
+                justificativa: $("#n_justificativa").val()
             };          
                   
             $(".n_gestor_titular option:selected").each(function(){                
@@ -630,11 +636,13 @@ $(document).ready(function () {
             $("#n_unidade_calculo").val(4).change();
             $("#n_tipo_aquisicao").val(1).change();
             $("#numero_novo_aditivo").val(1);
-            $("#n_data_publicacao").val("01/01/2018");
+            $("#n_data_publicacao").val("01/01/2019");
+            $("#n_data_assinatura").val("02/02/2019");
             $('.select_funcionarios').val(1).trigger('change');
             
             $(".add-pessoa").trigger('click');
             $('.select_funcionarios').val(1).trigger('change');
+            $("#n_justificativa").val("Justificação");
             
         }
 

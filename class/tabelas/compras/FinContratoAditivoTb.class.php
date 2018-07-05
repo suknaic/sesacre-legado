@@ -10,6 +10,7 @@ class FinContratoAditivoTb{
     private $id_contrato_base_calculo = null;
     private $id_contrato_unidade_calculo = null;
     private $id_contrato_aquisicao = null;
+    private $ds_justificativa = null;
                                   
 
     /**
@@ -204,4 +205,14 @@ class FinContratoAditivoTb{
         return $this;
     }
 
+    public function getDsJustificativa() {
+        return $this->ds_justificativa;
+    }
+
+    public function setDsJustificativa($ds_justificativa) {
+        $this->ds_justificativa = $ds_justificativa;
+    }
+
+
+    
 }
