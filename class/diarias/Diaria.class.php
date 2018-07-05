@@ -1013,23 +1013,35 @@ class Diaria {
             $data_fim = date_create_from_format('d/m/Y H:i', $destino->dh_fim);
 
             if (!Metodos::ValidaData($destino->dh_inicio,'d/m/Y H:i') || !Metodos::ValidaData($destino->dh_fim,'d/m/Y H:i')) {
-                $msgErro .= 'Data e hora de saída ou chegada inválida.'; 
+                $msgErro .= "Data e hora de saída ou chegada inválida. "; 
             }
             
             if ($data_inicio->getTimeStamp() >= $data_fim->getTimeStamp()) {
-                $msgErro .= ' Data e hora de chegada não pode ser menor ou igual a data e hora de saída.';
+                $msgErro .= "Data e hora de chegada não pode ser menor ou igual a data e hora de saída. ";
             }
             
             //Verifica se há período concomitante
             $itinerario = json_decode($this->getItinerario());
+//            var_dump($itinerario);
             foreach ($itinerario as $linha) {
+                $dt_ini = date_create_from_format('d/m/Y H:i', $linha->dh_inicio);
+                $dt_fim = date_create_from_format('d/m/Y H:i', $linha->dh_fim);
+                
+                //verifica se o novo destino está em um período concomitante com os demais destinos
+                if (($data_inicio->getTimeStamp() >= $dt_ini->getTimeStamp() and $data_inicio->getTimeStamp() <= $dt_fim->getTimeStamp()) OR
+                    ($data_fim->getTimeStamp() >=  $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() <= $dt_fim->getTimeStamp()) OR
+                    ($data_inicio->getTimeStamp() <= $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() >= $dt_fim->getTimeStamp()) OR
+                    ($data_inicio->getTimeStamp() >= $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() <= $dt_fim->getTimeStamp())) {
+                        $msgErro .= "Data e hora de chegada não pode ser concomitante com outro destino. ";
+                        break;
+                }
                 
             }
             
             if(empty($msgErro)){
                 return Metodos::retornoAjax("ok", "console", $data_fim->format('d/m/Y H:i'));
             } else {
-                return Metodos::retornoAjax("Erro", "console", $msgErro);
+                return Metodos::retornoAjax("Erro", "alert", $msgErro);
             }
             
         } catch (Exception $exc) {

@@ -250,4 +250,37 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
+    /**
+     * Retorna as entregas confirmacao com a somatorias dos itens
+     * @param PDO $pdo
+     */
+    public function retornaEntregaConfirmacao(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "select entrega.id_entrega_confirmacao, entrega.nr_entrega_confirmacao, 
+                        to_char(entrega.dt_entrega, 'dd/mm/YYYY') as dt_entrega,
+                        to_char(entrega.dh_cadastramento, 'DD/MM/YYYY HH24:MI:SS') as dt_sistema,
+                        case 
+                                when entrega.sit_entrega = '1' then 'Entrega Parcial'
+                                when entrega.sit_entrega = '2' then 'Entrega Total'
+                        end tipo, 
+                        round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) as total
+                        from fin_entrega_confirmacao as entrega
+                        inner join fin_entrega_itens as entItens
+                        on entItens.id_entrega_confirmacao = entrega.id_entrega_confirmacao
+                        where entrega.id_ordem = :ordem
+                        group by entrega.id_entrega_confirmacao
+                        order by entrega.nr_entrega_confirmacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }

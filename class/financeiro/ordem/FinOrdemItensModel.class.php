@@ -215,7 +215,42 @@ class FinOrdemItensModel {
             } else {
                 $this->sucesso = false;
             }
-           
+        }
+    }
+
+    public function retornaArrayQdtVlOrdemItens(PDO $pdo) {
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+
+        if (!empty($this->id_ordem)) {
+            $daoFinOrdenItens = new DaoFinOrdenItens();
+            $daoFinOrdenItens->setIdOrdem($this->id_ordem);
+            $daoFinOrdenItens->retornaQtdEValor($pdo);
+            return $daoFinOrdenItens->getMsgRetorno();
+        }
+    }
+
+    /**
+     * @param PDO $pdo
+     * @param type $arrayItensOrdem array com as quantidades e valores da ordem
+     * @param type $qtd do valor para ser verificador
+     * @param type $vl valor para ser verificador
+     * @return type
+     */
+    public function verificarSaldoOrdemItens(PDO $pdo, $arrayItensOrdem, $qtd = null, $vl = null) {
+
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+
+        if (!empty($this->id_ordem)) {
+            $daoFinOrdenItens = new DaoFinOrdenItens();
+            $daoFinOrdenItens->setIdOrdem($this->id_ordem);
+            $daoFinOrdenItens->retornaQtdEValor($pdo);
+            return $daoFinOrdenItens->getMsgRetorno();
         }
     }
 

@@ -192,17 +192,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                         <thead>
                                                             <tr>
                                                                 <th class="text-center">Nº da entrega</th>
-                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Entregue</th>
                                                                 <th class="text-center">Tipo da entrega</th>
                                                                 <th class="text-center">Data da entrega</th>
+                                                                <th class="text-center">Data sistema</th>
+                                                                <th class="text-center">Total entrega</th>
                                                                 <th class="text-center">Ação</th>
                                                             </tr>
                                                         </thead>
