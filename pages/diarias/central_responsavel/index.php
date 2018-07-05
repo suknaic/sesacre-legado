@@ -51,6 +51,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/diarias/central_responsavel/inde
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Registra os Responsáveis pela Central de Demanda</h1>                       
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="../">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 

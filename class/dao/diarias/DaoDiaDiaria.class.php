@@ -568,10 +568,10 @@ class DaoDiaDiaria extends DiaDiaria {
                                            || ')' 
                                            || cf.nm_cidade 
                                            || ' / ' 
-                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G999D99')) 
+                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G990D99')) 
                                            || ' X ' 
                                            || 'R$ ' 
-                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G999D99')) 
+                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G990D99')) 
                                            || ' = R$ ' 
                                            || ( Trim(To_char(dd.qt_diaria_destino * dd.vl_diaria_destino, 
                                                      '999G999G999D99')) ), '<hr>') AS destino 
@@ -651,10 +651,10 @@ class DaoDiaDiaria extends DiaDiaria {
                                            || ')' 
                                            || cf.nm_cidade 
                                            || ' / ' 
-                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G999D99')) 
+                                           || Trim(To_char(dd.qt_diaria_destino, '999G999G990D99')) 
                                            || ' X ' 
                                            || 'R$ ' 
-                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G999D99')) 
+                                           || Trim(To_char(dd.vl_diaria_destino, '999G999G990D99')) 
                                            || ' = R$ ' 
                                            || ( Trim(To_char(dd.qt_diaria_destino * dd.vl_diaria_destino, 
                                                      '999G999G999D99')) ), '<hr>') AS destino 
@@ -915,7 +915,7 @@ class DaoDiaDiaria extends DiaDiaria {
                              ses_lotacao l
                         WHERE l.id_lotacao = f.id_lotacao
                           AND f.id_pessoa = :id_pessoa_solicitante
-                          AND f.id_tipo_solicitacao = 3";
+                          AND f.id_tipo_administracao = 3";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_pessoa_solicitante', $this->getIdPessoaSolicitante(),PDO::PARAM_INT);
                 $stmt->execute();

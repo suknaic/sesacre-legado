@@ -34,9 +34,6 @@ if(empty($motivoAditamentoGet)){
     header("Location: /pages/index.php?permi=false");
 }
 
-
-
-$sequencialUltimoAditivo = 0;
 $conexao = new Conexao();
 $pdo = $conexao->connect();
 

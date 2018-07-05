@@ -188,7 +188,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
         }
     }
 
-    function retornaTodos($pdo) {
+    function retornaTodos($pdo, string $filtro = "" ) {
 
         if ($pdo == null) {
             $conexao = new Conexao();
@@ -208,8 +208,8 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
                  FROM fin_central_responsavel CR
                  INNER JOIN ses_pessoa P ON P.id_pessoa = CR.id_pessoa
                  INNER JOIN ses_lotacao L ON L.id_lotacao = CR.id_lotacao
-                 LEFT JOIN fin_tipo_administracao T ON T.id_tipo_administracao = CR.id_tipo_administracao
-                 ORDER BY P.nm_pessoa,
+                 LEFT JOIN fin_tipo_administracao T ON T.id_tipo_administracao = CR.id_tipo_administracao ". $filtro .
+                 " ORDER BY P.nm_pessoa,
                           L.nm_lotacao,
                           T.nm_tipo_administracao";
         try {
