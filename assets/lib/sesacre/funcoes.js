@@ -197,6 +197,28 @@ function Funcoes() {
             location.reload();
         });
     }
+    
+    /**
+     * 
+     * @param string valor
+     * @returns string
+     */
+    this.converteValorIng = function(valor){
+        valor = valor.replace('.' , '');
+        valor = valor.replace(',' , '.');
+        return valor;
+    }
+    
+    /**
+     * 
+     * @param string valor
+     * @returns float
+     */
+    this.converteValorIngFloat = function(valor){
+        valor = valor.replace('.' , '');
+        valor = parseFloat(valor.replace(',' , '.'));
+        return valor;
+    }
 
 
 }

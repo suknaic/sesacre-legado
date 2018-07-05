@@ -276,75 +276,59 @@ $(document).ready(function () {
 
     });
 
-//    function carregaSituacaoDaEntregue() {
-//        $.ajax({
-//            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-//            "dataType": "json",
-//            "data": {
-//                "acao": "ListaItensEntregue",
-//                "id_entrega": $("#id_entrega").val()
-//            },
-//            "success": function (response) {
-//                if (response != 'Nenhum registro encontrado') {
-//                    let valores = [];
-//                    if ($.trim(response)) {
-//                        if (response.length) {
-//                            valores = response
-//                        }
-//                    }
-//                    let dataSet = [];
-//                    var oTable2 = $('#tabela2').dataTable();
-//                    oTable2.fnDestroy();
-//                    for (var i = valores.length - 1; i >= 0; i--) {
-//
-//                        let valor = [
-//                            '1',
-//                            valores[i]['nr_item'],
-//                            valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
-//                            valores[i]['nm_desc_material'],
-//                            valores[i]['cd_despesa'],
-//                            valores[i]['tp_material'],
-//                            valores[i]['nr_lote'],
-//                            valores[i]['qt_itens_ordem'],
-//                            valores[i]['vl_itens_ordem'],
-//                            valores[i]['entregue'],
-//                            valores[i]['tipo'],
-//                            valores[i]['dt_entrega'],
-//                            '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' + valores[i]['id_entrega_itens'] + '" \n\
-//                              nomeItem="' + valores[i]['nr_item'] + '" idEntrega="' + valores[i]['id_entrega_confirmacao'] + '" ><i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>\n\
-//                             </button>'
-//                        ]
-//                        dataSet.push(valor)
-//                    }
-//
-//                    $('#tabela2').DataTable({
-//                        data: dataSet,
-//                        language: {
-//                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//                        },
-//
-//                        columns: [
-//                            {title: "Nº da entrega", className: "text-center"},
-//                            {title: "Nº", className: "text-center"},
-//                            {title: "Item", className: "text-center"},
-//                            {title: "Descrição", className: "text-center"},
-//                            {title: "Elemento de Despesa", className: "text-center"},
-//                            {title: "Tipo", className: "text-center"},
-//                            {title: "Lote", className: "text-center"},
-//                            {title: "QTD", className: "text-center"},
-//                            {title: "Valor unit", className: "text-center"},
-//                            {title: "Entregue", className: "text-center"},
-//                            {title: "Tipo Entrega", className: "text-center"},
-//                            {title: "Data de Entrega", className: "text-center itens"},
-//                            {title: "Ação", className: "text-center"}
-//
-//                        ]
-//                    });
-//                }
-//            }
-//        });
-//    }
-//    carregaSituacaoDaEntregue();
+    function carregaSituacaoDaEntregue() {
+        $.ajax({
+            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+            "dataType": "json",
+            "data": {
+                "acao": "ListaItensEntregue",
+                "id_ordem": $("#idOrdem").val()
+            },
+            "success": function (response) {
+                if (response != 'Nenhum registro encontrado') {
+                    let valores = [];
+                    if ($.trim(response)) {
+                        if (response.length) {
+                            valores = response
+                        }
+                    }
+                    let dataSet = [];
+                    var oTable2 = $('#tabela2').dataTable();
+                    oTable2.fnDestroy();
+                    for (var i = valores.length - 1; i >= 0; i--) {
+
+                        let valor = [
+                            valores[i]['nr_entrega_confirmacao'],
+                            valores[i]['tipo'],
+                            valores[i]['dt_entrega'],
+                            valores[i]['dt_sistema'],
+                            Number(valores[i]['total']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
+                            'tesyte',
+                        ]
+                        dataSet.push(valor)
+                    }
+
+                    $('#tabela2').DataTable({
+                        data: dataSet,
+                        language: {
+                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                        },
+
+                        columns: [
+                            {title: "Nº da entrega", className: "text-center"},
+                            {title: "Tipo entrega", className: "text-center"},
+                            {title: "Data de entrega", className: "text-center"},
+                            {title: "Data sistema", className: "text-center"},
+                            {title: "Total da entrega", className: "text-center"},
+                            {title: "Ação", className: "text-center"}
+
+                        ]
+                    });
+                }
+            }
+        });
+    }
+    carregaSituacaoDaEntregue();
 
 //
 //    $('body').on('click', '.btn-remover', function (e) {

@@ -438,7 +438,7 @@ class DaoFinContrato extends FinContratoTb {
                         . " LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
                         . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"                                           
                         . " WHERE C.nr_contrato LIKE :nrContrato AND C.st_ativo = '1' "
-                        . " AND C.sq_contrato = 0";
+                        . " AND C.sq_contrato = 0 AND C.tp_contrato = '2'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nrContrato", "%".$this->getNrContrato()."%", PDO::PARAM_STR);
                 $stmt->execute();

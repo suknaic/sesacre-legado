@@ -28,6 +28,8 @@ class FinContratoModel {
     private $tp_contrato = null;
     private $fl_carona = null;
     private $id_contrato_alt = null;
+    private $sq_contrato = null;
+    private $id_contrato_aditivo_pai = null;
     //fornecedor
     private $id_fornecedor = null;
     private $id_pessoaFornecedor = null;
@@ -714,7 +716,24 @@ class FinContratoModel {
 
         return $this;
     }
+    
+    public function getSqContrato() {
+        return $this->sq_contrato;
+    }
 
+    public function getIdContratoAditivoPai() {
+        return $this->id_contrato_aditivo_pai;
+    }
+
+    public function setSqContrato($sq_contrato) {
+        $this->sq_contrato = $sq_contrato;
+    }
+
+    public function setIdContratoAditivoPai($id_contrato_aditivo_pai) {
+        $this->id_contrato_aditivo_pai = $id_contrato_aditivo_pai;
+    }
+
+    
     /**
      * Metodo responsavel por cadastrar a ata no sistema
      * @return type
@@ -1533,49 +1552,6 @@ class FinContratoModel {
         }
     }
     
-    /**
-     * Retorna Os Aditivos em formato de Tabela de um Contrato
-     * @return string
-     */
-    public function retornaAditivosDoContrato() {
-        try {
-            //variaveis do sistema
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $daoContrato = new DaoFinContrato();
-            $daoContrato->setIdContrato($this->id_contrato);
-            
-            //Precisa Verifica se o Contrato possui algum aditivo vinculado a ele e listar.
-            //Esperando definição do Banco de Dados Ainda
-            
-            $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade="0">'
-                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
-                    . '</div>';
-					                    			            
-            return $retorno;
-            
-            
-            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade="0">
-                    <thead>
-                        <tr>
-                            <th>Número do Aditivo</th>
-                            <th>Motivo do Aditamento</th>
-                            <th>Vigência</th>
-                            <th>Publicação</th>
-                            <th>Valor do Aditivo</th>
-                            <th>Opções</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>';                    
-            
-            
-            
-        } catch (Exception $e) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
+    
 
 }

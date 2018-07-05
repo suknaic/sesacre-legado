@@ -3,6 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoAditivo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/ItemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/FinFornecedorModel.class.php";
 
@@ -53,13 +54,13 @@ switch ($_REQUEST['acao']) {
         }
 
     CASE 'retornaAditivosDoContrato':
-        try {            
+        try {
             
-            $idContrato = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);            
-            $gestaoContratoModel = new FinContratoModel();
+            $idContrato = (int)filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);            
+            $gestaoContratoModel = new FinContratoAditivo();
             $gestaoContratoModel->setIdContrato($idContrato);
             echo $gestaoContratoModel->retornaAditivosDoContrato();
-        
+            
             return;
             break;
         } catch (Error $e) {
@@ -80,6 +81,32 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'retornaGestoresDoContrato':
+        try{
+            $contratoModel = new FinContratoModel();            
+            //echo $contratoModel->retornaOptionPessoaContrato(null);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 
+    case 'salvar':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $contrato = new FinContratoAditivo();
+            echo $contrato->salvar($dados);            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
   
 }

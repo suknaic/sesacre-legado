@@ -233,7 +233,8 @@
                                     </div>
                                     
                                     <div class="form-horizontal">
-                                        <input type="hidden" id="tipo_aditivo" value="<?php echo $idTipoAditvo; ?>" />
+                                        <input type="hidden" id="motivo" value="<?php echo $motivo->getIdContratoMotivo(); ?>" />
+                                        <input type="hidden" id="numero_novo_aditivo" value="0" />
                                         <div class="panel-body">                                             
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label text-left">Motivo do Aditamento: <span class="text-danger">*</span> </label>
@@ -394,8 +395,14 @@
                                                 </div>
                                             </div>                                                                                        
                                             
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Período Inicial: <span class="text-danger">*</span></label>
+                                            <div class="form-group" id="div_periodo_inicial">
+                                                <label class="col-sm-2 control-label text-left">Período Inicial: 
+                                                    <span class="text-danger">*</span>
+                                                    <span class="fa fa-question-circle add-tooltip" 
+                                                          data-original-title="Campo Obrigatório Quando o Instrumento de Equilíbrio Econômico-Financeiro for Reajuste" 
+                                                        data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
+                                                    </span>
+                                                </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -406,8 +413,14 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
-                                                <label class="col-sm-2 control-label text-left">Período Final: <span class="text-danger">*</span></label>
+                                            <div class="form-group" id="div_periodo_final">
+                                                <label class="col-sm-2 control-label text-left">Período Final: 
+                                                    <span class="text-danger">*</span>
+                                                    <span class="fa fa-question-circle add-tooltip" 
+                                                          data-original-title="Campo Obrigatório Quando o Instrumento de Equilíbrio Econômico-Financeiro for Reajuste" 
+                                                        data-toggle="tooltip" data-container="body" data-placement="top" role="button">                                                              
+                                                    </span>
+                                                </label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -455,7 +468,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_gestor_sub" class="form-control select_funcionarios">                                                            
+                                                        <select class="n_gestor_sub form-control select_funcionarios">                                                            
                                                         </select>   
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-primary add-pessoa" type="button">
@@ -473,7 +486,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_fiscal" class="form-control select_funcionarios">                                                            
+                                                        <select class="n_fiscal form-control select_funcionarios">                                                            
                                                         </select>   
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-primary add-pessoa" type="button">
@@ -491,7 +504,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_fiscal_sub" class="form-control select_funcionarios">                                                            
+                                                        <select class="n_fiscal_sub form-control select_funcionarios">                                                            
                                                         </select>    
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-primary add-pessoa" type="button">
@@ -509,7 +522,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_sub_fiscal" class="form-control select_funcionarios">                                                            
+                                                        <select class="n_sub_fiscal form-control select_funcionarios">                                                            
                                                         </select>
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-primary add-pessoa" type="button">
@@ -527,7 +540,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                        <select id="n_sub_fiscal_sub" class="form-control select_funcionarios">                                                            
+                                                        <select class="n_sub_fiscal_sub form-control select_funcionarios">                                                            
                                                         </select> 
                                                         <span class="input-group-btn">
                                                             <button class="btn btn-primary add-pessoa" type="button">

@@ -95,4 +95,25 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
         }
     }
 
+    public function retornaQtdEValor(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_ordem_itens, qt_itens_ordem, vl_itens_ordem from fin_ordem_itens where id_ordem = :ordem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
 }
