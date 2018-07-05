@@ -227,7 +227,6 @@ class DaoDiaDiaria extends DiaDiaria {
                                 diaria.ds_obs,
                                 diaria.nr_protocolo,
                                 diaria.id_pessoa_solicitante,
-                                diaria.id_lotacao_solicitante,
                                 diaria.fl_retorno,
                                 diaria.id_pedido,
                                 diaria.id_diaria_pai,
@@ -683,7 +682,7 @@ class DaoDiaDiaria extends DiaDiaria {
 					ON cd.id_lotacao = di.id_central_solicitante
                                 LEFT JOIN fin_central_responsavel cr 
                                        ON cr.id_lotacao = di.id_central_solicitante 
-                                          AND cr.id_tipo_solicitacao = 3 
+                                          AND cr.id_tipo_administracao = 3 
                                           AND cr.id_pessoa = :usuario 
                          WHERE  ( di.id_pessoa_proposto = :usuario 
                                    OR di.id_pessoa_proponente = :usuario 
