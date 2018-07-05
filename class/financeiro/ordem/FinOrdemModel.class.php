@@ -324,8 +324,7 @@ class FinOrdemModel {
             $daoFinOrdem->retornaPrazoEntrega($pdo);
             $daoFinOrdem->setNrPrazoOrdem($daoFinOrdem->getMsgRetorno()["nr_prazo_entrega"]);
             //pega ano ordem
-            $date = new DateTime($ordem[0]->vig_inicial);
-            $daoFinOrdem->setAaOrdem($date->format('Y'));
+            $daoFinOrdem->setAaOrdem(date("Y"));
 
             if ($ordem[0]->pergunta == 1) {
                 if (Metodos::validaConverteDataING($ordem[0]->vig_inicial) != '' && Metodos::validaConverteDataING($ordem[0]->vig_inicial) != "") {
