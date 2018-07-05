@@ -444,6 +444,30 @@
                                             </div>
                                             
                                             <div class="form-group">
+                                                <label class="col-sm-2 control-label text-left">Data da Assinatura: <span class="text-danger">*</span></label>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-calendar inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control data" name="n_data_assinatura" id="n_data_assinatura" placeholder="__/__/____">
+                                                    </div>                                                  
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label text-left">Justificativa: </label>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <textarea class="form-control" rows="4" cols="50" name="n_justificativa" id="n_justificativa"></textarea>                                                        
+                                                    </div>                                                  
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
                                                 <label class="col-sm-2 control-label text-left">Gestores Titulares: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">

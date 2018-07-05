@@ -275,6 +275,8 @@ function encapsulaDadosDoFormItinerario() {
                 return false;
             }
             if (response.tipoMsg === "Erro") {
+                console.log(response.msg);
+              
                 func.modalAlert(response.msg);
                 return false;
             } else if (response.tipoMsg === "ok") {
