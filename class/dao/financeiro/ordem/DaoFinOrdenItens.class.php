@@ -95,10 +95,27 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
         }
     }
 
-    public function retornaQtdEValor(PDO $pdo) {
+    public function retornaSaldoItensOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select id_ordem_itens, qt_itens_ordem, vl_itens_ordem from fin_ordem_itens where id_ordem = :ordem";
+                $sql = "select ordemItens.id_ordem_itens, 
+                        case 
+                                when (material.tp_material = 'C' OR material.tp_material = 'P') and itens.fl_valor_variavel = '0'
+                                then round((ordemItens.qt_itens_ordem - sum(COALESCE(entItens.qt_itens_entrega, '0.0000'))),4)	
+                                when (material.tp_material = 'S' OR itens.fl_valor_variavel = '1')
+                                then round(((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) - sum(COALESCE((entItens.qt_itens_entrega * entItens.vl_itens_entrega),'0.0000'))),4)		
+                        end saldoItens
+                        from fin_ordem_itens as ordemItens
+                        inner join fin_pre_ordem as preOrdem
+                        on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
+                        inner join fin_cont_itens as itens
+                        on itens.id_cont_itens = preOrdem.id_cont_itens
+                        inner join pla_material as material
+                        on material.id_material = itens.id_material
+                        left join fin_entrega_itens as entItens
+                        on entItens.id_ordem_itens = ordemItens.id_ordem_itens
+                        where id_ordem = :ordem
+                        group by ordemItens.id_ordem_itens, material.tp_material, itens.fl_valor_variavel";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
