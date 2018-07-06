@@ -297,7 +297,7 @@ class FinContratoAditivo {
             //Verifica a Quantidade de Aditivos
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($contrato->getIdContrato());
-            $daoContratoAditivo->retornaQuantidadeDeAditivo($pdo);                                    
+            $daoContratoAditivo->retornaUltimoAditivo($pdo);                                    
             if(!$daoContratoAditivo->Sucesso()){
                 return Metodos::retornoAjax("Erro", "console", "Não foi possível saber a quantidade de Aditivo.");
             }
@@ -351,7 +351,7 @@ class FinContratoAditivo {
             
             
             //Busca a quantidade de Aditivos Cadastrado no sistema
-            $daoContrato->retornaQuantidadeDeAditivo($pdo);
+            $daoContrato->retornaUltimoAditivo($pdo);
                         
             if(!$daoContrato->Sucesso()){
                 $retorno = '<div class="alert alert-warning">'
