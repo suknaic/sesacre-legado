@@ -123,8 +123,12 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
              to_char(p.dt_pedido, 'yyyy')) as pedido, ordem.nr_ordem, ordem.aa_ordem, ordem.nr_prazo_ordem, 
              cont.nr_contrato, cont.tp_contrato, gprocesso.cd_pregao, modalidade.nm_modalidade, objeto.nm_objeto, 
              cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pe.nm_pessoa, pe.nm_email, pj.nr_cnpj, 
-             pe.ds_logradouro, pe.ds_bairro, pe.nr_telefone_residencial as telefoneCredor, contItens.nr_item, mat.nm_material, 
-             mat.nm_desc_material, contItens.nm_marca, contItens.nm_modelo, ordemItens.qt_itens_ordem, 
+             pe.ds_logradouro, pe.ds_bairro, pe.nr_telefone_residencial as telefoneCredor, contItens.nr_item, mat.nm_material,
+             case 
+                when contItens.ds_itens !='' then contItens.ds_itens
+                else mat.nm_desc_material
+             end nm_desc_material, 
+             contItens.nm_marca, contItens.nm_modelo, ordemItens.qt_itens_ordem, 
              ordemItens.vl_itens_ordem, unid.nm_unidade_medida, emp.nr_empenho, desp.cd_despesa_elemento, 
              desp.ds_despesa_elemento, font.nr_fonte, local.nm_lotacao as localEntrega, local.ds_logradouro as localLogradouro,
              local.ds_bairro as localBairro, local.nr_cep as localCep, pEmissor.nm_pessoa as emissor, setorEmissor.nm_lotacao as setor, 
