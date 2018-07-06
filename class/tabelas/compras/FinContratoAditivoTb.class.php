@@ -11,6 +11,11 @@ class FinContratoAditivoTb{
     private $id_contrato_unidade_calculo = null;
     private $id_contrato_aquisicao = null;
     private $ds_justificativa = null;
+    private $nr_aditivo = null;
+    private $dt_inicial = null;
+    private $dt_final = null;
+    private $nr_percentual_indice = null;
+    private $st_ativo = null;
                                   
 
     /**
@@ -213,6 +218,48 @@ class FinContratoAditivoTb{
         $this->ds_justificativa = $ds_justificativa;
     }
 
+    public function getNrAditivo() {
+        return $this->nr_aditivo;
+    }
 
+    public function setNrAditivo($nr_aditivo) {
+        $this->nr_aditivo = $nr_aditivo;
+    }
+
+    public function getDtInicial() {
+        return $this->dt_inicial;
+    }
+
+    public function getDtFinal() {
+        return $this->dt_final;
+    }
+
+    public function getNrPercentualIndice() {
+        return $this->nr_percentual_indice;
+    }
+
+    public function getStAtivo() {
+        return $this->st_ativo;
+    }
+
+    public function setDtInicial($dt_inicial) {
+        $this->dt_inicial = $dt_inicial;
+    }
+
+    public function setDtFinal($dt_final) {
+        $this->dt_final = $dt_final;
+    }
+
+    public function setNrPercentualIndice($nr_percentual_indice) {
+        $this->nr_percentual_indice = $nr_percentual_indice;
+    }
+
+    public function setStAtivo($st_ativo) {
+        $this->st_ativo = $st_ativo;
+    }
+
+
+    
+    
     
 }

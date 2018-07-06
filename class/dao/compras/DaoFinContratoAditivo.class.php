@@ -77,7 +77,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
 //    }    
     
     
-    function retornaQuantidadeDeAditivo($pdo) {
+    function retornaUltimoAditivo($pdo) {
         $this->sucesso = false;
 
         $sql = " SELECT count(CA.id_contrato_aditivo) AS quantidade"                    
@@ -85,6 +85,16 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                 . " INNER JOIN fin_contrato C ON C.id_contrato_aditivo_pai = CA.id_contrato"
                 . " WHERE CA.id_contrato = :idContrato AND C.st_ativo = '1'"
                 . " AND C.tp_contrato = '2' AND C.sq_contrato > 0";
+        
+        $sql = "SELECT COALESCE(CA.nr_aditivo, 0) as ultimo_aditivo"
+                . " , c.ID_CONTRATO, CA.id_contrato_aditivo"
+                . " FROM fin_contrato C"
+                . " LEFT JOIN fin_contrato CAUX ON CAUX.id_contrato_aditivo_pai = C.id_contrato"
+                . " LEFT JOIN fin_contrato_aditivo CA ON CA.id_contrato = CAUX.id_contrato AND CA.st_ativo = '1'"
+                . " WHERE C.id_contrato = 1253 AND C.tp_contrato = '2'"
+                . " ORDER BY CA.id_contrato_aditivo DESC"
+                . " LIMIT 1";
+        
         try {
             $result = $pdo->prepare($sql);  
             $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
