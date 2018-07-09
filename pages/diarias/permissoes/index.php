@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro de Perfil de Acesso do Módulo de Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Vincular Perfil de Acesso do Módulo de Diárias</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->

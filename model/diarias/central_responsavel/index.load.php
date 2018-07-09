@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
 
 $session = new Session();
-if(!$session->vPGeral()){
+if(!$session->vPDiariasPermissoes()){
     header("Location: /pages/index.php"); 
 }
 
