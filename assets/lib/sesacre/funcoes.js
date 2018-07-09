@@ -30,7 +30,7 @@ function Funcoes() {
         } else {
             $('.modal-alert').find('.alert').removeClass(classeN.join(' ')).addClass('alert-warning');
         }
-        $('.modal-alert').find('.textoModal').text(texto);
+        $('.modal-alert').find('.textoModal').html(texto);
         $('.modal-alert').modal('show');
     }
 

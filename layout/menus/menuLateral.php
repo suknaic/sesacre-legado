@@ -315,22 +315,13 @@
                                     </a>
                                     <ul>
                                         <li>
-                                            <a href="#">Centrais de Demanda <i class="arrow"></i></a>
-                                            <ul>
-                                                <li><a href="/pages/diarias/central_responsavel/">Vincular Central de Demanda do Módulo de Diárias</a></li>
-                                            </ul>
+                                            <a href="/pages/diarias/permissoes/">Perfil de Acesso</a>
                                         </li>
                                         <li>
-                                            <a href="#">Perfil de Acesso <i class="arrow"></i></a>
-                                            <ul>
-                                                <li><a href="/pages/diarias/permissoes/">Vincular Perfil de Acesso do Módulo de Diárias</a></li>
-                                            </ul>
+                                            <a href="/pages/diarias/decreto_valor/">Valores das Diárias</a>
                                         </li>
-                                        <li>
-                                            <a href="#">Tabelas Gerenciais <i class="arrow"></i></a>
-                                            <ul>
-                                                <li><a href="/pages/diarias/decreto_valor/">Valores das Diárias</a></li>
-                                            </ul>
+                                         <li>
+                                            <a href="/pages/diarias/central_responsavel/">Centrais de Demanda</a>
                                         </li>
                                     </ul>
                                     
