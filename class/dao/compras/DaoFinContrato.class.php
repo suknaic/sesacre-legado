@@ -454,5 +454,41 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
+    
+    
+    public function retornaDadosSemItens(PDO $pdo) {
+        try {
+            if ($pdo != null) {
+                $sql = "SELECT C.id_contrato, C.nr_contrato, C.nr_prazo_entrega, C.id_processo, C.id_pessoa"
+                        . " , C.ds_objeto, C.fl_servico_continuado, C.dt_ini_vigencia_contrato, C.dt_fim_vigencia_contrato"
+                        . " , C.dt_assinatura, C.dt_publicacao, C.ds_obs_contrato, C.st_ativo, C.id_modalidade, C.ds_area_abrangencia"
+                        . " , C.ds_unidade_contemplada, C.id_orgao_gerenciador, C.id_tipo_gasto, C.vl_contrato, C.tp_contrato, C.fl_bloqueado"
+                        . " , C.fl_carona, C.id_contrato_alt, C.sq_contrato, C.id_contrato_aditivo_pai"
+                        . " , F.id_fornecedor, F.id_pessoa AS pessoa_fornecedor, F.id_contrato AS contrato_fornecedor, F.sit_fornecedor"
+                        . " , CA.id_contrato_aditivo, CA.id_contrato AS contrato_aditivo, CA.id_contrato_motivo, CA.id_contrato_finalidade"
+                        . " , CA.id_contrato_instrumento, CA.id_contrato_base_calculo, CA.id_contrato_unidade_calculo, CA.id_contrato_aquisicao"
+                        . " , CA.ds_justificativa, CA.nr_aditivo, CA.dt_inicial, CA.dt_final, CA.nr_percentual_indice"
+                        . " FROM fin_contrato C"
+                        . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
+                        . " LEFT JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato AND CA.st_ativo = '1'"
+                        . " WHERE C.id_contrato = :idContrato"
+                        . " AND C.st_ativo = '1'";                        
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+    
 
 }

@@ -19,6 +19,18 @@ class ItemModel {
     private $cdDescMaterial = null;
     private $descItem = null;
     private $idUnidadeMedida = null;
+    private $flValorVariavel = null;
+    
+    private $sucesso = false;
+    private $msgRetorno = null;
+
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+    
+    public function Sucesso() {
+        return $this->sucesso;
+    }
 
     function getIdContItens() {
         return $this->idContItens;
@@ -131,7 +143,16 @@ class ItemModel {
     function setIdUnidadeMedida($idUnidadeMedida) {
         $this->idUnidadeMedida = $idUnidadeMedida;
     }
+    
+    public function getFlValorVariavel() {
+        return $this->flValorVariavel;
+    }
 
+    public function setFlValorVariavel($flValorVariavel) {
+        $this->flValorVariavel = $flValorVariavel;
+    }
+
+    
     public function cadastrarItem() {
         try {
             //conexao com banco dedados
@@ -831,5 +852,32 @@ class ItemModel {
             return $tabela;
         }
     }
+    
+    
+    public function retornaItensPorFornecedor(PDO $pdo){     
+        try {           
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+                
+            $dao = new DaoFinItens();
+            $dao->setIdFornecedor($this->idFornecedor);
+            $dao->retornaItensFornecedor($pdo);
+            if(!$dao->Sucesso()){
+                $this->sucesso = false;            
+                $this->msgRetorno = "Não foi possível Localizar Itens do Contrato";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = $dao->getMsgRetorno();            
+                                                   
+        } catch (Exception $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
 
 }

@@ -1,9 +1,12 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContratoAditivo.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
+
 
 class FinContratoAditivo {
             
+    private $idContratoAditivo = null;
     private $idContrato = null;
     private $idMotivo = null;
     private $numeroNovoAditivo = null;
@@ -40,202 +43,207 @@ class FinContratoAditivo {
     
     private $tipoAquisicaoObras = 1;
     private $tipoAquisicaoReforma = 2;
-    
-    private $contrato = null;
-    private $itens = array();
-    
+            
     private $sucesso = null;
     private $msgRetorno = null;    
     
-    function getMsgRetorno() {
+    public function getMsgRetorno() {
         return $this->msgRetorno;
     }   
  
-    function Sucesso(){
+    public function Sucesso(){
         return $this->sucesso;
     }
     
-    function getIdContrato() {
+    public function getIdContrato() {
         return $this->idContrato;
     }
 
-    function setIdContrato($idContrato) {
+    public function setIdContrato($idContrato) {
         $this->idContrato = $idContrato;
     }       
     
-    function getIdMotivo() {
+    public function getIdMotivo() {
         return $this->idMotivo;
     }
 
-    function getNumeroNovoAditivo() {
+    public function getNumeroNovoAditivo() {
         return $this->numeroNovoAditivo;
     }
 
-    function getIdBaseCalculo() {
+    public function getIdBaseCalculo() {
         return $this->idBaseCalculo;
     }
 
-    function getDtPublicacao() {
+    public function getDtPublicacao() {
         return $this->dtPublicacao;
     }
 
-    function getIdFinalidade() {
+    public function getIdFinalidade() {
         return $this->idFinalidade;
     }
 
-    function getIndiceCorrecao() {
+    public function getIndiceCorrecao() {
         return $this->indiceCorrecao;
     }
 
-    function getIdInstrumento() {
+    public function getIdInstrumento() {
         return $this->idInstrumento;
     }
 
-    function getPercentual() {
+    public function getPercentual() {
         return $this->percentual;
     }
 
-    function getDtPeriodoInicial() {
+    public function getDtPeriodoInicial() {
         return $this->dtPeriodoInicial;
     }
 
-    function getDtPeriodoFinal() {
+    public function getDtPeriodoFinal() {
         return $this->dtPeriodoFinal;
     }
 
-    function getIdTipoAquisicao() {
+    public function getIdTipoAquisicao() {
         return $this->idTipoAquisicao;
     }
 
-    function setIdMotivo($idMotivo) {
+    public function setIdMotivo($idMotivo) {
         $this->idMotivo = $idMotivo;
     }
 
-    function setNumeroNovoAditivo($numeroNovoAditivo) {
+    public function setNumeroNovoAditivo($numeroNovoAditivo) {
         $this->numeroNovoAditivo = $numeroNovoAditivo;
     }
 
-    function setIdBaseCalculo($idBaseCalculo) {
+    public function setIdBaseCalculo($idBaseCalculo) {
         $this->idBaseCalculo = $idBaseCalculo;
     }
 
-    function setDtPublicacao($dtPublicacao) {
+    public function setDtPublicacao($dtPublicacao) {
         $this->dtPublicacao = $dtPublicacao;
     }
 
-    function setIdFinalidade($idFinalidade) {
+    public function setIdFinalidade($idFinalidade) {
         $this->idFinalidade = $idFinalidade;
     }
 
-    function setIndiceCorrecao($indiceCorrecao) {
+    public function setIndiceCorrecao($indiceCorrecao) {
         $this->indiceCorrecao = $indiceCorrecao;
     }
 
-    function setIdInstrumento($idInstrumento) {
+    public function setIdInstrumento($idInstrumento) {
         $this->idInstrumento = $idInstrumento;
     }
 
-    function setPercentual($percentual) {
+    public function setPercentual($percentual) {
         $this->percentual = $percentual;
     }
 
-    function setDtPeriodoInicial($dtPeriodoInicial) {
+    public function setDtPeriodoInicial($dtPeriodoInicial) {
         $this->dtPeriodoInicial = $dtPeriodoInicial;
     }
 
-    function setDtPeriodoFinal($dtPeriodoFinal) {
+    public function setDtPeriodoFinal($dtPeriodoFinal) {
         $this->dtPeriodoFinal = $dtPeriodoFinal;
     }
 
-    function setIdTipoAquisicao($idTipoAquisicao) {
+    public function setIdTipoAquisicao($idTipoAquisicao) {
         $this->idTipoAquisicao = $idTipoAquisicao;
     }
 
-    function getDtAssinatura() {
+    public function getDtAssinatura() {
         return $this->dtAssinatura;
     }
 
-    function setDtAssinatura($dtAssinatura) {
+    public function setDtAssinatura($dtAssinatura) {
         $this->dtAssinatura = $dtAssinatura;
     }        
             
-    function getIdUnidadeCalculo() {
+    public function getIdUnidadeCalculo() {
         return $this->idUnidadeCalculo;
     }
     
-    function getDsJustificativa() {
+    public function getDsJustificativa() {
         return $this->dsJustificativa;
     }
 
-    function setDsJustificativa($dsJustificativa) {
+    public function setDsJustificativa($dsJustificativa) {
         $this->dsJustificativa = $dsJustificativa;
     }
 
     
-    function setIdUnidadeCalculo($idUnidadeCalculo) {
+    public function setIdUnidadeCalculo($idUnidadeCalculo) {
         $this->idUnidadeCalculo = $idUnidadeCalculo;
     }
     
-    function getMotivoPorValor() {
+    public function getMotivoPorValor() {
         return $this->motivoPorValor;
     }
 
-    function getMotivoPorPrazo() {
+    public function getMotivoPorPrazo() {
         return $this->motivoPorPrazo;
     }
 
-    function getMotivoPorValorePrazo() {
+    public function getMotivoPorValorePrazo() {
         return $this->motivoPorValorePrazo;
     }
     
-    function getFinalidadeAdicao() {
+    public function getFinalidadeAdicao() {
         return $this->finalidadeAdicao;
     }
 
-    function getFinalidadeSupressao() {
+    public function getFinalidadeSupressao() {
         return $this->finalidadeSupressao;
     }
 
-    function getInstrumentoRevisao() {
+    public function getInstrumentoRevisao() {
         return $this->instrumentoRevisao;
     }
 
-    function getInstrumentoReajuste() {
+    public function getInstrumentoReajuste() {
         return $this->instrumentoReajuste;
     }
 
-    function getBaseCalculoGlobal() {
+    public function getBaseCalculoGlobal() {
         return $this->baseCalculoGlobal;
     }
 
-    function getBaseCalculoUnitario() {
+    public function getBaseCalculoUnitario() {
         return $this->baseCalculoUnitario;
     }
 
-    function getUnidadeCalculoPercentual() {
+    public function getUnidadeCalculoPercentual() {
         return $this->unidadeCalculoPercentual;
     }
 
-    function getUnidadeCalculoIndice() {
+    public function getUnidadeCalculoIndice() {
         return $this->unidadeCalculoIndice;
     }
 
-    function getUnidadeCalculoMoeda() {
+    public function getUnidadeCalculoMoeda() {
         return $this->unidadeCalculoMoeda;
     }
 
-    function getUnidadeCalculoQuantidade() {
+    public function getUnidadeCalculoQuantidade() {
         return $this->unidadeCalculoQuantidade;
     }
 
-    function getTipoAquisicaoObras() {
+    public function getTipoAquisicaoObras() {
         return $this->tipoAquisicaoObras;
     }
 
-    function getTipoAquisicaoReforma() {
+    public function getTipoAquisicaoReforma() {
         return $this->tipoAquisicaoReforma;
     }
     
+    public function getIdContratoAditivo() {
+        return $this->idContratoAditivo;
+    }
+
+    public function setIdContratoAditivo($idContratoAditivo) {
+        $this->idContratoAditivo = $idContratoAditivo;
+    }
+        
     
     public function salvar($dados){
 
@@ -247,6 +255,7 @@ class FinContratoAditivo {
 
             $conexao = new Conexao();
             $pdo = $conexao->connect();
+            $pdo->beginTransaction();
 
             $this->idContrato = (int) $dados['dados']['contrato'];
             $this->numeroNovoAditivo = (int)$dados['dados']['numero_novo_aditivo'];
@@ -297,7 +306,7 @@ class FinContratoAditivo {
             //Verifica a Quantidade de Aditivos
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($contrato->getIdContrato());
-            $daoContratoAditivo->retornaUltimoAditivo($pdo);                                    
+            $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);                                    
             if(!$daoContratoAditivo->Sucesso()){
                 return Metodos::retornoAjax("Erro", "console", "Não foi possível saber a quantidade de Aditivo.");
             }
@@ -310,19 +319,74 @@ class FinContratoAditivo {
             $contrato->setSqContrato($proximoAditivo);
 
             //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor
-            $this->contrato = new FinContratoModel();            
+            $contratoRef = new FinContratoModel();       
+            $contratoRef->setIdContrato($this->idContrato);
+            $contratoRef->retornaDadosContratoCompleto($pdo);
+            if(!$contratoRef->sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
+            }
             
-            $this->itens[] = new ItemModel();
-            $this->itens[] = new ItemModel();
+            $contRef = $contratoRef->getMsgRetorno();
+            
+            
+            
+            
+            
+            
+            
+            
+            //Preparar Dados Para Inserir no Banco            
+            //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
+            //gestores, fiscais e subfiscais
+            $daoContrato = new FinContratoModel();
+            $finContratoTb = new FinContratoTb();
+            $finContratoTb->setNrContrato($finContratoTb);
+            //Adicionar os Itens nesse Objeto da Tabela, fazer isso com todas as outras tabelas
+            //E somente posterior iniciar o objeto do contrato model e mandar via parametro os objetos para serem salvos
+            
+            
+            //Nome do Numero do contrato
+            $nomeDoContrato = $contrato->getSqContrato()."º Termo Aditivo ao contrato ".$contRef->getNrContrato();
+            $daoContrato->setNrContrato($nomeDoContrato);
+            $daoContrato->setNrPrazoEntrega($contRef->getNrPrazoEntrega());
+            $daoContrato->setIdProcesso($contRef->getIdProcesso());
+            $daoContrato->setIdPessoa($contRef->getIdPessoa());
+            $daoContrato->setDsObjeto($contRef->getDsObjeto());            
+            $daoContrato->setFlServicoContinuado($contRef->getFlServicoContinuado());
+            $daoContrato->setDtIniVigenciaContrato($contRef->getDtIniVigenciaContrato());
+            $daoContrato->setDtFimVigenciaContrato($contRef->getDtFimVigenciaContrato());
+            $daoContrato->setDtAssinatura($contRef->getDtAssinatura());
+            $daoContrato->setDtPublicacao($contRef->getDtPublicacao());
+            $daoContrato->setDsObsContrato($contRef->getDsObsContrato());
+            $daoContrato->setIdModalidade($contRef->getIdModalidade());
+            $daoContrato->setDsAreaAbrangencia($contRef->getDsAreaAbrangencia());
+            $daoContrato->setDsUnidadeContemplada($contRef->getDsUnidadeContemplada());
+            $daoContrato->setIdOrgaoGerenciador($contRef->getIdOrgaoGerenciador());
+            $daoContrato->setIdTipoGasto($contRef->getIdTipoGasto());
+            $daoContrato->setVlContrato($contRef->getVlContrato());
+            $daoContrato->setTpContrato($contRef->getTpContrato());
+            $daoContrato->setSqContrato($contrato->getSqContrato());
+            $daoContrato->setIdContratoAditivoPai($this->idContrato);
+            $contRef = new FinContratoModel();
+            
+            $a = new FinFornecedoresModel();
+            $a->getIdPessoa();
+            
+            $daoContrato->setIdPessoaFornecedor($contRef->getFornecedor()->getIdPessoa());
+            
             
             echo "<pre>";
-            print_r($this->contrato);
+            print_r($daoContrato);
             echo "</pre>";
             
-            echo "<pre>";
-            print_r($this->itens);
-            echo "</pre>";
-           
+                    
+            //$daoContrato->cadastrarContratoComAditivo();
+            $daoContratoAditivo = new DaoFinContratoAditivo();
+            $daoContratoFornecedor = new DaoFinFornecedores();
+            $daoContratoContItens = new DaoFinItens();
+            
+            
+            
 
 
 
@@ -351,7 +415,7 @@ class FinContratoAditivo {
             
             
             //Busca a quantidade de Aditivos Cadastrado no sistema
-            $daoContrato->retornaUltimoAditivo($pdo);
+            $daoContrato->retornaNumeroUltimoAditivo($pdo);
                         
             if(!$daoContrato->Sucesso()){
                 $retorno = '<div class="alert alert-warning">'
