@@ -330,8 +330,10 @@ class FinEntregaConfirmacaoModel {
             //instancio a classe ordem itens para pega a quantida e valores antes do insert
             $finOrdemItensModel = new FinOrdemItensModel();
             $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
-            $resultQtdVlOrdem = $finOrdemItensModel->verificarSaldoOrdemItens($pdo, $idOrdem, $qtd, $vl);
-            var_dump($resultQtdVlOrdem);
+            $finOrdemItensModel->retornaArraySaldoOrdemItens($pdo);
+            var_dump($finOrdemItensModel->getMsgRetorno());
+            //$resultQtdVlOrdem = $finOrdemItensModel->verificarSaldoOrdemItens($pdo, $finOrdemItensModel->getMsgRetorno(), $qtd, $vl);
+            //var_dump($resultQtdVlOrdem);
             return false;
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);

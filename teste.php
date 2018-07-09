@@ -1,41 +1,41 @@
 <?php
-
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-
-//-----------------------------------------------------------teste para corrigir fin_despesa_elemeneto----------------------------------------------------------------------------------
-$conexao = new Conexao();
-$pdo = $conexao->connect();
-$resut = 0;
-$teste = 'Maçao';
-
-try {
-    $sql = "select id_despesa_elemento, ds_despesa_elemento from  view_despesa_elemento";
-
-    $stmt = $pdo->prepare($sql);
-
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
-        $resut = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } else {
-        $resut = 0;
-    }
-
-    foreach ($resut as $v) {
-
-//        echo $v["ds_despesa_elemento"];
-//        echo "<br/>";
-
-    $sql = "update fin_despesa_elemento set ds_despesa_elemento = '" . substr_replace($v["ds_despesa_elemento"], '', 0, 19) . "' where id_despesa_elemento = " . $v["id_despesa_elemento"];
-    
-    $stmt = $pdo->prepare($sql);
-    
-    $stmt->execute();
-    echo 'Nada';
-    }
-} catch (Error $e) {
-    echo $e->getMessage();
-}
+echo date("Y");
+//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+//
+////-----------------------------------------------------------teste para corrigir fin_despesa_elemeneto----------------------------------------------------------------------------------
+//$conexao = new Conexao();
+//$pdo = $conexao->connect();
+//$resut = 0;
+//$teste = 'Maçao';
+//
+//try {
+//    $sql = "select id_despesa_elemento, ds_despesa_elemento from  view_despesa_elemento";
+//
+//    $stmt = $pdo->prepare($sql);
+//
+//    $stmt->execute();
+//
+//    if ($stmt->rowCount() > 0) {
+//        $resut = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    } else {
+//        $resut = 0;
+//    }
+//
+//    foreach ($resut as $v) {
+//
+////        echo $v["ds_despesa_elemento"];
+////        echo "<br/>";
+//
+//    $sql = "update fin_despesa_elemento set ds_despesa_elemento = '" . substr_replace($v["ds_despesa_elemento"], '', 0, 19) . "' where id_despesa_elemento = " . $v["id_despesa_elemento"];
+//    
+//    $stmt = $pdo->prepare($sql);
+//    
+//    $stmt->execute();
+//    echo 'Nada';
+//    }
+//} catch (Error $e) {
+//    echo $e->getMessage();
+//}
 //-----------------------------------------------------------------------------teste da classe finCentralLiberacao------------------------------------------------------------------------
 //require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 //require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";

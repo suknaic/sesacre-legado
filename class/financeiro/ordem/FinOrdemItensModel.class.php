@@ -218,7 +218,7 @@ class FinOrdemItensModel {
         }
     }
 
-    public function retornaArrayQdtVlOrdemItens(PDO $pdo) {
+    public function retornaArraySaldoOrdemItens(PDO $pdo) {
         if (empty($pdo)) {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -227,8 +227,12 @@ class FinOrdemItensModel {
         if (!empty($this->id_ordem)) {
             $daoFinOrdenItens = new DaoFinOrdenItens();
             $daoFinOrdenItens->setIdOrdem($this->id_ordem);
-            $daoFinOrdenItens->retornaQtdEValor($pdo);
-            return $daoFinOrdenItens->getMsgRetorno();
+            $daoFinOrdenItens->retornaSaldoItensOrdem($pdo);
+            if ($daoFinOrdenItens->Sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinOrdenItens->getMsgRetorno();
+            }
+            $this->sucesso = false;
         }
     }
 
@@ -239,19 +243,24 @@ class FinOrdemItensModel {
      * @param type $vl valor para ser verificador
      * @return type
      */
-    public function verificarSaldoOrdemItens(PDO $pdo, $arrayItensOrdem, $qtd = null, $vl = null) {
+    public function verificarSaldoOrdemItens($saldoItens, $id_itens = null, $qtd = null, $vl = null) {
 
-        if (empty($pdo)) {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-        }
 
-        if (!empty($this->id_ordem)) {
-            $daoFinOrdenItens = new DaoFinOrdenItens();
-            $daoFinOrdenItens->setIdOrdem($this->id_ordem);
-            $daoFinOrdenItens->retornaQtdEValor($pdo);
-            return $daoFinOrdenItens->getMsgRetorno();
+
+        foreach ($saldoItens as $valor) {
+            if ($valor["id_ordem_itens"] == $id_itens) {
+                if (empty($vl)) {
+                    if (($valor["saldoitens"] - $qtd) < 0) {
+                        return false;
+                    }
+                } else {
+                    if (($valor["saldoitens"] - ($qtd * $vl)) < 0) {
+                        return false;
+                    }
+                }
+            }
         }
+        return true;
     }
 
 }
