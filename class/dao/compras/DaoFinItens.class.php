@@ -753,7 +753,10 @@ class DaoFinItens extends FinItensTb {
             try{
                 $sql = "SELECT F.id_fornecedor"
                     . " , ITEM.id_cont_itens, ITEM.nr_lote, ITEM.qt_itens, ITEM.vl_itens"
-                    . " , ITEM.pc_desconto, ITEM.nr_item"
+                    . " , ITEM.pc_desconto, ITEM.nr_item, ITEM.nm_marca, ITEM.nm_modelo"
+                    . " , ITEM.fl_valor_variavel, ITEM.ds_itens"
+                    . " , ITEM.id_material, ITEM.id_cont_itens_alt"
+                    . " , ITEM.id_unidade_medida"
                     . " , MAT.nm_material, MAT.nm_desc_material, MAT.nm_grupo, MAT.nm_sub_grupo"
                     . " , MAT.cd_elemento_despesa, MAT.tp_material"
                     . " , UNID.nm_unidade_medida, MAT.cd_desc_material"

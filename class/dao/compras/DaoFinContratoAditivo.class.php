@@ -77,21 +77,16 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
 //    }    
     
     
-    function retornaUltimoAditivo($pdo) {
+    function retornaNumeroUltimoAditivo(PDO $pdo) {
         $this->sucesso = false;
 
-        $sql = " SELECT count(CA.id_contrato_aditivo) AS quantidade"                    
-                . " FROM fin_contrato_aditivo CA"
-                . " INNER JOIN fin_contrato C ON C.id_contrato_aditivo_pai = CA.id_contrato"
-                . " WHERE CA.id_contrato = :idContrato AND C.st_ativo = '1'"
-                . " AND C.tp_contrato = '2' AND C.sq_contrato > 0";
-        
-        $sql = "SELECT COALESCE(CA.nr_aditivo, 0) as ultimo_aditivo"
-                . " , c.ID_CONTRATO, CA.id_contrato_aditivo"
+               
+        $sql = "SELECT COALESCE(CA.nr_aditivo, 0) as numero_ultimo_aditivo"
+                . " , c.id_contrato, CA.id_contrato_aditivo"
                 . " FROM fin_contrato C"
                 . " LEFT JOIN fin_contrato CAUX ON CAUX.id_contrato_aditivo_pai = C.id_contrato"
                 . " LEFT JOIN fin_contrato_aditivo CA ON CA.id_contrato = CAUX.id_contrato AND CA.st_ativo = '1'"
-                . " WHERE C.id_contrato = 1253 AND C.tp_contrato = '2'"
+                . " WHERE C.id_contrato = :idContrato AND C.tp_contrato = '2'"
                 . " ORDER BY CA.id_contrato_aditivo DESC"
                 . " LIMIT 1";
         
@@ -101,7 +96,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
-                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC)['quantidade'];
+                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC)['numero_ultimo_aditivo'];
             } else {
                 $this->sucesso = false;                
                 $this->msgRetorno = "Não encontrou Registros";                
