@@ -234,14 +234,14 @@ switch ($_REQUEST['acao']) {
 
     CASE 'carregaLotacao':
         try {
-
+            $tpSolicitacao = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             if ($session->vPFinanceiroAcao()) {
                 $central = new FinCentralModel();
                 echo $central->retornaOptionsCentrais();
             } else {
                 $central = new CentralResponsavel();
                 $central->setIdPessoa($_SESSION['idUser']);
-                echo $central->retornaLotacaoUsuarioCentral(null);
+                echo $central->retornaLotacaoUsuarioSolicitacao(null,(int)$tpSolicitacao);
             }
             return;
             break;

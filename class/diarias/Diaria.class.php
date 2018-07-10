@@ -843,7 +843,7 @@ class Diaria {
             $centrais = [0];
             $daoFinCentralResponsavel = new DaoFinCentralResponsavel();
             $daoFinCentralResponsavel->setIdPessoa($this->getUsuarioSessao()->getIdUser());
-            $daoFinCentralResponsavel->retornaLotacaoPorPessoa($pdo);
+            $daoFinCentralResponsavel->retornaLotacaoAdministracaoDoUsuario($pdo);
             if ($daoFinCentralResponsavel->Sucesso()) {
                 foreach ($daoFinCentralResponsavel->getMsgRetorno() as $linha) {
                     if ($linha['id_tipo_administracao'] == 3) { //Somente as centrais do tipo DIARIA: 3
@@ -1032,7 +1032,7 @@ class Diaria {
                     ($data_fim->getTimeStamp() >=  $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() <= $dt_fim->getTimeStamp()) OR
                     ($data_inicio->getTimeStamp() <= $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() >= $dt_fim->getTimeStamp()) OR
                     ($data_inicio->getTimeStamp() >= $dt_ini->getTimeStamp() and $data_fim->getTimeStamp() <= $dt_fim->getTimeStamp())) {
-                        $msgErro .= "Data e hora de chegada não pode ser concomitante com outro destino. ";
+                        $msgErro .= "Data e hora dos itinerários não podem coincidir";
                         break;
                 }
                 

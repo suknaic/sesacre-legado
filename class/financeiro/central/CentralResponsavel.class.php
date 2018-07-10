@@ -408,7 +408,7 @@ class CentralResponsavel {
         }
     }
 
-    public function retornaLotacaoUsuarioCentral($pdo = null) {
+    public function retornaLotacaoUsuarioSolicitacao($pdo = null, int $tpSolicitacao = 0) {
         $retorno = '';
         try {
             if (empty($pdo)) {
@@ -417,12 +417,11 @@ class CentralResponsavel {
             }
             $dao = new DaoFinCentralResponsavel();
             $dao->setIdPessoa($this->idPessoa);
-            $result = '';
-            $dao->retornaLotacaoPorPessoa($pdo);
+            $dao->retornaLotacaoPorPessoaSolicitacao($pdo,$tpSolicitacao);
+            $retorno = '<option value="0">Selecione uma Central</option>';
             if ($dao->Sucesso()) {
-                $result = $dao->getMsgRetorno();
-                if (!empty($result)) {
-                    foreach ($result as $v) {
+                if (!empty( $dao->getMsgRetorno())) {
+                    foreach ( $dao->getMsgRetorno() as $v) {
                         $retorno .= "<option value = '" . $v['id_lotacao'] . "'>" . $v['nm_lotacao'] . "</option>";
                     }
                 }
@@ -430,7 +429,7 @@ class CentralResponsavel {
 
             return $retorno;
         } catch (Exception $ex) {
-            return "";
+            return $ex->getMessage();
         }
     }
 

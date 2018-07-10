@@ -28,7 +28,6 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
 
     public function insertentregaItens(PDO $pdo) {
         try {
-            var_dump($pdo);
             if (!empty($pdo)) {
                 $sql = "insert into fin_entrega_itens (id_entrega_confirmacao, id_ordem_itens, qt_itens_entrega, vl_itens_entrega) values (:idEntrega, :idOrdemItens, :qt, :vl)";
                 $stmt = $pdo->prepare($sql);

@@ -119,7 +119,7 @@ class FinEntregaItensModel {
         return $this;
     }
 
-    public function cadastraEntregaItens($pdo) {
+    public function cadastraEntregaItens(PDO $pdo) {
         try {
             $daoFinEntregaItens = new DaoFinEntregaItens();
             if (!empty($this->id_entrega_confirmacao) || !empty($this->id_ordem_itens) || !empty($this->qt_itens_entrega) || !empty($this->vl_itens_entrega)) {
@@ -252,6 +252,29 @@ class FinEntregaItensModel {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @param type $arrayItensOrdem array com as quantidades e valores da ordem
+     * @return type
+     */
+    public function verificarSaldoOrdemItens($saldoItens) {
+
+        foreach ($saldoItens as $valor) {
+
+            if ($valor["id_ordem_itens"] == $this->id_ordem_itens) {
+                if (empty($this->vl_itens_entrega)) {
+                    if (($valor["saldoitens"] - $this->qt_itens_entrega) < 0) {
+                        return false;
+                    }
+                } else {
+                    if (($valor["saldoitens"] - ($this->qt_itens_entrega * $this->vl_itens_entrega)) < 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
 }

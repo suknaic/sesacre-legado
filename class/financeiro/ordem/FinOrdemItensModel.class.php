@@ -224,43 +224,19 @@ class FinOrdemItensModel {
             $pdo = $conexao->connect();
         }
 
-        if (!empty($this->id_ordem)) {
-            $daoFinOrdenItens = new DaoFinOrdenItens();
-            $daoFinOrdenItens->setIdOrdem($this->id_ordem);
-            $daoFinOrdenItens->retornaSaldoItensOrdem($pdo);
-            if ($daoFinOrdenItens->Sucesso()) {
-                $this->sucesso = true;
-                $this->msgRetorno = $daoFinOrdenItens->getMsgRetorno();
-            }
+        if (empty($this->id_ordem)) {
             $this->sucesso = false;
         }
-    }
+        
+        $daoFinOrdenItens = new DaoFinOrdenItens();
+        $daoFinOrdenItens->setIdOrdem($this->id_ordem);
+        $daoFinOrdenItens->retornaSaldoItensOrdem($pdo);
+        $this->msgRetorno = $daoFinOrdenItens->getMsgRetorno();
+        $this->sucesso = true;
 
-    /**
-     * @param PDO $pdo
-     * @param type $arrayItensOrdem array com as quantidades e valores da ordem
-     * @param type $qtd do valor para ser verificador
-     * @param type $vl valor para ser verificador
-     * @return type
-     */
-    public function verificarSaldoOrdemItens($saldoItens, $id_itens = null, $qtd = null, $vl = null) {
-
-
-
-        foreach ($saldoItens as $valor) {
-            if ($valor["id_ordem_itens"] == $id_itens) {
-                if (empty($vl)) {
-                    if (($valor["saldoitens"] - $qtd) < 0) {
-                        return false;
-                    }
-                } else {
-                    if (($valor["saldoitens"] - ($qtd * $vl)) < 0) {
-                        return false;
-                    }
-                }
-            }
+        if (!$daoFinOrdenItens->Sucesso()) {
+            $this->sucesso = false;
         }
-        return true;
     }
 
 }

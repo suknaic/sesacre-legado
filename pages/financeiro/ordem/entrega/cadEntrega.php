@@ -188,6 +188,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                             <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem; ?>">
                                             <div class="row">
                                                 <div class="col-sm-12">
+                                                    
                                                     <table class="table table-striped table-bordered" id="tabela2">
                                                         <thead>
                                                             <tr>

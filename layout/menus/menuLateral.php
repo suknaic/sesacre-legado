@@ -318,7 +318,10 @@
                                             <a href="/pages/diarias/permissoes/">Perfil de Acesso</a>
                                         </li>
                                         <li>
-                                            <a href="/pages/diarias/decreto_valor/">Valores das Diárias</a>
+                                            <a href="#">Tabelas Gerenciais<i class="arrow"></i></a>
+                                            <ul class="collapse">
+                                                <li><a href="/pages/diarias/decreto_valor/">Valores das Diárias</a></li>
+                                            </ul>
                                         </li>
                                          <li>
                                             <a href="/pages/diarias/central_responsavel/">Centrais de Demanda</a>
@@ -345,6 +348,9 @@
                             <ul class="collapse">
                                 <li>
                                     <a href="/pages/administracao/tipoGasto/">Tipo Gasto</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/administracao/tipo_administracao/">Tipo de Administração</a>
                                 </li>
                             </ul>
                         </li>
