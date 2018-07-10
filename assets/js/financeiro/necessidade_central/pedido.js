@@ -24,11 +24,13 @@ $(document).ready(function () {
 
     //carrega options de lotacao do usuario
     function carregaLotacao() {
+        var tpSolicitacao = $("#tipoSolicitacao option:selected").val();
         $.ajax({
             "url": "/model/financeiro/necessidade_central/requestPedido.php",
             "dataType": 'html',
             "data": {
-                "acao": "carregaLotacao"
+                "acao": "carregaLotacao",
+                "dados": tpSolicitacao
             },
             "success": function (response) {
                 $("body").find("#central").html(response);
@@ -37,7 +39,7 @@ $(document).ready(function () {
             }
         });
     }
-    carregaLotacao();
+//    carregaLotacao();
     //fim
 
     //carrega tipo de solicitacao
@@ -113,6 +115,8 @@ $(document).ready(function () {
             $("#valor").prop("disabled",false);
             $("#valor").val("");
         }
+        
+        carregaLotacao();
     });
     
     //-------------------Regras diaria-----------------------
