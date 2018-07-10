@@ -182,33 +182,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Situação da Entrega</h3>
                                     </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <input type="hidden" name="id_protocolo" id="id_protocolo" value="<?php echo $id; ?>">
-                                            <input type="hidden" name="idOrdem" id="idOrdem" value="<?php echo $ordem; ?>">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    
-                                                    <table class="table table-striped table-bordered" id="tabela2">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-center">Nº da entrega</th>
-                                                                <th class="text-center">Tipo da entrega</th>
-                                                                <th class="text-center">Data da entrega</th>
-                                                                <th class="text-center">Data sistema</th>
-                                                                <th class="text-center">Total entrega</th>
-                                                                <th class="text-center">Ação</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega();?>
                                 </div>
 
                                 <div class="panel">
