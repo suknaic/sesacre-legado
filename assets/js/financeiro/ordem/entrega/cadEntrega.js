@@ -70,7 +70,7 @@ $(document).ready(function () {
                             valores[i]['entregue'],
                             valores[i]['aguardandoentrega'],
                             acao
-                       ]
+                        ]
                         dataSet.push(valor)
                     }
 
@@ -219,18 +219,17 @@ $(document).ready(function () {
             });
 
             var enc = JSON.stringify(itens);
-            
+
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-                "dataType": "html",
+                "dataType": "json",
                 "data": {
                     "acao": "cadastroItensEntrega",
                     "itens": enc
                 },
                 "success": function (response) {
                     console.log(response);
-                    return false;
                     $this.prop("disabled", false);
 
                     if (response.tipoMsg === "Erro") {
@@ -276,59 +275,7 @@ $(document).ready(function () {
 
     });
 
-    function carregaSituacaoDaEntregue() {
-        $.ajax({
-            "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-            "dataType": "json",
-            "data": {
-                "acao": "ListaItensEntregue",
-                "id_ordem": $("#idOrdem").val()
-            },
-            "success": function (response) {
-                if (response != 'Nenhum registro encontrado') {
-                    let valores = [];
-                    if ($.trim(response)) {
-                        if (response.length) {
-                            valores = response
-                        }
-                    }
-                    let dataSet = [];
-                    var oTable2 = $('#tabela2').dataTable();
-                    oTable2.fnDestroy();
-                    for (var i = valores.length - 1; i >= 0; i--) {
 
-                        let valor = [
-                            valores[i]['nr_entrega_confirmacao'],
-                            valores[i]['tipo'],
-                            valores[i]['dt_entrega'],
-                            valores[i]['dt_sistema'],
-                            Number(valores[i]['total']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
-                            'tesyte',
-                        ]
-                        dataSet.push(valor)
-                    }
-
-                    $('#tabela2').DataTable({
-                        data: dataSet,
-                        language: {
-                            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-                        },
-
-                        columns: [
-                            {title: "Nº da entrega", className: "text-center"},
-                            {title: "Tipo entrega", className: "text-center"},
-                            {title: "Data de entrega", className: "text-center"},
-                            {title: "Data sistema", className: "text-center"},
-                            {title: "Total da entrega", className: "text-center"},
-                            {title: "Ação", className: "text-center"}
-
-                        ]
-                    });
-                }
-            }
-        });
-    }
-    carregaSituacaoDaEntregue();
 
 //
 //    $('body').on('click', '.btn-remover', function (e) {

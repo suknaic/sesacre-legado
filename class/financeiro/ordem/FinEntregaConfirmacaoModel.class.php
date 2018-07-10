@@ -311,7 +311,7 @@ class FinEntregaConfirmacaoModel {
             //verificar ser deu tudo certo na busca do numero da entrega confirmacao ser sim vai seta o resto dos dados
             if (!$daoFinEntregaConfirmacao->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                return Metodos::retornoAjax("Erro", "alert", "O sistema não identificou o numero da entrega");
             }
 
             $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
@@ -327,24 +327,39 @@ class FinEntregaConfirmacaoModel {
 
             //pega o id daa entrega confirmacao
             $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
-            //instancio a classe ordem itens para pega a quantida e valores antes do insert
+            //retorna os saldos dos itens
             $finOrdemItensModel = new FinOrdemItensModel();
             $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
             $finOrdemItensModel->retornaArraySaldoOrdemItens($pdo);
-            var_dump($finOrdemItensModel->getMsgRetorno());
-            //$resultQtdVlOrdem = $finOrdemItensModel->verificarSaldoOrdemItens($pdo, $finOrdemItensModel->getMsgRetorno(), $qtd, $vl);
-            //var_dump($resultQtdVlOrdem);
-            return false;
+
+            //verifica ser retornou o saldo com sucesso
+            if (!$finOrdemItensModel->getSucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "O sistema não identificou o saldo dos itens");
+            }
+
+            $saldoItens = $finOrdemItensModel->getMsgRetorno();
+
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
                 //verificar ser precisa pega o valor dos itens
                 if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
-                    
+
                     $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                    if (!$finEntregaItensModel->verificarSaldoOrdemItens($saldoItens)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "saldo insuficiente, por favor verifique os itens.");
+                    }
+
                     $finEntregaItensModel->autoSetVlItemOrdem($pdo);
                 } else if ($valor->tp == "S" || $valor->fl_valor == 1) {
-                    
+                    $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
                     $finEntregaItensModel->setVlItensEntrega(Metodos::ConverteValorIng($valor->vl));
+
+                    if (!$finEntregaItensModel->verificarSaldoOrdemItens($saldoItens)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "saldo insuficiente, por favor verifique os itens.");
+                    }
                 }
 
                 if (!$finEntregaItensModel->cadastraEntregaItens($pdo)) {
@@ -366,22 +381,46 @@ class FinEntregaConfirmacaoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            
+
             if (!empty($this->id_ordem)) {
                 $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
             }
-            
+
             $daoFinEntregaConfirmacao->retornaEntregaConfirmacao($pdo);
-            
+
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 return $daoFinEntregaConfirmacao->getMsgRetorno();
             }
-            
+
             return false;
-            
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+
+    public function retornaSituacaoEntrega() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $tabela = "";
+            
+            if (empty($this->id_ordem)) {
+                return $tabela;
+            }
+            
+            $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
+            $daoFinEntregaConfirmacao->retornaEntregaConfirmacao($pdo);
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+
+            return false;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
 
 }

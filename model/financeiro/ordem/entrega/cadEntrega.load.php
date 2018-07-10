@@ -24,16 +24,9 @@ if (empty($token) && empty($token2)) {
     $finProtocoloModel->setIdOrdem($ordem);
     $dados = [];
     $dados = $finProtocoloModel->inforLoadProtocolo();
-    var_dump($dados);
-
-// $finProtocoloModel = new FinProtocoloModel();
-// $finProtocoloModel->setIdOrdem($ordem);
-// $protocolo = $finProtocoloModel->retornaIdProtocoloPorOrdem();
-// 
-// $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-// $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($id);
-// $situacao = 0;
-// $situacao = $finEntregaConfirmacaoModel->verificaSerAEntregaTotal(null);
+    
+    $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+    
 }
 
 
