@@ -253,5 +253,24 @@ class FinCentraisModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    public function retornaCentraisPorContrato(PDO $pdo){
+        try{
+            $dao = new DaoFinCentrais();
+            $dao->retornaCentraisPorContrato($pdo, $this->idContrato);
+            if(!$dao->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não achou nenhuma central";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = $dao->getMsgRetorno();
+            return;                        
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
 }

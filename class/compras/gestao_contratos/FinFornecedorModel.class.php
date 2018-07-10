@@ -129,7 +129,7 @@ class FinFornecedoresModel {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoFornecedores->getIdFornecedor();
                 if (!Log::SalvaLogI('fin_fornecedor', $daoFornecedores->getIdFornecedor(), $pdo)) {
-                    $sucesso = false;
+                    $this->sucesso = false;
                 }
             } else {
                 $this->sucesso = false;

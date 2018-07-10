@@ -167,5 +167,30 @@ class DaoFinCentrais extends FinCentraisTb {
             $this->sucesso = false;
         }
     }
+    
+    public function retornaCentraisPorContrato(PDO $pdo = null, int $idContrato = null) {
+        try {
+            if (!empty($pdo) && !empty($idContrato)) {
+                $sql = "SELECT id_cont_central, id_contrato, id_lotacao"
+                        . " FROM fin_cont_central"
+                        . " WHERE id_contrato = :idContrato";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idContrato", $idContrato, PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Error $e) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }
+    }
 
 }

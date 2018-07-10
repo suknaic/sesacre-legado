@@ -490,5 +490,55 @@ class DaoFinContrato extends FinContratoTb {
         }
     }
     
+    
+    
+    public function insertContratoParaAditivo($pdo = null) {
+        if ($pdo != null) {
+            try {
+                $sql = "INSERT INTO fin_contrato (nr_contrato, nr_prazo_entrega, id_processo, id_pessoa"
+                        . " , ds_objeto, fl_servico_continuado, dt_ini_vigencia_contrato, dt_fim_vigencia_contrato, dt_assinatura"
+                        . " , dt_publicacao, ds_obs_contrato"
+                        . " , id_modalidade, ds_area_abrangencia, ds_unidade_contemplada"
+                        . " , id_orgao_gerenciador, id_tipo_gasto, tp_contrato"
+                        . " , id_contrato_alt, sq_contrato, id_contrato_aditivo_pai)"                        
+                        . " VALUES (:numero, :prazo, :processo, :idPessoa, :ds_objeto, :servico "
+                        . " , :dt_ini, :dt_fim, :dt_assinatura, :dt_publicacao, :obs"
+                        . " , :idModalidade, :dsAreaAbragencia, :dsUnidadeContemplada"
+                        . " , :idOrgaoGerenciador, :idTipoGasto, :tpContrato, :idContratoAlt"
+                        . " , :sqContrato, :idContratoAditivoPai)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":prazo", $this->getNrPrazoEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":processo", $this->getIdProcesso(), PDO::PARAM_INT);
+                $stmt->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->bindValue(":ds_objeto", $this->getDsObjeto(), PDO::PARAM_STR);
+                $stmt->bindValue(":servico", $this->getFlServicoContinuado(), PDO::PARAM_INT);
+                $stmt->bindValue(":dt_ini", $this->getDtIniVigenciaContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_fim", $this->getDtFimVigenciaContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_assinatura", $this->getDtAssinatura(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_publicacao", $this->getDtPublicacao(), PDO::PARAM_STR);
+                $stmt->bindValue(":obs", $this->getDsObsContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idModalidade", $this->getIdModalidade(), PDO::PARAM_INT);
+                $stmt->bindValue(":dsAreaAbragencia", $this->getDsAreaAbrangencia(), PDO::PARAM_STR);
+                $stmt->bindValue(":dsUnidadeContemplada", $this->getDsUnidadeContemplada(), PDO::PARAM_STR);
+                $stmt->bindValue(":idOrgaoGerenciador", $this->getIdOrgaoGerenciador(), PDO::PARAM_INT);
+                $stmt->bindValue(":idTipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
+                $stmt->bindValue(":tpContrato", $this->getTpContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idContratoAlt", $this->getIdContratoAlt(), PDO::PARAM_INT);
+                $stmt->bindValue(":sqContrato", $this->getSqContrato(), PDO::PARAM_INT);
+                $stmt->bindValue(":idContratoAditivoPai", $this->getIdContratoAditivoPai(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } catch (PDOException $e) {
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
+    
+    
+    
+    
 
 }
