@@ -236,7 +236,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                <?php if ($session->vPDiariasSolicitacao()) {  ?>
                                     <div class="panel-body" id="destinoForm">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="id_cidade_inicio">Cidade de origem: <span class="text-danger">*</span></label>
                                                     <input type="hidden" id="id_cidade_inicio" readonly value="">
@@ -248,7 +248,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="id_cidade_fim">Cidade de destino: <span class="text-danger">*</span></label>
                                                     <input type="hidden" id="id_cidade_fim" readonly value="">
@@ -260,17 +260,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="estadual_nacional">Estadual ou Nacional: </label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-file-text-o inputPFa"></p>
-                                                        </span>
-                                                        <input class="form-control"  type="text" id="estadual_nacional" readonly value="" /> 
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -312,11 +302,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-1">
                                                 <div class="form-group">
                                                     <label for="fl_pernoite">Pernoite: </label>
                                                     <div class="input-group">
                                                         <input style="width: 25px; height: 25px;"  type="checkbox" id="fl_pernoite" <?php echo $fl_pernoite;?> /> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="estadual_nacional">Estadual ou Nacional: </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input class="form-control"  type="text" id="estadual_nacional" readonly value="" /> 
                                                     </div>
                                                 </div>
                                             </div>

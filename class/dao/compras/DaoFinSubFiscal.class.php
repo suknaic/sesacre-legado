@@ -21,12 +21,11 @@ class DaoFinSubFiscal extends FinSubFiscalTb{
     public function insertSubFiscal($pdo = null){
         if (!empty($pdo)) {
             try {
-                $sql = "INSERT INTO fin_sub_fiscal (id_pessoa, id_contrato, id_ata, tp_sub_fiscal, dt_ini_sub_fiscal, dt_fim_sub_fiscal)
-                VALUES (:pessoa, :contrato, :ata, :tipo, :dataIni, :dataFim)";
+                $sql = "INSERT INTO fin_sub_fiscal (id_pessoa, id_contrato, tp_sub_fiscal, dt_ini_sub_fiscal, dt_fim_sub_fiscal)
+                VALUES (:pessoa, :contrato, :tipo, :dataIni, :dataFim)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
-                $stmt->bindValue(":contrato", $this->getIdContrato() === '' ? null : $this->getIdContrato(), PDO::PARAM_INT);
-                $stmt->bindValue(":ata", $this->getIdAta() === '' ? null : $this->getIdAta(), PDO::PARAM_INT);
+                $stmt->bindValue(":contrato", $this->getIdContrato() === '' ? null : $this->getIdContrato(), PDO::PARAM_INT);                
                 $stmt->bindValue(":tipo", $this->getTpSubFiscal() , PDO::PARAM_INT);
                 $stmt->bindValue(":dataIni", $this->getDtIniSubFiscal(), PDO::PARAM_STR);
                 $stmt->bindValue(":dataFim", $this->getDtFimSubFiscal() === '' ? null : $this->getDtFimSubFiscal(), PDO::PARAM_STR);

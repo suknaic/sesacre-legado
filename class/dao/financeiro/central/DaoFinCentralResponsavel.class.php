@@ -228,7 +228,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
         }
     }
 
-    function retornaLotacaoPorPessoa($pdo) {
+    function retornaLotacaoPorPessoaSolicitacao($pdo, int $tpSolicitacao = 0) {
 
         if ($pdo == null) {
             $conexao = new Conexao();
@@ -236,6 +236,45 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
             $pdo = $conexao->connect();
         }
 
+        $this->sucesso = false;
+
+        $sql = "SELECT 
+                    L.id_lotacao,
+                    L.nm_lotacao
+                  FROM fin_central_responsavel CR
+                  INNER JOIN ses_lotacao L
+                    ON L.id_lotacao = CR.id_lotacao 
+                  INNER JOIN fin_administracao_solicitacao FAS
+                    ON FAS.id_tipo_administracao = CR.id_tipo_administracao
+                  WHERE CR.id_pessoa = :idPessoa
+                  AND FAS.id_tipo_solicitacao = :idSolicitacao
+                  ORDER BY L.nm_lotacao";
+        try {
+            $result = $pdo->prepare($sql);
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->bindValue(":idSolicitacao", $tpSolicitacao, PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = false;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
+    function retornaLotacaoAdministracaoDoUsuario($pdo){
+        
+        if ($pdo == null) {
+            $conexao = new Conexao();
+            /* @var $pdo PDO */
+            $pdo = $conexao->connect();
+        }
+        
         $this->sucesso = false;
 
         $sql = " SELECT CR.id_central_responsavel"

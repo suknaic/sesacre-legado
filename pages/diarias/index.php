@@ -62,12 +62,14 @@
                                     <h3 class="panel-title">Lista de Proposta e Concessão de Diárias</h3>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="pull-right">
-                                        <a class="btn btn-rounded btn-primary mar-ver" href="./diaria/" role="button">
-                                            <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                            Cadastrar Diária 
-                                        </a>
-                                    </div>
+                                    <?php if($session->vPDiariasSolicitacao()) { ?>
+                                        <div class="pull-right">
+                                            <a class="btn btn-rounded btn-primary mar-ver" href="./diaria/" role="button">
+                                                <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
+                                                Cadastrar Diária 
+                                            </a>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="panel-body">
