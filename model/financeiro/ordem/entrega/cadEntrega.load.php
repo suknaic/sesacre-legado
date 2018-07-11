@@ -26,6 +26,7 @@ if (empty($token) && empty($token2)) {
     $dados = $finProtocoloModel->inforLoadProtocolo();
     
     $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+    $finEntregaConfirmacaoModel->setIdOrdem($ordem);
     
 }
 

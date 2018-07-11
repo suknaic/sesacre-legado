@@ -342,6 +342,7 @@ class FinEntregaConfirmacaoModel {
 
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
+
                 //verificar ser precisa pega o valor dos itens
                 if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
 
@@ -366,6 +367,9 @@ class FinEntregaConfirmacaoModel {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
+                //limpa qtd e valor
+                $finEntregaItensModel->setQtItensEntrega(null);
+                $finEntregaItensModel->setVlItensEntrega(null);
             }
 
             $pdo->commit();
@@ -404,16 +408,96 @@ class FinEntregaConfirmacaoModel {
             $pdo = $conexao->connect();
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $tabela = "";
-            
+            $situacaoEntrega = array();
+            $arraySituacaoEntrega = array();
             if (empty($this->id_ordem)) {
                 return $tabela;
             }
-            
+
             $daoFinEntregaConfirmacao->setIdOrdem($this->id_ordem);
-            $daoFinEntregaConfirmacao->retornaEntregaConfirmacao($pdo);
+            $daoFinEntregaConfirmacao->retornaSituacaoEntrega($pdo);
+
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
-                return $daoFinEntregaConfirmacao->getMsgRetorno();
+                $situacaoEntrega = $daoFinEntregaConfirmacao->getMsgRetorno();
+                //montando o array para gerar os campos da situaçao da entrega
+                foreach ($situacaoEntrega as $valor) {
+
+
+                    $arraySituacaoEntrega[$valor["nr_entrega_confirmacao"]][] = array(
+                        "id_entrega_itens" => $valor["id_entrega_itens"],
+                        "nr_item" => $valor["nr_item"],
+                        "cd_desc_material" => $valor["cd_desc_material"],
+                        "nm_material" => $valor["nm_material"],
+                        "dt_entrega" => $valor["dt_entrega"],
+                        "dh_cadastramento" => $valor["dh_cadastramento"],
+                        "situacao" => $valor["situacao"],
+                        "descricao" => $valor["descricao"],
+                        "tp_material" => $valor["tp_material"],
+                        "nr_lote" => $valor["nr_lote"],
+                        "qt_itens_entrega" => $valor["qt_itens_entrega"],
+                        "vl_itens_entrega" => $valor["vl_itens_entrega"],
+                        "entregue" => $valor["entregue"]
+                    );
+                }
+
+                foreach ($arraySituacaoEntrega as $key => $campos) {
+
+                    $tabela .= ' <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab" id="heading' . $key . '">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
+                                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                                    <b>Entrega: </b><span style="color:#758697">' . $key . '</span> <b style=" margin-left: 1%">Tipo de Entrega: </b>
+                                                    <span style="color:#758697">' . $campos[0]["situacao"] .'</span> <b style=" margin-left: 1%">Data de Entrega: </b>
+                                                    <span style="color:#758697">' . $campos[0]["dt_entrega"] . '</span>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    <div id="' . $key . '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading' . $key . '" aria-expanded="false">
+                                        <div class="panel-body">
+                                             <table class="table table-striped table-bordered" id="tabela2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Nº</th>
+                                                                <th class="text-center">Item</th>
+                                                                <th class="text-center">Descrição</th>
+                                                                <th class="text-center">Elemento de Despesa</th>
+                                                                <th class="text-center">Tipo</th>
+                                                                <th class="text-center">Lote</th>
+                                                                <th class="text-center">Qtd</th>
+                                                                <th class="text-center">Valor unit</th>
+                                                                <th class="text-center">Entregue</th>
+                                                                <th class="text-center">Ação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>';
+
+                    foreach ($campos as $c) {
+
+                        $tabela .= '<tr>
+                                    <td class="text-center">' . $c["nr_item"] . '</td>
+                                    <td class="text-center">' . $c["cd_desc_material"] . ' - .' . $c["nm_material"] . '</td>
+                                    <td class="text-center">' . $c["descricao"] . '</td>
+                                    <td class="text-center">' . $c["nr_item"] . '</td>
+                                    <td class="text-center">' . $c["tp_material"] . '</td>
+                                    <td class="text-center">' . $c["nr_lote"] . '</td>
+                                    <td class="text-center">' . $c["qt_itens_entrega"] . '</td>
+                                    <td class="text-center">' . $c["vl_itens_entrega"] . '</td>
+                                    <td class="text-center">' . $c["entregue"] . '</td>
+                                    <td class="text-center">dsdsd</td>    
+                                </tr>';
+                    }
+
+                    $tabela .= ' </tbody>
+                               </table>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>';
+                }
+                echo $tabela;
             }
 
             return false;
@@ -421,6 +505,5 @@ class FinEntregaConfirmacaoModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
 
 }

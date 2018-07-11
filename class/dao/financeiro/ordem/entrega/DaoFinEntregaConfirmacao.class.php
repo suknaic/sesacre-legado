@@ -282,24 +282,49 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $this->sucesso = false;
         }
     }
-
+    /**
+     * 
+     * @param PDO $pdo
+     */
     public function retornaSituacaoEntrega(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select entrega.id_entrega_confirmacao, entrega.nr_entrega_confirmacao, 
-                        to_char(entrega.dt_entrega, 'dd/mm/YYYY') as dt_entrega,
-                        to_char(entrega.dh_cadastramento, 'DD/MM/YYYY HH24:MI:SS') as dt_sistema,
+                $sql = "select entregaItens.id_entrega_itens, confirmacao.nr_entrega_confirmacao, itens.nr_item, mat.cd_desc_material, 
+                        mat.nm_material, to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
+                        to_char(confirmacao.dh_cadastramento, 'DD/MM/YYYY HH:MI:SS') as dh_cadastramento, mat.tp_material, 
+                        itens.nr_lote, entregaItens.qt_itens_entrega, entregaItens.vl_itens_entrega, 
+                        
                         case 
-                                when entrega.sit_entrega = '1' then 'Entrega Parcial'
-                                when entrega.sit_entrega = '2' then 'Entrega Total'
-                        end tipo, 
-                        round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) as total
-                        from fin_entrega_confirmacao as entrega
-                        inner join fin_entrega_itens as entItens
-                        on entItens.id_entrega_confirmacao = entrega.id_entrega_confirmacao
-                        where entrega.id_ordem = :ordem
-                        group by entrega.id_entrega_confirmacao
-                        order by entrega.nr_entrega_confirmacao";
+                        when confirmacao.sit_entrega = 1 then 'Entrega Parcial'
+                        when confirmacao.sit_entrega = 2 then 'Entrega Total'
+                        end situacao,
+                        
+                        case 
+                        when itens.ds_itens != '' then itens.ds_itens
+                        else mat.nm_desc_material 
+                        end descricao, 
+                        
+                        case 
+                        when (mat.tp_material  = 'C' or mat.tp_material  = 'P') and itens.fl_valor_variavel = '0'
+                                then entregaItens.qt_itens_entrega
+                        when  mat.tp_material  = 'S' or itens.fl_valor_variavel = '1' then (entregaItens.qt_itens_entrega * entregaItens.vl_itens_entrega)
+                        end entregue
+                        
+                        from fin_entrega_confirmacao as confirmacao
+                        inner join fin_entrega_itens as entregaItens
+                        on entregaItens.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                        inner join fin_ordem_itens as ordemItens 
+                        on ordemItens.id_ordem_itens = entregaItens.id_ordem_itens
+                        inner join fin_pre_ordem as preOrdem 
+                        on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
+                        inner join fin_cont_itens as itens 
+                        on itens.id_cont_itens = preOrdem.id_cont_itens
+                        inner join pla_material as mat
+                        on mat.id_material = itens.id_material 
+                        inner join view_despesa as despesa 
+                        on despesa.id_despesa = mat.id_despesa
+                        where confirmacao.id_ordem = :ordem
+                        order by confirmacao.nr_entrega_confirmacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
