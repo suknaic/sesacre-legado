@@ -264,11 +264,12 @@ class FinEntregaItensModel {
 
             if ($valor["id_ordem_itens"] == $this->id_ordem_itens) {
                 if (empty($this->vl_itens_entrega)) {
-                    if (($valor["saldoitens"] - $this->qt_itens_entrega) < 0) {
+
+                    if ((round($valor["saldoitens"], 4) - round($this->qt_itens_entrega, 4)) < 0) {
                         return false;
                     }
                 } else {
-                    if (($valor["saldoitens"] - ($this->qt_itens_entrega * $this->vl_itens_entrega)) < 0) {
+                    if ((round($valor["saldoitens"],4) - round(($this->qt_itens_entrega * $this->vl_itens_entrega),4)) < 0) {
                         return false;
                     }
                 }

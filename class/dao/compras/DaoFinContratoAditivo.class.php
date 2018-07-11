@@ -15,18 +15,34 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
         return $this->sucesso;
     }
 
-//    function insert($pdo) {
-//        try {
-//            $result = $pdo->prepare("INSERT INTO fin_qdd (aa_qdd) "
-//                    . " VALUES (:aaQdd)");                                        
-//            $result->bindValue(":aaQdd", $this->getAaQdd(), PDO::PARAM_INT);                                        
-//            $result->execute();
-//            $this->sucesso = true;            
-//        } catch (PDOException $e) {
-//            $this->sucesso = false;            
-//            $this->msgRetorno = $e->getMessage();            
-//        }
-//    }    
+    function insert($pdo) {
+        try {
+                      
+            $result = $pdo->prepare("INSERT INTO fin_contrato_aditivo (id_contrato, id_contrato_motivo, id_contrato_finalidade"
+                    . " , id_contrato_instrumento, id_contrato_base_calculo, id_contrato_unidade_calculo"
+                    . " , id_contrato_aquisicao, ds_justificativa, nr_aditivo, dt_inicial, dt_final, nr_percentual_indice)"
+                    . " VALUES (:idContrato, :idContratoMotivo, :idContratoFinalidade, :idContratoInstrumento"
+                    . " , :idContratoBaseCalculo, :idContratoUnidadeCalculo, :idContratoAquisicao, :dsJustificativa"
+                    . " , :nrAditivo, :dtInicial, :dtFim, :nrPercentualIndice)");                                        
+            $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoMotivo", $this->getIdContratoMotivo(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoFinalidade", $this->getIdContratoFinalidade(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoInstrumento", $this->getIdContratoInstrumento(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoBaseCalculo", $this->getIdContratoBaseCalculo(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoUnidadeCalculo", $this->getIdContratoUnidadeCalculo(), PDO::PARAM_INT);
+            $result->bindValue(":idContratoAquisicao", $this->getIdContratoAquisicao(), PDO::PARAM_INT);
+            $result->bindValue(":dsJustificativa", $this->getDsJustificativa(), PDO::PARAM_STR);
+            $result->bindValue(":nrAditivo", $this->getNrAditivo(), PDO::PARAM_INT);
+            $result->bindValue(":dtInicial", $this->getDtInicial(), PDO::PARAM_STR);
+            $result->bindValue(":dtFim", $this->getDtFinal(), PDO::PARAM_STR);
+            $result->bindValue(":nrPercentualIndice", !empty($this->getNrPercentualIndice()) ? $this->getNrPercentualIndice() : null, PDO::PARAM_STR);
+            $result->execute();
+            $this->sucesso = true;            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage();            
+        }
+    }    
 //    
 //    function update($pdo) {
 //        try {

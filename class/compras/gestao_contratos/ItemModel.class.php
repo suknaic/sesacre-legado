@@ -859,8 +859,7 @@ class ItemModel {
             if(empty($pdo)){
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
-            }
-                
+            }                
             $dao = new DaoFinItens();
             $dao->setIdFornecedor($this->idFornecedor);
             $dao->retornaItensFornecedor($pdo);
@@ -868,14 +867,62 @@ class ItemModel {
                 $this->sucesso = false;            
                 $this->msgRetorno = "Não foi possível Localizar Itens do Contrato";
                 return;
-            }
-            
+            }            
             $this->sucesso = true;
-            $this->msgRetorno = $dao->getMsgRetorno();            
-                                                   
+            $this->msgRetorno = $dao->getMsgRetorno();                                                               
         } catch (Exception $e) {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
+    
+    public function cadastraItensContratoAditivo($itens = null, int $idFornecedor, PDO $pdo){
+        try {           
+            //criando objeto do Dao dos itens da ata
+            $daoFinItens = new DaoFinItens();            
+            $daoFinItens->setIdFornecedor($idFornecedor);            
+            if(empty($itens)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi identificar os itens";
+                return;
+            }            
+            foreach ($itens as $key => $value) {                
+                $daoFinItens->setNrItem($value->getNrItem());
+                $daoFinItens->setNrLote($value->getNrLote());
+                $daoFinItens->setNmMarca($value->getNmMarca());
+                $daoFinItens->setNmModelo($value->getNmModelo());
+                $daoFinItens->setQtItens($value->getQtItens());
+                $daoFinItens->setVlItens($value->getVlItens());
+                $daoFinItens->setPcDesconto($value->getPcDesconto());
+                $daoFinItens->setFlValorVariavel($value->getFlValorVariavel());
+                $daoFinItens->setDescItem($value->getDescItem());
+                $daoFinItens->setIdMaterial($value->getIdMaterial());
+                $daoFinItens->setIdContItens($value->getIdContItens());
+                $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida());                                
+                
+                $daoFinItens->cadastrarItemAditivo($pdo);
+                if(!$daoFinItens->Sucesso()){
+                    $this->sucesso = false;
+                    $this->msgRetorno = $daoFinItens->getMsgRetorno();
+                    return;
+                }
+                $daoFinItens->setIdContItens($pdo->lastInsertId('fin_cont_itens_id_cont_itens_seq'));
+                if (!Log::SalvaLogI('fin_cont_itens', $daoFinItens->getIdContItens(), $pdo)){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no Log dos itens";
+                    return;
+                }                                                
+            }
+                                    
+            $this->sucesso = true;
+            $this->msgRetorno = "Itens Salvo com Sucesso";
+            return;
+                             
+        } catch (Exception $exc) {            
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+            return;
         }
     }
     

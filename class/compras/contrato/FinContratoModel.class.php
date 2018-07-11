@@ -1667,8 +1667,8 @@ class FinContratoModel {
             $itens->setIdFornecedor($r['id_fornecedor']);
             $itens->retornaItensPorFornecedor($pdo);
             
-            if($itens->Sucesso()){                
-                foreach ($itens->getMsgRetorno() as $key => $result){
+            if($itens->Sucesso()){             
+                foreach ($itens->getMsgRetorno() as $key => $result){                   
                     $item = new ItemModel();
                     $item->setIdContItens($result['id_cont_itens']);
                     $item->setNrItem($result['nr_item']);
@@ -1683,7 +1683,7 @@ class FinContratoModel {
                     $item->setIdMaterial($result['id_material']);
                     $item->setIdFornecedor($result['id_fornecedor']);
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
-                    $item->setIdUnidadeMedida($result['id_unidade_medida']);   
+                    $item->setIdUnidadeMedida($result['id_unidade_medida']); 
                     $cont->setItems($item);
                 }
             }                                              
@@ -1700,251 +1700,287 @@ class FinContratoModel {
     
     
     
-    public function cadastrarContratoComAditivo() {
+    public function cadastrarContratoComAditivo(FinContratoTb $c, FinFornecedoresTb $f
+            , FinContratoAditivoTb $finContratoAdtivo
+            , array $centraisDoContrato
+            , array $gestorTitular, array $gestorSubstituto
+            , array $fiscal, array $fiscalSubstituto
+            , array $subFiscal, array $subFiscalSubstituto
+            , $itens
+            , PDO $pdo){                    
         try {
-            if (empty($this->id_pessoa) || empty($this->id_pessoaFornecedor) 
-                    || empty($this->nr_contrato) || empty($this->nr_prazo_entrega) 
-                    || empty($this->ds_objeto) || empty($this->dt_ini_vigencia_contrato) 
-                    || empty($this->dt_fim_vigencia_contrato) || empty($this->dt_assinatura) 
-                    || empty($this->dt_publicacao)) {
-                return Metodos::retornoAjax("Erro1", "alert", STR_PREENCHER_CAMPOS);
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
             }
-
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            $daoContrato = new DaoFinContrato();
-            $sucesso = true;
+            
+            if ( empty($c->getNrContrato()) || empty($c->getDtIniVigenciaContrato()) 
+                    || empty($c->getDtFimVigenciaContrato()) || empty($c->getDtAssinatura())
+                    || empty($c->getDtPublicacao()) || empty($itens)   ) {
+                $this->sucesso = false;
+                $this->msgRetorno = STR_PREENCHER_CAMPOS;
+                $pdo->rollBack();
+                return;
+            }
+                                    
+            $daoContrato = new DaoFinContrato();            
             //Seta os campos
-            $daoContrato->setNrContrato($this->nr_contrato);
-            $daoContrato->setIdProcesso($this->id_processo);
-            $daoContrato->setNrPrazoEntrega($this->nr_prazo_entrega);
-            if (empty($this->id_contrato_alt)) {
-                $daoContrato->setIdContratoAlt(null);
-            } else {
-                $daoContrato->setIdContratoAlt($this->id_contrato_alt);
+            $daoContrato->setNrContrato($c->getNrContrato());
+            $daoContrato->setIdProcesso($c->getIdProcesso());
+            $daoContrato->setNrPrazoEntrega($c->getNrPrazoEntrega());
+            
+            if(empty($c->getIdPessoa())){
+                $daoContrato->setIdPessoa(NULL);
+            }else{
+                $daoContrato->setIdPessoa($c->getIdPessoa());
             }
-            $daoContrato->setDsObjeto($this->ds_objeto);
-            $daoContrato->setDtIniVigenciaContrato(Metodos::ConverteDataING($this->dt_ini_vigencia_contrato));
-            $daoContrato->setDtFimVigenciaContrato(Metodos::ConverteDataING($this->dt_fim_vigencia_contrato));
-            $daoContrato->setDtAssinatura(Metodos::ConverteDataING($this->dt_assinatura));
-            $daoContrato->setDtPublicacao(Metodos::ConverteDataING($this->dt_publicacao));
-            $daoContrato->setDsObsContrato($this->ds_obs_contrato);
-            $daoContrato->setTpContrato(2);
-            //verificar valoes opcionais
-            if ($this->fl_servico_continuado != '' && $this->fl_servico_continuado != "" && $this->fl_servico_continuado != null) {
-                $daoContrato->setFlServicoContinuado($this->fl_servico_continuado);
+            
+            $daoContrato->setDsObjeto($c->getDsObjeto());
+            
+            if (!empty($c->getFlServicoContinuado())) {
+                $daoContrato->setFlServicoContinuado($c->getFlServicoContinuado());
             } else {
                 $daoContrato->setFlServicoContinuado(0);
+            }  
+            $daoContrato->setDtIniVigenciaContrato($c->getDtIniVigenciaContrato());
+            $daoContrato->setDtFimVigenciaContrato($c->getDtFimVigenciaContrato());
+            $daoContrato->setDtAssinatura($c->getDtAssinatura());
+            $daoContrato->setDtPublicacao($c->getDtPublicacao());
+            $daoContrato->setDsObsContrato($c->getDsObsContrato());
+            
+            if(empty($c->getIdModalidade())){
+                $daoContrato->setIdModalidade(NULL);
+            }else{
+                $daoContrato->setIdModalidade($c->getIdModalidade());
             }
-            $daoContrato->setIdTipoGasto($this->id_tipo_gasto);
-            //primeiro result é para verificar ser o contrato foi armazenado no banco de daods
-            $daoContrato->insertContrato($pdo);
-            if (!$daoContrato->sucesso()) {
-                $retorno = Metodos::retornoAjax("Erro2", "console", $daoContrato->getMsgRetorno());
-                $pdo->rollBack();
-                return $retorno;
+            
+            $daoContrato->setDsAreaAbrangencia($c->getDsAreaAbrangencia());
+            $daoContrato->setDsUnidadeContemplada($c->getDsUnidadeContemplada());
+            
+            if(empty($c->getIdOrgaoGerenciador())){
+                $daoContrato->setIdOrgaoGerenciador(NULL);
+            }else{
+                $daoContrato->setIdOrgaoGerenciador($c->getIdOrgaoGerenciador());
+            }  
+            
+            if(empty($c->getIdTipoGasto())){
+                $daoContrato->setIdTipoGasto(NULL);
+            }else{
+                $daoContrato->setIdTipoGasto($c->getIdTipoGasto());
             }
-            //pegando o id do contrato
-            $daoContrato->setIdContrato($pdo->lastInsertId('fin_contrato_id_contrato_seq'));
-
-            //cadastrar centrais
-            if (!empty($this->id_lotacaoCentral)) {
-                $finCentraisModel = new FinCentraisModel();
-
-                foreach ($this->id_lotacaoCentral as $valor) {
-                    $finCentraisModel->setIdContrato($daoContrato->getIdContrato());
-                    $finCentraisModel->setIdLotacao($valor);
-                    $finCentraisModel->cadastrarCentralContrato($pdo);
-                    if (!$finCentraisModel->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-
-                    if ($sucesso == false) {
-                        $retorno = Metodos::retornoAjax("Erro3", "console", $finCentraisModel->getMsgRetorno());
-                        $pdo->rollBack();
-                        return $retorno;
-                    }
-                }
+            
+            $daoContrato->setTpContrato(2);
+                        
+            if (empty($c->getIdContratoAlt())) {
+                $daoContrato->setIdContratoAlt(NULL);
             } else {
-                return Metodos::retornoAjax("Erro1", "alert", STR_PREENCHER_CAMPOS);
+                $daoContrato->setIdContratoAlt($c->getIdContratoAlt());
             }
-
-            //cadastrar gestor titular
-            if (!empty($this->idPessoaGestor)) {
-                $finGestor = new FinGestorModel();
-                foreach ($this->idPessoaGestor as $valor) {
-                    $finGestor->setIdPessoa($valor);
-                    $finGestor->setIdContrato($daoContrato->getIdContrato());
-                    $finGestor->setTpGestor(1);
-                    $finGestor->cadastraGestor($pdo);
-                    if (!$finGestor->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro4", "console", $finGestor->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
+            
+            $daoContrato->setSqContrato($c->getSqContrato());
+            $daoContrato->setIdContratoAditivoPai($c->getIdContratoAditivoPai());
+                               
+            
+            //primeiro result é para verificar ser o contrato foi armazenado no banco de daods
+            $daoContrato->insertContratoParaAditivo($pdo);
+            if(!$daoContrato->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoContrato->getMsgRetorno();                            
+                $pdo->rollBack();
+                return;
             }
-
-            //cadastrar gestor substituto
-            if (!empty($this->idGestoresSub)) {
-                $finGestor = new FinGestorModel();
-                foreach ($this->idGestoresSub as $valor) {
-                    $finGestor->setIdPessoa($valor);
-                    $finGestor->setIdContrato($daoContrato->getIdContrato());
-                    $finGestor->setTpGestor(2);
-                    $finGestor->cadastraGestor($pdo);
-
-                    if (!$finGestor->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro5", "console", $finGestor->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
+            //Pegando o id do contrato
+            $daoContrato->setIdContrato($pdo->lastInsertId('fin_contrato_id_contrato_seq'));
+            if(Log::SalvaLogI('fin_contrato', $daoContrato->getIdContrato(), $pdo)){
+                $sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = STR_ERROR;
+                $pdo->rollBack();
+                return;                
             }
-
-            //cadastrar fiscal
-            if (!empty($this->idPessoaFiscal)) {
-                $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->idPessoaFiscal as $valor) {
-                    $finFiscaisModel->setIdPessoa($valor);
-                    $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
-                    $finFiscaisModel->setTpFiscal(1);
-                    $finFiscaisModel->cadastraFiscal($pdo);
-
-                    if (!$finFiscaisModel->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro6", "console", $finFiscaisModel->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            }
-
-            //cadastrar fiscal substituto
-            if (!empty($this->idPessoaFiscalSub)) {
-                $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->idPessoaFiscalSub as $valor) {
-                    $finFiscaisModel->setIdPessoa($valor);
-                    $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
-                    $finFiscaisModel->setTpFiscal(2);
-                    $finFiscaisModel->cadastraFiscal($pdo);
-
-                    if (!$finFiscaisModel->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro7", "console", $finFiscaisModel->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            }
-
-            //cadastrar Subfiscal
-            if (!empty($this->idPessoaSubFiscal)) {
-                $subFiscalModel = new SubFiscalModel();
-                foreach ($this->idPessoaSubFiscal as $valor) {
-                    $subFiscalModel->setIdPessoa($valor);
-                    $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
-                    $subFiscalModel->setTpSubFiscal(1);
-                    $subFiscalModel->cadastraSubFiscal($pdo);
-
-                    if (!$subFiscalModel->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro8", "console", $subFiscalModel->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            }
-
-            //cadastrar Subfiscal substituto
-            if (!empty($this->idPessoaSubFiscalSub)) {
-                $subFiscalModel = new SubFiscalModel();
-                foreach ($this->idPessoaSubFiscalSub as $valor) {
-                    $subFiscalModel->setIdPessoa($valor);
-                    $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
-                    $subFiscalModel->setTpSubFiscal(2);
-                    $subFiscalModel->cadastraSubFiscal($pdo);
-
-                    if (!$subFiscalModel->sucesso()) {
-                        $sucesso = false;
-                        break;
-                    }
-                }
-
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro9", "console", $subFiscalModel->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            }
-
+            
+            //Final do Cadastro do Contrato
+            
+            //Iniciar o Cadastro do Fornecedor
             //cadastrar fornecedor
             $fornecedor = new FinFornecedoresModel();
             $fornecedor->setIdContrato($daoContrato->getIdContrato());
-            $fornecedor->setIdPessoa($this->id_pessoaFornecedor);
+            $fornecedor->setIdPessoa($f->getIdPessoa());
             $fornecedor->cadastrarFornecedores($pdo);
-            if (!$fornecedor->sucesso()) {
-                $sucesso = false;
-            }
-
-            //segundo result verifica ser a vigencia do contrato foi armazenada no banco
-            $daoContrato->cadastrarContratoVigencia($pdo);
-            if (!$daoContrato->sucesso()) {
-                $retorno = Metodos::retornoAjax("Erro", "console10", $daoContrato->getMsgRetorno());
+            if(!$fornecedor->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi Possível Cadastrar o novo Fornecedor";
                 $pdo->rollBack();
-                return $retorno;
+                return;
             }
-
-            if (Log::SalvaLogI('fin_contrato', $daoContrato->getIdContrato(), $pdo)) {
-                $sucesso = true;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro11", "alert", STR_ERROR);
+            
+            $fornecedor->setIdFornecedor($fornecedor->getMsgRetorno());
+            
+            
+            //Inicia o Cadastro do Aditivo
+            $aditivo = new FinContratoAditivo();
+            $finContratoAdtivo->setIdContrato($daoContrato->getIdContrato());
+            $aditivo->inserirAditivo($finContratoAdtivo, $pdo);                       
+            if(!$aditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Cadastrar os Dados do Aditivo";
                 $pdo->rollBack();
-                return $retorno;
+                return;
             }
-            if ($sucesso) {
-                //verifico ser o contrato tem ata ou nao
-                if (empty($this->id_contrato_alt)) {
-                    $retorno = Metodos::retornoAjax("ok", "noAta", $fornecedor->getMsgRetorno());
-                } else {
-                    $retorno = Metodos::retornoAjax("ok", "ata", $fornecedor->getMsgRetorno());
+                                                                        
+            //Adiciona os Itens para o Novo Fornecedor
+            $itemModal = new ItemModel();
+            $itemModal->cadastraItensContratoAditivo($itens, (int)$fornecedor->getIdFornecedor(), $pdo);            
+            if(!$itemModal->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Cadastrar os Itens do Contrato";
+                $pdo->rollBack();
+                return;
+            }
+            
+            
+            //
+            
+            
+                        
+            //Adiciona as Centrais do Contrato no Fin Cont Central, Se Existir
+            if(!empty($centraisDoContrato)){
+                $finCentraisModel = new FinCentraisModel();
+                $finCentraisModel->setIdContrato($daoContrato->getIdContrato());
+                foreach ($centraisDoContrato as $value) {                    
+                    $finCentraisModel->setIdLotacao($value['id_lotacao']);
+                    $finCentraisModel->cadastrarCentralContrato($pdo);
+                    if (!$finCentraisModel->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $finCentraisModel->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }                   
                 }
+            }
+                       
 
-                $pdo->commit();
-                return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro12", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
+            //cadastrar gestor titular
+            if (!empty($gestorTitular)){
+                $finGestor = new FinGestorModel();
+                $finGestor->setIdContrato($daoContrato->getIdContrato());
+                $finGestor->setTpGestor(1);
+                $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());
+                foreach ($gestorTitular as $valor) {
+                    $finGestor->setIdPessoa($valor);                                        
+                    $finGestor->cadastraGestorAditivo($pdo);
+                    if (!$finGestor->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $finGestor->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }               
             }
 
-            return Metodos::retornoAjax("Erro13", "alert", STR_ERROR);
+            //cadastrar gestor substituto
+            if (!empty($gestorSubstituto)){
+                $finGestor = new FinGestorModel();
+                $finGestor->setIdContrato($daoContrato->getIdContrato());
+                $finGestor->setTpGestor(2);
+                $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());
+                foreach ($gestorSubstituto as $valor){
+                    $finGestor->setIdPessoa($valor);                    
+                    
+                    $finGestor->cadastraGestorAditivo($pdo);
+                    if (!$finGestor->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $finGestor->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }              
+            }
+            
+            //cadastrar fiscal
+            if (!empty($fiscal)){
+                $finFiscaisModel = new FinFiscaisModel();
+                $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
+                $finFiscaisModel->setDtIniFiscal($daoContrato->getDtIniVigenciaContrato());
+                $finFiscaisModel->setTpFiscal(1);                
+                foreach ($fiscal as $valor){
+                    $finFiscaisModel->setIdPessoa($valor);                                                            
+                    $finFiscaisModel->cadastraFiscalAditivo($pdo);
+                    if (!$finFiscaisModel->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $finFiscaisModel->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }              
+            }
+
+            //cadastrar fiscal substituto
+            if (!empty($fiscalSubstituto)){
+                $finFiscaisModel = new FinFiscaisModel();
+                $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
+                $finFiscaisModel->setDtIniFiscal($daoContrato->getDtIniVigenciaContrato());
+                $finFiscaisModel->setTpFiscal(2);
+                foreach ($fiscalSubstituto as $valor){
+                    $finFiscaisModel->setIdPessoa($valor);                                                            
+                    $finFiscaisModel->cadastraFiscalAditivo($pdo);
+                    if (!$finFiscaisModel->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $finFiscaisModel->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }            
+            }
+                         
+           
+            //cadastrar Subfiscal
+            if (!empty($subFiscal)){
+                $subFiscalModel = new SubFiscalModel();
+                $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
+                $subFiscalModel->setDtIniSubFiscal($daoContrato->getDtIniVigenciaContrato());
+                $subFiscalModel->setTpSubFiscal(1);
+                foreach ($subFiscal as $valor){
+                    $subFiscalModel->setIdPessoa($valor);                    
+                    $subFiscalModel->cadastraSubFiscalAditivo($pdo);
+                    if (!$subFiscalModel->sucesso()) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = $subFiscalModel->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }             
+            }
+
+            //cadastrar Subfiscal substituto
+            if (!empty($subFiscalSubstituto)){
+                $subFiscalModel = new SubFiscalModel();
+                $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
+                $subFiscalModel->setDtIniSubFiscal($daoContrato->getDtIniVigenciaContrato());
+                $subFiscalModel->setTpSubFiscal(2);
+                foreach ($subFiscalSubstituto as $valor){
+                    $subFiscalModel->setIdPessoa($valor);                    
+                    $subFiscalModel->cadastraSubFiscalAditivo($pdo);
+                    if (!$subFiscalModel->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $subFiscalModel->getMsgRetorno();
+                        $pdo->rollBack();
+                        return;
+                    }
+                }             
+            }                       
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "ok";
+                        
+            return;
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro14", "console", $exc->getMessage());
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+            $pdo->rollBack();
+            return;
         }
     }
     

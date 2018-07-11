@@ -2,6 +2,12 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContratoAditivo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/centrais/FinCentraisModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/FinFornecedorModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestor/FinGestorModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/fiscais/FinFiscaisModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/sub_fiscal/SubFiscalModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
 
 
 class FinContratoAditivo {
@@ -22,6 +28,13 @@ class FinContratoAditivo {
     private $idTipoAquisicao = null;
     private $dtAssinatura = null;
     private $dsJustificativa = null;
+    private $gestorTitular = null;
+    private $gestorSubstituto = null;
+    private $fiscal = null;
+    private $fiscalSubstituto = null;
+    private $subFiscal = null;
+    private $subFiscalSubstituto = null;
+    private $itens = null;
     
     private $motivoPorValor = 1;
     private $motivoPorPrazo = 2;
@@ -243,7 +256,64 @@ class FinContratoAditivo {
     public function setIdContratoAditivo($idContratoAditivo) {
         $this->idContratoAditivo = $idContratoAditivo;
     }
-        
+    
+    public function getGestorTitular() {
+        return $this->gestorTitular;
+    }
+
+    public function getGestorSubstituto() {
+        return $this->gestorSubstituto;
+    }
+
+    public function getFiscal() {
+        return $this->fiscal;
+    }
+
+    public function getFiscalSubstituto() {
+        return $this->fiscalSubstituto;
+    }
+
+    public function getSubFiscal() {
+        return $this->subFiscal;
+    }
+
+    public function getSubFiscalSubstituto() {
+        return $this->subFiscalSubstituto;
+    }
+
+    public function setGestorTitular($gestorTitular) {
+        $this->gestorTitular = $gestorTitular;
+    }
+
+    public function setGestorSubstituto($gestorSubstituto) {
+        $this->gestorSubstituto = $gestorSubstituto;
+    }
+
+    public function setFiscal($fiscal) {
+        $this->fiscal = $fiscal;
+    }
+
+    public function setFiscalSubstituto($fiscalSubstituto) {
+        $this->fiscalSubstituto = $fiscalSubstituto;
+    }
+
+    public function setSubFiscal($subFiscal) {
+        $this->subFiscal = $subFiscal;
+    }
+
+    public function setSubFiscalSubstituto($subFiscalSubstituto) {
+        $this->subFiscalSubstituto = $subFiscalSubstituto;
+    }
+    
+    public function getItens() {
+        return $this->itens;
+    }
+
+    public function setItens($itens) {
+        $this->itens = $itens;
+    }
+
+                
     
     public function salvar($dados){
 
@@ -287,8 +357,52 @@ class FinContratoAditivo {
             $this->dtAssinatura = Metodos::validaConverteDataING($this->dtAssinatura);
             if(empty($this->dtAssinatura)){
                 $this->dtAssinatura = NULL;
-            }  
-
+            }                          
+            
+            $this->gestorTitular = $dados['gestor_titular'];
+            if(!is_array($this->gestorTitular) || empty($this->gestorTitular)){
+                $this->gestorTitular = NULL;
+            }
+            $this->gestorTitular = array_unique($this->gestorTitular);
+            
+            $this->gestorSubstituto = $dados['gestor_substituto'];
+            if(!is_array($this->gestorSubstituto) || empty($this->gestorSubstituto)){
+                $this->gestorSubstituto = NULL;
+            }
+            $this->gestorSubstituto = array_unique($this->gestorSubstituto);
+            
+            $this->fiscal = $dados['fiscal'];
+            if(!is_array($this->fiscal) || empty($this->fiscal)){
+                $this->fiscal = NULL;
+            }
+            $this->fiscal = array_unique($this->fiscal);
+            
+            $this->fiscalSubstituto = $dados['fiscal_substituto'];
+            if(!is_array($this->fiscalSubstituto) || empty($this->fiscalSubstituto)){
+                $this->fiscalSubstituto = NULL;
+            }
+            $this->fiscalSubstituto = array_unique($this->fiscalSubstituto);
+            
+            $this->subFiscal = $dados['sub_fiscal'];
+            if(!is_array($this->subFiscal) || empty($this->subFiscal)){
+                $this->subFiscal = NULL;
+            }
+            $this->subFiscal = array_unique($this->subFiscal);
+            
+            $this->subFiscalSubstituto = $dados['sub_fiscal_substituto'];
+            if(!is_array($this->subFiscalSubstituto) || empty($this->subFiscalSubstituto)){
+                $this->subFiscalSubstituto = NULL;
+            }
+            $this->subFiscalSubstituto = array_unique($this->subFiscalSubstituto);
+            
+            if(array_key_exists("itens", $dados)){
+                $this->itens = $dados['itens'];
+            }
+            
+             
+            
+                                    
+            
             //Faz a Validação dos Campos Obrigatorios de acordo com o Motivo, Valor, Prazo ou Valor e Prazo
             if(!$this->validaCamposObrigatorio()){
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);                                                
@@ -319,34 +433,135 @@ class FinContratoAditivo {
             $contrato->setSqContrato($proximoAditivo);
 
             //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor
-            $contratoRef = new FinContratoModel();       
+            $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
             if(!$contratoRef->sucesso()){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
-            }
-            
+            }                
             $contRef = $contratoRef->getMsgRetorno();
             
-            
-            
-            
-            
-            
-            
-            
+           
+            //Carrega todos os itens do Contrato(Fornecedor)
+            $finContItens = "";
+            $itemModel = new ItemModel();
+            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
+            $itemModel->retornaItensPorFornecedor($pdo);
+            if($itemModel->Sucesso()){
+                $finContItens = $itemModel->getMsgRetorno();
+            }
+                                               
+                      
+                                                                       
             //Preparar Dados Para Inserir no Banco            
             //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
             //gestores, fiscais e subfiscais
             $daoContrato = new FinContratoModel();
-            $finContratoTb = new FinContratoTb();
-            $finContratoTb->setNrContrato($finContratoTb);
+                                    
+            //Adiciona os Dados na classe que representa a tabela Fin Contrato
+            $finContratoTb = new FinContratoTb();     
+            //Nome do Numero do contrato
+            $nomeDoContrato = $contrato->getSqContrato()."º Termo Aditivo ao contrato ".$contRef->getNrContrato();            
+            $finContratoTb->setNrContrato($nomeDoContrato);
+            $finContratoTb->setNrPrazoEntrega($contRef->getNrPrazoEntrega());
+            $finContratoTb->setIdProcesso($contRef->getIdProcesso());
+            $finContratoTb->setIdPessoa($contRef->getIdPessoa());
+            $finContratoTb->setDsObjeto($contRef->getDsObjeto());            
+            $finContratoTb->setFlServicoContinuado($contRef->getFlServicoContinuado());
+            $finContratoTb->setDtIniVigenciaContrato($contRef->getDtIniVigenciaContrato());
+            $finContratoTb->setDtFimVigenciaContrato($contRef->getDtFimVigenciaContrato());
+            $finContratoTb->setDtAssinatura($contRef->getDtAssinatura());
+            $finContratoTb->setDtPublicacao($contRef->getDtPublicacao());
+            $finContratoTb->setDsObsContrato($contRef->getDsObsContrato());
+            $finContratoTb->setIdModalidade($contRef->getIdModalidade());
+            $finContratoTb->setDsAreaAbrangencia($contRef->getDsAreaAbrangencia());
+            $finContratoTb->setDsUnidadeContemplada($contRef->getDsUnidadeContemplada());
+            $finContratoTb->setIdOrgaoGerenciador($contRef->getIdOrgaoGerenciador());
+            $finContratoTb->setIdTipoGasto($contRef->getIdTipoGasto());
+            $finContratoTb->setVlContrato($contRef->getVlContrato());
+            $finContratoTb->setTpContrato($contRef->getTpContrato());
+            $finContratoTb->setSqContrato($contrato->getSqContrato());
+            $finContratoTb->setIdContratoAditivoPai($this->idContrato);                       
+            
+            
+            //Adiciona os Dados na classe que representa a tabela Fin Fornecedor
+            $finFornecedorTb = new FinFornecedoresTb();            
+            $finFornecedorTb->setIdPessoa($contRef->getFornecedor()->getIdPessoa());
+            
+            
+            //Busca os Dados do Fin Cont Central
+            //Centrais do Contrato
+            $finCentraisModel = new FinCentraisModel();
+            $finCentraisModel->setIdContrato($this->idContrato);
+            $finCentraisModel->retornaCentraisPorContrato($pdo);
+            $centraisDoContrato = array();
+            if($finCentraisModel->sucesso()){
+                $centraisDoContrato = $finCentraisModel->getMsgRetorno();
+            }
+            
+            
+            //Busca os Dados do Fin Cont Itens
+            //Somente os itens que serão duplicados
+            $itens = "";
+            foreach ($finContItens as $key => $value){
+                $finItens = new FinItensTb();
+                $finItens->setNrItem($value['nr_item']);
+                $finItens->setNrLote($value['nr_lote']);
+                $finItens->setNmMarca($value['nm_marca']);
+                $finItens->setNmModelo($value['nm_modelo']);
+                $finItens->setQtItens($value['qt_itens']);
+                $finItens->setVlItens($value['vl_itens']);
+                $finItens->setPcDesconto($value['pc_desconto']);
+                $finItens->setFlValorVariavel($value['fl_valor_variavel']);
+                $finItens->setDescItem($value['ds_itens']);
+                $finItens->setIdMaterial($value['id_material']);
+                $finItens->setIdContItens(NULL);
+                $finItens->setIdUnidadeMedida($value['id_unidade_medida']);
+                $itens[] = $finItens;
+            }                        
+                      
+            
+            $finContratoAdtivoTb = new FinContratoAditivoTb();
+            $finContratoAdtivoTb->setIdContratoMotivo($this->idMotivo)
+                    ->setIdContratoFinalidade($this->idFinalidade)
+                    ->setIdContratoInstrumento($this->idInstrumento)
+                    ->setIdContratoBaseCalculo($this->idBaseCalculo)
+                    ->setIdContratoUnidadeCalculo($this->idUnidadeCalculo)
+                    ->setIdContratoAquisicao($this->idTipoAquisicao)
+                    ->setDsJustificativa($this->dsJustificativa)
+                    ->setNrAditivo($this->numeroNovoAditivo)
+                    ->setDtInicial($this->dtPeriodoInicial)
+                    ->setDtFinal($this->dtPeriodoInicial)
+                    ->setNrPercentualIndice($this->percentual);                                                   
+                      
+            $contrato->cadastrarContratoComAditivo($finContratoTb, $finFornecedorTb
+                    , $finContratoAdtivoTb, $centraisDoContrato
+                    , $this->gestorTitular, $this->gestorSubstituto
+                    , $this->fiscal, $this->fiscalSubstituto
+                    , $this->subFiscal, $this->subFiscalSubstituto
+                    , $itens
+                    , $pdo);
+            if(!$contrato->sucesso()){ 
+                return Metodos::retornoAjax("Erro", "console", $contrato->getMsgRetorno());
+            }
+            echo $this->msgRetorno;
+            $pdo->commit();
+            return;
+            
+            //$pdo->rollBack();
+            echo "<pre>";
+            print_r($contrato->getMsgRetorno());
+            echo "</pre>";
+            
+            echo "<pre>";
+            print_r($finContratoTb);
+            echo "</pre>";
+            return;
+           
             //Adicionar os Itens nesse Objeto da Tabela, fazer isso com todas as outras tabelas
             //E somente posterior iniciar o objeto do contrato model e mandar via parametro os objetos para serem salvos
             
             
-            //Nome do Numero do contrato
-            $nomeDoContrato = $contrato->getSqContrato()."º Termo Aditivo ao contrato ".$contRef->getNrContrato();
             $daoContrato->setNrContrato($nomeDoContrato);
             $daoContrato->setNrPrazoEntrega($contRef->getNrPrazoEntrega());
             $daoContrato->setIdProcesso($contRef->getIdProcesso());
@@ -559,6 +774,48 @@ class FinContratoAditivo {
         $this->sucesso = true;
         $this->msgRetorno = "ok";
     }
+    
+    public function inserirAditivo(FinContratoAditivoTb $finContratoAditivo, PDO $pdo){
+                      
+        try{
+         
+            $dao = new DaoFinContratoAditivo();
+            $dao->setIdContrato($finContratoAditivo->getIdContrato());
+            $dao->setIdContratoMotivo($finContratoAditivo->getIdContratoMotivo());
+            $dao->setIdContratoFinalidade($finContratoAditivo->getIdContratoFinalidade());
+            $dao->setIdContratoInstrumento($finContratoAditivo->getIdContratoInstrumento());
+            $dao->setIdContratoBaseCalculo($finContratoAditivo->getIdContratoBaseCalculo());
+            $dao->setIdContratoUnidadeCalculo($finContratoAditivo->getIdContratoUnidadeCalculo());
+            $dao->setIdContratoAquisicao($finContratoAditivo->getIdContratoAquisicao());
+            $dao->setDsJustificativa($finContratoAditivo->getDsJustificativa());
+            $dao->setNrAditivo($finContratoAditivo->getNrAditivo());
+            $dao->setDtInicial($finContratoAditivo->getDtInicial());
+            $dao->setDtFinal($finContratoAditivo->getDtFinal());
+            $dao->setNrPercentualIndice($finContratoAditivo->getNrPercentualIndice());
+            $dao->insert($pdo);
+            
+            if(!$dao->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }
+            $dao->setIdContratoAditivo($pdo->lastInsertId('fin_contrato_aditivo_id_contrato_aditivo_seq'));
+            if (!Log::SalvaLogI('fin_contrato_aditivo', $dao->getIdContratoAditivo(), $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro no Log dos Aditivos";
+                return;
+            }
+            
+            $this->sucesso = true;        
+            $this->msgRetorno = "Dados do Aditivo salvo com Sucesso";
+            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
+        }                        
+    }
+    
+    
     
 }
 

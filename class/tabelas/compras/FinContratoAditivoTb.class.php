@@ -215,7 +215,8 @@ class FinContratoAditivoTb{
     }
 
     public function setDsJustificativa($ds_justificativa) {
-        $this->ds_justificativa = $ds_justificativa;
+        $this->ds_justificativa = $ds_justificativa;        
+        return $this;
     }
 
     public function getNrAditivo() {
@@ -224,6 +225,7 @@ class FinContratoAditivoTb{
 
     public function setNrAditivo($nr_aditivo) {
         $this->nr_aditivo = $nr_aditivo;
+        return $this;
     }
 
     public function getDtInicial() {
@@ -244,14 +246,17 @@ class FinContratoAditivoTb{
 
     public function setDtInicial($dt_inicial) {
         $this->dt_inicial = $dt_inicial;
+        return $this;
     }
 
     public function setDtFinal($dt_final) {
         $this->dt_final = $dt_final;
+        return $this;
     }
 
     public function setNrPercentualIndice($nr_percentual_indice) {
         $this->nr_percentual_indice = $nr_percentual_indice;
+        return $this;
     }
 
     public function setStAtivo($st_ativo) {

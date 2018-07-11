@@ -25,6 +25,8 @@ class FinContratoTb {
     private $tp_contrato = null;
     private $fl_carona = null;
     private $id_contrato_alt = null;
+    private $sq_contrato = null;
+    private $id_contrato_aditivo_pai = null;
     //fornecedor
     private $id_fornecedor = null;
     private $id_pessoaFornecedor = null;
@@ -711,6 +713,24 @@ class FinContratoTb {
 
         return $this;
     }
+    
+    public function getSqContrato() {
+        return $this->sq_contrato;
+    }
+
+    public function getIdContratoAditivoPai() {
+        return $this->id_contrato_aditivo_pai;
+    }
+
+    public function setSqContrato($sq_contrato) {
+        $this->sq_contrato = $sq_contrato;
+    }
+
+    public function setIdContratoAditivoPai($id_contrato_aditivo_pai) {
+        $this->id_contrato_aditivo_pai = $id_contrato_aditivo_pai;
+    }
+
+
 }
 
 ?>

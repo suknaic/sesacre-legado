@@ -182,4 +182,40 @@ class FinFiscaisModel {
 			$this->msgRetorno = $exc->getMessage();
 		}
 	}
+        
+        public function cadastraFiscalAditivo($pdo = null) {
+            try {
+                
+                $this->idPessoa = (is_numeric($this->idPessoa)) ? $this->idPessoa : null;
+                $this->idContrato = (is_numeric($this->idContrato)) ? $this->idContrato : null;
+                $this->tpFiscal = (is_numeric($this->tpFiscal)) ? $this->tpFiscal : null;
+                $this->dtIniFiscal = (!empty($this->dtIniFiscal)) ? $this->dtIniFiscal : null;
+                $this->dtFimFiscal = (!empty($this->dtFimFiscal)) ? $this->dtFimFiscal : null;
+                if (!empty($this->idContrato) && !empty($this->idPessoa) && !empty($this->tpFiscal)) {                    
+                    $daoFinFiscal = new DaoFinFiscal();
+                    $daoFinFiscal->setIdPessoa($this->idPessoa);
+                    $daoFinFiscal->setIdContrato($this->idContrato);
+                    $daoFinFiscal->setTpFiscal($this->tpFiscal);
+                    $daoFinFiscal->setDtIniFiscal($this->dtIniFiscal);
+                    $daoFinFiscal->insertFiscal($pdo);
+                    if ($daoFinFiscal->sucesso()) {
+                        $daoFinFiscal->setIdFiscal($pdo->lastInsertId('fin_fiscal_id_fiscal_seq'));
+                        $this->sucesso = true;
+                        if (!Log::SalvaLogI('fin_fiscal', $daoFinFiscal->getIdFiscal(), $pdo)) {
+                            $this->sucesso = false;
+                            $this->msgRetorno = 'erro log';
+                        }
+                    }else{
+                        $this->sucesso = false;
+                        $this->msgRetorno = $daoFinFiscal->getMsgRetorno();
+                        return;
+                    }                    
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (Exception $exc) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = $exc->getMessage();
+            }
+	}
 }

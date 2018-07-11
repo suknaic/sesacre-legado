@@ -184,5 +184,37 @@ class FinGestorModel {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    public function cadastraGestorAditivo($pdo = null) {
+        try {            
+            $daoFinGestor = new DaoFinGestor();
+            
+            $daoFinGestor->setIdPessoa($this->idPessoa);
+            $daoFinGestor->setIdContrato($this->idContrato);
+            $daoFinGestor->setTpGestor($this->tpGestor);
+            $daoFinGestor->setDtIniGestor($this->dtIniGestor);
+
+            $daoFinGestor->insertGestor($pdo);
+            //verificar ser deu certo o insert caso sim sucesso passa a ser true
+            if ($daoFinGestor->sucesso()) {
+                $daoFinGestor->setIdGestor(is_numeric($pdo->lastInsertId('fin_gestor_id_gestor_seq')) ? $pdo->lastInsertId('fin_gestor_id_gestor_seq') : NULL);
+                $this->sucesso = true;                
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinGestor->getMsgRetorno();
+                return;
+            } 
+
+            if (!Log::SalvaLogI('fin_gestor', $daoFinGestor->getIdGestor(), $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = 'erro log';
+                return;
+            }
+            
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
 }

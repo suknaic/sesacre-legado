@@ -17,6 +17,7 @@ class FinItensTb {
     private $cdDescMaterial = null;
     private $descItem = null;
     private $idUnidadeMedida = null;
+    private $flValorVariavel = null;
 
     function getIdContItens() {
         return $this->idContItens;
@@ -129,5 +130,15 @@ class FinItensTb {
     function setIdUnidadeMedida($idUnidadeMedida) {
         $this->idUnidadeMedida = $idUnidadeMedida;
     }
+    
+    function getFlValorVariavel() {
+        return $this->flValorVariavel;
+    }
+
+    function setFlValorVariavel($flValorVariavel) {
+        $this->flValorVariavel = $flValorVariavel;
+    }
+
+
 
 }
