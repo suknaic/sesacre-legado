@@ -782,6 +782,46 @@ class DaoFinItens extends FinItensTb {
         }
     }
     
+    public function cadastrarItemAditivo($pdo = null) {
+        if (!empty($pdo)) {
+            try {
+                $sql = "INSERT INTO fin_cont_itens (nr_item, nr_lote, nm_marca, nm_modelo, qt_itens, vl_itens, pc_desconto"
+                        . " , fl_valor_variavel, ds_itens, id_material, id_fornecedor, id_cont_itens_alt, id_unidade_medida)"
+                        . " VALUES (:nrItem, :lote, :marca, :modelo, :qtd, :vl, :desconto"
+                        . " , :flValorVariavel, :dsItem"
+                        . " , :material, :fornecedor, :fornecedor_alt, :unidadeMedida)";                    
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":nrItem", $this->getNrItem(), PDO::PARAM_INT);
+                $stmt->bindValue(":lote", $this->getNrLote(), PDO::PARAM_STR);
+                $stmt->bindValue(":marca", $this->getNmMarca(), PDO::PARAM_STR);
+                $stmt->bindValue(":modelo", $this->getNmModelo(), PDO::PARAM_STR);
+                $stmt->bindValue(":qtd", $this->getQtItens(), PDO::PARAM_STR);
+                $stmt->bindValue(":vl", $this->getVlItens(), PDO::PARAM_STR);
+                $stmt->bindValue(":desconto", $this->getPcDesconto(), PDO::PARAM_STR);
+                $stmt->bindValue(":flValorVariavel", $this->getFlValorVariavel(), PDO::PARAM_STR);                
+                $stmt->bindValue(":dsItem", $this->getDescItem(), PDO::PARAM_STR);                                                
+                $stmt->bindValue(":material", $this->getIdMaterial(), PDO::PARAM_INT);
+                $stmt->bindValue(":fornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
+                $stmt->bindValue(":fornecedor_alt", $this->getIdContItensAlt(), PDO::PARAM_INT);
+                $stmt->bindValue(":unidadeMedida", $this->getIdUnidadeMedida(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+                $this->msgRetorno = '';
+            } catch (PDOException $e) {
+                $this->sucesso = false;
+                if ($e->getCode() == "23505") {
+                    $this->msgRetorno = 'Alguns itens já ser encontra salvo no sistema';
+                } else {
+                    $this->msgRetorno = $e->getMessage();
+                }
+            }
+        } else {
+            $this->sucesso = false;
+            $this->msgRetorno = 'Sem conexão com o banco de dados';
+        }
+    }
+    
     
 
 }
