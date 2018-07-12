@@ -264,7 +264,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/central_responsavel/index.php">Vinculação Central</a>
+                                    <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                 </li>
 
                             </ul>
@@ -323,7 +323,7 @@
                                                 <li><a href="/pages/diarias/decreto_valor/">Valores das Diárias</a></li>
                                                 <li><a href="/pages/diarias/administracao_solicitacao/">Vincular Administração/Solicitação</a></li>
                                                 <li>
-                                                    <a href="/pages/diarias/central_responsavel/">Centrais de Demanda</a>
+                                                    <a href="/pages/diarias/central_responsavel/">Vincular Central de Demanda</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -352,7 +352,7 @@
                                     <a href="/pages/administracao/tipoGasto/">Tipo Gasto</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/administracao/tipo_administracao/">Tipo de Administração</a>
+                                    <a href="/pages/administracao/central_demanda/">Centrais de Demanda</a>
                                 </li>
                             </ul>
                         </li>

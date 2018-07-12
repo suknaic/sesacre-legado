@@ -108,5 +108,19 @@ switch ($_REQUEST['acao']) {
             break;
         }
         
+    case 'removerAditivo':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $contrato = new FinContratoAditivo();
+            $contrato->setIdContrato((int)$dados['id']);
+            echo $contrato->remover($dados);            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
   
 }
