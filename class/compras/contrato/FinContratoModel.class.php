@@ -1667,8 +1667,8 @@ class FinContratoModel {
             $itens->setIdFornecedor($r['id_fornecedor']);
             $itens->retornaItensPorFornecedor($pdo);
             
-            if($itens->Sucesso()){                
-                foreach ($itens->getMsgRetorno() as $key => $result){
+            if($itens->Sucesso()){             
+                foreach ($itens->getMsgRetorno() as $key => $result){                   
                     $item = new ItemModel();
                     $item->setIdContItens($result['id_cont_itens']);
                     $item->setNrItem($result['nr_item']);
@@ -1683,7 +1683,7 @@ class FinContratoModel {
                     $item->setIdMaterial($result['id_material']);
                     $item->setIdFornecedor($result['id_fornecedor']);
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
-                    $item->setIdUnidadeMedida($result['id_unidade_medida']);   
+                    $item->setIdUnidadeMedida($result['id_unidade_medida']); 
                     $cont->setItems($item);
                 }
             }                                              
@@ -1701,11 +1701,13 @@ class FinContratoModel {
     
     
     public function cadastrarContratoComAditivo(FinContratoTb $c, FinFornecedoresTb $f
+            , FinContratoAditivoTb $finContratoAdtivo
             , array $centraisDoContrato
             , array $gestorTitular, array $gestorSubstituto
             , array $fiscal, array $fiscalSubstituto
             , array $subFiscal, array $subFiscalSubstituto
-            , PDO $pdo){
+            , $itens
+            , PDO $pdo){                    
         try {
             if(empty($pdo)){
                 $conexao = new Conexao();
@@ -1713,9 +1715,9 @@ class FinContratoModel {
                 $pdo->beginTransaction();
             }
             
-            if (empty($c->getNrContrato()) || empty($c->getDtIniVigenciaContrato()) 
-                    || empty($c->getDtFimVigenciaContrato() || empty($c->getDtAssinatura()
-                    || empty($c->getDtPublicacao()))) ) {
+            if ( empty($c->getNrContrato()) || empty($c->getDtIniVigenciaContrato()) 
+                    || empty($c->getDtFimVigenciaContrato()) || empty($c->getDtAssinatura())
+                    || empty($c->getDtPublicacao()) || empty($itens)   ) {
                 $this->sucesso = false;
                 $this->msgRetorno = STR_PREENCHER_CAMPOS;
                 $pdo->rollBack();
@@ -1814,7 +1816,33 @@ class FinContratoModel {
                 return;
             }
             
-            $fornecedor->setIdFornecedor($this->msgRetorno);
+            $fornecedor->setIdFornecedor($fornecedor->getMsgRetorno());
+            
+            
+            //Inicia o Cadastro do Aditivo
+            $aditivo = new FinContratoAditivo();
+            $finContratoAdtivo->setIdContrato($daoContrato->getIdContrato());
+            $aditivo->inserirAditivo($finContratoAdtivo, $pdo);                       
+            if(!$aditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Cadastrar os Dados do Aditivo";
+                $pdo->rollBack();
+                return;
+            }
+                                                                        
+            //Adiciona os Itens para o Novo Fornecedor
+            $itemModal = new ItemModel();
+            $itemModal->cadastraItensContratoAditivo($itens, (int)$fornecedor->getIdFornecedor(), $pdo);            
+            if(!$itemModal->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Cadastrar os Itens do Contrato";
+                $pdo->rollBack();
+                return;
+            }
+            
+            
+            //
+            
             
                         
             //Adiciona as Centrais do Contrato no Fin Cont Central, Se Existir

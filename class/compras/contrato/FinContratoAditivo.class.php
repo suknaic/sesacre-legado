@@ -33,7 +33,8 @@ class FinContratoAditivo {
     private $fiscal = null;
     private $fiscalSubstituto = null;
     private $subFiscal = null;
-    private $subFiscalSubstituto = null;    
+    private $subFiscalSubstituto = null;
+    private $itens = null;
     
     private $motivoPorValor = 1;
     private $motivoPorPrazo = 2;
@@ -303,7 +304,16 @@ class FinContratoAditivo {
     public function setSubFiscalSubstituto($subFiscalSubstituto) {
         $this->subFiscalSubstituto = $subFiscalSubstituto;
     }
-            
+    
+    public function getItens() {
+        return $this->itens;
+    }
+
+    public function setItens($itens) {
+        $this->itens = $itens;
+    }
+
+                
     
     public function salvar($dados){
 
@@ -385,6 +395,13 @@ class FinContratoAditivo {
             }
             $this->subFiscalSubstituto = array_unique($this->subFiscalSubstituto);
             
+            if(array_key_exists("itens", $dados)){
+                $this->itens = $dados['itens'];
+            }
+            
+             
+            
+                                    
             
             //Faz a Validação dos Campos Obrigatorios de acordo com o Motivo, Valor, Prazo ou Valor e Prazo
             if(!$this->validaCamposObrigatorio()){
@@ -421,16 +438,20 @@ class FinContratoAditivo {
             $contratoRef->retornaDadosContratoCompleto($pdo);
             if(!$contratoRef->sucesso()){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
-            }
-            
-          
-            //Busca os Dados do fin cont itens
-            //Itens do Contrato
-            
-            
-            
-            
+            }                
             $contRef = $contratoRef->getMsgRetorno();
+            
+           
+            //Carrega todos os itens do Contrato(Fornecedor)
+            $finContItens = "";
+            $itemModel = new ItemModel();
+            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
+            $itemModel->retornaItensPorFornecedor($pdo);
+            if($itemModel->Sucesso()){
+                $finContItens = $itemModel->getMsgRetorno();
+            }
+                                               
+                      
                                                                        
             //Preparar Dados Para Inserir no Banco            
             //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
@@ -470,22 +491,57 @@ class FinContratoAditivo {
             
             //Busca os Dados do Fin Cont Central
             //Centrais do Contrato
-            $finContItens = new FinCentraisModel();
-            $finContItens->setIdContrato($this->idContrato);
-            $finContItens->retornaCentraisPorContrato($pdo);
+            $finCentraisModel = new FinCentraisModel();
+            $finCentraisModel->setIdContrato($this->idContrato);
+            $finCentraisModel->retornaCentraisPorContrato($pdo);
             $centraisDoContrato = array();
-            if($finContItens->sucesso()){
-                $centraisDoContrato = $finContItens->getMsgRetorno();
+            if($finCentraisModel->sucesso()){
+                $centraisDoContrato = $finCentraisModel->getMsgRetorno();
             }
-                        
-                        
+            
+            
+            //Busca os Dados do Fin Cont Itens
+            //Somente os itens que serão duplicados
+            $itens = "";
+            foreach ($finContItens as $key => $value){
+                $finItens = new FinItensTb();
+                $finItens->setNrItem($value['nr_item']);
+                $finItens->setNrLote($value['nr_lote']);
+                $finItens->setNmMarca($value['nm_marca']);
+                $finItens->setNmModelo($value['nm_modelo']);
+                $finItens->setQtItens($value['qt_itens']);
+                $finItens->setVlItens($value['vl_itens']);
+                $finItens->setPcDesconto($value['pc_desconto']);
+                $finItens->setFlValorVariavel($value['fl_valor_variavel']);
+                $finItens->setDescItem($value['ds_itens']);
+                $finItens->setIdMaterial($value['id_material']);
+                $finItens->setIdContItens(NULL);
+                $finItens->setIdUnidadeMedida($value['id_unidade_medida']);
+                $itens[] = $finItens;
+            }                        
+                      
+            
+            $finContratoAdtivoTb = new FinContratoAditivoTb();
+            $finContratoAdtivoTb->setIdContratoMotivo($this->idMotivo)
+                    ->setIdContratoFinalidade($this->idFinalidade)
+                    ->setIdContratoInstrumento($this->idInstrumento)
+                    ->setIdContratoBaseCalculo($this->idBaseCalculo)
+                    ->setIdContratoUnidadeCalculo($this->idUnidadeCalculo)
+                    ->setIdContratoAquisicao($this->idTipoAquisicao)
+                    ->setDsJustificativa($this->dsJustificativa)
+                    ->setNrAditivo($this->numeroNovoAditivo)
+                    ->setDtInicial($this->dtPeriodoInicial)
+                    ->setDtFinal($this->dtPeriodoInicial)
+                    ->setNrPercentualIndice($this->percentual);                                                   
+                      
             $contrato->cadastrarContratoComAditivo($finContratoTb, $finFornecedorTb
-                    , $centraisDoContrato
+                    , $finContratoAdtivoTb, $centraisDoContrato
                     , $this->gestorTitular, $this->gestorSubstituto
                     , $this->fiscal, $this->fiscalSubstituto
                     , $this->subFiscal, $this->subFiscalSubstituto
+                    , $itens
                     , $pdo);
-            if(!$contrato->sucesso()){  
+            if(!$contrato->sucesso()){ 
                 return Metodos::retornoAjax("Erro", "console", $contrato->getMsgRetorno());
             }
             echo $this->msgRetorno;
@@ -718,6 +774,48 @@ class FinContratoAditivo {
         $this->sucesso = true;
         $this->msgRetorno = "ok";
     }
+    
+    public function inserirAditivo(FinContratoAditivoTb $finContratoAditivo, PDO $pdo){
+                      
+        try{
+         
+            $dao = new DaoFinContratoAditivo();
+            $dao->setIdContrato($finContratoAditivo->getIdContrato());
+            $dao->setIdContratoMotivo($finContratoAditivo->getIdContratoMotivo());
+            $dao->setIdContratoFinalidade($finContratoAditivo->getIdContratoFinalidade());
+            $dao->setIdContratoInstrumento($finContratoAditivo->getIdContratoInstrumento());
+            $dao->setIdContratoBaseCalculo($finContratoAditivo->getIdContratoBaseCalculo());
+            $dao->setIdContratoUnidadeCalculo($finContratoAditivo->getIdContratoUnidadeCalculo());
+            $dao->setIdContratoAquisicao($finContratoAditivo->getIdContratoAquisicao());
+            $dao->setDsJustificativa($finContratoAditivo->getDsJustificativa());
+            $dao->setNrAditivo($finContratoAditivo->getNrAditivo());
+            $dao->setDtInicial($finContratoAditivo->getDtInicial());
+            $dao->setDtFinal($finContratoAditivo->getDtFinal());
+            $dao->setNrPercentualIndice($finContratoAditivo->getNrPercentualIndice());
+            $dao->insert($pdo);
+            
+            if(!$dao->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }
+            $dao->setIdContratoAditivo($pdo->lastInsertId('fin_contrato_aditivo_id_contrato_aditivo_seq'));
+            if (!Log::SalvaLogI('fin_contrato_aditivo', $dao->getIdContratoAditivo(), $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro no Log dos Aditivos";
+                return;
+            }
+            
+            $this->sucesso = true;        
+            $this->msgRetorno = "Dados do Aditivo salvo com Sucesso";
+            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
+        }                        
+    }
+    
+    
     
 }
 
