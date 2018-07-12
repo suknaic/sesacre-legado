@@ -210,37 +210,6 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
-    public function atualizaSituacao(PDO $pdo) {
-        try {
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-            $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
-            //chama a funçao para lista os dados antes do update
-            $daoFinEntregaConfirmacao->retornaDados($pdo);
-            $busca = [];
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $busca = $daoFinEntregaConfirmacao->getMsgRetorno();
-                //ser tudo de certo chamo a funçao de updatae da situacao
-                $daoFinEntregaConfirmacao->atualizaSituacao($pdo);
-            }
-
-            if (!Log::SalvaLogU("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $busca, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-            }
-
-
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
     public function verificaSerAEntregaTotal($pdo) {
         try {
             if (empty($pdo)) {
@@ -297,13 +266,15 @@ class FinEntregaConfirmacaoModel {
 
     public function salvaEntregaConfirmacao($dados) {
         try {
+            //conexao com o banco
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $finEntregaItensModel = new FinEntregaItensModel();
-
+            $finProtocoloModel = new FinProtocoloModel();
+            
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
             //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
@@ -324,14 +295,21 @@ class FinEntregaConfirmacaoModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
-            //pega o id daa entrega confirmacao
+            //pega o id da entrega confirmacao
             $finEntregaItensModel->setIdEntregaConfirmacao($pdo->lastInsertId('fin_entrega_confirmacao_id_entrega_confirmacao_seq'));
+            //setando os dados para atualiza a situacao do protocolo
+            $finProtocoloModel->setIdProtocolo($dados[0]->id_protocolo);
+            $finProtocoloModel->setStProtocolo($dados[0]->tipoEntrega);
+            
+            if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação");
+            }
+
             //retorna os saldos dos itens
             $finOrdemItensModel = new FinOrdemItensModel();
             $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
             $finOrdemItensModel->retornaArraySaldoOrdemItens($pdo);
-
             //verifica ser retornou o saldo com sucesso
             if (!$finOrdemItensModel->getSucesso()) {
                 $pdo->rollBack();
@@ -345,8 +323,14 @@ class FinEntregaConfirmacaoModel {
 
                 //verificar ser precisa pega o valor dos itens
                 if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
+                    
+                    if ($valor->tipoEntrega == 1) {
 
-                    $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                        $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
+                    }else{
+                        $finEntregaItensModel->setQtItensEntrega($valor->qtd);
+                    }
+                    
                     if (!$finEntregaItensModel->verificarSaldoOrdemItens($saldoItens)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "saldo insuficiente, por favor verifique os itens.");
@@ -450,7 +434,7 @@ class FinEntregaConfirmacaoModel {
                                                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
                                                     <i class="glyphicon glyphicon-chevron-down"></i>
                                                     <b>Entrega: </b><span style="color:#758697">' . $key . '</span> <b style=" margin-left: 1%">Tipo de Entrega: </b>
-                                                    <span style="color:#758697">' . $campos[0]["situacao"] .'</span> <b style=" margin-left: 1%">Data de Entrega: </b>
+                                                    <span style="color:#758697">' . $campos[0]["situacao"] . '</span> <b style=" margin-left: 1%">Data de Entrega: </b>
                                                     <span style="color:#758697">' . $campos[0]["dt_entrega"] . '</span>
                                                 </a>
                                             </h4>

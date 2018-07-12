@@ -129,7 +129,7 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
             }
         } catch (Exception $ex) {
             $this->sucesso = false;
-            $this->msgRetorno = $e->getMessage();
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 

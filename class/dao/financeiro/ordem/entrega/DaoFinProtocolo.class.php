@@ -216,4 +216,65 @@ class DaoFinProtocolo extends FinProtocoloTb {
         }
     }
 
+    public function updateSituacaoProtocolo(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_protocolo set st_protocolo = :situacao where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $this->getStProtocolo(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaEntregueDiaProtocolo(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select dt_confirmacao from fin_protocolo where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function updateDtConfirmacao(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_protocolo set dt_confirmacao = :data where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":data", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }
