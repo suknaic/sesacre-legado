@@ -263,10 +263,32 @@ class DaoFinProtocolo extends FinProtocoloTb {
             if (!empty($pdo)) {
                 $sql = "update fin_protocolo set dt_confirmacao = :data where id_protocolo = :protocolo";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":data", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->bindValue(":data", $this->getDtConfirmacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function verificaEntregaParcial(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_protocolo where st_protocolo = '1' and id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
