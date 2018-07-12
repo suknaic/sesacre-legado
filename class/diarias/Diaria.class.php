@@ -328,8 +328,10 @@ class Diaria {
         $stEstagios = array(
             1 => "Aguardando envio",
             2 => "Aguardando deferimento",
-            3 => "Indeferida",
+            3 => "Indeferida",            
             4 => "Deferida",
+            5 => "Vinculado com pedido de necessidade",
+            6 => "Com pedido de necessidade cancelado",
             9 => "Todas"
         );
         return $stEstagios;
@@ -904,7 +906,7 @@ class Diaria {
                         }
                                 
 
-                        if ($estagio == '4' or $estagio == '5' or $estagio == '6' or  !$altera ) { //Deferida só permite visualização
+                        if ($estagio == '2' or $estagio == '4' or $estagio == '5' or $estagio == '6' or  !$altera ) { //Deferida só permite visualização
                             $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
                                         . '<button type="button" title="Visualizar">'
                                             . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
@@ -1785,6 +1787,15 @@ class Diaria {
                                             . '<i class="fa fa-thumbs-o-down fa-lg text-danger" aria-hidden="true"></i>'
                                     . "</button>";
                         }
+                        
+                        if ($estagio != '3') {
+                            $retorno .= '<a href="/pages/diarias/diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
+                                        . '<button title="Imprimir proposta e concessão da Diária" type="button" >'
+                                            . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
+                                        . '</button>'
+                                    . '</a>';
+                        }
+                        
                     $retorno .=  "</td>"
                              . "</tr>";  
                 }

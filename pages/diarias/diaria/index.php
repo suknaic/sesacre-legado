@@ -233,7 +233,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <h2 class="panel-title">Dados da Viagem</h2>
                                    <input type="hidden" id="id_diaria_destino" disabled />
                                </div>
-                               <?php if ($session->vPDiariasSolicitacao()) {  ?>
+                               <?php if ($session->vPDiariasSolicitacao() and $edita) {  ?>
                                     <div class="panel-body" id="destinoForm">
                                         <div class="row">
                                             <div class="col-md-6">
