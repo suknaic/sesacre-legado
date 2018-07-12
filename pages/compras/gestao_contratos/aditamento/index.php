@@ -633,6 +633,8 @@
         <script src="/assets/lib/jquerypriceformat/jquery.priceformat.min.js"></script>
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
