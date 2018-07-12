@@ -157,22 +157,6 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
-    public function atualizaSituacao(PDO $pdo) {
-        try {
-            if ($pdo != null) {
-                $sql = "update fin_entrega_confirmacao set sit_entrega = :situacao where id_entrega_confirmacao = :entrega";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
-                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
-                $stmt->execute();
-                $this->sucesso = true;
-            }
-        } catch (Exception $ex) {
-            $this->msgRetorno = $ex->getMessage();
-            $this->sucesso = false;
-        }
-    }
-
     public function retornaDados(PDO $pdo) {
         try {
             if ($pdo != null) {

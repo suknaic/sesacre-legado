@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] ."/model/diarias/central_responsavel/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Manutenção dos Tipos de Administração</h1>                       
+                        <h1 class="page-header text-overflow">Vincular Tipo de Administração com Tipo de Solicitação</h1>                       
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="../">Voltar</a></li>                        
@@ -75,21 +75,41 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
                                         <div class="panel-body">
                                             
                                             <div class="row">
-
-                                                <div class="form-group">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
 <!--                                                    <div class="panel-body">-->
-                                                    <label for="nm_tipo_administracao">
-                                                        Tipo da Administração: <span class="text-danger">*</span>
-                                                    </label>                                                        
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-file-text-o inputPFa"></p>
-                                                        </span>
-                                                        <input id="pessoa" class="form-control"/>
-
+                                                        <label for="administracao">
+                                                            Tipo da Administração: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="administracao" class="form-control">
+<!--                                                                <option value="0">Selecione um Responsável</option>                                                                -->
+                                                                
+                                                            </select>
+<!--                                                        </div>-->
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+<!--                                                    <div class="panel-body">-->
+                                                        <label for="solicitacao">
+                                                            Tipo de Solicitação: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="solicitacao" class="form-control">                                                                                                                             
+                                                                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <!-- End <div class="form-group"> -->
                                            
@@ -126,7 +146,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Usuários</h3>
+                                <h3 class="panel-title">Administração/Solicitação</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -135,8 +155,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nome</th>
-                                                        <th>Central de Demanda</th>
+                                                        <th>Tipo da Administração</th>
+                                                        <th>Tipo de Solicitação</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
@@ -212,7 +232,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/administracao/tipo_administracao/index.js"></script>
+        <script src="/assets/js/diarias/administracao_solicitacao/index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            

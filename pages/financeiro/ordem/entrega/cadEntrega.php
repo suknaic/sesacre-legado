@@ -91,16 +91,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
                                 <div class="panel panel-bordered-success">
                                     <div class="panel-body">
-                                        <input type="hidden" id="protocolo" value="<?php echo $id; ?>" />
+                                        <input type="hidden" id="id_protocolo" value="<?php echo $id; ?>" />
+                                        <input type="hidden" id="idOrdem" value="<?php echo $ordem; ?>" />
                                         <p><strong>Pedido:</strong> <?php echo $dados["nr_pedido"]; ?></p>
                                         <p><strong>Descrição:</strong> <?php echo $dados["ds_pedido"]; ?>/p>
-                                        <?php
-                                        if ($dados["tp_contrato"] == 1) {
-                                            ?>
+                                            <?php
+                                            if ($dados["tp_contrato"] == 1) {
+                                                ?>
                                             <p><strong>ATA:</strong> <?php echo $dados["nr_contrato"]; ?></p>
-                                            <?php } else {  ?>
+                                        <?php } else { ?>
                                             <p><strong>Contrato:</strong> <?php echo $dados["nr_contrato"]; ?></p>
-                                            <?php } ?>
+                                        <?php } ?>
                                         <p><strong>Empenho:</strong> <?php echo $dados["nr_empenho"]; ?></p>
                                         <p><strong>Ordem:</strong> <?php echo $dados["nr_ordem"]; ?></p>
                                     </div>
@@ -182,7 +183,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Situação da Entrega</h3>
                                     </div>
-                                    <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega();?>
+                                    <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega(); ?>
                                 </div>
 
                                 <div class="panel">

@@ -261,7 +261,7 @@ class FinEntregaItensModel {
     public function verificarSaldoOrdemItens($saldoItens) {
 
         foreach ($saldoItens as $valor) {
-
+           
             if ($valor["id_ordem_itens"] == $this->id_ordem_itens) {
                 if (empty($this->vl_itens_entrega)) {
 
