@@ -52,4 +52,76 @@ class DaoFinGestor extends FinGestorTb {
 			$this->msgRetorno = 'Sem conexão com o banco de dados';
 		}
 	}
+        
+        
+    function delete($pdo){
+        try {
+            $result = $pdo->prepare("DELETE FROM fin_gestor WHERE id_gestor = :idGestor");
+            $result->bindValue(":idGestor", $this->getIdGestor(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;  
+            $this->msgRetorno = $e->getMessage(); 
+            if($e->getCode() == "23503"){
+                $this->msgRetorno = "FKViolation";                
+            }            
+        }
+    }
+    
+    function retorna($pdo){
+        
+        $retorno = FALSE;
+        
+        $sql = "SELECT *"
+                . " FROM fin_gestor"
+                . " WHERE id_gestor = :idGestor";
+        try {
+            
+            $sth = $pdo->prepare($sql);  
+            $sth->bindValue(":idGestor", $this->getIdGestor(), PDO::PARAM_INT);       
+            $sth->execute();           
+            if($sth->rowCount() >= 1){
+                $this->sucesso = true;
+                $this->msgRetorno = $sth->fetch(PDO::FETCH_ASSOC);
+                return;                 
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não achou o registro";
+                return;
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+            return;
+        }
+    }
+    
+    function retornaTodosPorContrato($pdo){
+        
+        $retorno = FALSE;
+        
+        $sql = "SELECT id_gestor, tp_gestor, id_contrato, id_pessoa, dt_ini_gestor"
+                . " , dt_fim_gestor"
+                . " FROM fin_gestor"
+                . " WHERE id_contrato = :idContrato ";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);       
+            $sth->execute();           
+            if($sth->rowCount() >= 1){
+                $this->sucesso = true;
+                $this->msgRetorno = $sth->fetchAll(PDO::FETCH_ASSOC);
+                return;                 
+            }else{
+                $this->sucesso = true;
+                $this->msgRetorno = "";
+                return;
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+            return;
+        }
+    }
 }

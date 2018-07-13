@@ -70,27 +70,28 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
 //        }
 //    }   
     
-//    function retornaTodos($pdo) {
-//        $this->sucesso = false;
-//
-//        $sql = " SELECT id_contrato_aditivo, nm_contrato_aditivo"                    
-//                . " FROM fin_contrato_aditivo"
-//                . " WHERE st_ativo = '1'";
-//        try {
-//            $result = $pdo->prepare($sql);            
-//            $result->execute();
-//            if ($result->rowCount() >= 1){
-//                $this->sucesso = true; 
-//                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
-//            } else {
-//                $this->sucesso = false;                
-//                $this->msgRetorno = "Não encontrou Registros";                
-//            }            
-//        } catch (PDOException $e) {
-//            $this->sucesso = false;            
-//            $this->msgRetorno = $e->getMessage(); 
-//        }
-//    }    
+    function retorna($pdo) {
+        $this->sucesso = false;
+
+        $sql = " SELECT *"                    
+                . " FROM fin_contrato_aditivo"
+                . " WHERE id_contrato_aditivo = :idContratoAditivo";
+        try {
+            $result = $pdo->prepare($sql);            
+            $result->bindValue(":idContratoAditivo", $this->getIdContratoAditivo(), PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1){
+                $this->sucesso = true; 
+                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;                
+                $this->msgRetorno = "Não encontrou Registros";                
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }    
     
     
     function retornaNumeroUltimoAditivo(PDO $pdo) {
@@ -187,7 +188,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
     function retornaIdsDoContratoPraRemover(PDO $pdo) {
         $this->sucesso = false;
                
-        $sql = "SELECT C.id_contrato, F.id_fornecedor, CA.id_contrato_aditivo"                
+        $sql = "SELECT C.id_contrato, F.id_fornecedor, CA.id_contrato_aditivo, CA.nr_aditivo"                
                 . " FROM fin_contrato C"
                 . " INNER JOIN (SELECT DISTINCT ON (id_contrato) id_contrato, id_fornecedor, id_pessoa"
                         . " FROM fin_fornecedor"

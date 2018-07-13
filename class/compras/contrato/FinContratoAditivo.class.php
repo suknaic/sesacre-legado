@@ -629,8 +629,9 @@ class FinContratoAditivo {
     
     
     public function remover(){
+        
         try{
-            
+                                                
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();           
@@ -640,13 +641,56 @@ class FinContratoAditivo {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $this->msgRetorno);
             }
-            echo $this->idFornecedor;
+            //$this->idFornecedor;
+            //$this->idContratoAditivo;
             
-            
+            //Verifica se o Aditivo é o ultimo cadastrado            
             $finContratoModel = new FinContratoModel();
-            $finContratoModel->setIdContrato($this->idContrato);
-            $finContratoModel->retorna();
-            //$finContratoModal->setid
+            $finContratoModel->setIdContrato($this->idContrato);            
+            $finContratoModel->carregaDados($pdo);
+            
+            if(!$finContratoModel->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $finContratoModel->getMsgRetorno());
+            }
+            
+            //Pega o Contrato Pai e verifico qual é o ultimo Aditivo para verifica se esse que está tentando
+            //ser removido seja o último, para não quebrar as regras dos calculos do próximo aditivo
+            $daoContratoAditivo = new DaoFinContratoAditivo();
+            $daoContratoAditivo->setIdContrato($finContratoModel->getIdContratoAditivoPai());
+            $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);
+            if(!$daoContratoAditivo->Sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoContratoAditivo->getMsgRetorno());
+            }            
+            $ultimoAditivo = $daoContratoAditivo->getMsgRetorno();
+                                               
+            if($ultimoAditivo != $this->numeroNovoAditivo){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não é possível remover esse "
+                        . "Aditivo, pois ele não é o último aditivo cadastrado. Para excluir esse Aditivo, é necessário"
+                        . " que se exclua os Aditivos posterior a esse.");
+            }
+       
+           
+            $finContratoModel->removeContratoAditivo((int)$this->idContrato
+                    , (int)$this->idFornecedor
+                    , (int)$this->idContratoAditivo                    
+                    , $pdo);
+            
+            
+          
+            
+            echo "<pre>";
+            print_r($finContratoModel->getMsgRetorno());
+            echo "</pre>";
+            $pdo->rollBack();
+            return;
+            
+            if(!$finContratoModel->sucesso()){
+                
+            }
+            
             
             
             $finFornecedor = new FinFornecedoresModel();
@@ -679,6 +723,7 @@ class FinContratoAditivo {
             if($dao->Sucesso()){    
                 $this->idFornecedor = $dao->getMsgRetorno()['id_fornecedor'];
                 $this->idContratoAditivo = $dao->getMsgRetorno()['id_contrato_aditivo'];
+                $this->numeroNovoAditivo = $dao->getMsgRetorno()['nr_aditivo'];
                 $this->sucesso = true;
                 return;
             }
@@ -710,10 +755,7 @@ class FinContratoAditivo {
             //Precisa Verifica se o Contrato possui algum aditivo vinculado a ele e listar.
             //Esperando definição do Banco de Dados Ainda
             $daoContrato->buscaTodosAditivosPorcontrato($pdo);
-//            echo "<pre>";
-//            print_r($daoContrato->getMsgRetorno());
-//            echo "</pre>";
-//            exit();
+
             if(!$daoContrato->Sucesso()){
                 $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade=0>'
                         . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
@@ -775,38 +817,7 @@ class FinContratoAditivo {
                     '.$tbody.'
                     </tbody>
                 </table>';  
-            return $retorno;
-            
-            //Busca a quantidade de Aditivos Cadastrado no sistema
-            $daoContrato->retornaNumeroUltimoAditivo($pdo);
-                        
-            
-            
-            
-            $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade='.$quantidade.'>'
-                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
-                    . '</div>';
-					                    			            
-            return $retorno;
-            
-            
-            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade='.$quantidade.'>
-                    <thead>
-                        <tr>
-                            <th>Número do Aditivo</th>
-                            <th>Motivo do Aditamento</th>
-                            <th>Vigência</th>
-                            <th>Publicação</th>
-                            <th>Valor do Aditivo</th>
-                            <th>Opções</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>';                    
-            
-            
+            return $retorno;                                  
             
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

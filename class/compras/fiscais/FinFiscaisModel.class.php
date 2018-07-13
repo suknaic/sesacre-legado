@@ -218,4 +218,68 @@ class FinFiscaisModel {
                     $this->msgRetorno = $exc->getMessage();
             }
 	}
+        
+        
+    public function removerAditivoPorContrato(PDO $pdo){
+        
+        try {
+            
+            $dao = new DaoFinFiscal();
+            $dao->setIdContrato($this->idContrato);
+            $dao->retornaTodosPorContrato($pdo);
+           
+            if($dao->sucesso()){
+                if(empty($dao->getMsgRetorno())){
+                    $this->sucesso = true;
+                    $this->msgRetorno = "Não existe Sub Fiscal Para Esse Contrato";
+                    return;
+                }
+                
+                $result = $dao->getMsgRetorno();                
+                foreach ($result as $key => $value) {
+                    
+                    $dao->setIdFiscal($value['id_fiscal']);
+                    $dao->retorna($pdo);
+                                                            
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }
+                    
+                    $busca = $dao->getMsgRetorno();
+                    $dao->setIdFiscal($busca['id_fiscal']);                   
+                    
+                    if (!Log::SalvaLogD('fin_fiscal', $dao->getIdFiscal(), $pdo)) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "Não foi possível localizar o Fiscal, LOG";
+                        return; 
+                    }
+                    
+                    $dao->delete($pdo);                   
+                    
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }                                                           
+                }               
+                               
+                $this->sucesso = true;
+                $this->msgRetorno = "ok";
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+            } 
+            
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi possível excluir os Sub Fiscais";
+            return;                                                                        
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+        
+    }
 }

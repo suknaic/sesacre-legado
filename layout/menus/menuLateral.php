@@ -349,10 +349,13 @@
 
                             <ul class="collapse">
                                 <li>
+                                    <a href="/pages/administracao/central_demanda/">Centrais de Demanda</a>
+                                </li>
+                                <li>
                                     <a href="/pages/administracao/tipoGasto/">Tipo Gasto</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/administracao/central_demanda/">Centrais de Demanda</a>
+                                    <a href="/pages/administracao/tipo_administracao/">Tipos de Administração/Gestores</a>
                                 </li>
                             </ul>
                         </li>
