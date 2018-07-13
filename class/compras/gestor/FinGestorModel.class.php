@@ -216,5 +216,69 @@ class FinGestorModel {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    
+    public function removerAditivoPorContrato(PDO $pdo){
+        
+        try {
+            
+            $dao = new DaoFinGestor();
+            $dao->setIdContrato($this->idContrato);
+            $dao->retornaTodosPorContrato($pdo);
+           
+            if($dao->sucesso()){
+                if(empty($dao->getMsgRetorno())){
+                    $this->sucesso = true;
+                    $this->msgRetorno = "Não existe Gestor Para Esse Contrato";
+                    return;
+                }
+                
+                $result = $dao->getMsgRetorno();                
+                foreach ($result as $key => $value) {
+                    
+                    $dao->setIdGestor($value['id_gestor']);
+                    $dao->retorna($pdo);
+                                                            
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }
+                    
+                    $busca = $dao->getMsgRetorno();
+                    $dao->setIdGestor($busca['id_gestor']);                   
+                    
+                    if (!Log::SalvaLogD('fin_gestor', $dao->getIdGestor(), $pdo)) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "Não foi possível localizar o Gestor, LOG";
+                        return; 
+                    }
+                    
+                    $dao->delete($pdo);                   
+                    
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }                                                           
+                }               
+                               
+                $this->sucesso = true;
+                $this->msgRetorno = "ok";
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+            } 
+            
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi possível excluir os Sub Fiscais";
+            return;                                                                        
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+        
+    }
 
 }

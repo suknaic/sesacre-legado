@@ -404,7 +404,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
-                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
@@ -414,7 +414,7 @@ class DaoFinContrato extends FinContratoTb {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
-    }
+    }        
     
     public function pesquisaContratoPorNumero($pdo = null) {
         if ($pdo != null) {

@@ -402,7 +402,7 @@ $(document).ready(function () {
                         "success": function (response) {
                             
                             console.log(response);
-                            
+                            return false;
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
