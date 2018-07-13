@@ -17,10 +17,12 @@ class TipoAdministracao {
 
     function setIdTipoAdministracao($idTipoAdministracao) {
         $this->idTipoAdministracao = $idTipoAdministracao;
+        return $this;
     }
 
     function setNmTipoadministracao($nmTipoadministracao) {
         $this->nmTipoadministracao = $nmTipoadministracao;
+        return $this;
     }
 
     function tipoAdministracaoOptions(){

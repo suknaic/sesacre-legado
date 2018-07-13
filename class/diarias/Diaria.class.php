@@ -605,13 +605,14 @@ class Diaria {
         }
     }
     
-    function checaUsuarioDiaria(){
+    function checaUsuarioDiaria(int $id_diaria = 0){
         
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             
             $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdDiaria($id_diaria);
             $daoDiaDiaria->verificaDiariasUsuario($pdo, $this->getUsuarioSessao()->getIdUser());
             
             return $daoDiaDiaria->getSucesso();
@@ -869,6 +870,8 @@ class Diaria {
     function montaTrDiárias(DaoDiaDiaria $daoDiaDiaria){
         $retorno = "";
         $altera = $this->getUsuarioSessao()->vPDiariasSolicitacao();
+        
+        $data_hoje = new DateTime();
         try {
             $estagios = $this->tiposStEstagios();
             
@@ -877,6 +880,9 @@ class Diaria {
                     $estagio = $linha['st_estagio'];
                     $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
                     $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
+                    
+                    //Pega a data atual e a data final do último itinerario ,para verificação posterior do cadastro do relatório de viagem
+                    $data_fim_itinerario = date_create_from_format('d/m/Y H:i', $linha['dh_fim']);
                     
                     $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
@@ -913,7 +919,7 @@ class Diaria {
                                         . '</button>'
                                       . '</a>';
                         }
-                        if ($estagio == '5') { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
+                        if ($estagio == '5' and $data_hoje > $data_fim_itinerario) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
                             $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
                                         . '<button title="Relatório de Viagem" type="button">'
                                              . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
@@ -1003,7 +1009,6 @@ class Diaria {
         }
     }
        
-   
     
     function validaDiariaDestino($novoDestino){
         $retorno = "";

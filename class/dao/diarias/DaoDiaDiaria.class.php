@@ -554,6 +554,7 @@ class DaoDiaDiaria extends DiaDiaria {
                                 di.id_pedido,
                                 di.nr_protocolo,
                                 cd.nm_lotacao AS central_demanda,
+                                to_char(max(dh_fim),'dd/mm/yyyy hh24:mi')          AS dh_fim,
                                 (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
@@ -635,6 +636,7 @@ class DaoDiaDiaria extends DiaDiaria {
                                 di.nr_protocolo,
                                 cr.id_lotacao,
                                 cd.nm_lotacao AS central_demanda, 
+                                to_char(max(dh_fim),'dd/mm/yyyy hh24:mi')          AS dh_fim,
                                 (SELECT To_char(dt_pedido, 'YYYY') 
                                  FROM   fin_pedido fp 
                                  WHERE  fp.id_pedido = di.id_pedido)               ano_pedido, 
@@ -935,21 +937,21 @@ class DaoDiaDiaria extends DiaDiaria {
     function verificaDiariasUsuario(PDO $pdo = null, int $usuario = 0){ //Verifica se o usuário está como proposto ou proponente de uma diária para poder visualizar
         try {
             if (!empty($pdo)) {
-                $sql = "select
-                            id_diaria,
-                            id_pessoa_proposto,
-                            id_pessoa_proponente,
-                            id_central_solicitante 
-                        from
-                           dia_diaria d 
-                        where
-                           (
-                              d.id_pessoa_proponente = :usuario 
-                              or d.id_pessoa_proposto = :usuario 
-                           )";
+                $sql = "SELECT *
+                        FROM dia_diaria
+                        WHERE (id_pessoa_proposto = :usuario
+                               OR id_pessoa_proponente = :usuario
+                               OR exists
+                                 (SELECT ''
+                                  FROM fin_central_responsavel
+                                  WHERE id_lotacao = id_central_solicitante
+                                    AND id_tipo_administracao = 3
+                                    AND id_pessoa = :usuario))
+                          AND (id_diaria = :id_diaria
+                               OR 0 = :id_diaria)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':usuario', $usuario, PDO::PARAM_INT);
-                
+                $stmt->bindValue(":id_diaria", empty($this->getIdDiaria()) ? 0 : $this->getIdDiaria()  ,PDO::PARAM_INT);
                 $stmt->execute();
                 
                 if ($stmt->rowCount() > 0) { 
