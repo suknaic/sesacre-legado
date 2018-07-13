@@ -196,9 +196,9 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
     public function retornaDataEntregaItens(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select dt_entrega from fin_entrega_itens where id_entrega_itens = :entrega";
+                $sql = "select dt_entrega from fin_entrega_confirmacao where id_entrega_confirmacao = :entrega";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":entrega", $this->getIdEntregaItens(), PDO::PARAM_INT);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;

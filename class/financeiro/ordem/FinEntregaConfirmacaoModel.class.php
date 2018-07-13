@@ -184,7 +184,7 @@ class FinEntregaConfirmacaoModel {
     public function atualizaDataConfirmacao(PDO $pdo) {
         try {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->setDtConfirmacao($this->dt_confirmacao);
             //chama a funçao para lista os dados antes do update
             $daoFinEntregaConfirmacao->retornaDados($pdo);
@@ -232,8 +232,9 @@ class FinEntregaConfirmacaoModel {
                 $pdo = $conexao->connect();
             }
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaUltimaDataEntrega($pdo);
+           
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
@@ -425,6 +426,7 @@ class FinEntregaConfirmacaoModel {
 
                     $arraySituacaoEntrega[$valor["nr_entrega_confirmacao"]][] = array(
                         "id_entrega_itens" => $valor["id_entrega_itens"],
+                        "id_entrega_confirmacao" => $valor["id_entrega_confirmacao"],
                         "nr_item" => $valor["nr_item"],
                         "cd_desc_material" => $valor["cd_desc_material"],
                         "nm_material" => $valor["nm_material"],
@@ -485,7 +487,12 @@ class FinEntregaConfirmacaoModel {
                                     <td class="text-center">' . $c["qt_itens_entrega"] . '</td>
                                     <td class="text-center">' . $c["vl_itens_entrega"] . '</td>
                                     <td class="text-center">' . $c["entregue"] . '</td>
-                                    <td class="text-center">dsdsd</td>    
+                                    <td class="text-center">
+                                    <button type="button" title="Excluir itens" class="excluir text-danger" value="'.$c["id_entrega_itens"].'" 
+                                     nomeitem ="'.$c["nm_material"].'" idEntrega = "'.$c["id_entrega_confirmacao"].'">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    </td>    
                                 </tr>';
                     }
 
