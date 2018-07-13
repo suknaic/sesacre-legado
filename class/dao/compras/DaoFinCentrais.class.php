@@ -64,6 +64,21 @@ class DaoFinCentrais extends FinCentraisTb {
             $this->msgRetorno = 'Sem conexão com o banco de dados';
         }
     }
+    
+    function delete($pdo){
+        try {
+            $result = $pdo->prepare("DELETE FROM fin_cont_central WHERE id_cont_central = :idContCentral");
+            $result->bindValue(":idContCentral", $this->getIdContCentral(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;  
+            $this->msgRetorno = $e->getMessage(); 
+            if($e->getCode() == "23503"){
+                $this->msgRetorno = "FKViolation";                
+            }            
+        }
+    }
 
     public function retornaCentrais(PDO $pdo = null) {
         try {
@@ -190,6 +205,34 @@ class DaoFinCentrais extends FinCentraisTb {
         } catch (Error $e) {
             $this->msgRetorno = $e->getMessage();
             $this->sucesso = false;
+        }
+    }
+    
+    function retorna($pdo){
+        
+        $retorno = FALSE;
+        
+        $sql = "SELECT *"
+                . " FROM fin_cont_central"
+                . " WHERE id_cont_central = :idContCentral";
+        try {
+            
+            $sth = $pdo->prepare($sql);  
+            $sth->bindValue(":idContCentral", $this->getIdContCentral(), PDO::PARAM_INT);       
+            $sth->execute();           
+            if($sth->rowCount() >= 1){
+                $this->sucesso = true;
+                $this->msgRetorno = $sth->fetch(PDO::FETCH_ASSOC);
+                return;                 
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não achou o registro";
+                return;
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+            return;
         }
     }
 

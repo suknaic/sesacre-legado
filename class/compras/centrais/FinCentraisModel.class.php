@@ -272,5 +272,69 @@ class FinCentraisModel {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    
+    public function removerAditivoPorContrato(PDO $pdo){
+        
+        try {
+            
+            $dao = new DaoFinCentrais();
+            $dao->setIdContrato($this->idContrato);
+            $dao->retornaCentraisPorContrato($pdo, (int)$dao->getIdContrato());
+           
+            if($dao->sucesso()){
+                if(empty($dao->getMsgRetorno())){
+                    $this->sucesso = true;
+                    $this->msgRetorno = "Não existe Central Para Esse Contrato";
+                    return;
+                }                                
+                
+                $result = $dao->getMsgRetorno();                
+                               
+                foreach ($result as $key => $value) {
+                    
+                    $dao->setIdContCentral($value['id_cont_central']);
+                    $dao->retorna($pdo);
+                                                            
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }
+                    
+                    $busca = $dao->getMsgRetorno();
+                    $dao->setIdContCentral($busca['id_cont_central']);                   
+                    
+                    if (!Log::SalvaLogD('fin_cont_central', $dao->getIdContCentral(), $pdo)) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "Não foi possível localizar as Centrais, LOG";
+                        return; 
+                    }
+                    
+                    $dao->delete($pdo);                   
+                    
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }                                                           
+                }               
+                               
+                $this->sucesso = true;
+                $this->msgRetorno = "ok";
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+            } 
+            
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi possível excluir os Sub Fiscais";
+            return;                                                                        
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
 }

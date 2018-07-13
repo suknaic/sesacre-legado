@@ -1984,6 +1984,137 @@ class FinContratoModel {
         }
     }
     
+    public function carregaDados(PDO $pdo){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            if(empty($this->id_contrato)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o Contrato";                
+                return;
+            }
+            
+            $dao = new DaoFinContrato();
+            $dao->setIdContrato($this->id_contrato);
+            $dao->retornaContrato($pdo);                        
+            
+            if($dao->sucesso()){
+                
+                $result = $dao->getMsgRetorno();
+                $this->nr_contrato = $result['nr_contrato'];
+                $this->nr_prazo_entrega = $result['nr_prazo_entrega'];
+                $this->id_processo = $result['id_processo'];
+                $this->id_pessoa = $result['id_pessoa'];
+                $this->ds_objeto = $result['ds_objeto'];
+                $this->fl_servico_continuado = $result['fl_servico_continuado'];
+                $this->dt_ini_vigencia_contrato = $result['dt_ini_vigencia_contrato'];
+                $this->dt_fim_vigencia_contrato = $result['dt_fim_vigencia_contrato'];
+                $this->dt_assinatura = $result['dt_assinatura'];
+                $this->dt_publicacao = $result['dt_publicacao'];
+                $this->ds_obs_contrato = $result['ds_obs_contrato'];
+                $this->id_modalidade = $result['id_modalidade'];
+                $this->ds_area_abrangencia = $result['ds_area_abrangencia'];
+                $this->ds_unidade_contemplada = $result['ds_unidade_contemplada'];
+                $this->id_orgao_gerenciador = $result['id_orgao_gerenciador'];
+                $this->id_tipo_gasto = $result['id_tipo_gasto'];
+                $this->vl_contrato = $result['vl_contrato'];
+                $this->tp_contrato = $result['tp_contrato'];
+                $this->fl_carona = $result['fl_carona'];
+                $this->id_contrato_alt = $result['id_contrato_alt'];
+                $this->sq_contrato = $result['sq_contrato'];
+                $this->id_contrato_aditivo_pai = $result['id_contrato_aditivo_pai'];                
+                                                                
+                $this->sucesso = true;
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }
+            
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi possível localizar o Contrato";
+            return;
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();            
+            return;
+        }
+    }
+    
+    public function removeContratoAditivo(int $idContrato, int $idFornecedor, int $idContratoAditivo, PDO $pdo){
+        try{
+                                    
+            //Remove Sub Fiscal do Contrato
+            $finSubFiscal = new SubFiscalModel();
+            $finSubFiscal->setIdContrato($idContrato);
+            $finSubFiscal->removerAditivoPorContrato($pdo);
+            if(!$finSubFiscal->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finSubFiscal->getMsgRetorno();
+                return;
+            }
+             
+            //Remove Fiscal do Contrato
+            $finFiscal = new FinFiscaisModel();
+            $finFiscal->setIdContrato($idContrato);
+            $finFiscal->removerAditivoPorContrato($pdo);
+            if(!$finFiscal->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finFiscal->getMsgRetorno();
+                return;
+            }
+            
+            //Remove Gestor do Contrato
+            $finGestor = new FinGestorModel();
+            $finGestor->setIdContrato($idContrato);
+            $finGestor->removerAditivoPorContrato($pdo);
+            if(!$finGestor->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finGestor->getMsgRetorno();
+                return;
+            }
+            
+            
+            //Remover o Contrato do Cont Central
+            $finContCentral = new FinCentraisModel();            
+            $finContCentral->setIdContrato($idContrato);
+            $finContCentral->removerAditivoPorContrato($pdo);
+            if(!$finContCentral->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finContCentral->getMsgRetorno();
+                return;
+            }
+            
+            
+            //Remover os Itens do Contrato
+            
+            
+            
+            //Remover o Fornecedor
+            
+            
+            
+            //Remover o Contrato Aditivo
+            
+            
+            
+            //Remover o Contrato
+            
+            
+            
+            
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();            
+            return;
+        }
+    }
+    
     
 
 }

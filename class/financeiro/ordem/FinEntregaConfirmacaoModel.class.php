@@ -274,7 +274,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $finEntregaItensModel = new FinEntregaItensModel();
             $finProtocoloModel = new FinProtocoloModel();
-            
+
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
             //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
@@ -300,12 +300,27 @@ class FinEntregaConfirmacaoModel {
             //setando os dados para atualiza a situacao do protocolo
             $finProtocoloModel->setIdProtocolo($dados[0]->id_protocolo);
             $finProtocoloModel->setStProtocolo($dados[0]->tipoEntrega);
+            $finProtocoloModel->setDtConfirmacao(Metodos::ConverteDataING($dados[0]->data));
+            //verifica ser a entrega e parcial
+            if($finProtocoloModel->verificarStatusEntregaParcial($pdo) && $dados[0]->tipoEntrega == 2){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Você não pode lança uma entrega total pois existem entrega(s) parcial lançada");
+            } 
             
+            
+            //atualiza situaçao da entrega
             if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação");
             }
+            //atualiza data entregue dia 
+            $finProtocoloModel->atualizaEntregueDia($pdo);
 
+            if (!$finProtocoloModel->Sucesso()) {
+                $pdo->rollBack();
+                return $finProtocoloModel->getMsgRetorno();
+            }
+            
             //retorna os saldos dos itens
             $finOrdemItensModel = new FinOrdemItensModel();
             $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
@@ -317,20 +332,20 @@ class FinEntregaConfirmacaoModel {
             }
 
             $saldoItens = $finOrdemItensModel->getMsgRetorno();
-
+            
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
 
                 //verificar ser precisa pega o valor dos itens
                 if (($valor->tp == "C" || $valor->tp == "P") && $valor->fl_valor == 0) {
-                    
+
                     if ($valor->tipoEntrega == 1) {
 
                         $finEntregaItensModel->setQtItensEntrega(Metodos::ConverteValorIng($valor->qtd));
-                    }else{
+                    } else {
                         $finEntregaItensModel->setQtItensEntrega($valor->qtd);
                     }
-                    
+
                     if (!$finEntregaItensModel->verificarSaldoOrdemItens($saldoItens)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "saldo insuficiente, por favor verifique os itens.");
@@ -355,7 +370,7 @@ class FinEntregaConfirmacaoModel {
                 $finEntregaItensModel->setQtItensEntrega(null);
                 $finEntregaItensModel->setVlItensEntrega(null);
             }
-
+            
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {

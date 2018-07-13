@@ -136,22 +136,6 @@ class FinEntregaItensModel {
         }
     }
 
-    public function listaSituacaoDaEntrega() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $daoFinEntregaItens = new DaoFinEntregaItens();
-            $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-            $daoFinEntregaItens->retornaSituacaoDaEntrega($pdo);
-            if ($daoFinEntregaItens->sucesso()) {
-
-                return $daoFinEntregaItens->getMsgRetorno();
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
     public function removeItemEntrega() {
         try {
             $conexao = new Conexao();
