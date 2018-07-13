@@ -50,5 +50,42 @@ class DaoFinCentral extends FinCentralTb {
             $this->sucesso = false;
         }
     }
+    
+    function insert(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "insert into fin_central_demanda(id_lotacao) values (:id_lotacao)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+                
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
+        }
+    }
+    
+    function delete(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare("DELETE FROM fin_central_demanda WHERE id_central_demanda = :idCentralDemanda");
+                $stmt->bindValue(":idCentralDemanda", $this->getIdCentralDemanda(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+            
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
+        }
+    }
 
 }

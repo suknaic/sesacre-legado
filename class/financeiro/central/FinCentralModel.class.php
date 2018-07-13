@@ -68,5 +68,102 @@ class FinCentralModel {
         }
     }
     
+    public function retornaTrCentrais(PDO $pdo = null){
+        try {
+            //variaveis do sistema
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoCentral = new DaoFinCentral();
+            $daoCentral->retornaCentrais($pdo);
+            $retorno = "";
+            if ($daoCentral->Sucesso()) {
+                foreach ($daoCentral->getMsgRetorno() as $linha) {
+                    $retorno .= "<tr data-id=".$linha['id_central_demanda'].">"
+                                    . "<td>".$linha['nm_lotacao']."</td>"
+                                    . "<td style='text-align: center;'>"
+                                        . "<button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' >"
+                                    .      "<i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>"
+                                    .    "</button>"
+                                    . "</td>"
+                            . "</tr>";
+                }
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    function salvarCentralDemanda(PDO $pdo = null) {
+        $retorno = "";
+        try {
+            //variaveis do sistema
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+            }
+            
+            if (empty($this->getIdLotacao() )) {
+                return Metodos::retornoAjax("Erro", "alert","Por favor preencha todos os campos necessários.");
+            }
+            $daoCentral = new DaoFinCentral();
+            $daoCentral->setIdLotacao($this->getIdLotacao());
+            $daoCentral->insert($pdo);
+            
+            if ($daoCentral->Sucesso()) {
+                $idCentralDemanda = $pdo->lastInsertId('fin_central_demanda_id_central_demanda_seq');
+                if (!Log::SalvaLogI('fin_central_demanda', $idCentralDemanda, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                $this->setIdCentralDemanda($idCentralDemanda);
+
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro da Central de Demanda realizado com sucesso.");
+            } else {
+                $pdo->rollBack();
+                $retorno = Metodos::retornoAjax("Erro", "console",$daoCentral->getMsgRetorno());
+            }
+            
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    function excluirCentralDemanda(PDO $pdo = null) {
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoCentral = new DaoFinCentral();
+            $daoCentral->setIdCentralDemanda($this->getIdCentralDemanda());
+            
+            $idCentralDemanda = $daoCentral->getIdCentralDemanda();
+            if (!Log::SalvaLogD('fin_central_demanda', $idCentralDemanda, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoCentral->delete($pdo);
+            if ($daoCentral->Sucesso()) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", "Exclusão realizada com Sucesso.");
+            } else {
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoCentral->getMsgRetorno());
+                $pdo->rollBack();
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$ex->getMessage());
+        }
+    }
 
 }

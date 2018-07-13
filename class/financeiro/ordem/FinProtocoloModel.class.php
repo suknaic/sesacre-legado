@@ -18,6 +18,8 @@ class FinProtocoloModel {
     private $dt_entrega = null;
     private $dt_confirmacao = null;
     private $st_protocolo = null;
+    private $sucesso = null;
+    private $msgRetorno = null;
 
     /**
      * @return mixed
@@ -271,6 +273,26 @@ class FinProtocoloModel {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function Sucesso() {
+        return $this->sucesso;
+    }
+
+    /**
+     * @param mixed $sucesso
+     *
+     * @return self
+     */
+
+    /**
+     * @return mixed
+     */
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+
     public function inforLoadProtocolo() {
         try {
             $conexao = new Conexao();
@@ -403,18 +425,42 @@ class FinProtocoloModel {
             $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
             $daoFinProtocolo->retornaEntregueDiaProtocolo($pdo);
 
-            if ($daoFinProtocolo->sucesso()) {
-                if (strtotime($daoFinProtocolo->getMsgRetorno()) < strtotime($this->dt_confirmacao)) {
+            if (!empty($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"])) {
+
+                if (strtotime($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) < strtotime($this->dt_confirmacao)) {
                     $daoFinProtocolo->setDtConfirmacao($this->dt_confirmacao);
-                    
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", "A data informada não pode ser menor que a data da última entrega.");
+                    return false;
                 }
             } else {
-                
+                $daoFinProtocolo->setDtConfirmacao($this->dt_confirmacao);
             }
+            $daoFinProtocolo->updateDtConfirmacao($pdo);
 
-            return false;
+            if (!$daoFinProtocolo->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", "Erro na atualização da data da entrega.");
+                return false;
+            } else {
+                $this->sucesso = true;
+            }
         } catch (Exception $ex) {
-            return $exc->getMessage();
+            $this->sucesso = false;
+            $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
+        }
+    }
+
+    public function verificarStatusEntregaParcial(PDO $pdo) {
+        try {
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
+            $daoFinProtocolo->verificaEntregaParcial($pdo);
+            return $daoFinProtocolo->sucesso();
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
         }
     }
 
