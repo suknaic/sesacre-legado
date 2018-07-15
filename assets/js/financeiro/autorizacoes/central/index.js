@@ -3,6 +3,18 @@ $(document).ready(function () {
     func = new Funcoes();
 
     func.carregaTabelaPadrao('tabela', null, [2], false);
+    var msg = $("body").find("#msg").val();
+    console.log(msg);
+    if (msg != 'false') {
+
+        $("#alerta").removeClass("hidden");
+        setInterval(ajaxCall, 1500);
+    }
+
+
+    function ajaxCall() {
+        top.location = "/pages/financeiro/autorizacoes/central/index.php";
+    }
 
     $.ajax({
         "url": "/model/financeiro/autorizacoes/request.php",

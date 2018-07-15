@@ -58,6 +58,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
                     <!--===================================================-->
                     <div id="page-content">
                         <div class="panel">
+                            <input type="hidden" name="msg" id="msg" value="<?php echo (!empty($_GET)) ? $_GET['msg'] : 'false';?>">
+                                   <div id="alerta" class="hidden">
+                                        <p class='text-center alert alert-success'>Pedido autorizado sucesso</p>
+                                    </div>
                             <div class="panel-heading">
                                 <h3 class="panel-title">Pedidos aguardando autorização</h3>
                             </div>
