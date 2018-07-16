@@ -13,3 +13,5 @@ define ("FONTE_200", 2);
 define ("FONTE_400", 3);
 define ("FONTE_500", 4);
 define ("FONTE_700", 5);
+
+date_default_timezone_set("America/Rio_branco");

@@ -60,7 +60,7 @@ class DaoFinAdministracaoSolicitacao extends FinAdministracaoSolicitacao {
                              fin_tipo_solicitacao fts
                         WHERE fas.id_tipo_administracao = fta.id_tipo_administracao
                           AND fas.id_tipo_solicitacao = fts.id_tipo_solicitacao
-                          ORDER BY fas.id_tipo_administracao, fas.id_tipo_solicitacao";
+                          ORDER BY fts.nm_tipo_solicitacao,fta.nm_tipo_administracao ";
                 $stmt = $pdo->prepare($sql);
                 
                 $stmt->execute();
