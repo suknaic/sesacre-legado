@@ -808,6 +808,13 @@ class ItemModel {
         $finContratoAditivo = new FinContratoAditivo();
         $finContratoAditivo->setIdContrato($idContrato);
         $finContratoAditivo->retornaNumeroUltimoAditivo($pdo);
+      
+        if($finContratoAditivo->Sucesso()
+                && !empty($finContratoAditivo->getMsgRetorno())
+                && is_array($finContratoAditivo->getMsgRetorno())){
+            $idContrato = $finContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];            
+        }        
+        
         
         //pega id do fornecedor
         $finFornecedoresModel = new FinFornecedoresModel();

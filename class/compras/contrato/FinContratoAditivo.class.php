@@ -454,7 +454,11 @@ class FinContratoAditivo {
             }
             
             $contrato = new FinContratoModel();
-            $contrato->setIdContrato($this->idContrato);            
+            $contrato->setIdContrato($this->idContrato);
+            $contrato->carregaDados($pdo);
+            if(!$contrato->sucesso()){
+                return Metodos::retornoAjax("Erro", "console", $contrato->getMsgRetorno());       
+            }
             
             //Verifica a Quantidade de Aditivos
             $daoContratoAditivo = new DaoFinContratoAditivo();
@@ -465,8 +469,7 @@ class FinContratoAditivo {
             }
             //Adiciona em 1 a quantidade do Aditivo, que será o próximo aditivo            
             $proximoAditivo = (int)$daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'] + 1;
-            $idContratoUltimo = (int)$daoContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];
-            $numeroContrato = $daoContratoAditivo->getMsgRetorno()['nr_contrato'];
+            $idContratoUltimo = (int)$daoContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];                                    
             
             //Valida se o novo aditivo informado realmente é o mesmo que será gerado.
             if($proximoAditivo != $this->numeroNovoAditivo){
@@ -506,17 +509,37 @@ class FinContratoAditivo {
                 $finContItens = $itemModel->getMsgRetorno();
             }
             
-            echo "<pre>";
-            print_r($this->itens);
-            echo "</pre>";
+            if(empty($finContItens)
+                    || !is_array($finContItens)){
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Último Contrato ou Aditivo Registrado.");
+            }
+          
+            $finContItensAux = $finContItens;
+            $finContItens = "";
             
-            echo "<pre>";
-            print_r($finContItens);
-            echo "</pre>";
+            if(!empty($this->itens)){
+                foreach ($this->itens as $key => $value) {
+                    $key = array_search($value['id'], array_column($finContItensAux, "id_cont_itens"));
+                    if($key === false){
+                        return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
+                    }
+                    //Se a unidade de Cálculo for Moeda
+                    //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
+                    if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()){
+                        $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
+                        $finContItens[] = $finContItensAux[$key];
+                    //Se a unidade de Cálculo for Quantidade
+                    //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
+                    }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()){
+                        $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
+                        $finContItens[] = $finContItensAux[$key];
+                    }else{
+                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Identificar a Unidade de Cálculo nos itens");
+                    }                                        
+                }
+            }
             
-            exit();
-            
-                                                                                                                     
+                                                                                                                                 
             //Preparar Dados Para Inserir no Banco            
             //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
             //gestores, fiscais e subfiscais            
@@ -524,7 +547,7 @@ class FinContratoAditivo {
             //Adiciona os Dados na classe que representa a tabela Fin Contrato
             $finContratoTb = new FinContratoTb();
             //Nome do Numero do contrato
-            $nomeDoContrato = $proximoAditivo."º Termo Aditivo ao contrato ".$numeroContrato;                           
+            $nomeDoContrato = $proximoAditivo."º Termo Aditivo ao contrato ".$contrato->getNrContrato();                           
             $finContratoTb->setNrContrato($nomeDoContrato);
             //Dados que serão duplicados
             $finContratoTb->setNrPrazoEntrega($contRef->getNrPrazoEntrega());
@@ -610,7 +633,7 @@ class FinContratoAditivo {
                     , $this->subFiscal, $this->subFiscalSubstituto
                     , $itens
                     , $pdo);
-            if(!$contrato->sucesso()){ 
+            if(!$contrato->sucesso()){
                 return Metodos::retornoAjax("Erro", "console", $contrato->getMsgRetorno());
             }
             
@@ -618,14 +641,14 @@ class FinContratoAditivo {
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);                                    
             
             //$pdo->rollBack();
-            echo "<pre>";
-            print_r($contrato->getMsgRetorno());
-            echo "</pre>";
-            
-            echo "<pre>";
-            print_r($finContratoTb);
-            echo "</pre>";
-            return;
+//            echo "<pre>";
+//            print_r($contrato->getMsgRetorno());
+//            echo "</pre>";
+//            
+//            echo "<pre>";
+//            print_r($finContratoTb);
+//            echo "</pre>";
+//            return;
            
             //Adicionar os Itens nesse Objeto da Tabela, fazer isso com todas as outras tabelas
             //E somente posterior iniciar o objeto do contrato model e mandar via parametro os objetos para serem salvos
@@ -717,7 +740,7 @@ class FinContratoAditivo {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $daoContratoAditivo->getMsgRetorno());
             }            
-            $ultimoAditivo = $daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'];
+            $ultimoAditivo = (int)$daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'];
                                                
             if($ultimoAditivo != $this->numeroNovoAditivo){
                 $pdo->rollBack();
@@ -838,7 +861,7 @@ class FinContratoAditivo {
                         . '<strong>Alerta!</strong> '.STR_ERROR.' '
                     . '</div>';
                 return $retorno;
-            }
+            }            
             $quantidade = $daoContrato->getMsgRetorno()['numero_ultimo_aditivo'];
             
             $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade='.$quantidade.'>
