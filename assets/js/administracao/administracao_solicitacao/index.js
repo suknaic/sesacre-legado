@@ -71,7 +71,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/model/diarias/administracao_solicitacao/request.php",
+                "url": "/model/administracao/administracao_solicitacao/request.php",
                 "dataType": "html",
                 "method": "post",
                 "data": {
@@ -152,7 +152,7 @@ $(document).ready(function () {
                 if (result) {
 
                     $.ajax({
-                        "url": "/model/diarias/administracao_solicitacao/request.php",
+                        "url": "/model/administracao/administracao_solicitacao/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "remAdministracaoSolicitacao",
