@@ -71,8 +71,9 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
+                                $(".btn-modal").addClass("hidden");
                                 func.modalAlert(response.msg, 'success');
-                                 window.location.href = "/pages/financeiro/autorizacoes/central/index.php?msg";
+                                setInterval(ajaxCall, 1000);
                                 return false;
                             } else {
                                 console.log('Ultimo else');
@@ -180,4 +181,9 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    function ajaxCall() {
+        top.location = "/pages/financeiro/autorizacoes/central/index.php";
+    }
 });

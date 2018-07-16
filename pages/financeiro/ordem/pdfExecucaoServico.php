@@ -209,7 +209,7 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                     <b>Telefone/Fax:</b> ' .$dados[0]["telefoneEmissor"].'<br/>
                     <b>E-mail:</b> ' .$dados[0]["nm_email"].'<br/>
                     <b>Data de Emissão:</b> ' .Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
-                    <b>Sol. de Necessidade nº:</b> ' .$dados[0]["id_pedido"].' 
+                    <b>Sol. de Necessidade nº:</b> ' .$dados[0]["pedido"].' 
                 </td>
             </tr>
                 <tr>
