@@ -200,9 +200,9 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
     public function retornaUltimaDataEntrega(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select max(dt_entrega) from fin_entrega_itens where id_entrega_confirmacao = :confirmacao";
+                $sql = "select max(dt_entrega) from fin_entrega_confirmacao where id_protocolo = :protocolo";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
@@ -276,7 +276,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 $sql = "select entregaItens.id_entrega_itens, confirmacao.nr_entrega_confirmacao, itens.nr_item, mat.cd_desc_material, 
                         mat.nm_material, to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as dt_entrega, 
                         to_char(confirmacao.dh_cadastramento, 'DD/MM/YYYY HH:MI:SS') as dh_cadastramento, mat.tp_material, 
-                        itens.nr_lote, entregaItens.qt_itens_entrega, entregaItens.vl_itens_entrega, 
+                        itens.nr_lote, entregaItens.qt_itens_entrega, entregaItens.vl_itens_entrega, confirmacao.id_entrega_confirmacao,
                         
                         case 
                         when confirmacao.sit_entrega = 1 then 'Entrega Parcial'
