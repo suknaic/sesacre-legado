@@ -196,11 +196,13 @@ class FinEntregaItensModel {
 
             //verificar ser deu tudo certo no retorno da maio data 
             if ($finEntregaConfirmacaoModel->sucesso()) {
-                $finEntregaConfirmacaoModel->setDtConfirmacao($dataMaior);
-                $finEntregaConfirmacaoModel->atualizaDataConfirmacao($pdo);
+                //
+                $finProtocoloModel = new FinProtocoloModel();
+                $finProtocoloModel->setDtConfirmacao($dataMaior);
+                $finProtocoloModel->atualizaEntregueDia($pdo, 1);
             }
 
-            if (!$finEntregaConfirmacaoModel->sucesso()) {
+            if (!$finProtocoloModel->Sucesso()) {
                 $erro = true;
             }
 

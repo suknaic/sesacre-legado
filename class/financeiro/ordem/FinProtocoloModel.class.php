@@ -419,13 +419,13 @@ class FinProtocoloModel {
         }
     }
 
-    public function atualizaEntregueDia(PDO $pdo) {
+    public function atualizaEntregueDia(PDO $pdo, int $fl_cancelamento = 0) {
         try {
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
             $daoFinProtocolo->retornaEntregueDiaProtocolo($pdo);
 
-            if (!empty($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"])) {
+            if (!empty($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) && $fl_cancelamento == 0) {
 
                 if (strtotime($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) < strtotime($this->dt_confirmacao)) {
                     $daoFinProtocolo->setDtConfirmacao($this->dt_confirmacao);
