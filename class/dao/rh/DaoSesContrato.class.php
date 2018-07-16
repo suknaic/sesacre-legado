@@ -919,7 +919,7 @@ class DaoSesContrato extends SesContrato {
                 . " FROM ses_contrato C"
                 . " INNER JOIN ses_pessoa_fisica PF ON PF.id_pessoa_fisica = C.id_pessoa_fisica"
                 . " INNER JOIN ses_pessoa P ON P.id_pessoa = PF.id_pessoa"
-                . " WHERE P.st_ativo = '1'"
+                . " WHERE P.st_ativo = '1' = C.st_ativo ='1'"
                 . " ORDER BY P.nm_pessoa";
         try {
             $sth = $pdo->prepare($sql);

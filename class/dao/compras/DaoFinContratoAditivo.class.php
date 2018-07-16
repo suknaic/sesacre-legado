@@ -105,7 +105,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                 . " INNER JOIN fin_contrato_aditivo CA ON CA.id_contrato = CAUX.id_contrato AND CA.st_ativo = '1'"
                 . " WHERE C.id_contrato = :idContrato AND C.tp_contrato = '2'"
                 . " ORDER BY CAUX.id_contrato DESC"
-                . " LIMIT 1";      
+                . " LIMIT 1";     
         try {
             $result = $pdo->prepare($sql);  
             $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);

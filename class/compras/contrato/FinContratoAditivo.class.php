@@ -1069,7 +1069,7 @@ class FinContratoAditivo {
             }
             
             if(empty($this->idContrato)){
-                $this->false;
+                $this->sucesso = false;
                 $this->msgRetorno = "Id Contrato não encontrado";
                 return;
             }
@@ -1082,9 +1082,8 @@ class FinContratoAditivo {
                 $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
                 return;                
             }
-            
-            return $daoContratoAditivo->getMsgRetorno();
-                                                
+            $this->sucesso = true;
+            $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();                                                            
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();            
