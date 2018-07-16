@@ -2092,19 +2092,60 @@ class FinContratoModel {
             
             
             //Remover os Itens do Contrato
-            
+            $finContItens= new ItemModel();
+            $finContItens->setIdFornecedor($idFornecedor);
+            $finContItens->removerAditivoPorFornecedor($pdo);
+            if(!$finContItens->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finContItens->getMsgRetorno();
+                return;
+            }                                    
             
             
             //Remover o Fornecedor
-            
+            $finFornecedor = new FinFornecedoresModel();
+            $finFornecedor->setIdFornecedor($idFornecedor);
+            $finFornecedor->removerAditivoPorFornecedor($pdo);
+            if(!$finFornecedor->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finFornecedor->getMsgRetorno();
+                return;
+            }
             
             
             //Remover o Contrato Aditivo
-            
+            $finContratoAditivo = new FinContratoAditivo();
+            $finContratoAditivo->setIdContratoAditivo($idContratoAditivo);
+            $finContratoAditivo->removerAditivoPorContratoAditivo($pdo);
+            if(!$finContratoAditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $finContratoAditivo->getMsgRetorno();
+                return;
+            }
             
             
             //Remover o Contrato
-            
+            $dao = new DaoFinContrato();
+            $dao->setIdContrato($idContrato);
+            $dao->retornaContrato($pdo);
+            if($dao->Sucesso()){
+                if (!Log::SalvaLogD('fin_contrato', $dao->getIdContrato(), $pdo)){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no Log do Contrato";
+                    return;
+                }
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o Contrato.";
+                return;   
+            }
+                                    
+            $dao->delete($pdo);
+            if(!$dao->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }
             
             
             

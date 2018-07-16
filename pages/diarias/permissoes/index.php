@@ -81,8 +81,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/permissoes/index.load.p
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="pessoa" class="form-control">
-                                                                <option value="0">Selecione um Usuário</option>                                                                
+                                                            <select id="pessoa" class="form-control">                                                                
                                                                 <?php
                                                                     echo $selectPessoa;
                                                                 ?>

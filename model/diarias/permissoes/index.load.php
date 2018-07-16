@@ -14,7 +14,7 @@ $conexao = new Conexao();
 $pdo = $conexao->connect();
 
 $contrato = new Contrato();
-$selectPessoa = $contrato->retornaOptionPessoaContrato($pdo);
+$selectPessoa = $contrato->retornaOptionUsuarioContrato($pdo);
 
 $perfil = new Perfil();
 $selectPerfis = $perfil->retornaSelectPerfis($pdo);

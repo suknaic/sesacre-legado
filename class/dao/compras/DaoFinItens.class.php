@@ -822,6 +822,58 @@ class DaoFinItens extends FinItensTb {
         }
     }
     
+    public function retornaItensFornecedorSemJoins($pdo){
+        if (!empty($pdo)){
+            try{
+                $sql = "SELECT "
+                    . " ITEM.id_cont_itens, ITEM.nr_item, ITEM.nr_lote, ITEM.nm_marca"
+                    . " , ITEM.nm_modelo, ITEM.qt_itens, ITEM.vl_itens"
+                    . " , ITEM.pc_desconto, ITEM.fl_valor_variavel"
+                    . " , ITEM.ds_itens, ITEM.id_material"
+                    . " , ITEM.id_fornecedor, ITEM.id_cont_itens_alt"
+                    . " , ITEM.id_unidade_medida"                                            
+                    . " FROM fin_cont_itens AS ITEM"                    
+                    . " WHERE ITEM.id_fornecedor = :fornecedor";
+                    
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":fornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (Error $e){
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
+    public function retorna($pdo){
+        if (!empty($pdo)){
+            try{
+                $sql = "SELECT *"
+                    . " FROM fin_cont_itens"                    
+                    . " WHERE id_cont_itens = :idContItens";
+                    
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idContItens", $this->getIdContItens(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (Error $e){
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
     
 
 }
