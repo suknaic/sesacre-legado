@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/TipoAdministracao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/administracao/tipo_administracao/TipoAdministracao.class.php";
 
 $session = new Session();
 
