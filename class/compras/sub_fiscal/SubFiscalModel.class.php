@@ -174,7 +174,7 @@ class SubFiscalModel {
                     }
                     
                     $busca = $dao->getMsgRetorno();
-                    $dao->setIdSubFiscal($busca['id_sub_fiscal']);                   
+                    $dao->setIdSubFiscal($busca['id_sub_fiscal']);            
                     
                     if (!Log::SalvaLogD('fin_sub_fiscal', $dao->getIdSubFiscal(), $pdo)) {
                         $this->sucesso = false;

@@ -371,5 +371,51 @@ class FinFornecedoresModel {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    public function removerAditivoPorFornecedor(PDO $pdo = null){
+        try {
+                                    
+            if(empty($this->id_fornecedor)){
+                $this->sucesso = false;
+                $this->msgRetorno = "É Necessário o Fornecedor";
+                return;
+            }
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            //Seta os Campos
+            $dao = new DaoFinFornecedores();            
+            $dao->setIdFornecedor($this->id_fornecedor);                   
+            $dao->retornaDados($pdo);
+            if($dao->getSucesso()){
+                if (!Log::SalvaLogD('fin_fornecedor', $dao->getIdFornecedor(), $pdo)) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no Log do Fornecedor";
+                    return;
+                }
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o Fornecedor.";
+                return;   
+            }
+                                    
+            $dao->delete($pdo);
+            if(!$dao->getSucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return; 
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "ok";
+                            
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+            return; 
+        }  
+    }
 
 }

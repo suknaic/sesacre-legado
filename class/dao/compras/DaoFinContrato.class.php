@@ -186,6 +186,18 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
+    
+    function delete($pdo) {
+        try {
+            $result = $pdo->prepare("DELETE FROM fin_contrato WHERE id_contrato = :idContrato");
+            $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }  
 
     /**
      * [retornaAtaCombo Retorna a ata mais todas as tabelas que tem relacionamentos com ela]

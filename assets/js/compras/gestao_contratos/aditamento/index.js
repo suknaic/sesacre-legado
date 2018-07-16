@@ -246,6 +246,7 @@ $(document).ready(function () {
                     })                    
                 }
             });
+            
             arrayDados['itens'] = itens;
           
             arrayDados['dados'] = {
@@ -295,9 +296,7 @@ $(document).ready(function () {
                 if($(this).val() != 0){
                     arrayDados.sub_fiscal_substituto.push($(this).val())
                 }
-            });
-                                                            
-            console.log(arrayDados)
+            });                                                                        
             
             $.ajax({
                 "url": url,
@@ -308,9 +307,7 @@ $(document).ready(function () {
                     "dados": arrayDados
                 },
                 "success": function (response) {
-                    console.log(response);
-                    $this.prop("disabled", false);
-                    return false;
+                    
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
@@ -339,7 +336,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'primary');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            //top.location.href = "/pages/diarias/";
+                            location.reload();
                         });
                         return false;
                     } else {
@@ -400,9 +397,7 @@ $(document).ready(function () {
                             "dados": Dados
                         },
                         "success": function (response) {
-                            
-                            console.log(response);
-                            return false;
+                                                        
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -424,8 +419,8 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg);
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                func.modalAlert(response.msg, 'success');
+                                $('.modal-alert').on('hidden.bs.modal', function (e){
                                     location.reload();
                                 });
                                 return false;

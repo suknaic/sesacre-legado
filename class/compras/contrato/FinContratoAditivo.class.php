@@ -36,6 +36,9 @@ class FinContratoAditivo {
     private $subFiscalSubstituto = null;
     private $itens = null;
     private $idFornecedor = null;
+    private $idContratoAditivoPai = null;
+    private $dtVigenciaInicial = null;
+    private $dtVigenciaFinal = null;
     
     private $motivoPorValor = 1;
     private $motivoPorPrazo = 2;
@@ -322,7 +325,34 @@ class FinContratoAditivo {
         $this->idFornecedor = $idFornecedor;
         return $this;
     }
-        
+    
+    public function getIdContratoAditivoPai() {
+        return $this->idContratoAditivoPai;
+    }
+
+    public function setIdContratoAditivoPai($idContratoAditivoPai) {
+        $this->idContratoAditivoPai = $idContratoAditivoPai;
+        return $this;
+    }
+    
+    public function getDtVigenciaInicial() {
+        return $this->dtVigenciaInicial;
+    }
+
+    public function getDtVigenciaFinal() {
+        return $this->dtVigenciaFinal;
+    }
+
+    public function setDtVigenciaInicial($dtVigenciaInicial) {
+        $this->dtVigenciaInicial = $dtVigenciaInicial;
+        return $this;
+    }
+
+    public function setDtVigenciaFinal($dtVigenciaFinal) {
+        $this->dtVigenciaFinal = $dtVigenciaFinal;
+        return $this;
+    }
+                
     public function textoAditivoPor($texto){
         return "Aditivo Por ".$texto;
     }
@@ -412,8 +442,7 @@ class FinContratoAditivo {
             if(array_key_exists("itens", $dados)){
                 $this->itens = $dados['itens'];
             }
-            
-                                                                        
+                                                                                    
             //Faz a Validação dos Campos Obrigatorios de acordo com o Motivo, Valor, Prazo ou Valor e Prazo
             if(!$this->validaCamposObrigatorio()){
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);                                                
@@ -426,17 +455,19 @@ class FinContratoAditivo {
             
             $contrato = new FinContratoModel();
             $contrato->setIdContrato($this->idContrato);            
-
+            
             //Verifica a Quantidade de Aditivos
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($contrato->getIdContrato());
-            $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);                                    
+            $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);                                  
             if(!$daoContratoAditivo->Sucesso()){
                 return Metodos::retornoAjax("Erro", "console", "Não foi possível saber a quantidade de Aditivo.");
             }
             //Adiciona em 1 a quantidade do Aditivo, que será o próximo aditivo            
-            $proximoAditivo = (int)$daoContratoAditivo->getMsgRetorno() + 1;       
-                                   
+            $proximoAditivo = (int)$daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'] + 1;
+            $idContratoUltimo = (int)$daoContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];
+            $numeroContrato = $daoContratoAditivo->getMsgRetorno()['nr_contrato'];
+            
             //Valida se o novo aditivo informado realmente é o mesmo que será gerado.
             if($proximoAditivo != $this->numeroNovoAditivo){
                 return Metodos::retornoAjax("Erro", "alert", "O Número do Aditivo informado parece que já está cadastrado, por favor verifique se o Aditivo já está cadastrado.");
@@ -448,8 +479,16 @@ class FinContratoAditivo {
                 return Metodos::retornoAjax("Erro", "alert", $daoContratoAditivo->getMsgRetorno());
             }
             $proximoSequencial = $daoContratoAditivo->getMsgRetorno();
-
+            
+            
             //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor
+            //Se for o primeiro contrato, então será do contrato.
+            //Se já tiver algum Aditivo cadastrado, então será pego o ultimo Aditivo para pegar os Dados dele
+            $this->idContratoAditivoPai = $this->idContrato;
+            if((int)$proximoAditivo > 1){
+                $this->idContrato = $idContratoUltimo;
+            }
+            
             $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
@@ -457,7 +496,7 @@ class FinContratoAditivo {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
             }                
             $contRef = $contratoRef->getMsgRetorno();
-                       
+            
             //Carrega todos os itens do Contrato(Fornecedor)
             $finContItens = "";
             $itemModel = new ItemModel();
@@ -466,27 +505,33 @@ class FinContratoAditivo {
             if($itemModel->Sucesso()){
                 $finContItens = $itemModel->getMsgRetorno();
             }
-                                               
-                                                                                             
+            
+            echo "<pre>";
+            print_r($this->itens);
+            echo "</pre>";
+            
+            echo "<pre>";
+            print_r($finContItens);
+            echo "</pre>";
+            
+            exit();
+            
+                                                                                                                     
             //Preparar Dados Para Inserir no Banco            
             //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
-            //gestores, fiscais e subfiscais
-            $daoContrato = new FinContratoModel();
+            //gestores, fiscais e subfiscais            
                                     
             //Adiciona os Dados na classe que representa a tabela Fin Contrato
-            $finContratoTb = new FinContratoTb();     
+            $finContratoTb = new FinContratoTb();
             //Nome do Numero do contrato
-            $nomeDoContrato = $proximoAditivo."º Termo Aditivo ao contrato ".$contRef->getNrContrato();            
+            $nomeDoContrato = $proximoAditivo."º Termo Aditivo ao contrato ".$numeroContrato;                           
             $finContratoTb->setNrContrato($nomeDoContrato);
+            //Dados que serão duplicados
             $finContratoTb->setNrPrazoEntrega($contRef->getNrPrazoEntrega());
             $finContratoTb->setIdProcesso($contRef->getIdProcesso());
             $finContratoTb->setIdPessoa($contRef->getIdPessoa());
             $finContratoTb->setDsObjeto($contRef->getDsObjeto());            
             $finContratoTb->setFlServicoContinuado($contRef->getFlServicoContinuado());
-            $finContratoTb->setDtIniVigenciaContrato($contRef->getDtIniVigenciaContrato());
-            $finContratoTb->setDtFimVigenciaContrato($contRef->getDtFimVigenciaContrato());
-            $finContratoTb->setDtAssinatura($contRef->getDtAssinatura());
-            $finContratoTb->setDtPublicacao($contRef->getDtPublicacao());
             $finContratoTb->setDsObsContrato($contRef->getDsObsContrato());
             $finContratoTb->setIdModalidade($contRef->getIdModalidade());
             $finContratoTb->setDsAreaAbrangencia($contRef->getDsAreaAbrangencia());
@@ -495,12 +540,21 @@ class FinContratoAditivo {
             $finContratoTb->setIdTipoGasto($contRef->getIdTipoGasto());
             $finContratoTb->setVlContrato($contRef->getVlContrato());
             $finContratoTb->setTpContrato($contRef->getTpContrato());
+            
+            //Se o Aditivo for Por Prazo ou Valor e Prazo
+            //Então a Vigência do Contrato será diferente do Ultimo Aditivo ou Contrato
+            $finContratoTb->setDtIniVigenciaContrato($contRef->getDtIniVigenciaContrato());
+            $finContratoTb->setDtFimVigenciaContrato($contRef->getDtFimVigenciaContrato());
+            
+            
+            $finContratoTb->setDtAssinatura($this->dtAssinatura);
+            $finContratoTb->setDtPublicacao($this->dtPublicacao);        
             $finContratoTb->setSqContrato($proximoSequencial);
-            $finContratoTb->setIdContratoAditivoPai($this->idContrato);                       
+            $finContratoTb->setIdContratoAditivoPai($this->idContratoAditivoPai);                 
             
             
             //Adiciona os Dados na classe que representa a tabela Fin Fornecedor
-            $finFornecedorTb = new FinFornecedoresTb();            
+            $finFornecedorTb = new FinFornecedoresTb();      
             $finFornecedorTb->setIdPessoa($contRef->getFornecedor()->getIdPessoa());
             
             
@@ -559,9 +613,9 @@ class FinContratoAditivo {
             if(!$contrato->sucesso()){ 
                 return Metodos::retornoAjax("Erro", "console", $contrato->getMsgRetorno());
             }
-            echo $this->msgRetorno;
+            
             $pdo->commit();
-            return;
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);                                    
             
             //$pdo->rollBack();
             echo "<pre>";
@@ -663,7 +717,7 @@ class FinContratoAditivo {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $daoContratoAditivo->getMsgRetorno());
             }            
-            $ultimoAditivo = $daoContratoAditivo->getMsgRetorno();
+            $ultimoAditivo = $daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'];
                                                
             if($ultimoAditivo != $this->numeroNovoAditivo){
                 $pdo->rollBack();
@@ -677,28 +731,13 @@ class FinContratoAditivo {
                     , (int)$this->idFornecedor
                     , (int)$this->idContratoAditivo                    
                     , $pdo);
-            
-            
-          
-            
-            echo "<pre>";
-            print_r($finContratoModel->getMsgRetorno());
-            echo "</pre>";
-            $pdo->rollBack();
-            return;
-            
             if(!$finContratoModel->sucesso()){
-                
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
             }
             
-            
-            
-            $finFornecedor = new FinFornecedoresModel();
-            //$finFornecedor->
-            
-            
-            
-            $pdo->rollBack();
+            $pdo->commit();            
+            return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             
         } catch (Exception $ex) {
             $pdo->rollBack();
@@ -800,7 +839,7 @@ class FinContratoAditivo {
                     . '</div>';
                 return $retorno;
             }
-            $quantidade = $daoContrato->getMsgRetorno();
+            $quantidade = $daoContrato->getMsgRetorno()['numero_ultimo_aditivo'];
             
             $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade='.$quantidade.'>
                     <thead>
@@ -923,7 +962,15 @@ class FinContratoAditivo {
                 $this->sucesso = false;
                 $this->msgRetorno = "Se a Base de Cálculo for Valor Unitário, a Unidade de Cálculo deverá ser Moeda ou Quantidade.";
                 return;  
-            }                        
+            }  
+            
+            //Motivo Por Valor, é necessário o preenchimento de algum item
+            if(empty($this->itens)){
+                $this->sucesso = false;
+                $this->msgRetorno = "No Aditivo Por Valor, é necessário o Preenchimento dos Valores Por Cada Item que será aditivado.";
+                return; 
+            }
+            
         }                                        
         $this->sucesso = true;
         $this->msgRetorno = "ok";
@@ -967,6 +1014,81 @@ class FinContratoAditivo {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();            
         }                        
+    }
+    
+    public function removerAditivoPorContratoAditivo(PDO $pdo = null){
+        try {
+                                    
+            if(empty($this->idContratoAditivo)){
+                $this->sucesso = false;
+                $this->msgRetorno = "É Necessário o Contrato Aditivo";
+                return;
+            }
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            //Seta os Campos
+            $dao = new DaoFinContratoAditivo();            
+            $dao->setIdContratoAditivo($this->idContratoAditivo);                   
+            $dao->retorna($pdo);
+            if($dao->Sucesso()){
+                if (!Log::SalvaLogD('fin_contrato_aditivo', $dao->getIdContratoAditivo(), $pdo)){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no Log do Contrato Aditivo";
+                    return;
+                }
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o Contrato Aditivo.";
+                return;   
+            }
+                                    
+            $dao->delete($pdo);
+            if(!$dao->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "ok";
+                            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }  
+    }
+    
+    public function retornaNumeroUltimoAditivo(PDO $pdo = null){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            if(empty($this->idContrato)){
+                $this->false;
+                $this->msgRetorno = "Id Contrato não encontrado";
+                return;
+            }
+            
+            $daoContratoAditivo = new DaoFinContratoAditivo();
+            $daoContratoAditivo->setIdContrato($this->idContrato);
+            $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);
+            if(!$daoContratoAditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
+                return;                
+            }
+            
+            return $daoContratoAditivo->getMsgRetorno();
+                                                
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
+        }
     }
     
     

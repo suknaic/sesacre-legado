@@ -803,20 +803,25 @@ class ItemModel {
         //conexao com banco dedados
         $conexao = new Conexao();
         $pdo = $conexao->connect();
+        
+        
+        $finContratoAditivo = new FinContratoAditivo();
+        $finContratoAditivo->
+        
         //pega id do fornecedor
         $finFornecedoresModel = new FinFornecedoresModel();
         $finFornecedoresModel->setIdContrato($idContrato);
 
         //Retorna o id do Fornecedor, o primeiro, do contrato para buscar os itens dele
         $finFornecedoresModel->retornaPrimeiroFornecedorDoContrato($pdo);
-        if (!$finFornecedoresModel->sucesso()) {
+        if (!$finFornecedoresModel->sucesso()){
             return "Não foi possível Localizar o Fornecedor do Contrato.";
         }
-
+        
         //criando objeto do Dao dos itens da ata
         $daoFinItens = new DaoFinItens();
         //chamando o metodo que lista os itens da ata
-        if (!empty($finFornecedoresModel->getMsgRetorno()['id_fornecedor'])) {
+        if (!empty($finFornecedoresModel->getMsgRetorno()['id_fornecedor'])){
             $daoFinItens->setIdFornecedor($finFornecedoresModel->getMsgRetorno()['id_fornecedor']);
             $daoFinItens->retornaItensFornecedor($pdo);
         } else {
@@ -923,6 +928,82 @@ class ItemModel {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
             return;
+        }
+    }
+    
+    public function removerAditivoPorFornecedor(PDO $pdo){
+        
+        try {
+            
+            $dao = new DaoFinItens();
+            $dao->setIdFornecedor($this->idFornecedor);
+            $dao->retornaItensFornecedorSemJoins($pdo);
+            
+            if($dao->sucesso()){
+                if(empty($dao->getMsgRetorno())){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não existe Itens Para Esse Contrato";
+                    return;
+                }                                
+                
+                $result = $dao->getMsgRetorno();                
+                
+                //Utilizado para saber se a quantidade de itens que veio do fornecedor é a mesma que foi excluído
+                $quantidadeDeItens = count($result);
+                $i = 0;
+                foreach ($result as $key => $value) {
+                    
+                    $dao->setIdContItens($value['id_cont_itens']);
+                    $dao->retorna($pdo);
+                    
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }
+                    
+                    $busca = $dao->getMsgRetorno();
+                    $dao->setIdContItens($busca['id_cont_itens']);                   
+                    
+                    if (!Log::SalvaLogD('fin_cont_itens', $dao->getIdContItens(), $pdo)) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "Não foi possível localizar os Itens, LOG";
+                        return; 
+                    }
+                    
+                    $dao->excluirItem($pdo);                   
+                    
+                    if(!$dao->sucesso()){
+                        $this->sucesso = false;
+                        $this->msgRetorno = $dao->getMsgRetorno();
+                        return; 
+                    }     
+                    
+                    $i++;                    
+                }       
+                
+                if($quantidadeDeItens == $i){
+                    $this->sucesso = true;
+                    $this->msgRetorno = "ok";
+                    return;
+                }else{
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível excluir todos os Itens";
+                    return;  
+                }
+                               
+                
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return;
+            }            
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi possível excluir os Itens";
+            return;                                                                        
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
         }
     }
     

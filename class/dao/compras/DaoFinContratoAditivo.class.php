@@ -58,17 +58,17 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
 //        }
 //    }
 //    
-//    function delete($pdo) {
-//        try {
-//            $result = $pdo->prepare("DELETE FROM fin_qdd WHERE id_qdd = :idQdd");
-//            $result->bindValue(":idQdd", $this->getIdQdd(), PDO::PARAM_INT);
-//            $result->execute();
-//            $this->sucesso = true; 
-//        } catch (PDOException $e) {
-//            $this->sucesso = false;            
-//            $this->msgRetorno = $e->getMessage(); 
-//        }
-//    }   
+    function delete($pdo) {
+        try {
+            $result = $pdo->prepare("DELETE FROM fin_contrato_aditivo WHERE id_contrato_aditivo = :idContratoAditivo");
+            $result->bindValue(":idContratoAditivo", $this->getIdContratoAditivo(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }   
     
     function retorna($pdo) {
         $this->sucesso = false;
@@ -98,21 +98,21 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
         $this->sucesso = false;
                
         $sql = "SELECT COALESCE(CA.nr_aditivo, 0) as numero_ultimo_aditivo"
-                . " , c.id_contrato, CA.id_contrato_aditivo"
+                . " , C.id_contrato, C.nr_contrato"
+                . " , CA.id_contrato_aditivo, CAUX.id_contrato as id_contrato_ultimo"
                 . " FROM fin_contrato C"
                 . " INNER JOIN fin_contrato CAUX ON CAUX.id_contrato_aditivo_pai = C.id_contrato AND CAUX.st_ativo = '1'"
                 . " INNER JOIN fin_contrato_aditivo CA ON CA.id_contrato = CAUX.id_contrato AND CA.st_ativo = '1'"
                 . " WHERE C.id_contrato = :idContrato AND C.tp_contrato = '2'"
                 . " ORDER BY CAUX.id_contrato DESC"
-                . " LIMIT 1";
-        
+                . " LIMIT 1";      
         try {
             $result = $pdo->prepare($sql);  
             $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
-                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC)['numero_ultimo_aditivo'];
+                $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC);
             } else {
                 $this->sucesso = true;                
                 $this->msgRetorno = 0;                

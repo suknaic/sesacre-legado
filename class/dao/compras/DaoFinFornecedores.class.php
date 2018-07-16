@@ -62,6 +62,21 @@ class DaoFinFornecedores extends FinFornecedoresTb {
             $this->msgRetorno = 'Sem conexão com o banco de dados';
         }
     }
+    
+    function delete($pdo){
+        try {
+            $result = $pdo->prepare("DELETE FROM fin_fornecedor WHERE id_fornecedor = :idFornecedor");
+            $result->bindValue(":idFornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;  
+            $this->msgRetorno = $e->getMessage(); 
+            if($e->getCode() == "23503"){
+                $this->msgRetorno = "FKViolation";                
+            }            
+        }
+    }
 
     public function retornaDados($pdo = null) {
         if (!empty($pdo)) {
