@@ -232,7 +232,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/diarias/central_responsavel/inde
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/diarias/administracao_solicitacao/index.js"></script>
+        <script src="/assets/js/administracao/administracao_solicitacao/index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
            

@@ -9,7 +9,7 @@ $(document).ready(function () {
     
     function lista() {
         $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
+            "url": "/model/administracao/administracao_solicitacao/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaAdministracaoSolicitacao"
@@ -23,7 +23,7 @@ $(document).ready(function () {
     
     function administracaoCombo(){
         $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
+            "url": "/model/administracao/administracao_solicitacao/request.php",
             "dataType": 'html',
             "data": {
                 acao: "administracaoOptions"
@@ -38,7 +38,7 @@ $(document).ready(function () {
     
     function solicitacaoCombo(){
         $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
+            "url": "/model/administracao/administracao_solicitacao/request.php",
             "dataType": 'html',
             "data": {
                 acao: "solicitacaoOptions"

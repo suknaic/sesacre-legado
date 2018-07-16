@@ -555,7 +555,8 @@ class DaoDiaDiaria extends DiaDiaria {
                                 di.nr_protocolo,
                                 cd.nm_lotacao AS central_demanda,
                                 to_char(max(dh_fim),'dd/mm/yyyy hh24:mi')          AS dh_fim,
-                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) ano_pedido,
+                                (select to_char(dt_pedido,'YYYY') from fin_pedido fp where fp.id_pedido = di.id_pedido) AS ano_pedido,
+                                (select nr_pedido from fin_pedido fp where fp.id_pedido = di.id_pedido) AS nr_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
                                            || est_ini. nm_sigla 
@@ -639,7 +640,10 @@ class DaoDiaDiaria extends DiaDiaria {
                                 to_char(max(dh_fim),'dd/mm/yyyy hh24:mi')          AS dh_fim,
                                 (SELECT To_char(dt_pedido, 'YYYY') 
                                  FROM   fin_pedido fp 
-                                 WHERE  fp.id_pedido = di.id_pedido)               ano_pedido, 
+                                 WHERE  fp.id_pedido = di.id_pedido)               AS ano_pedido,
+                                (SELECT nr_pedido 
+                                 FROM   fin_pedido fp 
+                                 WHERE  fp.id_pedido = di.id_pedido)               AS nr_pedido,
                                 String_agg(pais_ini.nm_pais 
                                            || '(' 
                                            || est_ini. nm_sigla 

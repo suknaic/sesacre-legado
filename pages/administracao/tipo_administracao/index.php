@@ -71,9 +71,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
 
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form">
+                                    <form class="form" id="formulario">
                                         <div class="panel-body">
                                             <div class="row">
+                                                <input class="hidden" id="id_tipo_administracao" value=""/>
                                                 <div class="form-group">
 <!--                                                    <div class="panel-body">-->
                                                     <label for="tipo_administracao">
@@ -134,6 +135,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
+                                                        <th>Id</th>
                                                         <th>Descrição</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
