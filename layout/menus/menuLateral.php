@@ -321,7 +321,6 @@
                                             <a href="#">Tabelas Gerenciais<i class="arrow"></i></a>
                                             <ul class="collapse">
                                                 <li><a href="/pages/diarias/decreto_valor/">Valores das Diárias</a></li>
-                                                <li><a href="/pages/diarias/administracao_solicitacao/">Vincular Administração/Solicitação</a></li>
                                                 <li>
                                                     <a href="/pages/diarias/central_responsavel/">Vincular Central de Demanda</a>
                                                 </li>
@@ -349,10 +348,16 @@
 
                             <ul class="collapse">
                                 <li>
+                                    <a href="/pages/administracao/central_demanda/">Centrais de Demanda</a>
+                                </li>
+                                <li>
                                     <a href="/pages/administracao/tipoGasto/">Tipo Gasto</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/administracao/central_demanda/">Centrais de Demanda</a>
+                                    <a href="/pages/administracao/tipo_administracao/">Tipos de Administração/Gestores</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/administracao/administracao_solicitacao/">Vincular Administração/Solicitação</a>
                                 </li>
                             </ul>
                         </li>

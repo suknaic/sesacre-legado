@@ -78,9 +78,9 @@ $(document).ready(function () {
                                     }
                                 } else if (response.tipoMsg === "ok") {
                                     func.modalAlert(response.msg, 'success');
-                                    $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                        window.location.href = "/pages/financeiro/autorizacoes/ordenador/index.php";
-                                    });
+                                    $(".btn-modal").addClass("hidden");
+                                    func.modalAlert(response.msg, 'success');
+                                    setInterval(ajaxCall, 1000);
                                     return false;
                                 } else {
                                     console.log('Ultimo else');
@@ -189,5 +189,9 @@ $(document).ready(function () {
             });
         });
     });
+
+    function ajaxCall() {
+        top.location = "/pages/financeiro/autorizacoes/ordenador/index.php";
+    }
 
 });

@@ -55,10 +55,11 @@ switch ($_REQUEST['acao']) {
 
     CASE 'excluirItemEntrega':
         try {
-            $itens = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finEntregaItensModel = new FinEntregaItensModel();
             $finEntregaItensModel->setIdEntregaItens($itens["idItem"]);
             $finEntregaItensModel->setIdEntregaConfirmacao($itens["idEntrega"]);
+            $finEntregaItensModel->setIdProtocolo($itens["idProtocolo"]);
             echo $finEntregaItensModel->removeItemEntrega();
             return;
             break;

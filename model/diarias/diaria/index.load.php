@@ -4,20 +4,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/lotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 
+
 $session = new Session();
 
 $contrato = new Contrato();
 $lotacao = new Lotacao();
 $diaria = new Diaria();
-
 $diaria->setUsuarioSessao($session);
 
-if(!$session->vPDiariasSolicitacao() and !$diaria->checaUsuarioDiaria()){
+$id_diaria = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
+
+if(!$session->vPDiariasSolicitacao() and !$diaria->checaUsuarioDiaria($id_diaria)){
     header("Location: /pages/index.php"); 
 }
 
 
-$id_diaria = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
+
 $jsonDiaria = "";
 $linhasAnexos = "";
 

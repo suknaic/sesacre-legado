@@ -4,15 +4,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Relatorio.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 
 $session = new Session();
-if(!$session->vPDiariasSolicitacao()){
-    header("Location: /pages/index.php"); 
-}
-
-
 $relatorio = new Relatorio();
 $diaria = new Diaria();
 
+$diaria->setUsuarioSessao($session);
+
 $id_diaria = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
+
+if(!$session->vPDiariasSolicitacao() and !$diaria->checaUsuarioDiaria($id_diaria)){
+    header("Location: /pages/index.php"); 
+}
 
 $id_relatorio = 0;
 $dh_inicio = '';

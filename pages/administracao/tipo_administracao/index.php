@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] ."/model/administracao/tipo_administracao/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -23,23 +23,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">        
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-        <!--Datapicker-->
-        <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <!-- select2 -->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
+
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
-            <?php
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            //Modal Alert
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php 
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
+
             <div class="boxed">
 
                 <!--CONTENT CONTAINER-->
@@ -49,21 +49,84 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Autorizações Central</h1>                       
+                        <h1 class="page-header text-overflow">Manutenção dos Tipos de Administração/Gestores</h1>                       
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="../">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <div class="panel">
-                            <input type="hidden" name="msg" id="msg" value="<?php echo (!empty($_GET)) ? $_GET['msg'] : 'false';?>">
-                                   <div id="alerta" class="hidden">
-                                        <p class='text-center alert alert-success'>Pedido autorizado sucesso</p>
+                        
+                        <!-- Inicio Form -->
+<!--                        <div class="row">-->
+<!--                            <div class="col-sm-12">-->
+                                <div class="panel">
+                                    <div class="panel-heading ">
+                                        <h3 class="panel-title">Formulário</h3>
                                     </div>
+
+                                    <!--Horizontal Form-->
+                                    <!--===================================================-->
+                                    <form class="form" id="formulario">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <input class="hidden" id="id_tipo_administracao" value=""/>
+                                                <div class="form-group">
+<!--                                                    <div class="panel-body">-->
+                                                    <label for="tipo_administracao">
+                                                        Tipo da Administração: <span class="text-danger">*</span>
+                                                    </label>                                                        
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input id="tipo_administracao" class="form-control"/>
+<!--                                                                <option value="0">Selecione um Responsável</option>                                                                -->
+
+<!--                                                        </div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- End <div class="form-group"> -->
+                                           
+                                        
+                                        </div>
+                                        <!-- <div class="panel-body"> -->
+
+
+                                        <!-- Footer Form -->
+                                        <div class="panel-footer text-right">
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
+                                                Limpar
+                                            </button>                                  
+                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                            </button>
+                                            <button class="btn btn-success btn-rounded btn-salvar" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
+                                        </div>
+                                        <!-- End Form -->
+                                    </form>
+                                    <!--===================================================-->
+                                    <!--End Horizontal Form-->
+
+                                </div>
+<!--                            </div>-->
+<!--                        </div>-->
+                        <!-- Fim Form -->
+                        
+                        
+                        
+                        
+                        
+                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Pedidos aguardando autorização</h3>
+                                <h3 class="panel-title">Tipos de Administração</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -72,31 +135,36 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">Pedido</th>
-                                                        <th class="text-center">Descrição</th>
-                                                        <th class="text-center">Tipo de gasto</th>
-                                                        <th class="text-center">Fonte</th>
-                                                        <th class="text-center">Elemento de Despesa</th>
-                                                        <th class="text-center">Valor unit.</th>
-                                                        <th class="text-center">Ação</th>
+                                                        <th>Id</th>
+                                                        <th>Descrição</th>
+                                                        <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
+                                                                                                                                                                                                                                                    
                                                 </tbody>
-
-                                            </table>
+                                            </table>            
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
+
+
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
+
+
+
+
+
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
@@ -113,9 +181,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
+
+
+
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
+
+       
+
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -131,22 +205,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/central
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
         <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
         <!-- DIALOG CONFIRM [OPT] -->
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <!--Datapicker-->
-        <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+        <script src="/assets/js/administracao/tipo_administracao/index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-        <!--MaskedInput-->
-        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <script src="/assets/js/financeiro/autorizacoes/central/index.js"></script>
+           
         <!-- END JAVASCRIPT -->
-
 
     </body>
 </html>
+
+
+
+

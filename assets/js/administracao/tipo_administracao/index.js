@@ -1,18 +1,13 @@
-
 $(document).ready(function () {
-    
     func = new Funcoes();
     
-    $('body').find('select').select2({
-        width: '100%'
-    });
     
     function lista() {
         $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
+            "url": "/model/administracao/tipo_administracao/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaAdministracaoSolicitacao"
+                acao: "listaTiposAdministracoes"
             },
             "success": function (response) {            
                 func.carregaTabelaPadrao('tabela', response, [2]);
@@ -20,37 +15,6 @@ $(document).ready(function () {
         });
     }
     lista();
-    
-    function administracaoCombo(){
-        $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
-            "dataType": 'html',
-            "data": {
-                acao: "administracaoOptions"
-            },
-            "success": function (response) {            
-                $("#administracao").html(response);
-            }
-        });
-    }
-    
-    administracaoCombo();
-    
-    function solicitacaoCombo(){
-        $.ajax({
-            "url": "/model/diarias/administracao_solicitacao/request.php",
-            "dataType": 'html',
-            "data": {
-                acao: "solicitacaoOptions"
-            },
-            "success": function (response) {            
-                $("#solicitacao").html(response);
-            }
-        });
-    }
-    
-    solicitacaoCombo();
-    
     
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -60,22 +24,21 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var Dados = {
-                administracao: $("#administracao option:selected").val(),
-                solicitacao: $("#solicitacao option:selected").val(),
+                administracao: $("#tipo_administracao").val()
             }
 
-            if ($("#administracao option:selected").val() == 0 || $("#solicitacao option:selected").val() == 0 ) {
+            if ($("#tipo_administracao").val() == "" ) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
             }
 
             $.ajax({
-                "url": "/model/diarias/administracao_solicitacao/request.php",
+                "url": "/model/administracao/tipo_administracao/request.php",
                 "dataType": "html",
                 "method": "post",
                 "data": {
-                    "acao": "cadAdministracaoSolicitacao",
+                    "acao": "cadTipoAdministracao",
                     "dados": Dados
                 },
                 "success": function (response) {
@@ -133,7 +96,7 @@ $(document).ready(function () {
 
         var $this = $(this);
         var id = $this.closest('tr').data('id');
-        var item = $this.closest('tr').find('td:eq(0)').text()+" - "+$this.closest('tr').find('td:eq(1)').text();
+        var item = $this.closest('tr').find('td:eq(1)').text();
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',
@@ -152,10 +115,10 @@ $(document).ready(function () {
                 if (result) {
 
                     $.ajax({
-                        "url": "/model/diarias/administracao_solicitacao/request.php",
+                        "url": "/model/administracao/tipo_administracao/request.php",
                         "dataType": "html",
                         "data": {
-                            "acao": "remAdministracaoSolicitacao",
+                            "acao": "remTipoAdministracao",
                             "dados": id
                         },
                         "success": function (response) {
@@ -209,7 +172,101 @@ $(document).ready(function () {
         });
 
     });
+    
+    $('body').on('click','.btn-edit',function(e){
+        $(".btn-salvar").hide();
+        $(".btn-editar").show();
+        
+        var idTipoAdministracao = $(this).closest('tr').data('id');
+        var tipoAdministracao = $(this).closest('tr').find('td:eq(1)').text(); 
+
+        $('#id_tipo_administracao').val(idTipoAdministracao);
+        $('#tipo_administracao').val(tipoAdministracao);
+        
+        $('html, body').animate({
+            scrollTop: $('#formulario').offset().top + 'px'
+        }, 'slow');
+       
+    });
+    
+    $('body').on('click','.btn-editar',function(e){
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            var Dados = {
+                id: $("#id_tipo_administracao").val(),
+                administracao: $("#tipo_administracao").val()
+            }
+
+            if ($("#tipo_administracao").val() == "" || $("#id_tipo_administracao").val() == 0) {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+            
+            $.ajax({
+                "url": "/model/administracao/tipo_administracao/request.php",
+                "dataType": "html",
+                "method": "post",
+                "data": {
+                    "acao": "altTipoAdministracao",
+                    "dados": Dados
+                },
+                "success": function (response) {
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        console.log(response);
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'primary');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            location.reload();
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    console.log(response);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+            
+            $(".btn-salvar").show();
+            $(".btn-editar").hide();
+
+            $this.prop("disabled", false);
+        }
+    });
 });
-
-
 

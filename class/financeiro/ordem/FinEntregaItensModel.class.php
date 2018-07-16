@@ -10,10 +10,9 @@ class FinEntregaItensModel {
     private $fl_valor_variavel = null;
     private $qt_itens_entrega = null;
     private $vl_itens_entrega = null;
+    private $id_protocolo = null;
 
-    /**
-     * @return mixed
-     */
+    
     public function getIdEntregaItens() {
         return $this->id_entrega_itens;
     }
@@ -119,6 +118,24 @@ class FinEntregaItensModel {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIdProtocolo() {
+        return $this->id_protocolo;
+    }
+
+    /**
+     * @param mixed $id_protocolo
+     *
+     * @return self
+     */
+    public function setIdProtocolo($id_protocolo) {
+        $this->id_protocolo = $id_protocolo;
+
+        return $this;
+    }
+
     public function cadastraEntregaItens(PDO $pdo) {
         try {
             $daoFinEntregaItens = new DaoFinEntregaItens();
@@ -148,11 +165,12 @@ class FinEntregaItensModel {
             $daoFinEntregaItens = new DaoFinEntregaItens();
             //fim
             //buscando a maior data no banco
-            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
             $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
             $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
+            
             //buscando a data do item a ser removido no banco
-            $daoFinEntregaItens->setIdEntregaItens($this->id_entrega_itens);
+            $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaItens->retornaDataEntregaItens($pdo);
 
             if ($daoFinEntregaItens->sucesso()) {
@@ -160,11 +178,12 @@ class FinEntregaItensModel {
             } else {
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
+      
             if (strtotime($dataMaior) > strtotime($dataItem["dt_entrega"])) {
                 return Metodos::retornoAjax("Erro", "alert", "Exclua o item que tem a maior data");
             }
-
+            
+            $daoFinEntregaItens->setIdEntregaItens($this->id_entrega_itens);
             $daoFinEntregaItens->removeItemEntrega($pdo);
             $erro = false;
 
@@ -245,7 +264,7 @@ class FinEntregaItensModel {
     public function verificarSaldoOrdemItens($saldoItens) {
 
         foreach ($saldoItens as $valor) {
-           
+
             if ($valor["id_ordem_itens"] == $this->id_ordem_itens) {
                 if (empty($this->vl_itens_entrega)) {
 
@@ -253,7 +272,7 @@ class FinEntregaItensModel {
                         return false;
                     }
                 } else {
-                    if ((round($valor["saldoitens"],4) - round(($this->qt_itens_entrega * $this->vl_itens_entrega),4)) < 0) {
+                    if ((round($valor["saldoitens"], 4) - round(($this->qt_itens_entrega * $this->vl_itens_entrega), 4)) < 0) {
                         return false;
                     }
                 }

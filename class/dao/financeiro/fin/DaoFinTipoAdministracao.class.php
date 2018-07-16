@@ -35,8 +35,9 @@ class DaoFinTipoAdministracao extends FinTipoAdministracao {
     function update(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "update fin_tipo_administracao set nm_tipo_administracao = :nm_tipo_administracao";
+                $sql = "update fin_tipo_administracao set nm_tipo_administracao = :nm_tipo_administracao where id_tipo_administracao = :id_tipo_administracao";
                 $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_tipo_administracao", $this->getIdTipoAdministracao(), PDO::PARAM_INT);
                 $stmt->bindValue(":nm_tipo_administracao", $this->getNmTipoAdministracao(), PDO::PARAM_STR);
                 
                 $stmt->execute();
@@ -70,7 +71,7 @@ class DaoFinTipoAdministracao extends FinTipoAdministracao {
     function select(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select id_tipo_administracao, nm_tipo_administracao, st_ativo from fin_tipo_administracao". $this->filtroSql();
+                $sql = "select id_tipo_administracao, nm_tipo_administracao, st_ativo from fin_tipo_administracao". $this->filtroSql() . " order by id_tipo_administracao";
                 $stmt = $pdo->prepare($sql);
                 
                 if($this->getIdTipoAdministracao()){
@@ -81,6 +82,30 @@ class DaoFinTipoAdministracao extends FinTipoAdministracao {
                 
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+                
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function selectLinha(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_tipo_administracao where id_tipo_administracao = :id_tipo_administracao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_tipo_administracao", $this->getIdTipoAdministracao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;

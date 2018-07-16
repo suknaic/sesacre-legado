@@ -168,6 +168,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-4">
+                                                            <b>Nº da Diária/Nº do Protocolo:</b>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <?php echo $diariaObj[0]['id_diaria']; ?>/<?php echo $diariaObj[0]['nr_protocolo']?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
                                                             <b>Proponente:</b><br>
                                                             <b>Lotação Proponente:</b><br>
                                                             <b>Função Proponente:</b><br>
