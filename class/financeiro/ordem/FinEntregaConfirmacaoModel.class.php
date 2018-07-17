@@ -205,7 +205,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaUltimaDataEntrega($pdo);
-           
+
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
@@ -274,12 +274,12 @@ class FinEntregaConfirmacaoModel {
             $finProtocoloModel->setStProtocolo($dados[0]->tipoEntrega);
             $finProtocoloModel->setDtConfirmacao(Metodos::ConverteDataING($dados[0]->data));
             //verifica ser a entrega e parcial
-            if($finProtocoloModel->verificarStatusEntregaParcial($pdo) && $dados[0]->tipoEntrega == 2){
+            if ($finProtocoloModel->verificarStatusEntregaParcial($pdo) && $dados[0]->tipoEntrega == 2) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Você não pode lança uma entrega total pois existem entrega(s) parcial lançada");
-            } 
-            
-            
+            }
+
+
             //atualiza situaçao da entrega
             if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                 $pdo->rollBack();
@@ -292,7 +292,7 @@ class FinEntregaConfirmacaoModel {
                 $pdo->rollBack();
                 return $finProtocoloModel->getMsgRetorno();
             }
-            
+
             //retorna os saldos dos itens
             $finOrdemItensModel = new FinOrdemItensModel();
             $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
@@ -304,7 +304,7 @@ class FinEntregaConfirmacaoModel {
             }
 
             $saldoItens = $finOrdemItensModel->getMsgRetorno();
-            
+
             foreach ($dados as $valor) {
                 $finEntregaItensModel->setIdOrdemItens($valor->idOrdemItens);
 
@@ -342,7 +342,7 @@ class FinEntregaConfirmacaoModel {
                 $finEntregaItensModel->setQtItensEntrega(null);
                 $finEntregaItensModel->setVlItensEntrega(null);
             }
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
@@ -459,8 +459,8 @@ class FinEntregaConfirmacaoModel {
                                     <td class="text-center">' . $c["vl_itens_entrega"] . '</td>
                                     <td class="text-center">' . $c["entregue"] . '</td>
                                     <td class="text-center">
-                                    <button type="button" title="Excluir itens" class="excluir text-danger" value="'.$c["id_entrega_itens"].'" 
-                                     nomeitem ="'.$c["nm_material"].'" idEntrega = "'.$c["id_entrega_confirmacao"].'">
+                                    <button type="button" title="Excluir itens" class="excluir text-danger" value="' . $c["id_entrega_itens"] . '" 
+                                     nomeitem ="' . $c["nm_material"] . '" idEntrega = "' . $c["id_entrega_confirmacao"] . '">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>
                                     </td>    
@@ -478,6 +478,28 @@ class FinEntregaConfirmacaoModel {
             }
 
             return false;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function excluirEntrega(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->removeEntregaConfirmacao($pdo);
+
+            if (!$daoFinEntregaConfirmacao->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao excluir a entrega confirmação");
+            }
+
+            if (!Log::SalvaLogD("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $pdo)) {
+                return Metodos::retornoAjax("Erro", "console", "Erro log delete entrega confirmacao");
+            }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

@@ -281,7 +281,7 @@ $(document).ready(function () {
         var idEntrega = $this.closest('td').find('.excluir').attr("idEntrega");
         var idProtocolo = $("#id_protocolo").val();
         var item = $this.closest('td').find('.excluir').attr("nomeitem");
-        
+
         bootbox.confirm({
             title: func.msgCaixaDeConfirmacao,
             message: 'Você tem Certeza que deseja continuar com a Exclusão do Item: <span class="text-danger">' + item + '</span> ?',
@@ -318,8 +318,6 @@ $(document).ready(function () {
                             "dados": dados
                         },
                         "success": function (response) {
-                            console.log(response);
-                            return false;
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
