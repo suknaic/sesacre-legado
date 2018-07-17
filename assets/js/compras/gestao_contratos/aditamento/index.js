@@ -42,6 +42,17 @@ $(document).ready(function () {
             limit: 7
         });
     });
+    
+    $("body").on("focus", "#n_indice_correcao", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',            
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 7
+        });
+    });
+    
         
     
     
@@ -454,8 +465,7 @@ $(document).ready(function () {
     //Controle da Tela, Campos habilitados ou não
     //O Campo Percentual, ficará escondido até que a Regra para o tipo dele seja selecionado pelo usuário
     $("#div_percentual").hide();
-    $("#div_indice_correcao").hide();
-    $("#btn_itens_abrir_modal").hide();    
+    $("#div_indice_correcao").hide();      
     $('#n_unidade_calculo option').filter(function() {      
         return $(this).val() != 0;
     }).attr("disabled", "");
@@ -514,11 +524,11 @@ $(document).ready(function () {
                 $('#n_unidade_calculo option[value=3]').removeAttr("disabled");
             }
         }                                                                                    
-        $("#btn_itens_abrir_modal").hide();
+        //$("#btn_itens_abrir_modal").hide();
         //Sempre que a Base de Calculo for Valor Unitario, então irá habilitar o Botão Itens ao lado do Valor Aditivo
-        if($("#n_base_calculo option:selected").val() == 2){
-            $("#btn_itens_abrir_modal").show();
-        } 
+        //if($("#n_base_calculo option:selected").val() == 2){
+            //$("#btn_itens_abrir_modal").show();
+        //} 
         $("#n_unidade_calculo").trigger('change');
     });
         
@@ -540,6 +550,14 @@ $(document).ready(function () {
                 && $("#n_base_calculo option:selected").val() == 1 ){
             $("#div_indice_correcao").show();
         } 
+        //Os Campos para serem digitados ficaram readonly
+        //Somente se unidade de cálculo for Moeda ou Quantidade que 
+        //irá habilitar o campo para ser preenchido pelo usuário
+        $('.qtd_aditivo').prop('readonly', true);
+        if($("#n_unidade_calculo option:selected").val() == 3
+                || $("#n_unidade_calculo option:selected").val() == 4){
+            $('.qtd_aditivo').prop('readonly', false);
+        }
     });
     
     
@@ -552,13 +570,13 @@ $(document).ready(function () {
            //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
             if($("#n_tipo_aquisicao option:selected").val() == 1){
                 if(valor > 25.0000){          
-                    $("#n_percentual").val("25,0000");
+                    $("#n_percentual").val("25,0000").change();
                 }
             }
             //Se Tipo de Aquisicao for Reforma de Edifício, o Valor Percentual máximo será de 50%
             if($("#n_tipo_aquisicao option:selected").val() == 2){
                 if(valor > 50.0000){                  
-                    $("#n_percentual").val("50,0000");
+                    $("#n_percentual").val("50,0000").change();
                 }
             }            
         }
@@ -569,24 +587,24 @@ $(document).ready(function () {
         $("#n_finalidade").trigger("change");
     });
     //Percentual sempre leva em consideração a regra da finalidade
+    //para calcular os Valores quando ele informar no Campo
     $("body").on("change keydown keyup", "#n_percentual", function (){        
         $("#n_finalidade").trigger("change");
+        calculoPercentualDosItens($(this));
     });
-    
-    //$("#n_base_calculo").val(2).change();
+    //Indice de Correção, para calcular os Valores quando ele informar no Campo
+    $("body").on("change keydown keyup", "#n_indice_correcao", function (){                
+        calculoPercentualDosItens($(this));
+    });        
     
     $('body').on('click', '#btn_itens_abrir_modal', function (e){
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else { 
-            e.preventDefault();                
-            if($("#n_unidade_calculo option:selected").val() != 3
-                    && $("#n_unidade_calculo").val() != 4){
-                func.modalAlert("É Necessário Escolher Uma Unidade de Cálculo Quantidade ou Moeda.");
-                return false;
-            }            
+            e.preventDefault();    
+            
             if($("#n_unidade_calculo").val() == 0){
-                func.modalAlert("É Necessário Escolher um Tipo de Aquisição.");
+                func.modalAlert("É Necessário Escolher uma Unidade de Cálculo.");
                 return false;
             }           
             
@@ -596,12 +614,12 @@ $(document).ready(function () {
                 return false;
             }
             
-            //Quando a unidade de cálculo for Moeda
+            //Quando a unidade de cálculo for Moeda ou Indice de Correção
             //Então o usuário deverá informar o Valor Unitário Aditivada
-            if($("#n_unidade_calculo").val() == 3){
+            if($("#n_unidade_calculo").val() == 3 || $("#n_unidade_calculo").val() == 2){
                 $(".label-aditivo").text("Valor Unit. Aditivado");
-            //Se por acaso for Quantidade, então deverá ser informado a Quantidade Aditivada
-            }else if($("#n_unidade_calculo").val() == 4){
+            //Se por acaso for Quantidade ou Percentual, então deverá ser informado a Quantidade Aditivada
+            }else if($("#n_unidade_calculo").val() == 4 || $("#n_unidade_calculo").val() == 1){
                 $(".label-aditivo").text("Qtd. Aditivada");
             }else{
                 $(".label-aditivo").text("Sem Opção de Texto");
@@ -618,12 +636,12 @@ $(document).ready(function () {
         let qtd = "0"; 
         //Quando a unidade de cálculo for Moeda
         //Então iremos calcular pegando a Quantidade X Valor Informado pelo usuário 
-        if($("#n_unidade_calculo").val() == 3){
+        if($("#n_unidade_calculo").val() == 3 || $("#n_unidade_calculo").val() == 2){
             valor = $(elemento).closest("tr").find(".qtd_aditivo").val();
             qtd = $(elemento).closest("tr").find(".td_quantidade").text();
         //Quando a unidade de cálculo for Quantidade
         //Então iremos calcular pegando o Valor Unitário X Quantidade Informado pelo usuário 
-        }else if($("#n_unidade_calculo").val() == 4){
+        }else if($("#n_unidade_calculo").val() == 4 || $("#n_unidade_calculo").val() == 1){
             valor = $(elemento).closest("tr").find(".td_valor_unitario").text();
             qtd = $(elemento).closest("tr").find(".qtd_aditivo").val();
         }else{
@@ -639,8 +657,43 @@ $(document).ready(function () {
             centsSeparator: ',',
             thousandsSeparator: '.',
             centsLimit: 4
-        }); 
-    }        
+        });
+    }       
+    
+    //Quando a Unidade de Cálculo for Percentual ou Indice de Correção
+    //Os Itens serão calculados de acordo com os Dados da % fornecida pelo usuario
+    function calculoPercentualDosItens(elemento){
+        let percentual = func.converteValorIngFloat($(elemento).val());
+        let valorAditivo = 0;
+        if($("#n_unidade_calculo option:selected").val() == 1){
+            $(".td_quantidade").each(function(index){         
+                let quantidade = func.converteValorIngFloat($(this).text());           
+                valorAditivo = quantidade * (percentual/100);
+                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                $(this).closest('tr').find('.qtd_aditivo').priceFormat({
+                    prefix: '',
+                    centsSeparator: ',',
+                    thousandsSeparator: '.',
+                    centsLimit: 4
+                }); 
+                calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));            
+            });
+        }else if($("#n_unidade_calculo option:selected").val() == 2){
+            $(".td_valor_unitario").each(function(index){         
+                let quantidade = func.converteValorIngFloat($(this).text());           
+                valorAditivo = quantidade * (percentual/100);
+                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                $(this).closest('tr').find('.qtd_aditivo').priceFormat({
+                    prefix: '',
+                    centsSeparator: ',',
+                    thousandsSeparator: '.',
+                    centsLimit: 4
+                }); 
+                calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));            
+            });
+        }
+        calculoValorAditivo();        
+    }    
     $('body').on('keyup', '.qtd_aditivo', function(){
         calculaValorTotal(this);
     });                  
@@ -708,8 +761,8 @@ $(document).ready(function () {
         function carregaDadosEdicao(){
             $("#n_finalidade").val(1).change();
             $("#n_instrumento").val(1).change();
-            $("#n_base_calculo").val(2).change();
-            $("#n_unidade_calculo").val(4).change();
+            $("#n_base_calculo").val(1).change();
+            $("#n_unidade_calculo").val(1).change();
             $("#n_tipo_aquisicao").val(1).change();
             $("#numero_novo_aditivo").val(1);
             $("#n_data_publicacao").val("01/01/2019");
