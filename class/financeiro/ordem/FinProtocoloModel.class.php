@@ -366,7 +366,7 @@ class FinProtocoloModel {
                 return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
             }
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
@@ -383,7 +383,7 @@ class FinProtocoloModel {
                 return false;
             }
         } catch (Exception $ex) {
-            return $exc->getMessage();
+            return $ex->getMessage();
         }
     }
 
