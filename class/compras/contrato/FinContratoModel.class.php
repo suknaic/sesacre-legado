@@ -1825,6 +1825,7 @@ class FinContratoModel {
             $aditivo->inserirAditivo($finContratoAdtivo, $pdo);                       
             if(!$aditivo->Sucesso()){
                 $this->sucesso = false;
+                echo $aditivo->getMsgRetorno();
                 $this->msgRetorno = "Não foi possível Cadastrar os Dados do Aditivo";
                 $pdo->rollBack();
                 return;

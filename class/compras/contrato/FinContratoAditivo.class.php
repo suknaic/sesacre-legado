@@ -22,7 +22,7 @@ class FinContratoAditivo {
     private $idUnidadeCalculo = null;
     private $indiceCorrecao = null;
     private $idInstrumento = null;
-    private $percentual = null;
+    private $percentual = null;    
     private $dtPeriodoInicial = null;
     private $dtPeriodoFinal = null;
     private $idTipoAquisicao = null;
@@ -366,7 +366,7 @@ class FinContratoAditivo {
             if(!is_array($dados)){
                 return Metodos::retornoAjax("Erro", "console", "Não foi possível validar esses dados como array.");
             }
-
+                       
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -374,13 +374,28 @@ class FinContratoAditivo {
             $this->idContrato = (int) $dados['dados']['contrato'];
             $this->numeroNovoAditivo = (int)$dados['dados']['numero_novo_aditivo'];
             $this->idBaseCalculo = (int)$dados['dados']['base_calculo'];
+            if(empty($this->idBaseCalculo)){
+                $this->idBaseCalculo = NULL;
+            }            
             $this->idFinalidade = (int)$dados['dados']['finalidade'];
+            if(empty($this->idFinalidade)){
+                $this->idFinalidade = NULL;
+            }
             $this->idUnidadeCalculo = (int)$dados['dados']['unidade_calculo'];
-            $this->indiceCorrecao = trim($dados['dados']['indice_correcao']);
+            if(empty($this->idUnidadeCalculo)){
+                $this->idUnidadeCalculo = NULL;
+            }
+            $this->indiceCorrecao = Metodos::ConverteValorIng(trim($dados['dados']['indice_correcao']));
             $this->idInstrumento = (int)$dados['dados']['instrumento'];
             $this->idMotivo = (int)$dados['dados']['motivo'];
-            $this->percentual = trim($dados['dados']['percentual']);
+            if(empty($this->idMotivo)){
+                $this->idMotivo = NULL;
+            }
+            $this->percentual = Metodos::ConverteValorIng(trim($dados['dados']['percentual']));
             $this->idTipoAquisicao = (int)$dados['dados']['tipo_aquisicao']; 
+            if(empty($this->idTipoAquisicao)){
+                $this->idTipoAquisicao = NULL;
+            }
             $this->dsJustificativa = trim($dados['dados']['justificativa']);
             $this->dtPeriodoInicial = $dados['dados']['periodo_inicial'];            
             $this->dtPeriodoInicial = Metodos::validaConverteDataING($this->dtPeriodoInicial);
@@ -401,7 +416,7 @@ class FinContratoAditivo {
             $this->dtAssinatura = Metodos::validaConverteDataING($this->dtAssinatura);
             if(empty($this->dtAssinatura)){
                 $this->dtAssinatura = NULL;
-            }                          
+            }                                                                      
             
             $this->gestorTitular = $dados['gestor_titular'];
             if(!is_array($this->gestorTitular) || empty($this->gestorTitular)){
@@ -438,6 +453,16 @@ class FinContratoAditivo {
                 $this->subFiscalSubstituto = NULL;
             }
             $this->subFiscalSubstituto = array_unique($this->subFiscalSubstituto);
+            
+            //Para Dentro do sistema, mesmo tendo indice de correção e percentual, basta ter somente um campo 
+            //Com os dados da %
+            if(empty((float)$this->indiceCorrecao)){
+                $this->indiceCorrecao = NULL;
+            }            
+            if(empty((float)$this->percentual)){
+                $this->percentual = $this->indiceCorrecao;
+            }
+                                                                        
             
             if(array_key_exists("itens", $dados)){
                 $this->itens = $dados['itens'];
@@ -523,14 +548,16 @@ class FinContratoAditivo {
                     if($key === false){
                         return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
                     }
-                    //Se a unidade de Cálculo for Moeda
+                    //Se a unidade de Cálculo for Moeda ou Indice de Correção
                     //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
-                    if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()){
+                    if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()
+                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
                         $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
                         $finContItens[] = $finContItensAux[$key];
-                    //Se a unidade de Cálculo for Quantidade
+                    //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
-                    }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()){
+                    }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
+                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
                         $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
                         $finContItens[] = $finContItensAux[$key];
                     }else{
@@ -623,7 +650,7 @@ class FinContratoAditivo {
                     ->setDsJustificativa($this->dsJustificativa)
                     ->setNrAditivo($this->numeroNovoAditivo)
                     ->setDtInicial($this->dtPeriodoInicial)
-                    ->setDtFinal($this->dtPeriodoInicial)
+                    ->setDtFinal($this->dtPeriodoFinal)
                     ->setNrPercentualIndice($this->percentual);                                                   
                       
             $contrato->cadastrarContratoComAditivo($finContratoTb, $finFornecedorTb
@@ -840,7 +867,12 @@ class FinContratoAditivo {
                     $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']." - ".$value['dt_fim_vigencia_contrato']."</td>";
                     $tbody .= "<td style='text-align: center;'>".$value['dt_publicacao']."</td>";
                     $tbody .= "<td style='text-align: center;'>R$ ".$value['valor']."</td>";
-                    $tbody .= '<td style="text-align: center;">'                                                       
+                    $tbody .= '<td style="text-align: center;">'
+                            .'<button type="button" class="btn btn-default btn-open-modal btn-xs"'                               
+                                . ' title="Detalhes" nome="'.$value['nr_contrato'].'" '                               
+                                . ' value=' . $value['id_contrato'] . ' >
+                                <i class="fa fa-file fa-lg text-primary" aria-hidden="true"></i>                                
+                              </button> '
                             .'<button type="button" class="btn btn-default btn-edit btn-xs"'                               
                                 . ' title="Editar" nome="'.$value['nr_contrato'].'" '                               
                                 . ' value=' . $value['id_contrato'] . ' >
@@ -962,6 +994,16 @@ class FinContratoAditivo {
                 return;
             }                                                
             
+            //Se o instrumento de equilibrio for Reajuste
+            //Então é necessário que se preencha os Campos de Periodo Final e Periodo Inicial
+            if( ($this->idInstrumento == $this->getInstrumentoReajuste())
+                && (empty($this->dtPeriodoInicial) || empty($this->dtPeriodoFinal)) 
+            ){
+                $this->sucesso = false;
+                $this->msgRetorno = "Se o Instrumento de Equilíbrio Econômico-Financeiro For Reajuste,"
+                        . " então é obrigatório o preenchimento do Período Inicial e Final.";
+                return;                                    
+            }            
             
             //Se a Base de Calculo for Global, somente poderá ser Percentual ou Indice de Correção na Unidade de Cálculo
             if( $this->idBaseCalculo == $this->getBaseCalculoGlobal() 
@@ -986,6 +1028,23 @@ class FinContratoAditivo {
                 $this->msgRetorno = "Se a Base de Cálculo for Valor Unitário, a Unidade de Cálculo deverá ser Moeda ou Quantidade.";
                 return;  
             }  
+                        
+            //Se a Unidade de Cálculo for Percentual ou Indice de Correção
+            //, então os dados dos percentuais devem estar preenchidos
+            if( ($this->getUnidadeCalculoIndice() == $this->idUnidadeCalculo)
+                    && empty((float)$this->percentual)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Quando a Unidade de Cálculo for Índice de Correção, então é necesário que se informe"
+                        . " o Valor do Índice de Correção.";
+                return;  
+            }else if(($this->getUnidadeCalculoPercentual() == $this->idUnidadeCalculo)
+                    && empty((float)$this->percentual)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Quando a Unidade de Cálculo for Percentual, então é necesário que se informe"
+                        . " o Valor do Percentual.";
+                return;  
+            }
+                                    
             
             //Motivo Por Valor, é necessário o preenchimento de algum item
             if(empty($this->itens)){

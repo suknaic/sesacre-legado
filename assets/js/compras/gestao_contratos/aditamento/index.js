@@ -550,6 +550,9 @@ $(document).ready(function () {
                 && $("#n_base_calculo option:selected").val() == 1 ){
             $("#div_indice_correcao").show();
         } 
+        //Os Campos para serem digitados ficaram readonly
+        //Somente se unidade de cálculo for Moeda ou Quantidade que 
+        //irá habilitar o campo para ser preenchido pelo usuário
         $('.qtd_aditivo').prop('readonly', true);
         if($("#n_unidade_calculo option:selected").val() == 3
                 || $("#n_unidade_calculo option:selected").val() == 4){
@@ -567,13 +570,13 @@ $(document).ready(function () {
            //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
             if($("#n_tipo_aquisicao option:selected").val() == 1){
                 if(valor > 25.0000){          
-                    $("#n_percentual").val("25,0000");
+                    $("#n_percentual").val("25,0000").change();
                 }
             }
             //Se Tipo de Aquisicao for Reforma de Edifício, o Valor Percentual máximo será de 50%
             if($("#n_tipo_aquisicao option:selected").val() == 2){
                 if(valor > 50.0000){                  
-                    $("#n_percentual").val("50,0000");
+                    $("#n_percentual").val("50,0000").change();
                 }
             }            
         }
@@ -584,12 +587,15 @@ $(document).ready(function () {
         $("#n_finalidade").trigger("change");
     });
     //Percentual sempre leva em consideração a regra da finalidade
+    //para calcular os Valores quando ele informar no Campo
     $("body").on("change keydown keyup", "#n_percentual", function (){        
         $("#n_finalidade").trigger("change");
-        calculoPercentualDosItens();
+        calculoPercentualDosItens($(this));
     });
-    
-    //$("#n_base_calculo").val(2).change();
+    //Indice de Correção, para calcular os Valores quando ele informar no Campo
+    $("body").on("change keydown keyup", "#n_indice_correcao", function (){                
+        calculoPercentualDosItens($(this));
+    });        
     
     $('body').on('click', '#btn_itens_abrir_modal', function (e){
         e.stopPropagation();
@@ -597,11 +603,6 @@ $(document).ready(function () {
         } else { 
             e.preventDefault();    
             
-//            if($("#n_unidade_calculo option:selected").val() != 3
-//                    && $("#n_unidade_calculo").val() != 4){
-//                func.modalAlert("É Necessário Escolher Uma Unidade de Cálculo Quantidade ou Moeda.");
-//                return false;
-//            }            
             if($("#n_unidade_calculo").val() == 0){
                 func.modalAlert("É Necessário Escolher uma Unidade de Cálculo.");
                 return false;
@@ -658,26 +659,41 @@ $(document).ready(function () {
             centsLimit: 4
         });
     }       
-    function calculoPercentualDosItens(){
-        let percentual = func.converteValorIngFloat($("#n_percentual").val());
-        let valorAditivo = 0;
-        $(".td_quantidade").each(function(index){         
-            let quantidade = func.converteValorIngFloat($(this).text());           
-            valorAditivo = quantidade * (percentual/100);
-            $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
-            $(this).closest('tr').find('.qtd_aditivo').priceFormat({
-                prefix: '',
-                centsSeparator: ',',
-                thousandsSeparator: '.',
-                centsLimit: 4
-            }); 
-            calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));
-            //console.log(valorAditivo.toFixed(4)+" "+percentual);
-        });
-        calculoValorAditivo();
-        //console.log(percentual);
-    }
     
+    //Quando a Unidade de Cálculo for Percentual ou Indice de Correção
+    //Os Itens serão calculados de acordo com os Dados da % fornecida pelo usuario
+    function calculoPercentualDosItens(elemento){
+        let percentual = func.converteValorIngFloat($(elemento).val());
+        let valorAditivo = 0;
+        if($("#n_unidade_calculo option:selected").val() == 1){
+            $(".td_quantidade").each(function(index){         
+                let quantidade = func.converteValorIngFloat($(this).text());           
+                valorAditivo = quantidade * (percentual/100);
+                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                $(this).closest('tr').find('.qtd_aditivo').priceFormat({
+                    prefix: '',
+                    centsSeparator: ',',
+                    thousandsSeparator: '.',
+                    centsLimit: 4
+                }); 
+                calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));            
+            });
+        }else if($("#n_unidade_calculo option:selected").val() == 2){
+            $(".td_valor_unitario").each(function(index){         
+                let quantidade = func.converteValorIngFloat($(this).text());           
+                valorAditivo = quantidade * (percentual/100);
+                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                $(this).closest('tr').find('.qtd_aditivo').priceFormat({
+                    prefix: '',
+                    centsSeparator: ',',
+                    thousandsSeparator: '.',
+                    centsLimit: 4
+                }); 
+                calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));            
+            });
+        }
+        calculoValorAditivo();        
+    }    
     $('body').on('keyup', '.qtd_aditivo', function(){
         calculaValorTotal(this);
     });                  
