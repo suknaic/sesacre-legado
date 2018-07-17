@@ -181,35 +181,6 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
-    public function atualizaDataConfirmacao(PDO $pdo) {
-        try {
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
-            $daoFinEntregaConfirmacao->setDtConfirmacao($this->dt_confirmacao);
-            //chama a funçao para lista os dados antes do update
-            $daoFinEntregaConfirmacao->retornaDados($pdo);
-            $busca = [];
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $busca = $daoFinEntregaConfirmacao->getMsgRetorno();
-                //ser tudo de certo chamo a funçao de updatae da data de 
-                $daoFinEntregaConfirmacao->updateDataConfirmacao($pdo);
-            }
-            if (!Log::SalvaLogU("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $busca, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-            }
-
-            if ($daoFinEntregaConfirmacao->sucesso()) {
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
     public function verificaSerAEntregaTotal($pdo) {
         try {
             if (empty($pdo)) {

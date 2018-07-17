@@ -217,4 +217,28 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
         }
     }
 
+    public function verificarUltimaEntrega(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_entrega_itens from fin_entrega_itens where ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro PDO";
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }
