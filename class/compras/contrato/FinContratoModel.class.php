@@ -1867,7 +1867,7 @@ class FinContratoModel {
                 $finGestor = new FinGestorModel();
                 $finGestor->setIdContrato($daoContrato->getIdContrato());
                 $finGestor->setTpGestor(1);
-                $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());
+                $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());               
                 foreach ($gestorTitular as $valor) {
                     $finGestor->setIdPessoa($valor);                                        
                     $finGestor->cadastraGestorAditivo($pdo);

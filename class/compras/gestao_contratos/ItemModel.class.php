@@ -856,7 +856,7 @@ class ItemModel {
 				<td class="text-center td_valor_unitario">' . Metodos::ConverteValorBr($value["vl_itens"], 4) . '</td>								
 				<td class="text-center">
                                     <span class="label-aditivo">Quantidade</span>
-                                    <input type="text" name="qtd_aditivo" class="form-control input-sm qtd_aditivo quatro_casas" />
+                                    <input type="text" name="qtd_aditivo" class="form-control input-sm qtd_aditivo quatro_casas" readonly="true" value="0.0000" />
                                 </td>				
 				<td class="text-center td_total">0.0000</td>
                                 <td class="">Saldo</td>

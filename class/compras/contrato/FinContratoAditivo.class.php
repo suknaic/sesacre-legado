@@ -407,7 +407,7 @@ class FinContratoAditivo {
             if(!is_array($this->gestorTitular) || empty($this->gestorTitular)){
                 $this->gestorTitular = NULL;
             }
-            $this->gestorTitular = array_unique($this->gestorTitular);
+            $this->gestorTitular = array_unique($this->gestorTitular);                        
             
             $this->gestorSubstituto = $dados['gestor_substituto'];
             if(!is_array($this->gestorSubstituto) || empty($this->gestorSubstituto)){
@@ -898,16 +898,16 @@ class FinContratoAditivo {
         }
         
         //Se o Motivo é por Valor, então essa será a validação
-        if($this->idMotivo == $this->getMotivoPorValor()){         
-            if(empty($this->numeroNovoAditivo) || empty($this->idFinalidade)
+        if($this->idMotivo == $this->getMotivoPorValor()){    
+            if(!( empty($this->numeroNovoAditivo) || empty($this->idFinalidade)
                 || empty($this->idInstrumento) || empty($this->idBaseCalculo)                                    
                 || empty($this->idUnidadeCalculo) || empty($this->dtPublicacao) 
-                || empty($this->dtAssinatura)){
-                return false;
+                || empty($this->dtAssinatura) )){
+                return true;
             }                        
         }
                         
-        return true;
+        return false;
     }
     
     /**
@@ -993,10 +993,12 @@ class FinContratoAditivo {
                 $this->msgRetorno = "No Aditivo Por Valor, é necessário o Preenchimento dos Valores Por Cada Item que será aditivado.";
                 return; 
             }
-            
+            $this->sucesso = true;
+            $this->msgRetorno = "ok";
+            return;
         }                                        
-        $this->sucesso = true;
-        $this->msgRetorno = "ok";
+        $this->sucesso = false;
+        $this->msgRetorno = "Não foi possível validar os Dados desse Motivo do Aditivo.";
     }
     
     public function inserirAditivo(FinContratoAditivoTb $finContratoAditivo, PDO $pdo){
