@@ -509,62 +509,108 @@ class FinContratoAditivo {
             $proximoSequencial = $daoContratoAditivo->getMsgRetorno();
             
             
-            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor
-            //Se for o primeiro contrato, então será do contrato.
-            //Se já tiver algum Aditivo cadastrado, então será pego o ultimo Aditivo para pegar os Dados dele
-            $this->idContratoAditivoPai = $this->idContrato;
-            if((int)$proximoAditivo > 1){
-                $this->idContrato = $idContratoUltimo;
-            }
+            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor            
             
             $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
             if(!$contratoRef->sucesso()){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
-            }                
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Contrato.");
+            }
             $contRef = $contratoRef->getMsgRetorno();
             
-            //Carrega todos os itens do Contrato(Fornecedor)
-            $finContItens = "";
-            $itemModel = new ItemModel();
-            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
-            $itemModel->retornaItensPorFornecedor($pdo);
-            if($itemModel->Sucesso()){
-                $finContItens = $itemModel->getMsgRetorno();
+            
+            $this->idContratoAditivoPai = $this->idContrato;
+            if((int)$proximoAditivo > 1 && !empty($idContratoUltimo)){
+                $contratoAditivoRef = new FinContratoModel();
+                $contratoAditivoRef->setIdContrato($idContratoUltimo);
+                $contratoAditivoRef->retornaDadosContratoCompleto($pdo);
+                if(!$contratoAditivoRef->sucesso()){
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
+                }
+                $contAditivoRef = $contratoAditivoRef->getMsgRetorno();               
+                //$this->idContrato = $idContratoUltimo;
             }
             
+            
+            
+            //Carrega todos os itens do Contrato(Fornecedor)
+//            $finContItens = "";
+//            $itemModel = new ItemModel();
+//            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
+//            $itemModel->retornaItensPorFornecedor($pdo);
+//            if($itemModel->Sucesso()){
+//                $finContItens = $itemModel->getMsgRetorno();
+//            }
+
+           
+            
+            $finContItens = $contRef->getItems();
             if(empty($finContItens)
                     || !is_array($finContItens)){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Último Contrato ou Aditivo Registrado.");
-            }
-          
-            $finContItensAux = $finContItens;
-            $finContItens = "";
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Contrato Registrado.");
+            }                        
             
+            //Ajusta os Valores dos Itens que serão duplicados no sistema
             if(!empty($this->itens)){
-                foreach ($this->itens as $key => $value) {
-                    $key = array_search($value['id'], array_column($finContItensAux, "id_cont_itens"));
+                $quantidadeDeItensEnviado = count($this->itens);
+                $i = 0;
+                foreach ($finContItens as $k => $value) {
+                    $key = array_search($value->getIdContItens(), array_column($this->itens, "id"));
+                    //Se a aplicação não enviou o Id do Item, então esse item terá seu valor zerado
                     if($key === false){
-                        return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
-                    }
+                        $finContItens[$k]->setQtItens(0);
+                        $finContItens[$k]->setVlItens(0);                                               
+                        continue;
+                    }                    
                     //Se a unidade de Cálculo for Moeda ou Indice de Correção
                     //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
                     if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()
                             || $this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
-                        $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
-                        $finContItens[] = $finContItensAux[$key];
+                        $finContItens[$k]->setVlItens($this->itens[$key]['valor_aditivado']);      
+                        $i++;
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
                     }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
                             || $this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
-                        $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
-                        $finContItens[] = $finContItensAux[$key];
-                    }else{
-                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Identificar a Unidade de Cálculo nos itens");
+                        $finContItens[$k]->setQtItens($this->itens[$key]['valor_aditivado']);
+                        $i++;                        
                     }                                        
                 }
-            }
+                if($quantidadeDeItensEnviado != $i){
+                    return Metodos::retornoAjax("Erro", "alert", "A Quantidade de Itens que foi enviada para alteração não tiverem seus "
+                            . "dados ajustados de acordo com os itens do Contrato.");
+                }
+            }                  
+           
+//            $finContItensAux = $finContItens;
+//            $finContItens = "";
+            
+            
+            
+//            if(!empty($this->itens)){
+//                foreach ($this->itens as $key => $value) {
+//                    $key = array_search($value['id'], array_column($finContItensAux, "id_cont_itens"));
+//                    if($key === false){
+//                        return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
+//                    }
+//                    //Se a unidade de Cálculo for Moeda ou Indice de Correção
+//                    //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
+//                    if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()
+//                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
+//                        $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
+//                        $finContItens[] = $finContItensAux[$key];
+//                    //Se a unidade de Cálculo for Quantidade ou Percentual
+//                    //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
+//                    }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
+//                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
+//                        $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
+//                        $finContItens[] = $finContItensAux[$key];
+//                    }else{
+//                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Identificar a Unidade de Cálculo nos itens");
+//                    }                                        
+//                }
+//            }
             
                                                                                                                                  
             //Preparar Dados Para Inserir no Banco            
@@ -622,23 +668,23 @@ class FinContratoAditivo {
             //Busca os Dados do Fin Cont Itens
             //Somente os itens que serão duplicados
             $itens = "";
-            foreach ($finContItens as $key => $value){
+            foreach ($finContItens as $key => $value){        
                 $finItens = new FinItensTb();
-                $finItens->setNrItem($value['nr_item']);
-                $finItens->setNrLote($value['nr_lote']);
-                $finItens->setNmMarca($value['nm_marca']);
-                $finItens->setNmModelo($value['nm_modelo']);
-                $finItens->setQtItens($value['qt_itens']);
-                $finItens->setVlItens($value['vl_itens']);
-                $finItens->setPcDesconto($value['pc_desconto']);
-                $finItens->setFlValorVariavel($value['fl_valor_variavel']);
-                $finItens->setDescItem($value['ds_itens']);
-                $finItens->setIdMaterial($value['id_material']);
+                $finItens->setNrItem($value->getNrItem());
+                $finItens->setNrLote($value->getNrLote());
+                $finItens->setNmMarca($value->getNmMarca());
+                $finItens->setNmModelo($value->getNmModelo());
+                $finItens->setQtItens($value->getQtItens());
+                $finItens->setVlItens($value->getVlItens());
+                $finItens->setPcDesconto($value->getPcDesconto());
+                $finItens->setFlValorVariavel($value->getFlValorVariavel());
+                $finItens->setDescItem($value->getDescItem());
+                $finItens->setIdMaterial($value->getIdMaterial());
                 $finItens->setIdContItens(NULL);
-                $finItens->setIdUnidadeMedida($value['id_unidade_medida']);
+                $finItens->setIdUnidadeMedida($value->getIdMaterial());
                 $itens[] = $finItens;
-            }                        
-                      
+            }                      
+            
             
             $finContratoAdtivoTb = new FinContratoAditivoTb();
             $finContratoAdtivoTb->setIdContratoMotivo($this->idMotivo)
