@@ -335,4 +335,23 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
+    public function verificarUltimaEntrega(PDO $pdo) {
+        try {
+            $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+            $stmt->execute();
+            
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+            
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }

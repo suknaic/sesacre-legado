@@ -177,7 +177,7 @@ class FinEntregaItensModel {
             } else {
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-           
+
             if (strtotime($dataMaior) > strtotime($dataItem["dt_entrega"])) {
                 return Metodos::retornoAjax("Erro", "alert", "Exclua o item que tem a maior data");
             }
@@ -195,7 +195,7 @@ class FinEntregaItensModel {
             //verificar ser e a ultima entrega ser for false e a ultima sendo assim
             //tenho que volta o status da confirmacao da entrega para 0
             $daoFinEntregaItens->verificarUltimaEntrega($pdo);
-            
+
             if (!$daoFinEntregaItens->sucesso()) {
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
                 $finEntregaConfirmacaoModel->excluirEntrega($pdo);
@@ -218,14 +218,25 @@ class FinEntregaItensModel {
                 $finProtocoloModel->setDtConfirmacao($dataMaior);
                 $finProtocoloModel->atualizaEntregueDia($pdo, 1);
             }
-            
+
             if (!$finProtocoloModel->Sucesso()) {
                 $erro = true;
             }
 
+            $finEntregaConfirmacaoModel->verificaUltimaEntregaConfirmacao($pdo);
+            
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $finProtocoloModel = new FinProtocoloModel();
+                $finProtocoloModel->setIdProtocolo($this->id_protocolo);
+                $finProtocoloModel->setStProtocolo(0);
+                if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
+                    $erro = true;
+                }
+            }
+
             if (!$erro) {
                 $pdo->commit();
-                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);

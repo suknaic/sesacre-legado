@@ -318,6 +318,7 @@ $(document).ready(function () {
                             "dados": dados
                         },
                         "success": function (response) {
+                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -339,7 +340,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
+                                func.modalAlert(response.msg, 'success');
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
                                     location.reload();
                                 });
