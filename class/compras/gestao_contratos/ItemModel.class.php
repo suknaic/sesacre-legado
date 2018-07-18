@@ -799,22 +799,10 @@ class ItemModel {
         }
     }
 
-    public function retornaTrItensParaAditamento(int $idContrato) {
+    public function retornaTrItensParaAditamento(int $idContrato){
         //conexao com banco dedados
         $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        
-        
-        $finContratoAditivo = new FinContratoAditivo();
-        $finContratoAditivo->setIdContrato($idContrato);
-        $finContratoAditivo->retornaNumeroUltimoAditivo($pdo);
-      
-        if($finContratoAditivo->Sucesso()
-                && !empty($finContratoAditivo->getMsgRetorno())
-                && is_array($finContratoAditivo->getMsgRetorno())){
-            $idContrato = $finContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];            
-        }        
-        
+        $pdo = $conexao->connect();             
         
         //pega id do fornecedor
         $finFornecedoresModel = new FinFornecedoresModel();

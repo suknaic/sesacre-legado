@@ -1600,8 +1600,7 @@ class FinContratoModel {
             }
             
             $daoContrato = new DaoFinContrato();
-            $daoContrato->setIdContrato($this->id_contrato);
-            //$daoContrato->setIdContrato(1355);
+            $daoContrato->setIdContrato($this->id_contrato);            
             $daoContrato->retornaDadosSemItens($pdo);
             if(!$daoContrato->sucesso()){
                 $this->msgRetorno = $daoContrato->getMsgRetorno();
