@@ -343,6 +343,25 @@ class FinEntregaConfirmacaoModel {
                 $finEntregaItensModel->setVlItensEntrega(null);
             }
 
+            $finOrdemItensModel->setIdOrdem($dados[0]->idOrdem);
+            $finOrdemItensModel->retornaArraySaldoOrdemItens($pdo);
+            $parcial = 0;
+
+            foreach ($finOrdemItensModel->getMsgRetorno() as $saldo) {
+                if (round($saldo["saldoitens"], 4) > 0) {
+                    $parcial++;
+                }
+            }
+
+            if (empty($parcial)) {
+                //atualiza situaçao da entrega
+                $finProtocoloModel->setStProtocolo(2);
+                if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação");
+                }
+            }
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
@@ -507,7 +526,7 @@ class FinEntregaConfirmacaoModel {
 
     public function verificaUltimaEntregaConfirmacao(PDO $pdo) {
         try {
-            
+
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
@@ -516,7 +535,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->verificarUltimaEntrega($pdo);
-            $this->sucesso = $daoFinEntregaConfirmacao->sucesso(); 
+            $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
