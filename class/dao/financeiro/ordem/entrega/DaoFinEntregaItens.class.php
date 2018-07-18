@@ -220,7 +220,7 @@ class DaoFinEntregaItens extends FinEntregaItensTb {
     public function verificarUltimaEntrega(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select id_entrega_itens from fin_entrega_itens where ";
+                $sql = "select id_entrega_itens from fin_entrega_itens where id_entrega_confirmacao = :entrega";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();

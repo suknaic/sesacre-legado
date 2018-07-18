@@ -12,7 +12,6 @@ class FinEntregaItensModel {
     private $vl_itens_entrega = null;
     private $id_protocolo = null;
 
-    
     public function getIdEntregaItens() {
         return $this->id_entrega_itens;
     }
@@ -168,7 +167,7 @@ class FinEntregaItensModel {
             $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
             $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
             $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
-            
+
             //buscando a data do item a ser removido no banco
             $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaItens->retornaDataEntregaItens($pdo);
@@ -178,31 +177,16 @@ class FinEntregaItensModel {
             } else {
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-      
+
             if (strtotime($dataMaior) > strtotime($dataItem["dt_entrega"])) {
                 return Metodos::retornoAjax("Erro", "alert", "Exclua o item que tem a maior data");
             }
-            
+
             $daoFinEntregaItens->setIdEntregaItens($this->id_entrega_itens);
             $daoFinEntregaItens->removeItemEntrega($pdo);
             $erro = false;
 
             if (!$daoFinEntregaItens->sucesso()) {
-                $erro = true;
-            }
-
-            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
-            $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
-
-            //verificar ser deu tudo certo no retorno da maio data 
-            if ($finEntregaConfirmacaoModel->sucesso()) {
-                //
-                $finProtocoloModel = new FinProtocoloModel();
-                $finProtocoloModel->setDtConfirmacao($dataMaior);
-                $finProtocoloModel->atualizaEntregueDia($pdo, 1);
-            }
-
-            if (!$finProtocoloModel->Sucesso()) {
                 $erro = true;
             }
 
@@ -212,14 +196,9 @@ class FinEntregaItensModel {
             //tenho que volta o status da confirmacao da entrega para 0
             $daoFinEntregaItens->verificarUltimaEntrega($pdo);
 
-            if ($daoFinEntregaItens->sucesso()) {
+            if (!$daoFinEntregaItens->sucesso()) {
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-                $finEntregaConfirmacaoModel->setSitEntrega(1);
-                $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
-            } else {
-                $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-                $finEntregaConfirmacaoModel->setSitEntrega(0);
-                $finEntregaConfirmacaoModel->atualizaSituacao($pdo);
+                $finEntregaConfirmacaoModel->excluirEntrega($pdo);
             }
 
             if (!$finEntregaConfirmacaoModel->sucesso()) {
@@ -230,9 +209,34 @@ class FinEntregaItensModel {
                 $erro = true;
             }
 
+            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+            $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
+            //verificar ser deu tudo certo no retorno da maio data 
+            if ($finEntregaConfirmacaoModel->sucesso()) {
+                $finProtocoloModel = new FinProtocoloModel();
+                $finProtocoloModel->setIdProtocolo($this->id_protocolo);
+                $finProtocoloModel->setDtConfirmacao($dataMaior);
+                $finProtocoloModel->atualizaEntregueDia($pdo, 1);
+            }
+
+            if (!$finProtocoloModel->Sucesso()) {
+                $erro = true;
+            }
+
+            $finEntregaConfirmacaoModel->verificaUltimaEntregaConfirmacao($pdo);
+            
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $finProtocoloModel = new FinProtocoloModel();
+                $finProtocoloModel->setIdProtocolo($this->id_protocolo);
+                $finProtocoloModel->setStProtocolo(0);
+                if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
+                    $erro = true;
+                }
+            }
+
             if (!$erro) {
                 $pdo->commit();
-                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);

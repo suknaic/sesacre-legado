@@ -91,13 +91,13 @@
                             </ul>
                         </li>
                         <!--Menu list Chamados-->
-                        <li>
+<!--                        <li>
                             <a href="#">
                                 <i class="fa fa fa-phone" aria-hidden="true"></i>
                                 <span class="menu-title">Chamados</span>
                                 <i class="arrow"></i>
                             </a>
-                            <!--Submenu-->
+                            Submenu
                             <ul class="collapse">                                
                                 <li>
                                     <a href="#">Engenharia</a>
@@ -161,7 +161,7 @@
                                 </li>
                             </ul>
 
-                        </li>
+                        </li>-->
                         <!--Menu list Planejamento-->
                         <li>
                             <a href="/pages/pla/">

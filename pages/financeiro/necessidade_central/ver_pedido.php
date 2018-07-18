@@ -116,12 +116,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                                 <div class='col-sm-9' id="valorPedido"><?php echo Metodos::ConverteValorBr($dados[0]["vl_pedido"], '4'); ?></div>
                                             </div>
                                         <?php } ?>
+                                        <div class="row">
+                                            <div class='col-sm-2'><b>Data do Pedido:</b></div>
+                                            <div class='col-sm-9' id="dataPeddio"><?php echo $dados[0]["datapedido"]; ?></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--===================================================-->
-                        <?php if($dados[0]['id_tipo_gasto'] != 13) {?>
+                        <?php if ($dados[0]['id_tipo_gasto'] != 13) { ?>
                             <!--Informaçao do Itens da pre ordem-->
                             <div class="row">
                                 <div class="col-sm-12">
@@ -171,12 +175,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                                             <b>Nº da Diária/Nº do Protocolo:</b>
                                                         </div>
                                                         <div class="col-sm-8">
-                                                            <?php echo $diariaObj[0]['id_diaria']; ?>/<?php echo $diariaObj[0]['nr_protocolo']?>
+                                                            <?php echo $diariaObj[0]['id_diaria']; ?>/<?php echo $diariaObj[0]['nr_protocolo'] ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    
+
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -213,15 +217,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                         <div class="panel-footer">
                                             <table class="table">
                                                 <thead>
-                                                    <th>Origem</th>
-                                                    <th>Destino</th>
-                                                    <th>Horário Partida</th>
-                                                    <th>Horário Chegada</th>
-                                                    <th>Qtd. Diárias</th>
-                                                    <th>Valor unit.</th>
+                                                <th>Origem</th>
+                                                <th>Destino</th>
+                                                <th>Horário Partida</th>
+                                                <th>Horário Chegada</th>
+                                                <th>Qtd. Diárias</th>
+                                                <th>Valor unit.</th>
                                                 </thead>
                                                 <tbody>
-                                                    <?php echo $destinos;?>
+                                                    <?php echo $destinos; ?>
                                                 </tbody>
                                             </table>
                                         </div>
