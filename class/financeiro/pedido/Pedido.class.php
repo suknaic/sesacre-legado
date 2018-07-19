@@ -201,6 +201,14 @@ class Pedido {
         );
         return $arr_situacao;
     }
+    
+    public static function getPermiteCancelamento(string $st_pedido){
+        if ($st_pedido == '9' or $st_pedido == '10' or $st_pedido == '11' or $st_pedido == '12' or $st_pedido == '13' or $st_pedido == '14' or $st_pedido == '15') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function salvaPedido() {
         try {

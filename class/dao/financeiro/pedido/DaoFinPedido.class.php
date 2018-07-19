@@ -248,7 +248,7 @@ class DaoFinPedido extends FinPedidoTb {
                         pt.cd_programa_trabalho, pt.ds_programa_trabalho, 
                         case
                          when p.st_pedido  = '9' THEN 'Aguardando finaliza a pre-ordem'
-                         when p.st_pedido  = '10' THEN 'Aguardando autorização da responsável imediato' 
+                         when p.st_pedido  = '10' THEN 'Aguardando autorização do responsável imediato' 
                          when p.st_pedido  = '11' THEN 'Aguardando autorização do responsável da central'
                          when p.st_pedido  = '12' THEN 'Aguardando autorização de orçamentário'
                          when p.st_pedido  = '13' THEN 'Aguardando autorização financeiro'
