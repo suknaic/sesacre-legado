@@ -223,11 +223,16 @@ class FinEntregaItensModel {
                 $erro = true;
             }
 
+            $finProtocoloModel = new FinProtocoloModel();
+            $finProtocoloModel->setIdProtocolo($this->id_protocolo);
+            $finProtocoloModel->setStProtocolo(1);
+            if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
+                $erro = true;
+            }
+
             $finEntregaConfirmacaoModel->verificaUltimaEntregaConfirmacao($pdo);
-            
+
             if (!$finEntregaConfirmacaoModel->sucesso()) {
-                $finProtocoloModel = new FinProtocoloModel();
-                $finProtocoloModel->setIdProtocolo($this->id_protocolo);
                 $finProtocoloModel->setStProtocolo(0);
                 if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                     $erro = true;
