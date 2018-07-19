@@ -25,19 +25,26 @@ $(document).ready(function () {
     //carrega options de lotacao do usuario
     function carregaLotacao() {
         var tpSolicitacao = $("#tipoSolicitacao option:selected").val();
-        $.ajax({
-            "url": "/model/financeiro/necessidade_central/requestPedido.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "carregaLotacao",
-                "dados": tpSolicitacao
-            },
-            "success": function (response) {
-                $("body").find("#central").html(response);
-                $(".select").select2({
-                });
-            }
-        });
+        
+        if (tpSolicitacao == "" || tpSolicitacao == "0") {
+            $("body").find("#central").html('<option value="0">Selecione uma Central</option>');
+            $(".select").select2({
+            });
+        } else {
+            $.ajax({
+                "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "carregaLotacao",
+                    "dados": tpSolicitacao
+                },
+                "success": function (response) {
+                    $("body").find("#central").html(response);
+                    $(".select").select2({
+                    });
+                }
+            });
+        }
     }
 //    carregaLotacao();
     //fim
