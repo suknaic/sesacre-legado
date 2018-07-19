@@ -107,7 +107,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <?php if (!$situacao) { ?>
+                                    <?php if ($situacao["st_protocolo"] < '2') { ?>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <div class="panel-body">
