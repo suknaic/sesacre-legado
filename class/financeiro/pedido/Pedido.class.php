@@ -22,11 +22,10 @@ class Pedido {
     private $stPedido = null;
     private $contratado = null;
     private $ano = null;
-    
     //atributos para vincular a diaria
     private $idUsuario = null;
     private $idDiaria = null;
-    
+
     function getIdUsuario() {
         return $this->idUsuario;
     }
@@ -186,7 +185,7 @@ class Pedido {
     function setAno($ano) {
         $this->ano = $ano;
     }
-    
+
     public function getSituacaoPedidos(): array {
         $arr_situacao = array(
             '0' => 'Cancelado',
@@ -197,7 +196,7 @@ class Pedido {
             '13' => 'Aguardando Autorização do Gerente Financeiro',
             '14' => 'Aguardando Autorização do Ordenador de Despesa',
             '15' => 'Empenho',
-            '16' => 'Ordem'            
+            '16' => 'Ordem'
         );
         return $arr_situacao;
     }
@@ -245,12 +244,7 @@ class Pedido {
             $daoFinPedido->setIdLotacao($this->idLotacao);
             $daoFinPedido->setDsPedido($this->dsPedido);
             $daoFinPedido->setVlPedido($this->vlPedido);
-            if ($this->idTipoSolicitacao <> 3) {
-                $daoFinPedido->setStPedido(9);
-            } else {
-                $daoFinPedido->setStPedido(10);
-            }
-
+            $daoFinPedido->setStPedido(9);
             $daoFinPedido->cadastrarFinPedido($pdo);
 
             //log do pedido de necessidade
@@ -267,7 +261,7 @@ class Pedido {
                     $retorno = Metodos::retornoAjax("ok", "offPre", $daoFinPedido->getIdPedido());
                 } else {
                     $retorno = Metodos::retornoAjax("ok", "pre", $daoFinPedido->getIdPedido());
-                } 
+                }
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();
@@ -316,11 +310,7 @@ class Pedido {
             $daoFinPedido->setIdLotacao($this->idLotacao);
             $daoFinPedido->setDsPedido($this->dsPedido);
             $daoFinPedido->setVlPedido(Metodos::ConverteValorIng($this->vlPedido));
-            if ($this->idTipoSolicitacao == 3) {
-                $daoFinPedido->setStPedido(10);
-            } else {
-                $daoFinPedido->setStPedido(11);
-            }
+            $daoFinPedido->setStPedido(11);
 
             $daoFinPedido->cadastrarFinPedidoSemFornecedor($pdo);
             //log do pedido de necessidade
@@ -329,15 +319,15 @@ class Pedido {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
             if ($daoFinPedido->Sucesso()) {
-                
+
                 //Se for diaria, irá vincular com o pedido
                 if ($this->idTipoGasto == 13) {
                     //pega o ano do pedido para adicionar esta informação no historico da diaria
                     $daoFinPedido->retornaDadosPedido($pdo);
                     $dataPedido = new DateTime($daoFinPedido->getMsgRetorno()['dt_pedido']);
-                    $retorno2 = !$this->associaPedidoDiaria($pdo,$daoFinPedido->getIdPedido(),(int)$dataPedido->format('Y'));
+                    $retorno2 = !$this->associaPedidoDiaria($pdo, $daoFinPedido->getIdPedido(), (int) $dataPedido->format('Y'));
                 } else {
                     $retorno2 = true;
                 }
@@ -352,7 +342,6 @@ class Pedido {
                 } else {
                     $retorno = Metodos::retornoAjax("Erro", "alert", 'Erro na vinculação do pedido com a diária.');
                 }
-                
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
                 $pdo->rollBack();
@@ -363,19 +352,19 @@ class Pedido {
         }
     }
 
-   function associaPedidoDiaria(PDO $pdo = null, int $idPedido, int $anoPedido){
-       try {
-           $diaria = new Diaria();
-           $diaria->setIdDiaria($this->getIdDiaria());
-           $diaria->setIdPedido($idPedido);
-           $diaria->setAnoPedido($anoPedido);
-           $diaria->setUsuarioPedido($this->getIdUsuario());
-           return $diaria->vinculaPedidoDiaria($pdo);
-       } catch (Exception $exc) {
-           return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-       }
+    function associaPedidoDiaria(PDO $pdo = null, int $idPedido, int $anoPedido) {
+        try {
+            $diaria = new Diaria();
+            $diaria->setIdDiaria($this->getIdDiaria());
+            $diaria->setIdPedido($idPedido);
+            $diaria->setAnoPedido($anoPedido);
+            $diaria->setUsuarioPedido($this->getIdUsuario());
+            return $diaria->vinculaPedidoDiaria($pdo);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
     }
-    
+
     public function retornaDadosPedido() {
         try {
             $conexao = new Conexao();
@@ -498,7 +487,7 @@ class Pedido {
                                 <td class = "text-center">' . Metodos::ConverteValorBr($dados["vl_pedido"], 4) . '</td>  
                                 <td class = "text-center">' . $dados["status"] . '</td>    
                                 <td class = "text-center">
-                                    <a type = "button" title = "Visualiza pedido" href="/pages/financeiro/necessidade_central/ver_pedido.php?id='. $dados['id_pedido'].'" class = "verPedido" >
+                                    <a type = "button" title = "Visualiza pedido" href="/pages/financeiro/necessidade_central/ver_pedido.php?id=' . $dados['id_pedido'] . '" class = "verPedido" >
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
                                     </a >
                                 </td>
@@ -510,54 +499,54 @@ class Pedido {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
+
     public function listaSituacaoQuantidadeJSON() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->retornaQuantidadeSituacaoPedido($pdo);
-            
+
             $array = array(
                 '11' => 'Aut. Central',
                 '12' => 'Aut. Orçamento',
                 '13' => 'Aut. Financeiro',
                 '14' => 'Aut. Ordenador'
             );
-            
+
             $arraySituacao = array(
-                    11 => array(                        
-                        "situacao" => "Aut. Central",
-                        "quantidade" => 0                 
-                    ),
-                    12 => array(                        
-                        "situacao" => "Aut. Orçamento",
-                        "quantidade" => 0                 
-                    ),
-                    13 => array(                        
-                        "situacao" => "Aut. Financeiro",
-                        "quantidade" => 0                 
-                    ),
-                    14 => array(
-                        "situacao" => "Aut. Ordenador",
-                        "quantidade" => 0                 
-                    ),
-                );
-            
+                11 => array(
+                    "situacao" => "Aut. Central",
+                    "quantidade" => 0
+                ),
+                12 => array(
+                    "situacao" => "Aut. Orçamento",
+                    "quantidade" => 0
+                ),
+                13 => array(
+                    "situacao" => "Aut. Financeiro",
+                    "quantidade" => 0
+                ),
+                14 => array(
+                    "situacao" => "Aut. Ordenador",
+                    "quantidade" => 0
+                ),
+            );
+
             $arrayQuantidade = array();
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
-                if(array_key_exists($value['st_pedido'], $arraySituacao)){
+                if (array_key_exists($value['st_pedido'], $arraySituacao)) {
                     $arraySituacao[$value['st_pedido']]['quantidade'] = $value['quantidade'];
-                }                
+                }
             }
-            
+
             foreach ($arraySituacao as $key => $value) {
                 $arrayQuantidade[] = $value;
             }
-            
-            
+
+
             return json_encode($arrayQuantidade);
-             return json_encode($daoFinPedido->getMsgRetorno());
+            return json_encode($daoFinPedido->getMsgRetorno());
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
