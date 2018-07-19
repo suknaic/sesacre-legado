@@ -280,8 +280,8 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                         itens.nr_lote, entregaItens.qt_itens_entrega, entregaItens.vl_itens_entrega, confirmacao.id_entrega_confirmacao,
                         
                         case 
-                        when confirmacao.sit_entrega = 1 then 'Entrega Parcial'
-                        when confirmacao.sit_entrega = 2 then 'Entrega Total'
+                        when confirmacao.sit_entrega = 1 then 'Parcial'
+                        when confirmacao.sit_entrega = 2 then 'Total'
                         end situacao,
                         
                         case 
