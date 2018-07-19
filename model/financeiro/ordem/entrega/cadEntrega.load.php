@@ -22,6 +22,14 @@ if (empty($token) && empty($token2)) {
 
     $finProtocoloModel = new FinProtocoloModel();
     $finProtocoloModel->setIdOrdem($ordem);
+    $finProtocoloModel->setIdProtocolo($id);
+    
+    $finProtocoloModel->retornaSituacaoProtocolo(null);
+    
+    if($finProtocoloModel->Sucesso()){
+        $situacao = $finProtocoloModel->getMsgRetorno();
+    }
+    
     $dados = [];
     $dados = $finProtocoloModel->inforLoadProtocolo();
     

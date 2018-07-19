@@ -229,7 +229,7 @@ $(document).ready(function () {
                     "itens": enc
                 },
                 "success": function (response) {
-
+                   
                     $this.prop("disabled", false);
 
                     if (response.tipoMsg === "Erro") {
