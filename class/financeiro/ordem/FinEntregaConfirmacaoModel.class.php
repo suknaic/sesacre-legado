@@ -280,6 +280,14 @@ class FinEntregaConfirmacaoModel {
             }
 
 
+            $finProtocoloModel->setQtEntrega($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+            $finProtocoloModel->atualizaQtEntrega($pdo);
+
+            if (!$finProtocoloModel->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da quantidade de entrega");
+            }
+
             //atualiza situaçao da entrega
             if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                 $pdo->rollBack();

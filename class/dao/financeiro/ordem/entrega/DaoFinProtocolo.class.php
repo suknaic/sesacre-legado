@@ -322,4 +322,23 @@ class DaoFinProtocolo extends FinProtocoloTb {
         }
     }
 
+    public function updateQtEntrega(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update set qt_entrega = :qtEntrega from fin_protocolo where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":qtEntrega", $this->getQtEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }
