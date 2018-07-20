@@ -62,9 +62,15 @@ $(document).ready(function () {
     
     $('#id_decreto').on('change', function(e){
         e.preventDefault();
-        var decreto = $("#id_decreto").val();
+        var decreto = $("#id_decreto option:selected").val();
         var classe = $("#id_classe_default").val();
-        listaClasseCombo(decreto,classe);
+        console.log(decreto);
+        if (decreto == "0" || decreto == "") {
+            $("#id_classe").html("<option value='0'>Selecione a classe</option>");
+        } else {
+            listaClasseCombo(decreto,classe);
+        }
+        
     });
     
     
