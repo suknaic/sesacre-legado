@@ -474,6 +474,12 @@ $(document).ready(function () {
     $("#div_periodo_inicial").hide();
     $("#div_periodo_final").hide();
     
+    
+    if($("#motivo").val() == 1){
+       $("#div_vigencia_inicial").hide();
+        $("#div_vigencia_final").hide(); 
+    }
+    
     if($("#motivo").val() == 2){
         $("#div_finalidade").hide();
         $("#div_instrumento").hide();
@@ -484,11 +490,7 @@ $(document).ready(function () {
         $("#div_percentual").hide();
         $("#div_valor_aditivo").hide();
         $("#div_periodo_inicial").hide();
-        $("#div_periodo_final").hide();
-        
-        
-        
-        
+        $("#div_periodo_final").hide();                    
     }
     
     
@@ -773,28 +775,28 @@ $(document).ready(function () {
                 "dados": '261'
             },
             "success": function (response) {                
-//                func.carregaTabelaPadrao('tabelaItens', response, [], true);
-//                $(".selecionaItem").first().trigger('click');
-//                $(".btn-add-aditivo").trigger('click');  
-//                carregaDadosEdicao();
+                func.carregaTabelaPadrao('tabelaItens', response, [], true);
+                $(".selecionaItem").first().trigger('click');
+                $(".btn-add-aditivo").trigger('click');  
+                //carregaDadosEdicao();
                 
             }            
         });  
 
         function carregaDadosEdicao(){
-//            $("#n_finalidade").val(1).change();
-//            $("#n_instrumento").val(1).change();
-//            $("#n_base_calculo").val(1).change();
-//            $("#n_unidade_calculo").val(1).change();
-//            $("#n_tipo_aquisicao").val(1).change();
-//            $("#numero_novo_aditivo").val(1);
-//            $("#n_data_publicacao").val("01/01/2019");
-//            $("#n_data_assinatura").val("02/02/2019");
-//            $('.select_funcionarios').val(1).trigger('change');
-//            
-//            $(".add-pessoa").trigger('click');
-//            $('.select_funcionarios').val(1).trigger('change');
-//            $("#n_justificativa").val("Justificação");
+            $("#n_finalidade").val(1).change();
+            $("#n_instrumento").val(1).change();
+            $("#n_base_calculo").val(1).change();
+            $("#n_unidade_calculo").val(1).change();
+            $("#n_tipo_aquisicao").val(1).change();
+            $("#numero_novo_aditivo").val(1);
+            $("#n_data_publicacao").val("01/01/2019");
+            $("#n_data_assinatura").val("02/02/2019");
+            $('.select_funcionarios').val(1).trigger('change');
+            
+            $(".add-pessoa").trigger('click');
+            $('.select_funcionarios').val(1).trigger('change');
+            $("#n_justificativa").val("Justificação");
             
         }
 
