@@ -541,4 +541,20 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function atualizaSituacaoEntrega(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->updateSitEntrega($pdo);
+            $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
 }
