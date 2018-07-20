@@ -533,7 +533,7 @@ class FinContratoAditivo {
             $daoContratoAditivo->setIdContrato($contrato->getIdContrato());
             $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);                                  
             if(!$daoContratoAditivo->Sucesso()){
-                return Metodos::retornoAjax("Erro", "console", "Não foi possível saber a quantidade de Aditivo.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível saber a quantidade de Aditivo.");
             }
             //Adiciona em 1 a quantidade do Aditivo, que será o próximo aditivo            
             $proximoAditivo = (int)$daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'] + 1;
@@ -589,7 +589,9 @@ class FinContratoAditivo {
                         . " Data da Vigência Inicial do Contrato/Último Aditivo.");
             }
             
-            
+            //Se Motivo for por Prazo e Prazo valor
+            //Então data da Vigência Final do Contrato ou Ultimo Aditivo não pode ser Menor que a Data 
+            //Da Vigência Inicial informada
             if($this->idMotivo == $this->getMotivoPorPrazo() 
                     || $this->idMotivo == $this->getMotivoPorValorePrazo()){
                 $dtVigFinal = new DateTime($contRef->getDtFimVigenciaContrato());
@@ -598,6 +600,59 @@ class FinContratoAditivo {
                         . " não pode ser Menor que a data Data da Vigência Final do Contrato/Último Aditivo.");
                 }
             }
+            
+            
+            $finContItens = $contRef->getItems();
+            if(empty($finContItens)
+                    || !is_array($finContItens)){
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Contrato Registrado.");
+            } 
+            
+            echo "<pre>";
+            print_r($finContItens);
+            echo "</pre>";
+            
+            //Quando Motivofor por Prazo, então precisa buscar todos os Itens do Contrato e Aditivos para fazer
+            //A Somatoria das Quantidades dos Itens
+            if($this->idMotivo == $this->getMotivoPorPrazo()){
+                
+                $this->retornaTodosItens($pdo);
+                if(!$this->sucesso){
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar todos os Itens do Contrato "
+                            . "e Últimos Aditivos.". STR_ERROR);                        
+                }
+                                                                
+                $result = $this->msgRetorno;
+                
+                echo "<pre>";
+                print_r($result);
+                echo "</pre>";
+                
+                foreach ($finContItens as $key => $value) {
+                    $value->getIdContItens();
+                    
+                    foreach ($result as $k => $v) {
+                        if($v['id_cont_itens_alt'] == $value->getIdContItens()
+                                && $v['tipo'] == "aditivo"){
+                            $valorItens = $finContItens[$key]->getVlItens() + $v['vl_itens'];
+                            $finContItens->setVlItens($valorItens);
+                        }
+                    }
+                    
+                }
+                
+                
+                
+                echo "<pre>";
+                print_r($finContItens);
+                echo "</pre>";
+                
+                
+                
+                
+            }
+            
+            return;
             
            
             //Carrega todos os itens do Contrato(Fornecedor)
@@ -609,18 +664,17 @@ class FinContratoAditivo {
 //                $finContItens = $itemModel->getMsgRetorno();
 //            }
          
-            
-            $finContItens = $contRef->getItems();
-            if(empty($finContItens)
-                    || !is_array($finContItens)){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Contrato Registrado.");
-            }                        
+//            echo "<pre>";
+//            print_r($this->itens);
+//            echo "</pre>";
+//            return;
+                                   
             
             //Ajusta os Valores dos Itens que serão duplicados no sistema
             if(!empty($this->itens)){
                 $quantidadeDeItensEnviado = count($this->itens);
                 $i = 0;                
-                foreach ($finContItens as $k => $value) {                    
+                foreach ($finContItens as $k => $value) {                
                     $key = array_search($value->getIdContItens(), array_column($this->itens, "id"));
                     //Se a aplicação não enviou o Id do Item, então esse item terá seu valor zerado
                     if($key === false){
@@ -767,6 +821,7 @@ class FinContratoAditivo {
                 $finItens->setIdMaterial($value->getIdMaterial());
                 $finItens->setIdContItens(NULL);
                 $finItens->setIdUnidadeMedida($value->getIdUnidadeMedida());
+                $finItens->setIdContItensAlt($value->getIdContItens());
                 $itens[] = $finItens;
             }                      
             
@@ -1335,6 +1390,37 @@ class FinContratoAditivo {
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($this->idContrato);
             $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);
+            if(!$daoContratoAditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
+                return;                
+            }
+            $this->sucesso = true;
+            $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();                                                            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
+        }
+    }
+    
+    
+    public function retornaTodosItens(PDO $pdo = null){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            if(empty($this->idContrato)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Id Contrato não encontrado";
+                return;
+            }
+            
+            $daoContratoAditivo = new DaoFinContratoAditivo();
+            $daoContratoAditivo->setIdContrato($this->idContrato);
+            $daoContratoAditivo->todosItens($pdo);
             if(!$daoContratoAditivo->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();

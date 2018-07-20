@@ -1702,9 +1702,9 @@ class FinContratoModel {
     public function cadastrarContratoComAditivo(FinContratoTb $c, FinFornecedoresTb $f
             , FinContratoAditivoTb $finContratoAdtivo
             , array $centraisDoContrato
-            , array $gestorTitular, array $gestorSubstituto
-            , array $fiscal, array $fiscalSubstituto
-            , array $subFiscal, array $subFiscalSubstituto
+            , array $gestorTitular = NULL, array $gestorSubstituto = NULL
+            , array $fiscal = NULL, array $fiscalSubstituto = NULL
+            , array $subFiscal = NULL, array $subFiscalSubstituto = NULL
             , $itens
             , PDO $pdo){                    
         try {
