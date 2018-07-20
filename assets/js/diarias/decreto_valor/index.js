@@ -64,7 +64,6 @@ $(document).ready(function () {
         e.preventDefault();
         var decreto = $("#id_decreto option:selected").val();
         var classe = $("#id_classe_default").val();
-        console.log(decreto);
         if (decreto == "0" || decreto == "") {
             $("#id_classe").html("<option value='0'>Selecione a classe</option>");
         } else {
