@@ -189,7 +189,15 @@ class FinEntregaItensModel {
             if (!$daoFinEntregaItens->sucesso()) {
                 $erro = true;
             }
-
+            
+            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $finEntregaConfirmacaoModel->setSitEntrega(1);
+            $finEntregaConfirmacaoModel->atualizaSituacaoEntrega($pdo);
+            
+            if(!$finEntregaConfirmacaoModel->sucesso()){
+                return Metodos::retornoAjax("Erro", "console", "Erro na atualizaçao da situaçao da entrega");
+            }
+            
             //seto o id da entrega confirmacao para pode realiza a pesquisa
             $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             //verificar ser e a ultima entrega ser for false e a ultima sendo assim

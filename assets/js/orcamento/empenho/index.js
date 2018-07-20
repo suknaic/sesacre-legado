@@ -2,7 +2,7 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
 
-    func.carregaTabelaPadrao('tabela', null, [2], false);
+    func.carregaTabelaPadrao('tabela', null, [7], false);
 
     $("body").on("click", ".btn-pesquisar", function (e) {
         e.stopPropagation();
@@ -46,7 +46,7 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.carregaTabelaPadrao('tabela', response.msg, [2], true);
+                        func.carregaTabelaPadrao('tabela', response.msg, [7], true);
                         return false;
                     } else {
                         console.log('Ultimo else');

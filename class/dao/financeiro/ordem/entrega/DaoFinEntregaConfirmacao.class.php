@@ -280,8 +280,8 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                         itens.nr_lote, entregaItens.qt_itens_entrega, entregaItens.vl_itens_entrega, confirmacao.id_entrega_confirmacao,
                         
                         case 
-                        when confirmacao.sit_entrega = 1 then 'Entrega Parcial'
-                        when confirmacao.sit_entrega = 2 then 'Entrega Total'
+                        when confirmacao.sit_entrega = 1 then 'Parcial'
+                        when confirmacao.sit_entrega = 2 then 'Total'
                         end situacao,
                         
                         case 
@@ -341,13 +341,27 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
             $stmt->execute();
-            
+
             if ($stmt->rowCount() > 0) {
                 $this->sucesso = true;
             } else {
                 $this->sucesso = false;
             }
-            
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function updateSitEntrega(PDO $pdo) {
+        try {
+            $sql = "update fin_entrega_confirmacao set sit_entrega = :situacao where id_entrega_confirmacao = :entrega";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
+            $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+            $stmt->execute();
+            $this->sucesso = true;
+         
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;

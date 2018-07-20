@@ -34,17 +34,28 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaPedidoParaEmpenho(PDO $pdo = null, $condicao = '') {
         try {
             if (!empty($pdo)) {
-                $sql = "select concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as numero, 
-                        p.ds_pedido, tp.nm_tipo_gasto, font.nr_fonte, desp.cd_despesa_elemento, p.vl_pedido, p.id_pedido
-                        from fin_pedido as p
-                        inner join pla_tipo_gasto as tp 
-                        on tp.id_tipo_gasto = p.id_tipo_gasto
-                        inner join fin_fonte as font
-                        on font.id_fonte = p.id_fonte
-                        inner join view_despesa_elemento as desp
-                        on desp.id_despesa_elemento = p.id_despesa_elemento
-                        where p.st_pedido = '15'
-                        and p.id_pedido not in (select emp.id_pedido from fin_empenho as emp) " . $condicao;
+                $sql = "SELECT Concat(Concat(Concat(p.id_lotacao, '-'), Concat(p.nr_pedido, '/')),
+                                        To_char(p.dt_pedido, 'yyyy'))                 AS numero,
+                                 p.ds_pedido,
+                                 tp.nm_tipo_gasto,
+                                 font.nr_fonte,
+                                 desp.cd_despesa_elemento,
+                                 p.vl_pedido,
+                                 To_char(aut.dt_autorizacao, 'DD/MM/YYYY HH24:MI:SS') AS dt_aut_ordenador,
+                                 p.id_pedido
+                          FROM   fin_pedido AS p
+                                 inner join pla_tipo_gasto AS tp
+                                         ON tp.id_tipo_gasto = p.id_tipo_gasto
+                                 inner join fin_fonte AS font
+                                         ON font.id_fonte = p.id_fonte
+                                 inner join view_despesa_elemento AS desp
+                                         ON desp.id_despesa_elemento = p.id_despesa_elemento
+                                 left join fin_autorizacao aut
+                                        ON aut.id_pedido = p.id_pedido
+                                           AND aut.st_nivel = 14
+                          WHERE  p.st_pedido = '15'
+                                 AND p.id_pedido NOT IN (SELECT emp.id_pedido
+                                                         FROM   fin_empenho AS emp) " . $condicao;
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
