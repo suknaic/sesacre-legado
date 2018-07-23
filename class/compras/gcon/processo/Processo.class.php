@@ -3,6 +3,11 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/anotacao/DaoGcoAnotacao.class.php";
 
+/**
+ * Description of Processo
+ *
+ * @author elivelton
+ */
 class Processo {
 
     private $idProcesso = null;

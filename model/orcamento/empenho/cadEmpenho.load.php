@@ -14,6 +14,7 @@ $dados = $finEmpenhoModel->retornaDadosPedido();
 
 $tabela = '';
 $total = 0;
+$anotacoes = '';
 if(!empty($dados[0]["nr_item"])){
     
 foreach ($dados as $l){

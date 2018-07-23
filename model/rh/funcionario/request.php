@@ -31,12 +31,12 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido");
+                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
             if (!$validaCpf) {
-                echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF");
+                echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF.");
                 return;
             }
             //*************************************************
@@ -65,12 +65,12 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido");
+                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
             if (!$validaCpf) {
-                echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF");
+                echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF.");
                 return;
             }
 

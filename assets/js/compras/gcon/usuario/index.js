@@ -51,7 +51,6 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "data" : {
-            menu : 'menu_2'
         },
         "success": function (response) {
             $("body").find("#menu_gcon").append(response);
@@ -59,15 +58,15 @@ $(document).ready(function () {
     });
     
     $("#butao").mouseover(function () {
-        $('#menu').css({'display' : 'flex', 'margin-left': '440px'});
+        $('#menu').css({'display' : 'block', 'margin-left': '600px'});
     }).mouseout(function () {
         $("#menu").mouseover(function () {
-            $("#menu").css({'display' : 'flex', 'margin-left': '440px'});
+            $("#menu").css({'display' : 'block', 'margin-left': '600px'});
         }).mouseout(function () {
-            $("#menu").css('display', 'none');
+            $("#menu").css({'display':'none'});
         });
     }).mouseout(function () {
-        $("#menu").css('display', 'none');
+        $("#menu").css({'display': 'none'});
     });
 
     $('body').on('click', '.btn-limpar', function (e) {
