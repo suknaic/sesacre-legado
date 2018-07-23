@@ -247,6 +247,11 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
+            
+            if(empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)){
+                return 0;
+            }
+            
             return $daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao;
             
         } catch (Exception $ex) {

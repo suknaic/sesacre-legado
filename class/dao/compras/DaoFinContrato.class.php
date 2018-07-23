@@ -52,7 +52,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":tipo", $this->getTpContrato(), PDO::PARAM_INT);
                 $stmt->bindValue(":orgao", $this->getIdOrgaoGerenciador(), PDO::PARAM_INT);
                 $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
-                
+
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -186,18 +186,18 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
+
     function delete($pdo) {
         try {
             $result = $pdo->prepare("DELETE FROM fin_contrato WHERE id_contrato = :idContrato");
             $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
             $result->execute();
-            $this->sucesso = true; 
+            $this->sucesso = true;
         } catch (PDOException $e) {
-            $this->sucesso = false;            
-            $this->msgRetorno = $e->getMessage(); 
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
         }
-    }  
+    }
 
     /**
      * [retornaAtaCombo Retorna a ata mais todas as tabelas que tem relacionamentos com ela]
@@ -208,7 +208,7 @@ class DaoFinContrato extends FinContratoTb {
     public function retornaContratoCombo($pdo = null, $condicao = '') {
         if ($pdo != null) {
             try {
-                $sql = "SELECT distinct f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
+                $sql = "SELECT f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
                         p.nm_pessoa, cont.id_contrato, cont.fl_bloqueado
                         FROM fin_contrato AS cont
 
@@ -217,7 +217,7 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
-                        
+
                         INNER JOIN gco_modalidade as modalidade
                         on modalidade.id_modalidade = processo.id_modalidade
 
@@ -226,12 +226,9 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN ses_pessoa as p 
                         on p.id_pessoa = f.id_pessoa
-                        
-                        LEFT JOIN gco_processo_tipo_gasto as gtpg
-                        on gtpg.id_tipo_gasto = cont.id_tipo_gasto
-                        
-                        LEFT JOIN pla_tipo_gasto as plaTipoGasto
-                        on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
+
+                        INNER JOIN pla_tipo_gasto as plaTipoGasto
+                        on plaTipoGasto.id_tipo_gasto =  cont.id_tipo_gasto
 
                         WHERE f.sit_fornecedor = '1' AND cont.st_ativo = '1' " . $condicao;
                 $stmt = $pdo->prepare($sql);
@@ -426,8 +423,8 @@ class DaoFinContrato extends FinContratoTb {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
-    }        
-    
+    }
+
     public function pesquisaContratoPorNumero($pdo = null) {
         if ($pdo != null) {
             try {
@@ -439,20 +436,20 @@ class DaoFinContrato extends FinContratoTb {
                         . " , to_char(C.dt_assinatura, 'DD/MM/YYYY') as dt_assinatura"
                         . " , to_char(C.dt_publicacao, 'DD/MM/YYYY') as dt_publicacao"
                         . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
-                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"                        
+                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
                         . " FROM fin_contrato C"
                         . " INNER JOIN (SELECT DISTINCT ON (id_contrato) id_contrato, id_fornecedor, id_pessoa"
-                            . " FROM fin_fornecedor"
-                            . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"
-                        . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"                             
+                        . " FROM fin_fornecedor"
+                        . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"
+                        . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"
                         . " LEFT JOIN gco_processo PRO ON PRO.id_processo = C.id_processo"
-                        . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"                        
+                        . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"
                         . " LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
-                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"                                           
+                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"
                         . " WHERE C.nr_contrato LIKE :nrContrato AND C.st_ativo = '1' "
                         . " AND C.sq_contrato = 0 AND C.tp_contrato = '2'";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":nrContrato", "%".$this->getNrContrato()."%", PDO::PARAM_STR);
+                $stmt->bindValue(":nrContrato", "%" . $this->getNrContrato() . "%", PDO::PARAM_STR);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -466,8 +463,7 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
-    
+
     public function retornaDadosSemItens(PDO $pdo) {
         try {
             if ($pdo != null) {
@@ -484,7 +480,7 @@ class DaoFinContrato extends FinContratoTb {
                         . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
                         . " LEFT JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato AND CA.st_ativo = '1'"
                         . " WHERE C.id_contrato = :idContrato"
-                        . " AND C.st_ativo = '1'";                        
+                        . " AND C.st_ativo = '1'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -501,9 +497,7 @@ class DaoFinContrato extends FinContratoTb {
             $this->sucesso = false;
         }
     }
-    
-    
-    
+
     public function insertContratoParaAditivo($pdo = null) {
         if ($pdo != null) {
             try {
@@ -512,7 +506,7 @@ class DaoFinContrato extends FinContratoTb {
                         . " , dt_publicacao, ds_obs_contrato"
                         . " , id_modalidade, ds_area_abrangencia, ds_unidade_contemplada"
                         . " , id_orgao_gerenciador, id_tipo_gasto, tp_contrato"
-                        . " , id_contrato_alt, sq_contrato, id_contrato_aditivo_pai)"                        
+                        . " , id_contrato_alt, sq_contrato, id_contrato_aditivo_pai)"
                         . " VALUES (:numero, :prazo, :processo, :idPessoa, :ds_objeto, :servico "
                         . " , :dt_ini, :dt_fim, :dt_assinatura, :dt_publicacao, :obs"
                         . " , :idModalidade, :dsAreaAbragencia, :dsUnidadeContemplada"
@@ -547,10 +541,16 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
-    
-    
-    
-    
+
+    public function retornaDadosContratoGdof(PDO $pdo) {
+        try {
+            if(!empty($pdo)){
+                $sql = "";
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }
+    }
 
 }
