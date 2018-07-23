@@ -652,7 +652,7 @@ class FinContratoAditivo {
                 
             }
             
-            return;
+            //return;
             
            
             //Carrega todos os itens do Contrato(Fornecedor)
@@ -1405,8 +1405,7 @@ class FinContratoAditivo {
     
     
     public function retornaTodosItens(PDO $pdo = null){
-        try{
-            
+        try{            
             if(empty($pdo)){
                 $conexao = new Conexao();            
                 $pdo = $conexao->connect();
@@ -1435,6 +1434,371 @@ class FinContratoAditivo {
     }
     
     
+    /**
+     * Apartir de um Contrato, retorna em json com todos os Gestores, fiscais ... do
+     * Contrato ou do Ultimo Aditivo
+     * @param PDO $pdo     
+     * @return json
+     */
+    public function retornaUltimoGestoresDoContratoAditivo(PDO $pdo = null){
+        
+        try{ 
+        
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+
+            $dao = new DaoFinContratoAditivo();
+            $dao->setIdContrato($this->idContrato);
+            $dao->retornaUltimoContratoAditivo($pdo);
+            
+            if(!$dao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "console", "");
+            }
+            
+            $idContrato = $dao->getMsgRetorno()['id_contrato'];
+            $dao->setIdContrato($idContrato);
+            $dao->retornaTodosGestoresFiscaisSubs($pdo);                                    
+            
+            if(!$dao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "console", "");
+            }
+                        
+            return Metodos::retornoAjax("ok", "console", $dao->getMsgRetorno());                                        
+        
+        } catch (Exception $ex) {
+           return Metodos::retornoAjax("Erro", "console", $ex->getMessage());       
+        }                
+    }
+    
+    
+    public function retornaInformacoesHtmlAditivo(PDO $pdo = null){
+        
+        try{ 
+        
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            $dao = new DaoFinContratoAditivo();
+            $dao->setIdContrato($this->idContrato);
+            $dao->retornaDa($pdo);
+            
+            if(!$dao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "console", "");
+            }
+            
+            $idContrato = $dao->getMsgRetorno()['id_contrato'];
+            $dao->setIdContrato($idContrato);
+            $dao->retornaTodosGestoresFiscaisSubs($pdo);                                    
+            
+            if(!$dao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "console", "");
+            }
+                        
+            return Metodos::retornoAjax("ok", "console", $dao->getMsgRetorno());                                        
+        
+        } catch (Exception $ex) {
+           return Metodos::retornoAjax("Erro", "console", $ex->getMessage());       
+        }                
+    }
+    
+    
+    
+    public function retornaInformacoesCompletaAditivo() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContratoAditivo();
+            $daoContrato->setIdContrato($this->idContrato);
+            
+            
+            $daoContrato->dadosCompletoAditivo($pdo);
+            
+            echo "<pre>";
+            print_r($daoContrato->getMsgRetorno());
+            echo "</pre>";
+            
+            $finCentraisModel = new FinCentraisModel();
+            $finCentraisModel->setIdContrato($this->idContrato);
+            $finCentraisModel->retornaCentraisPorContrato($pdo);
+            $centraisDoContrato = array();
+            if($finCentraisModel->sucesso()){
+                $centraisDoContrato = $finCentraisModel->getMsgRetorno();
+            }
+            
+            echo "<pre>";
+            print_r($centraisDoContrato);
+            echo "</pre>";
+            
+            
+            $daoContrato->retornaTodosGestoresFiscaisSubs($pdo);  
+            
+            echo "<pre>";
+            print_r($daoContrato->getMsgRetorno());
+            echo "</pre>";
+            
+            $itemModel = new ItemModel();
+            $itemModel->setIdFornecedor(1428);
+            $itemModel->retornaItensPorFornecedor($pdo);
+            
+            echo "<pre>";
+            print_r($itemModel->getMsgRetorno());
+            echo "</pre>";
+            
+            return;
+            
+            
+            
+            
+            
+            
+
+            if(!$daoContrato->Sucesso()){
+                $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade=0>'
+                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
+                    . '</div>';
+                return $retorno;
+            }
+                        
+            if(empty($daoContrato->getMsgRetorno())){
+                $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade=0>'
+                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
+                    . '</div>';
+                return $retorno;
+            }
+            
+            $tbody = "";
+            foreach ($daoContrato->getMsgRetorno() as $key => $value) {
+                $tbody .= "<tr>";
+                    $tbody .= "<td>".$value['nr_contrato']."</td>";
+                    $tbody .= "<td>". $this->textoAditivoPor($value['nm_contrato_motivo'])."</td>";
+                    $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']." - ".$value['dt_fim_vigencia_contrato']."</td>";
+                    $tbody .= "<td style='text-align: center;'>".$value['dt_publicacao']."</td>";
+                    $tbody .= "<td style='text-align: center;'>R$ ".$value['valor']."</td>";
+                    $tbody .= '<td style="text-align: center;">'
+                            .'<button type="button" class="btn btn-default btn-open-modal btn-xs"'                               
+                                . ' title="Detalhes" nome="'.$value['nr_contrato'].'" '                               
+                                . ' value=' . $value['id_contrato'] . ' >
+                                <i class="fa fa-file fa-lg text-primary" aria-hidden="true"></i>                                
+                              </button> '
+                            .'<button type="button" class="btn btn-default btn-edit btn-xs"'                               
+                                . ' title="Editar" nome="'.$value['nr_contrato'].'" '                               
+                                . ' value=' . $value['id_contrato'] . ' >
+                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
+                              </button> '
+                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $value['id_contrato'] . ' >
+                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                              </button>'
+                            . '</td>';                                
+                $tbody .= "</tr>";
+            }
+            
+            
+            
+            $daoContrato->retornaNumeroUltimoAditivo($pdo);
+            if(!$daoContrato->Sucesso()){
+                $retorno = '<div class="alert alert-warning">'
+                        . '<strong>Alerta!</strong> '.STR_ERROR.' '
+                    . '</div>';
+                return $retorno;
+            }            
+            $quantidade = $daoContrato->getMsgRetorno()['numero_ultimo_aditivo'];
+            
+            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade='.$quantidade.'>
+                    <thead>
+                        <tr>
+                            <th>Número do Aditivo</th>
+                            <th>Motivo do Aditamento</th>
+                            <th style="text-align: center;">Vigência</th>
+                            <th style="text-align: center;">Publicação</th>
+                            <th style="text-align: center;">Valor do Aditivo</th>
+                            <th style="text-align: center;">Opções</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    '.$tbody.'
+                    </tbody>
+                </table>';  
+            return $retorno;                                  
+            
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+     public function retornaInformacoesDoItem($pdo = null){
+        $retorno = "";                
+        try{
+            if($pdo == null){
+                $conexao = new Conexao();            
+                /* @var $pdo PDO */
+                $pdo = $conexao->connect();            
+            }            
+            
+            $dao = new DaoPlaPtaItem();
+            $dao->setIdPtaItem($this->idPtaItem);            
+                        
+            $dao->retornaDadosCompleto($pdo);                       
+            
+            if(!$dao->Sucesso()){               
+                return $retorno;
+            }else{
+                $result = $dao->getMsgRetorno();                     
+                $obj = $this->stTextoItem($result['st_pta_item']);
+                
+                $retorno .= '<div class="panel panelInformacoesItens">'
+                            . '<div class="panel-body">'
+                                . '<div class="row">
+                                    <div class="col-sm-12">
+                                        <p class="text-bold">Item: <span class=text-'.$obj->cor.'>'.$obj->msg.'</span></p>
+                                        <p>'.$result['nm_desc_material'].'</p>
+                                    </div>                                   
+                                </div>'
+                                . '<div class="row">
+                                    <div class="col-sm-12">
+                                        <p class="text-bold">Código da Descrição do Item:</p>
+                                        <p>'.$result['cd_desc_material'].'</p>
+                                    </div>                                    
+                                </div>'
+                        
+                                . '<div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Item:</p>
+                                        <p>'.$result['nm_material'].'</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Código do Item:</p>
+                                        <p>'.$result['cd_material'].'</p>
+                                    </div>                                    
+                                </div>'
+                        
+                                . '<div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Nome do Grupo:</p>
+                                        <p>'.$result['nm_grupo'].'</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Código do Grupo:</p>
+                                        <p>'.$result['cd_grupo'].'</p>
+                                    </div>                                    
+                                </div>'
+                        
+                                . '<div class="row">
+                                     <div class="col-sm-6">
+                                        <p class="text-bold">Nome do Sub Grupo:</p>
+                                        <p>'.$result['nm_sub_grupo'].'</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Código do Sub Grupo:</p>
+                                        <p>'.$result['cd_sub_grupo'].'</p>
+                                    </div>                                   
+                                </div>'
+                        
+                                . '<div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Elemento de Despesa:</p>
+                                        <p>'.$result['cd_elemento_despesa'].'</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-bold">Tipo de Item:</p>
+                                        <p>'.$result['tp_material'].'</p>
+                                    </div>                                    
+                                </div>'  
+                        
+                                . '<div class="row">
+                                        <div class="col-sm-12">
+                                            <p class="text-bold">Detalhamento da ação:</p>
+                                            <p>'.$result['nm_pta_acao_det'].'</p>
+                                        </div>                                   
+                                    </div>'
+                        
+                                . '<div class="row">
+                                        <div class="col-sm-12">
+                                            <p class="text-bold">Descrição do Item:</p>
+                                            <p>'.$result['ds_pta_item'].'</p>
+                                        </div>                                   
+                                    </div>'
+                                
+                                . '<div class="row">
+                                        <div class="col-sm-6">
+                                            <p class="text-bold">Tipo de Gasto Categoria:</p>
+                                            <p>'.$result['nm_tipo_gasto_categoria'].'</p>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <p class="text-bold">Fonte:</p>
+                                            <p>'.$result['nr_fonte'].'</p>
+                                        </div>                 
+                                        <div class="col-sm-3">
+                                            <p class="text-bold">Tipo Fonte:</p>
+                                            <p>'.Metodos::retornaTpFonteTexto($result['tp_fonte']).'</p>
+                                        </div>
+                                    </div>';
+                if(!empty ($result['id_portaria'])){
+                    $retorno .=  '<div class="row">
+                                    <div class="col-sm-12">
+                                        <p class="text-bold">Portaria:</p>
+                                        <p>'.$result['nm_rede_tematica']." - ".$result['nm_portaria'].'</p>
+                                    </div>
+                                </div>';    
+                }
+                if(!empty ($result['id_convenio'])){
+                    $retorno .=  '<div class="row">
+                                    <div class="col-sm-12">
+                                        <p class="text-bold">Convênio:</p>
+                                        <p>'.$result['id_convenio'].'</p>
+                                    </div>
+                                </div>';    
+                }
+                                
+                $retorno           .= '<div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="text-bold">Unidade Medida:</p>
+                                        <p>'.$result['nm_unidade_medida'].'</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <p class="text-bold">Quantidade:</p>
+                                        <p>'.Metodos::ConverteValorBr((float)$result['qt_pta_item'], 4).'</p>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <p class="text-bold">Valor Unitário:</p>
+                                        <p>R$ '. Metodos::ConverteValorBr((float)$result['vl_pta_item'], 4).'</p>
+                                    </div>  
+                                     <div class="col-sm-3">
+                                        <p class="text-bold">Valor Total:</p>
+                                        <p>R$ '.Metodos::ConverteValorBr((float)($result['qt_pta_item']*$result['vl_pta_item']), 4).'</p>
+                                    </div>  
+                                </div>'
+                                . '<div class="row">
+                                        <div class="col-sm-6">
+                                            <p class="text-bold">PTA:</p>
+                                            <p>'.$result['nm_pta'].'</p>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <p class="text-bold">PTA Título:</p>
+                                            <p>'.$result['nm_pta_titulo'].'</p>
+                                        </div>                                    
+                                    </div>' 
+                                . '<div class="row">
+                                        <div class="col-sm-12">
+                                            <p class="text-bold">Unidade/Departamento/Setor:</p>
+                                            <p>'.$result['nm_lotacao'].'</p>
+                                        </div>                                                                    
+                                    </div>' 
+                            
+                            . '</div>'
+                        . '</div>';
+            }
+                        
+            return $retorno;
+                                                                     
+        } catch (Exception $ex) {
+            $retorno = "";
+        }                               
+    }
     
 }
 
