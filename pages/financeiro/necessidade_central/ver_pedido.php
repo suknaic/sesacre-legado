@@ -246,6 +246,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                             </div>
                         </div>
                         <!--===================================================-->
+                        <?php if(Pedido::getPermiteCancelamento($dados[0]["st_pedido"])) { ?>
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">
@@ -274,6 +275,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 </div>
                             </div>
                         </form>
+                        <?php } ?>
                     </div>
                     <!--===================================================-->
                     <!--End page content-->

@@ -222,7 +222,7 @@
                                     </div>
                                     <div class="panel-footer">                                   
                                         <button class="btn btn-primary btn-add-aditivo btn-rounded">
-                                            <i class="fa fa-plus-circle fa-1x"></i> Adicionar Aditivo
+                                            <i class="fa fa-plus-circle fa-1x"></i> Iniciar Novo Aditivo
                                         </button>                                    
                                     </div>
                                 </div>
@@ -260,7 +260,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_finalidade">
                                                 <label class="col-sm-2 control-label text-left">Finalidade: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
@@ -275,7 +275,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_instrumento">
                                                 <label class="col-sm-2 control-label text-left">
                                                     Instrumento de Equilíbrio Econômico-Financeiro: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
@@ -291,7 +291,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_base_calculo">
                                                 <label class="col-sm-2 control-label text-left">Base de Cálculo: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
@@ -306,7 +306,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_unidade_calculo">
                                                 <label class="col-sm-2 control-label text-left">Unidade de Cálculo: 
                                                     <span class="text-danger">*</span>
                                                     <span class="fa fa-question-circle add-tooltip" 
@@ -327,7 +327,7 @@
                                                 </div>
                                             </div>
                                                                                                                                     
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_tipo_aquisicao">
                                                 <label class="col-sm-2 control-label text-left">Tipo de Aquisição: 
                                                     <span class="text-danger">*</span>
                                                     <span class="fa fa-question-circle add-tooltip" 
@@ -378,7 +378,7 @@
                                                 </div>
                                             </div>
                                             
-                                            <div class="form-group">
+                                            <div class="form-group" id="div_valor_aditivo">
                                                 <label class="col-sm-2 control-label text-left">Valor do Aditivo: <span class="text-danger">*</span></label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
@@ -427,6 +427,34 @@
                                                             <p class="fa fa-calendar inputPFa"></p>
                                                         </span>
                                                         <input type="text" class="form-control data" name="n_periodo_final" id="n_periodo_final" placeholder="__/__/____">
+                                                    </div>                                                  
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group" id="div_vigencia_inicial">
+                                                <label class="col-sm-2 control-label text-left">Data da Vigência Inicial: 
+                                                    <span class="text-danger">*</span>                                                    
+                                                </label>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-calendar inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control data" name="n_vigencia_inicial" id="n_vigencia_inicial" placeholder="__/__/____">
+                                                    </div>                                                  
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group" id="div_vigencia_final">
+                                                <label class="col-sm-2 control-label text-left">Data da Vigência Final: 
+                                                    <span class="text-danger">*</span>                                                    
+                                                </label>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-calendar inputPFa"></p>
+                                                        </span>
+                                                        <input type="text" class="form-control data" name="n_vigencia_final" id="n_vigencia_final" placeholder="__/__/____">
                                                     </div>                                                  
                                                 </div>
                                             </div>
@@ -641,7 +669,7 @@
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
-        <script src="/assets/lib/sesacre/funcoes.js"></script>
+        <script src="/assets/lib/sesacre/funcoes.js"></script>        
         <script src="/assets/js/compras/gestao_contratos/aditamento/index.js"></script>
     </body>
 </html>

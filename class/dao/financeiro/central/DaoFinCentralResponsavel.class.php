@@ -238,7 +238,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
 
         $this->sucesso = false;
 
-        $sql = "SELECT 
+        $sql = "SELECT DISTINCT
                     L.id_lotacao,
                     L.nm_lotacao
                   FROM fin_central_responsavel CR
@@ -247,7 +247,7 @@ class DaoFinCentralResponsavel extends FinCentralResponsavel {
                   INNER JOIN fin_administracao_solicitacao FAS
                     ON FAS.id_tipo_administracao = CR.id_tipo_administracao
                   WHERE CR.id_pessoa = :idPessoa
-                  AND FAS.id_tipo_solicitacao = :idSolicitacao
+                  AND (FAS.id_tipo_solicitacao = :idSolicitacao OR :idSolicitacao = 0) 
                   ORDER BY L.nm_lotacao";
         try {
             $result = $pdo->prepare($sql);

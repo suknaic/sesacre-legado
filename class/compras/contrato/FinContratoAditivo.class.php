@@ -24,7 +24,7 @@ class FinContratoAditivo {
     private $idInstrumento = null;
     private $percentual = null;    
     private $dtPeriodoInicial = null;
-    private $dtPeriodoFinal = null;
+    private $dtPeriodoFinal = null;    
     private $idTipoAquisicao = null;
     private $dtAssinatura = null;
     private $dsJustificativa = null;
@@ -401,58 +401,101 @@ class FinContratoAditivo {
             $this->dtPeriodoInicial = Metodos::validaConverteDataING($this->dtPeriodoInicial);
             if(empty($this->dtPeriodoInicial)){
                 $this->dtPeriodoInicial = NULL;
-            }            
+            }else{
+                $this->dtPeriodoInicial = new DateTime($this->dtPeriodoInicial);
+            }
             $this->dtPeriodoFinal = $dados['dados']['periodo_final'];            
             $this->dtPeriodoFinal = Metodos::validaConverteDataING($this->dtPeriodoFinal);
             if(empty($this->dtPeriodoFinal)){
                 $this->dtPeriodoFinal = NULL;
-            }            
+            }else{
+                $this->dtPeriodoFinal = new DateTime($this->dtPeriodoFinal);
+            }
             $this->dtPublicacao = $dados['dados']['data_publicacao'];
             $this->dtPublicacao = Metodos::validaConverteDataING($this->dtPublicacao);
             if(empty($this->dtPublicacao)){
                 $this->dtPublicacao = NULL;
-            }  
+            }else{
+                $this->dtPublicacao = new DateTime($this->dtPublicacao);
+            }
             $this->dtAssinatura = $dados['dados']['data_assinatura'];
             $this->dtAssinatura = Metodos::validaConverteDataING($this->dtAssinatura);
             if(empty($this->dtAssinatura)){
                 $this->dtAssinatura = NULL;
-            }                                                                      
+            }else{
+                $this->dtAssinatura = new DateTime($this->dtAssinatura);
+            }                                                                   
             
-            $this->gestorTitular = $dados['gestor_titular'];
-            if(!is_array($this->gestorTitular) || empty($this->gestorTitular)){
+            $this->dtVigenciaInicial = $dados['dados']['data_vigencia_inicial'];
+            $this->dtVigenciaInicial = Metodos::validaConverteDataING($this->dtVigenciaInicial);
+            if(empty($this->dtVigenciaInicial)){
+                $this->dtVigenciaInicial = NULL;
+            }else{
+                $this->dtVigenciaInicial = new DateTime($this->dtVigenciaInicial);
+            }
+            
+            $this->dtVigenciaFinal = $dados['dados']['data_vigencia_final'];
+            $this->dtVigenciaFinal = Metodos::validaConverteDataING($this->dtVigenciaFinal);
+            if(empty($this->dtVigenciaFinal)){
+                $this->dtVigenciaFinal = NULL;
+            }else{
+                $this->dtVigenciaFinal = new DateTime($this->dtVigenciaFinal);
+            }
+            
+            if(array_key_exists('gestor_titular', $dados)){
+                $this->gestorTitular = $dados['gestor_titular'];
+                if(!is_array($this->gestorTitular) || empty($this->gestorTitular)){
+                    $this->gestorTitular = NULL;
+                }
+                $this->gestorTitular = array_unique($this->gestorTitular);     
+            }else{
                 $this->gestorTitular = NULL;
             }
-            $this->gestorTitular = array_unique($this->gestorTitular);                        
-            
-            $this->gestorSubstituto = $dados['gestor_substituto'];
-            if(!is_array($this->gestorSubstituto) || empty($this->gestorSubstituto)){
+            if(array_key_exists('gestor_substituto', $dados)){
+                $this->gestorSubstituto = $dados['gestor_substituto'];
+                if(!is_array($this->gestorSubstituto) || empty($this->gestorSubstituto)){
+                    $this->gestorSubstituto = NULL;
+                }
+                $this->gestorSubstituto = array_unique($this->gestorSubstituto);
+            }else{
                 $this->gestorSubstituto = NULL;
             }
-            $this->gestorSubstituto = array_unique($this->gestorSubstituto);
-            
-            $this->fiscal = $dados['fiscal'];
-            if(!is_array($this->fiscal) || empty($this->fiscal)){
+            if(array_key_exists('fiscal', $dados)){
+                $this->fiscal = $dados['fiscal'];
+                if(!is_array($this->fiscal) || empty($this->fiscal)){
+                    $this->fiscal = NULL;
+                }
+                $this->fiscal = array_unique($this->fiscal);
+            }else{
                 $this->fiscal = NULL;
             }
-            $this->fiscal = array_unique($this->fiscal);
-            
-            $this->fiscalSubstituto = $dados['fiscal_substituto'];
-            if(!is_array($this->fiscalSubstituto) || empty($this->fiscalSubstituto)){
+            if(array_key_exists('fiscal_substituto', $dados)){
+                $this->fiscalSubstituto = $dados['fiscal_substituto'];
+                if(!is_array($this->fiscalSubstituto) || empty($this->fiscalSubstituto)){
+                    $this->fiscalSubstituto = NULL;
+                }
+                $this->fiscalSubstituto = array_unique($this->fiscalSubstituto);
+            }else{
                 $this->fiscalSubstituto = NULL;
             }
-            $this->fiscalSubstituto = array_unique($this->fiscalSubstituto);
-            
-            $this->subFiscal = $dados['sub_fiscal'];
-            if(!is_array($this->subFiscal) || empty($this->subFiscal)){
+            if(array_key_exists('sub_fiscal', $dados)){
+                $this->subFiscal = $dados['sub_fiscal'];
+                if(!is_array($this->subFiscal) || empty($this->subFiscal)){
+                    $this->subFiscal = NULL;
+                }
+                $this->subFiscal = array_unique($this->subFiscal);
+            }else{
                 $this->subFiscal = NULL;
             }
-            $this->subFiscal = array_unique($this->subFiscal);
-            
-            $this->subFiscalSubstituto = $dados['sub_fiscal_substituto'];
-            if(!is_array($this->subFiscalSubstituto) || empty($this->subFiscalSubstituto)){
+            if(array_key_exists('sub_fiscal_substituto', $dados)){
+                $this->subFiscalSubstituto = $dados['sub_fiscal_substituto'];
+                if(!is_array($this->subFiscalSubstituto) || empty($this->subFiscalSubstituto)){
+                    $this->subFiscalSubstituto = NULL;
+                }
+                $this->subFiscalSubstituto = array_unique($this->subFiscalSubstituto);
+            }else{
                 $this->subFiscalSubstituto = NULL;
             }
-            $this->subFiscalSubstituto = array_unique($this->subFiscalSubstituto);
             
             //Para Dentro do sistema, mesmo tendo indice de correção e percentual, basta ter somente um campo 
             //Com os dados da %
@@ -490,7 +533,7 @@ class FinContratoAditivo {
             $daoContratoAditivo->setIdContrato($contrato->getIdContrato());
             $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);                                  
             if(!$daoContratoAditivo->Sucesso()){
-                return Metodos::retornoAjax("Erro", "console", "Não foi possível saber a quantidade de Aditivo.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível saber a quantidade de Aditivo.");
             }
             //Adiciona em 1 a quantidade do Aditivo, que será o próximo aditivo            
             $proximoAditivo = (int)$daoContratoAditivo->getMsgRetorno()['numero_ultimo_aditivo'] + 1;
@@ -509,62 +552,204 @@ class FinContratoAditivo {
             $proximoSequencial = $daoContratoAditivo->getMsgRetorno();
             
             
-            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor
-            //Se for o primeiro contrato, então será do contrato.
-            //Se já tiver algum Aditivo cadastrado, então será pego o ultimo Aditivo para pegar os Dados dele
-            $this->idContratoAditivoPai = $this->idContrato;
-            if((int)$proximoAditivo > 1){
-                $this->idContrato = $idContratoUltimo;
-            }
+            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor            
             
             $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
             if(!$contratoRef->sucesso()){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
-            }                
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Contrato.");
+            }
             $contRef = $contratoRef->getMsgRetorno();
             
-            //Carrega todos os itens do Contrato(Fornecedor)
-            $finContItens = "";
-            $itemModel = new ItemModel();
-            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
-            $itemModel->retornaItensPorFornecedor($pdo);
-            if($itemModel->Sucesso()){
-                $finContItens = $itemModel->getMsgRetorno();
+            
+            $this->idContratoAditivoPai = $this->idContrato;
+            if((int)$proximoAditivo > 1 && !empty($idContratoUltimo)){
+                $contratoAditivoRef = new FinContratoModel();
+                $contratoAditivoRef->setIdContrato($idContratoUltimo);
+                $contratoAditivoRef->retornaDadosContratoCompleto($pdo);
+                if(!$contratoAditivoRef->sucesso()){
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Último Contrato/Aditivo.");
+                }
+                $contAditivoRef = $contratoAditivoRef->getMsgRetorno();    
+                $contRef->setDtIniVigenciaContrato($contAditivoRef->getDtIniVigenciaContrato());
+                $contRef->setDtFimVigenciaContrato($contAditivoRef->getDtFimVigenciaContrato());
+             
+                
+                //$this->idContrato = $idContratoUltimo;
+            }
+                        
+            
+            //Valida se as Data de Assinatura e Publicação do Aditivo são menores que a Data
+            //da Vigência Inicial e Final            
+            $dtVigIni = new DateTime($contRef->getDtIniVigenciaContrato());           
+            if($this->dtPublicacao < $dtVigIni
+                    || $this->dtAssinatura < $dtVigIni){
+                return Metodos::retornoAjax("Erro", "alert", "Data de Publicação ou Assinatura não pode ser menor que a"
+                        . " Data da Vigência Inicial do Contrato/Último Aditivo.");
             }
             
+            //Se Motivo for por Prazo e Prazo valor
+            //Então data da Vigência Final do Contrato ou Ultimo Aditivo não pode ser Menor que a Data 
+            //Da Vigência Inicial informada
+            if($this->idMotivo == $this->getMotivoPorPrazo() 
+                    || $this->idMotivo == $this->getMotivoPorValorePrazo()){
+                $dtVigFinal = new DateTime($contRef->getDtFimVigenciaContrato());
+                if($this->dtVigenciaInicial < $dtVigFinal){
+                    return Metodos::retornoAjax("Erro", "alert", "Data da Vigência Inicial Informada para o novo Aditivo"
+                        . " não pode ser Menor que a data Data da Vigência Final do Contrato/Último Aditivo.");
+                }
+            }
+            
+            
+            $finContItens = $contRef->getItems();
             if(empty($finContItens)
                     || !is_array($finContItens)){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Último Contrato ou Aditivo Registrado.");
-            }
-          
-            $finContItensAux = $finContItens;
-            $finContItens = "";
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Contrato Registrado.");
+            } 
             
-            if(!empty($this->itens)){
-                foreach ($this->itens as $key => $value) {
-                    $key = array_search($value['id'], array_column($finContItensAux, "id_cont_itens"));
-                    if($key === false){
-                        return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
+            echo "<pre>";
+            print_r($finContItens);
+            echo "</pre>";
+            
+            //Quando Motivofor por Prazo, então precisa buscar todos os Itens do Contrato e Aditivos para fazer
+            //A Somatoria das Quantidades dos Itens
+            if($this->idMotivo == $this->getMotivoPorPrazo()){
+                
+                $this->retornaTodosItens($pdo);
+                if(!$this->sucesso){
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar todos os Itens do Contrato "
+                            . "e Últimos Aditivos.". STR_ERROR);                        
+                }
+                                                                
+                $result = $this->msgRetorno;
+                
+                echo "<pre>";
+                print_r($result);
+                echo "</pre>";
+                
+                foreach ($finContItens as $key => $value) {
+                    $value->getIdContItens();
+                    
+                    foreach ($result as $k => $v) {
+                        if($v['id_cont_itens_alt'] == $value->getIdContItens()
+                                && $v['tipo'] == "aditivo"){
+                            $valorItens = $finContItens[$key]->getVlItens() + $v['vl_itens'];
+                            $finContItens->setVlItens($valorItens);
+                        }
                     }
+                    
+                }
+                
+                
+                
+                echo "<pre>";
+                print_r($finContItens);
+                echo "</pre>";
+                
+                
+                
+                
+            }
+            
+            return;
+            
+           
+            //Carrega todos os itens do Contrato(Fornecedor)
+//            $finContItens = "";
+//            $itemModel = new ItemModel();
+//            $itemModel->setIdFornecedor($contRef->getFornecedor()->getIdFornecedor());
+//            $itemModel->retornaItensPorFornecedor($pdo);
+//            if($itemModel->Sucesso()){
+//                $finContItens = $itemModel->getMsgRetorno();
+//            }
+         
+//            echo "<pre>";
+//            print_r($this->itens);
+//            echo "</pre>";
+//            return;
+                                   
+            
+            //Ajusta os Valores dos Itens que serão duplicados no sistema
+            if(!empty($this->itens)){
+                $quantidadeDeItensEnviado = count($this->itens);
+                $i = 0;                
+                foreach ($finContItens as $k => $value) {                
+                    $key = array_search($value->getIdContItens(), array_column($this->itens, "id"));
+                    //Se a aplicação não enviou o Id do Item, então esse item terá seu valor zerado
+                    if($key === false){
+                        $finContItens[$k]->setQtItens(0);
+                        $finContItens[$k]->setVlItens(0);                                               
+                        continue;
+                    }                    
                     //Se a unidade de Cálculo for Moeda ou Indice de Correção
                     //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
                     if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()
                             || $this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
-                        $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
-                        $finContItens[] = $finContItensAux[$key];
+                        //Se a unidade de calculo for indice de correção, então iremos fazer o calculo do percentual
+                        //e verificar se ele está batendo com o valor informado pelo usuário na tela.
+                        if($this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
+                            $valorNovo = round((($finContItens[$k]->getVlItens()/100) * $this->percentual), 4);
+                            if($valorNovo != $this->itens[$key]['valor_aditivado']){
+                                return Metodos::retornoAjax("Erro", "alert", "Os Valores dos Itens estão diferente do Informado pelo usuário. \n".STR_ERROR);
+                            }else{
+                                $this->itens[$key]['valor_aditivado'] = $valorNovo;
+                            } 
+                        }                        
+                        $finContItens[$k]->setVlItens($this->itens[$key]['valor_aditivado']);      
+                        $i++;
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
                     }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
                             || $this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
-                        $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
-                        $finContItens[] = $finContItensAux[$key];
-                    }else{
-                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Identificar a Unidade de Cálculo nos itens");
+                        //Se a unidade de calculo for percentual, então iremos fazer o calculo do percentual
+                        //e verificar se ele está batendo com o valor informado pelo usuário na tela.
+                        if($this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
+                            $valorNovo = round((($finContItens[$k]->getQtItens()/100) * $this->percentual), 4);
+                            if($valorNovo != $this->itens[$key]['valor_aditivado']){
+                                return Metodos::retornoAjax("Erro", "alert", "Os Valores dos Itens estão diferente do Informado pelo usuário. \n".STR_ERROR);
+                            }else{
+                                $this->itens[$key]['valor_aditivado'] = $valorNovo;
+                            }                            
+                        }                        
+                        $finContItens[$k]->setQtItens($this->itens[$key]['valor_aditivado']);
+                        $i++;                        
                     }                                        
                 }
-            }
+                if($quantidadeDeItensEnviado != $i){
+                    return Metodos::retornoAjax("Erro", "alert", "A Quantidade de Itens que foi enviada para alteração não tiverem seus "
+                            . "dados ajustados de acordo com os itens do Contrato.");
+                }
+            }       
+                                 
+//            $finContItensAux = $finContItens;
+//            $finContItens = "";
+            
+            
+            
+//            if(!empty($this->itens)){
+//                foreach ($this->itens as $key => $value) {
+//                    $key = array_search($value['id'], array_column($finContItensAux, "id_cont_itens"));
+//                    if($key === false){
+//                        return Metodos::retornoAjax("Erro", "alert", "O Item a qual está sendo Aditivado não existe no Último Contrato ou Aditivo Registrado.");
+//                    }
+//                    //Se a unidade de Cálculo for Moeda ou Indice de Correção
+//                    //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
+//                    if($this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()
+//                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoIndice()){
+//                        $finContItensAux[$key]['vl_itens'] = $value['valor_aditivado'];
+//                        $finContItens[] = $finContItensAux[$key];
+//                    //Se a unidade de Cálculo for Quantidade ou Percentual
+//                    //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
+//                    }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
+//                            || $this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()){
+//                        $finContItensAux[$key]['qt_itens'] = $value['valor_aditivado'];
+//                        $finContItens[] = $finContItensAux[$key];
+//                    }else{
+//                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Identificar a Unidade de Cálculo nos itens");
+//                    }                                        
+//                }
+//            }
             
                                                                                                                                  
             //Preparar Dados Para Inserir no Banco            
@@ -597,8 +782,8 @@ class FinContratoAditivo {
             $finContratoTb->setDtFimVigenciaContrato($contRef->getDtFimVigenciaContrato());
             
             
-            $finContratoTb->setDtAssinatura($this->dtAssinatura);
-            $finContratoTb->setDtPublicacao($this->dtPublicacao);        
+            $finContratoTb->setDtAssinatura($this->dtAssinatura->format("Y-m-d"));
+            $finContratoTb->setDtPublicacao($this->dtPublicacao->format("Y-m-d"));        
             $finContratoTb->setSqContrato($proximoSequencial);
             $finContratoTb->setIdContratoAditivoPai($this->idContratoAditivoPai);                 
             
@@ -622,23 +807,24 @@ class FinContratoAditivo {
             //Busca os Dados do Fin Cont Itens
             //Somente os itens que serão duplicados
             $itens = "";
-            foreach ($finContItens as $key => $value){
+            foreach ($finContItens as $key => $value){     
                 $finItens = new FinItensTb();
-                $finItens->setNrItem($value['nr_item']);
-                $finItens->setNrLote($value['nr_lote']);
-                $finItens->setNmMarca($value['nm_marca']);
-                $finItens->setNmModelo($value['nm_modelo']);
-                $finItens->setQtItens($value['qt_itens']);
-                $finItens->setVlItens($value['vl_itens']);
-                $finItens->setPcDesconto($value['pc_desconto']);
-                $finItens->setFlValorVariavel($value['fl_valor_variavel']);
-                $finItens->setDescItem($value['ds_itens']);
-                $finItens->setIdMaterial($value['id_material']);
+                $finItens->setNrItem($value->getNrItem());
+                $finItens->setNrLote($value->getNrLote());
+                $finItens->setNmMarca($value->getNmMarca());
+                $finItens->setNmModelo($value->getNmModelo());
+                $finItens->setQtItens($value->getQtItens());
+                $finItens->setVlItens($value->getVlItens());
+                $finItens->setPcDesconto($value->getPcDesconto());
+                $finItens->setFlValorVariavel($value->getFlValorVariavel());
+                $finItens->setDescItem($value->getDescItem());
+                $finItens->setIdMaterial($value->getIdMaterial());
                 $finItens->setIdContItens(NULL);
-                $finItens->setIdUnidadeMedida($value['id_unidade_medida']);
+                $finItens->setIdUnidadeMedida($value->getIdUnidadeMedida());
+                $finItens->setIdContItensAlt($value->getIdContItens());
                 $itens[] = $finItens;
-            }                        
-                      
+            }                      
+            
             
             $finContratoAdtivoTb = new FinContratoAditivoTb();
             $finContratoAdtivoTb->setIdContratoMotivo($this->idMotivo)
@@ -649,8 +835,8 @@ class FinContratoAditivo {
                     ->setIdContratoAquisicao($this->idTipoAquisicao)
                     ->setDsJustificativa($this->dsJustificativa)
                     ->setNrAditivo($this->numeroNovoAditivo)
-                    ->setDtInicial($this->dtPeriodoInicial)
-                    ->setDtFinal($this->dtPeriodoFinal)
+                    ->setDtInicial( (empty($this->dtPeriodoInicial)) ? NULL : $this->dtPeriodoInicial->format("Y-m-d") )
+                    ->setDtFinal( (empty($this->dtPeriodoFinal)) ? NULL : $this->dtPeriodoFinal->format("Y-m-d") )
                     ->setNrPercentualIndice($this->percentual);                                                   
                       
             $contrato->cadastrarContratoComAditivo($finContratoTb, $finFornecedorTb
@@ -930,13 +1116,21 @@ class FinContratoAditivo {
         }
         
         //Se o Motivo é por Valor, então essa será a validação
-        if($this->idMotivo == $this->getMotivoPorValor()){    
+        if($this->idMotivo == $this->getMotivoPorValor() || $this->idMotivo == $this->getMotivoPorValorePrazo()){    
             if(!( empty($this->numeroNovoAditivo) || empty($this->idFinalidade)
                 || empty($this->idInstrumento) || empty($this->idBaseCalculo)                                    
                 || empty($this->idUnidadeCalculo) || empty($this->dtPublicacao) 
                 || empty($this->dtAssinatura) )){
                 return true;
             }                        
+        }
+        
+        if($this->idMotivo == $this->getMotivoPorPrazo()){
+            if(!( empty($this->numeroNovoAditivo) || empty($this->dtVigenciaInicial)
+                    || empty($this->dtVigenciaFinal) || empty($this->dtAssinatura)
+                    || empty($this->dtPublicacao) )){                
+                return true;
+            }
         }
                         
         return false;
@@ -955,7 +1149,7 @@ class FinContratoAditivo {
         }
         
         //Se o Motivo é por Valor, então essa será a validação
-        if($this->idMotivo == $this->getMotivoPorValor()){      
+        if($this->idMotivo == $this->getMotivoPorValor() || $this->idMotivo == $this->getMotivoPorValorePrazo()){     
                         
             //Se o Instrumento de equilibrio for Revisão, então é obrigatorio que seja informado
             //um tipo de aquisição
@@ -1004,6 +1198,15 @@ class FinContratoAditivo {
                         . " então é obrigatório o preenchimento do Período Inicial e Final.";
                 return;                                    
             }            
+            
+            //Se o instrumento de equilibrio for Reajuste
+            //Então é necessário veririfcar se o período Final é Maior que o Período Inicial            
+            if($this->dtPeriodoFinal < $this->dtPeriodoInicial){
+                $this->sucesso = false;
+                $this->msgRetorno = "Período Final Não pode ser Menor que o Período Inicial.";
+                return; 
+            }
+            
             
             //Se a Base de Calculo for Global, somente poderá ser Percentual ou Indice de Correção na Unidade de Cálculo
             if( $this->idBaseCalculo == $this->getBaseCalculoGlobal() 
@@ -1055,7 +1258,33 @@ class FinContratoAditivo {
             $this->sucesso = true;
             $this->msgRetorno = "ok";
             return;
-        }                                        
+        } 
+        
+        if($this->idMotivo == $this->getMotivoPorPrazo() || $this->idMotivo == $this->getMotivoPorValorePrazo()){
+                        
+            if($this->dtVigenciaFinal < $this->dtVigenciaInicial){
+                $this->sucesso = false;
+                $this->msgRetorno = "Data Final da Vigência do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
+                return; 
+            }
+            
+            if($this->dtAssinatura < $this->dtVigenciaInicial){
+                $this->sucesso = false;
+                $this->msgRetorno = "Data da Assinatura do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
+                return; 
+            }
+            
+            if($this->dtPublicacao < $this->dtVigenciaInicial){
+                $this->sucesso = false;
+                $this->msgRetorno = "Data da Publicação do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
+                return; 
+            }                                                            
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "ok";
+            return;            
+        }
+        
         $this->sucesso = false;
         $this->msgRetorno = "Não foi possível validar os Dados desse Motivo do Aditivo.";
     }
@@ -1161,6 +1390,37 @@ class FinContratoAditivo {
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($this->idContrato);
             $daoContratoAditivo->retornaNumeroUltimoAditivo($pdo);
+            if(!$daoContratoAditivo->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
+                return;                
+            }
+            $this->sucesso = true;
+            $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();                                                            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
+        }
+    }
+    
+    
+    public function retornaTodosItens(PDO $pdo = null){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();            
+                $pdo = $conexao->connect();
+            }
+            
+            if(empty($this->idContrato)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Id Contrato não encontrado";
+                return;
+            }
+            
+            $daoContratoAditivo = new DaoFinContratoAditivo();
+            $daoContratoAditivo->setIdContrato($this->idContrato);
+            $daoContratoAditivo->todosItens($pdo);
             if(!$daoContratoAditivo->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();

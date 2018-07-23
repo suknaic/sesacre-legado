@@ -299,4 +299,46 @@ class DaoFinProtocolo extends FinProtocoloTb {
         }
     }
 
+    public function retornaSituacao(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select st_protocolo from fin_protocolo where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function updateQtEntrega(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_protocolo set qt_entrega = :qtEntrega where id_protocolo = :protocolo";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":qtEntrega", $this->getQtEntrega(), PDO::PARAM_INT);
+                $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem conexao";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
 }

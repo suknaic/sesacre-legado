@@ -223,13 +223,14 @@ $(document).ready(function () {
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
-                "dataType": "json",
+                "dataType": "html",
                 "data": {
                     "acao": "cadastroItensEntrega",
                     "itens": enc
                 },
                 "success": function (response) {
-
+                    console.log(response);
+                    return false;
                     $this.prop("disabled", false);
 
                     if (response.tipoMsg === "Erro") {

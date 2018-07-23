@@ -799,22 +799,10 @@ class ItemModel {
         }
     }
 
-    public function retornaTrItensParaAditamento(int $idContrato) {
+    public function retornaTrItensParaAditamento(int $idContrato){
         //conexao com banco dedados
         $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        
-        
-        $finContratoAditivo = new FinContratoAditivo();
-        $finContratoAditivo->setIdContrato($idContrato);
-        $finContratoAditivo->retornaNumeroUltimoAditivo($pdo);
-      
-        if($finContratoAditivo->Sucesso()
-                && !empty($finContratoAditivo->getMsgRetorno())
-                && is_array($finContratoAditivo->getMsgRetorno())){
-            $idContrato = $finContratoAditivo->getMsgRetorno()['id_contrato_ultimo'];            
-        }        
-        
+        $pdo = $conexao->connect();             
         
         //pega id do fornecedor
         $finFornecedoresModel = new FinFornecedoresModel();
@@ -900,6 +888,7 @@ class ItemModel {
                 $this->msgRetorno = "Não foi identificar os itens";
                 return;
             }            
+                       
             foreach ($itens as $key => $value) {                
                 $daoFinItens->setNrItem($value->getNrItem());
                 $daoFinItens->setNrLote($value->getNrLote());
@@ -912,7 +901,8 @@ class ItemModel {
                 $daoFinItens->setDescItem($value->getDescItem());
                 $daoFinItens->setIdMaterial($value->getIdMaterial());
                 $daoFinItens->setIdContItens($value->getIdContItens());
-                $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida());                                
+                $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida()); 
+                $daoFinItens->setIdContItensAlt($value->getIdContItensAlt());
                 
                 $daoFinItens->cadastrarItemAditivo($pdo);
                 if(!$daoFinItens->Sucesso()){

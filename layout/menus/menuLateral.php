@@ -51,15 +51,15 @@
                                         <li>
                                             <a href="/pages/rh/lotacao/index.php">Lotação</a>
                                         </li>
-<!--                                        <li>
-                                            <a href="/pages/rh/lotacaoDetalhe/">Lotação Detalhe</a>
-                                        </li>-->
+                                        <!--                                        <li>
+                                                                                    <a href="/pages/rh/lotacaoDetalhe/">Lotação Detalhe</a>
+                                                                                </li>-->
                                         <li>
                                             <a href="/pages/sistema/vinculo/index.php">Vínculos</a>
                                         </li>
-<!--                                        <li>
-                                            <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
-                                        </li>-->
+                                        <!--                                        <li>
+                                                                                    <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
+                                                                                </li>-->
                                     </ul>
                                 </li>
                                 <li>
@@ -91,77 +91,77 @@
                             </ul>
                         </li>
                         <!--Menu list Chamados-->
-<!--                        <li>
-                            <a href="#">
-                                <i class="fa fa fa-phone" aria-hidden="true"></i>
-                                <span class="menu-title">Chamados</span>
-                                <i class="arrow"></i>
-                            </a>
-                            Submenu
-                            <ul class="collapse">                                
-                                <li>
-                                    <a href="#">Engenharia</a>
-                                </li>
-                                <li>
-                                    <a href="#">Gestão Documental</a>
-                                </li>
-                                <li>
-                                    <a href="#">Hospitalar</a>
-                                </li>
-                                <li>
-                                    <a href="/pages/cha/informatica/index.php?id=3">Informática</a>
-                                </li>
-                                <li>
-                                    <a href="#">Serviços Gerais</a>
-                                </li>
-
-                                <li>
-                                    <a href="#">
-                                        Administração
-                                        <i class="arrow"></i>
-                                    </a>
-                                    <ul class="collapse">
-                                        <li>
-                                            <a href="/pages/cha/administracao/categoriaPrincipal/index.php">Categoria Principal</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/categoriaTipo/index.php">Categoria Tipo</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/categoriaPrimaria/index.php">Categoria Primária</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/categoriaSecundaria/index.php">Categoria Secundária</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/status/index.php">Status</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/condicao/index.php">Condição</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Técnicos</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/material/">Material</a>
-                                        </li>
-                                        <li>
-                                            <a href="/pages/cha/administracao/prioridade/index.php">Prioridade</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Peças e Suprimentos</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Equipamento</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Relatórios</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-
-                        </li>-->
+                        <!--                        <li>
+                                                    <a href="#">
+                                                        <i class="fa fa fa-phone" aria-hidden="true"></i>
+                                                        <span class="menu-title">Chamados</span>
+                                                        <i class="arrow"></i>
+                                                    </a>
+                                                    Submenu
+                                                    <ul class="collapse">                                
+                                                        <li>
+                                                            <a href="#">Engenharia</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Gestão Documental</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Hospitalar</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="/pages/cha/informatica/index.php?id=3">Informática</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Serviços Gerais</a>
+                                                        </li>
+                        
+                                                        <li>
+                                                            <a href="#">
+                                                                Administração
+                                                                <i class="arrow"></i>
+                                                            </a>
+                                                            <ul class="collapse">
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/categoriaPrincipal/index.php">Categoria Principal</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/categoriaTipo/index.php">Categoria Tipo</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/categoriaPrimaria/index.php">Categoria Primária</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/categoriaSecundaria/index.php">Categoria Secundária</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/status/index.php">Status</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/condicao/index.php">Condição</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Técnicos</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/material/">Material</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/pages/cha/administracao/prioridade/index.php">Prioridade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Peças e Suprimentos</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Equipamento</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Relatórios</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                        
+                                                </li>-->
                         <!--Menu list Planejamento-->
                         <li>
                             <a href="/pages/pla/">
@@ -230,9 +230,34 @@
                             </a>
                             <!--Submenu-->
                             <ul class="collapse">
-
                                 <li>
                                     <a href="/pages/financeiro/necessidade_central/index.php">Solicitação Central</a>
+                                </li>
+
+                                <li>
+                                    <a href="/pages/financeiro/autorizacoes/index.php">
+                                        <span class="menu-title">Autorizações</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="/pages/financeiro/autorizacoes/central/index.php">Aut.Central</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/pages/financeiro/autorizacoes/orcamento/index.php">Aut.Orçamento</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/pages/financeiro/autorizacoes/financeiro/index.php">Aut.Financeiro</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/pages/financeiro/autorizacoes/ordenador/index.php">Aut.Ordenador</a>
+                                        </li>
+
+                                    </ul>
                                 </li>
 
                                 <li>
@@ -240,33 +265,29 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Administração</a>
-                                </li>
+                                    <a href="/pages/financeiro/autorizacoes/index.php">
+                                        <span class="menu-title">Administração</span>
+                                        <i class="arrow"></i>
+                                    </a>
 
-                                <li>
-                                    <a href="/pages/financeiro/autorizacoes/index.php">Autorizações</a>
-                                </li>
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="/pages/financeiro/autorizacoes/index.php">
+                                                <span class="menu-title">Tabela Gerenciais</span>
+                                                <i class="arrow"></i>
+                                            </a>
+                                            <ul class="collapse">
+                                                <li>
+                                                    <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Cadastrar Tipo de Gasto e Elemento</a>
+                                                </li>
+                                            </ul>
 
-                                <li>
-                                    <a href="/pages/financeiro/autorizacoes/central/index.php">Aut.Central</a>
+                                        </li>
+                                    </ul>
                                 </li>
-
-                                <li>
-                                    <a href="/pages/financeiro/autorizacoes/orcamento/index.php">Aut.Orçamento</a>
-                                </li>
-
-                                <li>
-                                    <a href="/pages/financeiro/autorizacoes/financeiro/index.php">Aut.Financeiro</a>
-                                </li>
-
-                                <li>
-                                    <a href="/pages/financeiro/autorizacoes/ordenador/index.php">Aut.Ordenador</a>
-                                </li>
-
-                                <li>
-                                    <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
-                                </li>
-
                             </ul>
                         </li>
                         <!--Menu list Compras-->
@@ -306,8 +327,15 @@
                                 <i class="arrow"></i>
                             </a>
                             <!--Submenu-->
-                            
+
                             <ul class="collapse">
+
+                                <li>
+                                    <a href="/pages/diarias/">Proposta e Concessão de Diárias</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/diarias/autorizacoes/">Autorizações</a>
+                                </li>
                                 <li>
                                     <a href="#">
                                         Administração
@@ -326,15 +354,9 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        
+
                                     </ul>
-                                    
-                                </li>
-                                <li>
-                                    <a href="/pages/diarias/">Proposta e Concessão de Diárias</a>
-                                </li>
-                                <li>
-                                    <a href="/pages/diarias/autorizacoes/">Autorizações</a>
+
                                 </li>
                             </ul>
                         </li>

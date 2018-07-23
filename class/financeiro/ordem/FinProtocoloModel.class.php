@@ -436,7 +436,7 @@ class FinProtocoloModel {
             } else {
                 $daoFinProtocolo->setDtConfirmacao($this->dt_confirmacao);
             }
-            
+
             $daoFinProtocolo->updateDtConfirmacao($pdo);
 
             if (!$daoFinProtocolo->sucesso()) {
@@ -452,6 +452,11 @@ class FinProtocoloModel {
         }
     }
 
+    /**
+     * Verificar ser ja existem uma entrega parcial cadastrada para nao deixa o usuario cadastrar um entrega total
+     * @param PDO $pdo
+     * @return type
+     */
     public function verificarStatusEntregaParcial(PDO $pdo) {
         try {
             $daoFinProtocolo = new DaoFinProtocolo();
@@ -463,5 +468,47 @@ class FinProtocoloModel {
             $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
         }
     }
-    
+
+    public function retornaSituacaoProtocolo($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
+            $daoFinProtocolo->retornaSituacao($pdo);
+
+            if ($daoFinProtocolo->sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinProtocolo->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
+        }
+    }
+
+    public function atualizaQtEntrega(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
+            $daoFinProtocolo->setQtEntrega($this->qt_entrega);
+            $daoFinProtocolo->updateQtEntrega($pdo);
+            $this->sucesso = $daoFinProtocolo->sucesso();
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
+        }
+    }
+
 }

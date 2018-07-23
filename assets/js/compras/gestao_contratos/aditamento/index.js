@@ -274,6 +274,8 @@ $(document).ready(function () {
                 periodo_inicial: $("#n_periodo_inicial").val(),
                 periodo_final: $("#n_periodo_final").val(),
                 data_publicacao: $("#n_data_publicacao").val(),
+                data_vigencia_inicial: $("#n_vigencia_inicial").val(),
+                data_vigencia_final: $("#n_vigencia_final").val(),
                 data_assinatura : $("#n_data_assinatura").val(),
                 justificativa: $("#n_justificativa").val()
             };          
@@ -472,6 +474,26 @@ $(document).ready(function () {
     $("#div_periodo_inicial").hide();
     $("#div_periodo_final").hide();
     
+    
+    if($("#motivo").val() == 1){
+       $("#div_vigencia_inicial").hide();
+        $("#div_vigencia_final").hide(); 
+    }
+    
+    if($("#motivo").val() == 2){
+        $("#div_finalidade").hide();
+        $("#div_instrumento").hide();
+        $("#div_base_calculo").hide();
+        $("#div_unidade_calculo").hide();
+        $("#div_tipo_aquisicao").hide();
+        $("#div_indice_correcao").hide();
+        $("#div_percentual").hide();
+        $("#div_valor_aditivo").hide();
+        $("#div_periodo_inicial").hide();
+        $("#div_periodo_final").hide();                    
+    }
+    
+    
     $('body').on('change', '#n_instrumento', function (e) {
                 
         $('#n_base_calculo').val(0).trigger('change');                        
@@ -628,7 +650,8 @@ $(document).ready(function () {
         }
     });
     
-    
+  
+       
     
     //Calculo da Tabela dos Itens
     function calculaValorTotal(elemento){
@@ -647,18 +670,21 @@ $(document).ready(function () {
         }else{
             
         }
-            
+       
         valor = func.converteValorIngFloat(valor);   
-        qtd = func.converteValorIngFloat(qtd);        
-        
-        $(elemento).closest("tr").find(".td_total").text((qtd*valor).toFixed(4));
+        qtd = func.converteValorIngFloat(qtd);       
+
+        $(elemento).closest("tr").find(".td_total").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
         $(elemento).closest("tr").find(".td_total").priceFormat({
             prefix: '',
             centsSeparator: ',',
             thousandsSeparator: '.',
             centsLimit: 4
         });
-    }       
+    }     
+    
+    
+       
     
     //Quando a Unidade de Cálculo for Percentual ou Indice de Correção
     //Os Itens serão calculados de acordo com os Dados da % fornecida pelo usuario
@@ -668,21 +694,22 @@ $(document).ready(function () {
         if($("#n_unidade_calculo option:selected").val() == 1){
             $(".td_quantidade").each(function(index){         
                 let quantidade = func.converteValorIngFloat($(this).text());           
-                valorAditivo = quantidade * (percentual/100);
-                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                valorAditivo = quantidade * (percentual/100);               
+                $(this).closest('tr').find('.qtd_aditivo').val(func.arrendondaValorParaQuatroCasas(valorAditivo));                
                 $(this).closest('tr').find('.qtd_aditivo').priceFormat({
                     prefix: '',
                     centsSeparator: ',',
                     thousandsSeparator: '.',
                     centsLimit: 4
-                }); 
+                });           
+                
                 calculaValorTotal($(this).closest('tr').find('.qtd_aditivo'));            
             });
         }else if($("#n_unidade_calculo option:selected").val() == 2){
             $(".td_valor_unitario").each(function(index){         
                 let quantidade = func.converteValorIngFloat($(this).text());           
                 valorAditivo = quantidade * (percentual/100);
-                $(this).closest('tr').find('.qtd_aditivo').val(valorAditivo.toFixed(4));
+                $(this).closest('tr').find('.qtd_aditivo').val(func.arrendondaValorParaQuatroCasas(valorAditivo));
                 $(this).closest('tr').find('.qtd_aditivo').priceFormat({
                     prefix: '',
                     centsSeparator: ',',
@@ -696,9 +723,7 @@ $(document).ready(function () {
     }    
     $('body').on('keyup', '.qtd_aditivo', function(){
         calculaValorTotal(this);
-    });                  
-  
-  
+    });      
   
     //Calculo do Valor do Aditivo
     function calculoValorAditivo(){
@@ -707,7 +732,7 @@ $(document).ready(function () {
             let valorInformado = func.converteValorIngFloat($(this).text());            
             valorAditivo = valorAditivo + valorInformado;
         });
-        $("#n_valor_aditivo").val(valorAditivo.toFixed(4));
+        $("#n_valor_aditivo").val(func.arrendondaValorParaQuatroCasas(valorAditivo));
         $("#n_valor_aditivo").priceFormat({
             prefix: '',
             centsSeparator: ',',
@@ -753,7 +778,7 @@ $(document).ready(function () {
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
                 $(".selecionaItem").first().trigger('click');
                 $(".btn-add-aditivo").trigger('click');  
-                carregaDadosEdicao();
+                //carregaDadosEdicao();
                 
             }            
         });  
