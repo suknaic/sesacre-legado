@@ -257,36 +257,35 @@ class Contrato {
             //return;
             //************************************************************************************************
             // Definindo o perfil(CHAMADO) padrão para o funcionário
-            if 
+            if ($sucesso) {
                 $perfilPessoa = new PerfilPessoa();
                 $perfilPessoa->setIdPerfil();
                 $perfilPessoa->setIdPessoa($idPessoa);
 
                 $inseriPerfil = $perfilPessoa->incluirPessoaPerfil($pdo);
                 if ($inseriPerfil) {
-                    $pdo->commit();
-                    return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
+                    if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
+                        $fim = true;
+                    } else {
+                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                    if ($fim) {
+                        $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+                        $pdo->commit();
+                        return $retorno;
+                    } else {
+                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
                 } else {
                     $pdo->rollBack();
                     return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
                 }
+            }
             //************************************************************************************************
-            if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
-                $sucesso = true;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
-            }
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
-                $pdo->commit();
-                return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
-            }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -1294,7 +1293,7 @@ class Contrato {
             if ($rs != FALSE) {
                 foreach ($rs as $linha) {
 
-                    echo "<tr class='warning lotacaoLinha' dataAtual='". date('d/m/Y')."' idCont= '" . $idContrato . "'> 
+                    echo "<tr class='warning lotacaoLinha' dataAtual='" . date('d/m/Y') . "' idCont= '" . $idContrato . "'> 
                                 <td class='text-center lotacao' idLotacao='" . $linha['id_lotacao'] . "'>" . $linha['nm_lotacao'] . "</td>
                                 <td class='text-center funcao' idFuncao='" . $linha['id_funcao'] . "'>" . $linha['nm_funcao'] . "</td>
                                 <td class='text-center cargaLotacao'ch='" . $linha['carga_horaria_lotacao'] . "'>" . $linha['carga_horaria_lotacao'] . "</td>
@@ -1458,8 +1457,8 @@ class Contrato {
             $retorno = "";
         }
     }
-    
-   public function retornaOptionUsuarioContrato(PDO $pdo = null, int $idUsuario = 0) {
+
+    public function retornaOptionUsuarioContrato(PDO $pdo = null, int $idUsuario = 0) {
         $retorno = "<option value='0'>Selecione um Usuário</option>";
         try {
             if (empty($pdo)) {
@@ -1484,7 +1483,7 @@ class Contrato {
         } catch (Exception $ex) {
             $retorno = "";
         }
-    } 
+    }
 
     public function retornaOptionPessoaChamado(PDO $pdo = null, int $idPessoa = 0) {
 //        $retorno = "<option value='0'>Selecione uma pessoa</option>";
