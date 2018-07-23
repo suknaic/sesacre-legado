@@ -84,7 +84,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                    <div class="row">
                                        <div class="col-sm-6">
                                            <div class="form-group">
-                                               <label for="nr_protocolo">Nº Protocoloco: <span class="text-danger">*</span></label>
+                                               <label for="nr_protocolo">Nº Protocolo: <span class="text-danger">*</span></label>
                                                <div class="input-group">
                                                     <span class="input-group-addon">
                                                        <p class="fa fa-file-text-o inputPFa"></p>
