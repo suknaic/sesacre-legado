@@ -186,9 +186,11 @@ class DaoFinCentrais extends FinCentraisTb {
     public function retornaCentraisPorContrato(PDO $pdo = null, int $idContrato = null) {
         try {
             if (!empty($pdo) && !empty($idContrato)) {
-                $sql = "SELECT id_cont_central, id_contrato, id_lotacao"
-                        . " FROM fin_cont_central"
-                        . " WHERE id_contrato = :idContrato";
+                $sql = "SELECT CC.id_cont_central, CC.id_contrato, CC.id_lotacao"
+                        . " , L.nm_lotacao"
+                        . " FROM fin_cont_central CC"
+                        . " INNER JOIN ses_lotacao L ON L.id_lotacao = CC.id_lotacao"
+                        . " WHERE CC.id_contrato = :idContrato";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $idContrato, PDO::PARAM_INT);
                 $stmt->execute();

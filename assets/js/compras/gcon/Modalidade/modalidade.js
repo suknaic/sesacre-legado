@@ -110,7 +110,6 @@ $(document).ready(function () {
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
         "data" : {
-            "menu" : 'menu_1'
         },
         "success": function (response) {
             $("body").find("#menu_gcon").append(response);

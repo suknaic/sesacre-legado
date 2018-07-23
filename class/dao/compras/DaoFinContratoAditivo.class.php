@@ -169,7 +169,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " WHERE C.id_contrato_aditivo_pai = :idContratoAditivoPai AND C.st_ativo = '1' "
                         . " AND C.sq_contrato > 0 AND C.tp_contrato = '2'";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":idContratoAditivoPai", $this->getIdContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idContratoAditivoPai", $this->getIdContrato(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -243,7 +243,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " ORDER BY id_contrato DESC";
 
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_STR);
+                $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -258,6 +258,140 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
         }
     }
     
+    public function retornaUltimoContratoAditivo(PDO $pdo = null){
+        $this->sucesso = false;
+        try{
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();  
+            }
+            
+            $sql = "SELECT C.id_contrato, 'contrato' AS tipo"
+                . " FROM fin_contrato C"
+                . " WHERE C.id_contrato = :idContrato AND C.id_contrato_aditivo_pai IS NULL"
+                . " AND C.tp_contrato = '2' AND C.st_ativo = '1'"
+                . " UNION"
+                . " SELECT C.id_contrato, 'aditivo_valor' AS tipo"
+                . " FROM fin_contrato C"
+                . " INNER JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato"
+                . " WHERE C.id_contrato_aditivo_pai = :idContrato AND C.tp_contrato = '2'"
+                . " AND C.st_ativo = '1'"
+                . " ORDER BY id_contrato DESC"
+                . " LIMIT 1";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+            
+            
+            
+            
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }                
+    }
+    
+    public function retornaTodosGestoresFiscaisSubs(PDO $pdo = null){
+        
+        $this->sucesso = false;
+        try{
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();  
+            }
+            
+            $sql = "SELECT G.id_pessoa, G.tp_gestor as tipo"
+                . " , 'gestor' as tabela, P.nm_pessoa"
+                . " FROM fin_gestor G"
+                . " INNER JOIN ses_pessoa P ON P.id_pessoa = G.id_pessoa"
+                . " WHERE G.id_contrato = :idContrato"
+                . " UNION ALL"
+                . " SELECT F.id_pessoa, F.tp_fiscal as tipo"
+                . " , 'fiscal' as tabela, P.nm_pessoa"
+                . " FROM fin_fiscal F"
+                . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"
+                . " WHERE F.id_contrato = :idContrato"
+                . " UNION ALL"
+                . " SELECT S.id_pessoa, to_number(S.tp_sub_fiscal, '99G999D9S') as tipo"
+                . " , 'sub_fiscal' as tabela, P.nm_pessoa"
+                . " FROM fin_sub_fiscal S"
+                . " INNER JOIN ses_pessoa P ON P.id_pessoa = S.id_pessoa"
+                . " WHERE S.id_contrato = :idContrato";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "";
+                $this->sucesso = false;
+            }
+
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }                    
+    }
+    
+    
+    public function dadosCompletoAditivo(PDO $pdo = null){
+        $this->sucesso = false;
+        try{
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();  
+            }
+            
+            $sql = "SELECT C.id_contrato, C.nr_contrato"
+                    . " , to_char(C.dt_publicacao, 'DD/MM/YYYY') as dt_publicacao"
+                    . " , to_char(C.dt_assinatura, 'DD/MM/YYYY') as dt_assinatura"
+                    . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
+                    . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
+                    . " , F.id_fornecedor, P.nm_pessoa"
+                    . " , TG.nm_tipo_gasto"
+                    . " , CA.ds_justificativa, CA.dt_inicial, CA.dt_final, CA.nr_percentual_indice"
+                    . " , CM.nm_contrato_motivo, CF.nm_contrato_finalidade, CI.nm_contrato_instrumento"
+                    . " , CB.nm_contrato_base_calculo, CU.nm_contrato_unidade_calculo"
+                    . " , CAQ.nm_contrato_aquisicao"                    
+                    . " FROM fin_contrato C"
+                    . " INNER JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato"
+                    . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
+                    . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"
+                    . " INNER JOIN fin_contrato_motivo CM ON CM.id_contrato_motivo = CA.id_contrato_motivo"
+                    . " INNER JOIN fin_contrato_finalidade CF ON CF.id_contrato_finalidade = CA.id_contrato_finalidade"
+                    . " INNER JOIN fin_contrato_instrumento CI ON CI.id_contrato_instrumento = CA.id_contrato_instrumento"
+                    . " INNER JOIN fin_contrato_base_calculo CB ON CB.id_contrato_base_calculo = CA.id_contrato_base_calculo"
+                    . " INNER JOIN fin_contrato_unidade_calculo CU ON CU.id_contrato_unidade_calculo = CA.id_contrato_unidade_calculo"
+                    . " INNER JOIN fin_contrato_aquisicao CAQ ON CAQ.id_contrato_aquisicao = CA.id_contrato_aquisicao"
+                    . " INNER JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"                    
+                    . " WHERE C.id_contrato = :idContrato AND C.st_ativo ='1'"
+                    . " AND C.tp_contrato = '2' AND C.sq_contrato > 0";                    
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "";
+                $this->sucesso = false;
+            }
+
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }
+    }
     
         
 

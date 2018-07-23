@@ -111,7 +111,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                         <div class="row">
                                             <div class='col-sm-2'><b>Vigência:</b></div>
                                             <div class='col-sm-9' id="vigencia_inical">
-                                                <?php echo empty($dados[0]["dt_ini_vigencia_contrato"]) ? '' : Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]); ?> a 
+                                                <?php echo empty($dados[0]["dt_ini_vigencia_contrato"]) ? '' : Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]) . " a "; ?>  
                                                 <?php echo empty($dados[0]["dt_fim_vigencia_contrato"]) ? '' : Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]); ?>
                                             </div>
                                         </div>
@@ -138,6 +138,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                                 <div class='col-sm-9' id="valorPedido"><?php echo Metodos::ConverteValorBr($dados[0]["vl_pedido"], '4'); ?></div>
                                             </div>
                                         <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="panel">
+                                    <div class="panel-heading ">
+                                        <h3 class="panel-title">Anotações</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <textarea id="anotacao" class="form-control"></textarea>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <?php echo $anotacoes; ?>
                                     </div>
                                 </div>
                             </div>
