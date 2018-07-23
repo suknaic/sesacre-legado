@@ -2,6 +2,11 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/compras/gcon/processo/processoExtd.class.php";
 
+/**
+ * Description of DaoProcesso
+ *
+ * @author elivelton
+ */
 class DaoProcesso extends ProcessoExtd {
 
     //Método para cadastrar processo no BD   

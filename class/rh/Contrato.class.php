@@ -3,6 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesContrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesContrato.class.php";
 
 class Contrato {
@@ -254,6 +255,21 @@ class Contrato {
             //print_r($pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq'));
             //print_r($contrato);
             //return;
+            //************************************************************************************************
+            // Definindo o perfil(CHAMADO) padrão para o funcionário
+            if 
+                $perfilPessoa = new PerfilPessoa();
+                $perfilPessoa->setIdPerfil();
+                $perfilPessoa->setIdPessoa($idPessoa);
+
+                $inseriPerfil = $perfilPessoa->incluirPessoaPerfil($pdo);
+                if ($inseriPerfil) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
+                }
             //************************************************************************************************
             if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
                 $sucesso = true;
@@ -1278,7 +1294,7 @@ class Contrato {
             if ($rs != FALSE) {
                 foreach ($rs as $linha) {
 
-                    echo "<tr class='warning lotacaoLinha' idCont= '" . $idContrato . "'> 
+                    echo "<tr class='warning lotacaoLinha' dataAtual='". date('d/m/Y')."' idCont= '" . $idContrato . "'> 
                                 <td class='text-center lotacao' idLotacao='" . $linha['id_lotacao'] . "'>" . $linha['nm_lotacao'] . "</td>
                                 <td class='text-center funcao' idFuncao='" . $linha['id_funcao'] . "'>" . $linha['nm_funcao'] . "</td>
                                 <td class='text-center cargaLotacao'ch='" . $linha['carga_horaria_lotacao'] . "'>" . $linha['carga_horaria_lotacao'] . "</td>
