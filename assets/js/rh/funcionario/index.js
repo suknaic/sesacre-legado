@@ -290,8 +290,6 @@ $(document).ready(function () {
         $("#matricula").val("");
         $("#id_lotacao").val(0).change();
         $("#id_vinculo").val(0).change();
-        
-
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {

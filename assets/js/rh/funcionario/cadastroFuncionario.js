@@ -517,7 +517,7 @@ $(document).ready(function () {
             $("#tabela tbody tr").each(function () {
                 if (competenciaId == $(this).find(".escolaridade").attr("idEscolaridadeFormacao")) {
                     flag = 1;
-                    func.modalAlert(" O Item já Existe!!!")
+                    func.modalAlert(" O Item já Existe!!!");
                 }
             });
         }
@@ -587,7 +587,7 @@ $(document).ready(function () {
                 email: $("#nm_email").val(),
                 senha: "$2y$14$rnt28R3reooTFh1exTRw9.aF08zbyP2Kio73YxgVeqh/3qZmCPbQ2",
                 obs: $("#ds_observacao").val()
-            }
+            };
             $cpf = $("#nr_cpf").val().replace(/(\.|\/|\-)/g, "");
             var DadosPessoaFisica = {
                 nomeCivil: $("#nm_civil").val(),
@@ -603,7 +603,7 @@ $(document).ready(function () {
                 dtNascimento: $("#dt_nascimento").val(),
                 cns: $("#nr_cns").val(),
                 escolaridade: $("#id_escolaridade").val()
-            }
+            };
 //***************competencias************************************
             if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
                 var DadosCompetencia = [];
@@ -637,7 +637,7 @@ $(document).ready(function () {
                 vinculo: $("#id_vinculo").val(),
                 pessoaJuridica: $("#id_pessoa_juridica").val(),
                 idCargo: $("#id_cargo").val()
-            }
+            };
             var x = 0;
             if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
                 x = 1;
@@ -651,7 +651,7 @@ $(document).ready(function () {
                         idFuncao: $(this).find(".funcao").attr("idFuncao"),
                         dt_inicio: $(this).find(".dataIni").attr("dt_inicio"),
                         dt_fim: $(this).find(".dataFim").attr("dt_fim")
-                    })
+                    });
                 });
             }
 //*******************************************************************

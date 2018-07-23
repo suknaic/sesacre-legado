@@ -480,13 +480,31 @@ class FinProtocoloModel {
             $daoFinProtocolo = new DaoFinProtocolo();
             $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
             $daoFinProtocolo->retornaSituacao($pdo);
-            
-           if($daoFinProtocolo->sucesso()){
-               $this->sucesso = true;
-               $this->msgRetorno = $daoFinProtocolo->getMsgRetorno(); 
-           }else{
-               $this->sucesso = false;
-           }
+
+            if ($daoFinProtocolo->sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinProtocolo->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
+        }
+    }
+
+    public function atualizaQtEntrega(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
+            $daoFinProtocolo->setQtEntrega($this->qt_entrega);
+            $daoFinProtocolo->updateQtEntrega($pdo);
+            $this->sucesso = $daoFinProtocolo->sucesso();
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = Metodos::retornoAjax("Erro", "alert", $exc->getMessage());

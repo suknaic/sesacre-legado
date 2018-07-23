@@ -888,6 +888,7 @@ class ItemModel {
                 $this->msgRetorno = "Não foi identificar os itens";
                 return;
             }            
+                       
             foreach ($itens as $key => $value) {                
                 $daoFinItens->setNrItem($value->getNrItem());
                 $daoFinItens->setNrLote($value->getNrLote());
@@ -900,7 +901,8 @@ class ItemModel {
                 $daoFinItens->setDescItem($value->getDescItem());
                 $daoFinItens->setIdMaterial($value->getIdMaterial());
                 $daoFinItens->setIdContItens($value->getIdContItens());
-                $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida());                                
+                $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida()); 
+                $daoFinItens->setIdContItensAlt($value->getIdContItensAlt());
                 
                 $daoFinItens->cadastrarItemAditivo($pdo);
                 if(!$daoFinItens->Sucesso()){

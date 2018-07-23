@@ -82,7 +82,7 @@ $(document).ready(function () {
 
                 },
                 "success": function (response) {
-                    //console.log(response);
+//                    console.log(response);
                     func.carregaTabelaPadrao('tabela', response, [7], true);
                 }
             });
