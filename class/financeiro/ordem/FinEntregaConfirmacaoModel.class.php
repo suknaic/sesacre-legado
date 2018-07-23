@@ -236,6 +236,24 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
+    public function retornaNumeroEntregaConfirmacao(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
+            $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
+            return $daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao;
+            
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
     public function salvaEntregaConfirmacao($dados) {
         try {
             //conexao com o banco
@@ -246,18 +264,11 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $finEntregaItensModel = new FinEntregaItensModel();
             $finProtocoloModel = new FinProtocoloModel();
+            $this->id_protocolo = $dados[0]->id_protocolo;
 
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
-            //retorna o numero da ultima entrega cadastrada caso nao exista retorna zero
-            $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
-            //verificar ser deu tudo certo na busca do numero da entrega confirmacao ser sim vai seta o resto dos dados
-            if (!$daoFinEntregaConfirmacao->sucesso()) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "O sistema não identificou o numero da entrega");
-            }
-
-            $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+            $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($this->retornaNumeroEntregaConfirmacao($pdo) + 1);
             $daoFinEntregaConfirmacao->setDtEntrega(Metodos::ConverteDataING($dados[0]->data));
             $daoFinEntregaConfirmacao->setSitEntrega($dados[0]->tipoEntrega);
             $daoFinEntregaConfirmacao->salvaEntregaConfirmacao($pdo);
@@ -280,7 +291,7 @@ class FinEntregaConfirmacaoModel {
             }
 
 
-            $finProtocoloModel->setQtEntrega($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao + 1);
+            $finProtocoloModel->setQtEntrega($this->retornaNumeroEntregaConfirmacao($pdo));
             $finProtocoloModel->atualizaQtEntrega($pdo);
 
             if (!$finProtocoloModel->Sucesso()) {

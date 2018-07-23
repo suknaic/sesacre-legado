@@ -325,7 +325,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
     public function updateQtEntrega(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "update set qt_entrega = :qtEntrega from fin_protocolo where id_protocolo = :protocolo";
+                $sql = "update fin_protocolo set qt_entrega = :qtEntrega where id_protocolo = :protocolo";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":qtEntrega", $this->getQtEntrega(), PDO::PARAM_INT);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);

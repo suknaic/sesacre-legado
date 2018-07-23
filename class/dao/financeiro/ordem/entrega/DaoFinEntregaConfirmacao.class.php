@@ -225,8 +225,14 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
-                $this->sucesso = true;
-                $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
+                 if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+                
             }
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();

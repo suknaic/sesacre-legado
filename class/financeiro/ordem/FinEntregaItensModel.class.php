@@ -175,10 +175,12 @@ class FinEntregaItensModel {
             if ($daoFinEntregaItens->sucesso()) {
                 $dataItem = $daoFinEntregaItens->getMsgRetorno();
             } else {
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
 
             if (strtotime($dataMaior) > strtotime($dataItem["dt_entrega"])) {
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Exclua o item que tem a maior data");
             }
 
@@ -189,15 +191,16 @@ class FinEntregaItensModel {
             if (!$daoFinEntregaItens->sucesso()) {
                 $erro = true;
             }
-            
+
             $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $finEntregaConfirmacaoModel->setSitEntrega(1);
             $finEntregaConfirmacaoModel->atualizaSituacaoEntrega($pdo);
-            
-            if(!$finEntregaConfirmacaoModel->sucesso()){
+
+            if (!$finEntregaConfirmacaoModel->sucesso()) {
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", "Erro na atualizaçao da situaçao da entrega");
             }
-            
+
             //seto o id da entrega confirmacao para pode realiza a pesquisa
             $daoFinEntregaItens->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             //verificar ser e a ultima entrega ser for false e a ultima sendo assim
@@ -207,11 +210,16 @@ class FinEntregaItensModel {
             if (!$daoFinEntregaItens->sucesso()) {
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
                 $finEntregaConfirmacaoModel->excluirEntrega($pdo);
+
+                if (!$finEntregaConfirmacaoModel->sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", "Erro ao excluir a entrega");
+                }
+                
+                
+                
             }
 
-            if (!$finEntregaConfirmacaoModel->sucesso()) {
-                $erro = true;
-            }
 
             if (!Log::SalvaLogD("fin_entrega_itens", $this->id_entrega_itens, $pdo)) {
                 $erro = true;
