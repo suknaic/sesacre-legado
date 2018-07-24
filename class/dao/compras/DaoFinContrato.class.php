@@ -542,13 +542,48 @@ class DaoFinContrato extends FinContratoTb {
         }
     }
 
-    public function retornaDadosContratoGdof(PDO $pdo) {
+    public function retornaDadosContratoGdof(PDO $pdo, $nr_pedido) {
         try {
-            if(!empty($pdo)){
-                $sql = "";
+            if (!empty($pdo)) {
+                $sql = "select cont.nr_contrato, processo.cd_pregao, tp.nm_tipo_gasto, obj.nm_objeto,
+                        mod.nm_modalidade, p.nm_pessoa,
+                        case 
+                                when pf.nr_cpf is not null then pf.nr_cpf
+                                when pf.nr_cpf is null then pj.nr_cnpj
+                        end as cpfCnpj
+
+                        from fin_pedido as pedido 
+                        inner join fin_fornecedor as f
+                        on f.id_fornecedor  =  pedido.id_fornecedor
+                        inner join fin_contrato as cont
+                        on cont.id_contrato = f.id_contrato
+                        inner join gco_processo as processo
+                        on processo.id_processo = cont.id_processo
+                        inner join gco_objeto as obj
+                        on obj.id_objeto = processo.id_objeto
+                        inner join pla_tipo_gasto as tp
+                        on tp.id_tipo_gasto = cont.id_tipo_gasto
+                        inner join gco_modalidade as mod
+                        on mod.id_modalidade = processo.id_modalidade
+                        inner join ses_pessoa as p
+                        on p.id_pessoa = f.id_pessoa 
+                        left join ses_pessoa_fisica as pf
+                        on pf.id_pessoa = p.id_pessoa
+                        left join ses_pessoa_juridica as pj
+                        on pj.id_pessoa = p.id_pessoa
+                        where pedido.nr_pedido  = :pedido";
+                $stmt->bindValue(":pedido", $nr_pedido, PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                    $this->sucesso = false;
+                }
             }
         } catch (Exception $ex) {
-            $this->msgRetorno = $e->getMessage();
+            $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
     }
