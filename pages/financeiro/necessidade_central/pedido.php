@@ -30,7 +30,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                 overflow-y: initial !important
             }
             .modal-diaria-corpo{
-                height: 650px;
+                height: 800px;
                 overflow-y: auto;
             }
         </style>
@@ -61,7 +61,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
 
                         <!-- Modal -->
                         <div id="diaria_info" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-diaria" role="document" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
+                            <div class="modal-dialog modal-lg modal-diaria" role="document" style="overflow-y: scroll; max-height:95%;  margin-top: 20px; margin-bottom:20px;">
 
                                 <!-- Modal content-->
                                 <div class="modal-content">

@@ -54,6 +54,34 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                     </ol>
                     <!--Page content-->
                     <div id="page-content">
+                        <!--Modal addAnotacao-->
+                        <div class=" modal fade modal-footer" id="adAnotacao"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Anotação</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                            <input type="hidden" name="id_pedido_anotacao" id="id_processo_anotacao" value="">
+                                            <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                        <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fim Modal AddAnotacao-->
                         <!--Informaçao do pedido-->
                         <div class="row">
                             <div class="col-sm-12">
@@ -141,16 +169,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                     </div>
                                 </div>
                                 <div class="panel">
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">Anotações</h3>
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Anotações
+                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar Anotação">
+                                                <i class="ion-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </h3>
                                     </div>
                                     <div class="panel-body">
-                                        <textarea id="anotacao" class="form-control"></textarea>
+                                        <div class="row">
+                                            <textarea class="form-control" rows="5" disabled><?php echo $anotacoes; ?></textarea>
+                                        </div>
                                     </div>
-                                    <div class="panel-footer">
-                                        <?php echo $anotacoes; ?>
-                                    </div>
-                                </div>
+                                </div>    
                             </div>
                         </div>
                         <!--===================================================-->

@@ -308,7 +308,7 @@ class PreOrdem {
                         $tabela .= '<tr>
                     <td>' . $value["nr_item"] . '</td>
                     <td>' . $value["nm_material"] . '</td>
-                    <td>' .$value["cd_desc_material"].'-' .$value["nm_desc_material"] . '</td>
+                    <td>' . $value["ds_itens"] . '</td>
                     <td>' . $value["nm_grupo"] . '</td>
                     <td>' . $value["nm_sub_grupo"] . '</td>
                     <td>' . $value["nm_unidade_medida"] . '</td>    

@@ -132,6 +132,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/index.load";
                                                             <th class="text-center">Elemento de Despesa</th>
                                                             <th class="text-center">Data Aut. Ordenador</th>
                                                             <th class="text-center">Valor unit.</th>
+                                                            <th class="text-center">Anotação</th>
                                                             <th class="text-center">Ação</th>
                                                         </tr>
                                                     </thead>

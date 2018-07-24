@@ -50,7 +50,10 @@
             }
             .modal.modal-fu .modal-footer {
                 bottom: 0;
-            }                                   
+            }     
+            .celulas{
+                border: 1px solid rgba(86,61,124,.2);
+            }
         </style>
     
     </head>    

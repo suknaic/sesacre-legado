@@ -1517,11 +1517,102 @@ class FinContratoAditivo {
             
             
             $daoContrato->dadosCompletoAditivo($pdo);
+            if(!$daoContrato->Sucesso()){
+                $retorno = '<div class="alert alert-warning">'
+                        . '<strong>Alerta!</strong> Não foi possível localizar os Dados do Aditivo.'
+                    . '</div>';
+                return $retorno;
+            }
+            $retorno = "";
             
-            echo "<pre>";
-            print_r($daoContrato->getMsgRetorno());
-            echo "</pre>";
+            $result = $daoContrato->getMsgRetorno();
             
+            $idFornecedor = $result['id_fornecedor'];
+            
+            $retorno .= '<div class="panel">'
+                            .   '<div class="panel-body">'                               
+                                .   '<div class="row">
+                                        <div class="col-sm-6 celulas" >
+                                            <p class="text-bold">Número do Contrato:</p>
+                                            <p>&nbsp;'.$result['nr_contrato'].'</p>
+                                        </div>
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Motivo:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_motivo'].'</p>
+                                        </div>                                    
+                                    </div>'
+                                .   '<div class="row">
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Finalidade:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_finalidade'].'</p>
+                                        </div>
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Instrumento de Equilíbrio Econômico-Financeiro:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_instrumento'].'</p>
+                                        </div>
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Base de Cálculo:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_base_calculo'].'</p>
+                                        </div>                                    
+                                    </div>'
+                                .   '<div class="row">
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Unidade de Cálculo:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_unidade_calculo'].'</p>
+                                        </div>
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Tipo de Aquisição:</p>
+                                            <p>&nbsp;'.$result['nm_contrato_aquisicao'].'</p>
+                                        </div>                                    
+                                    </div>'
+                                .   '<div class="row">
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Vigência Inicial/Final:</p>
+                                            <p>&nbsp;'.$result['dt_ini_vigencia_contrato'].' - '.$result['dt_fim_vigencia_contrato'].'</p>
+                                        </div>
+                                        <div class="col-sm-3 celulas">
+                                            <p class="text-bold">Data da Assinatura:</p>
+                                            <p>&nbsp;'.$result['dt_assinatura'].'</p>
+                                        </div> 
+                                        <div class="col-sm-3 celulas">
+                                            <p class="text-bold">Data da Publicação:</p>
+                                            <p>&nbsp;'.$result['dt_publicacao'].'</p>
+                                        </div>
+                                    </div>'
+                    
+                                .   '<div class="row">
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Período Inicial:</p>
+                                            <p>&nbsp;'.$result['dt_inicial'].'</p>
+                                        </div>
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Período Final:</p>
+                                            <p>&nbsp;'.$result['dt_final'].'</p>
+                                        </div> 
+                                        <div class="col-sm-4 celulas">
+                                            <p class="text-bold">Percentual/Índice de Correção:</p>
+                                            <p>&nbsp;'.$result['nr_percentual_indice'].'</p>
+                                        </div> 
+                                    </div>'
+                    
+                                .   '<div class="row">
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Fornecedor:</p>
+                                            <p>&nbsp;'.$result['nm_pessoa'].'</p>
+                                        </div>
+                                        <div class="col-sm-6 celulas">
+                                            <p class="text-bold">Tipo de Gasto:</p>
+                                            <p>&nbsp;'.$result['nm_tipo_gasto'].'</p>
+                                        </div>                                    
+                                    </div>'
+                    
+                                .   '<div class="row">
+                                        <div class="col-sm-12 celulas">
+                                            <p class="text-bold">Justificativa:</p>
+                                            <p>&nbsp;'.$result['ds_justificativa'].'</p>
+                                        </div>                                        
+                                    </div>';
+                    
             $finCentraisModel = new FinCentraisModel();
             $finCentraisModel->setIdContrato($this->idContrato);
             $finCentraisModel->retornaCentraisPorContrato($pdo);
@@ -1530,25 +1621,159 @@ class FinContratoAditivo {
                 $centraisDoContrato = $finCentraisModel->getMsgRetorno();
             }
             
-            echo "<pre>";
-            print_r($centraisDoContrato);
-            echo "</pre>";
+            if(is_array($centraisDoContrato) && !empty($centraisDoContrato)){
+                $retorno .= '<div class="row">
+                                <div class="col-sm-12 celulas">
+                                    <p class="text-bold">Centrais de Demanda:</p>';
+                $centrais = array();
+                foreach ($centraisDoContrato as $value) {
+                    $centrais[] = $value['nm_lotacao'];                                                            
+                }
+                $centrais = implode(", ", $centrais);
+                $retorno .= '<p>&nbsp;'.$centrais.'</p>';
+                $retorno .= '   </div>'
+                        .   '</div>';
+            }
             
+            $arrayGestores = array(
+                "gestor" => array(),
+                "gestor_sub" => array(),
+                "fiscal" => array(),
+                "fiscal_sub" => array(),
+                "sub_fiscal" => array(),
+                "sub_fiscal_sub" => array()
+            );
             
             $daoContrato->retornaTodosGestoresFiscaisSubs($pdo);  
+            if($daoContrato->Sucesso()){
+                $result = $daoContrato->getMsgRetorno();
+                if(is_array($result) && !empty($result)){
+                    foreach ($result as $key => $value) {
+                        if($value['tabela'] == "gestor"
+                                && $value['tipo'] == 1){
+                            $arrayGestores['gestor'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                        if($value['tabela'] == "gestor"
+                                && $value['tipo'] == 2){
+                            $arrayGestores['gestor_sub'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                        if($value['tabela'] == "fiscal"
+                                && $value['tipo'] == 1){
+                            $arrayGestores['fiscal'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                        if($value['tabela'] == "fiscal"
+                                && $value['tipo'] == 2){
+                            $arrayGestores['fiscal_sub'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                        if($value['tabela'] == "sub_fiscal"
+                                && $value['tipo'] == 1){
+                            $arrayGestores['sub_fiscal'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                        if($value['tabela'] == "sub_fiscal"
+                                && $value['tipo'] == 2){
+                            $arrayGestores['sub_fiscal_sub'][] = $value['nm_pessoa'];
+                            continue;
+                        }
+                    }
+                }
+            }
             
-            echo "<pre>";
-            print_r($daoContrato->getMsgRetorno());
-            echo "</pre>";
+            
+            $retorno .= '<div class="row">
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Gestores Titulares:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['gestor']).'</p>
+                            </div>
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Gestores Substitutos:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['gestor_sub']).'</p>
+                            </div>                                    
+                        </div>';
+            
+            $retorno .= '<div class="row">
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Fiscais:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['fiscal']).'</p>
+                            </div>
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Fiscais Substitutos:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['fiscal_sub']).'</p>
+                            </div>                                    
+                        </div>';
+            
+            $retorno .= '<div class="row">
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Sub-Fiscais:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['sub_fiscal']).'</p>
+                            </div>
+                            <div class="col-sm-6 celulas">
+                                <p class="text-bold">Sub-Fiscais Substitutos:</p>
+                                <p>&nbsp;'.implode(", " ,$arrayGestores['sub_fiscal_sub']).'</p>
+                            </div>                                    
+                        </div>';
             
             $itemModel = new ItemModel();
-            $itemModel->setIdFornecedor(1428);
+            $itemModel->setIdFornecedor($idFornecedor);
             $itemModel->retornaItensPorFornecedor($pdo);
+            if($itemModel->Sucesso()){
             
-            echo "<pre>";
-            print_r($itemModel->getMsgRetorno());
-            echo "</pre>";
+                $retorno .= "<div class='row'></div>";
+                
+                $retorno .= '<table class="table table-striped table-bordered" id="tabelaFu">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Nº</th>
+                                        <th class="text-center">Item</th>
+                                        <th class="text-center">Descrição</th>
+                                        <th class="text-center">Grupo</th>
+                                        <th class="text-center">Sub Grupo</th>
+                                        <th class="text-center">Unid</th>
+                                        <th class="text-center">Elemento de Despesa</th>
+                                        <th class="text-center">Tipo</th>
+                                        <th class="text-center">Lote</th>
+                                        <th class="text-center">QTD</th>
+                                        <th class="text-center">Valor unit</th>                                                                                                                     
+                                    </tr>
+                                </thead>
+                                <tbody>';
+
+                $result = $itemModel->getMsgRetorno();
+                foreach ($result as $key => $value) {
+                    $retorno .= '<tr>'
+                            . '<td>'.$value['nr_item'].'</td>'
+                            . '<td>'.$value['nm_material'].'</td>'
+                            . '<td>'.$value['cd_desc_material'].' - '.$value['nm_desc_material'].'</td>'
+                            . '<td>'.$value['nm_grupo'].'</td>'
+                            . '<td>'.$value['nm_sub_grupo'].'</td>'
+                            . '<td>'.$value['nm_unidade_medida'].'</td>'
+                            . '<td>'.$value['cd_elemento_despesa'].'</td>'
+                            . '<td>'.$value['tp_material'].'</td>'
+                            . '<td>'.$value['nr_lote'].'</td>'
+                            . '<td>'.Metodos::ConverteValorBr($value['qt_itens'], 4) .'</td>'
+                            . '<td>'.Metodos::ConverteValorBr($value["vl_itens"], 4).'</td>'                            
+                            . '</tr>';
+                }
+
+
+                $retorno .= '   </tbody>
+                            </table>';
+            }
             
+            
+            
+            
+            $retorno .= '</div>
+                                </div>';
+            
+            //$retorno .= '</div></div>';
+            echo $retorno;                                                           
+            
+                                  
             return;
             
             
@@ -1630,175 +1855,6 @@ class FinContratoAditivo {
         }
     }
     
-     public function retornaInformacoesDoItem($pdo = null){
-        $retorno = "";                
-        try{
-            if($pdo == null){
-                $conexao = new Conexao();            
-                /* @var $pdo PDO */
-                $pdo = $conexao->connect();            
-            }            
-            
-            $dao = new DaoPlaPtaItem();
-            $dao->setIdPtaItem($this->idPtaItem);            
-                        
-            $dao->retornaDadosCompleto($pdo);                       
-            
-            if(!$dao->Sucesso()){               
-                return $retorno;
-            }else{
-                $result = $dao->getMsgRetorno();                     
-                $obj = $this->stTextoItem($result['st_pta_item']);
-                
-                $retorno .= '<div class="panel panelInformacoesItens">'
-                            . '<div class="panel-body">'
-                                . '<div class="row">
-                                    <div class="col-sm-12">
-                                        <p class="text-bold">Item: <span class=text-'.$obj->cor.'>'.$obj->msg.'</span></p>
-                                        <p>'.$result['nm_desc_material'].'</p>
-                                    </div>                                   
-                                </div>'
-                                . '<div class="row">
-                                    <div class="col-sm-12">
-                                        <p class="text-bold">Código da Descrição do Item:</p>
-                                        <p>'.$result['cd_desc_material'].'</p>
-                                    </div>                                    
-                                </div>'
-                        
-                                . '<div class="row">
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Item:</p>
-                                        <p>'.$result['nm_material'].'</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Código do Item:</p>
-                                        <p>'.$result['cd_material'].'</p>
-                                    </div>                                    
-                                </div>'
-                        
-                                . '<div class="row">
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Nome do Grupo:</p>
-                                        <p>'.$result['nm_grupo'].'</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Código do Grupo:</p>
-                                        <p>'.$result['cd_grupo'].'</p>
-                                    </div>                                    
-                                </div>'
-                        
-                                . '<div class="row">
-                                     <div class="col-sm-6">
-                                        <p class="text-bold">Nome do Sub Grupo:</p>
-                                        <p>'.$result['nm_sub_grupo'].'</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Código do Sub Grupo:</p>
-                                        <p>'.$result['cd_sub_grupo'].'</p>
-                                    </div>                                   
-                                </div>'
-                        
-                                . '<div class="row">
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Elemento de Despesa:</p>
-                                        <p>'.$result['cd_elemento_despesa'].'</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="text-bold">Tipo de Item:</p>
-                                        <p>'.$result['tp_material'].'</p>
-                                    </div>                                    
-                                </div>'  
-                        
-                                . '<div class="row">
-                                        <div class="col-sm-12">
-                                            <p class="text-bold">Detalhamento da ação:</p>
-                                            <p>'.$result['nm_pta_acao_det'].'</p>
-                                        </div>                                   
-                                    </div>'
-                        
-                                . '<div class="row">
-                                        <div class="col-sm-12">
-                                            <p class="text-bold">Descrição do Item:</p>
-                                            <p>'.$result['ds_pta_item'].'</p>
-                                        </div>                                   
-                                    </div>'
-                                
-                                . '<div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="text-bold">Tipo de Gasto Categoria:</p>
-                                            <p>'.$result['nm_tipo_gasto_categoria'].'</p>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <p class="text-bold">Fonte:</p>
-                                            <p>'.$result['nr_fonte'].'</p>
-                                        </div>                 
-                                        <div class="col-sm-3">
-                                            <p class="text-bold">Tipo Fonte:</p>
-                                            <p>'.Metodos::retornaTpFonteTexto($result['tp_fonte']).'</p>
-                                        </div>
-                                    </div>';
-                if(!empty ($result['id_portaria'])){
-                    $retorno .=  '<div class="row">
-                                    <div class="col-sm-12">
-                                        <p class="text-bold">Portaria:</p>
-                                        <p>'.$result['nm_rede_tematica']." - ".$result['nm_portaria'].'</p>
-                                    </div>
-                                </div>';    
-                }
-                if(!empty ($result['id_convenio'])){
-                    $retorno .=  '<div class="row">
-                                    <div class="col-sm-12">
-                                        <p class="text-bold">Convênio:</p>
-                                        <p>'.$result['id_convenio'].'</p>
-                                    </div>
-                                </div>';    
-                }
-                                
-                $retorno           .= '<div class="row">
-                                    <div class="col-sm-3">
-                                        <p class="text-bold">Unidade Medida:</p>
-                                        <p>'.$result['nm_unidade_medida'].'</p>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <p class="text-bold">Quantidade:</p>
-                                        <p>'.Metodos::ConverteValorBr((float)$result['qt_pta_item'], 4).'</p>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <p class="text-bold">Valor Unitário:</p>
-                                        <p>R$ '. Metodos::ConverteValorBr((float)$result['vl_pta_item'], 4).'</p>
-                                    </div>  
-                                     <div class="col-sm-3">
-                                        <p class="text-bold">Valor Total:</p>
-                                        <p>R$ '.Metodos::ConverteValorBr((float)($result['qt_pta_item']*$result['vl_pta_item']), 4).'</p>
-                                    </div>  
-                                </div>'
-                                . '<div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="text-bold">PTA:</p>
-                                            <p>'.$result['nm_pta'].'</p>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p class="text-bold">PTA Título:</p>
-                                            <p>'.$result['nm_pta_titulo'].'</p>
-                                        </div>                                    
-                                    </div>' 
-                                . '<div class="row">
-                                        <div class="col-sm-12">
-                                            <p class="text-bold">Unidade/Departamento/Setor:</p>
-                                            <p>'.$result['nm_lotacao'].'</p>
-                                        </div>                                                                    
-                                    </div>' 
-                            
-                            . '</div>'
-                        . '</div>';
-            }
-                        
-            return $retorno;
-                                                                     
-        } catch (Exception $ex) {
-            $retorno = "";
-        }                               
-    }
     
 }
 

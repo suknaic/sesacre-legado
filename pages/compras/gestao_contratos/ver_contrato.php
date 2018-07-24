@@ -178,6 +178,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/ver_contrato.l
                                                             <th class="text-center">Valor unit.</th>
                                                             <th class="text-center">Total</th>
                                                             <th class="text-center">Utilizado</th>
+                                                            <th class="text-center">% Utilizado</th>
                                                             <th class="text-center">Saldo</th>
                                                             <th class="text-center">Saldo Total</th>
                                                         </tr>
