@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoAnotacao.class.php";
 
 $session = new Session('ajax');
 
@@ -59,4 +60,21 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    case 'salvaAnotacao':
+        try {
+            $filtro = filter_input(INPUT_POST, 'dados',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
+            $prog = new FinEmpenhoAnotacao();
+            $prog->setIdPedido($filtro['pedido'])
+                 ->setDsPedidoAnotacao($filtro['anotacao'])
+                 ->setIdPessoa($session->getIdUser());
+            
+            echo $prog->salvaAnotacao();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
 }
