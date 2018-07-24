@@ -266,6 +266,32 @@
 
                                 <li>
                                     <a href="/pages/financeiro/autorizacoes/index.php">
+                                        <span class="menu-title">Gdof</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="/pages/financeiro/gdof/unidade/cad_gdof/index.php">Unidades</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">Central demandante</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">Liquidação</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">Financeiro</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="/pages/financeiro/autorizacoes/index.php">
                                         <span class="menu-title">Administração</span>
                                         <i class="arrow"></i>
                                     </a>

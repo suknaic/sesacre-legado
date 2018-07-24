@@ -22,7 +22,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
 
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
-        
+
         <style>
 
             /* Important part */
@@ -54,11 +54,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                 <!--===================================================-->
                 <div id="content-container">
                     <!--End page title-->
-                    
+
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        
+
                         <!-- Modal -->
                         <div id="diaria_info" class="modal fade" role="dialog" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-diaria" role="document" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; margin-bottom:50px;">
@@ -79,8 +79,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
 
                             </div>
                         </div>
-                        
-                        
+
+
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title text-center">Informações sobre a Solicitação de necessidade</h3>
@@ -133,7 +133,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 </div>
                                 <div class="col-sm-4"></div>
                             </div>
-                            
+
                             <!--                            VINCULACAO DA DIARIA-->
                             <div class="row" id="diaria">
                                 <div class="col-sm-4"></div>
@@ -143,7 +143,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                         <div class="input-group">
                                             <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                             <select id="id_diaria" name="id_diaria" class="form-control select">
-                                            
+
                                             </select>
                                             <span class="input-group-btn">
                                                 <button data-toggle="modal" data-target="#diaria_info" class="btn btn-primary" type="button">Detalhes</button>
@@ -153,7 +153,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/necessidade_central/
                                 </div>
                                 <div class="col-sm-4"></div>
                             </div>
-<!--                                FIM VINCULACAO DIARIA-->
+                            <!--                                FIM VINCULACAO DIARIA-->
 
                             <div class="campoForneceor">
                                 <div class="row">

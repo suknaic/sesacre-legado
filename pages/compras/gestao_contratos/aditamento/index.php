@@ -162,6 +162,24 @@
                     </div>
                     
                     
+                    <div class="modal fade footer-to-bottom" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-fu animated zoomInLeft modal-lg" role="document" >
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Dados do Aditivo</h4>
+                                </div>
+                                <div class="modal-body modal-fu-body">
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>                                    
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </div>
+                    
+                    
                     
                     <!-- /.modal -->
                     <!--Page content-->

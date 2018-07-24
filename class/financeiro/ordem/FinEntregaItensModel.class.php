@@ -162,6 +162,7 @@ class FinEntregaItensModel {
             //instanciando objetos 
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $daoFinEntregaItens = new DaoFinEntregaItens();
+            $finProtocolo = new FinProtocoloModel();
             //fim
             //buscando a maior data no banco
             $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
@@ -215,11 +216,15 @@ class FinEntregaItensModel {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", "Erro ao excluir a entrega");
                 }
-                
-                
-                
-            }
 
+                $finProtocolo->setIdProtocolo($this->id_protocolo);
+                $finProtocolo->setQtEntrega($finEntregaConfirmacaoModel->retornaNumeroEntregaConfirmacao($pdo));
+                $finProtocolo->atualizaQtEntrega($pdo);
+
+                if (!$finProtocolo->Sucesso()) {
+                    $erro = true;
+                }
+            }
 
             if (!Log::SalvaLogD("fin_entrega_itens", $this->id_entrega_itens, $pdo)) {
                 $erro = true;
