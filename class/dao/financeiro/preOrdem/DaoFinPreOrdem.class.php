@@ -50,7 +50,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
     public function retornaPreOdemPedido($pdo = null) {
         if (!empty($pdo)) {
             try {
-                $sql = "SELECT pre.id_pre_ordem, pre.id_fornecedor, contIt.id_cont_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo, 
+                $sql = "SELECT pre.id_pre_ordem, pre.id_fornecedor, contIt.id_cont_itens, contIt.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo, 
                         desp.cd_despesa, mat.tp_material, contIt.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, (pre.qt_itens_pre * pre.vl_itens_pre) as total,
                         contIt.nr_item, unid.nm_unidade_medida, mat.cd_desc_material
 			FROM fin_pre_ordem as pre

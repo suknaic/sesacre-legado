@@ -225,6 +225,7 @@ class ItemModel {
 
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
+                $percentualUtilizado = ($value['utilizado'] * 100) / $value['total']; 
                 $tabela .= '<tr>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
@@ -240,6 +241,7 @@ class ItemModel {
 				<td class="text-center">' . Metodos::ConverteValorBr($value["vl_itens"], 4) . '</td>
 				<td class="text-center">' . Metodos::ConverteValorBr($value["total"], 4) . '</td>
                                 <td class="text-center">' . Metodos::ConverteValorBr($value["utilizado"], 4) . '</td>
+                                <td class="text-center">' . number_format($percentualUtilizado,2,",",".") . '</td>
                                 <td class="text-center">' . Metodos::ConverteValorBr($value["saldo"], 4) . '</td>
                                 <td class="text-center">' . Metodos::ConverteValorBr($value["totalsaldo"], 4) . '</td>     
 				</tr>';
