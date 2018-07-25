@@ -777,10 +777,17 @@ class ItemModel {
             $total = 0;
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
+                
+                if (empty($value["ds_itens"])) {
+                    $descritivoItem = $value['cd_desc_material'] . ' - ' . $value['nm_desc_material'];
+                } else {
+                    $descritivoItem = $value["ds_itens"];
+                }
+                
                 $tabela .= '<tr>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
-				<td>' . empty($value["ds_itens"]) ? ($value['cd_desc_material'] . ' - ' . $value['nm_desc_material']) : $value["ds_itens"] . '</td>
+				<td>' . $descritivoItem . '</td>
 				<td>' . $value["nm_grupo"] . '</td>
 				<td>' . $value["nm_sub_grupo"] . '</td>
                                 <td>' . $value["nm_unidade_medida"] . '</td>    
