@@ -225,7 +225,12 @@ class ItemModel {
 
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
-                $percentualUtilizado = ($value['utilizado'] * 100) / $value['total']; 
+                if ($value['tp_material'] == 'C' or $value['tp_material'] == 'P') {
+                    $percentualUtilizado = ($value['utilizado'] * 100) / $value['qt_itens']; 
+                } else {
+                    $percentualUtilizado = ($value['utilizado'] * 100) / $value['total']; 
+                }
+                
                 $tabela .= '<tr>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
