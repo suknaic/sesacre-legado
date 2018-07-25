@@ -25,7 +25,7 @@ $(document).ready(function () {
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
-        var pedido = $this.attr('pedido');
+        var dados = $("#codItemPesquisa").val();
         /**
          * retornaContratosPedido
          */
@@ -38,7 +38,25 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                func.carregaTabelaPadrao('tabelaItens', response, [], true);
+                $(".contratos").html("");
+                $(".contratos").append(response);
+            }
+        });
+        /**
+         * retornaDadosPedido
+         */
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaPedidoGdof",
+                "dados": dados
+
+            },
+            "success": function (response) {
+                console.log(response);
+                $(".pedido").html("");
+                $(".pedido").append(response);
             }
         });
 

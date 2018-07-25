@@ -220,7 +220,7 @@ class DaoFinPedido extends FinPedidoTb {
                         on gcon.id_processo = cont.id_processo
                         left join gco_modalidade as modalidade
                         on modalidade.id_modalidade = gcon.id_modalidade
-                        where p.nr_pedido = :pedido ".$condicao;
+                        where p.nr_pedido = :pedido " . $condicao;
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -273,7 +273,7 @@ class DaoFinPedido extends FinPedidoTb {
                         on f.id_fornecedor = p.id_fornecedor
                         left join ses_pessoa as pessoa
                         on pessoa.id_pessoa = f.id_pessoa
-                        where p.st_pedido > '0' ".$filter. " order by p.id_pedido desc";
+                        where p.st_pedido > '0' " . $filter . " order by p.id_pedido desc";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
@@ -291,14 +291,14 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
     public function retornaQuantidadeSituacaoPedido(PDO $pdo = null) {
         try {
             $sql = "SELECT "
                     . " st_pedido, count(id_pedido) AS quantidade"
                     . " FROM fin_pedido"
                     . " GROUP BY st_pedido";
-            
+
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
@@ -306,6 +306,37 @@ class DaoFinPedido extends FinPedidoTb {
                 $this->sucesso = true;
             } else {
                 $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaPedidoGcon(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
+                        programa.cd_programa_trabalho, programa.ds_programa_trabalho,
+                        despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
+                        p.vl_pedido
+                        from fin_pedido as p
+                        inner join fin_fonte as f
+                        on f.id_fonte = p.id_fonte
+                        inner join view_programa_trabalho as programa
+                        on programa.id_programa_trabalho = p.id_programa_trabalho
+                        inner join view_despesa_elemento as despesa
+                        on despesa.id_despesa_elemento = p.id_despesa_elemento
+                        where p.nr_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
             }
         } catch (Exception $ex) {
             $this->sucesso = false;

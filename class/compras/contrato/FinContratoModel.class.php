@@ -2140,14 +2140,76 @@ class FinContratoModel {
         }
     }
 
-    public function retornaContratoGdof(PDO $pdo) {
+    public function retornaContratoGdof($pdo, $nr_pedido) {
         try {
 
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+            $dadosContrato = '';
             $daoContrato = new DaoFinContrato();
+            $daoContrato->retornaDadosContratoGdof($pdo, $nr_pedido);
+            if ($daoContrato->sucesso()) {
+                $campos = $daoContrato->getMsgRetorno();
+                
+                $dadosContrato .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" 
+                                                        aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                                                <div class="panel-body">
+                                                
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Licitação:</b></div>
+                                                        <div class="col-sm-3">'.$campos["cd_pregao"].'</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de gasto:</b></div>
+                                                        <div class="col-sm-3">'.$campos["nm_tipo_gasto"].'</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Objeto:</b></div>
+                                                        <div class="col-sm-3">'.$campos["nm_objeto"].'</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Modalidade:</b></div>
+                                                        <div class="col-sm-3">'.$campos["nm_modalidade"].'</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-3">'.$campos["nm_pessoa"].'</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-3">'.$campos["cpfcnpj"].'</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosContrato;
+            }
+            return $dadosContrato;
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();

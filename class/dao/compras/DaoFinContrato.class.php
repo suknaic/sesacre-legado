@@ -572,10 +572,11 @@ class DaoFinContrato extends FinContratoTb {
                         left join ses_pessoa_juridica as pj
                         on pj.id_pessoa = p.id_pessoa
                         where pedido.nr_pedido  = :pedido";
+                $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $nr_pedido, PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
-                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->msgRetorno = "Não foi possível Localizar o Contrato";

@@ -154,7 +154,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/itens/cad_item_contrato
                                     <div class="col-md-4">
                                         <div class="panel-body">
                                             Descrição do item:<span class="text-danger">*</span>
-                                            <textarea class="form-control" rows="4" id="desc_item" disabled="true"></textarea>
+                                            <textarea class="form-control" rows="4" id="desc_item"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-8"></div>
