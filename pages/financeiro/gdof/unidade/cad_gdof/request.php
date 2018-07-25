@@ -33,8 +33,8 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
-        CASE 'retornaPedidoGdof':
+
+    CASE 'retornaPedidoGdof':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $pedido = new Pedido();
@@ -46,6 +46,20 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
             break;
-        }    
+        }
+
+    CASE 'retornaPedidoGdof':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $pedido = new Pedido();
+            $pedido->setNrPedido($dados);
+            echo $pedido->retornaPedidoGdof(null, $dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 

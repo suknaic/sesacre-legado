@@ -59,9 +59,23 @@ $(document).ready(function () {
                 $(".pedido").append(response);
             }
         });
+        /**
+         * retornaDadosEmpenho
+         */
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaPedidoGdof",
+                "dados": dados
 
+            },
+            "success": function (response) {
+                console.log(response);
+                $(".pedido").html("");
+                $(".pedido").append(response);
+            }
+        });
     });
-
-
 
 });

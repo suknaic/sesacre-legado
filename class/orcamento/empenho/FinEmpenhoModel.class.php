@@ -229,9 +229,9 @@ class FinEmpenhoModel {
                                 <td class="text-center">' . $l["nm_tipo_gasto"] . '</td>
                                 <td class="text-center">' . $l["nr_fonte"] . '</td>
                                 <td class="text-center">' . $l["cd_despesa_elemento"] . '</td>
-                                <td class="text-center">' . $l["dt_aut_ordenador"]. '</td>
+                                <td class="text-center">' . $l["dt_aut_ordenador"] . '</td>
                                 <td class="text-center">' . Metodos::ConverteValorBr($l["vl_pedido"], 4) . '</td>
-                                <td class="text-center">'. $l["ds_pedido_anotacao"] . '</td>
+                                <td class="text-center">' . $l["ds_pedido_anotacao"] . '</td>
                                 <td class="text-center">
                                 <a type="button" href="/pages/orcamento/empenho/cadEmpenho.php?id=' . $l["id_pedido"] . '" target="_blank" class="button">
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
@@ -408,6 +408,76 @@ class FinEmpenhoModel {
             }
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro7", "alert", STR_ERROR . '1');
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function retornaEmpenhoGdof($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosEmpenho = '';
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->retornaEmpenhoGdof($pdo);
+
+            if ($daoFinPedido->sucesso()) {
+                $campos = $daoFinPedido->getMsgRetorno();
+
+                $dadosEmpenho .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" 
+                                                        aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="panel-body">
+                                                
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-3">' . $campos["ds_pedido"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nr_fonte"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Funcional programatica:</b></div>
+                                                        <div class="col-sm-3">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-3">' . $campos["cd_despesa_elemento"] . '- ' . $campos["ds_despesa_elemento"] . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do pedido:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosPedido;
+            }
+            return $dadosEmpenho;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
