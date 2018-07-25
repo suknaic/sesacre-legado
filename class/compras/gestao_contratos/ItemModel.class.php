@@ -225,7 +225,12 @@ class ItemModel {
 
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
-                $percentualUtilizado = ($value['utilizado'] * 100) / $value['total']; 
+                if ($value['tp_material'] == 'C' or $value['tp_material'] == 'P') {
+                    $percentualUtilizado = ($value['utilizado'] * 100) / $value['qt_itens']; 
+                } else {
+                    $percentualUtilizado = ($value['utilizado'] * 100) / $value['total']; 
+                }
+                
                 $tabela .= '<tr>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
@@ -772,10 +777,17 @@ class ItemModel {
             $total = 0;
             foreach ($daoFinItens->getMsgRetorno() as $value) {
                 $total += $value["total"];
+                
+                if (empty($value["ds_itens"])) {
+                    $descritivoItem = $value['cd_desc_material'] . ' - ' . $value['nm_desc_material'];
+                } else {
+                    $descritivoItem = $value["ds_itens"];
+                }
+                
                 $tabela .= '<tr>
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
-				<td>' . $value["cd_desc_material"] . ' - ' . $value["nm_desc_material"] . '</td>
+				<td>' . $descritivoItem . '</td>
 				<td>' . $value["nm_grupo"] . '</td>
 				<td>' . $value["nm_sub_grupo"] . '</td>
                                 <td>' . $value["nm_unidade_medida"] . '</td>    
