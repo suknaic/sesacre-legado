@@ -475,7 +475,7 @@ class DaoFinItens extends FinItensTb {
     public function retornaItensPorSubElemento($pdo = null, $subElemento = null) {
         if (!empty($pdo) && !empty($subElemento)) {
             try {
-                $sql = "SELECT f.id_fornecedor, item.id_cont_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo,
+                $sql = "SELECT f.id_fornecedor, item.id_cont_itens, item.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo,
 						mat.cd_elemento_despesa, mat.tp_material, item.nr_lote, item.qt_itens, item.vl_itens,
 						item.pc_desconto, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,
 						CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
