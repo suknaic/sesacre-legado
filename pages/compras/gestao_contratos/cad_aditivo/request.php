@@ -138,5 +138,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    
+    case 'buscaHistoricoDosItens':
+        try{
+            $contratoModel = new FinContratoAditivo();    
+            $idContrato = (int)filter_input(INPUT_GET, 'id', FILTER_DEFAULT);  
+            $contratoModel->setIdContrato($idContrato);
+            echo $contratoModel->retornaHistoricoDosItens();            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
         
 }

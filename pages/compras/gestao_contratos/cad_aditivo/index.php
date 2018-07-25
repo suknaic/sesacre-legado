@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gestaoContratos/aditamento/index.load.php";
+    require_once "index.load.php";
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -27,34 +27,7 @@
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css" rel="stylesheet">
-        <style>
-            /* Important part */
-            .modal-fu{
-                /*overflow-y: initial !important
-                overflow-y: scroll; */
-                max-height:85%;                  
-                bottom: 0;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                margin: 0;
-                width: 100%;
-                animation-duration:0.6s;
-                height: 80%;
-            }
-            .modal-fu-body{
-                /*height: 100px;*/
-                max-height: calc(100vh - 212px);
-                overflow-y: auto;
-            }
-            .modal.modal-fu .modal-footer {
-                bottom: 0;
-            }     
-            .celulas{
-                border: 1px solid rgba(86,61,124,.2);
-            }
-        </style>
+        <link rel="stylesheet" href="index.css" rel="stylesheet">
     
     </head>    
     <body>
@@ -244,7 +217,10 @@
                                     <div class="panel-footer">                                   
                                         <button class="btn btn-primary btn-add-aditivo btn-rounded">
                                             <i class="fa fa-plus-circle fa-1x"></i> Iniciar Novo Aditivo
-                                        </button>                                    
+                                        </button>  
+                                        <button class="btn btn-primary btn-historico-itens btn-rounded" style="display: none;">
+                                            Histórico do Itens
+                                        </button>
                                     </div>
                                 </div>
                                 
@@ -691,6 +667,6 @@
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>        
-        <script src="/assets/js/compras/gestao_contratos/aditamento/index.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>
