@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gestaoContratos/aditamento/index.load.php";
+    require_once "index.load.php";
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -691,6 +691,6 @@
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>        
-        <script src="/assets/js/compras/gestao_contratos/aditamento/index.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>

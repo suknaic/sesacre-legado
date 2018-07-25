@@ -1509,7 +1509,7 @@ class FinContratoAditivo {
     
     public function retornaInformacoesCompletaAditivo() {
         try {
-            //variaveis do sistema
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoContrato = new DaoFinContratoAditivo();
@@ -1769,86 +1769,8 @@ class FinContratoAditivo {
             
             $retorno .= '</div>
                                 </div>';
-            
-            //$retorno .= '</div></div>';
-            echo $retorno;                                                           
-            
-                                  
-            return;
-            
-            
-            
-            
-            
-            
-
-            if(!$daoContrato->Sucesso()){
-                $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade=0>'
-                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
-                    . '</div>';
-                return $retorno;
-            }
                         
-            if(empty($daoContrato->getMsgRetorno())){
-                $retorno = '<div class="alert alert-warning aditivo_quantidade" quantidade=0>'
-                        . '<strong>Alerta!</strong> Este Contrato Não Possui Aditivo.'
-                    . '</div>';
-                return $retorno;
-            }
-            
-            $tbody = "";
-            foreach ($daoContrato->getMsgRetorno() as $key => $value) {
-                $tbody .= "<tr>";
-                    $tbody .= "<td>".$value['nr_contrato']."</td>";
-                    $tbody .= "<td>". $this->textoAditivoPor($value['nm_contrato_motivo'])."</td>";
-                    $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']." - ".$value['dt_fim_vigencia_contrato']."</td>";
-                    $tbody .= "<td style='text-align: center;'>".$value['dt_publicacao']."</td>";
-                    $tbody .= "<td style='text-align: center;'>R$ ".$value['valor']."</td>";
-                    $tbody .= '<td style="text-align: center;">'
-                            .'<button type="button" class="btn btn-default btn-open-modal btn-xs"'                               
-                                . ' title="Detalhes" nome="'.$value['nr_contrato'].'" '                               
-                                . ' value=' . $value['id_contrato'] . ' >
-                                <i class="fa fa-file fa-lg text-primary" aria-hidden="true"></i>                                
-                              </button> '
-                            .'<button type="button" class="btn btn-default btn-edit btn-xs"'                               
-                                . ' title="Editar" nome="'.$value['nr_contrato'].'" '                               
-                                . ' value=' . $value['id_contrato'] . ' >
-                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
-                              </button> '
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $value['id_contrato'] . ' >
-                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                              </button>'
-                            . '</td>';                                
-                $tbody .= "</tr>";
-            }
-            
-            
-            
-            $daoContrato->retornaNumeroUltimoAditivo($pdo);
-            if(!$daoContrato->Sucesso()){
-                $retorno = '<div class="alert alert-warning">'
-                        . '<strong>Alerta!</strong> '.STR_ERROR.' '
-                    . '</div>';
-                return $retorno;
-            }            
-            $quantidade = $daoContrato->getMsgRetorno()['numero_ultimo_aditivo'];
-            
-            $retorno = '<table class="table table-striped table-bordered table-condensed aditivo_quantidade" quantidade='.$quantidade.'>
-                    <thead>
-                        <tr>
-                            <th>Número do Aditivo</th>
-                            <th>Motivo do Aditamento</th>
-                            <th style="text-align: center;">Vigência</th>
-                            <th style="text-align: center;">Publicação</th>
-                            <th style="text-align: center;">Valor do Aditivo</th>
-                            <th style="text-align: center;">Opções</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    '.$tbody.'
-                    </tbody>
-                </table>';  
-            return $retorno;                                  
+            return $retorno;                                                                                                                    
             
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

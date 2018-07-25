@@ -3,7 +3,7 @@ $(document).ready(function () {
     
     //instacinado fucoes js
     func = new Funcoes();
-    var url = "/model/compras/gestaoContratos/aditamento/request.php";
+    var url = "request.php";
 
     $('.data').mask("99/99/9999")
     $("body").on("focus", ".quatro_casas", function () {
@@ -336,7 +336,7 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'primary');
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
