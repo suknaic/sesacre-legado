@@ -48,7 +48,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaPedidoGdof':
+    CASE 'retornaEmpenhoGdof':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $pedido = new Pedido();

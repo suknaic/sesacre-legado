@@ -66,7 +66,7 @@ $(document).ready(function () {
             "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaPedidoGdof",
+                "acao": "retornaEmpenhoGdof",
                 "dados": dados
 
             },
