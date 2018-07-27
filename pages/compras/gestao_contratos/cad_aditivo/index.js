@@ -1,28 +1,10 @@
 
-$(document).ready(function () {       
+$(document).ready(function () {      
     
     //instacinado fucoes js
     func = new Funcoes();
-    var url = "/model/compras/gestaoContratos/aditamento/request.php";
-    /*
-    var arrayDados = {
-        'dados' : new Array(),
-        'gestor_titular' : new Array()
-    }
-    var teste = new Array();
-    teste.push(1)
-    teste.push(2)
-    console.log(teste)    
-    arrayDados.dados['nome'] = 'Marcel';
-    arrayDados.dados['sobrenome'] = 'Melo';
-    arrayDados['teste'] = ({id:100,nome:'fff',idade:30});
-    arrayDados.gestor_titular.push(1);
-    arrayDados.gestor_titular.push(2);
-    arrayDados.gestor_titular.push(2323);        
-    console.log(arrayDados.gestor_titular)    
-    console.log(arrayDados)
-*/
-    
+    var url = "request.php";
+
     $('.data').mask("99/99/9999")
     $("body").on("focus", ".quatro_casas", function () {
         $(this).priceFormat({
@@ -92,13 +74,13 @@ $(document).ready(function () {
     $('body').on('click', '.add-pessoa', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
-        } else { 
+        } else {
             e.preventDefault();                        
             let $this = $(this);            
             
             let select = $this.closest(".input-group").clone();
             select.find(".add-pessoa").find('i').addClass('fa-minus-circle').removeClass('fa-plus-circle');
-            select.find(".add-pessoa").addClass('remove-pessoa btn-danger').removeClass('add-pessoa btn-primary');            
+            select.find(".add-pessoa").addClass('remove-pessoa btn-danger').removeClass('add-pessoa btn-primary');          
             select.css("margin-top", "5px");
             $this.closest(".input-group").after(select);
             $this.closest(".col-sm-6").find('.remove-pessoa').first().closest('.input-group').find('.select2-selection--single').remove();
@@ -158,6 +140,7 @@ $(document).ready(function () {
         buscaExisteAditivos(contrato.id_contrato); 
         buscaItensDoContrato(contrato.id_contrato);
         buscaGestoresDoContrato();
+        $("#panel-novo-atitivo").hide();
     });
     
     function preencheCamposContrato(contrato){
@@ -186,7 +169,10 @@ $(document).ready(function () {
                 "dados": idContrato
             },
             "success": function (response) {
-                $("#panel-aditivos").find('.panel-body').html(response);                        
+                $("#panel-aditivos").find('.panel-body').html(response);  
+                if($(".aditivo_quantidade").attr('quantidade') > 0){
+                    $(".btn-historico-itens").show();
+                }                
             }
         });
     }
@@ -216,8 +202,14 @@ $(document).ready(function () {
                 "id": $("#id_contrato").val()
             },
             "success": function (response) {                                                     
-                console.log(response);
-            }
+                if(response.tipoMsg == "ok"){
+                    let dados = response.msg
+                    alimentaComboBoxGestores(dados);                                                            
+                }
+            },            
+            "error": function(response){
+                console.log(response.responseText)
+            }                        
         });  
     }
     
@@ -347,7 +339,7 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'primary');
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
@@ -453,6 +445,54 @@ $(document).ready(function () {
     });
     
     
+    
+    
+    $('body').on('click', '.btn-open-modal', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            var $this = $(this);          
+            $.ajax({
+                "url": url,
+                "dataType": 'html',
+                "method": "get",
+                "data": {
+                    "acao": "buscaInformacoesAditivo",
+                    "id": $this.val()
+                },
+                "success": function (response) {       
+                    //console.log(response)
+                    $("#modalDetalhes").find('.modal-body').html(response);
+                    $("#modalDetalhes").modal('show')
+                }
+            });                                                 
+        }
+    });
+    
+    
+    $('body').on('click', '.btn-historico-itens', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            var $this = $(this);          
+            $.ajax({
+                "url": url,
+                "dataType": 'html',
+                "method": "get",
+                "data": {
+                    "acao": "buscaHistoricoDosItens",
+                    "id": $("#id_contrato").val()
+                },
+                "success": function (response) {       
+                    //console.log(response)
+                    $("#modalDetalhes").find('.modal-body').html(response);
+                    $("#modalDetalhes").modal('show')
+                }
+            });                                                 
+        }
+    });
     
     
     
@@ -587,9 +627,13 @@ $(document).ready(function () {
     
     $('body').on('change', '#n_finalidade', function (e) {
        //Se a Finalidade for Adição, teremos que fazer alguma Verificação com relação ao máximo de percentual
-       if($("#n_finalidade option:selected").val() == 1){
-           let valor = $("#n_percentual").val().replace(",", ".");
-           //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
+       if($("#n_finalidade option:selected").val() == 1
+               && ( $("#n_unidade_calculo option:selected").val() == 1
+                    || $("#n_unidade_calculo option:selected").val() == 4 
+                    ) 
+            ){
+            let valor = $("#n_percentual").val().replace(",", ".");
+            //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
             if($("#n_tipo_aquisicao option:selected").val() == 1){
                 if(valor > 25.0000){          
                     $("#n_percentual").val("25,0000").change();
@@ -753,7 +797,80 @@ $(document).ready(function () {
     }
   
   
-  
+    
+    function alimentaComboBoxGestores(dados){
+        let l = dados.length;        
+        var quantidadePorTipo = {
+            n_gestor_titular: {'quantidade': 0, 'itens': new Array()  },
+            n_gestor_sub: {'quantidade': 0, 'itens': new Array()  },
+            n_fiscal: {'quantidade': 0, 'itens': new Array()  },
+            n_fiscal_sub: {'quantidade': 0, 'itens': new Array()  },
+            n_sub_fiscal: {'quantidade': 0, 'itens': new Array()  },
+            n_sub_fiscal_sub: {'quantidade': 0, 'itens': new Array()  }
+            
+        }
+        
+        for (var i = 0; i < l; i++) {
+            if(dados[i]['tabela'] == "gestor" 
+                    && dados[i]['tipo'] == '1'){
+                quantidadePorTipo.n_gestor_titular.quantidade += 1; 
+                quantidadePorTipo.n_gestor_titular.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+            if(dados[i]['tabela'] == "gestor" 
+                    && dados[i]['tipo'] == '2'){
+                quantidadePorTipo.n_gestor_sub.quantidade += 1;
+                quantidadePorTipo.n_gestor_sub.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+            if(dados[i]['tabela'] == "fiscal" 
+                    && dados[i]['tipo'] == '1'){
+                quantidadePorTipo.n_fiscal.quantidade += 1; 
+                quantidadePorTipo.n_fiscal.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+            if(dados[i]['tabela'] == "fiscal" 
+                    && dados[i]['tipo'] == '2'){
+                quantidadePorTipo.n_fiscal_sub.quantidade += 1;
+                quantidadePorTipo.n_fiscal_sub.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+            if(dados[i]['tabela'] == "sub_fiscal" 
+                    && dados[i]['tipo'] == '1'){
+                quantidadePorTipo.n_sub_fiscal.quantidade += 1; 
+                quantidadePorTipo.n_sub_fiscal.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+            if(dados[i]['tabela'] == "sub_fiscal" 
+                    && dados[i]['tipo'] == '2'){
+                quantidadePorTipo.n_sub_fiscal_sub.quantidade += 1;
+                quantidadePorTipo.n_sub_fiscal_sub.itens.push(dados[i]['id_pessoa'])
+                continue;
+            }
+        }                
+        //Adiciona a quantidade de Selects necessários para os elementos, gestores.
+        for (x in quantidadePorTipo) {         
+            for (var i = 0, max = quantidadePorTipo[x].quantidade; i < max; i++) {                                 
+                if(i != 0) {
+                    $("."+x).closest(".input-group").find('.add-pessoa').trigger('click');
+                }                                
+            }                        
+        }
+        //Alimenta os Val dos campos
+        for (x in quantidadePorTipo) {
+            for (var i = 0, max = quantidadePorTipo[x].quantidade; i < max; i++) {                  
+                if(i == 0){
+                    $('.'+x).val(quantidadePorTipo[x].itens[0]).trigger('change');                    
+                    continue;
+                }                
+                if(i != 0) {
+                    $("."+x).filter(function(index) {      
+                        return index == i;                    
+                    }).val(quantidadePorTipo[x].itens[i]).trigger('change');
+                }                                
+            } 
+        }                             
+    }
   
   
   
@@ -777,9 +894,8 @@ $(document).ready(function () {
             "success": function (response) {                
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
                 $(".selecionaItem").first().trigger('click');
-                $(".btn-add-aditivo").trigger('click');  
-                //carregaDadosEdicao();
-                
+                //$(".btn-add-aditivo").trigger('click');  
+                //carregaDadosEdicao();                
             }            
         });  
 

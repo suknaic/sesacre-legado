@@ -14,6 +14,7 @@ class DaoFinOrdem extends FinOrdemTb {
     function Sucesso() {
         return $this->sucesso;
     }
+
     /**
      * Cadastrar ordem
      * @param PDO $pdo
@@ -43,6 +44,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage() . '1';
         }
     }
+
     /**
      * Retorna os itens da pre ordem 
      * @param PDO $pdo
@@ -132,6 +134,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+
     /**
      * Retorna o valor da pre ordem para seta no banco
      * @param PDO $pdo
@@ -157,6 +160,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+
     /**
      * Retorna o numero da ultima ordem feita no sistema
      * @param PDO $pdo
@@ -181,6 +185,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+
     /**
      * Retorna as ordem para tela de pesquisa da ordem 
      * @param PDO $pdo
@@ -230,6 +235,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+
     /**
      * Retorna prazo de entrega do fornecedor
      * @param PDO $pdo
@@ -262,6 +268,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+
     /**
      * Retorna Quantidade de ordem por tipo para o grafico inical do sistema
      * @param PDO $pdo
@@ -273,7 +280,7 @@ class DaoFinOrdem extends FinOrdemTb {
                     . " FROM fin_ordem"
                     . " WHERE aa_ordem = :aaOrdem"
                     . " GROUP BY tp_ordem";
-            
+
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":aaOrdem", date("Y"), PDO::PARAM_STR);
             $stmt->execute();
@@ -288,6 +295,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+
     /**
      * Atualiza o status da ordem para que ela fique desativada
      * @param PDO $pdo
@@ -309,6 +317,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+
     /**
      * Retorna toda as informaçoes da ordem especifica informado
      * @param PDO $pdo
@@ -336,5 +345,44 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
+    public function ordemGdof(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select ordem.nr_ordem, ordem.aa_ordem,  
+                        case 
+                                WHEN	 ordem.tp_ordem  = '1' then 'ENTREGA'
+                                WHEN	 ordem.tp_ordem  = '2' then 'EXCUÇÃO/SERVIÇO'
+                        end tipo,
+                        sum((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem)) as valor 
+                        from fin_ordem as ordem 
+                        inner join fin_ordem_itens as ordemItens
+                        on ordemItens.id_ordem = ordem.id_ordem
+                        where ordem.id_pedido = :pedido
+                        group by ordem.nr_ordem, 
+                        ordem.aa_ordem,
+                        case 
+                                WHEN	 ordem.tp_ordem  = '1' then 'ENTREGA'
+                                WHEN	 ordem.tp_ordem  = '2' then 'EXCUÇÃO/SERVIÇO'
+                        end";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
 }

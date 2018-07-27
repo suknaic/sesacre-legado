@@ -34,28 +34,53 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaPedidoParaEmpenho(PDO $pdo = null, $condicao = '') {
         try {
             if (!empty($pdo)) {
-                $sql = "SELECT Concat(Concat(Concat(p.id_lotacao, '-'), Concat(p.nr_pedido, '/')),
-                                        To_char(p.dt_pedido, 'yyyy'))                 AS numero,
-                                 p.ds_pedido,
-                                 tp.nm_tipo_gasto,
-                                 font.nr_fonte,
-                                 desp.cd_despesa_elemento,
-                                 p.vl_pedido,
-                                 To_char(aut.dt_autorizacao, 'DD/MM/YYYY HH24:MI:SS') AS dt_aut_ordenador,
-                                 p.id_pedido
-                          FROM   fin_pedido AS p
-                                 inner join pla_tipo_gasto AS tp
-                                         ON tp.id_tipo_gasto = p.id_tipo_gasto
-                                 inner join fin_fonte AS font
-                                         ON font.id_fonte = p.id_fonte
-                                 inner join view_despesa_elemento AS desp
-                                         ON desp.id_despesa_elemento = p.id_despesa_elemento
-                                 left join fin_autorizacao aut
-                                        ON aut.id_pedido = p.id_pedido
-                                           AND aut.st_nivel = 14
-                          WHERE  p.st_pedido = '15'
-                                 AND p.id_pedido NOT IN (SELECT emp.id_pedido
-                                                         FROM   fin_empenho AS emp) " . $condicao;
+                $sql = "SELECT
+                            Concat(Concat(Concat(p.id_lotacao, '-'), Concat(p.nr_pedido, '/')), To_char(p.dt_pedido, 'yyyy')) AS numero,
+                            p.ds_pedido,
+                            tp.nm_tipo_gasto,
+                            font.nr_fonte,
+                            desp.cd_despesa_elemento,
+                            p.vl_pedido,
+                            To_char(aut.dt_autorizacao, 'DD/MM/YYYY HH24:MI:SS') AS dt_aut_ordenador,
+                            p.id_pedido,
+                            (
+                               SELECT
+                                  To_char(pab.dh_pedido_anotacao, 'DD/MM/YYYY HH24:MI:SS') || ' - ' || sp.nm_pessoa || ': ' || pab.ds_pedido_anotacao 
+                               from
+                                  fin_pedido_anotacao pab,
+                                  ses_pessoa sp 
+                               WHERE
+                                  pab.id_pedido = p.id_pedido 
+                                  AND pab.id_pessoa = sp.id_pessoa 
+                               ORDER BY
+                                  pab.id_pedido_anotacao DESC limit 1
+                            )
+                            AS ds_pedido_anotacao 
+                         FROM
+                            fin_pedido AS p 
+                            inner join
+                               pla_tipo_gasto AS tp 
+                               ON tp.id_tipo_gasto = p.id_tipo_gasto 
+                            inner join
+                               fin_fonte AS font 
+                               ON font.id_fonte = p.id_fonte 
+                            inner join
+                               view_despesa_elemento AS desp 
+                               ON desp.id_despesa_elemento = p.id_despesa_elemento 
+                            left join
+                               fin_autorizacao aut 
+                               ON aut.id_pedido = p.id_pedido 
+                               AND aut.st_nivel = 14 
+                         WHERE
+                            p.st_pedido = '15' 
+                            AND p.id_pedido NOT IN 
+                            (
+                               SELECT
+                                  emp.id_pedido 
+                               FROM
+                                  fin_empenho AS emp
+                            )
+                          " . $condicao;
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
@@ -246,11 +271,39 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function updateStPedidoEmpenho(PDO $pdo, int $stPedido = 0) {
         try {
             if (!empty($pdo) && !empty($stPedido)) {
-                $sql = "UPDATE fin_pedido SET st_pedido = '".$stPedido."' where id_pedido = :pedido";
+                $sql = "UPDATE fin_pedido SET st_pedido = '" . $stPedido . "' where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+    public function retornaEmpenhoGdof(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select emp.nr_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                        tpEmp.nm_tipo_empenho, emp.vl_empenho
+                        from fin_empenho as emp
+                        inner join fin_tipo_empenho as tpEmp
+                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
+                        where id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';

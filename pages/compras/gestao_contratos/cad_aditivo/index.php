@@ -1,5 +1,5 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gestaoContratos/aditamento/index.load.php";
+    require_once "index.load.php";
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -27,31 +27,7 @@
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css" rel="stylesheet">
-        <style>
-            /* Important part */
-            .modal-fu{
-                /*overflow-y: initial !important
-                overflow-y: scroll; */
-                max-height:85%;                  
-                bottom: 0;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                margin: 0;
-                width: 100%;
-                animation-duration:0.6s;
-                height: 80%;
-            }
-            .modal-fu-body{
-                /*height: 100px;*/
-                max-height: calc(100vh - 212px);
-                overflow-y: auto;
-            }
-            .modal.modal-fu .modal-footer {
-                bottom: 0;
-            }                                   
-        </style>
+        <link rel="stylesheet" href="index.css" rel="stylesheet">
     
     </head>    
     <body>
@@ -162,6 +138,24 @@
                     </div>
                     
                     
+                    <div class="modal fade footer-to-bottom" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-fu animated zoomInLeft modal-lg" role="document" >
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title">Dados do Aditivo</h4>
+                                </div>
+                                <div class="modal-body modal-fu-body">
+                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>                                    
+                                </div>
+                            </div>                            
+                        </div>                        
+                    </div>
+                    
+                    
                     
                     <!-- /.modal -->
                     <!--Page content-->
@@ -223,7 +217,10 @@
                                     <div class="panel-footer">                                   
                                         <button class="btn btn-primary btn-add-aditivo btn-rounded">
                                             <i class="fa fa-plus-circle fa-1x"></i> Iniciar Novo Aditivo
-                                        </button>                                    
+                                        </button>  
+                                        <button class="btn btn-primary btn-historico-itens btn-rounded" style="display: none;">
+                                            Histórico do Itens
+                                        </button>
                                     </div>
                                 </div>
                                 
@@ -670,6 +667,6 @@
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>        
-        <script src="/assets/js/compras/gestao_contratos/aditamento/index.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>

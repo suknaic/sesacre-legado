@@ -84,8 +84,10 @@ switch ($_REQUEST['acao']) {
         
     case 'retornaGestoresDoContrato':
         try{
-            $contratoModel = new FinContratoModel();            
-            //echo $contratoModel->retornaOptionPessoaContrato(null);
+            $contratoModel = new FinContratoAditivo();    
+            $idContrato = (int)filter_input(INPUT_GET, 'id', FILTER_DEFAULT);  
+            $contratoModel->setIdContrato($idContrato);
+            echo $contratoModel->retornaUltimoGestoresDoContratoAditivo();            
             return;
             break;
         } catch (Error $e) {
@@ -123,4 +125,33 @@ switch ($_REQUEST['acao']) {
             break;
         }
   
+    case 'buscaInformacoesAditivo':
+        try{
+            $contratoModel = new FinContratoAditivo();    
+            $idContrato = (int)filter_input(INPUT_GET, 'id', FILTER_DEFAULT);  
+            $contratoModel->setIdContrato($idContrato);
+            echo $contratoModel->retornaInformacoesCompletaAditivo();            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+    
+    case 'buscaHistoricoDosItens':
+        try{
+            $contratoModel = new FinContratoAditivo();    
+            $idContrato = (int)filter_input(INPUT_GET, 'id', FILTER_DEFAULT);  
+            $contratoModel->setIdContrato($idContrato);
+            echo $contratoModel->retornaHistoricoDosItens();            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+        
 }

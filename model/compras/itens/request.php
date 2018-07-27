@@ -142,6 +142,7 @@ switch ($_REQUEST['acao']) {
             $itemModel->setVlItens($get['valor_unitario']);
             $itemModel->setPcDesconto($get['pc_desconto']);
             $itemModel->setIdUnidadeMedida($get['unidadeMedida']);
+            $itemModel->setDescItem($get["desc_item"]);
             echo $itemModel->editarItemAtaContrato();
             return;
             break;

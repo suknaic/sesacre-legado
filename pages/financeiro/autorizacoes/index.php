@@ -52,7 +52,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/autorizacoes/index.l
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Autorizações</h1>                       
+                        <h1 class="page-header text-overflow">Vincular Autorizações</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->

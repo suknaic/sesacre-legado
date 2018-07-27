@@ -114,5 +114,70 @@ $(document).ready(function () {
             });
         }
     });
+    
+    $('body').on('click', '.btn-addAnotacao', function (e) {
+        $('#adAnotacao').modal();
+    });
+
+    $('body').on('click', '.btn-enviarAnotacao', function (e) {
+        var Dados = {
+            pedido: $('#pedido').val(),
+            anotacao: $('#anotacao').val()
+        };
+        $.ajax({
+            "url": "/model/orcamento/empenho/request.php",
+            "method": "POST",
+            "dataType": "html",
+            "data": {
+                "acao": "salvaAnotacao",
+                "dados": Dados
+            },
+
+            "success": function (response) {
+                if (response.trim() === "SessaoExpirada") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(response.msg, 'success');
+                    $('.modal-alert').on('hidden.bs.modal', function (e) {
+                        location.reload();
+                    });
+                    return false;
+                } else {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {
+                $("#adAnotacao").modal('hide');
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+
+    });
 });
       

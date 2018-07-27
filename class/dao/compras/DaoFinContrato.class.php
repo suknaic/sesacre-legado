@@ -52,7 +52,7 @@ class DaoFinContrato extends FinContratoTb {
                 $stmt->bindValue(":tipo", $this->getTpContrato(), PDO::PARAM_INT);
                 $stmt->bindValue(":orgao", $this->getIdOrgaoGerenciador(), PDO::PARAM_INT);
                 $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
-                
+
                 $stmt->execute();
                 $this->sucesso = true;
             } catch (PDOException $e) {
@@ -186,18 +186,18 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
+
     function delete($pdo) {
         try {
             $result = $pdo->prepare("DELETE FROM fin_contrato WHERE id_contrato = :idContrato");
             $result->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
             $result->execute();
-            $this->sucesso = true; 
+            $this->sucesso = true;
         } catch (PDOException $e) {
-            $this->sucesso = false;            
-            $this->msgRetorno = $e->getMessage(); 
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
         }
-    }  
+    }
 
     /**
      * [retornaAtaCombo Retorna a ata mais todas as tabelas que tem relacionamentos com ela]
@@ -208,7 +208,7 @@ class DaoFinContrato extends FinContratoTb {
     public function retornaContratoCombo($pdo = null, $condicao = '') {
         if ($pdo != null) {
             try {
-                $sql = "SELECT distinct f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
+                $sql = "SELECT f.id_fornecedor, cont.nr_contrato, obj.nm_objeto, plaTipoGasto.nm_tipo_gasto, modalidade.nm_modalidade, 
                         p.nm_pessoa, cont.id_contrato, cont.fl_bloqueado
                         FROM fin_contrato AS cont
 
@@ -217,7 +217,7 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
-                        
+
                         INNER JOIN gco_modalidade as modalidade
                         on modalidade.id_modalidade = processo.id_modalidade
 
@@ -226,14 +226,180 @@ class DaoFinContrato extends FinContratoTb {
 
                         INNER JOIN ses_pessoa as p 
                         on p.id_pessoa = f.id_pessoa
-                        
-                        LEFT JOIN gco_processo_tipo_gasto as gtpg
-                        on gtpg.id_tipo_gasto = cont.id_tipo_gasto
-                        
-                        LEFT JOIN pla_tipo_gasto as plaTipoGasto
-                        on plaTipoGasto.id_tipo_gasto =  gtpg.id_tipo_gasto
+
+                        INNER JOIN pla_tipo_gasto as plaTipoGasto
+                        on plaTipoGasto.id_tipo_gasto =  cont.id_tipo_gasto
 
                         WHERE f.sit_fornecedor = '1' AND cont.st_ativo = '1' " . $condicao;
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } catch (PDOException $e) {
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
+    public function retornaContratoComValores($pdo = null, $condicao = ''){
+        if ($pdo != null) {
+            try {
+                
+                $sql = "WITH total AS 
+                        (
+                           SELECT
+                              ff.id_fornecedor,
+                              ff.sit_fornecedor,
+                              ff.id_contrato,
+                              ff.id_pessoa,
+                              fci.id_cont_itens,
+                              fci.id_cont_itens_alt,
+                              pm.id_material,
+                              pm.nm_material,
+                              pm.tp_material,
+                              CASE
+                                 WHEN
+                                    (
+                                       pm.tp_material = 'P' 
+                                       OR pm.tp_material = 'C' 
+                                    )
+                                    AND fci.fl_valor_variavel = '0' 
+                                 THEN
+                                    COALESCE(fci.qt_itens, 0) 
+                                 WHEN
+                                    pm.tp_material = 'S' 
+                                    OR fci.fl_valor_variavel = '1' 
+                                 THEN
+                                    ROUND(COALESCE(fci.qt_itens, 0) * COALESCE(fci.vl_itens, 0), 4) 
+                              END
+                              AS total_geral 
+                           FROM
+                              fin_fornecedor ff 
+                              LEFT JOIN
+                                 fin_cont_itens fci 
+                                 ON ff.id_fornecedor = fci.id_fornecedor 
+                              LEFT JOIN
+                                 pla_material pm 
+                                 ON pm.id_material = fci.id_material 
+                        )
+                        , utilizado AS 
+                        (
+                           SELECT
+                              ff.id_fornecedor,
+                              fci.id_cont_itens,
+                              pm.tp_material,
+                              CASE
+                                 WHEN
+                                    (
+                                       pm.tp_material = 'P' 
+                                       OR pm.tp_material = 'C' 
+                                    )
+                                    AND fci.fl_valor_variavel = '0' 
+                                 THEN
+                                    SUM(COALESCE(fci2.qt_itens, 0) + COALESCE(fpo.qt_itens_pre, 0)) 
+                                 WHEN
+                                    pm.tp_material = 'S' 
+                                    OR fci.fl_valor_variavel = '1' 
+                                 THEN
+                                    ROUND(SUM(COALESCE(fci2.qt_itens, 0) * COALESCE(fci2.vl_itens, 0)) + SUM(COALESCE(fpo.qt_itens_pre, 0) * COALESCE(fpo.vl_itens_pre, 0)), 4) 
+                              END
+                              AS total_utilizado 
+                           FROM
+                              fin_fornecedor ff 
+                              INNER JOIN
+                                 fin_cont_itens fci 
+                                 ON fci.id_fornecedor = ff.id_fornecedor 
+                              INNER JOIN
+                                 pla_material pm 
+                                 ON pm.id_material = fci.id_material 
+                              LEFT JOIN
+                                 fin_cont_itens fci2 
+                                 ON fci2.id_cont_itens_alt = fci.id_cont_itens 
+                              LEFT JOIN
+                                 (
+                                    select
+                                       fpo.id_fornecedor,
+                                       fpo.id_cont_itens,
+                                       fpo.qt_itens_pre,
+                                       fpo.vl_itens_pre 
+                                    from
+                                       fin_pre_ordem fpo,
+                                       fin_pedido fp 
+                                    where
+                                       fpo.id_pedido = fp.id_pedido 
+                                       and fp.st_pedido > '0' 
+                                 )
+                                 fpo 
+                                 ON fpo.id_fornecedor = ff.id_fornecedor 
+                                 AND fpo.id_cont_itens = fci.id_cont_itens 
+                           GROUP BY
+                              ff.id_fornecedor,
+                              fci.id_cont_itens,
+                              pm.tp_material 
+                        )
+                        SELECT
+                           itens.id_fornecedor,
+                           cont.nr_contrato,
+                           obj.nm_objeto,
+                           plaTipoGasto.nm_tipo_gasto,
+                           modalidade.nm_modalidade,
+                           p.nm_pessoa,
+                           cont.id_contrato,
+                           cont.fl_bloqueado,
+                           coalesce(sum(itens.total_geral),0) as total_geral,
+                           coalesce(sum(itens.total_utilizado),0) as total_utilizado 
+                        FROM
+                           fin_contrato as cont 
+                           LEFT JOIN
+                              (
+                                 select
+                                    tot.id_fornecedor,
+                                    tot.sit_fornecedor,
+                                    tot.id_contrato,
+                                    tot.id_pessoa,
+                                    tot.total_geral,
+                                    uti.total_utilizado 
+                                 from
+                                    total tot 
+                                    left join
+                                       utilizado uti 
+                                       ON tot.id_cont_itens = uti.id_cont_itens 
+                                       AND tot.id_fornecedor = uti.id_fornecedor 
+                              )
+                              itens 
+                              ON itens.id_contrato = cont.id_contrato 
+                           INNER JOIN
+                              ses_pessoa as p 
+                              ON p.id_pessoa = itens.id_pessoa 
+                           INNER JOIN
+                              pla_tipo_gasto as plaTipoGasto 
+                              ON plaTipoGasto.id_tipo_gasto = cont.id_tipo_gasto 
+                           INNER JOIN
+                              gco_processo as processo 
+                              ON processo.id_processo = cont.id_processo 
+                           INNER JOIN
+                              gco_objeto as obj 
+                              ON obj.id_objeto = processo.id_objeto 
+                           INNER JOIN
+                              gco_modalidade as modalidade 
+                              ON modalidade.id_modalidade = processo.id_modalidade 
+                        WHERE
+                           itens.sit_fornecedor = '1' 
+                           and cont.st_ativo = '1' "
+                           . $condicao .
+                        " group by
+                           itens.id_fornecedor,
+                           cont.nr_contrato,
+                           obj.nm_objeto,
+                           plaTipoGasto.nm_tipo_gasto,
+                           modalidade.nm_modalidade,
+                           p.nm_pessoa,
+                           cont.id_contrato,
+                           cont.fl_bloqueado 
+                        order by
+                           itens.id_fornecedor";
+                
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -426,8 +592,8 @@ class DaoFinContrato extends FinContratoTb {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
-    }        
-    
+    }
+
     public function pesquisaContratoPorNumero($pdo = null) {
         if ($pdo != null) {
             try {
@@ -439,20 +605,20 @@ class DaoFinContrato extends FinContratoTb {
                         . " , to_char(C.dt_assinatura, 'DD/MM/YYYY') as dt_assinatura"
                         . " , to_char(C.dt_publicacao, 'DD/MM/YYYY') as dt_publicacao"
                         . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
-                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"                        
+                        . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
                         . " FROM fin_contrato C"
                         . " INNER JOIN (SELECT DISTINCT ON (id_contrato) id_contrato, id_fornecedor, id_pessoa"
-                            . " FROM fin_fornecedor"
-                            . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"
-                        . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"                             
+                        . " FROM fin_fornecedor"
+                        . " ORDER BY id_contrato, id_fornecedor ASC ) F ON F.id_contrato = C.id_contrato"
+                        . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"
                         . " LEFT JOIN gco_processo PRO ON PRO.id_processo = C.id_processo"
-                        . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"                        
+                        . " LEFT JOIN gco_objeto OBJ ON OBJ.id_objeto = PRO.id_objeto"
                         . " LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
-                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"                                           
+                        . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"
                         . " WHERE C.nr_contrato LIKE :nrContrato AND C.st_ativo = '1' "
                         . " AND C.sq_contrato = 0 AND C.tp_contrato = '2'";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":nrContrato", "%".$this->getNrContrato()."%", PDO::PARAM_STR);
+                $stmt->bindValue(":nrContrato", "%" . $this->getNrContrato() . "%", PDO::PARAM_STR);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -466,8 +632,7 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
-    
+
     public function retornaDadosSemItens(PDO $pdo) {
         try {
             if ($pdo != null) {
@@ -484,7 +649,7 @@ class DaoFinContrato extends FinContratoTb {
                         . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
                         . " LEFT JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato AND CA.st_ativo = '1'"
                         . " WHERE C.id_contrato = :idContrato"
-                        . " AND C.st_ativo = '1'";                        
+                        . " AND C.st_ativo = '1'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -501,9 +666,7 @@ class DaoFinContrato extends FinContratoTb {
             $this->sucesso = false;
         }
     }
-    
-    
-    
+
     public function insertContratoParaAditivo($pdo = null) {
         if ($pdo != null) {
             try {
@@ -512,7 +675,7 @@ class DaoFinContrato extends FinContratoTb {
                         . " , dt_publicacao, ds_obs_contrato"
                         . " , id_modalidade, ds_area_abrangencia, ds_unidade_contemplada"
                         . " , id_orgao_gerenciador, id_tipo_gasto, tp_contrato"
-                        . " , id_contrato_alt, sq_contrato, id_contrato_aditivo_pai)"                        
+                        . " , id_contrato_alt, sq_contrato, id_contrato_aditivo_pai)"
                         . " VALUES (:numero, :prazo, :processo, :idPessoa, :ds_objeto, :servico "
                         . " , :dt_ini, :dt_fim, :dt_assinatura, :dt_publicacao, :obs"
                         . " , :idModalidade, :dsAreaAbragencia, :dsUnidadeContemplada"
@@ -547,10 +710,52 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
-    
-    
-    
-    
+
+    public function retornaDadosContratoGdof(PDO $pdo, $nr_pedido) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select cont.nr_contrato, processo.cd_pregao, tp.nm_tipo_gasto, obj.nm_objeto,
+                        mod.nm_modalidade, p.nm_pessoa,
+                        case 
+                                when pf.nr_cpf is not null then pf.nr_cpf
+                                when pf.nr_cpf is null then pj.nr_cnpj
+                        end as cpfCnpj
+
+                        from fin_pedido as pedido 
+                        inner join fin_fornecedor as f
+                        on f.id_fornecedor  =  pedido.id_fornecedor
+                        inner join fin_contrato as cont
+                        on cont.id_contrato = f.id_contrato
+                        inner join gco_processo as processo
+                        on processo.id_processo = cont.id_processo
+                        inner join gco_objeto as obj
+                        on obj.id_objeto = processo.id_objeto
+                        inner join pla_tipo_gasto as tp
+                        on tp.id_tipo_gasto = cont.id_tipo_gasto
+                        inner join gco_modalidade as mod
+                        on mod.id_modalidade = processo.id_modalidade
+                        inner join ses_pessoa as p
+                        on p.id_pessoa = f.id_pessoa 
+                        left join ses_pessoa_fisica as pf
+                        on pf.id_pessoa = p.id_pessoa
+                        left join ses_pessoa_juridica as pj
+                        on pj.id_pessoa = p.id_pessoa
+                        where pedido.nr_pedido  = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $nr_pedido, PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
 
 }

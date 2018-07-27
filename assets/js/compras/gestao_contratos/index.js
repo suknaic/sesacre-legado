@@ -104,6 +104,7 @@ $(document).ready(function () {
                 dados: dados
             },
             "success": function (response) {
+                console.log(response);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
                     return false;
