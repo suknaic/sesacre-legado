@@ -271,11 +271,39 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function updateStPedidoEmpenho(PDO $pdo, int $stPedido = 0) {
         try {
             if (!empty($pdo) && !empty($stPedido)) {
-                $sql = "UPDATE fin_pedido SET st_pedido = '".$stPedido."' where id_pedido = :pedido";
+                $sql = "UPDATE fin_pedido SET st_pedido = '" . $stPedido . "' where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+    public function retornaEmpenhoGdof(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select emp.nr_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                        tpEmp.nm_tipo_empenho, emp.vl_empenho
+                        from fin_empenho as emp
+                        inner join fin_tipo_empenho as tpEmp
+                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
+                        where id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';

@@ -139,6 +139,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                         </div>
                                     </div>
                                 </div>
+                                <!--Form dos dados do empenho-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body empenho">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form das ordens-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body ordem">
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="panel-body">
                                     <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar

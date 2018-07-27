@@ -1426,7 +1426,7 @@ class FinContratoModel {
                     $idContrato = implode(' , ', $arrayIdContrato);
                 }
 
-                $filter[] = "cont.id_contrato in('" . $idContrato . "')";
+                $filter[] = "cont.id_contrato in(" . $idContrato . ")";
             }
 
             if (!empty($dados['contratado'])) {
@@ -1440,14 +1440,17 @@ class FinContratoModel {
                 return false;
             }
 
-            $daoContrato->retornaContratoCombo($pdo, $filtro);
+//            $daoContrato->retornaContratoCombo($pdo, $filtro);
+            $daoContrato->retornaContratoComValores($pdo, $filtro);
             if ($daoContrato->sucesso()) {
                 $result = $daoContrato->getMsgRetorno();
             } else {
+                return Metodos::retornoAjax("Erro", "console", $daoContrato->getMsgRetorno());
                 $result = [];
             }
             $tabela = '';
             $central = 0;
+            
             foreach ($result as $linha) {
                 $daoContrato->setIdContrato($linha["id_contrato"]);
                 $daoContrato->retornaCentraisContrato($pdo);
@@ -1461,8 +1464,19 @@ class FinContratoModel {
                 foreach ($central as $l) {
                     $tabela .= $l["nm_lotacao"] . "<br/>";
                 }
-                $tabela .= '</td>
-                <td class = "text-center">';
+                $tabela .= '</td>';
+                
+               
+               if (!empty($linha['total_geral'])) { //Para evitar divisão por '0'
+                   $percentualUtilizado = ($linha['total_utilizado'] * 100) / $linha['total_geral']; 
+               } else {
+                   $percentualUtilizado = 0;
+               }
+                
+                
+                $tabela.= '<td class = "text-center">'. number_format($percentualUtilizado,2,",",".") .'</td>';
+                
+                $tabela .= '<td class = "text-center">';
                 if ($linha['fl_bloqueado'] == 0) {
                     $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
                                 <i class="fa fa-check text-success" aria-hidden="true"></i>
@@ -2172,38 +2186,32 @@ class FinContratoModel {
                                                 
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Licitação:</b></div>
-                                                        <div class="col-sm-3">'.$campos["cd_pregao"].'</div>
-                                                        <div class="col-sm-7"></div>
+                                                        <div class="col-sm-10">'.$campos["cd_pregao"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo de gasto:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_tipo_gasto"].'</div>
-                                                        <div class="col-sm-7"></div>
+                                                        <div class="col-sm-10">'.$campos["nm_tipo_gasto"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Objeto:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_objeto"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_objeto"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Modalidade:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_modalidade"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_modalidade"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Fornecedor:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_pessoa"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_pessoa"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
-                                                        <div class="col-sm-3">'.$campos["cpfcnpj"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["cpfcnpj"].'</div>
                                                     </div>
                                                 </div>
                                             </div>

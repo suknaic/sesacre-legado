@@ -241,6 +241,175 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
+    
+    public function retornaContratoComValores($pdo = null, $condicao = ''){
+        if ($pdo != null) {
+            try {
+                
+                $sql = "WITH total AS 
+                        (
+                           SELECT
+                              ff.id_fornecedor,
+                              ff.sit_fornecedor,
+                              ff.id_contrato,
+                              ff.id_pessoa,
+                              fci.id_cont_itens,
+                              fci.id_cont_itens_alt,
+                              pm.id_material,
+                              pm.nm_material,
+                              pm.tp_material,
+                              CASE
+                                 WHEN
+                                    (
+                                       pm.tp_material = 'P' 
+                                       OR pm.tp_material = 'C' 
+                                    )
+                                    AND fci.fl_valor_variavel = '0' 
+                                 THEN
+                                    COALESCE(fci.qt_itens, 0) 
+                                 WHEN
+                                    pm.tp_material = 'S' 
+                                    OR fci.fl_valor_variavel = '1' 
+                                 THEN
+                                    ROUND(COALESCE(fci.qt_itens, 0) * COALESCE(fci.vl_itens, 0), 4) 
+                              END
+                              AS total_geral 
+                           FROM
+                              fin_fornecedor ff 
+                              LEFT JOIN
+                                 fin_cont_itens fci 
+                                 ON ff.id_fornecedor = fci.id_fornecedor 
+                              LEFT JOIN
+                                 pla_material pm 
+                                 ON pm.id_material = fci.id_material 
+                        )
+                        , utilizado AS 
+                        (
+                           SELECT
+                              ff.id_fornecedor,
+                              fci.id_cont_itens,
+                              pm.tp_material,
+                              CASE
+                                 WHEN
+                                    (
+                                       pm.tp_material = 'P' 
+                                       OR pm.tp_material = 'C' 
+                                    )
+                                    AND fci.fl_valor_variavel = '0' 
+                                 THEN
+                                    SUM(COALESCE(fci2.qt_itens, 0) + COALESCE(fpo.qt_itens_pre, 0)) 
+                                 WHEN
+                                    pm.tp_material = 'S' 
+                                    OR fci.fl_valor_variavel = '1' 
+                                 THEN
+                                    ROUND(SUM(COALESCE(fci2.qt_itens, 0) * COALESCE(fci2.vl_itens, 0)) + SUM(COALESCE(fpo.qt_itens_pre, 0) * COALESCE(fpo.vl_itens_pre, 0)), 4) 
+                              END
+                              AS total_utilizado 
+                           FROM
+                              fin_fornecedor ff 
+                              INNER JOIN
+                                 fin_cont_itens fci 
+                                 ON fci.id_fornecedor = ff.id_fornecedor 
+                              INNER JOIN
+                                 pla_material pm 
+                                 ON pm.id_material = fci.id_material 
+                              LEFT JOIN
+                                 fin_cont_itens fci2 
+                                 ON fci2.id_cont_itens_alt = fci.id_cont_itens 
+                              LEFT JOIN
+                                 (
+                                    select
+                                       fpo.id_fornecedor,
+                                       fpo.id_cont_itens,
+                                       fpo.qt_itens_pre,
+                                       fpo.vl_itens_pre 
+                                    from
+                                       fin_pre_ordem fpo,
+                                       fin_pedido fp 
+                                    where
+                                       fpo.id_pedido = fp.id_pedido 
+                                       and fp.st_pedido > '0' 
+                                 )
+                                 fpo 
+                                 ON fpo.id_fornecedor = ff.id_fornecedor 
+                                 AND fpo.id_cont_itens = fci.id_cont_itens 
+                           GROUP BY
+                              ff.id_fornecedor,
+                              fci.id_cont_itens,
+                              pm.tp_material 
+                        )
+                        SELECT
+                           itens.id_fornecedor,
+                           cont.nr_contrato,
+                           obj.nm_objeto,
+                           plaTipoGasto.nm_tipo_gasto,
+                           modalidade.nm_modalidade,
+                           p.nm_pessoa,
+                           cont.id_contrato,
+                           cont.fl_bloqueado,
+                           coalesce(sum(itens.total_geral),0) as total_geral,
+                           coalesce(sum(itens.total_utilizado),0) as total_utilizado 
+                        FROM
+                           fin_contrato as cont 
+                           LEFT JOIN
+                              (
+                                 select
+                                    tot.id_fornecedor,
+                                    tot.sit_fornecedor,
+                                    tot.id_contrato,
+                                    tot.id_pessoa,
+                                    tot.total_geral,
+                                    uti.total_utilizado 
+                                 from
+                                    total tot 
+                                    left join
+                                       utilizado uti 
+                                       ON tot.id_cont_itens = uti.id_cont_itens 
+                                       AND tot.id_fornecedor = uti.id_fornecedor 
+                              )
+                              itens 
+                              ON itens.id_contrato = cont.id_contrato 
+                           INNER JOIN
+                              ses_pessoa as p 
+                              ON p.id_pessoa = itens.id_pessoa 
+                           INNER JOIN
+                              pla_tipo_gasto as plaTipoGasto 
+                              ON plaTipoGasto.id_tipo_gasto = cont.id_tipo_gasto 
+                           INNER JOIN
+                              gco_processo as processo 
+                              ON processo.id_processo = cont.id_processo 
+                           INNER JOIN
+                              gco_objeto as obj 
+                              ON obj.id_objeto = processo.id_objeto 
+                           INNER JOIN
+                              gco_modalidade as modalidade 
+                              ON modalidade.id_modalidade = processo.id_modalidade 
+                        WHERE
+                           itens.sit_fornecedor = '1' 
+                           and cont.st_ativo = '1' "
+                           . $condicao .
+                        " group by
+                           itens.id_fornecedor,
+                           cont.nr_contrato,
+                           obj.nm_objeto,
+                           plaTipoGasto.nm_tipo_gasto,
+                           modalidade.nm_modalidade,
+                           p.nm_pessoa,
+                           cont.id_contrato,
+                           cont.fl_bloqueado 
+                        order by
+                           itens.id_fornecedor";
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } catch (PDOException $e) {
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
 
     public function retornaCentraisContrato($pdo) {
         if ($pdo != null) {

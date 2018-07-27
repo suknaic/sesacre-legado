@@ -83,7 +83,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                 <select class="form-control select" name="central" id="central">
-                                                    <option value="">Selecione uma modalidade</option>
+                                                    <!--<option value="">Selecione uma modalidade</option> !-->
                                                 </select>
                                             </div>
                                         </div>
@@ -127,6 +127,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                                         <th class="text-center">Tipo gasto</th>
                                                         <th class="text-center">Modalidade</th>
                                                         <th class="text-center">Central</th>
+                                                        <th class="text-center">% Utilizado</th>
                                                         <th class="text-center">Ação</th>
                                                     </tr>
                                                 </thead>

@@ -344,4 +344,24 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
+    public function retornaIdPedidoPorNumero(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_pedido from fin_pedido where nr_pedido = :numero";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
 }

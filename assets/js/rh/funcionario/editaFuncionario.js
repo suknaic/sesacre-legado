@@ -50,7 +50,7 @@ function returnContratoEditar() {
                     $("#nr_cep").mask("99999-999");
                     listaEstadoCombo(response[0]['id_estado_orgao_expedidor']);
                     listaEstadoCivilCombo(response[0]['id_estado_civil']);
-                    listaEscolaridadeCombo(response[0]['id_escolaridade'])
+                    listaEscolaridadeCombo(response[0]['id_escolaridade']);
                     //**********************************************************************
                     //$("#id_cidade").val(response[0]['id_cidade']).change();
                     $("#id_pais_endereco").val(response[0]['id_pais_endereco']);
@@ -419,7 +419,7 @@ $(document).ready(function () {
     $(".ant").click(function () {
 // aba que esta ativa no momento
         $('.nav > .active').prev('li').find('a').trigger('click');
-    })
+    });
     //************************************************************
     $("body").on("change", "#id_vinculo", function (e) {
         var id = $(this).val();
@@ -497,7 +497,8 @@ $(document).ready(function () {
     $("body").on("click", ".editarLinhaLotacao", function (e) {
         $('#modalContratoLotacao').modal('show');
         $idContratoLotacao = $(this).val();
-//        alert($(this).closest(".lotacaoLinha").find(".cargaLotacao").text());
+//        alert($(this).closest(".lotacaoLinha").find(".dataIni").text());
+//        return;
         //**********************************************************************************
         $("#nr_ch_editar").val("");
         $("#dt_inicio_editar").val("");
@@ -625,7 +626,7 @@ $(document).ready(function () {
                             if (response.tipoExibicao === "console") {
                                 console.log('Console Mensagem');
                                 console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             } else if (response.tipoExibicao === "alert") {
                                 func.modalAlert(response.msg);
@@ -638,7 +639,7 @@ $(document).ready(function () {
                         } else {
                             console.log('Ultimo else');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     }
@@ -690,10 +691,10 @@ $(document).ready(function () {
         if (flag == 1) {
             return;
         }
-        
+
         //*********** Controle de data e carga horária das lotaçõs dos funcionários (Autor: Elivelton)*************
         $("#tabelaLotacao tbody tr").each(function () {
-            if (dataFimAntiga != '') {
+            if (dataFimAntiga !== '') {
                 var dataAnt = +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString());
                 var dataNov = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
 
@@ -704,14 +705,31 @@ $(document).ready(function () {
                     }
                 }
             }
+
+
         });
-        
+        seguir = true;
+        $("#tabelaLotacao tbody tr").each(function () {
+            if ($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim") === '') {
+                if (String($("#dt_inicio").val()) !== String($(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio"))) {
+                    seguir = false;
+                    return;
+                }
+            }
+
+        });
+
+        if (seguir === false) {
+            func.modalAlert("A Data Início da Nova Lotação do Funcionário Deve Ser Igual a Data da Lotação Ainda Vigente.");
+            return false;
+        }
+
         if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
             func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário");
-            return;
+            return false;
         }
         //*********************************************************************************************************
-        
+
         //********************************************************************************
         if (lotacaoId == 0) {
             func.modalAlert(" Informe Lotação");
@@ -918,7 +936,7 @@ $(document).ready(function () {
                                         return false;
                                     }
                                 } else if (response.tipoMsg === "ok") {
-                                    func.modalAlert(response.msg, 'primary');
+                                    func.modalAlert(response.msg, 'success');
                                     returnLotacaoFuncao(idContrato);
                                     return false;
                                 } else {

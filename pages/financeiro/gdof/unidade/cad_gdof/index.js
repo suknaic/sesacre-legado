@@ -54,14 +54,44 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response);
                 $(".pedido").html("");
                 $(".pedido").append(response);
             }
         });
+        /**
+         * retornaDadosEmpenho
+         */
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaEmpenhoGdof",
+                "dados": dados
 
+            },
+            "success": function (response) {
+                $(".empenho").html("");
+                $(".empenho").append(response);
+            }
+        });
+        /**
+         * retornaDadosOrdem
+         */
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaOrdemGdof",
+                "dados": dados
+
+            },
+            "success": function (response) {
+                console.log(response);
+                return false;
+                $(".empenho").html("");
+                $(".empenho").append(response);
+            }
+        });
     });
-
-
 
 });
