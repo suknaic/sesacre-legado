@@ -1680,7 +1680,8 @@ class FinContratoModel {
                     $item->setIdMaterial($result['id_material']);
                     $item->setIdFornecedor($result['id_fornecedor']);
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
-                    $item->setIdUnidadeMedida($result['id_unidade_medida']);
+                    $item->setIdUnidadeMedida($result['id_unidade_medida']);    
+                    $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);
                     $cont->setItems($item);
                 }
             }
@@ -1813,6 +1814,7 @@ class FinContratoModel {
             $aditivo = new FinContratoAditivo();
             $finContratoAdtivo->setIdContrato($daoContrato->getIdContrato());
             $aditivo->inserirAditivo($finContratoAdtivo, $pdo);
+
             if (!$aditivo->Sucesso()) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível Cadastrar os Dados do Aditivo";

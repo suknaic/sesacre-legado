@@ -16,6 +16,7 @@ class ItemModel {
     private $idMaterial = null;
     private $idFornecedor = null;
     private $idContItensAlt = null;
+    private $idContItensAditivo = null;
     private $cdDescMaterial = null;
     private $descItem = null;
     private $idUnidadeMedida = null;
@@ -151,7 +152,16 @@ class ItemModel {
     public function setFlValorVariavel($flValorVariavel) {
         $this->flValorVariavel = $flValorVariavel;
     }
+    
+    function getIdContItensAditivo() {
+        return $this->idContItensAditivo;
+    }
 
+    function setIdContItensAditivo($idContItensAditivo) {
+        $this->idContItensAditivo = $idContItensAditivo;
+        return $this;
+    }
+    
     
     public function cadastrarItem() {
         try {
@@ -917,6 +927,7 @@ class ItemModel {
                 $daoFinItens->setIdContItens($value->getIdContItens());
                 $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida()); 
                 $daoFinItens->setIdContItensAlt($value->getIdContItensAlt());
+                $daoFinItens->setIdContItensAditivo($value->getIdContItensAditivo());
                 
                 $daoFinItens->cadastrarItemAditivo($pdo);
                 if(!$daoFinItens->Sucesso()){
