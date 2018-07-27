@@ -584,6 +584,11 @@ class FinOrdemModel {
         $daoFinOrdem = new DaoFinOrdem();
         $daoFinOrdem->setIdPedido($this->id_pedido);
         $daoFinOrdem->ordemGdof($pdo);
+        $options = '';
+        foreach ($daoFinOrdem->getMsgRetorno() as $campos){
+            $options .= '<option>'.$campos["nr_ordem"].'/'.$campos["aa_ordem"].'</option>' ;
+        }
+        return $options;
     }
 
 }

@@ -25,7 +25,11 @@ $(document).ready(function () {
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
-        var dados = $("#codItemPesquisa").val();
+        var dados = {
+            "nr_pedido": $("#codItemPesquisa").val(),
+            "id_pedido": $("body").find(".selecionaItem").attr("pedido")
+        }
+
         /**
          * retornaContratosPedido
          */
@@ -88,8 +92,8 @@ $(document).ready(function () {
             "success": function (response) {
                 console.log(response);
                 return false;
-                $(".empenho").html("");
-                $(".empenho").append(response);
+                $(".ordem").html("");
+                $(".ordem").append(response);
             }
         });
     });

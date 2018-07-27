@@ -107,7 +107,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Informações da ordem</h3>
+                                    <h3 class="panel-title">Informações do documento fiscal</h3>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-3">
@@ -151,6 +151,27 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados da Ordem</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº ordem:</b></div>
+                                                            <div class="col-sm-10"></div>
+                                                        </div>
+                                                          <div class="form-group">
+                                                            <div class="col-sm-2"><b>Tipo de Ordem:</b></div>
+                                                            <div class="col-sm-10"></div>
+                                                        </div>
+                                                          <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor da Ordem:</b></div>
+                                                            <div class="col-sm-10"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                     </div>

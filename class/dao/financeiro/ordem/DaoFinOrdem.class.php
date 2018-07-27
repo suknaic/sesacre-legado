@@ -349,22 +349,7 @@ class DaoFinOrdem extends FinOrdemTb {
     public function ordemGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select ordem.nr_ordem, ordem.aa_ordem,  
-                        case 
-                                WHEN	 ordem.tp_ordem  = '1' then 'ENTREGA'
-                                WHEN	 ordem.tp_ordem  = '2' then 'EXCUÇÃO/SERVIÇO'
-                        end tipo,
-                        sum((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem)) as valor 
-                        from fin_ordem as ordem 
-                        inner join fin_ordem_itens as ordemItens
-                        on ordemItens.id_ordem = ordem.id_ordem
-                        where ordem.id_pedido = :pedido
-                        group by ordem.nr_ordem, 
-                        ordem.aa_ordem,
-                        case 
-                                WHEN	 ordem.tp_ordem  = '1' then 'ENTREGA'
-                                WHEN	 ordem.tp_ordem  = '2' then 'EXCUÇÃO/SERVIÇO'
-                        end";
+                $sql = "select nr_ordem, aa_ordem from fin_ordem where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();

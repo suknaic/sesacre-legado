@@ -14,7 +14,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $pedido = new Pedido();
             $pedido->setNrPedido($dados);
-            echo $pedido->retornaDadosPedidoOrdem($session);
+            echo $pedido->retornaPedidoComOrdemGdof(null);
             return;
             break;
         } catch (Error $e) {
@@ -25,9 +25,9 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaContratosGdof':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finContratoModel = new FinContratoModel();
-            echo $finContratoModel->retornaContratoGdof(null, $dados);
+            echo $finContratoModel->retornaContratoGdof(null, $dados["nr_pedido"]);
             return;
             break;
         } catch (Error $e) {
@@ -38,9 +38,9 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaPedidoGdof':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
-            $pedido->setNrPedido($dados);
+            $pedido->setNrPedido($dados["nr_pedido"]);
             echo $pedido->retornaPedidoGdof(null, $dados);
             return;
             break;
@@ -52,11 +52,11 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaEmpenhoGdof':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
-            $finEmpenhoModel->setIdPedido($pedido->retornaIdPedidoPeloNumero(null));
+            $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
             echo $finEmpenhoModel->retornaEmpenhoGdof(null);
             return;
             break;
@@ -68,12 +68,10 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaOrdemGdof':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
-            $pedido = new Pedido();
-            $pedido->setNrPedido($dados);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finOrdemModel = new FinOrdemModel();
-            $finOrdemModel->setIdPedido($pedido->retornaIdPedidoPeloNumero(null));
-            $finOrdemModel->retornaOrdemGdof();
+            $finOrdemModel->setIdPedido($dados["id_pedido"]);
+            echo $finOrdemModel->retornaOrdemGdof();
             return;
             break;
         } catch (Error $e) {
