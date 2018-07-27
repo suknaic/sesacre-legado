@@ -255,7 +255,7 @@
                                                         <input class="form-control" type="text" name="n_numero_aditivo" readonly="true" id="n_numero_aditivo" placeholder="1-90">
                                                     </div>                                                                                                 
                                                 </div>
-                                            </div>
+                                            </div>                                                                                        
                                             
                                             <div class="form-group" id="div_finalidade">
                                                 <label class="col-sm-2 control-label text-left">Finalidade: <span class="text-danger">*</span></label>
