@@ -266,7 +266,7 @@
 
                                 <li>
                                     <a href="/pages/financeiro/autorizacoes/index.php">
-                                        <span class="menu-title">Gdof</span>
+                                        <span class="menu-title">GDOF</span>
                                         <i class="arrow"></i>
                                     </a>
 
@@ -303,6 +303,9 @@
                                                 <i class="arrow"></i>
                                             </a>
                                             <ul class="collapse">
+                                                <li>
+                                                    <a href="/pages/financeiro/autorizacoes/index.php">Vincular Autorizações</a>
+                                                </li>
                                                 <li>
                                                     <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                                 </li>

@@ -1,5 +1,5 @@
 
-$(document).ready(function () {       
+$(document).ready(function () {      
     
     //instacinado fucoes js
     func = new Funcoes();
@@ -169,7 +169,10 @@ $(document).ready(function () {
                 "dados": idContrato
             },
             "success": function (response) {
-                $("#panel-aditivos").find('.panel-body').html(response);                        
+                $("#panel-aditivos").find('.panel-body').html(response);  
+                if($(".aditivo_quantidade").attr('quantidade') > 0){
+                    $(".btn-historico-itens").show();
+                }                
             }
         });
     }
@@ -459,15 +462,35 @@ $(document).ready(function () {
                     "id": $this.val()
                 },
                 "success": function (response) {       
-                    console.log(response)
+                    //console.log(response)
                     $("#modalDetalhes").find('.modal-body').html(response);
                     $("#modalDetalhes").modal('show')
                 }
-            }); 
-            
-            
-            
-            
+            });                                                 
+        }
+    });
+    
+    
+    $('body').on('click', '.btn-historico-itens', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            var $this = $(this);          
+            $.ajax({
+                "url": url,
+                "dataType": 'html',
+                "method": "get",
+                "data": {
+                    "acao": "buscaHistoricoDosItens",
+                    "id": $("#id_contrato").val()
+                },
+                "success": function (response) {       
+                    //console.log(response)
+                    $("#modalDetalhes").find('.modal-body').html(response);
+                    $("#modalDetalhes").modal('show')
+                }
+            });                                                 
         }
     });
     
@@ -604,9 +627,13 @@ $(document).ready(function () {
     
     $('body').on('change', '#n_finalidade', function (e) {
        //Se a Finalidade for Adição, teremos que fazer alguma Verificação com relação ao máximo de percentual
-       if($("#n_finalidade option:selected").val() == 1){
-           let valor = $("#n_percentual").val().replace(",", ".");
-           //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
+       if($("#n_finalidade option:selected").val() == 1
+               && ( $("#n_unidade_calculo option:selected").val() == 1
+                    || $("#n_unidade_calculo option:selected").val() == 4 
+                    ) 
+            ){
+            let valor = $("#n_percentual").val().replace(",", ".");
+            //Se Tipo de Aquisicao for Obras, Serviços ou Compras, o Valor Percentual máximo será de 25%
             if($("#n_tipo_aquisicao option:selected").val() == 1){
                 if(valor > 25.0000){          
                     $("#n_percentual").val("25,0000").change();
@@ -867,9 +894,8 @@ $(document).ready(function () {
             "success": function (response) {                
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
                 $(".selecionaItem").first().trigger('click');
-                $(".btn-add-aditivo").trigger('click');  
-                //carregaDadosEdicao();
-                
+                //$(".btn-add-aditivo").trigger('click');  
+                //carregaDadosEdicao();                
             }            
         });  
 

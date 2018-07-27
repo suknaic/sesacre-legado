@@ -563,7 +563,7 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setNrPedido($this->nrPedido);
             $daoFinPedido->retornaPedidoGcon($pdo);
-            
+
             if ($daoFinPedido->sucesso()) {
                 $campos = $daoFinPedido->getMsgRetorno();
 
@@ -583,33 +583,28 @@ class Pedido {
                                                 <div class="panel-body">
                                                 
                                                     <div class="form-group">
-                                                        <div class="col-sm-1"><b>Descrição:</b></div>
-                                                        <div class="col-sm-3">' . $campos["ds_pedido"] . '</div>
-                                                        <div class="col-sm-8"></div>
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-1"><b>Fonte:</b></div>
-                                                        <div class="col-sm-3">' . $campos["nr_fonte"] . '</div>
-                                                        <div class="col-sm-8"></div>
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-1"><b>Funcional programatica:</b></div>
-                                                        <div class="col-sm-3">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
-                                                        <div class="col-sm-8"></div>    
+                                                        <div class="col-sm-2"><b>Funcional programatica:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-1"><b>Despesa:</b></div>
-                                                        <div class="col-sm-3">' . $campos["cd_despesa_elemento"] . '- ' . $campos["ds_despesa_elemento"] . '</div>
-                                                        <div class="col-sm-8"></div>    
+                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . '- ' . $campos["ds_despesa_elemento"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-1"><b>Valor do pedido:</b></div>
-                                                        <div class="col-sm-3">' . $campos["vl_pedido"] . '</div>
-                                                        <div class="col-sm-8"></div>    
+                                                        <div class="col-sm-2"><b>Valor do pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -618,6 +613,26 @@ class Pedido {
                 return $dadosPedido;
             }
             return $dadosPedido;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+
+    public function retornaIdPedidoPeloNumero($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setNrPedido($this->nrPedido);
+            $daoFinPedido->retornaIdPedidoPorNumero($pdo);
+            if ($daoFinPedido->Sucesso()) {
+                return $daoFinPedido->getMsgRetorno()["id_pedido"];
+            }
+            return false;
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();

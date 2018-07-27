@@ -578,4 +578,12 @@ class FinOrdemModel {
         return Metodos::retornoAjax("ok", "html", "Ordem removida com sucesso.");
     }
 
+    public function retornaOrdemGdof() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinOrdem = new DaoFinOrdem();
+        $daoFinOrdem->setIdPedido($this->id_pedido);
+        $daoFinOrdem->ordemGdof($pdo);
+    }
+
 }
