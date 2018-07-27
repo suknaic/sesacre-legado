@@ -2170,38 +2170,32 @@ class FinContratoModel {
                                                 
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Licitação:</b></div>
-                                                        <div class="col-sm-3">'.$campos["cd_pregao"].'</div>
-                                                        <div class="col-sm-7"></div>
+                                                        <div class="col-sm-10">'.$campos["cd_pregao"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo de gasto:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_tipo_gasto"].'</div>
-                                                        <div class="col-sm-7"></div>
+                                                        <div class="col-sm-10">'.$campos["nm_tipo_gasto"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Objeto:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_objeto"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_objeto"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Modalidade:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_modalidade"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_modalidade"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Fornecedor:</b></div>
-                                                        <div class="col-sm-3">'.$campos["nm_pessoa"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["nm_pessoa"].'</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
-                                                        <div class="col-sm-3">'.$campos["cpfcnpj"].'</div>
-                                                        <div class="col-sm-7"></div>    
+                                                        <div class="col-sm-10">'.$campos["cpfcnpj"].'</div>
                                                     </div>
                                                 </div>
                                             </div>
