@@ -349,13 +349,63 @@ class DaoFinOrdem extends FinOrdemTb {
     public function ordemGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select nr_ordem, aa_ordem from fin_ordem where id_pedido = :pedido";
+                $sql = "select id_ordem, nr_ordem, aa_ordem from fin_ordem where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaTipoValor(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select 
+                        case 
+                                when ordem.tp_ordem = '1' then 'ENTREGA'
+                                when ordem.tp_ordem = '2' then 'EXECURÇÃO/SERVIÇO'
+                        end tipo,
+
+                        case 
+                                when (mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0'
+                                then	  sum(itensOrdem.qt_itens_ordem)
+                                when mat.tp_material = 'S' and itens.fl_valor_variavel = '1'
+                                then  sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem)
+                        end valor
+                        from fin_ordem as ordem
+
+                        inner join fin_ordem_itens as itensOrdem
+                        on itensOrdem.id_ordem = ordem.id_ordem
+
+                        inner join fin_pre_ordem as pre
+                        on pre.id_pre_ordem = itensOrdem.id_pre_ordem
+
+                        inner join fin_cont_itens as itens 
+                        on itens.id_cont_itens = pre.id_cont_itens
+
+                        inner join pla_material as mat
+                        on mat.id_material = itens.id_material
+                        where ordem.id_ordem = :ordem
+                        group by ordem.tp_ordem, mat.tp_material, fl_valor_variavel";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 } else {
                     $this->sucesso = false;
                     $this->msgRetorno = "Nenhum registro encontrado";

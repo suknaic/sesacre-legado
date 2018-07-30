@@ -159,15 +159,96 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Nº ordem:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <select class="form-control select" name="selectOrdem" id="selectOrdem">
+                                                                    <option value="0" selected="true">Selecione uma ordem</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
-                                                          <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo de Ordem:</b></div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
-                                                          <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor da Ordem:</b></div>
-                                                            <div class="col-sm-10"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--form processo administratio da despesa publica-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <input class="form-control" type="text" name="processoAdm" id="processoAdm" />
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--form processo administratio da despesa publica-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Documento Nº:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Competência:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Data de emissão:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Data de atesto:</b></div>
+                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-7"></div>
                                                         </div>
                                                     </div>
                                                 </div>

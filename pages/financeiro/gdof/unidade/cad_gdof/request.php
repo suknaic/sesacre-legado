@@ -79,5 +79,19 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
+    CASE 'retornaTipoValorOrdem':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $finOrdemModel = new FinOrdemModel();
+            $finOrdemModel->setIdOrdem($dados);
+            echo $finOrdemModel->retornaTipoValorOrdem();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 
