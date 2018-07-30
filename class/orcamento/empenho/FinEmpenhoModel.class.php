@@ -225,13 +225,13 @@ class FinEmpenhoModel {
             foreach ($daoFinEmpenho->getMsgRetorno() as $l) {
                 $tabela .= '<tr>
                                 <td class="text-center">' . $l["numero"] . '</td>
-                                <td class="text-center">' . $l["ds_pedido"] . '</td>
+                                <td class="text-center" style="width: 23%">' . $l["ds_pedido"] . '</td>
                                 <td class="text-center">' . $l["nm_tipo_gasto"] . '</td>
                                 <td class="text-center">' . $l["nr_fonte"] . '</td>
                                 <td class="text-center">' . $l["cd_despesa_elemento"] . '</td>
                                 <td class="text-center">' . $l["dt_aut_ordenador"] . '</td>
                                 <td class="text-center">' . Metodos::ConverteValorBr($l["vl_pedido"], 4) . '</td>
-                                <td class="text-center">' . $l["ds_pedido_anotacao"] . '</td>
+                                <td class="text-center" style="width: 23%">' . $l["ds_pedido_anotacao"] . '</td>
                                 <td class="text-center">
                                 <a type="button" href="/pages/orcamento/empenho/cadEmpenho.php?id=' . $l["id_pedido"] . '" target="_blank" class="button">
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
