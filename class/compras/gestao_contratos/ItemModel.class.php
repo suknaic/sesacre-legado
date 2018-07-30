@@ -1030,5 +1030,36 @@ class ItemModel {
         }
     }
     
+    public function retornaQuantidadeExecutadoItens(array $itens, PDO $pdo = null){
+        $this->sucesso = false;
+        try{
+            
+            if (empty($pdo)){            
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            if(count($itens) < 1){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui Itens";
+                return;
+            }
+            
+            $itens = implode(",", $itens);
+            
+            $dao = new DaoFinItens();
+            $dao->quantidadeItensExecutado($itens, $pdo);
+            if($dao->Sucesso()){
+                $this->sucesso = true;
+                $this->msgRetorno = $dao->getMsgRetorno();
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();                
+            }                                                
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 
 }
