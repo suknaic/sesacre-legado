@@ -628,45 +628,122 @@ class FinContratoAditivo {
             //então precisa buscar todos os Itens do Contrato e Aditivos para fazer
             //A Somatoria das Quantidades dos Itens
             //No caso do Valor será utilizado o ultimo Valor dos Aditivos/Contrato que não seja 0
-            if($this->idMotivo == $this->getMotivoPorPrazo() && $this->flServicoContinuado == "S"){
+            if($this->idMotivo == $this->getMotivoPorPrazo()){
                 
-                $this->retornaTodosItens($pdo);
+                $this->retornaTodosItensComExecutado($pdo);
                 if(!$this->sucesso){
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar todos os Itens do Contrato "
                             . "e Últimos Aditivos.". STR_ERROR);                        
                 }
                                                                 
                 $result = $this->msgRetorno;
+                
 //                echo "<pre>";
 //                print_r($result);
-//                echo "</pre>"; 
-                
+//                echo "</pre>";
+//                               return;
+                $arrayIdsContItens = array();
                 foreach ($finContItens as $key => $value){
-                    $flagValor = false;
-                    foreach ($result as $k => $v){
-                        if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
-                                && $v['tipo'] == "aditivo")
-                            ){
-                            if( !$flagValor && !empty((int)$v['vl_itens']) ){
-                                $finContItens[$key]->setVlItens($v['vl_itens']);
-                                $flagValor = true;
-                            }
-                            $valorItens = $finContItens[$key]->getQtItens() + $v['qt_itens'];
-                            $finContItens[$key]->setQtItens($valorItens);
-                            if($v['id_contrato_motivo'] == $this->motivoPorPrazo){
-                                break;
+                    $flagValor = false;   
+                    $flagQuantidade = false;
+                    $valorTotalDaQuantidade = 0.0000;
+                    $valorTotalDaQuantidadeExecutado = 0.0000;
+                    if($this->flServicoContinuado == "S"){
+                        foreach ($result as $k => $v){                                                                        
+                            if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
+                                    && $v['tipo'] == "aditivo")
+                                ||
+                                ($v['id_cont_itens'] == $value->getIdContItens()
+                                    && $v['tipo'] == "contrato")
+                                ){
+                                //Seta o Ultimo Valor Unitário Valido
+                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                    $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    $flagValor = true;
+                                }
+
+                                //Faz a somatoria das Quantidades dos Itens
+                                //Serviço Continuado, deverá somar todos os Itens
+                                $valorTotalDaQuantidade += $v['qt_itens'];                                                                    
+
+                                //Se o Retorno for, um Item no qual o Aditivo for Por Prazo
+                                //Então não precisa continuar correndo os Itens pois esse Valor já 
+                                //está somando os demais aditivos anteriores
+                                if($v['id_contrato_motivo'] == $this->motivoPorPrazo){
+                                    break;
+                                }
                             }
                         }
+                        $finContItens[$key]->setQtItens($valorTotalDaQuantidade);
+                    }else{
+                        foreach ($result as $k => $v){                                                                      
+                            if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
+                                    && $v['tipo'] == "aditivo")
+                                ||
+                                ($v['id_cont_itens'] == $value->getIdContItens()
+                                    && $v['tipo'] == "contrato")
+                                ){
+                                //Seta o Ultimo Valor Unitário Valido
+                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                    $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    $flagValor = true;
+                                }
+                                $valorTotalDaQuantidadeExecutado += $v['qtd_executado'];
+                                
+                                if(!$flagQuantidade){
+                                   // $valorTotalDaQuantidade += $v['qt_itens'];                                    
+                                }
+                                
+                                if($v['id_contrato_motivo'] != $this->motivoPorPrazo){
+                                    $valorTotalDaQuantidade += $v['qt_itens'];
+                                }
+                                //1936
+                                //Faz a somatoria das Quantidades dos Itens
+                                //Serviço Não Continuado, deverá somar todos os Itens
+                                //$valorItens = $finContItens[$key]->getQtItens() - $v['qtd_executado'];                                
+                                //$finContItens[$key]->setQtItens($valorItens);                                                       
+                                
+                            }
+                        }
+                        $finContItens[$key]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                     }
                 }
+                
+                
+                //Quando o Serviço não for continuado
+                //A Quantidade irá levar em consideração o Executado do Itens em todas as pre-ordem
+                //Quantidade Total do Item - Executado de todas as Pre-Ordens
+                if($this->flServicoContinuado != "S"){
+//                    $itemModel = new ItemModel();
+//                    $itemModel->retornaQuantidadeExecutadoItens($arrayIdsContItens, $pdo);
+//                    if(!$itemModel->Sucesso()){
+//                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar Os Itens Executado. ".STR_ERROR);
+//                    }
+//                    $result = $itemModel->getMsgRetorno();
+//                    
+//                    foreach ($finContItens as $key => $value){
+//                        
+//                    }
+//                    
+//                    echo "<pre>";
+//                    print_r($itemModel->getMsgRetorno());
+//                    echo "</pre>";
+                }
+                
+                
             }
             
 //            echo "<pre>";
 //            print_r($finContItens);
 //            echo "</pre>";
 //            
-//            
 //            return;
+//            echo "<pre>";
+//            print_r($finContItens);
+//            echo "</pre>";
+//            
+//            
+            //return;
             
             //Por Prazo
             //flag continuado não continuado
@@ -1391,7 +1468,7 @@ class FinContratoAditivo {
     }
     
     
-    public function retornaTodosItens(PDO $pdo = null){
+    public function retornaTodosItensComExecutado(PDO $pdo = null){
         try{            
             if(empty($pdo)){
                 $conexao = new Conexao();            
@@ -1406,7 +1483,7 @@ class FinContratoAditivo {
             
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($this->idContrato);
-            $daoContratoAditivo->todosItens($pdo);
+            $daoContratoAditivo->todosItensComExecutado($pdo);
             if(!$daoContratoAditivo->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
