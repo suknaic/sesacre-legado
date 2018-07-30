@@ -155,8 +155,12 @@ $(document).ready(function () {
         $("#con_descricao_objeto").find("p").html(contrato.ds_objeto);
         $("#con_fornecedor").find("p").html(contrato.nm_pessoa);
         $("#con_valor").find("p").html(contrato.valor);
-        $("#id_contrato").val(contrato.id_contrato);                
-                
+        $("#id_contrato").val(contrato.id_contrato);            
+        if(contrato.fl_servico_continuado == "S"){
+            $("#con_servico").find("p").html("Serviço Continuado");
+        }else{
+            $("#con_servico").find("p").html("Serviço Não Continuado");
+        }                
     }
     
     function buscaExisteAditivos(idContrato){        
