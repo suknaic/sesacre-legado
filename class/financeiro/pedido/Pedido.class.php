@@ -607,11 +607,11 @@ class Pedido {
             if ($daoFinPedido->sucesso()) {
                 $campos = $daoFinPedido->getMsgRetorno();
 
-                $dadosPedido .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingTwo">
                                                 <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" 
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
                                                         aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
                                                         <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 

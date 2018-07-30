@@ -127,20 +127,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
      */
     public function retornaTodosEmpenhos(PDO $pdo = null) {
         try {
-            $sql = "SELECT 
-                      fin_empenho.id_empenho, 
-                      fin_tipo_empenho.nm_tipo_empenho, 
-                      fin_empenho.nr_empenho, 
-                      fin_empenho.dh_empenho_sistema, 
-                      fin_empenho.dt_empenho_safira, 
-                      fin_empenho.vl_empenho, 
-                      fin_empenho.ds_empenho, 
-                      fin_empenho.sit_empenho
-                    FROM 
-                      public.fin_empenho, 
-                      public.fin_tipo_empenho
-                    WHERE 
-                      fin_empenho.id_tipo_empenho = fin_tipo_empenho.id_tipo_empenho";
+            $sql = "SELECT concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as nr_pedido, 
+                    emp.id_empenho, empTipo.nm_tipo_empenho, emp.nr_empenho, emp.dh_empenho_sistema, emp.dt_empenho_safira, 
+                    emp.vl_empenho, emp.ds_empenho, emp.sit_empenho, p.nr_pedido
+                    FROM fin_empenho as emp
+                    inner join fin_tipo_empenho as empTipo
+                    on empTipo.id_tipo_empenho = emp.id_tipo_empenho
+                    inner join fin_pedido as p
+                    on p.id_pedido = emp.id_pedido
+                    where to_char(now(),'yyyy') = to_char(p.dt_pedido, 'yyyy')";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
