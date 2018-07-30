@@ -552,6 +552,46 @@ class Pedido {
         }
     }
 
+    public function retornaPedidoComOrdemGdof($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setNrPedido($this->nrPedido);
+            $daoFinPedido->retornaPedidoOrdemGdof($pdo);
+            $retorno = '';
+            if ($daoFinPedido->Sucesso()) {
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
+                <td>' . $linha["pedido"] . '</td>
+                <td>' . $linha["ds_pedido"] . '</td>
+                <td>' . $linha["nm_tipo_gasto"] . '</td>    
+                <td>' . $linha["nr_fonte"] . '</td>
+                <td>' . $linha["ds_despesa_elemento"] . '</td>
+                <td>' . Metodos::ConverteValorBr($linha["vl_pedido"], 4) . '</td>
+                <td>' . $linha["tp_contrato"] . '</td>
+                <td>' . $linha["contrato"] . '</td>    
+                <td>' . $linha["nm_modalidade"] . '</td>
+                <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
+                <td>' . $linha["nr_empenho"] . '</td>
+                </tr>';
+                }
+            }
+            if (empty($retorno)) {
+                return "Nenhum pedido encontrado";
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+
     public function retornaPedidoGdof($pdo) {
         try {
 
@@ -562,7 +602,7 @@ class Pedido {
             $dadosPedido = '';
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setNrPedido($this->nrPedido);
-            $daoFinPedido->retornaPedidoGcon($pdo);
+            $daoFinPedido->retornaPedidoGdof($pdo);
 
             if ($daoFinPedido->sucesso()) {
                 $campos = $daoFinPedido->getMsgRetorno();

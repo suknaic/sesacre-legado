@@ -25,7 +25,11 @@ $(document).ready(function () {
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
-        var dados = $("#codItemPesquisa").val();
+        var dados = {
+            "nr_pedido": $("#codItemPesquisa").val(),
+            "id_pedido": $("body").find(".selecionaItem").attr("pedido")
+        }
+
         /**
          * retornaContratosPedido
          */
@@ -86,10 +90,25 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response);
-                return false;
-                $(".empenho").html("");
-                $(".empenho").append(response);
+                $("#selectOrdem").html(response);
+            }
+        });
+    });
+
+    $("body").on("change", "#selectOrdem", function (e) {
+        var idOrdem = $("body").find("#selectOrdem").val();
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTipoValorOrdem",
+                "dados": idOrdem
+
+            },
+            "success": function (response) {
+                var infoOrdem = JSON.parse(response);
+                $("body").find("#tipoOrdem").html(infoOrdem.tipo);
+                $("body").find("#valorOrdem").html(infoOrdem.valor);
             }
         });
     });

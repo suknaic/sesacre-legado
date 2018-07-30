@@ -313,7 +313,7 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
-    public function retornaPedidoGcon(PDO $pdo) {
+    public function retornaPedidoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
@@ -333,6 +333,51 @@ class DaoFinPedido extends FinPedidoTb {
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaPedidoOrdemGdof(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select DISTINCT(p.id_pedido), concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as pedido, p.ds_pedido,
+                        tp.nm_tipo_gasto, font.nr_fonte, desp.ds_despesa_elemento, p.vl_pedido,
+                        concat(concat(cont.nr_contrato,'/') , to_char(cont.dt_ini_vigencia_contrato, 'yyyy'))  as contrato, cont.tp_contrato,
+                        modalidade.nm_modalidade, pt.cd_programa_trabalho, pt.ds_programa_trabalho, emp.nr_empenho
+                        from fin_pedido p 
+                        inner join fin_ordem as ordem
+                        on ordem.id_pedido = p.id_pedido
+                        inner join view_despesa_elemento as desp
+                        on desp.id_despesa_elemento = p.id_despesa_elemento
+                        inner join pla_tipo_gasto as tp
+                        on tp.id_tipo_gasto = p.id_tipo_gasto
+                        inner join fin_fonte as font
+                        on font.id_fonte =  p.id_fonte
+                        inner join fin_fornecedor as f
+                        on f.id_fornecedor = p.id_fornecedor
+                        inner join fin_contrato as cont 
+                        on cont.id_contrato =  f.id_contrato
+                        inner join fin_programa_trabalho as pt
+                        on pt.id_programa_trabalho  = p.id_programa_trabalho
+                        inner join fin_empenho as emp
+                        on emp.id_pedido = p.id_pedido
+                        left join gco_processo as gcon
+                        on gcon.id_processo = cont.id_processo
+                        left join gco_modalidade as modalidade
+                        on modalidade.id_modalidade = gcon.id_modalidade
+                        where p.nr_pedido = :numero";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;

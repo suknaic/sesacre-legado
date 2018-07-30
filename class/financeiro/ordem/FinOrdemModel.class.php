@@ -584,6 +584,22 @@ class FinOrdemModel {
         $daoFinOrdem = new DaoFinOrdem();
         $daoFinOrdem->setIdPedido($this->id_pedido);
         $daoFinOrdem->ordemGdof($pdo);
+        $options = '<option value="0" selected="true">Selecione uma ordem</option>';
+        foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
+            $options .= '<option value="'. $campos["id_ordem"].'">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
+        }
+        return $options;
+    }
+
+    public function retornaTipoValorOrdem() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinOrdem = new DaoFinOrdem();
+        $daoFinOrdem->setIdOrdem($this->id_ordem);
+        $daoFinOrdem->retornaTipoValor($pdo);
+        if($daoFinOrdem->Sucesso()){
+            return json_encode($daoFinOrdem->getMsgRetorno());
+        }
     }
 
 }
