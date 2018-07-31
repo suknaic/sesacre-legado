@@ -54,7 +54,7 @@ class Cargo {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Cargo com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Cargo já existe no sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -70,7 +70,7 @@ class Cargo {
             if (Log::SalvaLogI('ses_cargo', $cargo->getId_cargo(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -79,12 +79,12 @@ class Cargo {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -104,11 +104,12 @@ class Cargo {
 
             $cargo->setId_cargo($this->id_cargo);
             $cargo->setNm_cargo($this->nm_cargo);
-            $busca = $cargo->buscaCargoPorNome($pdo);
-            if (!$busca) {
+            $buscaCargoNome = $cargo->buscaCargoPorNome($pdo);
+            
+            if (!$buscaCargoNome) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Cargo com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Cargo já existe no sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -116,7 +117,7 @@ class Cargo {
             $busca = $cargo->retornaCargo($pdo);
 
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -129,7 +130,7 @@ class Cargo {
             }
 
             if (!Log::SalvaLogU('ses_cargo', $cargo->getId_cargo(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -141,12 +142,12 @@ class Cargo {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -166,10 +167,9 @@ class Cargo {
             $cargo->setId_cargo($this->id_cargo);
 
             $busca = $cargo->retornaCargo($pdo);
-
             if ($busca) {
-                if (!Log::SalvaLogD('ses_cargo', $this->id_cargo, $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                if (!Log::SalvaLogU('ses_cargo', $this->id_cargo, $busca, $pdo)) {
+                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                     $pdo->rollBack();
                     return $retorno;
                 }
@@ -179,7 +179,7 @@ class Cargo {
                 return $retorno;
             }
 
-            $result = $cargo->delete($pdo);
+            $result = $cargo->desativa($pdo);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
                 $pdo->rollBack();
@@ -193,12 +193,12 @@ class Cargo {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

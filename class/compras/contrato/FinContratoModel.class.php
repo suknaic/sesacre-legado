@@ -1428,9 +1428,9 @@ class FinContratoModel {
 
                 $filter[] = "cont.id_contrato in(" . $idContrato . ")";
             }
-
+            
             if (!empty($dados['contratado'])) {
-                $filter[] = "f.id_pessoa = '" . $dados['contratado'] . "'";
+                $filter[] = "itens.id_pessoa = '" . $dados['contratado'] . "'";
             }
 
             //*************************************************
@@ -1439,6 +1439,7 @@ class FinContratoModel {
             } else {
                 return false;
             }
+         
 
 //            $daoContrato->retornaContratoCombo($pdo, $filtro);
             $daoContrato->retornaContratoComValores($pdo, $filtro);
@@ -2169,11 +2170,11 @@ class FinContratoModel {
             if ($daoContrato->sucesso()) {
                 $campos = $daoContrato->getMsgRetorno();
                 
-                $dadosContrato .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingOne">
                                                 <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" 
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionOne" href="#collapseOne" 
                                                         aria-expanded="false" aria-controls="collapseOne" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
                                                         <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span> 

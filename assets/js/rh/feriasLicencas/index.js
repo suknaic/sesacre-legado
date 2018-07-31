@@ -26,9 +26,7 @@ $(document).ready(function () {
                         return;
                     }
                     func.carregaTabelaPadrao('tabela', response, [6], true);
-                    //top.location.href = "/pages/rh/contrato/cadastrarFerias.php?id=" + cpf;
-                },
-
+                }
             });
         }
     });
@@ -39,7 +37,6 @@ $(document).ready(function () {
         } else {
             $id= $(this).val();
             top.location.href = "/pages/rh/feriasLicencas/cadastrarFeriasLicencas.php?id="+$id;
-
         }
     });
     //***************************************************

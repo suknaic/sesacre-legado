@@ -25,7 +25,7 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var Funcao = {
                 nome: $("#nm_funcao").val()
-            }
+            };
 
             if ($("#nm_funcao").val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -42,6 +42,7 @@ $(document).ready(function () {
                     "funcao": Funcao
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -51,39 +52,32 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg,"primary");
+                        func.modalAlert(response.msg, "success");
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -103,7 +97,7 @@ $(document).ready(function () {
             var Funcao = {
                 nome: $("#nm_funcao").val(),
                 id: $this.val()
-            }
+            };
 
             if ($("#nm_funcao").val() == "" || $this.val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -129,39 +123,32 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, "primary");
+                        func.modalAlert(response.msg, "success");
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -194,7 +181,7 @@ $(document).ready(function () {
                 if (result) {
                     var Funcao = {
                         id: id
-                    }
+                    };
 
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);
@@ -219,47 +206,37 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, "primary");
+                                func.modalAlert(response.msg, "success");
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
                                     location.reload();
                                 });
                                 return false;
                             } else {
-                                console.log('Ultimo else');
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
 
     $('body').on('click', '.btn-edit', function (e) {

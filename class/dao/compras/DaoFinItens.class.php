@@ -876,6 +876,36 @@ class DaoFinItens extends FinItensTb {
         }
     }
     
+    public function quantidadeItensExecutado(string $itens, PDO $pdo = null){
+        if (!empty($pdo)){
+            try {
+                $sql = "SELECT CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
+                        . " , COALESCE(sum(FPO.qt_itens_pre), 0) as qtd_quantitativo"
+                        . " , (CI.qt_itens - COALESCE(sum(FPO.qt_itens_pre), 0)) as saldo_quantitativo"
+                        . " FROM fin_cont_itens CI"
+                        . " LEFT JOIN fin_pre_ordem FPO ON FPO.id_cont_itens = CI.id_cont_itens"
+                        . " LEFT JOIN fin_pedido FP ON FP.id_pedido = FPO.id_pedido AND FP.st_pedido > '0'"
+                        . " WHERE CI.id_cont_itens IN (".$itens.")"
+                        . " GROUP BY CI.id_cont_itens";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0){
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = "Sem Itens";
+                    $this->sucesso = false;
+                }
+            } catch (PDOException $e) {
+                $this->sucesso = false;
+                $this->msgRetorno = $e->getMessage();
+            }
+        }else{
+            $this->sucesso = false;
+            $this->msgRetorno = "PDO FAIL";
+        }
+    }
+    
     
 
 }

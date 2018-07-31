@@ -248,6 +248,7 @@ $(document).ready(function () {
                 $("#totalEmpenhos").append(valores.length);
                 for (var i = valores.length - 1; i >= 0; i--) {
                     let valor = [
+                        valores[i]['nr_pedido'],
                         valores[i]['nr_empenho'],
                         valores[i]['ds_empenho'],
                         valores[i]['dh_empenho_sistema'],
@@ -262,6 +263,7 @@ $(document).ready(function () {
                         "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                     },
                     columns: [
+                        {title: "Nº Pedido"},
                         {title: "Nº Empenho"},
                         {title: "Descrição"},
                         {title: "Data Empenho no Sistema"},

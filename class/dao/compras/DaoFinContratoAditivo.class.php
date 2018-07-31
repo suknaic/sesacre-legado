@@ -214,7 +214,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
     }
         
     
-    public function todosItens($pdo = null) {
+    public function todosItensComExecutado($pdo = null) {
         if ($pdo != null) {
             try {
                 $sql = "SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
@@ -222,24 +222,36 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " , NULL AS id_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS id_contrato_instrumento, NULL AS id_contrato_base_calculo"
                         . " , NULL AS id_contrato_unidade_calculo, NULL AS id_contrato_aquisicao"
-                        . " , NULL AS nr_percentual_indice, 'contrato' AS tipo"
+                        . " , NULL AS nr_percentual_indice"
+                        . " , COALESCE(sum(FPO.qt_itens_pre), 0) as qtd_executado"
+                        . " , (CI.qt_itens - COALESCE(sum(FPO.qt_itens_pre), 0)) as saldo_qtd_executado"
+                        . " , 'contrato' AS tipo"
                         . " FROM fin_contrato C"
                         . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
                         . " INNER JOIN fin_cont_itens CI ON CI.id_fornecedor = F.id_fornecedor"
+                        . " LEFT JOIN fin_pre_ordem FPO ON FPO.id_cont_itens = CI.id_cont_itens"
+                        . " LEFT JOIN fin_pedido FP ON FP.id_pedido = FPO.id_pedido AND FP.st_pedido > '0'"
                         . " WHERE C.id_contrato = :idContrato AND C.id_contrato_aditivo_pai IS NULL"
                         . " AND C.tp_contrato = '2' AND C.st_ativo = '1'"
+                        . " GROUP BY C.id_contrato, CI.id_cont_itens"
                         . " UNION ALL"
                         . " SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
                         . " , CI.id_cont_itens_aditivo"
                         . " , CA.id_contrato_motivo, CA.id_contrato_finalidade, CA.id_contrato_instrumento, CA.id_contrato_base_calculo"
                         . " , CA.id_contrato_unidade_calculo, CA.id_contrato_aquisicao"
-                        . " , CA.nr_percentual_indice, 'aditivo' AS tipo"
+                        . " , CA.nr_percentual_indice"
+                        . " , COALESCE(sum(FPO.qt_itens_pre), 0) as qtd_executado"
+                        . " , (CI.qt_itens - COALESCE(sum(FPO.qt_itens_pre), 0)) as saldo_qtd_executado"
+                        . " , 'aditivo' AS tipo"
                         . " FROM fin_contrato C"
                         . " INNER JOIN fin_contrato_aditivo CA ON CA.id_contrato = C.id_contrato"
                         . " INNER JOIN fin_fornecedor F ON F.id_contrato = C.id_contrato"
                         . " INNER JOIN fin_cont_itens CI ON CI.id_fornecedor = F.id_fornecedor"
+                        . " LEFT JOIN fin_pre_ordem FPO ON FPO.id_cont_itens = CI.id_cont_itens"
+                        . " LEFT JOIN fin_pedido FP ON FP.id_pedido = FPO.id_pedido AND FP.st_pedido > '0'"
                         . " WHERE C.id_contrato_aditivo_pai = :idContrato AND C.tp_contrato = '2'"
                         . " AND C.st_ativo = '1'"
+                        . " GROUP BY C.id_contrato, CI.id_cont_itens, CA.id_contrato_aditivo"
                         . " ORDER BY id_contrato DESC";
 
                 $stmt = $pdo->prepare($sql);
