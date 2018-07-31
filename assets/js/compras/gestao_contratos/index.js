@@ -104,7 +104,6 @@ $(document).ready(function () {
                 dados: dados
             },
             "success": function (response) {
-                console.log(response);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
                     return false;
@@ -153,7 +152,6 @@ $(document).ready(function () {
                 } else if (response === 'nao') {
                     window.location.href = "/pages/compras/gestao_contratos/cad_item.php?&id=" + id;
                 }
-                console.log(response);
                 return false;
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
@@ -197,7 +195,7 @@ $(document).ready(function () {
                 id: $(this).val()
             },
             "success": function (response) {
-                window.location.href = "/pages/compras/gestao_contratos/ver_contrato.php?&id=" + id;
+                window.open("/pages/compras/gestao_contratos/ver_contrato.php?&id=" + id);
             }
         });
     });

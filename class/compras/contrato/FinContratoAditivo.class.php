@@ -28,6 +28,7 @@ class FinContratoAditivo {
     private $idTipoAquisicao = null;
     private $dtAssinatura = null;
     private $dsJustificativa = null;
+    private $flServicoContinuado = null;
     private $gestorTitular = null;
     private $gestorSubstituto = null;
     private $fiscal = null;
@@ -352,7 +353,16 @@ class FinContratoAditivo {
         $this->dtVigenciaFinal = $dtVigenciaFinal;
         return $this;
     }
-                
+    
+    function getFlServicoContinuado() {
+        return $this->flServicoContinuado;
+    }
+
+    function setFlServicoContinuado($flServicoContinuado) {
+        $this->flServicoContinuado = $flServicoContinuado;
+        return $this;
+    }
+                    
     public function textoAditivoPor($texto){
         return "Aditivo Por ".$texto;
     }
@@ -387,6 +397,9 @@ class FinContratoAditivo {
             }
             $this->indiceCorrecao = Metodos::ConverteValorIng(trim($dados['dados']['indice_correcao']));
             $this->idInstrumento = (int)$dados['dados']['instrumento'];
+            if(empty($this->idInstrumento)){
+                $this->idInstrumento = NULL;
+            }
             $this->idMotivo = (int)$dados['dados']['motivo'];
             if(empty($this->idMotivo)){
                 $this->idMotivo = NULL;
@@ -552,8 +565,7 @@ class FinContratoAditivo {
             $proximoSequencial = $daoContratoAditivo->getMsgRetorno();
             
             
-            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor            
-            
+            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor                        
             $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
@@ -561,7 +573,6 @@ class FinContratoAditivo {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Dados do Contrato.");
             }
             $contRef = $contratoRef->getMsgRetorno();
-            
             
             $this->idContratoAditivoPai = $this->idContrato;
             if((int)$proximoAditivo > 1 && !empty($idContratoUltimo)){
@@ -578,7 +589,9 @@ class FinContratoAditivo {
                 
                 //$this->idContrato = $idContratoUltimo;
             }
-                        
+                            
+            $this->flServicoContinuado = $contRef->getFlServicoContinuado();
+            
             
             //Valida se as Data de Assinatura e Publicação do Aditivo são menores que a Data
             //da Vigência Inicial e Final            
@@ -599,9 +612,10 @@ class FinContratoAditivo {
                     return Metodos::retornoAjax("Erro", "alert", "Data da Vigência Inicial Informada para o novo Aditivo"
                         . " não pode ser Menor que a data Data da Vigência Final do Contrato/Último Aditivo.");
                 }
+                $contRef->setDtIniVigenciaContrato($this->dtVigenciaInicial->format("Y-m-d"));
+                $contRef->setDtFimVigenciaContrato($this->dtVigenciaFinal->format("Y-m-d"));
             }
-            
-            
+                        
             $finContItens = $contRef->getItems();
             if(empty($finContItens)
                     || !is_array($finContItens)){
@@ -609,33 +623,146 @@ class FinContratoAditivo {
             } 
             
             
-            //Quando Motivofor por Prazo, então precisa buscar todos os Itens do Contrato e Aditivos para fazer
+            //Quando Motivo for por Prazo e o Serviço For Continuado.
+            //Iremos Somar todas as Quantidades 
+            //então precisa buscar todos os Itens do Contrato e Aditivos para fazer
             //A Somatoria das Quantidades dos Itens
+            //No caso do Valor será utilizado o ultimo Valor dos Aditivos/Contrato que não seja 0
             if($this->idMotivo == $this->getMotivoPorPrazo()){
                 
-                $this->retornaTodosItens($pdo);
+                $this->retornaTodosItensComExecutado($pdo);
                 if(!$this->sucesso){
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar todos os Itens do Contrato "
                             . "e Últimos Aditivos.". STR_ERROR);                        
                 }
                                                                 
                 $result = $this->msgRetorno;
-                              
                 
-                foreach ($finContItens as $key => $value) {
-                    $value->getIdContItens();
-                    
-                    foreach ($result as $k => $v) {
-                        if($v['id_cont_itens_alt'] == $value->getIdContItens()
-                                && $v['tipo'] == "aditivo"){
-                            $valorItens = $finContItens[$key]->getVlItens() + $v['vl_itens'];
-                            $finContItens->setVlItens($valorItens);
+//                echo "<pre>";
+//                print_r($result);
+//                echo "</pre>";
+//                               return;
+                $arrayIdsContItens = array();
+                foreach ($finContItens as $key => $value){
+                    $flagValor = false;   
+                    $flagQuantidade = false;
+                    $valorTotalDaQuantidade = 0.0000;
+                    $valorTotalDaQuantidadeExecutado = 0.0000;
+                    if($this->flServicoContinuado == "S"){
+                        foreach ($result as $k => $v){                                                                        
+                            if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
+                                    && $v['tipo'] == "aditivo")
+                                ||
+                                ($v['id_cont_itens'] == $value->getIdContItens()
+                                    && $v['tipo'] == "contrato")
+                                ){
+                                //Seta o Ultimo Valor Unitário Valido
+                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                    $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    $flagValor = true;
+                                }
+
+                                //Faz a somatoria das Quantidades dos Itens
+                                //Serviço Continuado, deverá somar todos os Itens
+                                $valorTotalDaQuantidade += $v['qt_itens'];                                                                    
+
+                                //Se o Retorno for, um Item no qual o Aditivo for Por Prazo
+                                //Então não precisa continuar correndo os Itens pois esse Valor já 
+                                //está somando os demais aditivos anteriores
+                                if($v['id_contrato_motivo'] == $this->motivoPorPrazo){
+                                    break;
+                                }
+                            }
                         }
+                        $finContItens[$key]->setQtItens($valorTotalDaQuantidade);
+                    }else{
+                        foreach ($result as $k => $v){                                                                      
+                            if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
+                                    && $v['tipo'] == "aditivo")
+                                ||
+                                ($v['id_cont_itens'] == $value->getIdContItens()
+                                    && $v['tipo'] == "contrato")
+                                ){
+                                //Seta o Ultimo Valor Unitário Valido
+                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                    $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    $flagValor = true;
+                                }
+                                $valorTotalDaQuantidadeExecutado += $v['qtd_executado'];
+                                
+                                if(!$flagQuantidade){
+                                   // $valorTotalDaQuantidade += $v['qt_itens'];                                    
+                                }
+                                
+                                if($v['id_contrato_motivo'] != $this->motivoPorPrazo){
+                                    $valorTotalDaQuantidade += $v['qt_itens'];
+                                }
+                                //1936
+                                //Faz a somatoria das Quantidades dos Itens
+                                //Serviço Não Continuado, deverá somar todos os Itens
+                                //$valorItens = $finContItens[$key]->getQtItens() - $v['qtd_executado'];                                
+                                //$finContItens[$key]->setQtItens($valorItens);                                                       
+                                
+                            }
+                        }
+                        $finContItens[$key]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                     }
-                    
-                }                                                                              
+                }
+                
+                
+                //Quando o Serviço não for continuado
+                //A Quantidade irá levar em consideração o Executado do Itens em todas as pre-ordem
+                //Quantidade Total do Item - Executado de todas as Pre-Ordens
+                if($this->flServicoContinuado != "S"){
+//                    $itemModel = new ItemModel();
+//                    $itemModel->retornaQuantidadeExecutadoItens($arrayIdsContItens, $pdo);
+//                    if(!$itemModel->Sucesso()){
+//                        return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar Os Itens Executado. ".STR_ERROR);
+//                    }
+//                    $result = $itemModel->getMsgRetorno();
+//                    
+//                    foreach ($finContItens as $key => $value){
+//                        
+//                    }
+//                    
+//                    echo "<pre>";
+//                    print_r($itemModel->getMsgRetorno());
+//                    echo "</pre>";
+                }
+                
                 
             }
+            
+//            echo "<pre>";
+//            print_r($finContItens);
+//            echo "</pre>";
+//            
+//            return;
+//            echo "<pre>";
+//            print_r($finContItens);
+//            echo "</pre>";
+//            
+//            
+            //return;
+            
+            //Por Prazo
+            //flag continuado não continuado
+            //cadastrar aditivo
+//            não continuado
+//            prazo
+//            quantidade = quantidade total de tudo - executado de tudo
+//            valor repito o ultimo
+//                    
+//            continuado
+//            prazo
+//            quantidade = quantidade total de tudo
+                    
+                    
+            
+                    
+                    
+            
+            
             
             //return;
             
@@ -806,7 +933,8 @@ class FinContratoAditivo {
                 $finItens->setIdMaterial($value->getIdMaterial());
                 $finItens->setIdContItens(NULL);
                 $finItens->setIdUnidadeMedida($value->getIdUnidadeMedida());
-                $finItens->setIdContItensAlt($value->getIdContItens());
+                $finItens->setIdContItensAlt(NULL);
+                $finItens->setIdContItensAditivo($value->getIdContItens());
                 $itens[] = $finItens;
             }                      
             
@@ -1228,7 +1356,7 @@ class FinContratoAditivo {
     public function inserirAditivo(FinContratoAditivoTb $finContratoAditivo, PDO $pdo){
                       
         try{
-         
+            
             $dao = new DaoFinContratoAditivo();
             $dao->setIdContrato($finContratoAditivo->getIdContrato());
             $dao->setIdContratoMotivo($finContratoAditivo->getIdContratoMotivo());
@@ -1340,7 +1468,7 @@ class FinContratoAditivo {
     }
     
     
-    public function retornaTodosItens(PDO $pdo = null){
+    public function retornaTodosItensComExecutado(PDO $pdo = null){
         try{            
             if(empty($pdo)){
                 $conexao = new Conexao();            
@@ -1355,7 +1483,7 @@ class FinContratoAditivo {
             
             $daoContratoAditivo = new DaoFinContratoAditivo();
             $daoContratoAditivo->setIdContrato($this->idContrato);
-            $daoContratoAditivo->todosItens($pdo);
+            $daoContratoAditivo->todosItensComExecutado($pdo);
             if(!$daoContratoAditivo->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $daoContratoAditivo->getMsgRetorno();
@@ -1720,9 +1848,9 @@ class FinContratoAditivo {
             $pdo = $conexao->connect();
             $daoContrato = new DaoFinContratoAditivo();
             $daoContrato->setIdContrato($this->idContrato);
+                    
+            $daoContrato->todosItensHistorico($pdo);
             
-        
-            $daoContrato->dadosCompletoAditivo($pdo);
             if(!$daoContrato->Sucesso()){
                 $retorno = '<div class="alert alert-warning">'
                         . '<strong>Alerta!</strong> Não foi possível localizar os Dados do Aditivo.'
@@ -1733,250 +1861,99 @@ class FinContratoAditivo {
             
             $result = $daoContrato->getMsgRetorno();
             
-            $idFornecedor = $result['id_fornecedor'];
-            
-            $retorno .= '<div class="panel">'
-                            .   '<div class="panel-body">'                               
-                                .   '<div class="row">
-                                        <div class="col-sm-6 celulas" >
-                                            <p class="text-bold">Número do Contrato:</p>
-                                            <p>&nbsp;'.$result['nr_contrato'].'</p>
-                                        </div>
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Motivo:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_motivo'].'</p>
-                                        </div>                                    
-                                    </div>'
-                                .   '<div class="row">
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Finalidade:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_finalidade'].'</p>
-                                        </div>
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Instrumento de Equilíbrio Econômico-Financeiro:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_instrumento'].'</p>
-                                        </div>
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Base de Cálculo:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_base_calculo'].'</p>
-                                        </div>                                    
-                                    </div>'
-                                .   '<div class="row">
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Unidade de Cálculo:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_unidade_calculo'].'</p>
-                                        </div>
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Tipo de Aquisição:</p>
-                                            <p>&nbsp;'.$result['nm_contrato_aquisicao'].'</p>
-                                        </div>                                    
-                                    </div>'
-                                .   '<div class="row">
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Vigência Inicial/Final:</p>
-                                            <p>&nbsp;'.$result['dt_ini_vigencia_contrato'].' - '.$result['dt_fim_vigencia_contrato'].'</p>
-                                        </div>
-                                        <div class="col-sm-3 celulas">
-                                            <p class="text-bold">Data da Assinatura:</p>
-                                            <p>&nbsp;'.$result['dt_assinatura'].'</p>
-                                        </div> 
-                                        <div class="col-sm-3 celulas">
-                                            <p class="text-bold">Data da Publicação:</p>
-                                            <p>&nbsp;'.$result['dt_publicacao'].'</p>
-                                        </div>
-                                    </div>'
-                    
-                                .   '<div class="row">
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Período Inicial:</p>
-                                            <p>&nbsp;'.$result['dt_inicial'].'</p>
-                                        </div>
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Período Final:</p>
-                                            <p>&nbsp;'.$result['dt_final'].'</p>
-                                        </div> 
-                                        <div class="col-sm-4 celulas">
-                                            <p class="text-bold">Percentual/Índice de Correção:</p>
-                                            <p>&nbsp;'.$result['nr_percentual_indice'].'</p>
-                                        </div> 
-                                    </div>'
-                    
-                                .   '<div class="row">
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Fornecedor:</p>
-                                            <p>&nbsp;'.$result['nm_pessoa'].'</p>
-                                        </div>
-                                        <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Tipo de Gasto:</p>
-                                            <p>&nbsp;'.$result['nm_tipo_gasto'].'</p>
-                                        </div>                                    
-                                    </div>'
-                    
-                                .   '<div class="row">
-                                        <div class="col-sm-12 celulas">
-                                            <p class="text-bold">Justificativa:</p>
-                                            <p>&nbsp;'.$result['ds_justificativa'].'</p>
-                                        </div>                                        
-                                    </div>';
-                    
-            $finCentraisModel = new FinCentraisModel();
-            $finCentraisModel->setIdContrato($this->idContrato);
-            $finCentraisModel->retornaCentraisPorContrato($pdo);
-            $centraisDoContrato = array();
-            if($finCentraisModel->sucesso()){
-                $centraisDoContrato = $finCentraisModel->getMsgRetorno();
-            }
-            
-            if(is_array($centraisDoContrato) && !empty($centraisDoContrato)){
-                $retorno .= '<div class="row">
-                                <div class="col-sm-12 celulas">
-                                    <p class="text-bold">Centrais de Demanda:</p>';
-                $centrais = array();
-                foreach ($centraisDoContrato as $value) {
-                    $centrais[] = $value['nm_lotacao'];                                                            
-                }
-                $centrais = implode(", ", $centrais);
-                $retorno .= '<p>&nbsp;'.$centrais.'</p>';
-                $retorno .= '   </div>'
-                        .   '</div>';
-            }
-            
-            $arrayGestores = array(
-                "gestor" => array(),
-                "gestor_sub" => array(),
-                "fiscal" => array(),
-                "fiscal_sub" => array(),
-                "sub_fiscal" => array(),
-                "sub_fiscal_sub" => array()
-            );
-            
-            $daoContrato->retornaTodosGestoresFiscaisSubs($pdo);  
-            if($daoContrato->Sucesso()){
-                $result = $daoContrato->getMsgRetorno();
-                if(is_array($result) && !empty($result)){
-                    foreach ($result as $key => $value) {
-                        if($value['tabela'] == "gestor"
-                                && $value['tipo'] == 1){
-                            $arrayGestores['gestor'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                        if($value['tabela'] == "gestor"
-                                && $value['tipo'] == 2){
-                            $arrayGestores['gestor_sub'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                        if($value['tabela'] == "fiscal"
-                                && $value['tipo'] == 1){
-                            $arrayGestores['fiscal'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                        if($value['tabela'] == "fiscal"
-                                && $value['tipo'] == 2){
-                            $arrayGestores['fiscal_sub'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                        if($value['tabela'] == "sub_fiscal"
-                                && $value['tipo'] == 1){
-                            $arrayGestores['sub_fiscal'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                        if($value['tabela'] == "sub_fiscal"
-                                && $value['tipo'] == 2){
-                            $arrayGestores['sub_fiscal_sub'][] = $value['nm_pessoa'];
-                            continue;
-                        }
-                    }
-                }
-            }
-            
-            
-            $retorno .= '<div class="row">
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Gestores Titulares:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['gestor']).'</p>
-                            </div>
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Gestores Substitutos:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['gestor_sub']).'</p>
-                            </div>                                    
-                        </div>';
-            
-            $retorno .= '<div class="row">
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Fiscais:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['fiscal']).'</p>
-                            </div>
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Fiscais Substitutos:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['fiscal_sub']).'</p>
-                            </div>                                    
-                        </div>';
-            
-            $retorno .= '<div class="row">
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Sub-Fiscais:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['sub_fiscal']).'</p>
-                            </div>
-                            <div class="col-sm-6 celulas">
-                                <p class="text-bold">Sub-Fiscais Substitutos:</p>
-                                <p>&nbsp;'.implode(", " ,$arrayGestores['sub_fiscal_sub']).'</p>
-                            </div>                                    
-                        </div>';
-            
-            $itemModel = new ItemModel();
-            $itemModel->setIdFornecedor($idFornecedor);
-            $itemModel->retornaItensPorFornecedor($pdo);
-            if($itemModel->Sucesso()){
-            
-                $retorno .= "<div class='row'></div>";
+            $dados = array();
+            $cabecalho = array();
+            $itens = array();
+            foreach ($result as $key => $value) {
                 
-                $retorno .= '<table class="table table-striped table-bordered" id="tabelaFu">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Nº</th>
-                                        <th class="text-center">Item</th>
-                                        <th class="text-center">Descrição</th>
-                                        <th class="text-center">Grupo</th>
-                                        <th class="text-center">Sub Grupo</th>
-                                        <th class="text-center">Unid</th>
-                                        <th class="text-center">Elemento de Despesa</th>
-                                        <th class="text-center">Tipo</th>
-                                        <th class="text-center">Lote</th>
-                                        <th class="text-center">QTD</th>
-                                        <th class="text-center">Valor unit</th>                                                                                                                     
-                                    </tr>
-                                </thead>
-                                <tbody>';
-
-                $result = $itemModel->getMsgRetorno();
-                foreach ($result as $key => $value) {
-                    $retorno .= '<tr>'
-                            . '<td>'.$value['nr_item'].'</td>'
-                            . '<td>'.$value['nm_material'].'</td>'
-                            . '<td>'.$value['cd_desc_material'].' - '.$value['nm_desc_material'].'</td>'
-                            . '<td>'.$value['nm_grupo'].'</td>'
-                            . '<td>'.$value['nm_sub_grupo'].'</td>'
-                            . '<td>'.$value['nm_unidade_medida'].'</td>'
-                            . '<td>'.$value['cd_elemento_despesa'].'</td>'
-                            . '<td>'.$value['tp_material'].'</td>'
-                            . '<td>'.$value['nr_lote'].'</td>'
-                            . '<td>'.Metodos::ConverteValorBr($value['qt_itens'], 4) .'</td>'
-                            . '<td>'.Metodos::ConverteValorBr($value["vl_itens"], 4).'</td>'                            
-                            . '</tr>';
+                if($value['tipo'] == "contrato"){
+                    $cabecalho[$value['id_contrato']] = array(
+                        "nr_contrato" => $value['nr_contrato'],
+                        "nm_contrato_motivo" => "",
+                        "nr_aditivo" => ""                        
+                    );
+                }else if($value['tipo'] == "aditivo_valor"){
+                    $cabecalho[$value['id_contrato']] = array(
+                        "nr_contrato" => $value['nr_contrato'],
+                        "nm_contrato_motivo" => $value['nm_contrato_motivo'],
+                        "nr_aditivo" => $value['nr_aditivo']                       
+                    );
                 }
-
-
-                $retorno .= '   </tbody>
-                            </table>';
+                                
+                $idContItens = $value['id_cont_itens'];
+                if(!empty($value['id_cont_itens_aditivo'])){
+                    $idContItens = $value['id_cont_itens_aditivo'];
+                }
+                
+                if(!array_key_exists($idContItens, $dados)){
+                    $dados[$idContItens] = array(
+                        "nm_material" => $value['nm_material'],
+                        "nm_desc_material" => $value['nm_desc_material'],
+                        "cd_elemento_despesa" => $value['cd_elemento_despesa'],
+                        "tp_material" => $value['tp_material'],
+                        "nm_marca" => $value['nm_marca'],
+                        "nr_item" => $value['nr_item'],
+                        "nr_lote" => $value['nr_lote'],
+                        "itens" => array(array(
+                                    "qt_itens" => $value['qt_itens'],
+                                    "vl_itens" => $value['vl_itens'] 
+                                ))   
+                    );
+                }else{
+                    $dados[$idContItens]['itens'][] = array(
+                        "qt_itens" => $value['qt_itens'],
+                        "vl_itens" => $value['vl_itens']    
+                    );                                        
+                }                                                                                               
             }
+                       
+            $retorno .= '<table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" rowspan="2">Nº</th>
+                                    <th class="text-center" rowspan="2">Item</th>
+                                    <th class="text-center" rowspan="2">Descrição</th>                                                                                                                        
+                                    <th class="text-center" rowspan="2">Elemento de Despesa</th>
+                                    <th class="text-center" rowspan="2">Tipo</th>
+                                    <th class="text-center" rowspan="2">Lote</th>';            
             
+            $quantidadeEValor = "";
             
+            foreach ($cabecalho as $key => $value) {
+                $retorno .= '<th class="text-center" colspan="2">';
+                if(empty($value['nr_aditivo'])){
+                    $retorno .= "Contrato";
+                }else{
+                    $retorno .= $value['nr_aditivo']."º Por ".$value['nm_contrato_motivo'];
+                }
+                $retorno .= '</th>';    
+                $quantidadeEValor .= '<th class="text-center">Quantidade</th>';
+                $quantidadeEValor .= '<th class="text-center">Valor</th>';
+            }
+            $retorno .= '</tr>'; 
+            $retorno .= '<tr>';
+            $retorno .= $quantidadeEValor;
+            $retorno .= '</tr>';
+            $retorno .= '</thead><tbody>';
             
-            
-            $retorno .= '</div>
-                                </div>';
+            foreach ($dados as $key => $value) {
+                $retorno .= '<tr>';
+                    $retorno .= '<td>'.$value['nr_item'].'</td>';
+                    $retorno .= '<td>'.$value['nm_material'].'</td>';
+                    $retorno .= '<td style="white-space: pre-wrap; word-wrap: break-word;">'.$value['nm_desc_material'].'</td>';
+                    $retorno .= '<td>'.$value['cd_elemento_despesa'].'</td>';
+                    $retorno .= '<td>'.$value['tp_material'].'</td>';
+                    $retorno .= '<td>'.$value['nr_lote'].'</td>';
+                
+                foreach ($value['itens'] as $k => $v) {
+                    $retorno .= '<td class="text-center">'.Metodos::ConverteValorBr($v['qt_itens'], 4).'</td>';
+                    $retorno .= '<td style="white-space: nowrap; overflow: hidden;" class="text-right">R$ '.Metodos::ConverteValorBr($v['vl_itens'], 4).'</td>';
+                }                                                            
+                $retorno .= "</tr>";
+            }
                         
-            return $retorno;                                                                                                                    
+            $retorno .= '</tbody></table>';                                          
+            return $retorno;           
             
         } catch (Exception $e) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

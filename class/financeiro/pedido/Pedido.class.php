@@ -552,6 +552,46 @@ class Pedido {
         }
     }
 
+    public function retornaPedidoComOrdemGdof($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setNrPedido($this->nrPedido);
+            $daoFinPedido->retornaPedidoOrdemGdof($pdo);
+            $retorno = '';
+            if ($daoFinPedido->Sucesso()) {
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
+                <td>' . $linha["pedido"] . '</td>
+                <td>' . $linha["ds_pedido"] . '</td>
+                <td>' . $linha["nm_tipo_gasto"] . '</td>    
+                <td>' . $linha["nr_fonte"] . '</td>
+                <td>' . $linha["ds_despesa_elemento"] . '</td>
+                <td>' . Metodos::ConverteValorBr($linha["vl_pedido"], 4) . '</td>
+                <td>' . $linha["tp_contrato"] . '</td>
+                <td>' . $linha["contrato"] . '</td>    
+                <td>' . $linha["nm_modalidade"] . '</td>
+                <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
+                <td>' . $linha["nr_empenho"] . '</td>
+                </tr>';
+                }
+            }
+            if (empty($retorno)) {
+                return "Nenhum pedido encontrado";
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+
     public function retornaPedidoGdof($pdo) {
         try {
 
@@ -562,16 +602,16 @@ class Pedido {
             $dadosPedido = '';
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setNrPedido($this->nrPedido);
-            $daoFinPedido->retornaPedidoGcon($pdo);
+            $daoFinPedido->retornaPedidoGdof($pdo);
 
             if ($daoFinPedido->sucesso()) {
                 $campos = $daoFinPedido->getMsgRetorno();
 
-                $dadosPedido .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingTwo">
                                                 <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" 
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
                                                         aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
                                                         <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 

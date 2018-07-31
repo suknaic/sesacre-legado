@@ -597,7 +597,7 @@ class DaoFinContrato extends FinContratoTb {
     public function pesquisaContratoPorNumero($pdo = null) {
         if ($pdo != null) {
             try {
-                $sql = "SELECT C.id_contrato, C.nr_contrato, C.ds_objeto"
+                $sql = "SELECT C.id_contrato, C.nr_contrato, C.ds_objeto, C.fl_servico_continuado"
                         . " , TG.nm_tipo_gasto, M.nm_modalidade"
                         . " , (SELECT trim(to_char(COALESCE(SUM(CI.qt_itens*CI.vl_itens), 0), '999G999G990D9999')) FROM fin_cont_itens CI WHERE CI.id_fornecedor = F.id_fornecedor) AS Valor"
                         . " , PRO.cd_pregao, OBJ.nm_objeto, F.id_fornecedor"

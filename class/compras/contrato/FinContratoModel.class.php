@@ -1428,9 +1428,9 @@ class FinContratoModel {
 
                 $filter[] = "cont.id_contrato in(" . $idContrato . ")";
             }
-
+            
             if (!empty($dados['contratado'])) {
-                $filter[] = "f.id_pessoa = '" . $dados['contratado'] . "'";
+                $filter[] = "itens.id_pessoa = '" . $dados['contratado'] . "'";
             }
 
             //*************************************************
@@ -1439,6 +1439,7 @@ class FinContratoModel {
             } else {
                 return false;
             }
+         
 
 //            $daoContrato->retornaContratoCombo($pdo, $filtro);
             $daoContrato->retornaContratoComValores($pdo, $filtro);
@@ -1694,7 +1695,8 @@ class FinContratoModel {
                     $item->setIdMaterial($result['id_material']);
                     $item->setIdFornecedor($result['id_fornecedor']);
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
-                    $item->setIdUnidadeMedida($result['id_unidade_medida']);
+                    $item->setIdUnidadeMedida($result['id_unidade_medida']);    
+                    $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);
                     $cont->setItems($item);
                 }
             }
@@ -1827,6 +1829,7 @@ class FinContratoModel {
             $aditivo = new FinContratoAditivo();
             $finContratoAdtivo->setIdContrato($daoContrato->getIdContrato());
             $aditivo->inserirAditivo($finContratoAdtivo, $pdo);
+
             if (!$aditivo->Sucesso()) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível Cadastrar os Dados do Aditivo";
@@ -2167,11 +2170,11 @@ class FinContratoModel {
             if ($daoContrato->sucesso()) {
                 $campos = $daoContrato->getMsgRetorno();
                 
-                $dadosContrato .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingOne">
                                                 <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" 
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionOne" href="#collapseOne" 
                                                         aria-expanded="false" aria-controls="collapseOne" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
                                                         <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span> 

@@ -25,6 +25,7 @@ $dadosContrato = array(
     "con_vigencia" => "Vigência",
     "con_descricao_objeto" => "Descrição do Objeto",
     "con_fornecedor" => "Fornecedor",
+    "con_servico" => "Serviço",
     "con_valor" => "Valor Atual"
 );
 
