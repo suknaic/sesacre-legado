@@ -649,7 +649,7 @@ class FinContratoAditivo {
                     $valorTotalDaQuantidade = 0.0000;
                     $valorTotalDaQuantidadeExecutado = 0.0000;
                     if($this->flServicoContinuado == "S"){
-                        foreach ($result as $k => $v){                                                                        
+                        foreach ($result as $k => $v){                                                                       
                             if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
                                     && $v['tipo'] == "aditivo")
                                 ||
@@ -783,7 +783,7 @@ class FinContratoAditivo {
                                    
             
             //Ajusta os Valores dos Itens que serão duplicados no sistema
-            if(!empty($this->itens)){
+            if(!empty($this->itens) && $this->idMotivo == $this->getMotivoPorValor()){
                 $quantidadeDeItensEnviado = count($this->itens);
                 $i = 0;                
                 foreach ($finContItens as $k => $value) {                
@@ -863,7 +863,10 @@ class FinContratoAditivo {
 //                }
 //            }
             
-                                                                                                                                 
+//            echo "<pre>";
+//            print_r($finContItens);
+//            echo "</pre>";       
+//            return;
             //Preparar Dados Para Inserir no Banco            
             //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
             //gestores, fiscais e subfiscais            
