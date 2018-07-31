@@ -200,6 +200,20 @@ class Pedido {
         );
         return $arr_situacao;
     }
+    
+    private function getPedidoNecessidadeStatus(): array {
+        $arr_status = array(
+            '9' => 'Aguardando finaliza a pre-ordem',
+            '10' => 'Aguardando autorização do responsável imediato' ,
+            '11' => 'Aguardando autorização do responsável da central',
+            '12' => 'Aguardando autorização de orçamentário',
+            '13' => 'Aguardando autorização financeiro',
+            '14' => 'Aguardando autorização ordenador de despesa',
+            '15' => 'Aguardando empenho',
+            '16' => 'Aguardando ordem'
+        );
+        return $arr_status;
+    }
 
     public static function getPermiteCancelamento(string $st_pedido) {
         if ($st_pedido == '9' or $st_pedido == '10' or $st_pedido == '11' or $st_pedido == '12' or $st_pedido == '13' or $st_pedido == '14' or $st_pedido == '15') {
@@ -471,12 +485,17 @@ class Pedido {
             } else {
                 return false;
             }
-            $daoFinPedido->retornaPedidoPesquisa($pdo, $filtro);
+//            $daoFinPedido->retornaPedidoPesquisa($pdo, $filtro);
+            $daoFinPedido->retornaPedidoPesquisaComOrdens($pdo, $filtro);
+            
+            //Carrega a status os possíveis
+            $opcoesStatus = $this->getPedidoNecessidadeStatus();
+
             if ($daoFinPedido->Sucesso()) {
 
-                foreach ($daoFinPedido->getMsgRetorno() as $dados) {
-                    $tabela .= '<tr>
-                                <td class = "text-center">' . $dados["id_lotacao"] . '-' . $dados["nr_pedido"] . '/' . $dados["ano"] . '</td>
+                foreach ($daoFinPedido->getMsgRetorno() as $dados) { 
+                    $statusPedido = $this->retornaStatusPedido($dados,$opcoesStatus);
+                    $tabela .= '<tr><td class = "text-center">' . $dados["id_lotacao"] . '-' . $dados["nr_pedido"] . '/' . $dados["ano"] . '</td>
                                 <td class = "text-center">' . $dados["nm_tipo_solicitacao"] . '</td>
                                 <td class = "text-center">' . $dados["cd_programa_trabalho"] . '-' . $dados["ds_programa_trabalho"] . '</td>        
                                 <td class = "text-center">' . $dados["nr_fonte"] . '</td>    
@@ -485,7 +504,7 @@ class Pedido {
                                 <td class = "text-center">' . $dados["nm_lotacao"] . '</td>
                                 <td class = "text-center">' . $dados["ds_pedido"] . '</td>     
                                 <td class = "text-center">' . Metodos::ConverteValorBr($dados["vl_pedido"], 4) . '</td>  
-                                <td class = "text-center">' . $dados["status"] . '</td>    
+                                <td class = "text-center">' . $statusPedido . '</td>    
                                 <td class = "text-center">
                                     <a type = "button" title = "Visualiza pedido" href="/pages/financeiro/necessidade_central/ver_pedido.php?id=' . $dados['id_pedido'] . '" class = "verPedido" >
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
@@ -493,6 +512,7 @@ class Pedido {
                                 </td>
                                 </tr>';
                 }
+                
             }
             return Metodos::retornoAjax("ok", "tabela", $tabela);
         } catch (Exception $exc) {
@@ -673,6 +693,29 @@ class Pedido {
                 return $daoFinPedido->getMsgRetorno()["id_pedido"];
             }
             return false;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+    
+    private function retornaStatusPedido(array $dados, array $opcoesStatus){
+        try {
+            
+            $statusPedido = $opcoesStatus[$dados["status"]];
+            
+            if (!empty($dados['ordens'])) { //Se existir ordens, o status é 'Aguardando entrega'
+                $statusPedido = "Aguardando entrega";
+                
+                if (!(strpos($dados["sit_entrega"], "1") === false)) { //Se existir ordem com entrega parcial
+                    $statusPedido = "Aguardando Finalização da Entrega";
+                } elseif (!(strpos($dados["sit_entrega"], "2") === false)) { //Se existir ordem com entrega total
+                    $statusPedido = "Aguardando Pagamento";
+                }
+            }
+
+            return $statusPedido;
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
