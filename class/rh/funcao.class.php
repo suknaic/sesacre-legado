@@ -54,7 +54,7 @@ class Funcao {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Funcao com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Esta função já existe no sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -70,7 +70,7 @@ class Funcao {
             if (Log::SalvaLogI('ses_funcao', $funcao->getId_funcao(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -79,12 +79,12 @@ class Funcao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -108,7 +108,7 @@ class Funcao {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Funcao com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Esta função já existe no sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -116,7 +116,7 @@ class Funcao {
             $busca = $funcao->retornaFuncao($pdo);
 
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -129,7 +129,7 @@ class Funcao {
             }
 
             if (!Log::SalvaLogU('ses_funcao', $funcao->getId_funcao(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -141,12 +141,12 @@ class Funcao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -174,7 +174,7 @@ class Funcao {
                     return $retorno;
                 }
             } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o Funcao.");
+                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar a Função.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -193,12 +193,12 @@ class Funcao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

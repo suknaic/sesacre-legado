@@ -23,9 +23,7 @@
                         <li>
                             <a href="#" class="rhTeste">
                                 <i class="fa fa-users" aria-hidden="true"></i>
-                                <span class="menu-title">
-                                    <strong>Recursos Humanos</strong>
-                                </span>
+                                Recursos Humanos
                                 <i class="arrow"></i>
                             </a>
                             <!--Submenu-->

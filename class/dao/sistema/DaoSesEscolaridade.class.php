@@ -130,7 +130,7 @@ class DaoSesEscolaridade extends SesEscolaridade {
         $retorno = false;
         $semEscolaridade = "";
         if ($esc->getIdEscolaridade() != NULL || $esc->getIdEscolaridade() != "") {
-            $semGrupo = " AND id_escolaridade <> :idEscolaridade";
+            $semEscolaridade = " AND id_escolaridade <> :idEscolaridade";
         }
         $sql = " SELECT "
                 . " id_escolaridade, nm_escolaridade"
