@@ -61,7 +61,7 @@ class Escolaridade {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Este grau de escolaridade já está cadastrado");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Este grau de escolaridade já existe no sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -78,7 +78,7 @@ class Escolaridade {
             if (Log::SalvaLogI('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -87,12 +87,12 @@ class Escolaridade {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -114,9 +114,9 @@ class Escolaridade {
             $esc->setIdEscolaridade($this->idEscolaridade);
             $esc->setNmEscolaridade($this->nmEscolaridade);
 
-            $busca = $esc->buscaEscolaridade($esc, $pdo);
+            $buscaNome = $esc->buscaEscolaridade($esc, $pdo);
 
-            if (!$busca) {
+            if (!$buscaNome) {
                 //return $retorno;            
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", "Este grau de escolaridade já está cadastrado.");
@@ -124,10 +124,10 @@ class Escolaridade {
                 return $retorno;
             }
 
-            $busca = $esc->retornaEscolaridade($pdo);
+            $buscaId = $esc->retornaEscolaridade($pdo);
 
-            if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+            if (!$buscaId) {
+                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -139,7 +139,7 @@ class Escolaridade {
                 return $retorno;
             }
 
-            if (!Log::SalvaLogU('ses_escolaridade', $esc->getIdEscolaridade(), $busca, $pdo)) {
+            if (!Log::SalvaLogU('ses_escolaridade', $esc->getIdEscolaridade(), $buscaId, $pdo)) {
                 $retorno = retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
                 return $retorno;
@@ -147,18 +147,17 @@ class Escolaridade {
                 $sucesso = true;
             }
 
-
             if ($sucesso) {
                 $retorno = Metodos::retornoAjax("ok", "html", "Edição do grau de Escolaridade Realizado com Sucesso.");
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -182,7 +181,7 @@ class Escolaridade {
 
             if ($busca) {
                 if (!Log::SalvaLogD('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                    $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
                     $pdo->rollBack();
                     return $retorno;
                 }
@@ -211,7 +210,7 @@ class Escolaridade {
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -276,7 +275,7 @@ class Escolaridade {
     }
 
     //*************************************************************************
-    public function retornaOptionEscolaridade($id) {
+    public function retornaOptionEscolaridade($id = null) {
         $retorno = "";
         try {
             $conexao = new Conexao();
@@ -309,7 +308,7 @@ class Escolaridade {
             $escolaridade = new DaoSesEscolaridade();
             $escolaridade->setId_pessoa_fisica($this->idPessoaFisica);
             $result = $escolaridade->buscaEscolaridadePorPessoa($pdo);
-//            print_r($result);
+            
             if (!$result) {
                 return $retorno;
             } else {

@@ -2,15 +2,6 @@ $(document).ready(function () {
 
     func = new Funcoes();
     func.carregaTabelaPadrao('tabela', null, [1]);
-//    var table = $('#tabela').DataTable({
-//        "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-//        "order": [[0, "asc"]],
-//        "language": {
-//            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//        },
-//        responsive: true
-//    });
-
 
     function listaEscolaridades() {
         $.ajax({
@@ -20,24 +11,7 @@ $(document).ready(function () {
                 acao: "listaEscolaridadeTable"
             },
             "success": function (response) {
-
                 func.carregaTabelaPadrao('tabela', response, [1],true);
-
-//                var oTable = $('#tabela').dataTable();
-//                oTable.fnDestroy();
-//                $("#tabela").find("tbody").html(response);
-//                var table = $('#tabela').DataTable({
-//                    "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-//                    "order": [[0, "asc"]],
-//                    "language": {
-//                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//                    },
-//                    responsive: true
-//                });
-//                $("#tabela").show();
-
-
-
             }
         });
     }
@@ -52,7 +26,7 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var Escolaridade = {
                 nome: $("#nmEscolaridade").val()
-            }
+            };
 
             if ($("#nmEscolaridade").val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -77,39 +51,32 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -129,7 +96,7 @@ $(document).ready(function () {
             var Escolaridade = {
                 nome: $("#nmEscolaridade").val(),
                 id: $this.val()
-            }
+            };
 
             if ($("#nmEscolaridade").val() == "" || $this.val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -155,38 +122,31 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -219,7 +179,7 @@ $(document).ready(function () {
                 if (result) {
                     var Escolaridade = {
                         id: id
-                    }
+                    };
 
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);
@@ -243,47 +203,37 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg);
+                                func.modalAlert(response.msg, 'success');
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
                                     location.reload();
                                 });
                                 return false;
                             } else {
-                                console.log('Ultimo else');
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
 
 
