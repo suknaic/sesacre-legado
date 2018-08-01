@@ -497,8 +497,17 @@ $(document).ready(function () {
     $("body").on("click", ".editarLinhaLotacao", function (e) {
         $('#modalContratoLotacao').modal('show');
         $idContratoLotacao = $(this).val();
-//        alert($(this).closest(".lotacaoLinha").find(".dataIni").text());
-//        return;
+        lotacoes = 0;
+        $("#tabelaLotacao tbody tr").each(function () {
+            if ($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim") === '') {
+                lotacoes++; 
+            }
+        });
+        if (lotacoes > 1) {
+            $("#dt_inicio_editar").prop("disabled", true);
+        } else {
+            $("#dt_inicio_editar").prop("disabled", false);
+        }
         //**********************************************************************************
         $("#nr_ch_editar").val("");
         $("#dt_inicio_editar").val("");

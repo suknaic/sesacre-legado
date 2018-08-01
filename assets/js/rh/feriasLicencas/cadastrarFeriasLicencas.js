@@ -30,7 +30,6 @@ $(document).ready(function () {
                 acao: "listaSituacaoOption"
             },
             "success": function (response) {
-                //console.log(response);
                 $("#id_situacao").append(response);
                 $("#id_situacao").select2({
                     width: " 100%"
@@ -47,11 +46,9 @@ $(document).ready(function () {
             "dataType": 'html',
             "data": {
                 acao: "listaSituacaoOption",
-                id: idSituacao,
+                id: idSituacao
             },
             "success": function (response) {
-                //console.log(response);
-                
                 $("#id_situacao2").html(response);
                 $("#id_situacao2").select2({
                     width: " 100%"
@@ -99,8 +96,8 @@ $(document).ready(function () {
                 idSituacao: idSituacao,
                 dtInicio: data1,
                 dtFim: data2,
-                dsObs: $("#ds_observacao").val(),
-            }
+                dsObs: $("#ds_observacao").val()
+            };
             //*************************salvar*****************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
@@ -112,6 +109,7 @@ $(document).ready(function () {
                 },
                 "success":
                         function (response) {
+                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -138,17 +136,13 @@ $(document).ready(function () {
                                 func.modalAlert(response.msg, 'success');
                                 func.fechaModalReload();
                                 return false;
-                                //returnHistorico(idContrato);
-                                //top.location = "/pages/rh/pessoaFisica/index.php";
                             } else {
                                 console.log('Ultimo else');
                                 console.log(response);
                                 func.modalAlert(func.msgErroPadrao);
                                 return false;
                             }
-
-                        },
-
+                        }
             });
         }
     });
@@ -282,7 +276,7 @@ $(document).ready(function () {
             idContratoSituacao: $idContratoSituacao,
             dataIni: $("#dt_inicio_editar").val(),
             dataFim: $("#dt_fim_editar").val()
-        }
+        };
 
         //************************************************
         $.ajax({
@@ -360,49 +354,49 @@ $(document).ready(function () {
             },
             callback: function (result) {
                 if (result) {
-                        $.ajax({
-                            "url": "/model/rh/funcionario/request.php",
-                            "dataType": "html",
-                            "data": {
-                                "acao": "excluirContratoHistorico",
-                                "idContratoHistorico": idContratoHistorico
-                            },
-                            "success": function (response) {
-                                console.log(response);
-                                if (response.trim() == "SessaoExpirada") {
-                                    func.modalAlert(func.msgSemPermissao);
-                                    return false;
-                                }
-                                try {
-                                    response = JSON.parse(response);
-                                } catch (e) {
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                }
-                                if (response.tipoMsg === "Erro") {
-                                    if (response.tipoExibicao === "console") {
-                                        func.modalAlert(func.msgErroPadrao);
-                                        return false;
-                                    } else if (response.tipoExibicao === "alert") {
-                                        func.modalAlert(response.msg);
-                                        return false;
-                                    }
-                                } else if (response.tipoMsg === "ok") {
-                                    func.modalAlert(response.msg, 'primary');
-                                    returnHistorico($idContrato);
-                                    return false;
-                                } else {
-                                    func.modalAlert(func.msgErroPadrao);
-                                    return false;
-                                }
-                            },
-                            "error": function (response) {
-                                //console.log(response);
+                    $.ajax({
+                        "url": "/model/rh/funcionario/request.php",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "excluirContratoHistorico",
+                            "idContratoHistorico": idContratoHistorico
+                        },
+                        "success": function (response) {
+                            console.log(response);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
                                 func.modalAlert(func.msgErroPadrao);
                                 return false;
                             }
-                        });
-                    
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'primary');
+                                returnHistorico($idContrato);
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            //console.log(response);
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
+
 
                 }
             }

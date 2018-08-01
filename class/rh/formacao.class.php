@@ -59,7 +59,14 @@ class Formacao {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe Formacao dessa Escolaridade.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe Formação dessa Escolaridade.");
+                $pdo->rollBack();
+                return $retorno;
+            }
+            
+            $naoPermitidas = array(2,3);
+            if (count(array_search($this->id_escolaridade, $naoPermitidas)) > 0) {
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Não é possível cadastrar formação com Escolaridade(Ensino Fundamental ou Médio).");
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -75,7 +82,7 @@ class Formacao {
             if (Log::SalvaLogI('ses_escolaridade_formacao', $formacao->getId_escolaridade_formacao(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -84,12 +91,12 @@ class Formacao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -110,6 +117,14 @@ class Formacao {
             $formacao->setId_escolaridade_formacao($this->id_formacao);
             $formacao->setNm_escolaridade_formacao($this->nm_formacao);
             $formacao->setId_escolaridade($this->id_escolaridade);
+            
+            $naoPermitidas = array(2,3);
+            if (count(array_search($this->id_escolaridade, $naoPermitidas)) > 0) {
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Não é possível cadastrar formação com Escolaridade(Ensino Fundamental ou Médio).");
+                $pdo->rollBack();
+                return $retorno;
+            }
+            
             $busca = $formacao->buscaFormacaoPorNome($pdo);
             if (!$busca) {
                 //return $retorno;            
@@ -120,11 +135,11 @@ class Formacao {
             }
             $busca = $formacao->retornaFormacao($pdo);
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
-
+            
             $result = $formacao->update($pdo);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
@@ -133,7 +148,7 @@ class Formacao {
             }
 
             if (!Log::SalvaLogU('ses_escolaridade_formacao', $formacao->getId_escolaridade_formacao(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -145,12 +160,12 @@ class Formacao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -159,7 +174,7 @@ class Formacao {
     public function removerFormacao() {
         try {
             if ($this->id_formacao == "") {
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
             $conexao = new Conexao();
@@ -173,7 +188,7 @@ class Formacao {
 
             if ($busca) {
                 if (!Log::SalvaLogD('ses_escolaridade_formacao', $this->id_formacao, $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                     $pdo->rollBack();
                     return $retorno;
                 }
@@ -197,12 +212,12 @@ class Formacao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

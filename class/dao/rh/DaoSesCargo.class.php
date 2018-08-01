@@ -64,6 +64,7 @@ class DaoSesCargo extends SesCargo {
 
         $sql = "SELECT id_cargo, nm_cargo"
                 . " FROM ses_cargo"
+                . " WHERE st_ativo = '1'"
                 . " ORDER BY nm_cargo";
         try {
             $sth = $pdo->prepare($sql);
@@ -81,14 +82,14 @@ class DaoSesCargo extends SesCargo {
     }
 
     /**
-     * Retorna as informações de uma Lotação Especifico
+     * Retorna as informações de um Cargo Especifico
      * @param type $pdo
      * @return boolean
      */
     function retornaCargo($pdo) {
 
         $retorno = FALSE;
-        $sql = "SELECT id_cargo, nm_cargo
+        $sql = "SELECT id_cargo, nm_cargo, st_ativo
                  FROM ses_cargo
                  WHERE id_cargo = :idCargo";
         try {
@@ -125,7 +126,6 @@ class DaoSesCargo extends SesCargo {
                 . " WHERE nm_cargo ilike :nmCargo"
                 . $filtro
                 . "";
-
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":nmCargo", $this->getNm_cargo(), PDO::PARAM_STR);
@@ -144,7 +144,6 @@ class DaoSesCargo extends SesCargo {
             return $retorno;
         }
     }
-
 }
 
 /* 

@@ -399,7 +399,7 @@ class DaoSesContrato extends SesContrato {
                 $filtro
 		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo
                 ORDER BY P.nm_pessoa, c.nr_matricula";
-
+        
         try {
             $sth = $pdo->prepare($sql);
             $sth->execute();
