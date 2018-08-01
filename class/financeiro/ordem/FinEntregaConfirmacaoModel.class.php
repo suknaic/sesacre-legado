@@ -247,13 +247,12 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
-            
-            if(empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)){
+
+            if (empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)) {
                 return 0;
             }
-            
+
             return $daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao;
-            
         } catch (Exception $ex) {
             return false;
         }
@@ -458,11 +457,11 @@ class FinEntregaConfirmacaoModel {
 
                 foreach ($arraySituacaoEntrega as $key => $campos) {
 
-                    $tabela .= ' <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    $tabela .= ' <div class="panel-group" id="accordion' . $key . '" role="tablist" aria-multiselectable="true">
                                     <div class="panel panel-default">
                                         <div class="panel-heading" role="tab" id="heading' . $key . '">
                                             <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion' . $key . '" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
                                                     <i class="glyphicon glyphicon-chevron-down"></i>
                                                     <b>Entrega: </b><span style="color:#758697">' . $key . '</span> <b style=" margin-left: 1%">Tipo de Entrega: </b>
                                                     <span style="color:#758697">' . $campos[0]["situacao"] . '</span> <b style=" margin-left: 1%">Data de Entrega: </b>
@@ -575,6 +574,21 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao->setSitEntrega($this->sit_entrega);
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->updateSitEntrega($pdo);
+            $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaOptionsEntregaOrdemGdof(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            
+            
             $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
