@@ -258,6 +258,7 @@ class Contrato {
             //************************************************************************************************
             // Definindo o perfil(CHAMADO) padrão para o funcionário
             if ($sucesso) {
+//************* Ativar código quando as pendencias do módulo do RH estiverem prontos ***************
 //                $perfilPessoa = new PerfilPessoa();
 //                $perfilPessoa->setIdPerfil();
 //                $perfilPessoa->setIdPessoa($idPessoa);
@@ -269,6 +270,7 @@ class Contrato {
 //                    $pdo->rollBack();
 //                    return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
 //                }
+// *************************************************************************************************
                 if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
                     $fim = true;
                 } else {
