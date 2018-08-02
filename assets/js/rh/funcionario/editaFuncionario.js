@@ -1081,8 +1081,11 @@ $(document).ready(function () {
                     cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
                 }
             });
-            if (parseInt($("#nr_carga_horaria").val()) > cargaHorariaLotacao) {
+            if (parseInt($("#nr_carga_horaria").val()) !== cargaHorariaLotacao) {
                 func.modalAlert('Complete ou Reajuste a Carga Horária.');
+                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                    $("#nr_carga_horaria").focus();
+                });
                 return false;
             }
             var DadosContrato = {
