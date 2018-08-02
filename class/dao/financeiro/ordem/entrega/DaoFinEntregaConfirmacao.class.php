@@ -225,14 +225,13 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
-                 if ($stmt->rowCount() > 0) {
+                if ($stmt->rowCount() > 0) {
                     $this->sucesso = true;
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_OBJ);
                 } else {
                     $this->sucesso = false;
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
-                
             }
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
@@ -367,7 +366,28 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
-         
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaEntregaOrdemGdof(PDO $pdo, $ordens) {
+        try {
+            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
+                    from fin_protocolo as protocolo
+                    inner join fin_entrega_confirmacao as confirmacao
+                    on protocolo.id_protocolo = confirmacao.id_protocolo
+                    inner join fin_ordem as ordem
+                    on confirmacao.id_ordem = ordem.id_ordem
+                    where protocolo.id_ordem in(".$ordens.")
+                    and protocolo.st_protocolo = '2'";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
+            $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+            $stmt->execute();
+            $this->sucesso = true;
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;

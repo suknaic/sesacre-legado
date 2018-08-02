@@ -554,51 +554,96 @@ class FinOrdemModel {
     }
 
     public function cancelaOrdem() {
-        $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        $daoFinOrdem = new DaoFinOrdem();
-        $pdo->beginTransaction();
-        $daoFinOrdem->setIdOrdem($this->id_ordem);
-        $daoFinOrdem->deleteOrdem($pdo);
-        $busca = "";
-        if (!$daoFinOrdem->Sucesso()) {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinOrdem = new DaoFinOrdem();
+            $pdo->beginTransaction();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->deleteOrdem($pdo);
+            $busca = "";
+            if (!$daoFinOrdem->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+
+            $daoFinOrdem->retornaOrdem($pdo);
+            $busca = $daoFinOrdem->getMsgRetorno();
+            if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Ordem removida com sucesso.");
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
-
-
-        $daoFinOrdem->retornaOrdem($pdo);
-        $busca = $daoFinOrdem->getMsgRetorno();
-        if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-        }
-
-        $pdo->commit();
-        return Metodos::retornoAjax("ok", "html", "Ordem removida com sucesso.");
     }
 
     public function retornaOrdemGdof() {
-        $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        $daoFinOrdem = new DaoFinOrdem();
-        $daoFinOrdem->setIdPedido($this->id_pedido);
-        $daoFinOrdem->ordemGdof($pdo);
-        $options = '<option value="0" selected="true">Selecione uma ordem</option>';
-        foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
-            $options .= '<option value="'. $campos["id_ordem"].'">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdPedido($this->id_pedido);
+            $daoFinOrdem->ordemGdof($pdo);
+            $options = '<option value="0" selected="true">Selecione uma ordem</option>';
+            foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
+                $options .= '<option value="' . $campos["id_ordem"] . '">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
+            }
+            return $options;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
-        return $options;
     }
 
     public function retornaTipoValorOrdem() {
-        $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        $daoFinOrdem = new DaoFinOrdem();
-        $daoFinOrdem->setIdOrdem($this->id_ordem);
-        $daoFinOrdem->retornaTipoValor($pdo);
-        if($daoFinOrdem->Sucesso()){
-            return json_encode($daoFinOrdem->getMsgRetorno());
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->retornaTipoValor($pdo);
+            if ($daoFinOrdem->Sucesso()) {
+                return json_encode($daoFinOrdem->getMsgRetorno());
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function montaTabelaOrdemGdof($dados) {
+        try {
+            $tabela = '<table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Nº da Ordem</th>
+                                <th>Tipo ordem</th>
+                                <th>Valor da Ordem</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+            foreach ($dados as $valor){
+                $tabela .= '<tr>
+                                <td class="text-center">'.$valor["nr_ordem"].'</td>
+                                <td class="text-center">'.$valor["tipo_ordem"].'</td>
+                                <td class="text-center">'.$valor["valorOrdem"].'</td>
+                                <td class="text-center">
+                                <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                </td>    
+                            </tr>';
+            }
+                            
+             $tabela .= '</tbody>
+                        </table>';
+             return $tabela;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 

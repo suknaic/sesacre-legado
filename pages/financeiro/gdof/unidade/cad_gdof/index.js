@@ -116,6 +116,46 @@ $(document).ready(function () {
                 $("body").find("#valorOrdem").html(infoOrdem.valor);
             }
         });
+
+//        $.ajax({
+//            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+//            "dataType": 'html',
+//            "data": {
+//                "acao": "retornaDadosDaEntregas",
+//                "dados": idOrdem
+//
+//            },
+//            "success": function (response) {
+//               console.log(response);
+//            }
+//        });
     });
 
+    var infTabOrdem = [];
+    var contInfTabordem = 0;
+    $("body").on("click", ".addOrdens", function (e) {
+       
+        infTabOrdem[contInfTabordem] = {
+            "id_ordem": $("#selectOrdem option:selected").val(),
+            "nr_ordem": $("#selectOrdem option:selected").text(),
+            "tipo_ordem": $("#tipoOrdem").text(),
+            "valorOrdem": $("#valorOrdem").text()
+        }
+        contInfTabordem++;
+        
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTabelaOrdem",
+                "dados": infTabOrdem
+
+            },
+            "success": function (response) {
+                $(".infoOrdem").html(response);
+            }
+        });
+        return false;
+        console.log($("#selectOrdem").val());
+    });
 });

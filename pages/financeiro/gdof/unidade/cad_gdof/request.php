@@ -93,5 +93,30 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
+    CASE 'retornaTabelaOrdem':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finOrdemModel = new FinOrdemModel();
+            echo $finOrdemModel->montaTabelaOrdemGdof($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaDadosDaEntregas':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $finOrdemModel = new FinOrdemModel();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 
