@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -96,7 +97,7 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaTabelaOrdem':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finOrdemModel = new FinOrdemModel();
             echo $finOrdemModel->montaTabelaOrdemGdof($dados);
             return;
@@ -107,10 +108,24 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaDadosDaEntregas':
+    CASE 'retornaOptionsDaEntrega':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
-            $finOrdemModel = new FinOrdemModel();
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            echo $finEntregaConfirmacaoModel->retornaOptionsEntregaOrdemGdof($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaTabelaEntrega':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            echo $finEntregaConfirmacaoModel->retornaTabelaEntregasGdof($dados);
             return;
             break;
         } catch (Error $e) {

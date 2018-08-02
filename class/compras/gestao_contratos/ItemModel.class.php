@@ -263,7 +263,7 @@ class ItemModel {
             }
             $tabela .= '<tr>
 			<td colspan="12" class="text-right"><strong>Total</strong></td>
-			<td  colspan="4">' . Metodos::ConverteValorBr($total, 4) . '</td>
+			<td  colspan="5">' . Metodos::ConverteValorBr($total, 4) . '</td>
 			</tr>';
             return $tabela;
         }

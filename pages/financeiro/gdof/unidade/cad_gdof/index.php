@@ -182,13 +182,75 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
 
                                                         <div class="form-group">
                                                             <div class="col-sm-5 infoOrdem">
-
+                                                                <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Nº da Ordem</th>
+                                                                            <th>Tipo ordem</th>
+                                                                            <th>Valor da Ordem</th>
+                                                                            <th>Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody></tbody>
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form das entrega-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados da Entrega</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectEntrega" id="selectEntrega">
+                                                                        <option value="0" selected="true">Selecione uma entrega</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addEntrega btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">Nº da Entrega</th>
+                                                                            <th class="text-center">Nº da Ordem</th>
+                                                                            <th class="text-center">Data do Aviso</th>
+                                                                            <th class="text-center">Data Limite para Entrega</th>
+                                                                            <th class="text-center">Prazo para Entrega</th>
+                                                                            <th class="text-center">Entregue Dia</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -292,7 +354,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Valor:</b></div>
-                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
+                                                                    <input type="text" class="form-control" name="valorDocumentoFiscal" id="valorDocumentoFiscal" disabled="true"/>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
                                                     </div>
@@ -316,7 +383,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked>Sim</label>
                                                                 <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
                                                             </div>
-                                                            
+
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>

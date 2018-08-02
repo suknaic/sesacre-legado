@@ -117,33 +117,31 @@ $(document).ready(function () {
             }
         });
 
-//        $.ajax({
-//            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaDadosDaEntregas",
-//                "dados": idOrdem
-//
-//            },
-//            "success": function (response) {
-//               console.log(response);
-//            }
-//        });
+
     });
 
-    var infTabOrdem = [];
-    var contInfTabordem = 0;
+    var infTabOrdem = {};
+
     $("body").on("click", ".addOrdens", function (e) {
-       
-        infTabOrdem[contInfTabordem] = {
+
+        array = {
             "id_ordem": $("#selectOrdem option:selected").val(),
             "nr_ordem": $("#selectOrdem option:selected").text(),
             "tipo_ordem": $("#tipoOrdem").text(),
             "valorOrdem": $("#valorOrdem").text()
         }
-        contInfTabordem++;
-        
+
+        $.each(infTabOrdem, function (index, value) {
+            if(value.id_ordem == $("#selectOrdem option:selected").val()){
+                func.modalAlert("Essa ordem já foi adicionada.");
+            }
+            console.log(value.id_ordem);
+        });
+
+        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
+
         $.ajax({
+            "method": "POST",
             "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
             "dataType": 'html',
             "data": {
@@ -152,10 +150,44 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                $(".infoOrdem").html(response);
+                $("#tabelaOrdem").find("tbody").html(response);
             }
         });
-        return false;
-        console.log($("#selectOrdem").val());
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaOptionsDaEntrega",
+                "dados": infTabOrdem
+
+            },
+            "success": function (response) {
+                $("#selectEntrega").html(response);
+            }
+        });
+
     });
+
+    var infTabEntrega = [];
+
+    $("body").on("click", ".addEntrega", function (e) {
+        infTabEntrega.push($("#selectEntrega option:selected").val());
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTabelaEntrega",
+                "dados": infTabEntrega
+
+            },
+            "success": function (response) {
+                $("#tabela").find("tbody").html(response);
+                $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
+            }
+        });
+    });
+
+
 });
