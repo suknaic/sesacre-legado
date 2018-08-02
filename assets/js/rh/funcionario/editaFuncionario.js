@@ -718,12 +718,12 @@ $(document).ready(function () {
                 dtFim = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[0].toString();
                 dtInicio = $("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString();
                 dtInicio2 = $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[0].toString();
-              
+
                 if (+new Date(dtInicio) <= +new Date(dtInicio2) && +new Date(dtInicio) >= +new Date(dtFim)) {
                     seguir = 1;
                     return;
                 }
-                
+
                 if (dtFim > dataAtua) {
                     console.log(parseInt(nr_carga_horaria));
                     console.log(cargaHorariaLotacao);
@@ -738,7 +738,7 @@ $(document).ready(function () {
                     return;
                 }
             }
-            
+
             if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
                 seguir = 3;
                 return;
@@ -1070,6 +1070,20 @@ $(document).ready(function () {
                     alert(" A data de Admissão não pode ser maior que a data de Demissão");
                     return;
                 }
+            }
+            cargaHorariaLotacao = 0;
+            $("#tabelaLotacao tbody tr").each(function () {
+                dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
+                dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
+                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
+                    cargaHorariaLotacao += 0;
+                } else {
+                    cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
+                }
+            });
+            if (parseInt($("#nr_carga_horaria").val()) > cargaHorariaLotacao) {
+                func.modalAlert('Complete ou Reajuste a Carga Horária.');
+                return false;
             }
             var DadosContrato = {
                 idContrato: idContrato,
