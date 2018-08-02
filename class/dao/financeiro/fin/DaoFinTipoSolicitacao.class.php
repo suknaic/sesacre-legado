@@ -35,9 +35,10 @@ class DaoFinTipoSolicitacao extends FinTipoSolicitacao {
     function update(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "update fin_tipo_solicitacao set nm_tipo_solicitacao = :nm_tipo_solicitacao";
+                $sql = "update fin_tipo_solicitacao set nm_tipo_solicitacao = :nm_tipo_solicitacao where id_tipo_solicitacao = :id_tipo_solicitacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':nm_tipo_solicitacao', $this->getNmTipoSolicitacao(), PDO::PARAM_STR);
+                $stmt->bindValue(':id_tipo_solicitacao', $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
                 
                 $stmt->execute();
                 $this->sucesso = true;

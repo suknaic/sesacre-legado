@@ -312,7 +312,7 @@ class DaoFinPedido extends FinPedidoTb {
                             pt.cd_programa_trabalho,
                             pt.ds_programa_trabalho,
                             p.st_pedido as status,
-                            ordem.sit_entrega,
+                            ordem.sit_protocolo,
                             ordem.ordens 
                          from
                             fin_pedido as p 
@@ -345,12 +345,12 @@ class DaoFinPedido extends FinPedidoTb {
                                   select
                                      fo.id_pedido,
                                      array_agg(fo.id_ordem) as ordens,
-                                     string_agg(trim(to_char(fec.sit_entrega, '9')), '') as sit_entrega 
+                                     string_agg(trim(fpro.st_protocolo), '') as sit_protocolo
                                   from
                                      fin_ordem as fo 
-                                     left join
-                                        fin_entrega_confirmacao as fec 
-                                        on fo.id_ordem = fec.id_ordem 
+				     left join
+				        fin_protocolo as fpro
+				        on fo.id_ordem = fpro.id_ordem
                                   group by
                                      fo.id_pedido 
                                )

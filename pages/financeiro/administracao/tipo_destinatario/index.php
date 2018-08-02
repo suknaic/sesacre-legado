@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.load.php";
+require_once "index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -49,7 +49,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Tabela de Valores das Diárias</h1>                       
+                        <h1 class="page-header text-overflow">Cadastro de Tipo de Destinatário</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -62,84 +62,27 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel" id="formTop">
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">Formulário</h3>
-                                    </div>
 
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form">
                                         <div class="panel-body">
-                                            <input type="hidden" id="id_decreto_valor" disabled>
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="id_decreto">
-                                                            Base Legal: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="id_decreto" class="form-control">
-                                                            </select>
-                                                        </div>
+                                                <input type="hidden" id="id_doc_tipo_destinatario" />
+                                                <div class="form-group">
+                                                    <label for="nm_doc_tipo_destinatario">
+                                                        Tipo de Destinatário: <span class="text-danger">*</span>
+                                                    </label>                                                        
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input id="nm_doc_tipo_destinatario" class="form-control" />
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <input type="hidden" id="id_classe_default" disabled>
-                                                        <label for="id_classe">
-                                                            Classe: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="id_classe" class="form-control">
-                                                                <option value="0">Selecione uma Classe</option>                                                                
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                             
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="tp_decreto_valor">
-                                                            Tipo da diária: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="tp_decreto_valor" class="form-control">
-                                                                <option value="0">Selecione se é estadual ou nacional</option>                                                                
-                                                                <option value="N">Nacional</option>                                                                
-                                                                <option value="E">Estadual</option>                                                                
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="vl_decreto_valor">
-                                                            Valor: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-sort-numeric-desc inputPFa"></p>
-                                                            </span>
-                                                            <input type="text" id="vl_decreto_valor" class="form-control decimal"/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                                   
-
                                         </div>
                                         <!-- <div class="panel-body"> -->
 
@@ -158,12 +101,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                         </div>
                                         <!-- End Form -->
                                     </form>
-                                </div>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
+                                </div>
                                 <div class="panel">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Valores por Decreto e Classe</h3>
+                                        <h3 class="panel-title">Lista de Tipo de Destinatário</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -172,10 +115,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                                     <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Decreto</th>
-                                                                <th>Classe</th>
-                                                                <th>Estadual ou Nacional</th>
-                                                                <th>Valor</th>
+                                                                <th>Tipo de Destinatário</th>
                                                                 <th class="text-center">Ações</th> 
                                                             </tr>
                                                         </thead>
@@ -189,6 +129,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
                                         </div>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                         <!-- Fim Form -->
@@ -253,7 +194,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/decreto_valor/index.loa
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/diarias/decreto_valor/index.js"></script>
+        <script src="index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
