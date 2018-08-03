@@ -220,8 +220,10 @@ class QddSupRed {
                 if( ($qddValor->getVlSaldo() - $this->vlQddSupRedTrans) < 0 ){
                     return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
                             . " de Reduzido o Saldo de R$ ". Metodos::ConverteValorBr($qddValor->getVlSaldo(), 2)." irá ficar Negativo.");
-                }                
-                if( ($qddValor->getVlAtual() - $this->vlQddSupRedTrans - $qddValor->getVlLiberado()) < 0 ){
+                }
+                
+                
+                if((round($qddValor->getVlAtual(),4) - round($this->vlQddSupRedTrans - $qddValor->getVlLiberado(),4)) < 0 ){
                     return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
                             . " de Redução o Valor Atual irá ficar Menor que o Valor que já foi Liberado para a Central."
                             . "  Valor Liberado para as Centrais R$ ". Metodos::ConverteValorBr($qddValor->getVlLiberado(), 2)

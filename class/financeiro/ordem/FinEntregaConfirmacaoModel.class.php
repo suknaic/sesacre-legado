@@ -580,16 +580,83 @@ class FinEntregaConfirmacaoModel {
         }
     }
 
-    public function retornaOptionsEntregaOrdemGdof(PDO $pdo) {
+    public function retornaOptionsEntregaOrdemGdof($dados) {
         try {
-            if (empty($pdo)) {
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
+            if (empty($dados)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
             }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdOrdens = array();
+            foreach ($dados as $linha) {
+                $arrayIdOrdens [] = $linha["id_ordem"];
+            }
+            $idOrdens = implode(' , ', $arrayIdOrdens);
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens);
+            $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campo) {
+                    $options .= '<option value = "' . $campo["id_entrega_confirmacao"] . '">' . $campo["nr_entrega_confirmacao"] . '-' . $campo["ordem"] . '</option>';
+                }
+                return $options;
+            }
+            return $options;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaTabelaEntregasGdof($idEntregas) {
+        try {
             
+            if (empty($idEntregas)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdEntregas = array();
+          
+            foreach ($idEntregas as $linha) {
+                $arrayIdEntregas [] = $linha;
+            }
             
-            $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
+            $idEntregas = implode(' , ', $arrayIdEntregas);
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->retornaEntregaGdof($pdo, $idEntregas);
+            $tabela = '';
+            
+            if($daoFinEntregaConfirmacao->sucesso()){
+                $totalEntrega = 0;
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos){
+                    $totalEntrega += $campos["valor"];
+                    $tabela .= '<tr>
+                                 <td class = "text-center">'.$campos["nr_entrega_confirmacao"].'</td>
+                                 <td class = "text-center">'.$campos["ordem"].'</td>
+                                 <td class = "text-center">'.$campos["dataaviso"].'</td>
+                                 <td class = "text-center">'.$campos["datalimite"].'</td>
+                                 <td class = "text-center">'.$campos["nr_prazo_ordem"].'</td>
+                                 <td class = "text-center">'.$campos["entreguedia"].'</td>
+                                 <td class = "text-center">'. Metodos::ConverteValorBr($campos["valor"],4).'</td>
+                                 <td class = "text-center">'.$campos["situacao"].'</td>
+                                 <td class = "text-center">
+                                 <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                </td>
+                                </tr>';
+                }
+                $totalEntrega = Metodos::ConverteValorBr($totalEntrega ,4);
+                $tabela .= '<tr>
+                                <td class="text-right" colspan="6">Total</td>
+                                <td class="text-center valorEntregaTotal" valor= "'.$totalEntrega.'" >'.$totalEntrega.'</td>
+                                <td class="text-right" colspan="2"></td>
+                            </tr>';
+            }
+           
+            return $tabela;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
