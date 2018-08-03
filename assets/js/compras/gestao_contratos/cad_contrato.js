@@ -381,7 +381,6 @@ $(document).ready(function () {
                 "acao": "retornaPessoaFisica"
             },
             "success": function (response) {
-                //console.log(response);
                 $("body").find("#empresa").html(response);
             }
         });
