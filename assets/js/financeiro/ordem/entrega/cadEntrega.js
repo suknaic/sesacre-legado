@@ -76,6 +76,7 @@ $(document).ready(function () {
 
                     $('#tabela').DataTable({
                         data: dataSet,
+                        "paging": false,
                         language: {
                             "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                         },
@@ -149,6 +150,7 @@ $(document).ready(function () {
 
                     $('#tabela').DataTable({
                         data: dataSet,
+                        "paging": false,
                         language: {
                             "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                         },

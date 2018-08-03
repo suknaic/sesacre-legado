@@ -20,23 +20,30 @@ $(document).ready(function () {
                     nome: nome
                 },
                 "success": function (response) {
-                    if (response == 0){
-                        alert('Dados não encontrado');
+                    if (response == 0) {
+                        try {
+                            response = JSON.parse(response);
+                        } catch (e) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                        func.modalAlert(response);
                         $("nm_pessoa").focus();
                         return;
+                    } else {
+                        func.carregaTabelaPadrao('tabela', response, [6], true);
                     }
-                    func.carregaTabelaPadrao('tabela', response, [6], true);
                 }
             });
         }
     });
-     //*************************************************************************
+    //*************************************************************************
     $('body').on('click', '.btn-registrar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
-            $id= $(this).val();
-            top.location.href = "/pages/rh/feriasLicencas/cadastrarFeriasLicencas.php?id="+$id;
+            $id = $(this).val();
+            top.location.href = "/pages/rh/feriasLicencas/cadastrarFeriasLicencas.php?id=" + $id;
         }
     });
     //***************************************************
@@ -51,5 +58,5 @@ $(document).ready(function () {
             return false;
         }
     });
-    
+
 });

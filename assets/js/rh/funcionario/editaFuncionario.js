@@ -500,7 +500,7 @@ $(document).ready(function () {
         lotacoes = 0;
         $("#tabelaLotacao tbody tr").each(function () {
             if ($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim") === '') {
-                lotacoes++; 
+                lotacoes++;
             }
         });
         if (lotacoes > 1) {
@@ -690,53 +690,88 @@ $(document).ready(function () {
 
                 dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
                 dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
-                if (dataFimAntiga != "") {
+                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
                     cargaHorariaLotacao += 0;
                 } else {
                     cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
                 }
             });
         }
-        if (flag == 1) {
+        if (flag === 1) {
             return;
         }
 
-        //*********** Controle de data e carga horária das lotaçõs dos funcionários (Autor: Elivelton)*************
+        //*********** Controle de data e carga horária das lotações dos funcionários (Autor: Elivelton)*************
+        seguir = 0;
         $("#tabelaLotacao tbody tr").each(function () {
             if (dataFimAntiga !== '') {
-                var dataAnt = +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString());
-                var dataNov = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
+                var dataAnti = +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString());
+                var dataAtua = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
 
-                if (dataAnt >= dataNov) {
+                if (dataAnti >= dataAtua) {
                     if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                        func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário");
+                        seguir = 3;
                         return;
                     }
                 }
-            }
 
+                dtFim = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[0].toString();
+                dtInicio = $("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString();
+                dtInicio2 = $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[0].toString();
 
-        });
-        seguir = true;
-        $("#tabelaLotacao tbody tr").each(function () {
-            if ($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim") === '') {
-                if (String($("#dt_inicio").val()) !== String($(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio"))) {
-                    seguir = false;
+                if (+new Date(dtInicio) <= +new Date(dtInicio2) && +new Date(dtInicio) >= +new Date(dtFim)) {
+                    seguir = 1;
+                    return;
+                }
+
+                if (dtFim > dataAtua) {
+                    console.log(parseInt(nr_carga_horaria));
+                    console.log(cargaHorariaLotacao);
+                    if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
+                        seguir = 3;
+                        return;
+                    }
+                }
+
+                if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                    seguir = 3;
                     return;
                 }
             }
 
+            if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                seguir = 3;
+                return;
+            }
         });
+//        console.log(seguir);
 
-        if (seguir === false) {
-            func.modalAlert("A Data Início da Nova Lotação do Funcionário Deve Ser Igual a Data da Lotação Ainda Vigente.");
+        if (seguir === 1) {
+            func.modalAlert("A (DATA INÍCIO) da Nova Lotação do Funcionário é Menor ou igual a (DATA FIM) da Lotação ainda Vigente.");
+//            func.modalAlert("Teste 1");
             return false;
         }
 
-        if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário");
+        if (seguir === 2) {
+            func.modalAlert("Não é Possível Inserir uma Nova Lotação pois a uma Lotação ainda Vigente.");
+//            func.modalAlert("Teste 2");
             return false;
         }
+        if (seguir === 3) {
+            func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
+//            func.modalAlert("Teste 3");
+            return false;
+        }
+//        if (seguir === 0) {
+//            func.modalAlert("Passou Direto.");
+//            func.modalAlert("Teste 3");
+//            return false;
+//        }
+//return false;
+//        if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+//            func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário");
+//            return false;
+//        }
         //*********************************************************************************************************
 
         //********************************************************************************
@@ -1035,6 +1070,23 @@ $(document).ready(function () {
                     alert(" A data de Admissão não pode ser maior que a data de Demissão");
                     return;
                 }
+            }
+            cargaHorariaLotacao = 0;
+            $("#tabelaLotacao tbody tr").each(function () {
+                dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
+                dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
+                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
+                    cargaHorariaLotacao += 0;
+                } else {
+                    cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
+                }
+            });
+            if (parseInt($("#nr_carga_horaria").val()) !== cargaHorariaLotacao) {
+                func.modalAlert('Complete ou Reajuste a Carga Horária.');
+                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                    $("#nr_carga_horaria").focus();
+                });
+                return false;
             }
             var DadosContrato = {
                 idContrato: idContrato,

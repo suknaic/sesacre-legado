@@ -258,31 +258,34 @@ class Contrato {
             //************************************************************************************************
             // Definindo o perfil(CHAMADO) padrão para o funcionário
             if ($sucesso) {
-                $perfilPessoa = new PerfilPessoa();
-                $perfilPessoa->setIdPerfil();
-                $perfilPessoa->setIdPessoa($idPessoa);
-
-                $inseriPerfil = $perfilPessoa->incluirPessoaPerfil($pdo);
-                if ($inseriPerfil) {
-                    if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
-                        $fim = true;
-                    } else {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                        $pdo->rollBack();
-                        return $retorno;
-                    }
-                    if ($fim) {
-                        $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
-                        $pdo->commit();
-                        return $retorno;
-                    } else {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                        $pdo->rollBack();
-                        return $retorno;
-                    }
+//************* Ativar código quando as pendencias do módulo do RH estiverem prontos ***************
+//                $perfilPessoa = new PerfilPessoa();
+//                $perfilPessoa->setIdPerfil();
+//                $perfilPessoa->setIdPessoa($idPessoa);
+//
+//                $inseriPerfil = $perfilPessoa->incluirPessoaPerfil($pdo);
+//                if ($inseriPerfil) {
+//                    
+//                } else {
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
+//                }
+// *************************************************************************************************
+                if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
+                    $fim = true;
                 } else {
+                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
-                    return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
+                    return $retorno;
+                }
+                if ($fim) {
+                    $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+                    $pdo->commit();
+                    return $retorno;
+                } else {
+                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                    $pdo->rollBack();
+                    return $retorno;
                 }
             }
             //************************************************************************************************
@@ -757,6 +760,7 @@ class Contrato {
             $result = $rh->retornaTodosFuncionarios($pdo, $filtro, $ferias);
 
             if (!$result) {
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Funcionário Não Encontrado.");
                 return $retorno;
             } else {
                 foreach ($result as $v) {

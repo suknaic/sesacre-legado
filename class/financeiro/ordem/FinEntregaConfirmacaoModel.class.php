@@ -247,13 +247,12 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
-            
-            if(empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)){
+
+            if (empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)) {
                 return 0;
             }
-            
+
             return $daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao;
-            
         } catch (Exception $ex) {
             return false;
         }
@@ -458,11 +457,11 @@ class FinEntregaConfirmacaoModel {
 
                 foreach ($arraySituacaoEntrega as $key => $campos) {
 
-                    $tabela .= ' <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    $tabela .= ' <div class="panel-group" id="accordion' . $key . '" role="tablist" aria-multiselectable="true">
                                     <div class="panel panel-default">
                                         <div class="panel-heading" role="tab" id="heading' . $key . '">
                                             <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion' . $key . '" href="#' . $key . '" aria-expanded="false" aria-controls="collapse' . $key . '" class="collapsed">
                                                     <i class="glyphicon glyphicon-chevron-down"></i>
                                                     <b>Entrega: </b><span style="color:#758697">' . $key . '</span> <b style=" margin-left: 1%">Tipo de Entrega: </b>
                                                     <span style="color:#758697">' . $campos[0]["situacao"] . '</span> <b style=" margin-left: 1%">Data de Entrega: </b>
@@ -576,6 +575,88 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->updateSitEntrega($pdo);
             $this->sucesso = $daoFinEntregaConfirmacao->sucesso();
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaOptionsEntregaOrdemGdof($dados) {
+        try {
+            if (empty($dados)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdOrdens = array();
+            foreach ($dados as $linha) {
+                $arrayIdOrdens [] = $linha["id_ordem"];
+            }
+            $idOrdens = implode(' , ', $arrayIdOrdens);
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens);
+            $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campo) {
+                    $options .= '<option value = "' . $campo["id_entrega_confirmacao"] . '">' . $campo["nr_entrega_confirmacao"] . '-' . $campo["ordem"] . '</option>';
+                }
+                return $options;
+            }
+            return $options;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaTabelaEntregasGdof($idEntregas) {
+        try {
+            
+            if (empty($idEntregas)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdEntregas = array();
+          
+            foreach ($idEntregas as $linha) {
+                $arrayIdEntregas [] = $linha;
+            }
+            
+            $idEntregas = implode(' , ', $arrayIdEntregas);
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->retornaEntregaGdof($pdo, $idEntregas);
+            $tabela = '';
+            
+            if($daoFinEntregaConfirmacao->sucesso()){
+                $totalEntrega = 0;
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos){
+                    $totalEntrega += $campos["valor"];
+                    $tabela .= '<tr>
+                                 <td class = "text-center">'.$campos["nr_entrega_confirmacao"].'</td>
+                                 <td class = "text-center">'.$campos["ordem"].'</td>
+                                 <td class = "text-center">'.$campos["dataaviso"].'</td>
+                                 <td class = "text-center">'.$campos["datalimite"].'</td>
+                                 <td class = "text-center">'.$campos["nr_prazo_ordem"].'</td>
+                                 <td class = "text-center">'.$campos["entreguedia"].'</td>
+                                 <td class = "text-center">'. Metodos::ConverteValorBr($campos["valor"],4).'</td>
+                                 <td class = "text-center">'.$campos["situacao"].'</td>
+                                 <td class = "text-center">
+                                 <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                </td>
+                                </tr>';
+                }
+                $totalEntrega = Metodos::ConverteValorBr($totalEntrega ,4);
+                $tabela .= '<tr>
+                                <td class="text-right" colspan="6">Total</td>
+                                <td class="text-center valorEntregaTotal" valor= "'.$totalEntrega.'" >'.$totalEntrega.'</td>
+                                <td class="text-right" colspan="2"></td>
+                            </tr>';
+            }
+           
+            return $tabela;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

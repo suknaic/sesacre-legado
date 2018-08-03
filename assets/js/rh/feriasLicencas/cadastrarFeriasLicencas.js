@@ -117,7 +117,7 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 console.log("Parse JSON");
                                 console.log(response);
                                 return false;
@@ -148,7 +148,7 @@ $(document).ready(function () {
     });
     //**************************************************************************
     $('.modal-alert').on('hide.bs.modal', function () {
-        var data1 = $("#dt_inicio").val()
+        var data1 = $("#dt_inicio").val();
 
         if ($("#id_situacao").val() == 0) {
             $("#id_situacao").trigger('focus');
@@ -192,7 +192,7 @@ $(document).ready(function () {
                         $(".titulo").text(response[0]['nm_social']);
                         $("#id_contrato").val(idContrato);
                         $("#id_pessoa_fisica").val(idPessoaFisica);
-                        returnHistorico(idContrato)
+                        returnHistorico(idContrato);
                     }
         });
     }

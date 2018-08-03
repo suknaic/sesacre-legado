@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -86,6 +87,45 @@ switch ($_REQUEST['acao']) {
             $finOrdemModel = new FinOrdemModel();
             $finOrdemModel->setIdOrdem($dados);
             echo $finOrdemModel->retornaTipoValorOrdem();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaTabelaOrdem':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finOrdemModel = new FinOrdemModel();
+            echo $finOrdemModel->montaTabelaOrdemGdof($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaOptionsDaEntrega':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            echo $finEntregaConfirmacaoModel->retornaOptionsEntregaOrdemGdof($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaTabelaEntrega':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            echo $finEntregaConfirmacaoModel->retornaTabelaEntregasGdof($dados);
             return;
             break;
         } catch (Error $e) {

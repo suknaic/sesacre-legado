@@ -160,11 +160,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Nº ordem:</b></div>
                                                             <div class="col-sm-3">
-                                                                <select class="form-control select" name="selectOrdem" id="selectOrdem">
-                                                                    <option value="0" selected="true">Selecione uma ordem</option>
-                                                                </select>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectOrdem" id="selectOrdem">
+                                                                        <option value="0" selected="true">Selecione uma ordem</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-sm-1"><a href="#" class="addOrdens btn btn-info">+</a></div>
+                                                            <div class="col-sm-1"><a class="addOrdens btn btn-info">+</a></div>
                                                             <div class="col-sm-6"></div>
                                                         </div>
                                                         <div class="form-group">
@@ -175,10 +178,79 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                             <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
+
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-5 infoOrdem">
+                                                                <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Nº da Ordem</th>
+                                                                            <th>Tipo ordem</th>
+                                                                            <th>Valor da Ordem</th>
+                                                                            <th>Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form das entrega-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados da Entrega</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectEntrega" id="selectEntrega">
+                                                                        <option value="0" selected="true">Selecione uma entrega</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addEntrega btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">Nº da Entrega</th>
+                                                                            <th class="text-center">Nº da Ordem</th>
+                                                                            <th class="text-center">Data do Aviso</th>
+                                                                            <th class="text-center">Data Limite para Entrega</th>
+                                                                            <th class="text-center">Prazo para Entrega</th>
+                                                                            <th class="text-center">Entregue Dia</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +267,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Protocolo Nº:</b></div>
                                                             <div class="col-sm-3">
-                                                                <input class="form-control" type="text" name="processoAdm" id="processoAdm" />
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="processoAdm" id="processoAdm" />
+                                                                </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
@@ -218,45 +293,73 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Documento Nº:</b></div>
-                                                            <div class="col-sm-3"><input class="form-control" type="text" name="nr_documento" id="nr_documento" /></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="nr_documento" id="nr_documento" />
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
                                                             <div class="col-sm-3">
-                                                                <select class="form-control select" name="tpDocumento" id="tpDocumento">
-                                                                    <option value="0" selected="true">Selecione uma tipo de documento</option>
-                                                                    <option value="1">Cupom fiscal</option>
-                                                                    <option value="2">Recibo</option>
-                                                                    <option value="3">Nota fiscal</option>
-                                                                    <option value="4">Fatura</option>
-                                                                </select>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="tpDocumento" id="tpDocumento">
+                                                                        <option value="0" selected="true">Selecione uma tipo de documento</option>
+                                                                        <option value="1">Cupom fiscal</option>
+                                                                        <option value="2">Recibo</option>
+                                                                        <option value="3">Nota fiscal</option>
+                                                                        <option value="4">Fatura</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Competência:</b></div>
-                                                            <div class="col-sm-3"><input class="form-control" type="text" name="competencia" id="competencia" /></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="competencia" id="competencia" />
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Data de emissão:</b></div>
-                                                            <div class="col-sm-3"><input class="form-control" type="text" name="emissao" id="emissao" /></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="emissao" id="emissao" />
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Data de atesto:</b></div>
-                                                            <div class="col-sm-3"><input class="form-control" type="text" name="atesto" id="atesto" /></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="atesto" id="atesto" />
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Valor:</b></div>
-                                                            <div class="col-sm-3"></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
+                                                                    <input type="text" class="form-control" name="valorDocumentoFiscal" id="valorDocumentoFiscal" disabled="true"/>
+                                                                </div>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
                                                     </div>
@@ -267,37 +370,45 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 </div>
                                 <!--form lançado no grp-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                    <div  class="col-sm-12" >
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
+                                                        <h4 class="panel-title">Lançado no GRP</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Lançado no GRP</b></div>
-                                                            <div class="col-sm-3" style="margin-left: -10%">
+                                                            <div class="col-sm-2">
                                                                 <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked>Sim</label>
                                                                 <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
                                                             </div>
-                                                            <div class="col-sm-3" style="margin-left: -20%">
-                                                                <input class="form-control" type="text" name="nr_grp" id="nr_grp" />
+
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="nr_grp" id="nr_grp" />
+                                                                </div>
                                                             </div>
-                                                            <div class="col-sm-4"></div>
+                                                            <div class="col-sm-7"></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                    </button>
+
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body">
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>

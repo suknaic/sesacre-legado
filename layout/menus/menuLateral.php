@@ -296,19 +296,39 @@
 
                                     <ul class="collapse">
                                         <li>
+                                            <a href="#">
+                                                <span class="menu-title">Perfil de Acesso</span>
+                                                <i class="arrow"></i>
+                                            </a>
+                                            <ul class="collapse">
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_perfil_acesso/">Vincular Perfil de Acesso</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/autorizacoes/index.php">Vincular Autorização</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Vincular Tramitação</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
                                             <a href="/pages/financeiro/autorizacoes/index.php">
                                                 <span class="menu-title">Tabela Gerenciais</span>
                                                 <i class="arrow"></i>
                                             </a>
                                             <ul class="collapse">
                                                 <li>
-                                                    <a href="/pages/financeiro/autorizacoes/index.php">Vincular Autorizações</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
-                                                </li>
-                                                <li>
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Cadastrar Tipo de Gasto e Elemento</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/tipo_destinatario/">Tipo de Destinatário</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/vincula_destinatario/">Vincular Tipo de Destinatário/Destinatário</a>
                                                 </li>
                                             </ul>
 

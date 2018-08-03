@@ -708,10 +708,10 @@ class Pedido {
             if (!empty($dados['ordens'])) { //Se existir ordens, o status é 'Aguardando entrega'
                 $statusPedido = "Aguardando entrega";
                 
-                if (!(strpos($dados["sit_entrega"], "1") === false)) { //Se existir ordem com entrega parcial
-                    $statusPedido = "Aguardando Finalização da Entrega";
-                } elseif (!(strpos($dados["sit_entrega"], "2") === false)) { //Se existir ordem com entrega total
+                if (!(strpos($dados["sit_protocolo"], "2") === false)) {  //Se existir ordem com entrega total
                     $statusPedido = "Aguardando Pagamento";
+                } elseif (!(strpos($dados["sit_protocolo"], "1") === false)) { //Se existir ordem com entrega parcial
+                    $statusPedido = "Aguardando Finalização da Entrega";
                 }
             }
 

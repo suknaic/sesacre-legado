@@ -116,6 +116,83 @@ $(document).ready(function () {
                 $("body").find("#valorOrdem").html(infoOrdem.valor);
             }
         });
+
+
     });
+
+    var infTabOrdem = {};
+
+    $("body").on("click", ".addOrdens", function (e) {
+
+        array = {
+            "id_ordem": $("#selectOrdem option:selected").val(),
+            "nr_ordem": $("#selectOrdem option:selected").text(),
+            "tipo_ordem": $("#tipoOrdem").text(),
+            "valorOrdem": $("#valorOrdem").text()
+        }
+
+        $.each(infTabOrdem, function (index, value) {
+            if(value.id_ordem == $("#selectOrdem option:selected").val()){
+                func.modalAlert("Essa ordem já foi adicionada.");
+            }
+        });
+
+        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
+
+        $.ajax({
+            "method": "POST",
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTabelaOrdem",
+                "dados": infTabOrdem
+
+            },
+            "success": function (response) {
+                $("#tabelaOrdem").find("tbody").html(response);
+            }
+        });
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaOptionsDaEntrega",
+                "dados": infTabOrdem
+
+            },
+            "success": function (response) {
+                $("#selectEntrega").html(response);
+            }
+        });
+
+    });
+    
+    $("body").on("click", ".excluirOrdem", function (e){
+        var $this = $(this);
+        $("#"+$this.val()).remove();
+        infTabOrdem = {};
+    });
+
+    var infTabEntrega = [];
+
+    $("body").on("click", ".addEntrega", function (e) {
+        infTabEntrega.push($("#selectEntrega option:selected").val());
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTabelaEntrega",
+                "dados": infTabEntrega
+
+            },
+            "success": function (response) {
+                $("#tabela").find("tbody").html(response);
+                $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
+            }
+        });
+    });
+
 
 });
