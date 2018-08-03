@@ -132,7 +132,7 @@ $(document).ready(function () {
         });
     });
 
-    $('body').on('click', '.selecionaItem', function (e) {        
+    $('body').on('click', '.selecionaItem', function (e){
         let contrato = $(this).data('contrato');        
         preencheCamposContrato(contrato);                                       
         $('#modalItem').modal('hide');
@@ -498,6 +498,33 @@ $(document).ready(function () {
         }
     });
     
+    if($("#id_contrato").val() != 0){
+        //carregaContratoPesquisa();
+    }
+    
+    //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
+    function carregaContratoPesquisa(){
+        if($("#id_contrato").val() == 0){
+            return false;
+        }
+        
+        $.ajax({
+            "url": url,
+            "dataType": 'json',
+            "method": "get",
+            "data": {
+                "acao": "buscaContrato",
+                "id": $("#id_contrato").val()
+            },
+            "success": function (response){      
+                //console.log(response)
+                $("#modalDetalhes").find('.modal-body').html(response);
+                $("#modalDetalhes").modal('show')
+            }
+        });
+        
+        
+    }
     
     
     
@@ -878,7 +905,7 @@ $(document).ready(function () {
   
   
   
-  
+    
   
   
   

@@ -38,7 +38,6 @@ if(empty($motivoAditamentoGet)){
 $conexao = new Conexao();
 $pdo = $conexao->connect();
 
-
 //Motivo
 $motivo = new FinContratoMotivo();
 $motivo->setIdContratoMotivo($motivoAditamentoGet);
@@ -75,4 +74,9 @@ $selectTipoAquisicao = $aquisicao->retornaOption();
 
 
 
+//Verifica se está recebendo o Id do Contrato
+$idContrato = (int)filter_input(INPUT_GET, 'contrato', FILTER_DEFAULT);
+if(empty($idContrato)){
+    $idContrato = 0;
+}
 ?>
