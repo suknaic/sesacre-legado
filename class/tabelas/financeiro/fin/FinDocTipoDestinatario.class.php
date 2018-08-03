@@ -4,7 +4,7 @@ class FinDocTipoDestinatario {
 
     private $idDocTipoDestinatario = null;
     private $nmDocTipoDestinatario = null;
-    private $st_ativo = '1';
+    private $stAtivo = '1';
     
     function getIdDocTipoDestinatario() {
         return $this->idDocTipoDestinatario;
@@ -14,8 +14,8 @@ class FinDocTipoDestinatario {
         return $this->nmDocTipoDestinatario;
     }
 
-    function getSt_ativo() {
-        return $this->st_ativo;
+    function getStAtivo() {
+        return $this->stAtivo;
     }
 
     function setIdDocTipoDestinatario($idDocTipoDestinatario) {
@@ -28,8 +28,8 @@ class FinDocTipoDestinatario {
         return $this;
     }
 
-    function setSt_ativo($st_ativo) {
-        $this->st_ativo = $st_ativo;
+    function setStAtivo($stAtivo) {
+        $this->stAtivo = $stAtivo;
         return $this;
     }
 
