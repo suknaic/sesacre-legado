@@ -11,7 +11,7 @@ $(document).ready(function () {
             "url": "request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaPessoasPerfis"
+                "acao": "retornaTiposDestinatarios"
             },
             "success": function (response) {  
                 func.carregaTabelaPadrao('tabela', response, [2]);
@@ -21,7 +21,6 @@ $(document).ready(function () {
     
     lista();
     
-    
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -30,11 +29,11 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var Dados = {
-                pessoa: $("#pessoa option:selected").val(),
-                perfil: $("#perfil option:selected").val()                
+                idDocTpDest: $("#id_doc_tipo_destinatario option:selected").val(),
+                idLotacao: $("#id_lotacao option:selected").val()                
             }
 
-            if ($("#pessoa option:selected").val() == 0 || $("#perfil option:selected").val() == 0) {
+            if (Dados.idDocTpDest == 0 || Dados.idLotacao == 0) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
@@ -45,7 +44,7 @@ $(document).ready(function () {
                 "dataType": "html",
                 "method": "post",
                 "data": {
-                    "acao": "cadastrarPessoaPerfil",
+                    "acao": "cadastrarTiposDestinatarios",
                     "dados": Dados
                 },
                 "success": function (response) {
@@ -98,12 +97,12 @@ $(document).ready(function () {
         }
     });
     
-    $('body').on('click', '.btn-remover', function (e) {
+    $('body').on('click', '.btn-excluir', function (e) {
 
         var $this = $(this);
-        var perfil = $this.val();
-        var pessoa = $(this).data('id');
-        var item = $this.closest('tr').find('td:eq(0)').text()+" - "+$this.closest('tr').find('td:eq(1)').text();
+        var dados = $(this).closest('tr').data('objeto');
+        var id = dados.id_doc_destinatario;
+        var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text();
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',
@@ -120,23 +119,14 @@ $(document).ready(function () {
             },
             callback: function (result) {
                 if (result) {
-                    var Dados = {
-                        perfil: perfil,
-                        pessoa: pessoa
-                    }
-
-                    if (Dados.perfil == "" || Dados.pessoa == "") {
-                        func.modalAlert(func.msgPreencherCampos);
-                        $this.prop("disabled", false);
-                        return false;
-                    }
+                    
 
                     $.ajax({
                         "url": "request.php",
                         "dataType": "html",
                         "data": {
-                            "acao": "removerPessoaPerfil",
-                            "dados": Dados
+                            "acao": "removerTiposDestinatarios",
+                            "dados": id
                         },
                         "success": function (response) {
                             if (response.trim() == "SessaoExpirada") {
@@ -164,6 +154,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
+                                console.log('testando');
                                 func.modalAlert(response.msg, 'primary');
                                 func.fechaModalReload();
                                 return false;
@@ -187,5 +178,5 @@ $(document).ready(function () {
         });
 
     });
-    
 });
+

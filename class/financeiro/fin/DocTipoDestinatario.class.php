@@ -23,6 +23,29 @@ class DocTipoDestinatario {
         $this->nmDocTipoDestinatario = $nmDocTipoDestinatario;
         return $this;
     }
+    
+    public function optionsTipoDestinatario(){
+        $retorno = '<option value="0">Selecione o tipo do destinatário</option>';
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoFinDocTipoDestinatario = new DaoFinDocTipoDestinatario();
+            $daoFinDocTipoDestinatario->select($pdo);
+            
+            if ($daoFinDocTipoDestinatario->getSucesso()) {
+                foreach ($daoFinDocTipoDestinatario->getMsgRetorno() as $linha) {
+                    $retorno .= '<option value='.$linha['id_doc_tipo_destinatario'].'>'.$linha['nm_doc_tipo_destinatario'].'</option>';
+                }
+            } else {
+                $retorno = $daoFinDocTipoDestinatario->getMsgRetorno();
+            }
+            
+            return $retorno;
+        } catch (Exception $exc) {
+            return $exc->getMessage();
+        }
+    }
 
     public function cadastrar(){
         try {  
