@@ -623,7 +623,7 @@ class FinOrdemModel {
                                 <td class="text-center">'.$valor["tipo_ordem"].'</td>
                                 <td class="text-center">'.$valor["valorOrdem"].'</td>
                                 <td class="text-center">
-                                <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "'.$valor["id_ordem"].'">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                                 </td>    

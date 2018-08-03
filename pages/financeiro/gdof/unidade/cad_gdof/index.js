@@ -135,7 +135,6 @@ $(document).ready(function () {
             if(value.id_ordem == $("#selectOrdem option:selected").val()){
                 func.modalAlert("Essa ordem já foi adicionada.");
             }
-            console.log(value.id_ordem);
         });
 
         infTabOrdem[$("#selectOrdem option:selected").val()] = array;
@@ -167,6 +166,12 @@ $(document).ready(function () {
             }
         });
 
+    });
+    
+    $("body").on("click", ".excluirOrdem", function (e){
+        var $this = $(this);
+        $("#"+$this.val()).remove();
+        infTabOrdem = {};
     });
 
     var infTabEntrega = [];

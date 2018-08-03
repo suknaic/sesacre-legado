@@ -370,7 +370,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 </div>
                                 <!--form lançado no grp-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                    <div  class="col-sm-12" >
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
@@ -395,15 +395,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                    </button>
+
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body">
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
