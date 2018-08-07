@@ -372,7 +372,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
-    public function retornaEntregaOrdemGdof(PDO $pdo, $ordens) {
+    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens) {
         try {
             $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
@@ -381,13 +381,54 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     on protocolo.id_protocolo = confirmacao.id_protocolo
                     inner join fin_ordem as ordem
                     on confirmacao.id_ordem = ordem.id_ordem
-                    where protocolo.id_ordem in(".$ordens.")
+                    where protocolo.id_ordem in(" . $idOrdens . ")
                     and protocolo.st_protocolo = '2'";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":situacao", $this->getSitEntrega(), PDO::PARAM_INT);
-            $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->execute();
-            $this->sucesso = true;
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaEntregaGdof(PDO $pdo, $idEntrega) {
+        try {
+            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem, 
+                    to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
+                    to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
+                    to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
+                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
+                    case 
+                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
+                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
+                     end situacao
+                    from fin_protocolo as protocolo
+                    inner join fin_entrega_confirmacao as confirmacao
+                    on protocolo.id_protocolo = confirmacao.id_protocolo
+                    inner join fin_ordem as ordem
+                    on confirmacao.id_ordem = ordem.id_ordem
+                    inner join fin_entrega_itens as item
+                    on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                    where confirmacao.id_entrega_confirmacao in(".$idEntrega.")
+                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo,
+                    ordem.id_ordem
+                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), 
+                    confirmacao.nr_entrega_confirmacao ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+            }
         } catch (Exception $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;

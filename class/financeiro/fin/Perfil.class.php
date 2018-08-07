@@ -42,7 +42,8 @@ class Perfil{
             PERFIL_FINANCEIRO_ORDEM => "Perfil Financeiro Ordem",
             PERFIL_FINANCEIRO_GDOF => "Perfil Financeiro GDOF",
             PERFIL_FINANCEIRO_PAGAMENTO =>  "Perfil Financeiro Pagamento",
-            PERFIL_FINANCEIRO_ADMINISTRACAO =>  "Perfil Financeiro Administração"
+            PERFIL_FINANCEIRO_ADMINISTRACAO =>  "Perfil Financeiro Administração",
+            PERFIL_FINANCEIRO_ZEUS => "Perfil Financeiro Zeus"
             );
         return $array;
     }

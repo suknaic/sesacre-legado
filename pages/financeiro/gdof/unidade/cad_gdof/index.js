@@ -117,33 +117,30 @@ $(document).ready(function () {
             }
         });
 
-//        $.ajax({
-//            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaDadosDaEntregas",
-//                "dados": idOrdem
-//
-//            },
-//            "success": function (response) {
-//               console.log(response);
-//            }
-//        });
+
     });
 
-    var infTabOrdem = [];
-    var contInfTabordem = 0;
+    var infTabOrdem = {};
+
     $("body").on("click", ".addOrdens", function (e) {
-       
-        infTabOrdem[contInfTabordem] = {
+
+        array = {
             "id_ordem": $("#selectOrdem option:selected").val(),
             "nr_ordem": $("#selectOrdem option:selected").text(),
             "tipo_ordem": $("#tipoOrdem").text(),
             "valorOrdem": $("#valorOrdem").text()
         }
-        contInfTabordem++;
-        
+
+        $.each(infTabOrdem, function (index, value) {
+            if (value.id_ordem == $("#selectOrdem option:selected").val()) {
+                func.modalAlert("Essa ordem já foi adicionada.");
+            }
+        });
+
+        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
+
         $.ajax({
+            "method": "POST",
             "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
             "dataType": 'html',
             "data": {
@@ -152,10 +149,102 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                $(".infoOrdem").html(response);
+                $("#tabelaOrdem").find("tbody").html(response);
             }
         });
-        return false;
-        console.log($("#selectOrdem").val());
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaOptionsDaEntrega",
+                "dados": infTabOrdem
+
+            },
+            "success": function (response) {
+                $("#selectEntrega").html(response);
+            }
+        });
+
     });
+
+
+
+    $("body").on("click", ".excluirOrdem", function (e) {
+        var $this = $(this);
+        var erro = 0;
+        //verificar ser tem entregas vinculadas pertencente a ordem excluida 
+        $(".trEntregas").each(function () {
+            if ($this.val() == $(this).attr("ordem")) {
+                erro++;
+
+            }
+        });
+        if (erro > 0) {
+            func.modalAlert("Exclua as entregas para exluir a ordem");
+            return false;
+        }
+
+        $("#" + $this.val()).remove();
+        infTabOrdem = {};
+        
+        $.each($(".tabOrdem"), function (index, value) {
+          console.log(value);
+        });
+
+//        $.ajax({
+//            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+//            "dataType": 'html',
+//            "data": {
+//                "acao": "retornaOptionsDaEntrega",
+//                "dados": infTabOrdem
+//
+//            },
+//            "success": function (response) {
+//                $("#selectEntrega").html(response);
+//            }
+//        });
+    });
+
+    var infTabEntrega = [];
+
+    $("body").on("click", ".addEntrega", function (e) {
+        infTabEntrega.push($("#selectEntrega option:selected").val());
+        atualizaTabelaEntrega(infTabEntrega);
+    });
+
+
+    function atualizaTabelaEntrega(infTabEntrega) {
+
+        $.ajax({
+            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaTabelaEntrega",
+                "dados": infTabEntrega
+
+            },
+            "success": function (response) {
+                $("#tabelaEntrega").find("tbody").html(response);
+                $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
+            }
+        });
+    }
+
+
+    $("body").on("click", ".excluirEntrega", function (e) {
+        var $this = $(this);
+        $("#ent" + $this.val()).remove();
+        infTabEntrega = [];
+        var qtdEntrega = 0;
+        $(".trEntregas").each(function () {
+            infTabEntrega.push($(this).attr("identrega"));
+            qtdEntrega++;
+        });
+        if (qtdEntrega > 0) {
+            atualizaTabelaEntrega(infTabEntrega);
+        }
+    });
+
+
 });

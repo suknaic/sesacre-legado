@@ -54,7 +54,19 @@ class DaoFinDocDestinatario extends FinDocDestinatario {
     function select(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select id_doc_destinatario ,id_doc_tipo_destinatario, id_lotacao, st_ativo from fin_doc_destinatario". $this->filtroSql() . " order by id_doc_destinatario";
+                $sql = "select 
+                                id_doc_destinatario,
+                                fdtd.id_doc_tipo_destinatario, 
+                                nm_doc_tipo_destinatario,
+                                sl.id_lotacao,
+                                nm_lotacao
+                        from 
+                                fin_doc_destinatario fdd,
+                                fin_doc_tipo_destinatario fdtd,
+                                ses_lotacao sl
+                        where
+                                fdd.id_doc_tipo_destinatario = fdtd.id_doc_tipo_destinatario
+                        and	fdd.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by id_doc_destinatario";
                 $stmt = $pdo->prepare($sql);
                 
                 if($this->getIdDocTipoDestinatario()){
@@ -115,15 +127,15 @@ class DaoFinDocDestinatario extends FinDocDestinatario {
         $filtro = "";
         
         if ($this->getIdDocDestinatario()) {
-            $filtro .= empty($filtro) ? " where id_doc_destinatario = :id_doc_destinatario" : " and id_doc_destinatario = :id_doc_destinatario";
+            $filtro .= " and id_doc_destinatario = :id_doc_destinatario";
         }
         
         if ($this->getIdDocTipoDestinatario()) {
-            $filtro .= empty($filtro) ? " where id_doc_tipo_destinatario = :id_doc_tipo_destinatario" : " and id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
+            $filtro .= " and id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
         }
         
         if ($this->getIdLotacao()) {
-            $filtro .= empty($filtro) ? " where id_lotacao = :id_lotacao" : " and id_lotacao = :id_lotacao";
+            $filtro .= " and id_lotacao = :id_lotacao";
         }
         
         return $filtro;

@@ -616,31 +616,19 @@ class FinOrdemModel {
 
     public function montaTabelaOrdemGdof($dados) {
         try {
-            $tabela = '<table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>Nº da Ordem</th>
-                                <th>Tipo ordem</th>
-                                <th>Valor da Ordem</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>';
-            foreach ($dados as $valor){
-                $tabela .= '<tr>
+            $tabela = '';
+            foreach ($dados as $key => $valor){
+                $tabela .= '<tr id = "'.$valor["id_ordem"].'" class= "tabOrdem">
                                 <td class="text-center">'.$valor["nr_ordem"].'</td>
                                 <td class="text-center">'.$valor["tipo_ordem"].'</td>
                                 <td class="text-center">'.$valor["valorOrdem"].'</td>
                                 <td class="text-center">
-                                <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "'.$valor["id_ordem"].'">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                                 </td>    
                             </tr>';
             }
-                            
-             $tabela .= '</tbody>
-                        </table>';
              return $tabela;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
