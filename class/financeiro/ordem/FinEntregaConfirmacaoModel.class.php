@@ -632,7 +632,7 @@ class FinEntregaConfirmacaoModel {
                 $totalEntrega = 0;
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos){
                     $totalEntrega += $campos["valor"];
-                    $tabela .= '<tr>
+                    $tabela .= '<tr id= "ent'.$campos["id_entrega_confirmacao"].'" ordem = "'.$campos["id_ordem"].'" class = "trEntregas" idEntrega = "'.$campos["id_entrega_confirmacao"].'">
                                  <td class = "text-center">'.$campos["nr_entrega_confirmacao"].'</td>
                                  <td class = "text-center">'.$campos["ordem"].'</td>
                                  <td class = "text-center">'.$campos["dataaviso"].'</td>
@@ -642,7 +642,7 @@ class FinEntregaConfirmacaoModel {
                                  <td class = "text-center">'. Metodos::ConverteValorBr($campos["valor"],4).'</td>
                                  <td class = "text-center">'.$campos["situacao"].'</td>
                                  <td class = "text-center">
-                                 <button type="button" title="Excluir ordem" class="excluir text-danger" value="1">
+                                 <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="'.$campos["id_entrega_confirmacao"].'">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                                 </td>
