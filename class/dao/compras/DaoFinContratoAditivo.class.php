@@ -370,7 +370,10 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                     . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
                     . " , C.fl_servico_continuado, F.id_fornecedor, P.nm_pessoa"
                     . " , TG.nm_tipo_gasto"
-                    . " , CA.ds_justificativa, CA.dt_inicial, CA.dt_final, CA.nr_percentual_indice"
+                    . " , CA.ds_justificativa"
+                    . " , to_char(CA.dt_inicial, 'DD/MM/YYYY') as dt_inicial"
+                    . " , to_char(CA.dt_final, 'DD/MM/YYYY') as dt_final"
+                    . " , CA.nr_percentual_indice"
                     . " , CM.nm_contrato_motivo, CF.nm_contrato_finalidade, CI.nm_contrato_instrumento"
                     . " , CB.nm_contrato_base_calculo, CU.nm_contrato_unidade_calculo"
                     . " , CAQ.nm_contrato_aquisicao"                    
@@ -442,7 +445,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " INNER JOIN pla_material MAT ON MAT.id_material = CI.id_material"                      
                         . " WHERE C.id_contrato_aditivo_pai = :idContrato AND C.tp_contrato = '2'"
                         . " AND C.st_ativo = '1'"
-                        . " ORDER BY id_contrato ASC";
+                        . " ORDER BY id_contrato ASC, nr_item";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
