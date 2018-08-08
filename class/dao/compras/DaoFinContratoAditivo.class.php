@@ -414,7 +414,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
             try{
                 $sql = "SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
                         . " , CI.id_cont_itens_aditivo"
-                        . " , NULL AS nm_contrato_motivo"
+                        . " , NULL AS nm_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS nr_percentual_indice, 'contrato' AS tipo"
                         . " , NULL AS id_aditivo_contrato, NULL AS nr_aditivo"
                         . " , CI.nr_item, CI.nr_lote, CI.nm_marca"
@@ -430,7 +430,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " UNION ALL"
                         . " SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
                         . " , CI.id_cont_itens_aditivo"
-                        . " , CM.nm_contrato_motivo"
+                        . " , CM.nm_contrato_motivo, CA.id_contrato_finalidade"
                         . " , CA.nr_percentual_indice, 'aditivo_valor' AS tipo"
                         . " , CA.id_contrato_aditivo, CA.nr_aditivo"                    
                         . " , CI.nr_item, CI.nr_lote, CI.nm_marca"

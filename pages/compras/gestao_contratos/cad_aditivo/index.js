@@ -499,7 +499,7 @@ $(document).ready(function () {
     });
     
     if($("#id_contrato").val() != 0){
-        //carregaContratoPesquisa();
+        carregaContratoPesquisa();
     }
     
     //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
@@ -517,9 +517,10 @@ $(document).ready(function () {
                 "id": $("#id_contrato").val()
             },
             "success": function (response){      
-                //console.log(response)
-                $("#modalDetalhes").find('.modal-body').html(response);
-                $("#modalDetalhes").modal('show')
+                console.log(response)
+                preencheCamposContrato(response)
+                //$("#modalDetalhes").find('.modal-body').html(response);
+                //$("#modalDetalhes").modal('show')
             }
         });
         
@@ -923,8 +924,8 @@ $(document).ready(function () {
                 "dados": '261'
             },
             "success": function (response) {                
-                func.carregaTabelaPadrao('tabelaItens', response, [], true);
-                $(".selecionaItem").first().trigger('click');
+                //func.carregaTabelaPadrao('tabelaItens', response, [], true);
+                //$(".selecionaItem").first().trigger('click');
                 //$(".btn-add-aditivo").trigger('click');  
                 //carregaDadosEdicao();                
             }            
