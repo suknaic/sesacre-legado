@@ -69,7 +69,7 @@ class DaoFinDocDestinatario extends FinDocDestinatario {
                         and	fdd.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by id_doc_destinatario";
                 $stmt = $pdo->prepare($sql);
                 
-                if($this->getIdDocTipoDestinatario()){
+                if($this->getIdDocDestinatario()){
                     $stmt->bindValue(":id_doc_destinatario", $this->getIdDocDestinatario(), PDO::PARAM_INT);
                 }
                 
@@ -131,11 +131,11 @@ class DaoFinDocDestinatario extends FinDocDestinatario {
         }
         
         if ($this->getIdDocTipoDestinatario()) {
-            $filtro .= " and id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
+            $filtro .= " and fdd.id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
         }
         
         if ($this->getIdLotacao()) {
-            $filtro .= " and id_lotacao = :id_lotacao";
+            $filtro .= " and fdd.id_lotacao = :id_lotacao";
         }
         
         return $filtro;

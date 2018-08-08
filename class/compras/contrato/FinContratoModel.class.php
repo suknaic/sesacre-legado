@@ -768,7 +768,7 @@ class FinContratoModel {
     }
 
     public function setItems(ItemModel $items) {
-        $this->items[] = $items;
+        $this->items[$items->getIdContItens()] = $items;
     }
 
     /**
@@ -1691,12 +1691,13 @@ class FinContratoModel {
                     $item->setVlItens($result['vl_itens']);
                     $item->setPcDesconto($result['pc_desconto']);
                     $item->setFlValorVariavel($result['fl_valor_variavel']);
-                    $item->setDescItem($result['ds_itens']);
+                    $item->setDescItem($result['nm_material']);
                     $item->setIdMaterial($result['id_material']);
                     $item->setIdFornecedor($result['id_fornecedor']);
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
                     $item->setIdUnidadeMedida($result['id_unidade_medida']);    
-                    $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);
+                    $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);                    
+                    
                     $cont->setItems($item);
                 }
             }
@@ -2225,6 +2226,26 @@ class FinContratoModel {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
             return;
+        }
+    }
+    
+    
+    public function retornaDadosContratoJson() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoContrato = new DaoFinContrato();
+            $daoContrato->setIdContrato($this->id_contrato);
+            $retorno = '';
+            $daoContrato->pesquisaDadosContrato($pdo);
+            if ($daoContrato->sucesso()) {                
+                return json_encode($daoContrato->getMsgRetorno());                
+            }
+
+            return $retorno;
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
     
