@@ -153,6 +153,11 @@ $(document).ready(function () {
             }
         });
 
+        retornaOptionsDaEntrega(infTabOrdem);
+
+    });
+    //retorna options entrega
+    function retornaOptionsDaEntrega(infTabOrdem) {
         $.ajax({
             "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
             "dataType": 'html',
@@ -165,11 +170,9 @@ $(document).ready(function () {
                 $("#selectEntrega").html(response);
             }
         });
+    }
 
-    });
-
-
-
+    //excluir ordem 
     $("body").on("click", ".excluirOrdem", function (e) {
         var $this = $(this);
         var erro = 0;
@@ -187,23 +190,17 @@ $(document).ready(function () {
 
         $("#" + $this.val()).remove();
         infTabOrdem = {};
-        
-        $.each($(".tabOrdem"), function (index, value) {
-          console.log(value);
-        });
 
-//        $.ajax({
-//            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaOptionsDaEntrega",
-//                "dados": infTabOrdem
-//
-//            },
-//            "success": function (response) {
-//                $("#selectEntrega").html(response);
-//            }
-//        });
+        //esse codigo abaixo foi realizado para atualiza o select das entregas
+        infNovaOrdem = {};
+        $(".tabOrdem").each(function () {
+            infNovaOrdem[$(this).attr("id")] = {"id_ordem": $(this).attr("id")}
+
+        });
+        //fim
+
+        retornaOptionsDaEntrega(infNovaOrdem);
+
     });
 
     var infTabEntrega = [];
@@ -243,6 +240,108 @@ $(document).ready(function () {
         });
         if (qtdEntrega > 0) {
             atualizaTabelaEntrega(infTabEntrega);
+        }
+    });
+
+    $("body").on("click", ".btn-salvar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            var entregas = [];
+
+            $(".trEntregas").each(function () {
+                entregas.push($(this).attr("identrega"));
+            });
+
+            if (entregas.length <= 0) {
+                func.modalAlert("Nenhuma entrega foi adicionada.");
+                return false;
+            }
+
+            var grp = "";
+
+            if ($('input[name=grp_cod]:checked').val() === 1) {
+                grp = $("#grp_sim").val();
+
+            } else if ($('input[name=grp_cod]:checked').val() === 0) {
+                grp = $("#grp_nao").val();
+
+            }
+
+            var dados = {
+                "processoAdm": $("#processoAdm").val(),
+                "nr_documento": $("#nr_documento").val(),
+                "tpDocumento": $("#tpDocumento option:selected").val(),
+                "competencia": $("#competencia").val(),
+                "emissao": $("#emissao").val(),
+                "atesto": $("#atesto").val(),
+                "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
+                "grp": grp,
+                "grpNumero": $("#grpNumero").val()
+            }
+
+            $.ajax({
+                "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+                "method": "POST",
+                "dataType": "html",
+                "data": {
+                    "acao": "cadastrarDocumentoFiscal",
+                    "dados": dados,
+                    "entrega": entregas
+                },
+                "success": function (response) {
+                    console.log(response);
+                    return false;
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert("Solicitação de Necessidade Realizada com Sucesso.", 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            if (response.tipoExibicao === "pre") {
+                                window.location.href = "/pages/financeiro/preOrdem/index.php?&id=" + response.msg;
+                            } else {
+                                window.location.href = "/pages/index.php";
+                            }
+
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
         }
     });
 

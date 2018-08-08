@@ -6,6 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -126,6 +127,27 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             echo $finEntregaConfirmacaoModel->retornaTabelaEntregasGdof($dados);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'cadastrarDocumentoFiscal':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+           
+            $finDocumentoFiscal = new FinDocumentoFiscal();
+            $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
+            $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
+            $finDocumentoFiscal->setIdTipoDocumento($dados["tpDocumento"]);
+            $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
+            $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
+            $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
+            echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;
             break;
         } catch (Error $e) {
