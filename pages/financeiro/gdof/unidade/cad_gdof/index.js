@@ -280,7 +280,7 @@ $(document).ready(function () {
                 "atesto": $("#atesto").val(),
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,
-                "grpNumero": $("#grpNumero").val()
+                "grpNumero": $("#nr_grp").val()
             }
 
             $.ajax({
@@ -294,6 +294,7 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
+                    $this.prop("disabled", true);
                     return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {

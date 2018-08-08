@@ -1,13 +1,12 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocumentoFiscal.class.php";
-
-class FinDocumentoFiscal {
+class FinDocumentoFiscalTb {
 
     private $id_documento_fiscal = null;
     private $nr_processo_administrativo = null;
     private $nr_documento_fiscal = null;
-    private $competencia = null;
+    private $mm_competencia = null;
+    private $aa_competencia = null;
     private $dt_emissao = null;
     private $dt_atesto = null;
     private $vl_documento = null;
@@ -20,7 +19,6 @@ class FinDocumentoFiscal {
     private $id_lotacao = null;
     private $id_documento_situacao = null;
     private $id_tipo_documento = null;
-    private $entrega = null;
 
     /**
      * @return mixed
@@ -79,17 +77,35 @@ class FinDocumentoFiscal {
     /**
      * @return mixed
      */
-    public function getCompetencia() {
-        return $this->competencia;
+    public function getMmCompetencia() {
+        return $this->mm_competencia;
     }
 
     /**
-     * @param mixed $competencia
+     * @param mixed $mm_competencia
      *
      * @return self
      */
-    public function setCompetencia($competencia) {
-        $this->competencia = $competencia;
+    public function setMmCompetencia($mm_competencia) {
+        $this->mm_competencia = $mm_competencia;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAaCompetencia() {
+        return $this->aa_competencia;
+    }
+
+    /**
+     * @param mixed $aa_competencia
+     *
+     * @return self
+     */
+    public function setAaCompetencia($aa_competencia) {
+        $this->aa_competencia = $aa_competencia;
 
         return $this;
     }
@@ -308,57 +324,6 @@ class FinDocumentoFiscal {
         $this->id_tipo_documento = $id_tipo_documento;
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntrega() {
-        return $this->entrega;
-    }
-
-    /**
-     * @param mixed $entrega
-     *
-     * @return self
-     */
-    public function setEntrega($entrega) {
-        $this->entrega = $entrega;
-
-        return $this;
-    }
-
-    public function salvaDocumentoFiscal() {
-        try {
-            if (empty($this->nr_processo_administrativo) && empty($this->nr_documento_fiscal) && empty($this->id_tipo_documento) && empty($this->dt_atesto) &&
-                    empty($this->dt_emissao) && empty($this->vl_documento)) {
-                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
-            }
-            //conexao 
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            //
-            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            $daoFinDocumentoFiscal->setNrProcessoAdministrativo($this->nr_processo_administrativo);
-            $daoFinDocumentoFiscal->setNrDocumentoFiscal($this->nr_documento_fiscal);
-            $daoFinDocumentoFiscal->setMmCompetencia("03");
-            $daoFinDocumentoFiscal->setAaCompetencia("2018");
-            $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
-            $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
-            $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
-            $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
-            $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
-            $daoFinDocumentoFiscal->setFlEncontroContas(0);
-            $daoFinDocumentoFiscal->setIdLotacao(1);
-            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1);
-            $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
-            $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
-            var_dump($daoFinDocumentoFiscal->sucesso());
-            var_dump($daoFinDocumentoFiscal->getMsgRetorno());
-        } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
-        }
     }
 
 }
