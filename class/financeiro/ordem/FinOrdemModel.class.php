@@ -618,7 +618,7 @@ class FinOrdemModel {
         try {
             $tabela = '';
             foreach ($dados as $key => $valor){
-                $tabela .= '<tr id = "'.$valor["id_ordem"].'">
+                $tabela .= '<tr id = "'.$valor["id_ordem"].'" class= "tabOrdem">
                                 <td class="text-center">'.$valor["nr_ordem"].'</td>
                                 <td class="text-center">'.$valor["tipo_ordem"].'</td>
                                 <td class="text-center">'.$valor["valorOrdem"].'</td>

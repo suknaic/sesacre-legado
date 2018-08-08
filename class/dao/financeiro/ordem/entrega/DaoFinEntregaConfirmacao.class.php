@@ -404,7 +404,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
                     to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
                     to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
-                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, 
+                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
                     case 
                      when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
                      when confirmacao.sit_entrega = '2' then 'Entrega Total'

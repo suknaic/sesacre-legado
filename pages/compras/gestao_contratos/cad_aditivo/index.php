@@ -191,7 +191,7 @@
                                         <h3 class="panel-title">Dados do Contrato</h3>
                                     </div>
                                     <div class="panel-body">
-                                        <input type="hidden" id="id_contrato" value="0" />
+                                        <input type="hidden" id="id_contrato" value="<?php echo $idContrato; ?>" />
                                         <?php 
                                             foreach ($dadosContrato as $key => $value) {
                                                 echo '<div class="row">

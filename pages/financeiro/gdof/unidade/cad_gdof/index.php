@@ -227,7 +227,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
-                                                                <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="text-center">Nº da Entrega</th>
@@ -380,7 +380,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2">
-                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked>Sim</label>
+                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked="checked">Sim</label>
                                                                 <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
                                                             </div>
 
