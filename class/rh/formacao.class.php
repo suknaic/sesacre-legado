@@ -64,12 +64,6 @@ class Formacao {
                 return $retorno;
             }
             
-            $naoPermitidas = array(2,3);
-            if (count(array_search($this->id_escolaridade, $naoPermitidas)) > 0) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Não é possível cadastrar formação com Escolaridade(Ensino Fundamental ou Médio).");
-                $pdo->rollBack();
-                return $retorno;
-            }
             $result = $formacao->insert($pdo);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
