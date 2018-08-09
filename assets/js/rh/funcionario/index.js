@@ -8,11 +8,8 @@ function listaVinculoCombo() {
             id: 0
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_vinculo").append(response);
-            $("#id_vinculo").select2({
-            //    width: " 100%"
-            });
+            $("#id_vinculo").select2({});
         }
     });
 }
@@ -27,11 +24,8 @@ function listaLotacaoCombo() {
             id: 0
         },
         "success": function (response) {
-            // console.log(response);
             $("#id_lotacao").append(response);
-            $("#id_lotacao").select2({
-          //      width: " 100%"
-            });
+            $("#id_lotacao").select2({});
         }
     });
 }
@@ -81,6 +75,12 @@ $(document).ready(function () {
             var vinculo = $("#id_vinculo").val();
             var lotacao = $("#id_lotacao").val();
             var cpf = $("#nr_cpf").val().replace(/(\.|\/|\-)/g, "");
+            
+            if (nome === '' && matricula === '' && vinculo === '0' && lotacao === '0' && cpf === '') {
+                func.modalAlert(func.msgPreencherCampos);
+                return false;
+            }
+
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
                 "dataType": 'html',
@@ -95,15 +95,28 @@ $(document).ready(function () {
 
                 },
                 "success": function (response) {
-                    //console.log(response);
-                    func.carregaTabelaPadrao('tabela', response, [7], true);
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.carregaTabelaPadrao('tabela', response, [7], true);
+                    }
+                    
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    }
                 }
             });
         }
     });
 
     $('body').on('click', '.btn-remover', function (e) {
-        
+
         var $this = $(this);
         var id = $this.val();
         var item = $this.closest('td').find('.btn-edit').attr("nome");
@@ -126,7 +139,7 @@ $(document).ready(function () {
                     var Pessoa = {
                         idContrato: idContrato
 
-                    }
+                    };
 
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);
@@ -192,13 +205,13 @@ $(document).ready(function () {
         });
 
     });
-    
+
     $('body').on('click', '.btn-redefinir', function (e) {
 
         var $this = $(this);
         var idPessoa = $this.val();
         var item = $this.closest('td').find('.btn-edit').attr("nome");
-        
+
         bootbox.confirm({
             title: 'Caixa de Confirmação',
             message: 'Você tem Certeza que deseja <span class="text-danger">REDEFINIR</span> a senha padrão de:   <span class="text-danger">' + item + '</span>?',
