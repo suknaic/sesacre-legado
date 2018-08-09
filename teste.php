@@ -2,7 +2,7 @@
 //require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 // ************************ INSERIR ANOTAÇÕES DOS PROCESSOS QUE TIVERAM SEUS TÉCNICOS EXCLUIDOS/ DO ANTIGO P/ O NOVO SESACRENET ******************************
 //try {
-    // ******************** Conexão com o 192.168.0.31 ***********************
+//    // ******************** Conexão com o 192.168.0.31 ***********************
 //    $pdo = new PDO('mysql:host=192.168.0.31;dbname=sesacre', 'suporte', '6832152624');
 //    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 //
@@ -18,7 +18,7 @@
 //    $idPessoa = 1723;
 //    foreach ($resultado as $dados) {
 //        echo "INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario, dh_anotacao)
-//                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", " . $dados['idSituacao'] . ", " . $idPessoa . ", " . $idPessoa . ", " . $dados['dataAnotacao'] . " )<br>";
+//                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", " . $dados['idSituacao'] . ", " . $idPessoa . ", " . $idPessoa . ", '" . $dados['dataAnotacao'] . "' );<br>";
 //    }
 //} catch (PDOException $e) {
 //    echo 'ERROR: ' . $e->getMessage();
