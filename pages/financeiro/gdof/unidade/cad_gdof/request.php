@@ -144,9 +144,13 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
             $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
             $finDocumentoFiscal->setIdTipoDocumento($dados["tpDocumento"]);
+            $finDocumentoFiscal->setCompetencia($dados["competencia"]);
             $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
             $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
             $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
+            $finDocumentoFiscal->setFlGrp($dados["grp"]);
+            $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
+            $finDocumentoFiscal->setEntrega($entrega);
             echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;
             break;

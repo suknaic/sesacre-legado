@@ -20,18 +20,20 @@ $(document).ready(function () {
                     nome: nome
                 },
                 "success": function (response) {
-                    if (response == 0) {
-                        try {
-                            response = JSON.parse(response);
-                        } catch (e) {
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.carregaTabelaPadrao('tabela', response, [6], true);
+                    }
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
                             func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            $("nm_pessoa").focus();
+                            return false;
                         }
-                        func.modalAlert(response);
-                        $("nm_pessoa").focus();
-                        return;
-                    } else {
-                        func.carregaTabelaPadrao('tabela', response, [6], true);
                     }
                 }
             });
