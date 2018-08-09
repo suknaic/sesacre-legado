@@ -172,7 +172,7 @@ $(document).ready(function () {
                 "acao": "retornaAditivosDoContrato",
                 "dados": idContrato
             },
-            "success": function (response) {
+            "success": function (response) {                
                 $("#panel-aditivos").find('.panel-body').html(response);  
                 if($(".aditivo_quantidade").attr('quantidade') > 0){
                     $(".btn-historico-itens").show();
@@ -345,7 +345,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                            window.location.href = "index.php?m="+$("#motivo").val()+"&contrato="+$("#id_contrato").val();
                         });
                         return false;
                     } else {
@@ -430,7 +430,7 @@ $(document).ready(function () {
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, 'success');
                                 $('.modal-alert').on('hidden.bs.modal', function (e){
-                                    location.reload();
+                                    window.location.href = "index.php?m="+$("#motivo").val()+"&contrato="+$("#id_contrato").val();
                                 });
                                 return false;
                             } else {                                
@@ -516,9 +516,11 @@ $(document).ready(function () {
                 "acao": "buscaContrato",
                 "id": $("#id_contrato").val()
             },
-            "success": function (response){      
-                console.log(response)
+            "success": function (response){                
                 preencheCamposContrato(response)
+                buscaExisteAditivos(response.id_contrato); 
+                buscaItensDoContrato(response.id_contrato);
+                buscaGestoresDoContrato();
                 //$("#modalDetalhes").find('.modal-body').html(response);
                 //$("#modalDetalhes").modal('show')
             }
