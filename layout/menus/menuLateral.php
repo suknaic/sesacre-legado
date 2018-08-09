@@ -311,13 +311,13 @@
                                                     <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#">Vincular Tramitação</a>
+                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_tramitacao/">Vincular Tramitação</a>
                                                 </li>
                                             </ul>
                                         </li>
                                         <li>
                                             <a href="/pages/financeiro/autorizacoes/index.php">
-                                                <span class="menu-title">Tabela Gerenciais</span>
+                                                <span class="menu-title">Tabelas Gerenciais</span>
                                                 <i class="arrow"></i>
                                             </a>
                                             <ul class="collapse">
@@ -325,10 +325,10 @@
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Cadastrar Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tipo_destinatario/">Tipo de Destinatário</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_destinatario/">Tipo de Destinatário</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/vincula_destinatario/">Vincular Tipo de Destinatário/Destinatário</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincula_destinatario/">Vincular Tipo de Destinatário/Destinatário</a>
                                                 </li>
                                             </ul>
 

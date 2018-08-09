@@ -104,6 +104,34 @@ class DocDestinatario {
         }
     }
     
+    function optionsDestinatario(){
+        try {
+            $retorno = "<option value=0>Selecione um Destinatário</option>";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoFinDocDestinatario = new DaoFinDocDestinatario();
+            
+            if ($this->getIdDocTipoDestinatario()) {
+                $daoFinDocDestinatario->setIdDocTipoDestinatario($this->getIdDocTipoDestinatario());
+            }
+            $daoFinDocDestinatario->select($pdo);
+            
+            if ($daoFinDocDestinatario->getSucesso()) {
+                foreach ($daoFinDocDestinatario->getMsgRetorno() as $linha) {
+                    $retorno .= "<option value=".$linha['id_lotacao'].">".$linha['nm_lotacao']."</option>";
+                }
+            } else {
+                $retorno = $daoFinDocDestinatario->getMsgRetorno();
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
     function listaTodos() {
         try {
             $retorno = "";

@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "//class/financeiro/fin/DocDestinatario.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/DocDestinatario.class.php";
 
 
 $session = new Session('ajax');

@@ -370,7 +370,10 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                     . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
                     . " , C.fl_servico_continuado, F.id_fornecedor, P.nm_pessoa"
                     . " , TG.nm_tipo_gasto"
-                    . " , CA.ds_justificativa, CA.dt_inicial, CA.dt_final, CA.nr_percentual_indice"
+                    . " , CA.ds_justificativa"
+                    . " , to_char(CA.dt_inicial, 'DD/MM/YYYY') as dt_inicial"
+                    . " , to_char(CA.dt_final, 'DD/MM/YYYY') as dt_final"
+                    . " , CA.nr_percentual_indice"
                     . " , CM.nm_contrato_motivo, CF.nm_contrato_finalidade, CI.nm_contrato_instrumento"
                     . " , CB.nm_contrato_base_calculo, CU.nm_contrato_unidade_calculo"
                     . " , CAQ.nm_contrato_aquisicao"                    
@@ -411,7 +414,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
             try{
                 $sql = "SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
                         . " , CI.id_cont_itens_aditivo"
-                        . " , NULL AS nm_contrato_motivo"
+                        . " , NULL AS nm_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS nr_percentual_indice, 'contrato' AS tipo"
                         . " , NULL AS id_aditivo_contrato, NULL AS nr_aditivo"
                         . " , CI.nr_item, CI.nr_lote, CI.nm_marca"
@@ -427,7 +430,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " UNION ALL"
                         . " SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
                         . " , CI.id_cont_itens_aditivo"
-                        . " , CM.nm_contrato_motivo"
+                        . " , CM.nm_contrato_motivo, CA.id_contrato_finalidade"
                         . " , CA.nr_percentual_indice, 'aditivo_valor' AS tipo"
                         . " , CA.id_contrato_aditivo, CA.nr_aditivo"                    
                         . " , CI.nr_item, CI.nr_lote, CI.nm_marca"
@@ -442,7 +445,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " INNER JOIN pla_material MAT ON MAT.id_material = CI.id_material"                      
                         . " WHERE C.id_contrato_aditivo_pai = :idContrato AND C.tp_contrato = '2'"
                         . " AND C.st_ativo = '1'"
-                        . " ORDER BY id_contrato ASC";
+                        . " ORDER BY id_contrato ASC, nr_item";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_INT);
