@@ -728,7 +728,9 @@ class FinContratoAditivo {
                                     && $v['tipo'] == "contrato")
                                 ){
                                 //Seta o Ultimo Valor Unitário Valido
-                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                if( !$flagValor && $v['vl_itens'] != "0" && $v['vl_itens'] != "0.0"
+                                        && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
+                                        && $v['vl_itens'] > 0){
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
                                     $flagValor = true;
                                 }
@@ -771,7 +773,9 @@ class FinContratoAditivo {
                                     && $v['tipo'] == "contrato")
                                 ){
                                 //Seta o Ultimo Valor Unitário Valido
-                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                if( !$flagValor && $v['vl_itens'] != "0" && $v['vl_itens'] != "0.0"
+                                        && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
+                                        && $v['vl_itens'] > 0){                                
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
                                     $flagValor = true;
                                 }
@@ -840,13 +844,15 @@ class FinContratoAditivo {
                                         && $v1['tipo'] == "contrato")
                                     ){ 
                                         //Seta o Ultimo Valor Unitário Valido
-                                        if(!empty((int)$v1['vl_itens']) ){
+                                        if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
+                                            && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
+                                            && $v1['vl_itens'] > 0){                                        
                                             $finContItens[$k]->setVlItens($v1['vl_itens']);
                                             break;
                                         }
                                     }
                             }                                                                                  
-                        }else{                                                              
+                        }else{                                                           
                             $finContItens[$k]->setVlItens($this->itens[$key]['valor_aditivado']);   
                         }
                         //No Caso de Mudança de Valor Unitário, A Quantidade será alterado de acordo com 
@@ -896,7 +902,7 @@ class FinContratoAditivo {
                                 . " ficará com sua quantidade Negativa");
                         }
                         
-                        
+                    
                       
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
@@ -921,8 +927,10 @@ class FinContratoAditivo {
                                 ||
                                 ($v1['id_cont_itens'] == $value->getIdContItens()
                                     && $v1['tipo'] == "contrato")
-                                ){
-                                if(!empty((int)$v1['vl_itens']) ){
+                                ){                                
+                                if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
+                                        && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
+                                        && $v1['vl_itens'] > 0){                                    
                                     $finContItens[$k]->setVlItens($v1['vl_itens']);
                                     break;
                                 }
@@ -932,9 +940,7 @@ class FinContratoAditivo {
                     }                                        
                 }                                
             }    
-            
-          
-            
+       
             /*
              * Se o tipo de Aquisição for preenchido, então se deve calcular a Porcentagem
              * limite para cada tipo de aquisição

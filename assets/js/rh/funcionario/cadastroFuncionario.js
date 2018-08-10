@@ -45,7 +45,6 @@ function listaLotacaoCombo() {
             "acao": "listaLotacaoOption"
         },
         "success": function (response) {
-            // console.log(response);
             $("#id_lotacao").append(response);
             $("#id_lotacao").select2({
                 width: " 100%"
@@ -63,7 +62,6 @@ function listaVinculoCombo() {
             acao: "listaVinculoOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_vinculo").append(response);
             $("#id_vinculo").select2({
                 width: " 100%"
@@ -81,7 +79,6 @@ function listaPaisCombo() {
             acao: "listaPaisOption"
         },
         "success": function (response) {
-            //console.log(response);
             $(".pais").append(response);
             $(".pais").select2({
                 width: " 100%"
@@ -100,7 +97,6 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
             idEstado: estado
         },
         "success": function (response) {
-            //console.log(response);
             if (sw == 1) {
                 $("#id_estado_naturalidade").empty();
                 $("#id_estado_naturalidade").append(response);
@@ -108,7 +104,6 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
                     width: " 100%"
                 });
                 $("#id_estado_naturalidade").val(estado);
-//                $("#id_estado_naturalidade").trigger('change');
             }
             if (sw == 2) {
                 $("#id_estado_endereco").empty();
@@ -117,7 +112,6 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
                     width: " 100%"
                 });
                 $("#id_estado_endereco").val(estado);
-//                $("#id_estado_endereco").trigger('change');
             }
 
         }
@@ -136,8 +130,6 @@ function listaCidadeCombo(idEstado, sw, cidade) {
             idCidade: cidade
         },
         "success": function (response) {
-            //console.log(response);
-            //console.log(cidade);
             if (sw == 1) {
                 $("#id_naturalidade").empty();
                 $("#id_naturalidade").append(response);
@@ -173,8 +165,6 @@ function listaCidadeComboUf(idEstado, uf) {
             uf: uf
         },
         "success": function (response) {
-            //       console.log(response);
-            //console.log(cidade);
 
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
@@ -197,7 +187,6 @@ function listaEstadoCombo() {
             idPais: null
         },
         "success": function (response) {
-            //    console.log(response);
             $("#id_estado_expedidor").append(response);
             $("#id_estado_expedidor").select2({
                 width: " 100%"
@@ -216,7 +205,6 @@ function listaEstadoCivilCombo() {
             acao: "listaEstadoCivilOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_estado_civil").append(response);
             $("#id_estado_civil").select2({
                 width: " 100%"
@@ -234,7 +222,6 @@ function listaEscolaridadeFormacaoCombo() {
             acao: "listaEscolaridadeFormacaoOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $(".formacao").append(response);
             $(".formacao").select2({
                 width: " 100%"
@@ -252,7 +239,6 @@ function listaEscolaridadeCombo() {
             acao: "listaEscolaridadeOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_escolaridade").append(response);
             $("#id_escolaridade").select2({
                 width: " 100%"
@@ -270,7 +256,6 @@ function listaEstadoCombo() {
             acao: "listaEstadoOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_estado").append(response);
             $("#id_estado").select2({
                 width: " 100%"
@@ -291,7 +276,6 @@ $(document).ready(function () {
                 acao: "listaPessoaJuridicaOption"
             },
             "success": function (response) {
-                //  console.log(response);
                 $("#id_pessoa_juridica").append(response);
                 $("#id_pessoa_juridica").select2({
                     width: " 100%"
@@ -674,10 +658,9 @@ $(document).ready(function () {
             if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
                 var DadosCompetencia = [];
                 $("#tabela tbody tr").each(function () {
-//var coluna =  $(this).children();
                     DadosCompetencia.push({
                         id_escolaridade_formacao: $(this).find(".escolaridade").attr("idEscolaridadeFormacao")
-                    })
+                    });
                 });
             }
 //*******************dados funcionais********************************
@@ -755,13 +738,13 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    //console.log($i+"-"+index+"=>"+value);
+                    console.log($i+"-"+index+"=>"+value);
                     if ($i <= 12) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
                     } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato (" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " - Endereço / Contato (" + index + ")");
                     } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + "  - Dados Funcionais (" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " - Dados Funcionais (" + index + ")");
                     }
                     console.log($i + "-" + index + "=>" + value);
                     $campo = 1;

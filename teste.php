@@ -1,6 +1,30 @@
 <?php
 //require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+// ************************ INSERIR ANOTAÇÕES DOS PROCESSOS QUE TIVERAM SEUS TÉCNICOS EXCLUIDOS/ DO ANTIGO P/ O NOVO SESACRENET ******************************
+//try {
+//    // ******************** Conexão com o 192.168.0.31 ***********************
+//    $pdo = new PDO('mysql:host=192.168.0.31;dbname=sesacre', 'suporte', '6832152624');
+//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 //
+//    $sql = $pdo->prepare('SELECT DISTINCT (pro.adaCpr), pro.idProcesso, ano.desAnotacao, sit.idSituacao, ano.dataAnotacao FROM LP_Processo as pro 
+//                                INNER JOIN func_info as func ON func.id = pro.idFuncionario
+//                                INNER JOIN LP_Anotacao as ano ON ano.idProcesso = pro.idProcesso
+//                                INNER JOIN LP_Situacao as sit ON sit.idSituacao = ano.idSituacao
+//                                    WHERE func.nome IN ("Clailson Dos Santos Lago")
+//                                        GROUP BY pro.idProcesso,ano.idAnotacao
+//                        ');
+//    $sql->execute();
+//    $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+//    $idPessoa = 1723;
+//    foreach ($resultado as $dados) {
+//        echo "INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario, dh_anotacao)
+//                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", " . $dados['idSituacao'] . ", " . $idPessoa . ", " . $idPessoa . ", '" . $dados['dataAnotacao'] . "' );<br>";
+//    }
+//} catch (PDOException $e) {
+//    echo 'ERROR: ' . $e->getMessage();
+//}
+// ************************************************************************************************************************************************************
+
 ////-----------------------------------------------------------teste para corrigir fin_despesa_elemeneto----------------------------------------------------------------------------------
 //$conexao = new Conexao();
 //$pdo = $conexao->connect();
