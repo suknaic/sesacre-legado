@@ -291,8 +291,8 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    public function retornaPedidoPesquisaComOrdens(PDO $pdo, $filter){
+
+    public function retornaPedidoPesquisaComOrdens(PDO $pdo, $filter) {
         try {
             if (!empty($pdo)) {
                 $sql = "select
@@ -357,7 +357,7 @@ class DaoFinPedido extends FinPedidoTb {
                                as ordem 
                                on ordem.id_pedido = p.id_pedido 
                          where
-                            p.st_pedido > '0' ". $filter ."
+                            p.st_pedido > '0' " . $filter . "
                           order by
                             p.id_pedido desc";
                 $stmt = $pdo->prepare($sql);
@@ -481,6 +481,37 @@ class DaoFinPedido extends FinPedidoTb {
                 $sql = "select id_pedido from fin_pedido where nr_pedido = :numero";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaValoresPedido(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select sum(vl_pedido)
+                        from fin_pedido as p
+                        where p.st_pedido > '0' 
+                        and p.id_fonte = :fonte
+                        and p.id_programa_trabalho  = :programa
+                        and p.id_despesa_elemento = :elemento
+                        and p.id_tipo_gasto = :tipoGasto
+                        and p.id_lotacao =  :lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":fonte", $this->getIdFonte(), PDO::PARAM_INT);
+                $stmt->bindValue(":programa", $this->getIdProgramaTrabalho(), PDO::PARAM_INT);
+                $stmt->bindValue(":elemento", $this->getIdDespesaElemento(), PDO::PARAM_INT);
+                $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
+                $stmt->bindValue(":lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);

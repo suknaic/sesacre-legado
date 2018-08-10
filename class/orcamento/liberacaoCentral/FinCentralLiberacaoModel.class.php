@@ -367,6 +367,8 @@ class FinCentralLiberacaoModel {
             $finCentralLiberacaoTransModel = new FinCentralLiberacaoTransModel();
             //qddvalor
             $qddValor = new QddValor();
+            //pedido 
+            $pedido  =  new Pedido();
             if (!empty($qdd->getIdQdd())) {
                 $daoFinCentralLiberacao->setIdPessoa($_SESSION['idUser']);
                 $daoFinCentralLiberacao->setIdLotacao($dados[0]["central"]);
@@ -383,6 +385,7 @@ class FinCentralLiberacaoModel {
                 //erro 
                 $erro = false;
                 foreach ($dados as $v) {
+                    
                     $qddValor->setIdQdd($qdd->getIdQdd());
                     $qddValor->setIdFonte($v["fonte"]);
                     $qddValor->setIdProgramaTrabalho($v["projeto"]);
@@ -400,15 +403,22 @@ class FinCentralLiberacaoModel {
                     if ($finCentralLiberacaoTransModel->salvaLiberacaoTrans($pdo) == false) {
                         $erro = true;
                     }
-
+                    
+                    $pedido->setIdFonte($v["fonte"]);
+                    $pedido->setIdProgramaTrabalho($v["projeto"]);
+                    $pedido->setIdDespesaElemento($v["despesa"]);
+                    $pedido->setIdTipoGasto($v["tipoDeGasto"]);
+                    $pedido->setIdLotacao($v["central"]);
+                    $vlPedidoExecucao = $pedido->retornaPedidoExecutado($pdo)["sum"];
+                   
                     if (!$erro) {
 
-                        if (($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"])) >= 0) {
+                        if (round(($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]) - $vlPedidoExecucao),4) >= 0) {
                             $qddValor->setVlLiberado($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]));
                             $qddValor->atualizaValoresLiberado($pdo);
                         } else {
                             $erro = true;
-                            return Metodos::retornoAjax("Erro", "alert", 'Redução estar maior do que foi liberado');
+                            return Metodos::retornoAjax("Erro", "alert", 'Redução estar maior do que foi liberado ou executado');
                         }
                     }
                 }

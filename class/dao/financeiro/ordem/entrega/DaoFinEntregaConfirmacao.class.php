@@ -381,8 +381,11 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     on protocolo.id_protocolo = confirmacao.id_protocolo
                     inner join fin_ordem as ordem
                     on confirmacao.id_ordem = ordem.id_ordem
+                    left join fin_entrega_documento as entDoc
+                    on entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
                     where protocolo.id_ordem in(" . $idOrdens . ")
-                    and protocolo.st_protocolo = '2'";
+                    and protocolo.st_protocolo = '2'
+                    and entDoc.id_documento_fiscal is null ";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {

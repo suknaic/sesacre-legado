@@ -98,6 +98,7 @@ $(document).ready(function () {
                 $("#selectOrdem").html(response);
             }
         });
+        $('#modalItem').modal('hide');
     });
 
     $("body").on("change", "#selectOrdem", function (e) {
@@ -243,6 +244,18 @@ $(document).ready(function () {
         }
     });
 
+
+    /*QUANDO CLICAR NO BOTAO NÃO ESCONDER OS CAMPOS DO NUMERO DO GRP*/
+
+    $("body").on('click', '#grp_nao', function () {
+        $(".divNumeroGrp").hide();
+        $("#nr_grp").val("");
+    });
+
+    $("body").on('click', '#grp_sim', function () {
+        $(".divNumeroGrp").show();
+    });
+    /****/
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -294,8 +307,6 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
-                    $this.prop("disabled", true);
-                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -320,14 +331,9 @@ $(document).ready(function () {
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert("Solicitação de Necessidade Realizada com Sucesso.", 'success');
+                        func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            if (response.tipoExibicao === "pre") {
-                                window.location.href = "/pages/financeiro/preOrdem/index.php?&id=" + response.msg;
-                            } else {
-                                window.location.href = "/pages/index.php";
-                            }
-
+                            location.reload();
                         });
                         return false;
                     } else {
@@ -337,7 +343,6 @@ $(document).ready(function () {
                     }
                 },
                 "error": function (response) {
-
                     $this.prop("disabled", false);
                     func.modalAlert(func.msgErroPadrao);
                     return false;
