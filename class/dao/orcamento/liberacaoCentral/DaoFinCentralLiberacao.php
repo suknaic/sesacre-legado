@@ -203,7 +203,7 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
                         inner join fin_central_liberacao_trans as subclt
                         on subCl.id_central_liberacao = subclt.id_central_liberacao 
                         
-                        where subCl.st_central_liberacao = '1'
+                        where subCl.st_central_liberacao = '2'
                         
                         and subclt.id_qdd_valor  = :idQddValor
                         

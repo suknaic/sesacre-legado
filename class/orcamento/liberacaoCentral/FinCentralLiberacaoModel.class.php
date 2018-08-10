@@ -404,22 +404,17 @@ class FinCentralLiberacaoModel {
                         $erro = true;
                     }
 
-                    $pedido->setIdFonte($v["fonte"]);
-                    $pedido->setIdProgramaTrabalho($v["projeto"]);
-                    $pedido->setIdDespesaElemento($v["despesa"]);
-                    $pedido->setIdTipoGasto($v["tipoDeGasto"]);
-                    $pedido->setIdLotacao($v["central"]);
-                    $vlPedidoExecucao = $pedido->retornaPedidoExecutado($pdo)["sum"];
-
                     if (!$erro) {
-
-                        if (round(($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]) - $vlPedidoExecucao), 4) < 0) {
+                        //adicionar o ano no array para busca o saldo do valor liberado
+                        $v += ["ano" => $ano];
+                        
+                        if (round(($this->retornaSaldoValorLiberado($v) - Metodos::ConverteValorIng($v["valor"])), 4) < 0) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", 'Redução estar maior do que foi liberado ou executado');
                         }
                     }
                 }
-              
+
                 if ($erro == false) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
@@ -746,7 +741,7 @@ class FinCentralLiberacaoModel {
         $dadosLiberacao = $this->dadosLiberacao($pdo);
         $qddValor->setIdQddValor($dados["id"]);
         $dadosQdd = $qddValor->retornaQddValorPorId($pdo);
-        
+
         if ($dados["validacao"] == 1) {
 
             if ($dados["tipoliberacao"] == 1) {
@@ -754,7 +749,8 @@ class FinCentralLiberacaoModel {
             }
 
             if ($dados["tipoliberacao"] == 2) {
-                $qddValor->setVlLiberado(($dadosLiberacao[0]["vl_central_liberacao_trans"] - $dadosQdd["vl_liberado"]));
+
+                $qddValor->setVlLiberado(($dadosQdd["vl_liberado"] - $dadosLiberacao[0]["vl_central_liberacao_trans"]));
             }
 
             $daoFinCentralLiberacao->setIdCentralLiberacao($dados["idLiberacao"]);
