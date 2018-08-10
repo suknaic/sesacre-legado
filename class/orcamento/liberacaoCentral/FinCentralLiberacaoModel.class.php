@@ -414,13 +414,13 @@ class FinCentralLiberacaoModel {
                     if (!$erro) {
 
                         if (round(($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]) - $vlPedidoExecucao), 4) < 0) {
-                            $erro = true;
+                            $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", 'Redução estar maior do que foi liberado ou executado');
                         }
                     }
                 }
-
-                if ($erro == false && $qddValor->Sucesso() == true) {
+              
+                if ($erro == false) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                     ;
