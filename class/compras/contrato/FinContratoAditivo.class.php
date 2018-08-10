@@ -600,6 +600,18 @@ class FinContratoAditivo {
                             
             $this->flServicoContinuado = $contRef->getFlServicoContinuado();
             
+            /*
+             * Motivo de Prazo e Valor e Prazo não pode ser para 
+             * Serviço Não Continuado
+             */                       
+            if($this->flServicoContinuado != "S" 
+                && ($this->idMotivo == $this->motivoPorPrazo
+                    || $this->idMotivo == $this->motivoPorValorePrazo
+                    )
+                ){
+                return Metodos::retornoAjax("Erro", "alert", "Contrato de Serviço Não Continuado não pode ser Aditivado Por Valor ou Valor e Prazo.");
+            }
+            
             
             //Valida se as Data de Assinatura e Publicação do Aditivo são menores que a Data
             //da Vigência Inicial e Final            
@@ -673,7 +685,7 @@ class FinContratoAditivo {
              * 
              */
             
-            $this->flServicoContinuado = "N";
+            //$this->flServicoContinuado = "N";
             
             $valorExecutado = array();
             
@@ -681,8 +693,8 @@ class FinContratoAditivo {
             $valorExecutado[] = array("id_cont_itens", 16862, "qtd_executado", 5000.0000);
             
             
-            $valorExecutado[] = array("id_cont_itens", 18201, "qtd_executado", 25.0000);
-            $valorExecutado[] = array("id_cont_itens", 18202, "qtd_executado", 50.0000);
+            $valorExecutado[] = array("id_cont_itens", 18223, "qtd_executado", 25.0000);
+            $valorExecutado[] = array("id_cont_itens", 18224, "qtd_executado", 50.0000);
                         
             //$valorExecutado[] = array("id_cont_itens", 18205, "qtd_executado", 100.0000);                        
             
@@ -1451,7 +1463,7 @@ class FinContratoAditivo {
         } 
         
         if($this->idMotivo == $this->getMotivoPorPrazo() || $this->idMotivo == $this->getMotivoPorValorePrazo()){
-                        
+                                                                   
             if($this->dtVigenciaFinal < $this->dtVigenciaInicial){
                 $this->sucesso = false;
                 $this->msgRetorno = "Data Final da Vigência do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
@@ -1468,8 +1480,15 @@ class FinContratoAditivo {
                 $this->sucesso = false;
                 $this->msgRetorno = "Data da Publicação do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
                 return; 
-            }                                                            
+            }      
             
+            $intervalo = $this->dtVigenciaInicial->diff($this->dtVigenciaFinal);
+            if($intervalo->y > 0){
+                $this->sucesso = false;
+                $this->msgRetorno = "As Datas das Vigências, inicial e final, só poder ter no máximo diferença de 1 ano.";
+                return; 
+            }
+           
             $this->sucesso = true;
             $this->msgRetorno = "ok";
             return;            
