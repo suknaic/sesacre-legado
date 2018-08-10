@@ -200,11 +200,11 @@ class Pedido {
         );
         return $arr_situacao;
     }
-    
+
     private function getPedidoNecessidadeStatus(): array {
         $arr_status = array(
             '9' => 'Aguardando finaliza a pre-ordem',
-            '10' => 'Aguardando autorização do responsável imediato' ,
+            '10' => 'Aguardando autorização do responsável imediato',
             '11' => 'Aguardando autorização do responsável da central',
             '12' => 'Aguardando autorização de orçamentário',
             '13' => 'Aguardando autorização financeiro',
@@ -487,14 +487,14 @@ class Pedido {
             }
 //            $daoFinPedido->retornaPedidoPesquisa($pdo, $filtro);
             $daoFinPedido->retornaPedidoPesquisaComOrdens($pdo, $filtro);
-            
+
             //Carrega a status os possíveis
             $opcoesStatus = $this->getPedidoNecessidadeStatus();
 
             if ($daoFinPedido->Sucesso()) {
 
-                foreach ($daoFinPedido->getMsgRetorno() as $dados) { 
-                    $statusPedido = $this->retornaStatusPedido($dados,$opcoesStatus);
+                foreach ($daoFinPedido->getMsgRetorno() as $dados) {
+                    $statusPedido = $this->retornaStatusPedido($dados, $opcoesStatus);
                     $tabela .= '<tr><td class = "text-center">' . $dados["id_lotacao"] . '-' . $dados["nr_pedido"] . '/' . $dados["ano"] . '</td>
                                 <td class = "text-center">' . $dados["nm_tipo_solicitacao"] . '</td>
                                 <td class = "text-center">' . $dados["cd_programa_trabalho"] . '-' . $dados["ds_programa_trabalho"] . '</td>        
@@ -512,7 +512,6 @@ class Pedido {
                                 </td>
                                 </tr>';
                 }
-                
             }
             return Metodos::retornoAjax("ok", "tabela", $tabela);
         } catch (Exception $exc) {
@@ -699,15 +698,15 @@ class Pedido {
             return;
         }
     }
-    
-    private function retornaStatusPedido(array $dados, array $opcoesStatus){
+
+    private function retornaStatusPedido(array $dados, array $opcoesStatus) {
         try {
-            
+
             $statusPedido = $opcoesStatus[$dados["status"]];
-            
+
             if (!empty($dados['ordens'])) { //Se existir ordens, o status é 'Aguardando entrega'
                 $statusPedido = "Aguardando entrega";
-                
+
                 if (!(strpos($dados["sit_protocolo"], "2") === false)) {  //Se existir ordem com entrega total
                     $statusPedido = "Aguardando Pagamento";
                 } elseif (!(strpos($dados["sit_protocolo"], "1") === false)) { //Se existir ordem com entrega parcial
@@ -716,6 +715,31 @@ class Pedido {
             }
 
             return $statusPedido;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+
+    public function retornaPedidoExecutado(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdFonte($this->idFonte);
+            $daoFinPedido->setIdProgramaTrabalho($this->idProgramaTrabalho);
+            $daoFinPedido->setIdDespesaElemento($this->idDespesaElemento);
+            $daoFinPedido->setIdTipoGasto($this->idTipoGasto);
+            $daoFinPedido->setIdLotacao($this->idLotacao);
+            $daoFinPedido->retornaValoresPedido($pdo);
+            if($daoFinPedido->Sucesso()){
+                return $daoFinPedido->getMsgRetorno();
+            }else{
+                return false;
+            }
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();

@@ -331,7 +331,7 @@ class FinDocumentoFiscal {
     public function salvaDocumentoFiscal() {
         try {
             if (empty($this->nr_processo_administrativo) && empty($this->nr_documento_fiscal) && empty($this->id_tipo_documento) && empty($this->dt_atesto) &&
-                    empty($this->dt_emissao) && empty($this->vl_documento)) {
+                    empty($this->dt_emissao) && empty($this->vl_documento) && empty($this->entrega)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             //conexao 
@@ -354,8 +354,33 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setIdDocumentoSituacao(1);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
-            var_dump($daoFinDocumentoFiscal->sucesso());
-            var_dump($daoFinDocumentoFiscal->getMsgRetorno());
+
+            if (!$daoFinDocumentoFiscal->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o documento fiscal");
+            }
+
+            $this->id_documento_fiscal = ($pdo->lastInsertId('fin_documento_fiscal_id_documento_fiscal_seq'));
+
+            if (!Log::SalvaLogI('fin_documento_fiscal', $this->id_documento_fiscal, $pdo)) {
+                return false;
+            }
+
+            //codigo abaixo cadastra as entregas do documento fiscal
+            $finEntregaDocumento = new FinEntregaDocumento();
+            foreach ($this->entrega as $dados) {
+                $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
+                $finEntregaDocumento->setIdEntregaConfirmacao($dados);
+               
+                if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
+                }
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+            
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
