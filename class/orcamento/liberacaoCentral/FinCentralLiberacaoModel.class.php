@@ -368,7 +368,7 @@ class FinCentralLiberacaoModel {
             //qddvalor
             $qddValor = new QddValor();
             //pedido 
-            $pedido  =  new Pedido();
+            $pedido = new Pedido();
             if (!empty($qdd->getIdQdd())) {
                 $daoFinCentralLiberacao->setIdPessoa($_SESSION['idUser']);
                 $daoFinCentralLiberacao->setIdLotacao($dados[0]["central"]);
@@ -385,7 +385,7 @@ class FinCentralLiberacaoModel {
                 //erro 
                 $erro = false;
                 foreach ($dados as $v) {
-                    
+
                     $qddValor->setIdQdd($qdd->getIdQdd());
                     $qddValor->setIdFonte($v["fonte"]);
                     $qddValor->setIdProgramaTrabalho($v["projeto"]);
@@ -403,20 +403,17 @@ class FinCentralLiberacaoModel {
                     if ($finCentralLiberacaoTransModel->salvaLiberacaoTrans($pdo) == false) {
                         $erro = true;
                     }
-                    
+
                     $pedido->setIdFonte($v["fonte"]);
                     $pedido->setIdProgramaTrabalho($v["projeto"]);
                     $pedido->setIdDespesaElemento($v["despesa"]);
                     $pedido->setIdTipoGasto($v["tipoDeGasto"]);
                     $pedido->setIdLotacao($v["central"]);
                     $vlPedidoExecucao = $pedido->retornaPedidoExecutado($pdo)["sum"];
-                   
+
                     if (!$erro) {
 
-                        if (round(($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]) - $vlPedidoExecucao),4) >= 0) {
-                            $qddValor->setVlLiberado($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]));
-                            $qddValor->atualizaValoresLiberado($pdo);
-                        } else {
+                        if (round(($qddValor->getVlLiberado() - Metodos::ConverteValorIng($v["valor"]) - $vlPedidoExecucao), 4) < 0) {
                             $erro = true;
                             return Metodos::retornoAjax("Erro", "alert", 'Redução estar maior do que foi liberado ou executado');
                         }
@@ -682,14 +679,14 @@ class FinCentralLiberacaoModel {
                         <td class="text-center">' . Metodos::ConverteDataBR($v["dh_central_liberacao"]) . '</td>
                         <td class="text-center">' . $v["ds_central_liberacao"] . '</td>
                         <td class="text-right">' . Metodos::ConverteValorBr($v["vl_central_liberacao_trans"], 4) . '</td>
-                        <td class="text-center "><b>'.$v["tipo"].'</b></td>
+                        <td class="text-center "><b>' . $v["tipo"] . '</b></td>
                         <td class="text-center">
                             <button type="button" class="btn btn-default btn-nao-validar btn-xs" title="Não Validar" value="' . $v["id_qdd_valor"] . '" '
-                        . 'idLiberacao = "' . $v["id_central_liberacao"] . '">
+                        . 'idLiberacao = "' . $v["id_central_liberacao"] . '" tipoLiberacao = "' . $v["tp_central_liberacao"] . '">
                             <i class="fa fa-thumbs-o-down fa-lg text-danger" aria-hidden="true"></i>
                             </button> 
                             <button type="button" class="btn btn-default btn-validar btn-xs" title="Validar" value="' . $v["id_qdd_valor"] . '" '
-                        . 'idLiberacao = "' . $v["id_central_liberacao"] . '" >
+                        . 'idLiberacao = "' . $v["id_central_liberacao"] . '" tipoLiberacao = "' . $v["tp_central_liberacao"] . '">
                             <i class="fa fa-thumbs-o-up fa-lg text-success" aria-hidden="true"></i>
                             </button>
                         </td>    
@@ -749,9 +746,18 @@ class FinCentralLiberacaoModel {
         $dadosLiberacao = $this->dadosLiberacao($pdo);
         $qddValor->setIdQddValor($dados["id"]);
         $dadosQdd = $qddValor->retornaQddValorPorId($pdo);
-        
+        var_dump($dados);
+        return false;
         if ($dados["validacao"] == 1) {
-            $qddValor->setVlLiberado(($dadosLiberacao[0]["vl_central_liberacao_trans"] + $dadosQdd["vl_liberado"]));
+
+            if ($dados["tipoliberacao"] == 1) {
+                $qddValor->setVlLiberado(($dadosLiberacao[0]["vl_central_liberacao_trans"] + $dadosQdd["vl_liberado"]));
+            }
+
+            if ($dados["tipoliberacao"] == 2) {
+                $qddValor->setVlLiberado(($dadosLiberacao[0]["vl_central_liberacao_trans"] - $dadosQdd["vl_liberado"]));
+            }
+
             $daoFinCentralLiberacao->setIdCentralLiberacao($dados["idLiberacao"]);
             $daoFinCentralLiberacao->validaLiberacao($pdo);
             $qddValor->atualizaValoresLiberado($pdo);
