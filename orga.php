@@ -22,7 +22,7 @@ AS
          , P.nm_lotacao AS lotacaoPai
       FROM ses_lotacao L
       INNER JOIN ses_lotacao P ON P.id_lotacao = L.id_pai
-     WHERE L.id_lotacao = :idPai
+     WHERE L.id_lotacao = :idPai AND L.st_ativo = '1'
      
     UNION ALL
      
@@ -37,6 +37,7 @@ AS
 INNER JOIN cte_recursiva c 
         ON g.id_pai = c.id_lotacao
 INNER JOIN ses_lotacao P ON P.id_lotacao = g.id_pai
+WHERE g.st_ativo = '1'
         
      
 )

@@ -496,6 +496,46 @@ class Itens{
     }
     
     
+    public function retornaTrPesquisaDescricaoItem(){
+        $retorno = "";
+                
+        try{
+
+            if($this->nmDescMaterial == "" || $this->nmDescMaterial == " "
+            || strlen($this->nmDescMaterial) < 2 ){
+                return $retorno;
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+                       
+            $dao = new DaoPlaMaterial();
+            $dao->setNmDescMaterial($this->nmDescMaterial);
+            $dao->pesquisaPorNmDescMaterial($pdo);            
+            
+            if($dao->Sucesso()){
+                foreach ($dao->getMsgRetorno() as $key => $value) {                    
+                    $retorno .= '<tr class="selecionaItem" data-item="'.$value['id_material'].'"';
+                    $retorno .= "data-info='".json_encode($value)."'";
+                    $retorno .= 'style="cursor:pointer;">
+                        <td>'.$value['cd_desc_material'].'</td>
+                        <td>'.$value['nm_desc_material'].'</td>
+                        <td>'.$value['nm_material'].'</td>
+                        <td>'.$value['nm_grupo'].'</td>
+                        <td class="text-center">'.$value['nm_sub_grupo'].'</td>                        
+                        <td class="text-center">'.$value['tp_material'].'</td>
+                        <td class="text-center">'.$value['cd_elemento_despesa'].'</td>                        
+                        </tr>';
+                }
+            }            
+            return $retorno;
+
+        } catch (Exception $ex) {
+            $retorno = $ex->getMessage();
+            return $retorno;
+        }
+    }
+    
+    
     
     
 }

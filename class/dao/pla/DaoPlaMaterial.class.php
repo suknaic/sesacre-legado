@@ -158,6 +158,33 @@ class DaoPlaMaterial extends PlaMaterial {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
         }
-    }  
+    } 
+    
+    function pesquisaPorNmDescMaterial($pdo) {
+
+        $this->sucesso = false;
+
+        $sql = " SELECT id_material, cd_material, nm_material"
+                    . " , cd_desc_material, nm_desc_material, cd_grupo, nm_grupo"
+                    . " , cd_sub_grupo, nm_sub_grupo, tp_material"
+                    . " , cd_elemento_despesa, id_despesa, st_ativo"
+                . " FROM pla_material"
+                . " WHERE nm_desc_material ILIKE :nmDescMaterial";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":nmDescMaterial", "%".$this->getNmDescMaterial()."%", PDO::PARAM_STR);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                $this->sucesso = true; 
+                $this->msgRetorno = $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;                
+                $this->msgRetorno = "Não encontrou Registros";                
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
 
 }

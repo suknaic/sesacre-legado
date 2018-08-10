@@ -907,5 +907,37 @@ class DaoFinItens extends FinItensTb {
     }
     
     
+    public function retornaContratosPorMaterial($pdo){
+        if (!empty($pdo)){
+            try{
+                $sql = "SELECT C.id_contrato, C.ds_objeto, C.nr_contrato"
+                    . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
+                    . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
+                    . " , P.nm_pessoa"
+                    . " , C.tp_contrato, TG.nm_tipo_gasto"
+                    . " FROM fin_cont_itens CI"
+                    . " INNER JOIN fin_fornecedor F ON F.id_fornecedor = CI.id_fornecedor"
+                    . " INNER JOIN ses_pessoa P ON P.id_pessoa = F.id_pessoa"
+                    . " INNER JOIN fin_contrato C ON C.id_contrato = F.id_contrato"
+                    . " INNER JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = C.id_tipo_gasto"
+                    . " WHERE CI.id_material = :idMaterial AND C.st_ativo ='1'";
+                    
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idMaterial", $this->getIdMaterial(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (Error $e){
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+    
+    
 
 }

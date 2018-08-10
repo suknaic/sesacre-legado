@@ -1061,5 +1061,77 @@ class ItemModel {
         }
     }
     
+    
+    /**
+     * Retorna todos os Contratos por um Material
+     * @return string
+     */
+    public function retornaContratosPorMaterial() {
+        try {
+            //variaveis do sistema
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $dao = new DaoFinItens();
+            $dao->setIdMaterial($this->idMaterial);
+                        
+            $dao->retornaContratosPorMaterial($pdo);
+
+            if(!$dao->Sucesso()){
+                $retorno = '<div class="alert alert-warning">'
+                        . '<strong>Alerta!</strong> Não Achou Nenhum Contrato.'
+                    . '</div>';
+                return $retorno;
+            }
+                        
+            if(empty($dao->getMsgRetorno())){
+                $retorno = '<div class="alert alert-warning ">'
+                        . '<strong>Alerta!</strong> Não Achou Nenhum Contrato.'
+                    . '</div>';
+                return $retorno;
+            }
+            
+            $tbody = "";
+            foreach ($dao->getMsgRetorno() as $key => $value) {
+                $tipo = "";
+                if($value['tp_contrato'] == '1'){
+                    $tipo = "ATA";
+                }elseif($value['tp_contrato'] == '2'){
+                    $tipo = "Contrato";
+                }
+                    
+                $tbody .= "<tr>";
+                    $tbody .= "<td>".$value['nr_contrato']."</td>";
+                    $tbody .= "<td>".$value['ds_objeto']."</td>";
+                    $tbody .= "<td>".$value['nm_tipo_gasto']."</td>";
+                    $tbody .= "<td>".$value['nm_pessoa']."</td>";
+                    $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']."</td>";
+                    $tbody .= "<td style='text-align: center;'>".$value['dt_fim_vigencia_contrato']."</td>";
+                    $tbody .= "<td style='text-align: center;'>".$tipo."</td>";                                                  
+                $tbody .= "</tr>";
+            }                                  
+            
+            $retorno = '<table class="table table-striped table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Objeto</th>
+                            <th>Tipo de Gasto</th>
+                            <th>Fornecedor</th>
+                            <th style="text-align: center;">Vigência Inicial</th>
+                            <th style="text-align: center;">Vigência Final</th>
+                            <th style="text-align: center;">Ata/Contrato</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    '.$tbody.'
+                    </tbody>
+                </table>';  
+            return $retorno;                                  
+            
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
 
 }

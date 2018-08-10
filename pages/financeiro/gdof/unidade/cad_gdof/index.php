@@ -384,7 +384,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
                                                             </div>
 
-                                                            <div class="col-sm-3">
+                                                            <div class="col-sm-3 divNumeroGrp">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="nr_grp" id="nr_grp" />
