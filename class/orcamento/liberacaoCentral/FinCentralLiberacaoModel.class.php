@@ -746,8 +746,7 @@ class FinCentralLiberacaoModel {
         $dadosLiberacao = $this->dadosLiberacao($pdo);
         $qddValor->setIdQddValor($dados["id"]);
         $dadosQdd = $qddValor->retornaQddValorPorId($pdo);
-        var_dump($dados);
-        return false;
+        
         if ($dados["validacao"] == 1) {
 
             if ($dados["tipoliberacao"] == 1) {
