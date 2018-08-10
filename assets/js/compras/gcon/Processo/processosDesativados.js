@@ -6,7 +6,7 @@ $(document).ready(function () {
     $.ajax({
         "url": "/layout/menus/compras/gcon/menu_gcon.php",
         "dataType": "html",
-        "data" : {
+        "data": {
         },
         "success": function (response) {
             $("body").find("#menu_gcon").append(response);
@@ -18,7 +18,7 @@ $(document).ready(function () {
                                                 </li>');
         }
     });
-    
+
     $("#butao").mouseover(function () {
         $('#menu').css('display', 'block');
     }).mouseout(function () {
@@ -30,8 +30,8 @@ $(document).ready(function () {
     }).mouseout(function () {
         $("#menu").css('display', 'none');
     });
-    
-    function listarProcessos(a) {    
+
+    function listarProcessos(a) {
         $.ajax({
             "url": "/model/compras/gcon/processo/request.php",
             "dataType": "html",
@@ -41,77 +41,98 @@ $(document).ready(function () {
 
             "success": function (response) {
                 if (a == 0) {
-                    func.carregaTabelaPadrao('tabela_processo', response, [10]); 
-                }else{
+                    func.carregaTabelaPadrao('tabela_processo', response, [10]);
+                } else {
                     func.carregaTabelaPadrao('tabela_processo', response, [10], true);
                 }
             }
         });
-    };
+    }
+    ;
     //chamando função para listar processos
     listarProcessos(0);
-    
+
     $('body').on("click", ".btn-ativar", function (e) {
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-        } else {
-            e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-            var processo = {
-                idProcesso : $(this).val(),
-                ada : $(this).attr('ada')
-            };
-            $.ajax({
-                "url": "/model/compras/gcon/processo/request.php",
-                "method": 'POST',
-                "dataType": "html",
-                "data": {
-                    "acao": "ativar_processo",
-                    "ativa_processo": processo
+        var processo = {
+            idProcesso: $(this).val(),
+            ada: $(this).attr('ada')
+        };
+
+        bootbox.confirm({
+            title: func.msgCaixaDeConfirmacao,
+            message: 'Você tem Certeza que Deseja <span class="text-danger"><strong>ATIVAR</strong></span> o Processo com o ADA/CPR: <span class="text-danger">' + processo.ada + '</span> ?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
                 },
-                "success": function (response) {
-                    $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    e.preventDefault();
+                    var $this = $(this);
+                    $this.prop("disabled", true);
+                    $.ajax({
+                        "url": "/model/compras/gcon/processo/request.php",
+                        "method": 'POST',
+                        "dataType": "html",
+                        "data": {
+                            "acao": "ativar_processo",
+                            "ativa_processo": processo
+                        },
+                        "success": function (response) {
+                            $this.prop("disabled", false);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+
+                                } else if (response.tipoExibicao === "alert") {
+                                    $("body").find("#campoEmpenho").html("");
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    //reload na página para não da bug na tabela
+                                    location.reload();
+                                    listarProcessos(1);
+                                });
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            $this.prop("disabled", false);
                             func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
-
-                        } else if (response.tipoExibicao === "alert") {
-                            $("body").find("#campoEmpenho").html("");
-                            func.modalAlert(response.msg);
-                            return false;
                         }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            //reload na página para não da bug na tabela
-                            location.reload();
-                            listarProcessos(1);
-                        });
-                        return false;
-                    } else {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-                },
-                "error": function (response) {
+                    });
                     $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao, 'danger');
-                    return false;
                 }
-            });
-            $this.prop("disabled", false);
-        }
+            }
+        });
+//        e.stopPropagation();
+//        if (e.isDefaultPrevented()) {
+//        } else {
+//
+//        }
     });
 });
