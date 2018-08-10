@@ -198,6 +198,11 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
+                        if (ano === 'Todos') {
+                            $('.btn-imprimirTodos').hide();
+                        } else {
+                            $('.btn-imprimirTodos').show();
+                        }
                         $("#tabela").show();
                         func.carregaTabelaPadrao('tabela_pesquisa', response, [12], true);
                         return false;
@@ -301,7 +306,7 @@ $(document).ready(function () {
 
         bootbox.confirm({
             title: func.msgCaixaDeConfirmacao,
-            message: 'Você tem Certeza que deseja continuar com a exclusão do proceso com o ADA/CPR: <span class="text-danger">' + item + '</span> ?',
+            message: 'Você tem Certeza que Deseja Continuar com a <span class="text-danger"><strong>EXCLUSÃO</strong></span> do Proceso com o ADA/CPR: <span class="text-danger">' + item + '</span> ?',
             buttons: {
                 'cancel': {
                     label: 'Não',

@@ -4,6 +4,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . '/model/compras/gcon/imprimir/imprimir.
 
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->WriteHTML($html);
-$mpdf->Output();
+$mpdf->SetTitle($dados['cd_ada_cpr']);
+$mpdf->Output($dados['cd_ada_cpr'].'.pdf', 'I');
 exit();
-
