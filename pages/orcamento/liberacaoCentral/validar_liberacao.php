@@ -113,6 +113,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/liberacaoCentral/vali
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <input type="hidden" name="idLiberacao" id="idLiberacao">
+                                        <input type="hidden" name="tipoliberacao" id="tipoliberacao">
                                         <div class="table-responsive">
                                             <table class="table table-striped table-bordered table-condensed table-hover" id="tabela" cellspacing="0" width="100%">
                                                 <thead>

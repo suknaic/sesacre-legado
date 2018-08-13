@@ -358,8 +358,13 @@
                                     <a href="/pages/compras/gestao_contratos/index.php">Gestão Contratos</a>
                                 </li>
                                 <li>
+                                    <a href="/pages/compras/produto/lista_produto/index.php">Banco de Produto</a>
+                                </li>
+                                <!--
+                                <li>
                                     <a href="/pages/compras/gestao_contratos/cad_item.php?&id=1">itens</a>
                                 </li>
+                                -->
                                 <li>
                                     <a href="/pages/compras/gestao_contratos/perfil/index.php">Perfil Contratos</a>
                                 </li>

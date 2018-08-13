@@ -49,6 +49,7 @@ $(document).ready(function () {
             $("#modalValidar").modal('show');
             $(".btn-validar-modal").val($this.val());
             $("#idLiberacao").val($this.attr("idLiberacao"));
+            $("#tipoliberacao").val($this.attr("tipoliberacao"));
         }
     });
 
@@ -61,6 +62,7 @@ $(document).ready(function () {
             $("#modalNaoValidar").modal('show');
             $(".btn-nao-validar-modal").val($this.val());
             $("#idLiberacao").val($this.attr("idLiberacao"));
+            $("#tipoliberacao").val($this.attr("tipoliberacao"));
         }
     });
 
@@ -81,9 +83,11 @@ $(document).ready(function () {
             var Dados = {
                 id: $this.val(),
                 validacao: validacao,
-                idLiberacao: $("#idLiberacao").val()
+                idLiberacao: $("#idLiberacao").val(),
+                tipoliberacao: $("#tipoliberacao").val(),
             }
-
+            
+            
             if (Dados.id == "" || Dados.validacao == "") {
                 $('.modal').modal('hide');
                 func.modalAlert(func.msgPreencherCampos);
