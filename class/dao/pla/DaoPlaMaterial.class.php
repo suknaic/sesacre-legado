@@ -169,10 +169,11 @@ class DaoPlaMaterial extends PlaMaterial {
                     . " , cd_sub_grupo, nm_sub_grupo, tp_material"
                     . " , cd_elemento_despesa, id_despesa, st_ativo"
                 . " FROM pla_material"
-                . " WHERE nm_desc_material ILIKE :nmDescMaterial";
+                . " WHERE nm_desc_material ILIKE :nmDescMaterial OR cd_desc_material = :nmDesc";
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":nmDescMaterial", "%".$this->getNmDescMaterial()."%", PDO::PARAM_STR);
+            $sth->bindValue(":nmDesc", (int)$this->getNmDescMaterial(), PDO::PARAM_INT);
             $sth->execute();
             if ($sth->rowCount() >= 1) {
                 $this->sucesso = true; 
