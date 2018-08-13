@@ -910,7 +910,7 @@ class DaoFinItens extends FinItensTb {
     public function retornaContratosPorMaterial($pdo){
         if (!empty($pdo)){
             try{
-                $sql = "SELECT C.id_contrato, C.ds_objeto, C.nr_contrato"
+                $sql = "SELECT C.id_contrato, C.ds_objeto, C.nr_contrato, F.id_fornecedor, CI.id_cont_itens"
                     . " , to_char(C.dt_ini_vigencia_contrato, 'DD/MM/YYYY') as dt_ini_vigencia_contrato"
                     . " , to_char(C.dt_fim_vigencia_contrato, 'DD/MM/YYYY') as dt_fim_vigencia_contrato"
                     . " , P.nm_pessoa"

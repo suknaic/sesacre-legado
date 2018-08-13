@@ -16,16 +16,12 @@
         <!-- Font Awesome [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <!-- themify icons [ REQUIRED ] -->
-        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">
-        <!--Select2-->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">        
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">                               
-        
-        <!--Datapicker-->
-        <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+                
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css" rel="stylesheet">
         <link rel="stylesheet" href="index.css" rel="stylesheet">
@@ -36,11 +32,7 @@
             <?php
                 //Cabeçalho do Sistema
                 require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            ?>
-            <?php
-                //Modal Alert
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
-            ?>
+            ?>            
             <div class="boxed">
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
@@ -95,22 +87,6 @@
                         </div>
                     </div>                                                                                                                      
                     
-                    <div class="modal fade footer-to-bottom" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-fu animated zoomInLeft modal-lg" role="document" >
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                        <h4 class="modal-title">Dados do Aditivo</h4>
-                                </div>
-                                <div class="modal-body modal-fu-body">
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>                                    
-                                </div>
-                            </div>                            
-                        </div>                        
-                    </div>
                     
                     
                     
@@ -119,15 +95,9 @@
                     <!--===================================================-->                    
                      <div id="page-title">
                         <h1 class="page-header text-overflow">Banco de Produto</h1>                     
-                    </div>
-                    <ol class="breadcrumb">
-                        <li><a href="../index.php">Voltar</a></li>
-                        
-                    </ol>
-                    <div id="page-content" class="form-horizontal">
-                        
-                            <div class="panel">
-                                
+                    </div>                   
+                    <div id="page-content" class="form-horizontal">                        
+                            <div class="panel">                                
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
@@ -163,17 +133,8 @@
                                     </div>
                                 </div>
                                 
-                                <div class="panel panel-default" id="panel-contratos">                                
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Contratos/Ata:</h3>
-                                    </div>
-                                    <div class="panel-body">                                
-                                        
-                                    </div>                                    
-                                </div>                                                                                                                                                        
-                                
-                                
-                        
+                                <div id="informacoes">                                    
+                                </div>                                                                                                                                                                                                                                                                                                              
                     </div>
                 </div>
                 <!--===================================================-->
@@ -206,17 +167,7 @@
         <!--BootstrapJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ RECOMMENDED ]-->
-        <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--Datapicker-->
-        <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-        <!--MaskedInput-->
-        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <!--Input valor priceformat-->
-        <script src="/assets/lib/jquerypriceformat/jquery.priceformat.min.js"></script>
-        <!--Select2-->
-        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-        <!-- DIALOG CONFIRM [OPT] -->
-        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
+        <script src="/assets/lib/template/js/nifty.min.js"></script>                                  
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>

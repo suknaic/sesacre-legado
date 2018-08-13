@@ -2,19 +2,8 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/itens/Itens.class.php";
-
-
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoAditivo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/ItemModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/FinFornecedorModel.class.php";
-
-/**/
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/pla/tipo_gasto/TipoGasto.class.php";
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/SesPessoaJuridicaModel.class.php";
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gcon/processo/Processo.class.php";
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 
 
 $session = new Session('ajax');

@@ -359,7 +359,8 @@ class DaoFinContrato extends FinContratoTb {
                                     tot.id_contrato,
                                     tot.id_pessoa,
                                     tot.total_geral,
-                                    uti.total_utilizado 
+                                    uti.total_utilizado,
+                                    tot.id_cont_itens
                                  from
                                     total tot 
                                     left join

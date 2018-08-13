@@ -2249,4 +2249,27 @@ class FinContratoModel {
         }
     }
     
+    
+    public function retornaPesquisaComSaldoCondicao(string $filtro, PDO $pdo = null) {
+        $this->sucesso = false;
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoContrato = new DaoFinContrato();                     
+            $daoContrato->retornaContratoComValores($pdo, $filtro);
+            if ($daoContrato->sucesso()) {
+                $this->sucesso = true;                
+                $this->msgRetorno = $daoContrato->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = $daoContrato->getMsgRetorno();                
+            }           
+        } catch (Exception $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();            
+        }
+    }
+    
 }
