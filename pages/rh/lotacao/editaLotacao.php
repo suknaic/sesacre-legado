@@ -111,7 +111,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    email: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
+                                                    Email: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -120,7 +120,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    Lotação Pai: <span class="text-danger"></span>
+                                                    Lotação Pai: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
@@ -190,7 +190,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    Bairo: <span class="text-danger"></span>
+                                                    Bairro: <span class="text-danger"></span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -298,15 +298,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         </div>
                                                     </div>
                                                         <!--<i class='fa fa-check-circle fa-2x text-success'></i>-->
-                                                    <div class="col-md-1">
-                                                        
-                                                        <div class="checkbox checkbox-info checkbox-circle">
-                                                            <i class="fa fa-question-circle" title="Informe se o Telefone é Principal da Lotação"></i>
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox checkbox-info checkbox-circle"><br>
                                                             <input id="checkbox8" type="checkbox" class="st_principal">
-                                                            <label for="checkbox8"> É Principal </label>
+                                                            <label for="checkbox8"> É Principal <i class="fa fa-question-circle" title="Selecione caso este seja o Telefone Principal da Lotação"></i></label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-1"></div>
                                                     <div class="col-md-2">
                                                         <div class="input-group">
                                                             <br>

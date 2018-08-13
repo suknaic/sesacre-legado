@@ -5,12 +5,12 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Pesquisa de Pessoa</h4>
+                <h4 class="modal-title" id="modalTitulo"></h4>
             </div>
             <div class="modal-body">
                 <div class="input-group mar-btm">
                     <input type="hidden" id="tipo" disabled>
-                    <input type="text" id="nm_pessoa" placeholder="Nome da Pessoa" class="form-control">
+                    <input type="text" id="nm_pessoa" placeholder="" class="form-control">
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="button" id="btn-pesquisa">
                             <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
