@@ -2023,6 +2023,11 @@ class FinContratoAditivo {
             
             $result = $daoContrato->getMsgRetorno();
             
+//            echo "<pre>";
+//            print_r($result);
+//            echo "</pre>";
+            //$k = array_search($value['id_cont_itens_aditivo'], array_column($todosItens, "id_cont_itens"));
+            
             $dados = array();
             $cabecalho = array();
             $itens = array();
@@ -2059,14 +2064,16 @@ class FinContratoAditivo {
                         "itens" => array(array(
                                     "qt_itens" => $value['qt_itens'],
                                     "vl_itens" => $value['vl_itens'],
-                                    "finalidade" => $value['id_contrato_finalidade']
+                                    "finalidade" => $value['id_contrato_finalidade'],
+                                    "unidade_calculo" => $value['id_contrato_unidade_calculo']
                                 ))   
                     );
                 }else{
                     $dados[$idContItens]['itens'][] = array(
                         "qt_itens" => $value['qt_itens'],
                         "vl_itens" => $value['vl_itens'],
-                        "finalidade" => $value['id_contrato_finalidade']
+                        "finalidade" => $value['id_contrato_finalidade'],
+                        "unidade_calculo" => $value['id_contrato_unidade_calculo']
                     );                                        
                 }                                                                                               
             }
@@ -2099,7 +2106,9 @@ class FinContratoAditivo {
             $retorno .= $quantidadeEValor;
             $retorno .= '</tr>';
             $retorno .= '</thead><tbody>';
-            
+//            echo "<pre>";
+//            print_r($dados);
+//            echo "</pre>";
             foreach ($dados as $key => $value) {                               
                 $retorno .= '<tr>';
                     $retorno .= '<td>'.$value['nr_item'].'</td>';
@@ -2108,16 +2117,25 @@ class FinContratoAditivo {
                     $retorno .= '<td>'.$value['cd_elemento_despesa'].'</td>';
                     $retorno .= '<td>'.$value['tp_material'].'</td>';
                     $retorno .= '<td>'.$value['nr_lote'].'</td>';
-                
+                $quantidade = $value['itens'][0]['qt_itens'];
                 foreach ($value['itens'] as $k => $v) {
                     $textColor = "";
                     $simbolo = "";
+                    $porcentagem = "";
                     if($v['finalidade'] == $this->getFinalidadeSupressao()){
                         $textColor = "text-danger";
                         $simbolo = "-";
                     }
                     
-                    $retorno .= '<td class="text-center '.$textColor.' ">'.$simbolo."".Metodos::ConverteValorBr($v['qt_itens'], 4).'</td>';
+                    if($v['unidade_calculo'] == $this->getUnidadeCalculoPercentual()
+                            || $v['unidade_calculo'] == $this->getUnidadeCalculoQuantidade()){                    
+                        $porcentagem = $v['qt_itens']/$quantidade*100;
+                        $porcentagem = " (".Metodos::ConverteValorBr($porcentagem, 2)."%)";
+                        //$porcentagem = "(".$porcentagem."%)";
+                    }
+                    
+                    
+                    $retorno .= '<td class="text-center '.$textColor.' " style="white-space: nowrap; overflow: hidden;" class="text-right">'.$simbolo."".Metodos::ConverteValorBr($v['qt_itens'], 4)."".$porcentagem.'</td>';
                     $retorno .= '<td style="white-space: nowrap; overflow: hidden;" class="text-right">R$ '.Metodos::ConverteValorBr($v['vl_itens'], 4).'</td>';
                 }                                                            
                 $retorno .= "</tr>";

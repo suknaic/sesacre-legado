@@ -358,7 +358,7 @@
                                     <a href="/pages/compras/gestao_contratos/index.php">Gestão Contratos</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/compras/produto/lista_produto">Banco de Produto</a>
+                                    <a href="/pages/compras/produto/lista_produto/index.php">Banco de Produto</a>
                                 </li>
                                 <!--
                                 <li>
