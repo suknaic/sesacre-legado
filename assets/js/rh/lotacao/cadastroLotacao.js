@@ -7,7 +7,6 @@ function listaPessoaCombo() {
             acao: "listaPessoaOption"
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_pessoa3").append(response);
             $("#id_pessoa3").select2({
                 //width: " 100%"
@@ -26,7 +25,6 @@ function listaLotacaoCombo() {
             id: 0
         },
         "success": function (response) {
-            // console.log(response);
             $("#id_pai_lotacao").append(response);
             $("#id_pai_lotacao").select2({
                 //width: " 100%"
@@ -45,7 +43,6 @@ function listaPjCombo() {
             id: 0
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_pessoa_juridica3").append(response);
             $("#id_pessoa_juridica3").select2({
                 //width: " 100%"
@@ -63,7 +60,6 @@ function listaCategoriaCombo() {
             acao: "listaCategoriaOption"
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_categoria").append(response);
             $("#id_categoria").select2({
                 //width: " 100%"
@@ -81,7 +77,6 @@ function listaPaisCombo() {
             acao: "listaPaisOption"
         },
         "success": function (response) {
-            //console.log(response);
             $(".pais").append(response);
             $(".pais").select2({
                 //width: " 100%"
@@ -100,7 +95,6 @@ function listaEstadoCombo(idPais, idEstado) {
             idEstado: idEstado
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_estado_endereco").empty();
             $("#id_estado_endereco").append(response);
             $("#id_estado_endereco").select2({
@@ -119,18 +113,15 @@ function listaCidadeCombo(idEstado) {
             idEstado: idEstado
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_cidade").append(response);
             $("#id_cidade").select2({
                 //width: " 100%"
             });
-
         }
     });
 }
 //**********************uf para cep**********************************************************
 function listaCidadeComboUf(idEstado, uf) {
-    //alert(cidade);
     $.ajax({
         "url": "/model/rh/lotacao/request.php",
         "dataType": 'html',
@@ -141,16 +132,11 @@ function listaCidadeComboUf(idEstado, uf) {
             uf: uf
         },
         "success": function (response) {
-            //console.log(response);
-            //console.log(cidade);
-
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
             $("#id_cidade").select2({
                 width: " 100%"
             });
-
-
         }
     });
 }
@@ -160,13 +146,11 @@ $(document).ready(function () {
 
     func = new Funcoes();
     //******************************************************************************************
-    $("body").on("change", "#id_cidade", function (e) {
-        $("#ds_logradouro").val("");
-        $("#ds_bairro").val("");
-        $("#ds_complemento").val("");
-        $("#nr_cep").val("");
-
-    });
+//    $("body").on("change", "#id_cidade", function (e) {
+//        $("#ds_logradouro").val("");
+//        $("#ds_bairro").val("");
+//        $("#nr_cep").val("");
+//    });
     //******************************************************************************************
     $("body").on("change.select2", "#id_pais_endereco", function (e) {
         $("#id_estado_endereco").empty();
@@ -175,7 +159,7 @@ $(document).ready(function () {
         if ($idPais == 0) {
             return;
         }
-        listaEstadoCombo($idPais, 2);
+        listaEstadoCombo($idPais,0);
     });
     //******************************************************************************************
     $("body").on("change.select2", "#id_estado_endereco", function (e) {
@@ -184,7 +168,7 @@ $(document).ready(function () {
         if ($idEstado == 0) {
             return;
         }
-        listaCidadeCombo($idEstado, 2);
+        listaCidadeCombo($idEstado,0);
     });
 //******************************************************************************************
     $("#nr_cnpj").mask("99.999.999/9999-99");
@@ -206,7 +190,7 @@ $(document).ready(function () {
             $("#tabela tbody tr").each(function () {
                 if (nro == $(this).find(".telefone").text()) {
                     flag = 1;
-                    func.modalAlert(" O Item já Existe!!!")
+                    func.modalAlert(" O Item já Existe!!!");
                 }
             });
         }
@@ -227,7 +211,7 @@ $(document).ready(function () {
                     <td class='text-center principal' st_principal = '" + value + "'>" + st + "</td>\n\
                     <td class='text-center'><button type='button' title='Remover' class='excluirLinha' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
                  </tr>";
-        $(linha).appendTo('.corpoTabela')
+        $(linha).appendTo('.corpoTabela');
 
         $("#nr_telefone").val("");
         $(".st_principal").prop("checked", false);
@@ -261,7 +245,7 @@ $(document).ready(function () {
                 cep: cep,
                 latitude: $("#mp_latitude").val(),
                 longitude: $("#mp_longitude").val(),
-                cidade: $("#id_cidade").val(),
+                cidade: $("#id_cidade").val()
             };
             //**************************telefones************************************
             if ($(this).closest(".formRhLotacao").find(".telefoneLinha").length > 0) {
@@ -272,7 +256,7 @@ $(document).ready(function () {
                     DadosTelefone.push({
                         telefone: $(this).find(".telefone").text(),
                         principal: $(this).find(".principal").attr("st_principal")
-                    })
+                    });
                 });
             }
             //*******************telefones se tem algum registro********************************
@@ -282,34 +266,35 @@ $(document).ready(function () {
             }
             //******************************************************************
             var DadosObrigatorio = {
-                categoria: DadosLotacao.idCategoria,
-                nomeLotacao: DadosLotacao.nomeLotacao,
-                empresaResponsavel: DadosLotacao.pessoaJuridica,
-                pessoaResponsavel: DadosLotacao.pessoa,
-                lotacaoPai: DadosLotacao.idPaiLotacao,
+                "Categoria": DadosLotacao.idCategoria,
+                "Nome da Lotação": DadosLotacao.nomeLotacao,
+                "Empresa Responsável": DadosLotacao.pessoaJuridica,
+                "Pessoa Responsável": DadosLotacao.pessoa,
+                "Lotação Pai": DadosLotacao.idPaiLotacao,
                 //********************************************
-                cidadeEndereco: DadosLotacao.cidade,
-                logradouro: DadosLotacao.logradouro,
-                bairro: DadosLotacao.bairro,
+                "Logradouro": DadosLotacao.logradouro,
+                "Bairro": DadosLotacao.bairro,
+                "País": $('#id_pais_endereco').val(),
+                "Estado": $("#id_estado_endereco").val(),
+                "Cidade": DadosLotacao.cidade
             };
-//            console.log(DadosObrigatorio);
+            
             $campo = 0;
             $i = 0;
             $.each(DadosObrigatorio, function (index, value) {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    //console.log($i+"-"+index+"=>"+value);
                     if ($i <= 5) {
-                        func.modalAlert(func.msgPreencherCampos + " - Dados(" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "</strong>)");
                     } else if ($i >= 6 && $i <= 8) {
-                        func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato(" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "<strong>)");
                     }
-                    console.log($i + "-" + index + "=>" + value);
                     $campo = 1;
                     return false;
                 }
             });
+            
             if ($campo == 1) {
                 return false;
             }
@@ -331,8 +316,6 @@ $(document).ready(function () {
                 },
 
                 "success": function (response) {
-                    // console.log(response);
-                    //$this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -340,16 +323,14 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
                         console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -357,20 +338,18 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        func.fechaModalReload();
+                        func.fechaModalHref('/pages/rh/lotacao/');
                         return false;
-                        //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
-                        console.log('Ultimo else');
                         console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
                     console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -380,12 +359,16 @@ $(document).ready(function () {
     //**************************************************************************
     $('body').on('click', '.pesquisaPessoaJuridica', function (e) {
         $('#tipo').val(2);
+        $('#modalTitulo').html('Pesquisa de Empresa');
+        $("#nm_pessoa").attr("placeholder", "Nome da Empresa").val("").focus().blur();
         $('#nm_pessoa').val("");
         func.carregaTabelaPadrao('tabelaPessoa', null, [2], true);
         $('#nm_pessoa').focus();
     });
     $('body').on('click', '.pesquisaPessoaFisica', function (e) {
         $('#tipo').val(1);
+        $('#modalTitulo').html('Pesquisa de Pessoa');
+        $("#nm_pessoa").attr("placeholder", "Nome da Pessoa").val("").focus().blur();
         $('#nm_pessoa').val("");
         func.carregaTabelaPadrao('tabelaPessoa', null, [2], true);
         $('#nm_pessoa').focus();
@@ -399,17 +382,16 @@ $(document).ready(function () {
         var Pessoa = {
             nome: $nome,
             tipoPessoa: $tipo
-        }
+        };
         $.ajax({
             "url": "/model/rh/lotacao/request.php",
             "dataType": 'html',
             "method": "POST",
             "data": {
                 acao: "listaPessoaTable",
-                pessoa: Pessoa,
+                pessoa: Pessoa
             },
             "success": function (response) {
-                //console.log(response);
                 func.carregaTabelaPadrao('tabelaPessoa', response, [2], true);
             }
         });

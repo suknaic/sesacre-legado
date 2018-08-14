@@ -453,6 +453,23 @@ class DaoSesLotacao extends SesLotacao {
             $this->msgRetorno = "Não encontrou Registros";
         }
     }
+    
+    public function verificarExistenciaLotacao($pdo) {
+        try {
+            $sql = $pdo->prepare('  SELECT id_pai, id_lotacao_categoria, nm_lotacao 
+                                        FROM ses_lotacao
+                                            WHERE id_pai =:idPai AND id_lotacao_categoria =:idLotCat AND nm_lotacao =:nmLotacao');
+            $sql->bindValue(':idPai', $this->getId_pai(), PDO::PARAM_INT);
+            $sql->bindValue(':idLotCat', $this->getId_lotacao_categoria(), PDO::PARAM_INT);
+            $sql->bindValue(':nmLotacao', $this->getNm_lotacao(), PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetch(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
 
 }
 
