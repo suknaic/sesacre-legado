@@ -1061,5 +1061,162 @@ class ItemModel {
         }
     }
     
+    
+    /**
+     * Retorna todos os Contratos por um Material Com Saldo
+     * @return string
+     */
+    public function retornaContratosPorMaterial() {
+        try {
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $dao = new DaoFinItens();
+            $dao->setIdMaterial($this->idMaterial);
+                        
+            $dao->retornaContratosPorMaterial($pdo);
+
+            if(!$dao->Sucesso()){
+                $retorno = '<div class="alert alert-warning">'
+                        . '<strong>Alerta!</strong> Não Achou Nenhum Contrato/Ata.'
+                    . '</div>';
+                return $retorno;
+            }
+                        
+            if(empty($dao->getMsgRetorno())){
+                $retorno = '<div class="alert alert-warning ">'
+                        . '<strong>Alerta!</strong> Não Achou Nenhum Contrato/Ata.'
+                    . '</div>';
+                return $retorno;
+            }
+            
+            $dados = array();
+            $fornecedores = array();
+            $contItens = array();
+            
+            foreach ($dao->getMsgRetorno() as $key => $value) {
+                $dados[$value['id_fornecedor']] = $value;
+                $fornecedores[] = $value['id_fornecedor'];
+                $contItens[] = $value['id_cont_itens'];
+            }
+
+            //Montar a Condição para buscar os Saldo dos Itens
+            $filter = array();
+            
+            if(!empty($contItens)){
+                $idContItens = implode(' , ', $contItens);
+                $filter[] = "itens.id_cont_itens in(" . $idContItens . ")";
+            }
+                        
+            if (!empty($fornecedores)) {
+                $idFornecedores = implode(' , ', $fornecedores);
+                $filter[] = "itens.id_fornecedor in(" . $idFornecedores . ")";                
+            }
+
+            
+            if (count($filter) > 0) {
+                $filtro = " and " . implode(' and ', $filter);
+            } else {
+                $retorno = '<div class="alert alert-warning ">'
+                        . '<strong>Alerta!</strong> Não foi possível realizar a ação do Saldo dos Contratos e Atas. '.STR_ERROR
+                    . '</div>';
+                return $retorno;
+            }            
+            
+            $finContrato = new FinContratoModel();
+            $finContrato->retornaPesquisaComSaldoCondicao($filtro, $pdo);
+            if(!$finContrato->sucesso()){
+                $retorno = '<div class="alert alert-warning ">'
+                        . '<strong>Alerta!</strong> Não foi possível encontrar a Execução do Item. '.STR_ERROR
+                    . '</div>';
+                return $retorno;
+            }
+
+            foreach ($finContrato->getMsgRetorno() as $key => $value) {
+                $dados[$value['id_fornecedor']]['nm_modalidade'] = $value['nm_modalidade'];
+                $dados[$value['id_fornecedor']]['total_geral'] = Metodos::ConverteValorBr((float)$value['total_geral'], 4);
+                $dados[$value['id_fornecedor']]['total_utilizado'] = Metodos::ConverteValorBr((float)$value['total_utilizado'], 4);    
+                $saldo = $value['total_geral'] - $value['total_utilizado'];
+                $saldo = Metodos::ConverteValorBr((float)$saldo, 4);
+                $dados[$value['id_fornecedor']]['saldo'] = $saldo;
+                if (!empty($value['total_geral'])) { //Para evitar divisão por '0'
+                    $percentualUtilizado = ($value['total_utilizado'] * 100) / $value['total_geral']; 
+                } else {
+                    $percentualUtilizado = 0;
+                }
+                $dados[$value['id_fornecedor']]['percentual'] = number_format($percentualUtilizado,2,",",".");
+            }
+            
+            $dadosArrumado = array();
+            //Separa Ata de Contrato
+            foreach ($dados as $key => $value) {
+                $dadosArrumado[$value['tp_contrato']][] = $value;
+            }
+            
+            $retorno = "";
+            foreach ($dadosArrumado as $k => $v) {
+                $fieldset = "";
+                if($k == '1'){
+                    $fieldset = "ATA";                    
+                }elseif($k == "2"){
+                    $fieldset = "Contrato";
+                }                
+                
+                $tabela = "";
+                $tbody = "";
+                
+                $tabela = '<div class="panel panel-default" id="panel-contratos">                                
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">'.$fieldset.'</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Número</th>
+                                            <th>Objeto</th>
+                                            <th>Tipo de Gasto</th>
+                                            <th>Fornecedor</th>
+                                            <th>Modalidade</th>
+                                            <th style="text-align: center;">Vigência Inicial</th>
+                                            <th style="text-align: center;">Vigência Final</th>
+                                            <th>Quantidade</th>
+                                            <th>Utilizado</th>
+                                            <th>% Utilizado</th>
+                                            <th>Saldo</th>                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+                
+                foreach ($v as $key => $value) {                    
+                    $tbody .= "<tr>";
+                        $tbody .= "<td>".$value['nr_contrato']."</td>";
+                        $tbody .= "<td>".$value['ds_objeto']."</td>";
+                        $tbody .= "<td>".$value['nm_tipo_gasto']."</td>";
+                        $tbody .= "<td>".$value['nm_pessoa']."</td>";
+                        $tbody .= "<td>".$value['nm_modalidade']."</td>";
+                        $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']."</td>";
+                        $tbody .= "<td style='text-align: center;'>".$value['dt_fim_vigencia_contrato']."</td>";
+                        $tbody .= "<td style='text-align: right;'>".$value['total_geral']."</td>";
+                        $tbody .= "<td style='text-align: right;' >".$value['total_utilizado']."</td>";
+                        $tbody .= "<td style='text-align: center;'>".$value['percentual']."</td>";
+                        $tbody .= "<td style='text-align: right;'>".$value['saldo']."</td>";                                                  
+                    $tbody .= "</tr>";                                        
+                }
+                
+                $tabela .= $tbody
+                        . '</tbody>'
+                        . '</table>'
+                        . '</div>'
+                        . '</div>';
+                
+                $retorno .= $tabela;
+            }
+            return $retorno;                                                            
+        } catch (Exception $e) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
 
 }

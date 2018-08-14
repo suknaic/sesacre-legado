@@ -234,7 +234,12 @@ class Lotacao {
             $lotacao->setId_pessoa($this->id_pessoa);
             $lotacao->setId_pessoa_juridica($this->id_pessoa_juridica);
             $lotacao->setId_cidade($this->id_cidade);
-
+            
+            $verifica = $lotacao->verificarExistenciaLotacao($pdo);
+            if ($verifica['nm_lotacao'] == $this->nm_lotacao && $verifica['id_pai'] == $this->id_pai) {
+                return Metodos::retornoAjax('Erro', 'alert', 'Registro Com Mesmo Nome e Lotação Pai Já Existem.');
+            }
+            
             $result = $lotacao->insert($pdo);
             //*****************************************
             if ($result != "Sucesso") {
@@ -280,7 +285,7 @@ class Lotacao {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }

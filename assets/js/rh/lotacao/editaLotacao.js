@@ -8,7 +8,6 @@ function listaLotacaoCombo(id) {
             id: id
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_pai_lotacao").append(response);
             $("#id_pai_lotacao").select2({
                 //width: " 100%"
@@ -26,7 +25,6 @@ function listaCategoriaCombo(id) {
             id: id
         },
         "success": function (response) {
-            //  console.log(response);
             $("#id_categoria").append(response);
             $("#id_categoria").select2({
                 //width: " 100%"
@@ -44,12 +42,11 @@ function listaPaisCombo() {
             acao: "listaPaisOption"
         },
         "success": function (response) {
-            //console.log(response);
             $(".pais").append(response);
             $(".pais").select2({
                 //width: " 100%"
             });
-            returnLotacaoEditar()
+            returnLotacaoEditar();
         }
     });
 }
@@ -64,7 +61,6 @@ function listaEstadoCombo(idPais, idEstado) {
             idEstado: idEstado
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_estado_endereco").empty();
             $("#id_estado_endereco").append(response);
             $("#id_estado_endereco").select2({
@@ -84,7 +80,6 @@ function listaCidadeCombo(idEstado, idCidade) {
             idCidade: idCidade
         },
         "success": function (response) {
-            //console.log(response);
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
             $("#id_cidade").select2({
@@ -106,7 +101,6 @@ function returnTelefones(id_lotacao) {
         },
         "success":
                 function (response) {
-                    //console.log(response);
                     $("#corpoTabela").html(response);
                 }
     });
@@ -123,7 +117,6 @@ function returnLotacaoEditar() {
         },
         "success":
                 function (response) {
-                    //console.log(response);
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
@@ -132,7 +125,7 @@ function returnLotacaoEditar() {
                     }
                     $("#id_lotacao").val(response[0]['id_lotacao']);
                     listaLotacaoCombo(response[0]['id_pai']);
-                    listaCategoriaCombo(response[0]['id_lotacao_categoria'])
+                    listaCategoriaCombo(response[0]['id_lotacao_categoria']);
                     $("#nm_lotacao").val(response[0]['nm_lotacao']);
                     $("#nr_cnpj").val(response[0]['nr_cnpj']);
                     $("#ds_logradouro").val(response[0]['ds_logradouro']);
@@ -161,7 +154,6 @@ function returnLotacaoEditar() {
 }
 //**********************uf para cep**********************************************************
 function listaCidadeComboUf(idEstado, uf) {
-    //alert(cidade);
     $.ajax({
         "url": "/model/rh/lotacao/request.php",
         "dataType": 'html',
@@ -172,9 +164,6 @@ function listaCidadeComboUf(idEstado, uf) {
             uf: uf
         },
         "success": function (response) {
-            //console.log(response);
-            //console.log(cidade);
-
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
             $("#id_cidade").select2({
@@ -238,7 +227,7 @@ $(document).ready(function () {
             $("#tabela tbody tr").each(function () {
                 if (nro == $(this).find(".telefone").text()) {
                     flag = 1;
-                    func.modalAlert(" O Item já Existe!!!")
+                    func.modalAlert(" O Item já Existe!!!");
                 }
             });
         }
@@ -256,7 +245,7 @@ $(document).ready(function () {
             idLotacao: idLotacao,
             telefone: nro,
             principal: value
-        }
+        };
         //****************************************
         $.ajax({
             "url": "/model/rh/lotacao/request.php",
@@ -264,7 +253,7 @@ $(document).ready(function () {
             "method": "POST",
             "data": {
                 "acao": "inserirTelefones",
-                "telefone": Telefone,
+                "telefone": Telefone
 
             },
             "success":
@@ -281,7 +270,6 @@ $(document).ready(function () {
     });
 //******************************************************************************************
     $("body").on("click", ".excluirLinha", function (e) {
-        //$(this).closest(".telefoneLinha").remove();
         var idTelefone = $(this).val();
         var idLotacao = $("#id_lotacao").val();
         $.ajax({
@@ -293,7 +281,6 @@ $(document).ready(function () {
             },
             "success":
                     function (response) {
-                        //console.log(response);
                         returnTelefones(idLotacao);
                     }
         });
@@ -306,7 +293,6 @@ $(document).ready(function () {
         } else {
             e.preventDefault();
             var $this = $(this);
-            //$this.prop("disabled", true);
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
             var DadosLotacao = {
                 //****************dados *********************
@@ -323,7 +309,7 @@ $(document).ready(function () {
                 cep: cep,
                 latitude: $("#mp_latitude").val(),
                 longitude: $("#mp_longitude").val(),
-                cidade: $("#id_cidade").val(),
+                cidade: $("#id_cidade").val()
             };
 
             var x = 0;
@@ -334,30 +320,28 @@ $(document).ready(function () {
 
             //******************************************************************
             var DadosObrigatorio = {
-                categoria: DadosLotacao.idCategoria,
-                nomeLotacao: DadosLotacao.nomeLotacao,
-                empresaResponsavel: DadosLotacao.pessoaJuridica,
-                pessoaResponsavel: DadosLotacao.pessoa,
-                lotacaoPai: DadosLotacao.idPaiLotacao,
+                "Categoria": DadosLotacao.idCategoria,
+                "Nome da Lotacao": DadosLotacao.nomeLotacao,
+                "Empresa Responsável": DadosLotacao.pessoaJuridica,
+                "Pessoa Responsável": DadosLotacao.pessoa,
+                "Lotação Pai": DadosLotacao.idPaiLotacao,
                 //********************************************
-                cidadeEndereco: DadosLotacao.cidade,
-                logradouro: DadosLotacao.logradouro,
-                bairro: DadosLotacao.bairro,
+                "Cidade": DadosLotacao.cidade,
+                "Logradouro": DadosLotacao.logradouro,
+                "Bairro": DadosLotacao.bairro
             };
-//            console.log(DadosObrigatorio);
+            
             $campo = 0;
             $i = 0;
             $.each(DadosObrigatorio, function (index, value) {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    //console.log($i+"-"+index+"=>"+value);
                     if ($i <= 5) {
-                        func.modalAlert(func.msgPreencherCampos + " - Dados(" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "</strong>)");
                     } else if ($i >= 6 && $i <= 8) {
-                        func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato(" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "</strong>)");
                     }
-                    console.log($i + "-" + index + "=>" + value);
                     $campo = 1;
                     return false;
                 }
@@ -383,8 +367,6 @@ $(document).ready(function () {
                 },
 
                 "success": function (response) {
-                    // console.log(response);
-                    //$this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -392,16 +374,14 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -411,18 +391,16 @@ $(document).ready(function () {
                         func.modalAlert(response.msg, 'success');
                         func.fechaModalReload();
                         return false;
-                        //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
-                        console.log('Ultimo else');
                         console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
                     console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -528,14 +506,14 @@ $(document).ready(function () {
         var Pessoa = {
             nome: $nome,
             tipoPessoa: $tipo
-        }
+        };
         $.ajax({
             "url": "/model/rh/lotacao/request.php",
             "dataType": 'html',
             "method": "POST",
             "data": {
                 acao: "listaPessoaTable",
-                pessoa: Pessoa,
+                pessoa: Pessoa
             },
             "success": function (response) {
                 //console.log(response);

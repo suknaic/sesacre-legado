@@ -760,7 +760,7 @@ class Contrato {
             $result = $rh->retornaTodosFuncionarios($pdo, $filtro, $ferias);
 
             if (!$result) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Funcionário Não Encontrado.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Registro de Funcionário Não Encontrado.");
                 return $retorno;
             } else {
                 foreach ($result as $v) {
@@ -781,7 +781,7 @@ class Contrato {
                                         <td style='text-align: center;'>                           
                                             <button type='button' class='btn btn-default btn-registrar btn-xs'                               
                                               title='Registrar' nome='" . $v['nm_pessoa'] . "' value='" . $idContrato . "/" . $idPessoaFisica . "' >
-                                               <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                               <i class='fa fa-search fa-lg text-primary' aria-hidden='true'></i>                                
                                             </button> 
                                         </td>
                                  </tr>";
@@ -823,7 +823,6 @@ class Contrato {
                     }
                 }
             }
-
             return $retorno;
         } catch (Exception $ex) {
             $retorno = "";

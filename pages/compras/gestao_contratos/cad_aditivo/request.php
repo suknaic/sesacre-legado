@@ -153,5 +153,19 @@ switch ($_REQUEST['acao']) {
             break;
         }
         
+    case 'buscaContrato':
+        try{
         
+            $idContrato = (int)filter_input(INPUT_GET, 'id', FILTER_DEFAULT);  
+            $gestaoContratoModel = new FinContratoModel();
+            $gestaoContratoModel->setIdContrato($idContrato);
+            echo $gestaoContratoModel->retornaDadosContratoJson();
+            return;                        
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }    
+     
 }

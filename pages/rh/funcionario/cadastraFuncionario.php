@@ -88,7 +88,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control" name="nm_email" id="nm_email" required="true">
+                                                                <input type="text" class="form-control" name="nm_email" data-email="Email" id="nm_email" required="true">
                                                             </div>
                                                         </div>
                                                     </div>

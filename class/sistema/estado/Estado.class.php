@@ -309,7 +309,7 @@ class Estado {
                     if (empty($est->getIdPais())) {
                         if ($idEstado == $v['id_estado']) {
                             $retorno .= "<option selected value = '" . $v['id_estado'] . "'>" . $v['nm_estado'] . " - " . $v['nm_pais'] . "</option>";
-                        }else{
+                        } else {
                             $retorno .= "<option value = '" . $v['id_estado'] . "'>" . $v['nm_estado'] . " - " . $v['nm_pais'] . "</option>";
                         }
                     } else {
@@ -321,7 +321,6 @@ class Estado {
                     }
                 }
             }
-
             return $retorno;
         } catch (Exception $ex) {
             $retorno = "";

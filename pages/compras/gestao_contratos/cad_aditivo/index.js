@@ -172,7 +172,7 @@ $(document).ready(function () {
                 "acao": "retornaAditivosDoContrato",
                 "dados": idContrato
             },
-            "success": function (response) {
+            "success": function (response) {                
                 $("#panel-aditivos").find('.panel-body').html(response);  
                 if($(".aditivo_quantidade").attr('quantidade') > 0){
                     $(".btn-historico-itens").show();
@@ -345,7 +345,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                            window.location.href = "index.php?m="+$("#motivo").val()+"&contrato="+$("#id_contrato").val();
                         });
                         return false;
                     } else {
@@ -430,7 +430,7 @@ $(document).ready(function () {
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, 'success');
                                 $('.modal-alert').on('hidden.bs.modal', function (e){
-                                    location.reload();
+                                    window.location.href = "index.php?m="+$("#motivo").val()+"&contrato="+$("#id_contrato").val();
                                 });
                                 return false;
                             } else {                                
@@ -499,7 +499,7 @@ $(document).ready(function () {
     });
     
     if($("#id_contrato").val() != 0){
-        //carregaContratoPesquisa();
+        carregaContratoPesquisa();
     }
     
     //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
@@ -516,10 +516,13 @@ $(document).ready(function () {
                 "acao": "buscaContrato",
                 "id": $("#id_contrato").val()
             },
-            "success": function (response){      
-                //console.log(response)
-                $("#modalDetalhes").find('.modal-body').html(response);
-                $("#modalDetalhes").modal('show')
+            "success": function (response){                
+                preencheCamposContrato(response)
+                buscaExisteAditivos(response.id_contrato); 
+                buscaItensDoContrato(response.id_contrato);
+                buscaGestoresDoContrato();
+                //$("#modalDetalhes").find('.modal-body').html(response);
+                //$("#modalDetalhes").modal('show')
             }
         });
         
@@ -923,8 +926,8 @@ $(document).ready(function () {
                 "dados": '261'
             },
             "success": function (response) {                
-                func.carregaTabelaPadrao('tabelaItens', response, [], true);
-                $(".selecionaItem").first().trigger('click');
+                //func.carregaTabelaPadrao('tabelaItens', response, [], true);
+                //$(".selecionaItem").first().trigger('click');
                 //$(".btn-add-aditivo").trigger('click');  
                 //carregaDadosEdicao();                
             }            

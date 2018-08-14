@@ -4,5 +4,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . '/model/compras/gcon/imprimir/imprimirT
 
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->WriteHTML($html);
-$mpdf->Output();
+$mpdf->SetTitle('Gestão de Compras - Licitações('.$ano.')');
+$mpdf->Output('Licitações-GCOM.pdf','I');
 exit();

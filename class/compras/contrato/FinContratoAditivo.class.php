@@ -600,6 +600,18 @@ class FinContratoAditivo {
                             
             $this->flServicoContinuado = $contRef->getFlServicoContinuado();
             
+            /*
+             * Motivo de Prazo e Valor e Prazo não pode ser para 
+             * Serviço Não Continuado
+             */                       
+            if($this->flServicoContinuado != "S" 
+                && ($this->idMotivo == $this->motivoPorPrazo
+                    || $this->idMotivo == $this->motivoPorValorePrazo
+                    )
+                ){
+                return Metodos::retornoAjax("Erro", "alert", "Contrato de Serviço Não Continuado não pode ser Aditivado Por Valor ou Valor e Prazo.");
+            }
+            
             
             //Valida se as Data de Assinatura e Publicação do Aditivo são menores que a Data
             //da Vigência Inicial e Final            
@@ -678,23 +690,25 @@ class FinContratoAditivo {
             $valorExecutado = array();
             
             $valorExecutado[] = array("id_cont_itens", 16861, "qtd_executado", 4000.0000);
-            $valorExecutado[] = array("id_cont_itens", 16862, "qtd_executado", 10000.0000);
+            $valorExecutado[] = array("id_cont_itens", 16862, "qtd_executado", 5000.0000);
             
             
-            $valorExecutado[] = array("id_cont_itens", 18159, "qtd_executado", 25.0000);
-            $valorExecutado[] = array("id_cont_itens", 18160, "qtd_executado", 5000.0000);
+            $valorExecutado[] = array("id_cont_itens", 18223, "qtd_executado", 25.0000);
+            $valorExecutado[] = array("id_cont_itens", 18224, "qtd_executado", 50.0000);
                         
-            $valorExecutado[] = array("id_cont_itens", 18163, "qtd_executado", 100.0000);                        
+            //$valorExecutado[] = array("id_cont_itens", 18205, "qtd_executado", 100.0000);                        
             
             foreach ($valorExecutado as $key => $value) {
                 $a = array_search($value[1], array_column($todosItens, $value[0]));
                 $todosItens[$a][$value[2]] = $value[3];
-            }            
+            }           
             
             
        
-            
-            
+//            echo "<pre>";
+//            print_r($todosItens);
+//            echo "</pre>";
+//            return;
             
             /**
              * 
@@ -726,7 +740,9 @@ class FinContratoAditivo {
                                     && $v['tipo'] == "contrato")
                                 ){
                                 //Seta o Ultimo Valor Unitário Valido
-                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                if( !$flagValor && $v['vl_itens'] != "0" && $v['vl_itens'] != "0.0"
+                                        && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
+                                        && $v['vl_itens'] > 0){
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
                                     $flagValor = true;
                                 }
@@ -740,7 +756,11 @@ class FinContratoAditivo {
                                 
                                 //Faz a somatoria das Quantidades dos Itens
                                 //Serviço Continuado, deverá somar todos os Itens
-                                $valorTotalDaQuantidade += $v['qt_itens'];                                                                    
+                                if($v['id_contrato_finalidade'] == $this->getFinalidadeSupressao()){
+                                    $valorTotalDaQuantidade -= $v['qt_itens'];
+                                }else{
+                                    $valorTotalDaQuantidade += $v['qt_itens'];   
+                                }
 
                                 //Se o Retorno for, um Item no qual o Aditivo for Por Prazo
                                 //Então não precisa continuar correndo os Itens pois esse Valor já 
@@ -751,6 +771,11 @@ class FinContratoAditivo {
                             }
                         }
                         $finContItens[$key]->setQtItens($valorTotalDaQuantidade);
+                        if($finContItens[$key]->getQtItens() < 0){
+                            return Metodos::retornoAjax("Erro", "alert", "Cadastro Do Aditivo Não pode ser finalizado"
+                                . " pois o Item ".$finContItens[$key]->getNrItem()." - ".$finContItens[$key]->getDescItem()
+                                . " ficará com sua quantidade Negativa");
+                        }
                     }else{
                         foreach ($todosItens as $k => $v){                                                                     
                             if( ($v['id_cont_itens_aditivo'] == $value->getIdContItens()
@@ -760,7 +785,9 @@ class FinContratoAditivo {
                                     && $v['tipo'] == "contrato")
                                 ){
                                 //Seta o Ultimo Valor Unitário Valido
-                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
+                                if( !$flagValor && $v['vl_itens'] != "0" && $v['vl_itens'] != "0.0"
+                                        && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
+                                        && $v['vl_itens'] > 0){                                
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
                                     $flagValor = true;
                                 }
@@ -773,11 +800,20 @@ class FinContratoAditivo {
                                         || $v['id_contrato_unidade_calculo'] == $this->getUnidadeCalculoIndice()
                                         )    
                                     ){
-                                    $valorTotalDaQuantidade += $v['qt_itens'];
+                                    if($v['id_contrato_finalidade'] == $this->getFinalidadeSupressao()){
+                                        $valorTotalDaQuantidade -= $v['qt_itens'];
+                                    }else{
+                                        $valorTotalDaQuantidade += $v['qt_itens'];
+                                    }
                                 }                                
                             }
                         }
                         $finContItens[$key]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
+                        if($finContItens[$key]->getQtItens() < 0){
+                            return Metodos::retornoAjax("Erro", "alert", "Cadastro Do Aditivo Não pode ser finalizado"
+                                . " pois o Item ".$finContItens[$key]->getNrItem()." - ".$finContItens[$key]->getDescItem()
+                                . " ficará com sua quantidade Negativa");
+                        }
                     }
                 }                                                              
             }
@@ -786,7 +822,7 @@ class FinContratoAditivo {
             //Ajusta os Valores dos Itens que serão duplicados no sistema
             if(!empty($this->itens) && $this->idMotivo == $this->getMotivoPorValor()){
                                              
-                foreach ($finContItens as $k => $value){     
+                foreach ($finContItens as $k => $value){    
                     $key = array_search($value->getIdContItens(), array_column($this->itens, "id"));                   
                     //Se a aplicação não enviou o Id do Item, então esse item terá seu valor zerado
                     if($key === false && $this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()){
@@ -794,8 +830,7 @@ class FinContratoAditivo {
                         $finContItens[$k]->setVlItens(0);                     
                         continue;
                     }                    
-                    
-                    
+                                        
                     
                     //Se a unidade de Cálculo for Moeda ou Indice de Correção
                     //Então o Campo preenchido que veio do formulário será para alterar os itens do vl_itens
@@ -821,13 +856,15 @@ class FinContratoAditivo {
                                         && $v1['tipo'] == "contrato")
                                     ){ 
                                         //Seta o Ultimo Valor Unitário Valido
-                                        if(!empty((int)$v1['vl_itens']) ){
+                                        if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
+                                            && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
+                                            && $v1['vl_itens'] > 0){                                        
                                             $finContItens[$k]->setVlItens($v1['vl_itens']);
                                             break;
                                         }
                                     }
                             }                                                                                  
-                        }else{                                                              
+                        }else{                                                           
                             $finContItens[$k]->setVlItens($this->itens[$key]['valor_aditivado']);   
                         }
                         //No Caso de Mudança de Valor Unitário, A Quantidade será alterado de acordo com 
@@ -840,7 +877,7 @@ class FinContratoAditivo {
                         //Praticamente Mesma Regra do Serviço Não Continuado
                         $valorTotalDaQuantidade = 0.0000;
                         $valorTotalDaQuantidadeExecutado = 0.0000;
-                        foreach ($todosItens as $k1 => $v1){                                                                      
+                        foreach ($todosItens as $k1 => $v1){                                                                     
                             if( ($v1['id_cont_itens_aditivo'] == $value->getIdContItens()
                                     && $v1['tipo'] == "aditivo")
                                 ||
@@ -859,13 +896,25 @@ class FinContratoAditivo {
                                         || $v1['id_contrato_unidade_calculo'] == $this->getUnidadeCalculoIndice()
                                         )    
                                     ){
-                                    $valorTotalDaQuantidade += $v1['qt_itens'];                                    
+                                    
+                                    if($v1['id_contrato_finalidade'] == $this->getFinalidadeSupressao()){
+                                        $valorTotalDaQuantidade -= $v1['qt_itens'];
+                                    }else{
+                                        $valorTotalDaQuantidade += $v1['qt_itens'];
+                                    }
+                                    
+                                    
                                 }                                                                                                                   
                             }
                         }                        
                         $finContItens[$k]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
+                        if($finContItens[$k]->getQtItens() < 0){
+                            return Metodos::retornoAjax("Erro", "alert", "Cadastro Do Aditivo Não pode ser finalizado"
+                                . " pois o Item ".$finContItens[$k]->getNrItem()." - ".$finContItens[$k]->getDescItem()
+                                . " ficará com sua quantidade Negativa");
+                        }
                         
-                        
+                    
                       
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
@@ -881,7 +930,7 @@ class FinContratoAditivo {
                                 $this->itens[$key]['valor_aditivado'] = $valorNovo;
                             }                            
                         }                        
-                        $finContItens[$k]->setQtItens($this->itens[$key]['valor_aditivado']);
+                        $finContItens[$k]->setQtItens($this->itens[$key]['valor_aditivado']);                        
                         
                         //O Valor Unitário irá sempre Repetir o Último Valor Válido do Contrato/Aditivo
                         foreach ($todosItens as $k1 => $v1){
@@ -890,29 +939,51 @@ class FinContratoAditivo {
                                 ||
                                 ($v1['id_cont_itens'] == $value->getIdContItens()
                                     && $v1['tipo'] == "contrato")
-                                ){
-                                if(!empty((int)$v1['vl_itens']) ){
+                                ){                                
+                                if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
+                                        && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
+                                        && $v1['vl_itens'] > 0){                                    
                                     $finContItens[$k]->setVlItens($v1['vl_itens']);
                                     break;
                                 }
                             }
-                        }                                                
-                                              
-                    }                                        
+                        }
+                                                                                              
+                    }
+                    
+                    /*
+                     * Verifica se o Valor da Quantidade irá ficar negativo 
+                     * se a Finalidade for Supressão
+                     */
+                    if($this->idFinalidade == $this->getFinalidadeSupressao()){
+//                        echo "<pre>";
+//                        print_r($todosItens);
+//                        echo "</pre>";
+                    }
+                    
                 }                                
-            }     
+            }    
             
+//            echo "<pre>";
+//            print_r($finContItens);
+//            echo "</pre>";
+//            return;
+       
             /*
              * Se o tipo de Aquisição for preenchido, então se deve calcular a Porcentagem
              * limite para cada tipo de aquisição
              */
             if(!empty($this->idTipoAquisicao)){
                 $this->calculaLimitePorcentagemAquisicao($finContItens, $todosItens, $pdo);
-                echo "<pre>";
-                print_r($this->msgRetorno);
-                echo "</pre>";
+                if(!$this->sucesso){
+                    return Metodos::retornoAjax("Erro", "alert", $this->msgRetorno);
+                }
+//                echo "<pre>";
+//                print_r($this->msgRetorno);
+//                echo "</pre>";
             }
-            return;
+            
+            //return;
 //                
 //            echo "<pre>";
 //            print_r($finContItens);
@@ -1409,7 +1480,7 @@ class FinContratoAditivo {
         } 
         
         if($this->idMotivo == $this->getMotivoPorPrazo() || $this->idMotivo == $this->getMotivoPorValorePrazo()){
-                        
+                                                                   
             if($this->dtVigenciaFinal < $this->dtVigenciaInicial){
                 $this->sucesso = false;
                 $this->msgRetorno = "Data Final da Vigência do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
@@ -1426,8 +1497,15 @@ class FinContratoAditivo {
                 $this->sucesso = false;
                 $this->msgRetorno = "Data da Publicação do Aditivo não pode ser Menor que a Data Inicial da Vigência do Aditivo.";
                 return; 
-            }                                                            
+            }      
             
+            $intervalo = $this->dtVigenciaInicial->diff($this->dtVigenciaFinal);
+            if($intervalo->y > 0){
+                $this->sucesso = false;
+                $this->msgRetorno = "As Datas das Vigências, inicial e final, só poder ter no máximo diferença de 1 ano.";
+                return; 
+            }
+           
             $this->sucesso = true;
             $this->msgRetorno = "ok";
             return;            
@@ -1945,10 +2023,15 @@ class FinContratoAditivo {
             
             $result = $daoContrato->getMsgRetorno();
             
+//            echo "<pre>";
+//            print_r($result);
+//            echo "</pre>";
+            //$k = array_search($value['id_cont_itens_aditivo'], array_column($todosItens, "id_cont_itens"));
+            
             $dados = array();
             $cabecalho = array();
             $itens = array();
-            foreach ($result as $key => $value) {
+            foreach ($result as $key => $value) {                               
                 
                 if($value['tipo'] == "contrato"){
                     $cabecalho[$value['id_contrato']] = array(
@@ -1980,13 +2063,17 @@ class FinContratoAditivo {
                         "nr_lote" => $value['nr_lote'],
                         "itens" => array(array(
                                     "qt_itens" => $value['qt_itens'],
-                                    "vl_itens" => $value['vl_itens'] 
+                                    "vl_itens" => $value['vl_itens'],
+                                    "finalidade" => $value['id_contrato_finalidade'],
+                                    "unidade_calculo" => $value['id_contrato_unidade_calculo']
                                 ))   
                     );
                 }else{
                     $dados[$idContItens]['itens'][] = array(
                         "qt_itens" => $value['qt_itens'],
-                        "vl_itens" => $value['vl_itens']    
+                        "vl_itens" => $value['vl_itens'],
+                        "finalidade" => $value['id_contrato_finalidade'],
+                        "unidade_calculo" => $value['id_contrato_unidade_calculo']
                     );                                        
                 }                                                                                               
             }
@@ -2019,8 +2106,10 @@ class FinContratoAditivo {
             $retorno .= $quantidadeEValor;
             $retorno .= '</tr>';
             $retorno .= '</thead><tbody>';
-            
-            foreach ($dados as $key => $value) {
+//            echo "<pre>";
+//            print_r($dados);
+//            echo "</pre>";
+            foreach ($dados as $key => $value) {                               
                 $retorno .= '<tr>';
                     $retorno .= '<td>'.$value['nr_item'].'</td>';
                     $retorno .= '<td>'.$value['nm_material'].'</td>';
@@ -2028,9 +2117,25 @@ class FinContratoAditivo {
                     $retorno .= '<td>'.$value['cd_elemento_despesa'].'</td>';
                     $retorno .= '<td>'.$value['tp_material'].'</td>';
                     $retorno .= '<td>'.$value['nr_lote'].'</td>';
-                
+                $quantidade = $value['itens'][0]['qt_itens'];
                 foreach ($value['itens'] as $k => $v) {
-                    $retorno .= '<td class="text-center">'.Metodos::ConverteValorBr($v['qt_itens'], 4).'</td>';
+                    $textColor = "";
+                    $simbolo = "";
+                    $porcentagem = "";
+                    if($v['finalidade'] == $this->getFinalidadeSupressao()){
+                        $textColor = "text-danger";
+                        $simbolo = "-";
+                    }
+                    
+                    if($v['unidade_calculo'] == $this->getUnidadeCalculoPercentual()
+                            || $v['unidade_calculo'] == $this->getUnidadeCalculoQuantidade()){                    
+                        $porcentagem = $v['qt_itens']/$quantidade*100;
+                        $porcentagem = " (".Metodos::ConverteValorBr($porcentagem, 2)."%)";
+                        //$porcentagem = "(".$porcentagem."%)";
+                    }
+                    
+                    
+                    $retorno .= '<td class="text-center '.$textColor.' " style="white-space: nowrap; overflow: hidden;" class="text-right">'.$simbolo."".Metodos::ConverteValorBr($v['qt_itens'], 4)."".$porcentagem.'</td>';
                     $retorno .= '<td style="white-space: nowrap; overflow: hidden;" class="text-right">R$ '.Metodos::ConverteValorBr($v['vl_itens'], 4).'</td>';
                 }                                                            
                 $retorno .= "</tr>";
@@ -2053,8 +2158,7 @@ class FinContratoAditivo {
          * Se o Tipo de Aquisição For Preenchido
          * Então iremos verificar a Porcentagem
          */
-        
-        
+              
         
         /*
          * Somente será calculado a somatoria dos Itens de forem do tipo:
@@ -2062,20 +2166,28 @@ class FinContratoAditivo {
          */
         if(!($this->idFinalidade == $this->getFinalidadeAdicao()
                 && $this->idInstrumento == $this->getInstrumentoRevisao()
-                && !empty($this->idTipoAquisicao) )){
+                && !empty($this->idTipoAquisicao)
+                && ($this->idUnidadeCalculo == $this->getUnidadeCalculoPercentual()
+                        ||
+                    $this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade())                
+                )){
             $this->sucesso = true;
             $this->msgRetorno = "Não será calculado a Porcentagem, pois Não é necessário para esse tipo de requisição.";
             return;
         }
         $valores = array();
-        foreach ($todosItens as $key => $value) {    
+        
+      
+        
+        foreach ($todosItens as $key => $value){           
             if($value['tipo'] == "aditivo"
                 && 
                 ($value['id_contrato_unidade_calculo'] == $this->getUnidadeCalculoPercentual()
                 ||
                 $value['id_contrato_unidade_calculo'] == $this->getUnidadeCalculoQuantidade())
                 &&
-                $value['qt_itens'] != '0.0000'
+                $value['qt_itens'] != '0.0000' && $value['qt_itens'] != '0.00' && $value['qt_itens'] != '0'
+                && $value['id_contrato_finalidade'] == $this->getFinalidadeAdicao()
                 ){
                     
                     $k = array_search($value['id_cont_itens_aditivo'], array_column($todosItens, "id_cont_itens"));  
@@ -2083,47 +2195,45 @@ class FinContratoAditivo {
                     $porcentagemDoItem = round($porcentagemDoItem, 4);
                     $valores[$value['id_cont_itens_aditivo']][] = array(
                         "quantidade" => $value['qt_itens'],                        
-                        "porcentagem" => $porcentagemDoItem
+                        "porcentagem" => $porcentagemDoItem,
+                        "id_cont_itens" => $value['id_cont_itens']
                     ); 
-            }            
-        }
+            }elseif($value['tipo'] == "contrato"){                
+                $porcentagemDoItem = ($finContItens[$value['id_cont_itens']]->getQtItens()/$value['qt_itens'])*100;
+                $porcentagemDoItem = round($porcentagemDoItem, 4);
+                $valores[$value['id_cont_itens']][] = array(
+                    "quantidade" => $finContItens[$value['id_cont_itens']]->getQtItens(),                        
+                    "porcentagem" => $porcentagemDoItem,
+                    "id_cont_itens" => $value['id_cont_itens']
+                ); 
+            }
+        }             
                
         if(empty($valores)){
-            $this->sucesso = true;
-            $this->msgRetorno = "Nenhum Item teve que ser Calculado para o limite de porcentagem.";
+            $this->sucesso = false;
+            $this->msgRetorno = "Não foi encontrado nenhuma Item para ser feito o Calculo da Porcentagem. ".STR_ERROR;
             return; 
         }
-        
-        foreach ($valores as $k => $v) {
+    
+                       
+        foreach ($valores as $k => $v){
             $quantidade = 0;            
-            foreach ($v as $key => $value) {                
+            foreach ($v as $key => $value){
                 $quantidade += $value['porcentagem'];
             }
             if($quantidade > $this->porcentagemLimitePorAquisicao()){
                 $this->sucesso = false;
-                $this->msgRetorno = "Limite da Porcentagem do Aditivo do Item foi ultrapassado.";
+                $this->msgRetorno = "Não foi possível Cadastrar o Novo Aditivo pois "
+                        . "o Limite da Porcentagem de ".$this->porcentagemLimitePorAquisicao()."%"
+                        . " do Item do ".$finContItens[$k]->getNrItem()." - ".$finContItens[$k]->getDescItem()
+                        . " será ultrapassado, ficando ". Metodos::ConverteValorBr($quantidade, 4)."%";
                 return;
-            }
-            echo "Item:".$k." Qtd: ".$quantidade." \n";
-            echo $this->porcentagemLimitePorAquisicao();
-        }
+            }            
+        }                      
         
-        
-        echo "<pre>";
-        print_r($valores);
-        echo "</pre>";
-        
-        echo "<pre>";
-        print_r($finContItens);
-        echo "</pre>";
-        
-        echo "<pre>";
-        print_r($todosItens);
-        echo "</pre>";
-        
-        
-        
-        $this->sucesso = false;
+        $this->sucesso = true;
+        $this->msgRetorno = "Tudo ok com as Porcentagens.";
+        return;
     }
     
     
