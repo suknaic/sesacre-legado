@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/ver_documento/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -65,7 +65,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-
+                                            <?php echo $finDocumentoFiscal->retornaDadosContrato(null);?>
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-
+                                             <?php echo $finDocumentoFiscal->retornaDadosPedidoNecessidade(null);?>
                                         </div>
                                     </div>
                                 </div>

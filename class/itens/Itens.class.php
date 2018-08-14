@@ -513,7 +513,7 @@ class Itens{
             $dao->pesquisaPorNmDescMaterial($pdo);            
             
             if($dao->Sucesso()){
-                foreach ($dao->getMsgRetorno() as $key => $value) {                    
+                foreach ($dao->getMsgRetorno() as $key => $value) {                  
                     $retorno .= '<tr class="selecionaItem" data-item="'.$value['id_material'].'"';
                     $retorno .= "data-info='".json_encode($value)."'";
                     $retorno .= 'style="cursor:pointer;">
