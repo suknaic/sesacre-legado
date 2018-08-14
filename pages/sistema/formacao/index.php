@@ -48,7 +48,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Formação</h1>                       
+                        <h1 class="page-header text-overflow">Curso</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -62,7 +62,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                 <div class="panel">
                                     <div class="panel-footer text-left">
                                         <button class="btn btn-primary btn-rounded btn-novo" type="button">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Formação
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Curso
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
@@ -76,7 +76,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                             <div class="form-group">
                                                 <div class="col-sm-1"></div>
                                                 <div class="col-sm-4">
-                                                    Escolaridade: <span class="text-danger">*</span>
+                                                    Escolaridade: <span class="text-danger obrigatorio">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
@@ -90,7 +90,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    Nome da Formação: <span class="text-danger">*</span>
+                                                    Nome do Curso: <span class="text-danger obrigatorio">*</span>
                                                     <input type="text" placeholder="Nome da Formação" id="nm_formacao" class="form-control" required autofocus>
                                                 </div>
                                             </div>                                                                                     
@@ -120,7 +120,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
 
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Lista de Formações</h3>
+                                <h3 class="panel-title">Lista de Cursos</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -129,7 +129,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Formações</th>                                                       
+                                                        <th>Cursos</th>                                                       
                                                         <th>Escolaridade</th>                 
                                                         <th class="text-center">Ações</th> 
                                                     </tr>

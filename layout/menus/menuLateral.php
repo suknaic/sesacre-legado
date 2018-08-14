@@ -41,7 +41,7 @@
                                             <a href="/pages/sistema/escolaridade/index.php">Escolaridade</a>
                                         </li>
                                         <li>
-                                            <a href="/pages/sistema/formacao/index.php">Formação</a>
+                                            <a href="/pages/sistema/formacao/index.php">Curso</a>
                                         </li>
                                         <li>
                                             <a href="/pages/sistema/funcao/index.php">Função</a>
@@ -53,7 +53,7 @@
                                                                                     <a href="/pages/rh/lotacaoDetalhe/">Lotação Detalhe</a>
                                                                                 </li>-->
                                         <li>
-                                            <a href="/pages/sistema/vinculo/index.php">Vínculos</a>
+                                            <a href="/pages/sistema/vinculo/index.php">Vínculo</a>
                                         </li>
                                         <!--                                        <li>
                                                                                     <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
@@ -79,7 +79,7 @@
                                             <a href="/pages/rh/relatorios/index.php">Diversos em PDF</a>
                                         </li>
                                         <li>
-                                            <a href="/pages/rh/relatorios/indexSituacao.php">Férias, Licenças e Concessões PDF</a>
+                                            <a href="/pages/rh/relatorios/indexSituacao.php">Férias, Licenças e Concessões em PDF</a>
                                         </li>
                                         <li>
                                             <a href="/pages/rh/relatorios/grafico1.php">Gráfico</a>
@@ -358,7 +358,7 @@
                                     <a href="/pages/compras/gestao_contratos/index.php">Gestão Contratos</a>
                                 </li>
                                 <li>
-                                    <a href="/pages/compras/produto/lista_produto">Banco de Produto</a>
+                                    <a href="/pages/compras/produto/lista_produto/index.php">Banco de Produto</a>
                                 </li>
                                 <!--
                                 <li>

@@ -70,6 +70,12 @@ $(document).ready(function () {
             var nome = $("#nm_lotacao").val();
             var categoria = $("#id_categoria").val();
             var lotacaoPai = $("#id_pai").val();
+            
+            if (nome === "" && categoria === "0" && lotacaoPai === "0") {
+                func.modalAlert(func.msgPreencherCampos);
+                return;
+            }
+            
             $.ajax({
                 "url": "/model/rh/lotacao/request.php",
                 "dataType": 'html',
@@ -82,7 +88,6 @@ $(document).ready(function () {
 
                 },
                 "success": function (response) {
-//                    console.log(response);
                     func.carregaTabelaPadrao('tabela', response, [7], true);
                 }
             });

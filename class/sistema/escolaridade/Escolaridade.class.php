@@ -61,7 +61,7 @@ class Escolaridade {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Este grau de escolaridade já existe no sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -115,11 +115,10 @@ class Escolaridade {
             $esc->setNmEscolaridade($this->nmEscolaridade);
 
             $buscaNome = $esc->buscaEscolaridade($esc, $pdo);
-
             if (!$buscaNome) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Este grau de escolaridade já está cadastrado.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -148,7 +147,7 @@ class Escolaridade {
             }
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Edição do grau de Escolaridade Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
@@ -181,7 +180,7 @@ class Escolaridade {
 
             if ($busca) {
                 if (!Log::SalvaLogD('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
+                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                     $pdo->rollBack();
                     return $retorno;
                 }
@@ -201,11 +200,11 @@ class Escolaridade {
             $sucesso = true;
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Grau de escolaridade removido com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }

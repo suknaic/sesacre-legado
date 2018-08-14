@@ -31,8 +31,7 @@ $(document).ready(function () {
                 "acao": "pesquisaProduto",
                 "dados": dados
             },
-            "success": function (response) {      
-                console.log(response)
+            "success": function (response) {                      
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
             }
         });

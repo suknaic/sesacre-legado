@@ -1,6 +1,6 @@
 func = new Funcoes();
 func.carregaTabelaPadrao('tabela', null, [2]);
-
+$('.obrigatorio').hide();
 //******************************************************************************************    
 function listaEscolaridadeCombo() {
     $.ajax({
@@ -291,6 +291,7 @@ $(document).ready(function () {
         $('.btn-pesquisar').hide();
         $('.btn-editar').show();
         $("#nm_formacao").focus();
+        $('.obrigatorio').show();
 
     });
     $('body').on('click', '.btn-limpar', function (e) {

@@ -823,7 +823,6 @@ class Contrato {
                     }
                 }
             }
-
             return $retorno;
         } catch (Exception $ex) {
             $retorno = "";
