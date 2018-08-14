@@ -911,7 +911,7 @@ class FinContratoAditivo {
                         }
                         
                     
-                      
+                      //teste
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
                     }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
