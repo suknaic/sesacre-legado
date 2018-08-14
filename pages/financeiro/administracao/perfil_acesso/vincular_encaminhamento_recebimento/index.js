@@ -1,4 +1,3 @@
-
 $(document).ready(function () {   
     func = new Funcoes();
     
@@ -11,15 +10,46 @@ $(document).ready(function () {
             "url": "request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaTiposDestinatarios"
+                "acao": "retornaDocVincTramitacoes"
             },
             "success": function (response) {  
-                func.carregaTabelaPadrao('tabela', response, [2]);
+//                console.log(response);
+                func.carregaTabelaPadrao('tabela', response, [4]);
             }
         });
     }
     
     lista();
+    
+    $('body').on('change','#tp_tramitacao',function (e){
+        e.preventDefault();
+        
+        var tp_tramitacao = $("#tp_tramitacao option:selected").val();
+        
+        //converte para inteiro o valor da opção selecionada
+        tp_tramitacao = parseInt(tp_tramitacao);
+        
+       
+        switch (tp_tramitacao) {
+            case 1:
+                $("#labelTpLotacao").html('Tipo do Destinatário: <span class="text-danger">*</span>');
+                $("#labelLotacao").html('Destinatário: <span class="text-danger">*</span>');
+                $('#tipo_lotacao option[value="0"]').text("Selecione o Tipo de Destinatário");
+                $('#id_lotacao option[value="0"]').text("Selecione um Destinatário");
+                break;
+                
+            case 2:
+                $("#labelTpLotacao").html('Tipo do Remetente: <span class="text-danger">*</span>');
+                $("#labelLotacao").html('Remetente: <span class="text-danger">*</span>');
+                $('#tipo_lotacao option[value="0"]').text("Selecione o Tipo de Remetente");
+                $('#id_lotacao option[value="0"]').text("Selecione um Remetente");
+                break;
+        }
+       
+        $('#id_lotacao').select2();
+        $('#tipo_lotacao').select2();
+    });
+    
     
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -28,12 +58,15 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
             $this.prop("disabled", true);
+            
             var Dados = {
-                idDocTpDest: $("#id_doc_tipo_destinatario option:selected").val(),
-                idLotacao: $("#id_lotacao option:selected").val()                
+                idPessoa: $("#id_pessoa option:selected").val(),
+                idTipoLot: $("#tipo_lotacao option:selected").val(),
+                idLotacao: $("#id_lotacao option:selected").val(),
+                tpTramitacao: $("#tp_tramitacao option:selected").val()
             }
 
-            if (Dados.idDocTpDest == 0 || Dados.idLotacao == 0) {
+            if (Dados.idPessoa == "0" || Dados.idTipoLot == "0" || Dados.idLotacao == "0" || Dados.tpTramitacao == "0"){
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
@@ -44,7 +77,7 @@ $(document).ready(function () {
                 "dataType": "html",
                 "method": "post",
                 "data": {
-                    "acao": "cadastrarTiposDestinatarios",
+                    "acao": "salvarDocVincTramitacao",
                     "dados": Dados
                 },
                 "success": function (response) {
@@ -101,8 +134,18 @@ $(document).ready(function () {
 
         var $this = $(this);
         var dados = $(this).closest('tr').data('objeto');
-        var id = dados.id_doc_destinatario;
-        var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text();
+        var tipo = dados.tramitacao;
+        
+        var id = 0;
+        if (tipo == '1') { //Encaminhamento
+            id = dados.id_doc_vinc_encaminhamento;
+        } else if(tipo == '2'){ //Recebimento
+            id = dados.id_doc_vinc_recebimento;
+        }
+        
+        
+        var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text() + ' - ' + $this.closest('tr').find('td:eq(2)').text() ;
+
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',
@@ -120,15 +163,20 @@ $(document).ready(function () {
             callback: function (result) {
                 if (result) {
                     
+                    var Dados = {
+                        id: id,
+                        tipo: tipo
+                    }
 
                     $.ajax({
                         "url": "request.php",
                         "dataType": "html",
                         "data": {
-                            "acao": "removerTiposDestinatarios",
-                            "dados": id
+                            "acao": "removerDocVincTramitacao",
+                            "dados": Dados
                         },
                         "success": function (response) {
+
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -179,4 +227,3 @@ $(document).ready(function () {
 
     });
 });
-

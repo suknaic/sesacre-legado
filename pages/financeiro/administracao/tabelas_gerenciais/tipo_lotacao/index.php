@@ -49,7 +49,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro de Tipo de Destinatário</h1>                       
+                        <h1 class="page-header text-overflow">Cadastro de Tipo de Destinatário/Remetente</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -68,19 +68,23 @@ require_once "index.load.php";
                                     <form class="form">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <input type="hidden" id="id_doc_tipo_destinatario" />
-                                                <div class="form-group">
-                                                    <label for="nm_doc_tipo_destinatario">
-                                                        Tipo de Destinatário: <span class="text-danger">*</span>
-                                                    </label>                                                        
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-file-text-o inputPFa"></p>
-                                                        </span>
-                                                        <input id="nm_doc_tipo_destinatario" class="form-control" />
+                                                
+                                                <div class="col-md-4">
+                                                    <input type="hidden" id="id_doc_tipo_lotacao" />
+                                                    <div class="form-group">
+                                                        <label for="nm_doc_tipo_lotacao">
+                                                            Tipo de Destinatário/Remetente: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                            </span>
+                                                            <input id="nm_doc_tipo_lotacao" class="form-control" />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                
+                                                <div class="col-md-4"></div>
+                                                <div class="col-md-4"></div>
                                             </div>
                                             
                                         </div>
@@ -106,7 +110,7 @@ require_once "index.load.php";
                                 </div>
                                 <div class="panel">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title">Lista de Tipo de Destinatário</h3>
+                                        <h3 class="panel-title">Lista de Tipo de Destinatário/Remetente</h3>
                                     </div>
                                     <div class="panel-body">
                                         <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -115,7 +119,7 @@ require_once "index.load.php";
                                                     <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Tipo de Destinatário</th>
+                                                                <th>Tipo de Destinatário/Remetente</th>
                                                                 <th class="text-center">Ações</th> 
                                                             </tr>
                                                         </thead>

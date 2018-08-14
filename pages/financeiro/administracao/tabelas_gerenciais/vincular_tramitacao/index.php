@@ -62,70 +62,101 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel">
-                                   
+
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal form">
+                                    <form class="form">
                                         <div class="panel-body">
-                                            <div class="form-group">
+                                            <div class="row">
 
                                                 <div class="col-md-4">
-                                                    <div class="panel-body">
-                                                        <label for="pessoa">
-                                                            Usuário: <span class="text-danger">*</span>
+                                                    <div class="form-group">
+                                                        <label for="tp_doc_tramitacao">
+                                                            Tramitação: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="pessoa" class="form-control">                                                                
-                                                                <?php
-                                                                    echo $selectUsuario;
-                                                                ?>
+                                                            <select id="tp_doc_tramitacao" class="form-control">                                                                
+                                                                <option value="0">Selecione a Tramitação</option>
+                                                                <option value="1">Encaminhar</option>
+                                                                <option value="2">Receber</option>
                                                             </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
+                                                
+
+                                                <div class="col-md-4">
+                                                    <div id="primeiro">
+                                                        <div class="form-group" id="remetente_conteudo">
+                                                            <label for="id_doc_tipo_remetente">
+                                                                Tipo de Remetente: <span class="text-danger">*</span>
+                                                            </label>                                                        
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-list inputPFa"></p>
+                                                                </span>
+                                                                <select id="id_doc_tipo_remetente" class="form-control">
+                                                                    <?php
+                                                                        echo $selectTipoRemetente;
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
+
                                                 <div class="col-md-4">
-                                                    <div class="panel-body">
-                                                        <label for="tpDestinatario">
-                                                            Tipo do Destinatário: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="tpDestinatario" class="form-control">
-                                                                <?php
-                                                                    echo $selecTipoDestinatario;
-                                                                ?>
-                                                            </select>
+                                                    <div id="segundo">
+                                                        <div class="form-group" id="destinatario_conteudo">
+                                                            <label for="id_doc_tipo_destinatario">
+                                                                Tipo de Destinatário: <span class="text-danger">*</span>
+                                                            </label>                                                        
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-list inputPFa"></p>
+                                                                </span>
+                                                                <select id="id_doc_tipo_destinatario" class="form-control">
+                                                                    <?php
+                                                                        echo $selectTipoDestinatario;
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 
+                                            </div>
+                                            <div class="row">
+                                                
                                                 <div class="col-md-4">
-                                                    <div class="panel-body">
-                                                        <label for="destinatario">
-                                                            Destinatário: <span class="text-danger">*</span>
+                                                    <div class="form-group">
+                                                        <label for="st_doc_tramitacao">
+                                                            Situação do Documento Fiscal: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="destinatario" class="form-control">
-                                                                <option value="0">Selecione um Destinatário</option>                                                                
-                                                                <?php
-                                                                    echo $selectDestinatario;
-                                                                ?>
+                                                            <select id="st_doc_tramitacao" class="form-control">
+<!--3.1.4.1. Em Trâmite;
+3.1.4.2. A Liquidar;
+3.1.4.3. Liquidado;
+3.1.4.4. A pagar;
+3.1.4.5. Pago Parcial;
+3.1.4.6. Pago;
+3.1.4.7. Encontro de Contas;
+3.1.4.8. Cancelado;-->
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-
-
                                             </div>
                                             <!-- End <div class="form-group"> -->
                                        
@@ -162,7 +193,7 @@
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Lista de Usuários por Tipo do Destinatário e Destinatário</h3>
+                                <h3 class="panel-title">Lista de Tramitação</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -171,8 +202,7 @@
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Usuário</th>
-                                                        <th>Tipo do Destinatário</th>
+                                                        <th>Tipo de Destinatário</th>
                                                         <th>Destinatário</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>

@@ -1,43 +1,20 @@
 $(document).ready(function () {   
     func = new Funcoes();
     
-    $('body').find('select').select2({
-        width: '100%'
-    });
-    
     function lista(){
         $.ajax({
             "url": "request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaVinculoDestinatarios"
+                "acao": "retornaTiposLotacoes"
             },
             "success": function (response) {  
-                func.carregaTabelaPadrao('tabela', response, [3]);
+                func.carregaTabelaPadrao('tabela', response, [2]);
             }
         });
     }
     
     lista();
-    
-    $("body").on('change','#tpDestinatario',function(e){
-       e.preventDefault();
-       
-       var tipoDestinatario = $("#tpDestinatario option:selected").val();
-
-       $.ajax({
-            "url": "request.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaDestinatarios",
-                "dados": tipoDestinatario
-            },
-            "success": function (response) {  
-                $('#destinatario').html(response);
-            }
-       });
-    });
-    
     
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -46,14 +23,11 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
             $this.prop("disabled", true);
-            
             var Dados = {
-                idPessoa: $("#pessoa option:selected").val(),
-                idTipoDest: $("#tpDestinatario option:selected").val(),
-                idLotacao: $("#destinatario option:selected").val()
+                nmTpLot: $("#nm_doc_tipo_lotacao").val()
             }
 
-            if (Dados.idPessoa == "0" || Dados.idTipoDest == "0" || Dados.idLotacao == "0" ){
+            if (Dados.nmTpDest == "") {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
@@ -64,7 +38,7 @@ $(document).ready(function () {
                 "dataType": "html",
                 "method": "post",
                 "data": {
-                    "acao": "salvarVinculoDestinatario",
+                    "acao": "cadastrarTipoLotacao",
                     "dados": Dados
                 },
                 "success": function (response) {
@@ -117,12 +91,88 @@ $(document).ready(function () {
         }
     });
     
+    $('body').on('click', '.btn-editar', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            
+            var Dados = {
+                idTpLot: $("#id_doc_tipo_lotacao").val(),
+                nmTpLot: $("#nm_doc_tipo_lotacao").val()
+            }
+
+            if (Dados.nmTpLot == "" || Dados.idTpLot == "0" || Dados.nmTpLot == "") {            
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            $.ajax({
+                "url": "request.php",
+                "dataType": "html",
+                "method": "post",
+                "data": {
+                    "acao": "alterarTipoLotacao",
+                    "dados": Dados
+                },
+                "success": function (response) {
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        console.log(response);
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'primary');
+                        func.fechaModalReload();
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    console.log(response);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+
+            $this.prop("disabled", false);
+        }
+    });
+    
     $('body').on('click', '.btn-excluir', function (e) {
 
         var $this = $(this);
         var dados = $(this).closest('tr').data('objeto');
-        var id = dados.id_vinc_destinatario;
-        var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text() + ' - ' + $this.closest('tr').find('td:eq(2)').text() ;
+        var id = dados.id_doc_tipo_lotacao;
+        var item = $this.closest('tr').find('td:eq(0)').text();
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',
@@ -145,11 +195,10 @@ $(document).ready(function () {
                         "url": "request.php",
                         "dataType": "html",
                         "data": {
-                            "acao": "removerVinculoDestinatario",
+                            "acao": "removerTipoLotacao",
                             "dados": id
                         },
                         "success": function (response) {
-
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -197,6 +246,30 @@ $(document).ready(function () {
                 }
             }
         });
+
+    });
+    
+    
+    $('body').on('click', '.btn-alterar', function (e) {
+        e.preventDefault();
+        
+        var dados = $(this).closest('tr').data('objeto');
+        $("#nm_doc_tipo_lotacao").val(dados.nm_doc_tipo_lotacao);
+        $("#id_doc_tipo_lotacao").val(dados.id_doc_tipo_lotacao);
+        
+        $('.btn-salvar').hide();
+        $('.btn-editar').show();
+        $("#nm_doc_tipo_lotacao").focus();
+
+    });
+    $('body').on('click', '.btn-limpar', function (e) {
+        $('.btn-salvar').prop("disabled", false);
+        $('.btn-editar').prop("disabled", false);
+        $('.btn-salvar').show();
+        $('.btn-editar').val(0);
+        $('.btn-editar').hide();
+        $("#nm_doc_tipo_lotacao").val("");
+        $("#id_doc_tipo_lotacao").val("");
 
     });
 });

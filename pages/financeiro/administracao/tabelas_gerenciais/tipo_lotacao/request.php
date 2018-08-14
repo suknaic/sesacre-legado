@@ -1,20 +1,20 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/DocTipoDestinatario.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocTipoLotacao.class.php";
 
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
     
-    CASE 'cadastrarTipoDestinatario':
+    CASE 'cadastrarTipoLotacao':
         try {
                                 
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);                        
             
-            $prog = new DocTipoDestinatario();
+            $prog = new DocTipoLotacao();
             
-            $prog->setNmDocTipoDestinatario($filtro['nmTpDest']);
+            $prog->setNmDocTipoLotacao($filtro['nmTpLot']);
             
             
             echo $prog->cadastrar();
@@ -25,15 +25,15 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }    
-    CASE 'alterarTipoDestinatario':
+    CASE 'alterarTipoLotacao':
         try {
                                 
             $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);                        
             
-            $prog = new DocTipoDestinatario();
+            $prog = new DocTipoLotacao();
             
-            $prog->setIdDocTipoDestinatario($filtro['idTpDest']);
-            $prog->setNmDocTipoDestinatario($filtro['nmTpDest']);
+            $prog->setIdDocTipoLotacao($filtro['idTpLot']);
+            $prog->setNmDocTipoLotacao($filtro['nmTpLot']);
             
             
             echo $prog->alterar();
@@ -44,14 +44,14 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }    
-    CASE 'removerTipoDestinatario':
+    CASE 'removerTipoLotacao':
         try {
                                 
             $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);                        
             
-            $prog = new DocTipoDestinatario();
+            $prog = new DocTipoLotacao();
             
-            $prog->setIdDocTipoDestinatario($filtro);
+            $prog->setIdDocTipoLotacao($filtro);
             
             
             echo $prog->excluir();
@@ -62,9 +62,9 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-    CASE 'retornaTiposDestinatarios':
+    CASE 'retornaTiposLotacoes':
         try {
-            $prog = new DocTipoDestinatario();            
+            $prog = new DocTipoLotacao();            
             echo $prog->listaTodos();
             return;
             break;

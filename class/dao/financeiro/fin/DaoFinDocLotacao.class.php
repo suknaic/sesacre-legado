@@ -1,8 +1,8 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/financeiro/fin/FinDocTipoDestinatario.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/financeiro/fin/FinDocLotacao.class.php";
 
-class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
+class DaoFinDocLotacao extends FinDocLotacao {
 
     private $sucesso = false;
     private $msgRetorno = null;
@@ -15,14 +15,13 @@ class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
         return $this->msgRetorno;
     }
 
-
     function insert(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "insert into fin_doc_tipo_destinatario (nm_doc_tipo_destinatario) values (:nm_doc_tipo_destinatario)";
+                $sql = "insert into fin_doc_lotacao (id_lotacao,id_doc_tipo_lotacao) values (:id_lotacao,:id_doc_tipo_lotacao)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":nm_doc_tipo_destinatario", $this->getNmDocTipoDestinatario(), PDO::PARAM_STR);
-                
+                $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -34,31 +33,13 @@ class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
         }
     }
     
-    function update(PDO $pdo = null){
-        try {
-            if (!empty($pdo)) {
-                $sql = "update fin_doc_tipo_destinatario set nm_doc_tipo_destinatario = :nm_doc_tipo_destinatario where id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(':nm_doc_tipo_destinatario', $this->getNmDocTipoDestinatario(), PDO::PARAM_STR);
-                $stmt->bindValue(':id_doc_tipo_destinatario', $this->getIdDocTipoDestinatario(), PDO::PARAM_INT);
-                
-                $stmt->execute();
-                $this->sucesso = true;
-            } else {
-                $this->msgRetorno = 'Sem conexão com o banco de dados';
-            }
-        } catch (Exception $exc) {
-            $this->sucesso = false;
-            $this->msgRetorno = $exc->getMessage();
-        }
-    }
     
     function delete(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "delete from fin_doc_tipo_destinatario where id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
+                $sql = "delete from fin_doc_lotacao where id_doc_lotacao = :id_doc_lotacao";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":id_doc_tipo_destinatario", $this->getIdDocTipoDestinatario(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
                 
                 $this->sucesso = $stmt->execute();
             } else {
@@ -73,11 +54,31 @@ class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
     function select(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select id_doc_tipo_destinatario, nm_doc_tipo_destinatario, st_ativo from fin_doc_tipo_destinatario". $this->filtroSql() . " order by id_doc_tipo_destinatario";
+                $sql = "select 
+                                id_doc_lotacao,
+                                fdtl.id_doc_tipo_lotacao, 
+                                nm_doc_tipo_lotacao,
+                                sl.id_lotacao,
+                                nm_lotacao
+                        from 
+                                fin_doc_lotacao fdl,
+                                fin_doc_tipo_lotacao fdtl,
+                                ses_lotacao sl
+                        where
+                                fdl.id_doc_tipo_lotacao = fdtl.id_doc_tipo_lotacao
+                        and	fdl.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by id_doc_lotacao";
                 $stmt = $pdo->prepare($sql);
                 
-                if($this->getIdDocTipoDestinatario()){
-                    $stmt->bindValue(":id_doc_tipo_destinatario", $this->getIdDocTipoDestinatario(), PDO::PARAM_INT);
+                if($this->getIdDocLotacao()){
+                    $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                }
+                
+                if ($this->getIdDocTipoLotacao()) {
+                    $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                }
+
+                if ($this->getIdLotacao()) {
+                    $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
                 }
                 
                 $stmt->execute();
@@ -101,9 +102,9 @@ class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
     function selectLinha(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select * from fin_doc_tipo_destinatario where id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
+                $sql = "select * from fin_doc_lotacao where id_doc_lotacao = :id_doc_lotacao";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":id_doc_tipo_destinatario", $this->getIdDocTipoDestinatario(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 
                 if ($stmt->rowCount() > 0) {
@@ -125,8 +126,16 @@ class DaoFinDocTipoDestinatario extends FinDocTipoDestinatario {
     function filtroSql(){
         $filtro = "";
         
-        if ($this->getIdDocTipoDestinatario()) {
-            $filtro .= empty($filtro) ? " where id_doc_tipo_destinatario = :id_doc_tipo_destinatario" : " and id_doc_tipo_destinatario = :id_doc_tipo_destinatario";
+        if ($this->getIdDocLotacao()) {
+            $filtro .= " and id_doc_lotacao = :id_doc_lotacao";
+        }
+        
+        if ($this->getIdDocTipoLotacao()) {
+            $filtro .= " and fdl.id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
+        }
+        
+        if ($this->getIdLotacao()) {
+            $filtro .= " and fdl.id_lotacao = :id_lotacao";
         }
         
         return $filtro;
