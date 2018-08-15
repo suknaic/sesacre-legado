@@ -47,6 +47,10 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
+    /**
+     * Retorna as informaçoes do contrato por id do documento fiscal 
+     * @param PDO $pdo
+     */
     public function retornaIfContratoPorIdDocumento(PDO $pdo) {
         try {
             $sql = "select DISTINCT(cont.nr_contrato), cont.nr_contrato, processo.cd_pregao, tp.nm_tipo_gasto, obj.nm_objeto,
@@ -99,6 +103,10 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
+    /**
+     * retorna as informaçoes do pedido por id do documento fiscal
+     * @param PDO $pdo
+     */
     public function retornaIfPedidoPorIdDocumento(PDO $pdo) {
         try {
             $sql = "select DISTINCT (p.nr_pedido), p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
@@ -134,6 +142,127 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    /**
+     * retorna informacoes do empenho por id do documento fiscal
+     * @param PDO $pdo
+     */
+    public function retornaIfEmpenhoPorIdDocumento(PDO $pdo) {
+        try {
+            $sql = "select DISTINCT (emp.nr_empenho), emp.nr_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                    tpEmp.nm_tipo_empenho, emp.vl_empenho
+                    from fin_documento_fiscal as doc
+                    inner join fin_entrega_documento as entDoc
+                    on entDoc.id_documento_fiscal = doc.id_documento_fiscal
+                    inner join fin_entrega_confirmacao as entrega
+                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
+                    inner join fin_ordem as ordem
+                    on ordem.id_ordem = entrega.id_ordem
+                    inner join fin_empenho as emp
+                    on emp.id_pedido =  ordem.id_pedido
+                    inner join fin_tipo_empenho as tpEmp
+                    on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
+                    where doc.id_documento_fiscal = :documento";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaOrdemVinculadaAoDocumentoFiscal(PDO $pdo) {
+        try {
+            $sql = "select ordem.id_ordem, concat(concat(ordem.nr_ordem, '/'),ordem.aa_ordem) as ordem,
+                    case 
+                            when ordem.tp_ordem = '1' then 'Entrega'
+                            when ordem.tp_ordem = '2' then 'Serviço/Execução'
+                    end tipo,
+                    sum(ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) as valor
+                    from fin_documento_fiscal as documento
+                    inner join fin_entrega_documento as entDoc
+                    on entDoc.id_documento_fiscal = documento.id_documento_fiscal
+                    inner join fin_entrega_confirmacao as entrega
+                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
+                    inner join fin_ordem as ordem
+                    on ordem.id_ordem  = entrega.id_ordem
+                    inner join fin_ordem_itens as ordemItens
+                    on ordemItens.id_ordem = ordem.id_ordem
+                    where documento.id_documento_fiscal = :documento
+                    group by ordem.id_ordem";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaEntregaVinculadoAoDocumentoFiscal(PDO $pdo) {
+        try {
+            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem, 
+                    to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
+                    to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
+                    to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
+                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
+                    case 
+                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
+                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
+                    end situacao
+                    from fin_documento_fiscal as doc
+                    inner join fin_entrega_documento as entDoc
+                    on entDoc.id_documento_fiscal =  doc.id_documento_fiscal
+                    inner join fin_entrega_confirmacao as confirmacao
+                    on confirmacao.id_entrega_confirmacao  =  entDoc.id_entrega_confirmacao
+                    inner join fin_protocolo as protocolo
+                    on protocolo.id_protocolo = confirmacao.id_protocolo
+                    inner join fin_ordem as ordem
+                    on confirmacao.id_ordem = ordem.id_ordem
+                    inner join fin_entrega_itens as item
+                    on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                    where doc.id_documento_fiscal = :documento
+                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo, ordem.id_ordem
+                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), confirmacao.nr_entrega_confirmacao";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosDocumento(PDO $pdo){
+        try{
+            
+        } catch (Exception $ex) {
+
         }
     }
 

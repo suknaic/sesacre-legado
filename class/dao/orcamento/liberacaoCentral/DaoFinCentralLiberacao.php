@@ -466,7 +466,7 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
     public function retornaLiberacaoPesquisa(PDO $pdo = null, $condicao = null) {
         try {
             if (!empty($pdo)) {
-                
+
                 $sql = "select pt.cd_programa_trabalho, pt.ds_programa_trabalho, l.nm_lotacao, desp.cd_despesa_elemento,
                         desp.ds_despesa_elemento, f.nr_fonte, tg.nm_tipo_gasto, qddv.id_fonte, qddv.id_programa_trabalho,
                         qddv.id_despesa_elemento, cl.id_tipo_gasto, l.id_lotacao, qddv.id_qdd_valor,
@@ -561,13 +561,13 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
                         inner join ses_lotacao as l
                         on l.id_lotacao = cl.id_lotacao
                         where cl.st_central_liberacao = '2' 
-                        and cl.tp_central_liberacao = '1' ".$condicao."
+                        and cl.tp_central_liberacao = '1' " . $condicao . "
                         group by pt.id_programa_trabalho, pt.cd_programa_trabalho, pt.ds_programa_trabalho, 
                         tg.id_tipo_gasto, l.nm_lotacao, l.id_lotacao, desp.ds_despesa_elemento, desp.cd_despesa_elemento,
                         f.nr_fonte, qddv.id_fonte, qddv.id_programa_trabalho, qddv.id_despesa_elemento, cl.id_tipo_gasto,
                         l.id_lotacao, qddv.id_qdd_valor
                         order by id_qdd_valor";
-                
+
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -575,6 +575,31 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Error $e) {
+            $this->msgRetorno = $e->getMessage();
+            $this->sucesso = false;
+        }
+    }
+
+    public function retornaValorAguardandoAutorizacaoFinanceiro(PDO $pdo, $idQddValor) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select coalesce(sum(clt.vl_central_liberacao_trans),0.0000) as saldo
+                        from fin_central_liberacao as cl
+                        inner join fin_central_liberacao_trans as clt
+                        on cl.id_central_liberacao = clt.id_central_liberacao
+                        where id_qdd_valor = :idQddValor
+                        and cl.id_lotacao = :central
+                        and cl.id_tipo_gasto = :tipoGasto
+                        and cl.st_central_liberacao = '1'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idQddValor", $idQddValor, PDO::PARAM_INT);
+                $stmt->bindValue(":central", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
             }
         } catch (Error $e) {
             $this->msgRetorno = $e->getMessage();

@@ -316,12 +316,15 @@ class FinCentralLiberacaoModel {
                     $qddValor->setIdProgramaTrabalho($v["projeto"]);
                     $qddValor->setIdDespesaElemento($v["despesa"]);
                     $qddValor->carregaDadosQddFonteProgDespesa($pdo);
+                    
                     if (empty($qddValor->getIdQddValor())) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Não existe qdd cadastrado com essas informações!");
                     }
-
-                    if ((float) $qddValor->getVlAtual() < ($qddValor->getVlLiberado() + Metodos::ConverteValorIng($v["valor"]))) {
+                    
+                    $daoFinCentralLiberacao->retornaValorAguardandoAutorizacaoFinanceiro($pdo, $qddValor->getIdQddValor());
+                    
+                    if ((float) $qddValor->getVlAtual() < ($qddValor->getVlLiberado() + $daoFinCentralLiberacao->getMsgRetorno()['saldo'])) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Valor liberado e maior que o saldo atual!");
                     }

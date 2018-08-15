@@ -16,10 +16,13 @@
 //    $sql->execute();
 //    $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 //    $idPessoa = 1723;
+//    $cont = 0;
 //    foreach ($resultado as $dados) {
+//        $cont++;
 //        echo "INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario, dh_anotacao)
 //                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", " . $dados['idSituacao'] . ", " . $idPessoa . ", " . $idPessoa . ", '" . $dados['dataAnotacao'] . "' );<br>";
 //    }
+//    echo $cont;
 //} catch (PDOException $e) {
 //    echo 'ERROR: ' . $e->getMessage();
 //}
