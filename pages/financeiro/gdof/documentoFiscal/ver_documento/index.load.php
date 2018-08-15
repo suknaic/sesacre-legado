@@ -18,7 +18,7 @@ $finDocumentoFiscal = new FinDocumentoFiscal();
 $finDocumentoFiscal->setIdDocumentoFiscal($id);
 
 $documento = ($finDocumentoFiscal->retornaDadosDocumento(null));
-var_dump($documento);
+
 
 if(empty($documento)){
     header("Location: /pages/index.php");
