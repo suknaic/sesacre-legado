@@ -1,0 +1,175 @@
+<?php
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/fin/DaoFinDocVincEncaminhamento.class.php";
+
+class DocVincEncaminhamento {
+
+    private $idDocVincEncaminhamento = null;
+    private $idDocTipoLotacao = null;
+    private $idLotacao = null;
+    private $idPessoa = null;
+    
+    function getIdDocVincEncaminhamento() {
+        return $this->idDocVincEncaminhamento;
+    }
+
+    function getIdDocTipoLotacao() {
+        return $this->idDocTipoLotacao;
+    }
+
+    function getIdLotacao() {
+        return $this->idLotacao;
+    }
+
+    function getIdPessoa() {
+        return $this->idPessoa;
+    }
+
+    function setIdDocVincEncaminhamento($idDocVincEncaminhamento) {
+        $this->idDocVincEncaminhamento = $idDocVincEncaminhamento;
+        return $this;
+    }
+
+    function setIdDocTipoLotacao($idDocTipoLotacao) {
+        $this->idDocTipoLotacao = $idDocTipoLotacao;
+        return $this;
+    }
+
+    function setIdLotacao($idLotacao) {
+        $this->idLotacao = $idLotacao;
+        return $this;
+    }
+
+    function setIdPessoa($idPessoa) {
+        $this->idPessoa = $idPessoa;
+        return $this;
+    }
+
+    public function cadastrar(){
+        try {  
+            
+            if (empty($this->getIdLotacao()) or empty($this->getIdPessoa()) or empty($this->getIdDocTipoLotacao())){
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+           
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
+            $daoFinDocVincEncaminhamento->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
+                                   ->setIdLotacao($this->getIdLotacao())
+                                   ->setIdPessoa($this->getIdPessoa());
+            
+            //verifica se já existe o registro, o banco já possui a constraint, para informar o usuário
+            $daoFinDocVincEncaminhamento->select($pdo);
+            
+            if ($daoFinDocVincEncaminhamento->getSucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "O registro já existe, não é possível incluir outro.");
+            }
+            
+            $daoFinDocVincEncaminhamento->insert($pdo);
+            
+            if ($daoFinDocVincEncaminhamento->getSucesso()) {
+                
+                $idDocVincEncaminhamento = $pdo->lastInsertId('fin_doc_vinc_encaminhamento_id_doc_vinc_encaminhamento_seq');
+                if (!Log::SalvaLogI('fin_doc_vinc_encaminhamento', $idDocVincEncaminhamento, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                
+                $this->setIdDocVincEncaminhamento($idDocVincEncaminhamento);
+                $pdo->commit();
+                
+                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinDocVincEncaminhamento->getMsgRetorno());
+            }
+
+            return $retorno;                                                                                                        
+        
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }  
+    }
+    
+    function excluir(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
+            $daoFinDocVincEncaminhamento->setIdDocVincEncaminhamento($this->getIdDocVincEncaminhamento());
+            
+            $idDocVincEncaminhamento = $daoFinDocVincEncaminhamento->getIdDocVincEncaminhamento();
+            if (!Log::SalvaLogD('fin_doc_vinc_encaminhamento', $idDocVincEncaminhamento, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoFinDocVincEncaminhamento->delete($pdo);
+            if ($daoFinDocVincEncaminhamento->getSucesso()) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            } else {
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinDocVincEncaminhamento->getMsgRetorno());
+                $pdo->rollBack();
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+
+    function listaTodos() {
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
+            
+            if ($this->getIdDocVincEncaminhamento()) {
+                $daoFinDocVincEncaminhamento->setIdDocVincEncaminhamento($this->getIdDocVincEncaminhamento());
+            }
+            if ($this->getIdDocTipoLotacao()) {
+                $daoFinDocVincEncaminhamento->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+            }
+            if ($this->getIdPessoa()) {
+                $daoFinDocVincEncaminhamento->setIdPessoa($this->getIdPessoa());
+            }
+            if ($this->getIdLotacao()) {
+                $daoFinDocVincEncaminhamento->setIdLotacao($this->getIdLotacao());
+            }
+
+            
+            $daoFinDocVincEncaminhamento->select($pdo);
+            
+            if ($daoFinDocVincEncaminhamento->getSucesso()) {
+                foreach ($daoFinDocVincEncaminhamento->getMsgRetorno() as $linha) {
+                    $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
+                                    . "<td>".$linha['nm_pessoa']."</td>"
+                                    . "<td>Encaminhar</td>"
+                                    . "<td>".$linha['nm_lotacao']."</td>"
+                                    . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
+                                    . "<td class='text-center'>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden=true></i></button>"
+                                    . "</td>"
+                             . "</tr>";
+                }
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+
+}

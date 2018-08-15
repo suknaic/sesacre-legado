@@ -473,7 +473,7 @@ class Pedido {
             }
 
             if (!empty($this->idFornecedor)) {
-                $filtro[] = "f.id_fornecedor = '" . $this->idFornecedor . "'";
+                $filtro[] = "f.id_pessoa = '" . $this->idFornecedor . "'";
             }
 
             if (!empty($this->ano)) {
