@@ -165,7 +165,7 @@ class Escolaridade {
     public function removerEscolaridade() {
         try {
 
-            if ($this->idEscolaridade == "") {
+            if (empty($this->idEscolaridade)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
 
@@ -178,35 +178,105 @@ class Escolaridade {
 
             $busca = $esc->retornaEscolaridade($pdo);
 
-            if ($busca) {
-                if (!Log::SalvaLogD('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o grau de Escolaridade.");
+            if ($busca === FALSE) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
             }
 
-            $resultDao = $esc->delete($esc, $pdo);
-            if ($resultDao != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $resultDao);
+            if (!Log::SalvaLogD('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
-            $sucesso = true;
-
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            $resultDao = $esc->delete($pdo);
+            if ($resultDao === TRUE) {
                 $pdo->commit();
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+            }
+
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function desativarEscolaridade() {
+        try {
+
+            if (empty($this->idEscolaridade)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $esc = new DaoSesEscolaridade();
+            $esc->setIdEscolaridade($this->idEscolaridade);
+
+            $busca = $esc->retornaEscolaridade($pdo);
+
+            if ($busca === FALSE) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_escolaridade', $esc->getIdEscolaridade(), $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $resultDao = $esc->desativar($pdo);
+            if ($resultDao === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function ativarEscolaridade() {
+        try {
+
+            if (empty($this->idEscolaridade)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $esc = new DaoSesEscolaridade();
+            $esc->setIdEscolaridade($this->idEscolaridade);
+
+            $busca = $esc->retornaEscolaridade($pdo);
+
+            if ($busca === FALSE) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_escolaridade', $esc->getIdEscolaridade(), $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $resultDao = $esc->ativar($pdo);
+            if ($resultDao === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_ATIVADO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
@@ -229,19 +299,26 @@ class Escolaridade {
             } else {
                 foreach ($result as $v) {
                     $idEscolaridade = $v['id_escolaridade'];
-                    $retorno .= "<tr>";
-                    $retorno .= "<td>" . $v['nm_escolaridade'] . "</td>"
-                            . '<td style="text-align: center;">'
-                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
-                            . ' title="Editar" nome="' . $v['nm_escolaridade'] . '" value=' . $idEscolaridade . ' >
-                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
-                              </button> '
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idEscolaridade . ' >
-                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                              </button>'
-                            . '</td>'
-                            . "</tr>";
-                    $retorno .= "</tr>";
+                    $retorno .= "<tr>
+                                    <td>" . $v['nm_escolaridade'] . "</td>
+                                    <td style='text-align: center;'>
+                                        <button type='button' class='btn btn-default btn-edit btn-xs title='Editar' nome='" . $v['nm_escolaridade'] . "' value='" . $idEscolaridade . "' >
+                                            <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                        </button> 
+                                        <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='" . $idEscolaridade . "' >
+                                            <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+                                        </button>";
+                    if ($v['st_ativo'] == '0') {
+                        $retorno .= "   <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_escolaridade'] . "' value='" . $idEscolaridade . "' >
+                                            <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                        </button>";
+                    } else {
+                        $retorno .= "    <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_escolaridade'] . "' value='" . $idEscolaridade . "' >
+                                            <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                        </button>";
+                    }
+                    $retorno .= "   </td>
+                                </tr>";
                 }
             }
 
@@ -307,7 +384,7 @@ class Escolaridade {
             $escolaridade = new DaoSesEscolaridade();
             $escolaridade->setId_pessoa_fisica($this->idPessoaFisica);
             $result = $escolaridade->buscaEscolaridadePorPessoa($pdo);
-            
+
             if (!$result) {
                 return $retorno;
             } else {

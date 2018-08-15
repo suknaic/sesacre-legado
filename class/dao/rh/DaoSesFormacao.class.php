@@ -38,13 +38,33 @@ class DaoSesFormacao extends SesFormacao {
             $result = $pdo->prepare("DELETE FROM ses_escolaridade_formacao WHERE Id_escolaridade_formacao = :idFormacao");
             $result->bindValue(":idFormacao", $this->getId_escolaridade_formacao(), PDO::PARAM_INT);
             $result->execute();
-
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
     }
 
+    function desativar($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_escolaridade_formacao SET st_ativo = '0' WHERE Id_escolaridade_formacao = :idFormacao");
+            $result->bindValue(":idFormacao", $this->getId_escolaridade_formacao(), PDO::PARAM_INT);
+            $result->execute();
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    function ativar($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_escolaridade_formacao SET st_ativo = '1' WHERE Id_escolaridade_formacao = :idFormacao");
+            $result->bindValue(":idFormacao", $this->getId_escolaridade_formacao(), PDO::PARAM_INT);
+            $result->execute();
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
 
     /**
      * Retorna as informações de uma Funçao Especifico
@@ -81,10 +101,9 @@ class DaoSesFormacao extends SesFormacao {
 
         $retorno = FALSE;
 
-        $sql = "select f.id_escolaridade_formacao, f.nm_escolaridade_formacao, e.id_escolaridade, e.nm_escolaridade
+        $sql = "select f.id_escolaridade_formacao, f.nm_escolaridade_formacao, e.id_escolaridade, e.nm_escolaridade, f.st_ativo
                 from ses_escolaridade e
                     inner join ses_escolaridade_formacao f on e.id_escolaridade = f.id_escolaridade
-                where e.st_ativo = '1' and f.st_ativo = '1'
                 $filtro
                 order by f.nm_escolaridade_formacao, e.nm_escolaridade";
         try {

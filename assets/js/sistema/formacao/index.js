@@ -96,9 +96,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, "success");
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.fechaModalReload();
                         return false;
                     } else {
                         func.modalAlert(func.msgErroPadrao, 'danger');
@@ -251,9 +249,7 @@ $(document).ready(function () {
                                 }
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, "success");
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.fechaModalReload();
                                 return false;
                             } else {
                                 func.modalAlert(func.msgErroPadrao, 'danger');
@@ -269,6 +265,167 @@ $(document).ready(function () {
             }
         });
     });
+    
+    $('body').on('click', '.btn-desativar', function (e) {
+
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-desativar').attr("nome");
+
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a Desativação do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Formacao = {
+                        id: id
+                    };
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/sistema/formacao/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "desativarFormacao",
+                            "formacao": Formacao
+                        },
+                        "success": function (response) {
+                            console.log(response);
+                            return false;
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, "success");
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    
+    $('body').on('click', '.btn-ativar', function (e) {
+
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-ativar').attr("nome");
+
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a Ativação do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Formacao = {
+                        id: id
+                    };
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/sistema/formacao/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "ativarFormacao",
+                            "formacao": Formacao
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, "success");
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    
     $('body').on('click', '.btn-novo', function (e) {
         $('.btn-salvar').prop("disabled", false);
         $('.btn-editar').prop("disabled", false);

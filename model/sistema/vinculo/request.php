@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vinculo/Vinculo.class.p
 
 $session = new Session('ajax');
 
-if(!$session->verificaPermissao(PERFIL_TI)){
+if (!$session->verificaPermissao(PERFIL_TI)) {
     echo "SessaoExpirada";
     return;
 }
@@ -13,15 +13,15 @@ if(!$session->verificaPermissao(PERFIL_TI)){
 
 
 switch ($_REQUEST['acao']) {
-               
+
     case 'cadVinculo':
         try {
-                        
-            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
-            
+
+            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             $vinc = new Vinculo();
             $vinc->setNmVinculo(trim($vinculo['nome']));
-            echo $vinc->cadastrarVinculo();                      
+            echo $vinc->cadastrarVinculo();
             return;
             break;
         } catch (Exception $e) {
@@ -29,15 +29,15 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
+
     case 'edtVinculo':
         try {
-            
-            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
-            
+
+            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             $vinc = new Vinculo();
             $vinc->setNmVinculo(trim($vinculo['nome']));
-            $vinc->setIdVinculo((int)$vinculo['id']);
+            $vinc->setIdVinculo((int) $vinculo['id']);
             echo $vinc->editarVinculo();
             return;
             break;
@@ -45,17 +45,16 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
             break;
-        }  
-    
-    
-    case 'remVinculo':
+        }
+
+    case 'desativarVinculo':
         try {
-                        
-            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
-            
+
+            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             $vinc = new Vinculo();
-            $vinc->setIdVinculo((int)$vinculo['id']);
-            echo $vinc->removerVinculo();                      
+            $vinc->setIdVinculo((int) $vinculo['id']);
+            echo $vinc->desativarVinculo();
             return;
             break;
         } catch (Exception $e) {
@@ -63,12 +62,44 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-     
+
+    case 'ativarVinculo':
+        try {
+                        
+            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $vinc = new Vinculo();
+            $vinc->setIdVinculo((int)$vinculo['id']);
+            echo $vinc->ativarVinculo();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }    
+        
+    case 'remVinculo':
+        try {
+
+            $vinculo = filter_input(INPUT_GET, 'vinculo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $vinc = new Vinculo();
+            $vinc->setIdVinculo((int) $vinculo['id']);
+            echo $vinc->removerVinculo();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
     case 'listaVinculosTable':
         try {
-        
-            $vinc = new Vinculo();            
-            echo $vinc->retornaTrVinculos();                      
+
+            $vinc = new Vinculo();
+            echo $vinc->retornaTrVinculos();
             return;
             break;
         } catch (Exception $e) {
@@ -86,13 +117,5 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
-    
 }
-
-
-
-
-
-
-
 ?>
