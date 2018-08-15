@@ -3,7 +3,6 @@ $(document).ready(function () {
     func = new Funcoes();
 
     //Mascara do sistema
-    $('#competencia').mask("99/9999");
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
     //busca pedido

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/unidade/cad_gdof/index.load.php";
 ?>
 <html lang="pt-br">
     <head>

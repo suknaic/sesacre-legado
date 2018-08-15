@@ -666,4 +666,17 @@ class FinDocumentoFiscal {
         }
     }
 
+    public function retornaDadosDocumento($pdo) {
+
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+
+        $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+        $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+        $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
+        return $daoFinDocumentoFiscal->getMsgRetorno();
+    }
+
 }

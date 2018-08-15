@@ -257,12 +257,23 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-    
-    public function retornaDadosDocumento(PDO $pdo){
-        try{
-            
-        } catch (Exception $ex) {
 
+    public function retornaDadosDocumento(PDO $pdo) {
+        try {
+            $sql = "select * from fin_documento_fiscal where id_documento_fiscal = :documento";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível Localizar o Contrato";
+                $this->sucesso = false;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 
