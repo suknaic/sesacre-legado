@@ -81,7 +81,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-
+                                            <?php echo $finDocumentoFiscal->retornaDadosEmpenho(null);?>
                                         </div>
                                     </div>
                                 </div>
@@ -113,10 +113,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th>Nº da Ordem</th>
                                                                             <th>Tipo ordem</th>
                                                                             <th>Valor da Ordem</th>
-                                                                            <th>Ação</th>
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody></tbody>
+                                                                    <tbody>
+                                                                        <?php echo $finDocumentoFiscal->retornaTabelaOrdemGdof(null , false);?>
+                                                                    </tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
@@ -150,11 +151,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Entregue Dia</th>
                                                                             <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Situação</th>
-                                                                            <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdof(null , false);?>
                                                                     </tbody>
 
                                                                 </table>

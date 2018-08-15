@@ -140,7 +140,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                         <!-- Fim Form -->
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Funcionários</h3>
+                                <h3 class="panel-title">Lista de Lotações</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
