@@ -269,22 +269,14 @@
                                     </a>
 
                                     <ul class="collapse">
-                                        <li>
-                                            <a href="/pages/financeiro/gdof/unidade/cad_gdof/index.php">Unidades</a>
-                                        </li>
 
                                         <li>
-                                            <a href="#">Central demandante</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.php">Documento Fiscal</a>
                                         </li>
-
+                                        
                                         <li>
-                                            <a href="#">Liquidação</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/index.php">Pesquisar Documento Fiscal</a>
                                         </li>
-
-                                        <li>
-                                            <a href="#">Financeiro</a>
-                                        </li>
-
                                     </ul>
                                 </li>
 
