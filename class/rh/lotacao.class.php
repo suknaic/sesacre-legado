@@ -259,7 +259,6 @@ class Lotacao {
             }
 
             //*****************************Telefone********************************************************
-
             if (count($getTelefone) > 0) {
                 foreach ($getTelefone as $linha => $v) {
                     $nr = Metodos::removeMascaraCel_Tel($v['telefone']);
@@ -319,7 +318,6 @@ class Lotacao {
             $lotacao->setId_cidade($this->id_cidade);
 
             $busca = $lotacao->retornaLotacao($pdo);
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
             if (!$busca) {
                 $sucesso = false;
                 $pdo->rollBack();
@@ -525,7 +523,7 @@ class Lotacao {
         }
     }
 
-    public function removerLotacao() {
+    public function desativarLotacao() {
         try {
             //***********************************************************************************
             $conexao = new Conexao();
@@ -535,11 +533,42 @@ class Lotacao {
             $lotacao->setId_lotacao($this->id_lotacao);
 
             $busca = $lotacao->retornaLotacao($pdo);
-            if ($busca != "") {
+            if (!$busca) {
                 return Metodos::retornoAjax('Erro', 'alert', 'Registro Não Encontrado.');
             }
 
-            $rs = $lotacao->excluirLotacao($pdo);
+            $rs = $lotacao->desativarLotacao($pdo);
+            if ($rs != "Sucesso") {
+                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
+                $pdo->rollBack();
+            }
+            //***********************************************************************
+            if (LOG::SalvaLogU('ses_lotacao', $this->id_lotacao, $busca, $pdo)) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+                return $retorno;
+            }
+            //***********************************************************************************
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function ativarLotacao() {
+        try {
+            //***********************************************************************************
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            $lotacao = new DaoSesLotacao();
+            $lotacao->setId_lotacao($this->id_lotacao);
+
+            $busca = $lotacao->retornaLotacao($pdo);
+            if (!$busca) {
+                return Metodos::retornoAjax('Erro', 'alert', 'Registro Não Encontrado.');
+            }
+
+            $rs = $lotacao->ativarLotacao($pdo);
             if ($rs != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                 $pdo->rollBack();
@@ -690,12 +719,18 @@ class Lotacao {
                                             <button type='button' class='btn btn-default btn-edit btn-xs'                               
                                                   title='Editar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
                                                   <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
-                                            </button> 
-                                            <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "'>
-                                                <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
-                                            </button>
-                                        </td>
-                                 </tr>";
+                                            </button>";
+                    if ($v['st_ativo'] == '0') {
+                        $retorno.= "        <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                            </button>";
+                    } else {
+                        $retorno.= "        <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                            </button>";
+                    }
+                    $retorno.=          "</td>
+                                </tr>";
                 }
             }
 

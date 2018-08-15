@@ -20,11 +20,12 @@ define("STR_DATA_INICIO_FIM", "Data Início tem que ser Menor que a Data Fim");
 define("STR_EMAIL_EXISTE", "email informado já existe, tente com outro email");
 define("STR_CPF_EXISTE", "CPF informado já existe... ");
 define("STR_CNPJ_EXISTE", "CNPJ informado já existe... ");
-define("STR_REGISTRO_EXISTE", "Registro já existe no sistema. ");
+define("STR_REGISTRO_EXISTE", "Registro já Existe no Sistema. ");
 define("STR_VALOR_INVALIDO", "Valor inserido é inválido. ");
 define("STR_PLANEJAMENTO_LIBERAR", "A PAS Não está liberada para alterações, para realizar esta Ação Contate o Planejamento.");
 define("STR_LOTACAO", "Área Administrativa/Técnica/Assistencial");
 define("STR_DESPESA_ELEMENTO", "Rubrica Orçamentária");
+define("STR_NAO_ENCONTRADO", "Registro Não Encontrado.");
 define("STR_FUNCIONAL_PROGRAMATICA", "Funcional Programática");
 define("STR_REDEFINIR_SENHA", "Senha Redefinida com Sucesso (123456)");
 

@@ -63,6 +63,38 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'desativarEscolaridade':
+        try {
+                        
+            $esc = filter_input(INPUT_GET, 'escolaridade', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $vinc = new Escolaridade();
+            $vinc->setIdEscolaridade((int)$esc['id']);
+            echo $vinc->desativarEscolaridade();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+    case 'ativarEscolaridade':
+        try {
+                        
+            $esc = filter_input(INPUT_GET, 'escolaridade', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $vinc = new Escolaridade();
+            $vinc->setIdEscolaridade((int)$esc['id']);
+            echo $vinc->ativarEscolaridade();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
      
     case 'listaEscolaridadeTable':
         try {

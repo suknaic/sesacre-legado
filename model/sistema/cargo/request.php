@@ -64,6 +64,38 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'desativarCargo':
+        try {
+                        
+            $cargo = filter_input(INPUT_POST, 'cargo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $sesCargo = new Cargo();
+            $sesCargo->setId_cargo((int)$cargo['id']);
+            echo $sesCargo->desativarCargo();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+    case 'ativarCargo':
+        try {
+                        
+            $cargo = filter_input(INPUT_POST, 'cargo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $sesCargo = new Cargo();
+            $sesCargo->setId_cargo((int)$cargo['id']);
+            echo $sesCargo->ativarCargo();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }    
      
     case 'listaCargoTable':
         try {

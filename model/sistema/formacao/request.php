@@ -66,6 +66,38 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'desativarFormacao':
+        try {
+
+            $formacao = filter_input(INPUT_POST, 'formacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $sesFormacao = new Formacao();
+            $sesFormacao->setId_formacao((int) $formacao['id']);
+            echo $sesFormacao->desativarFormacao();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+    case 'ativarFormacao':
+        try {
+
+            $formacao = filter_input(INPUT_POST, 'formacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $sesFormacao = new Formacao();
+            $sesFormacao->setId_formacao((int) $formacao['id']);
+            echo $sesFormacao->ativarFormacao();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 
     case 'listaFormacaoTable':
         try {
