@@ -705,10 +705,10 @@ class FinContratoAditivo {
             
             
        
-//            echo "<pre>";
-//            print_r($todosItens);
-//            echo "</pre>";
-//            return;
+            echo "<pre>";
+            print_r($todosItens);
+            echo "</pre>";
+            return;
             
             /**
              * 
@@ -848,13 +848,13 @@ class FinContratoAditivo {
                         }           
                         //Se O Valor Não foi informado, então ele deverá ser o ultimo valor valido
                         if($key === false && $this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()){
-                            foreach ($todosItens as $k1 => $v1){                                  
+                            foreach ($todosItens as $k1 => $v1){                             
                                 if( ($v1['id_cont_itens_aditivo'] == $value->getIdContItens()
                                         && $v1['tipo'] == "aditivo")
                                     ||
                                     ($v1['id_cont_itens'] == $value->getIdContItens()
                                         && $v1['tipo'] == "contrato")
-                                    ){ 
+                                    ){
                                         //Seta o Ultimo Valor Unitário Valido
                                         if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
                                             && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
@@ -884,11 +884,7 @@ class FinContratoAditivo {
                                 ($v1['id_cont_itens'] == $value->getIdContItens()
                                     && $v1['tipo'] == "contrato")
                                 ){
-                                //Seta o Ultimo Valor Unitário Valido
-//                                if( !$flagValor && !empty((int)$v['vl_itens']) ){
-//                                    $finContItens[$key]->setVlItens($v['vl_itens']);
-//                                    $flagValor = true;
-//                                }
+
                                 $valorTotalDaQuantidadeExecutado += $v1['qtd_executado'];
                                 if($v1['id_contrato_motivo'] != $this->motivoPorPrazo
                                     && 
@@ -915,7 +911,7 @@ class FinContratoAditivo {
                         }
                         
                     
-                      
+                      //teste
                     //Se a unidade de Cálculo for Quantidade ou Percentual
                     //Então o Campo preenchido que veio do formulário será para alter os itens do qt_itens
                     }else if($this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()
@@ -964,10 +960,10 @@ class FinContratoAditivo {
                 }                                
             }    
             
-//            echo "<pre>";
-//            print_r($finContItens);
-//            echo "</pre>";
-//            return;
+            echo "<pre>";
+            print_r($finContItens);
+            echo "</pre>";
+            return;
        
             /*
              * Se o tipo de Aquisição for preenchido, então se deve calcular a Porcentagem
@@ -2022,12 +2018,7 @@ class FinContratoAditivo {
             $retorno = "";
             
             $result = $daoContrato->getMsgRetorno();
-            
-//            echo "<pre>";
-//            print_r($result);
-//            echo "</pre>";
-            //$k = array_search($value['id_cont_itens_aditivo'], array_column($todosItens, "id_cont_itens"));
-            
+                        
             $dados = array();
             $cabecalho = array();
             $itens = array();
@@ -2106,9 +2097,7 @@ class FinContratoAditivo {
             $retorno .= $quantidadeEValor;
             $retorno .= '</tr>';
             $retorno .= '</thead><tbody>';
-//            echo "<pre>";
-//            print_r($dados);
-//            echo "</pre>";
+
             foreach ($dados as $key => $value) {                               
                 $retorno .= '<tr>';
                     $retorno .= '<td>'.$value['nr_item'].'</td>';
@@ -2130,8 +2119,7 @@ class FinContratoAditivo {
                     if($v['unidade_calculo'] == $this->getUnidadeCalculoPercentual()
                             || $v['unidade_calculo'] == $this->getUnidadeCalculoQuantidade()){                    
                         $porcentagem = $v['qt_itens']/$quantidade*100;
-                        $porcentagem = " (".Metodos::ConverteValorBr($porcentagem, 2)."%)";
-                        //$porcentagem = "(".$porcentagem."%)";
+                        $porcentagem = " (".Metodos::ConverteValorBr($porcentagem, 2)."%)";                        
                     }
                     
                     
