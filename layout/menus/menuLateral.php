@@ -269,28 +269,16 @@
                                     </a>
 
                                     <ul class="collapse">
+
                                         <li>
                                             <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
-                                         <li>
+                                        <li>
                                             <a href="#">Encaminhar Documento Fiscal</a>
                                         </li>
-                                         <li>
+                                        <li>
                                             <a href="#">Receber Documento Fiscal</a>
                                         </li>
-
-<!--                                        <li>
-                                            <a href="#">Central demandante</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">Liquidação</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">Financeiro</a>
-                                        </li>-->
-
                                     </ul>
                                 </li>
 

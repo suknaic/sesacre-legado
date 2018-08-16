@@ -1,14 +1,6 @@
 $(document).ready(function () {
 
     func = new Funcoes();
-//    var table = $('#tabela').DataTable({
-//        "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-//        "order": [[0, "asc"]],
-//        "language": {
-//            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//        },
-//        responsive: true
-//    });
 
     func.carregaTabelaPadrao('tabela', null, [1]);
     
@@ -21,21 +13,6 @@ $(document).ready(function () {
             },
             "success": function (response) {
                 func.carregaTabelaPadrao('tabela', response, [1], true);
-//                var oTable = $('#tabela').dataTable();
-//                oTable.fnDestroy();
-//                $("#tabela").find("tbody").html(response);
-//                var table = $('#tabela').DataTable({
-//                    "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-//                    "order": [[0, "asc"]],
-//                    "language": {
-//                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-//                    },
-//                    responsive: true
-//                });
-//                $("#tabela").show();
-
-
-
             }
         });
     }
@@ -50,7 +27,7 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var Vinculo = {
                 nome: $("#nmVinculo").val()
-            }
+            };
 
             if ($("#nmVinculo").val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -195,11 +172,9 @@ $(document).ready(function () {
 
 
     $('body').on('click', '.btn-remover', function (e) {
-
         var $this = $(this);
         var id = $this.val();
         var item = $this.closest('td').find('.btn-edit').attr("nome");
-
         bootbox.confirm({
             title: 'Caixa de Confirmação',
             message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
@@ -217,7 +192,7 @@ $(document).ready(function () {
                 if (result) {
                     var Vinculo = {
                         id: id
-                    }
+                    };
 
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);
@@ -241,50 +216,200 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 console.log(response);
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
                                     console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg);
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
                                 return false;
                             } else {
-                                console.log('Ultimo else');
                                 console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
+    
+    $('body').on('click', '.btn-ativar', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-ativar').attr("nome");
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a <span class="text-danger">Ativação</span> do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Vinculo = {
+                        id: id
+                    };
 
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
 
+                    $.ajax({
+                        "url": "/model/sistema/vinculo/request.php",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "ativarVinculo",
+                            "vinculo": Vinculo
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                console.log(response);
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log(response);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    
+    $('body').on('click', '.btn-desativar', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-desativar').attr("nome");
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a <span class="text-danger">Desativação</span> do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Vinculo = {
+                        id: id
+                    };
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/sistema/vinculo/request.php",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "desativarVinculo",
+                            "vinculo": Vinculo
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                console.log(response);
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log(response);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            console.log(response);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
 
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();

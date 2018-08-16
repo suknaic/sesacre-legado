@@ -370,8 +370,7 @@ class FinCentralLiberacaoModel {
             $finCentralLiberacaoTransModel = new FinCentralLiberacaoTransModel();
             //qddvalor
             $qddValor = new QddValor();
-            //pedido 
-            $pedido = new Pedido();
+            
             if (!empty($qdd->getIdQdd())) {
                 $daoFinCentralLiberacao->setIdPessoa($_SESSION['idUser']);
                 $daoFinCentralLiberacao->setIdLotacao($dados[0]["central"]);

@@ -29,25 +29,36 @@ class DaoSesEscolaridade extends SesEscolaridade {
         }
     }
 
-    function delete(SesEscolaridade $esc, $pdo) {
+    function delete($pdo) {
         try {
             $result = $pdo->prepare("DELETE FROM ses_escolaridade WHERE id_escolaridade = :idEscolaridade");
-            $result->bindValue(":idEscolaridade", $esc->getIdEscolaridade(), PDO::PARAM_INT);
+            $result->bindValue(":idEscolaridade", $this->getIdEscolaridade(), PDO::PARAM_INT);
             $result->execute();
-
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
     }
 
-    function desativa(SesEscolaridade $esc, $pdo) {
+    function desativar($pdo) {
         try {
             $result = $pdo->prepare("UPDATE ses_escolaridade SET st_ativo = 0 "
                     . "WHERE id_escolaridade = :idEscolaridade ");
+            $result->bindValue(":idEscolaridade", $this->getIdEscolaridade(), PDO::PARAM_INT);
+            $result->execute();
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    function ativar($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_escolaridade SET st_ativo = '1' 
+                                        WHERE id_escolaridade = :idEscolaridade ");
             $result->bindValue(":idEscolaridade", $esc->getIdEscolaridade(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }

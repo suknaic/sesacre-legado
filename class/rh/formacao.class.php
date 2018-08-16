@@ -51,7 +51,7 @@ class Formacao {
             $pdo->beginTransaction();
             //Seta os Campos
             $formacao = new DaoSesFormacao();
-            
+
             $formacao->setNm_escolaridade_formacao($this->nm_formacao);
             $formacao->setId_escolaridade($this->id_escolaridade);
             $busca = $formacao->buscaFormacaoPorNome($pdo);
@@ -59,7 +59,7 @@ class Formacao {
             if ($this->id_escolaridade == 2) {
                 return Metodos::retornoAjax("Erro", "alert", "Não é Permitido o Cadastro de Formação com Escolaridade Ensino Médio e Fundamental.");
             }
-            
+
             if (!$busca) {
                 //return $retorno;            
             } else {
@@ -67,7 +67,7 @@ class Formacao {
                 $pdo->rollBack();
                 return $retorno;
             }
-            
+
             $result = $formacao->insert($pdo);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
@@ -115,13 +115,13 @@ class Formacao {
             $formacao->setId_escolaridade_formacao($this->id_formacao);
             $formacao->setNm_escolaridade_formacao($this->nm_formacao);
             $formacao->setId_escolaridade($this->id_escolaridade);
-            
+
             // *** Bloqueio para permitir a edição de formação com escolaridade ensino fundamental ***
             if ($this->id_escolaridade == 2) {
                 return Metodos::retornoAjax("Erro", "alert", "Não é Permitido a Edição de Formação com Escolaridade Ensino Médio e Fundamental.");
             }
             //****************************************************************************************
-            
+
             $busca = $formacao->buscaFormacaoPorNome($pdo);
             if (!$busca) {
                 //return $retorno;            
@@ -136,7 +136,7 @@ class Formacao {
                 $pdo->rollBack();
                 return $retorno;
             }
-            
+
             $result = $formacao->update($pdo);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
@@ -170,8 +170,8 @@ class Formacao {
 
     public function removerFormacao() {
         try {
-            if ($this->id_formacao == "") {
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            if (empty($this->id_formacao)) {
+                return Metodos::retornoAjax("Erro", "console", STR_PREENCHER_CAMPOS);
             }
 
             $conexao = new Conexao();
@@ -183,35 +183,65 @@ class Formacao {
 
             $busca = $formacao->retornaFormacao($pdo);
 
-            if ($busca) {
-                if (!Log::SalvaLogD('ses_escolaridade_formacao', $this->id_formacao, $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar a Formacao.");
+            if ($busca === FALSE) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogD('ses_escolaridade_formacao', $this->id_formacao, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
             $result = $formacao->delete($pdo);
-            if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
+            if ($result === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            }else {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
             }
 
-            $sucesso = true;
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function desativarFormacao() {
+        try {
+            if (empty($this->id_formacao)) {
+                return Metodos::retornoAjax("Erro", "console", STR_PREENCHER_CAMPOS);
+            }
 
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-                $pdo->commit();
-                return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $formacao = new DaoSesFormacao();
+            $formacao->setId_escolaridade_formacao($this->id_formacao);
+
+            $busca = $formacao->retornaFormacao($pdo);
+
+            if ($busca === FALSE) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_escolaridade_formacao', $this->id_formacao, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $result = $formacao->desativar($pdo);
+            var_dump($result);
+            return;
+            if ($result === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
+            }else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
@@ -220,6 +250,46 @@ class Formacao {
         }
     }
 
+    public function ativarFormacao() {
+        try {
+            if (empty($this->id_formacao)) {
+                return Metodos::retornoAjax("Erro", "console", STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $formacao = new DaoSesFormacao();
+            $formacao->setId_escolaridade_formacao($this->id_formacao);
+
+            $busca = $formacao->retornaFormacao($pdo);
+
+            if ($busca === FALSE) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_escolaridade_formacao', $this->id_formacao, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $result = $formacao->ativar($pdo);
+            if ($result === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
+            }else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
     public function retornaTrFormacao($nome, $escolaridade = null) {
         $retorno = "";
         try {
@@ -227,16 +297,16 @@ class Formacao {
             $pdo = $conexao->connect();
             $filtro = "";
             $formacao = new DaoSesFormacao();
-             //*****************************************************************
+            //*****************************************************************
             $filter = array();
-            if(!empty($nome)){
+            if (!empty($nome)) {
                 $filter[] = "f.nm_escolaridade_formacao ilike '$nome%'";
             }
-            if(!empty($escolaridade)){
+            if (!empty($escolaridade)) {
                 $filter[] = "e.id_escolaridade = $escolaridade";
             }
-            if(count($filter)>0){
-                $filtro = " and " . implode(' and ', $filter) ;
+            if (count($filter) > 0) {
+                $filtro = " and " . implode(' and ', $filter);
             }
             //******************************************************************
             $result = $formacao->retornaFormacoes($pdo, $filtro);
@@ -246,18 +316,27 @@ class Formacao {
             } else {
                 foreach ($result as $v) {
                     $idFormacao = $v['id_escolaridade_formacao'];
-                    $retorno .= "<tr>";
-                    $retorno .=   "<td>" . $v['nm_escolaridade_formacao'] . "</td>"
-                                . "<td>" . $v['nm_escolaridade'] . "</td>"
-                                . '<td style="text-align: center;">'
-                                    . '<button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" escolaridade="' . $v['id_escolaridade'] . '" nome="' . $v['nm_escolaridade_formacao'] . '" value=' . $idFormacao . ' >
-                                            <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
-                                       </button> '
-                                    . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idFormacao . ' >
-                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                                       </button>'
-                                . '</td>'
-                               . "</tr>";
+                    $retorno .= "<tr>
+                                    <td>" . $v['nm_escolaridade_formacao'] . "</td>
+                                    <td>" . $v['nm_escolaridade'] . "</td>
+                                    <td style='text-align: center;'>
+                                        <button type='button' class='btn btn-default btn-edit btn-xs' title='Editar' escolaridade='" . $v['id_escolaridade'] . "' nome='" . $v['nm_escolaridade_formacao'] . "' value='" . $idFormacao . "' >
+                                            <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                        </button> 
+                                        <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='" . $idFormacao . "' >
+                                            <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+                                       </button>";
+                    if ($v['st_ativo'] == '0') {
+                        $retorno .= "    <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_escolaridade_formacao'] . "' value='" . $idFormacao . "' >
+                                            <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                        </button>";
+                    } else {
+                        $retorno .= "   <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_escolaridade_formacao'] . "' value='" . $idFormacao  . "' >
+                                            <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                        </button>";
+                    }
+                    $retorno .= "   </td>
+                                 </tr>";
                 }
             }
 

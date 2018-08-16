@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/cad_documento/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -50,10 +50,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                         <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--End page title-->
-                    <ol class="breadcrumb">
-                        <li><a href="#">Voltar</a></li>                        
-                    </ol>
                     <!--Modal itens content-->
                     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
                         <div class="modal-dialog modal-lg">
@@ -459,6 +455,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/financeiro/gdof/unidade/cad_gdof/index.js"></script>
+        <script src="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.js"></script>
     </body>
 </html>

@@ -37,7 +37,7 @@ class Cargo {
     public function cadastrarCargo() {
         try {
 
-            if ($this->nm_cargo == "") {
+            if (empty($this->nm_cargo)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -105,7 +105,7 @@ class Cargo {
             $cargo->setId_cargo($this->id_cargo);
             $cargo->setNm_cargo($this->nm_cargo);
             $buscaCargoNome = $cargo->buscaCargoPorNome($pdo);
-            
+
             if (!$buscaCargoNome) {
                 //return $retorno;            
             } else {
@@ -155,8 +155,8 @@ class Cargo {
 
     public function removerCargo() {
         try {
-            if ($this->id_cargo == "") {
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            if (empty($this->id_cargo)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
             $conexao = new Conexao();
@@ -167,37 +167,103 @@ class Cargo {
             $cargo->setId_cargo($this->id_cargo);
 
             $busca = $cargo->retornaCargo($pdo);
-            if ($busca) {
-                if (!Log::SalvaLogU('ses_cargo', $this->id_cargo, $busca, $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                    $pdo->rollBack();
-                    return $retorno;
-                }
-            } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o Cargo.");
+            if (!$busca) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_cargo', $this->id_cargo, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $result = $cargo->delete($pdo);
+            if ($result === TRUE) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+            }
+            
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function desativarCargo() {
+        try {
+            if (empty($this->id_cargo)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $cargo = new DaoSesCargo();
+            $cargo->setId_cargo($this->id_cargo);
+
+            $busca = $cargo->retornaCargo($pdo);
+            if (!$busca) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_cargo', $this->id_cargo, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
             $result = $cargo->desativa($pdo);
-            if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
-                $pdo->rollBack();
-                return $retorno;
-            }
-
-            $sucesso = true;
-
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            if ($result) {
                 $pdo->commit();
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $result);
+            }
+            
+            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function ativarCargo() {
+        try {
+            if (empty($this->id_cargo)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            //Seta os Campos
+            $cargo = new DaoSesCargo();
+            $cargo->setId_cargo($this->id_cargo);
+
+            $busca = $cargo->retornaCargo($pdo);
+            if (!$busca) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if (!Log::SalvaLogU('ses_cargo', $this->id_cargo, $busca, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+
+            $result = $cargo->ativa($pdo);
+            if ($result) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_ATIVADO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $result);
+            }
+            
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -218,19 +284,26 @@ class Cargo {
             } else {
                 foreach ($result as $v) {
                     $idCargo = $v['id_cargo'];
-                    $retorno .= "<tr>";
-                    $retorno .= "<td>" . $v['nm_cargo'] . "</td>"
-                            . '<td style="text-align: center;">'
-                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
-                            . ' title="Editar" nome="' . $v['nm_cargo'] . '" value=' . $idCargo . ' >
-                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
-                              </button> '
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idCargo . ' >
-                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                              </button>'
-                            . '</td>'
-                            . "</tr>";
-                    $retorno .= "</tr>";
+                    $retorno .= '<tr>
+                                    <td>' . $v['nm_cargo'] . '</td>
+                                    <td style="text-align: center;">
+                                        <button type="button" class="btn btn-default btn-edit btn-xs" title="Editar" nome="' . $v['nm_cargo'] . '" value=' . $idCargo . ' >
+                                            <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>                                
+                                        </button> 
+                                        <button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value=' . $idCargo . ' >
+                                            <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
+                                        </button>';
+                    if ($v['st_ativo'] == '0') {
+                        $retorno .= "    <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_cargo'] . "' value='" . $idCargo . "' >
+                                            <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                        </button>";
+                    } else {
+                        $retorno .= "    <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_cargo'] . "' value='" . $idCargo . "' >
+                                            <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                        </button>";
+                    }
+                    $retorno .= "   </td>
+                                 </tr>";
                 }
             }
 
@@ -251,9 +324,9 @@ class Cargo {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    if($v['id_cargo'] == $id){
+                    if ($v['id_cargo'] == $id) {
                         $retorno .= "<option selected value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
-                    }else{
+                    } else {
                         $retorno .= "<option value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
                     }
                 }

@@ -3,7 +3,6 @@ $(document).ready(function () {
     func = new Funcoes();
 
     //Mascara do sistema
-    $('#competencia').mask("99/9999");
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
     //busca pedido
@@ -15,7 +14,7 @@ $(document).ready(function () {
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaPedido",
@@ -39,7 +38,7 @@ $(document).ready(function () {
          * retornaContratosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaContratosGdof",
@@ -55,7 +54,7 @@ $(document).ready(function () {
          * retornaDadosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaPedidoGdof",
@@ -71,7 +70,7 @@ $(document).ready(function () {
          * retornaDadosEmpenho
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaEmpenhoGdof",
@@ -87,7 +86,7 @@ $(document).ready(function () {
          * retornaDadosOrdem
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOrdemGdof",
@@ -104,7 +103,7 @@ $(document).ready(function () {
     $("body").on("change", "#selectOrdem", function (e) {
         var idOrdem = $("body").find("#selectOrdem").val();
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTipoValorOrdem",
@@ -142,7 +141,7 @@ $(document).ready(function () {
 
         $.ajax({
             "method": "POST",
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaOrdem",
@@ -160,7 +159,7 @@ $(document).ready(function () {
     //retorna options entrega
     function retornaOptionsDaEntrega(infTabOrdem) {
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
@@ -215,7 +214,7 @@ $(document).ready(function () {
     function atualizaTabelaEntrega(infTabEntrega) {
 
         $.ajax({
-            "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaEntrega",
@@ -297,7 +296,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/pages/financeiro/gdof/unidade/cad_gdof/request.php",
+                "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
                 "method": "POST",
                 "dataType": "html",
                 "data": {
