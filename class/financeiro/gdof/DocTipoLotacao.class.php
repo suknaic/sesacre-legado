@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/fin/DaoFinDocTipoLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocTipoLotacao.class.php";
 
 class DocTipoLotacao {
     private $idDocTipoLotacao = null;
@@ -75,7 +75,7 @@ class DocTipoLotacao {
                 $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $idDocTipoLotacao->getMsgRetorno());
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoDocTipoLotacao->getMsgRetorno());
             }
             return $retorno;                                                                                                        
         

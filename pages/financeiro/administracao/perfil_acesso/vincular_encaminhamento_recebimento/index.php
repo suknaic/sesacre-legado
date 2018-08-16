@@ -49,7 +49,7 @@
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Vincular Tramitação</h1>                       
+                        <h1 class="page-header text-overflow">Vincular Encaminhamento/Recebimento</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -90,43 +90,22 @@
 
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label id="labelTpLotacao" for="tipo_lotacao">
-                                                            Tipo do Destinatário: <span class="text-danger">*</span>
+                                                        <label id="labelTpLotacao" for="id_doc_lotacao">
+                                                            Tipo do Destinatário/Destinatário: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="tipo_lotacao" class="form-control">
+                                                            <select id="id_doc_lotacao" class="form-control">
                                                                 <?php
-                                                                    echo $selecTipoLotacao;
+                                                                    echo $selectDocLotacao;
                                                                 ?>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
 
-
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label id="labelLotacao" for="id_lotacao">
-                                                            Destinatário: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="id_lotacao" class="form-control">
-                                                                <option value="0">Selecione um Destinatário/Remetente</option>                                                             
-                                                                <?php
-                                                                    echo $selectLotacao;
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>    
-                                            <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="id_pessoa">
@@ -144,7 +123,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                
+                                            </div>    
                                             <!-- End <div class="form-group"> -->
                                        
                                             

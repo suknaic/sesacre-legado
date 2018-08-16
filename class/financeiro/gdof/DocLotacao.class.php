@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/fin/DaoFinDocLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocLotacao.class.php";
 
 class DocLotacao {
 
@@ -104,7 +104,7 @@ class DocLotacao {
         }
     }
     
-    function optionsLotacao(){
+    function optionsTipoLotacao(){
         try {
             $retorno = "<option value=0>Selecione um Destinatário/Remetente</option>";
             $conexao = new Conexao();
@@ -119,7 +119,7 @@ class DocLotacao {
             
             if ($daoFinDocLotacao->getSucesso()) {
                 foreach ($daoFinDocLotacao->getMsgRetorno() as $linha) {
-                    $retorno .= "<option value=".$linha['id_lotacao'].">".$linha['nm_lotacao']."</option>";
+                    $retorno .= "<option data-objeto='". json_encode($linha)."' value=".$linha['id_doc_lotacao'].">". $linha['nm_doc_tipo_lotacao'] ." / ".$linha['nm_lotacao']."</option>";
                 }
             } else {
                 $retorno = $daoFinDocLotacao->getMsgRetorno();

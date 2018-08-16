@@ -342,8 +342,8 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setNrProcessoAdministrativo($this->nr_processo_administrativo);
             $daoFinDocumentoFiscal->setNrDocumentoFiscal($this->nr_documento_fiscal);
-            $daoFinDocumentoFiscal->setMmCompetencia("03");
-            $daoFinDocumentoFiscal->setAaCompetencia("2018");
+            $daoFinDocumentoFiscal->setMmCompetencia(explode("/", $this->competencia)[0]);
+            $daoFinDocumentoFiscal->setAaCompetencia(explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
@@ -356,6 +356,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
+                var_dump($daoFinDocumentoFiscal->getMsgRetorno());
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o documento fiscal");
             }
 

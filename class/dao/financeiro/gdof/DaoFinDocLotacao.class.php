@@ -66,7 +66,7 @@ class DaoFinDocLotacao extends FinDocLotacao {
                                 ses_lotacao sl
                         where
                                 fdl.id_doc_tipo_lotacao = fdtl.id_doc_tipo_lotacao
-                        and	fdl.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by id_doc_lotacao";
+                        and	fdl.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by nm_doc_tipo_lotacao,nm_lotacao";
                 $stmt = $pdo->prepare($sql);
                 
                 if($this->getIdDocLotacao()){
