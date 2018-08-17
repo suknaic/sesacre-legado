@@ -34,20 +34,31 @@ class DaoSesFuncao extends SesFuncao {
             $result = $pdo->prepare("DELETE FROM ses_funcao WHERE Id_funcao = :idFuncao");
             $result->bindValue(":idFuncao", $this->getId_funcao(), PDO::PARAM_INT);
             $result->execute();
-
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
     }
 
-    function desativa($pdo) {
+    function desativar($pdo) {
         try {
-            $result = $pdo->prepare("UPDATE ses_funcao SET st_ativo = 0 "
-                    . "WHERE Id_funcao = :idFuncao ");
+            $result = $pdo->prepare("UPDATE ses_funcao SET st_ativo = 0 
+                                           WHERE Id_funcao = :idFuncao ");
             $result->bindValue(":idFuncao", $this->getId_funcao(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    function ativar($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_funcao SET st_ativo = 1 
+                                           WHERE Id_funcao = :idFuncao ");
+            $result->bindValue(":idFuncao", $this->getId_funcao(), PDO::PARAM_INT);
+            $result->execute();
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -60,7 +71,7 @@ class DaoSesFuncao extends SesFuncao {
     function retornaFuncao($pdo) {
 
         $retorno = FALSE;
-        $sql = "SELECT id_funcao, nm_funcao
+        $sql = "SELECT id_funcao, nm_funcao, st_ativo
                  FROM ses_funcao
                  WHERE id_funcao = :idFuncao";
         try {
@@ -84,12 +95,31 @@ class DaoSesFuncao extends SesFuncao {
      */
 
     function retornaFuncoes($pdo) {
-
         $retorno = FALSE;
-
-        $sql = "SELECT id_funcao, nm_funcao"
+        $sql = "SELECT id_funcao, nm_funcao, st_ativo"
                 . " FROM ses_funcao"
                 . " ORDER BY nm_funcao";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return $retorno;
+            }
+            return $retorno;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return $retorno;
+        }
+    }
+    
+    function retornaFuncoesOption($pdo) {
+        $retorno = FALSE;
+        $sql = "SELECT id_funcao, nm_funcao
+                     FROM ses_funcao 
+                         WHERE st_ativo = '1' 
+                            ORDER BY nm_funcao";
         try {
             $sth = $pdo->prepare($sql);
             $sth->execute();

@@ -11,8 +11,6 @@ if(!$session->verificaPermissao(PERFIL_TI)){
     return;
 }
 
-
-
 switch ($_REQUEST['acao']) {
                
     case 'cadastrarFuncao':
@@ -65,6 +63,38 @@ switch ($_REQUEST['acao']) {
             break;
         }
      
+    case 'desativarFuncao':
+        try {
+                        
+            $funcao = filter_input(INPUT_POST, 'funcao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $sesFuncao = new Funcao();
+            $sesFuncao->setId_funcao((int)$funcao['id']);
+            echo $sesFuncao->desativarFuncao();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }    
+        
+    case 'ativarFuncao':
+        try {
+                        
+            $funcao = filter_input(INPUT_POST, 'funcao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
+            
+            $sesFuncao = new Funcao();
+            $sesFuncao->setId_funcao((int)$funcao['id']);
+            echo $sesFuncao->ativarFuncao();                      
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }  
+        
     case 'listaFuncaoTable':
         try {
         

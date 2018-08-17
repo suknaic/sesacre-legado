@@ -73,7 +73,7 @@
                                                             <th class="text-capitalize text-center">Situação</th>
                                                             <th class="text-capitalize text-center">Data Entrega</th>
                                                             <th class="text-capitalize text-center">Modalidade</th>
-                                                            <th class="text-capitalize text-center">N° Pregão</th>
+                                                            <th class="text-capitalize text-center">N° do Edital</th>
                                                             <th class="text-capitalize text-center">Objeto</th>
                                                             <th class="text-capitalize text-center">Área de Abrangência</th>
                                                             <th class="text-capitalize text-center">Valor T. Estimado</th>
@@ -104,48 +104,48 @@
                 ?>
                 <!--END MENU LATERAL-->
         
-            <!-- FOOTER -->
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php";
-            ?>
-            <!-- END FOOTER -->
+                <!-- FOOTER -->
+                <?php
+                    require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php";
+                ?>
+                <!-- END FOOTER -->
 
-            <!-- SCROLL PAGE BUTTON -->
+                <!-- SCROLL PAGE BUTTON -->
+                <!--===================================================-->
+                <button class="scroll-top btn">
+                    <i class="pci-chevron chevron-up"></i>
+                </button>
+                <!--===================================================-->
+            </div>
             <!--===================================================-->
-            <button class="scroll-top btn">
-                <i class="pci-chevron chevron-up"></i>
-            </button>
-            <!--===================================================-->
+            <!-- END OF CONTAINER -->
+
+            <!--jQuery [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
+            <!--BootstrapJS [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/bootstrap.min.js"></script>
+            <!--NiftyJS [ REQUIRED ]-->
+            <script src="/assets/lib/template/js/nifty.min.js"></script>
+            <!--DataTables [OPT]-->
+            <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
+            <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+            <!-- DIALOG CONFIRM [OPT] -->
+            <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
+            <!--JAVASCRIP da pagina-->
+            <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
+            <script src="/assets/lib/sesacre/funcoes.js"></script>
+            <script src="/assets/js/compras/gcon/Processo/processosDesativados.js"</script>
+            <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
+            <!-- END JAVASCRIPT -->
         </div>
-        <!--===================================================-->
-        <!-- END OF CONTAINER -->
-
-        <!--jQuery [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
-        <!--BootstrapJS [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/bootstrap.min.js"></script>
-        <!--NiftyJS [ REQUIRED ]-->
-        <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
-        <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script> 
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
-        <!-- DIALOG CONFIRM [OPT] -->
-        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
-        <!--JAVASCRIP da pagina-->
-        <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
-        <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/compras/gcon/Processo/processosDesativados.js"</script>
-        <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        <!-- END JAVASCRIPT -->
-
     </body>
 </html>
 

@@ -108,7 +108,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gcon.load.php";
                                     <div class="col-md-4">
                                         <div class="panel-body">
                                             <label for="text">
-                                                <p class= "form-control-static">N° do Pregão:</p>
+                                                <p class= "form-control-static">N° do Edital:</p>
                                             </label>
                                             <input type="text" class="form-control" name="num_pregao_pesquisa" id="num_pregao_pesquisa" required="true">
                                         </div>

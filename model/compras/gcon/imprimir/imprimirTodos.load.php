@@ -70,7 +70,7 @@ if (!$session->vPCompras()) {
                             <td class='tudo'><b>Situação</b></td>
                             <td class='tudo'><b>Data Entrada</b></td>
                             <td class='tudo'><b>Modalidade</b></td>
-                            <td class='tudo'><b>Pregão</b></td>
+                            <td class='tudo'><b>N° do Edital</b></td>
                             <td class='tudo'><b>Objeto</b></td>
                             <td class='tudo'><b>Centrais de Atendimento</b></td>
                             <td class='tudo'><b>Área de Abrangência</b></td>
