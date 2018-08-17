@@ -3,8 +3,7 @@
 class FinDocVincEncaminhamento {
 
     private $idDocVincEncaminhamento = null;
-    private $idDocTipoLotacao = null;
-    private $idLotacao = null;
+    private $idDocLotacao = null;
     private $idPessoa = null;
 
     function getIdDocVincEncaminhamento() {
@@ -16,25 +15,16 @@ class FinDocVincEncaminhamento {
         return $this;
     }
 
-    function getIdDocTipoLotacao() {
-        return $this->idDocTipoLotacao;
-    }
-
-    function getIdLotacao() {
-        return $this->idLotacao;
+    function getIdDocLotacao() {
+        return $this->idDocLotacao;
     }
     
     function getIdPessoa(){
         return $this->idPessoa;
     }
 
-    function setIdDocTipoLotacao($idDocTipoLotacao) {
-        $this->idDocTipoLotacao = $idDocTipoLotacao;
-        return $this;
-    }
-
-    function setIdLotacao($idLotacao) {
-        $this->idLotacao = $idLotacao;
+    function setIdDocLotacao($idDocLotacao) {
+        $this->idDocLotacao = $idDocLotacao;
         return $this;
     }
     

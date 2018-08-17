@@ -271,11 +271,13 @@
                                     <ul class="collapse">
 
                                         <li>
-                                            <a href="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.php">Documento Fiscal</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
-                                        
                                         <li>
-                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/index.php">Pesquisar Documento Fiscal</a>
+                                            <a href="#">Encaminhar Documento Fiscal</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Receber Documento Fiscal</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -318,6 +320,9 @@
                                                 </li>
                                                 <li>
                                                     <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao">Tipo de Destinatário / Remetente</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario">Vincular Tipo de Destinatário / Remetente</a>
                                                 </li>
                                                 <li>
                                                     <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao">Vincular Tramitação</a>

@@ -1,25 +1,21 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/fin/DaoFinDocVincRecebimento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocVincRecebimento.class.php";
 
 class DocVincRecebimento {
 
     private $idDocVincRecebimento = null;
-    private $idDocTipoLotacao = null;
-    private $idLotacao = null;
+    private $idDocLotacao = null;
     private $idPessoa = null;
     
     function getIdDocVincRecebimento() {
         return $this->idDocVincRecebimento;
     }
 
-    function getIdDocTipoLotacao() {
-        return $this->idDocTipoLotacao;
+    function getIdDocLotacao() {
+        return $this->idDocLotacao;
     }
 
-    function getIdLotacao() {
-        return $this->idLotacao;
-    }
 
     function getIdPessoa() {
         return $this->idPessoa;
@@ -30,15 +26,11 @@ class DocVincRecebimento {
         return $this;
     }
 
-    function setIdDocTipoLotacao($idDocTipoLotacao) {
-        $this->idDocTipoLotacao = $idDocTipoLotacao;
+    function setIdDocLotacao($idDocLotacao) {
+        $this->idDocLotacao = $idDocLotacao;
         return $this;
     }
 
-    function setIdLotacao($idLotacao) {
-        $this->idLotacao = $idLotacao;
-        return $this;
-    }
 
     function setIdPessoa($idPessoa) {
         $this->idPessoa = $idPessoa;
@@ -48,7 +40,7 @@ class DocVincRecebimento {
     public function cadastrar(){
         try {  
             
-            if (empty($this->getIdLotacao()) or empty($this->getIdPessoa()) or empty($this->getIdDocTipoLotacao())){
+            if (empty($this->getIdPessoa()) or empty($this->getIdDocLotacao())){
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
            
@@ -57,8 +49,7 @@ class DocVincRecebimento {
             $pdo->beginTransaction();
             
             $daoFinDocVincRecebimento = new DaoFinDocVincRecebimento();
-            $daoFinDocVincRecebimento->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
-                                   ->setIdLotacao($this->getIdLotacao())
+            $daoFinDocVincRecebimento->setIdDocLotacao($this->getIdDocLotacao())
                                    ->setIdPessoa($this->getIdPessoa());
             
             //verifica se já existe o registro, o banco já possui a constraint, para informar o usuário
@@ -138,15 +129,13 @@ class DocVincRecebimento {
             if ($this->getIdDocVincRecebimento()) {
                 $daoFinDocVincRecebimento->setIdDocVincRecebimento($this->getIdDocVincRecebimento());
             }
-            if ($this->getIdDocTipoLotacao()) {
-                $daoFinDocVincRecebimento->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+            if ($this->getIdDocLotacao()) {
+                $daoFinDocVincRecebimento->setIdDocLotacao($this->getIdDocLotacao());
             }
             if ($this->getIdPessoa()) {
                 $daoFinDocVincRecebimento->setIdPessoa($this->getIdPessoa());
             }
-            if ($this->getIdLotacao()) {
-                $daoFinDocVincRecebimento->setIdLotacao($this->getIdLotacao());
-            }
+
             
             $daoFinDocVincRecebimento->select($pdo);
             

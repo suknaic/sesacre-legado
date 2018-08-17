@@ -1,42 +1,26 @@
-
 $(document).ready(function () {   
     func = new Funcoes();
-    
-    $('#id_doc_tipo_remetente option[value="0"]').text('Selecione o Tipo de Remetente');
-    $('#id_doc_tipo_destinatario option[value="0"]').text('Selecione o Tipo de Destinatário');
     
     $('body').find('select').select2({
         width: '100%'
     });
     
-    //Inverte a posição do select para tipo de Remetente e Destinatário
-    $('body').on('change','#tp_doc_tramitacao',function(e){
-        var tipo_tramitacao = $("#tp_doc_tramitacao option:selected").val();
-        if (tipo_tramitacao == '1') { //Encaminhar
-            $('#remetente_conteudo').prependTo('#primeiro');
-            $('#destinatario_conteudo').prependTo('#segundo');
-        } else if(tipo_tramitacao == '2') { //Receber
-            $('#destinatario_conteudo').prependTo('#primeiro');
-            $('#remetente_conteudo').prependTo('#segundo');
-        }
-    });
     
     function lista(){
         $.ajax({
             "url": "request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaParmTramitacoes"
+                "acao": "listaDocLotacao"
             },
             "success": function (response) {  
 //                console.log(response);
-                func.carregaTabelaPadrao('tabela', response, [4]);
+                func.carregaTabelaPadrao('tabela', response, [3]);
             }
         });
     }
     
     lista();
-    
     
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -45,15 +29,12 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
             $this.prop("disabled", true);
-            
             var Dados = {
-                idDocTpRemetente: $("#id_doc_tipo_remetente option:selected").val(),
-                idDocTpDestinatario: $("#id_doc_tipo_destinatario option:selected").val(),
-                idDocSit: $("#id_documento_situacao option:selected").val(),
-                tpParmTramitacao: $("#tp_parm_tramitacao option:selected").val()
+                idTpLot: $("#id_doc_tipo option:selected").val(),
+                idLot: $("#id_doc_lotacao option:selected").val()
             }
 
-            if (Dados.idDocTpRemetente == "0" || Dados.idDocTpDestinatario == "0" || Dados.idDocSit == "0" || Dados.tpParmTramitacao == "0"){
+            if (Dados.idTpLot == "0" || Dados.idLot == "0") {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
@@ -64,10 +45,11 @@ $(document).ready(function () {
                 "dataType": "html",
                 "method": "post",
                 "data": {
-                    "acao": "cadastrarParmTramitacao",
+                    "acao": "cadastrarDocLotacao",
                     "dados": Dados
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -115,7 +97,4 @@ $(document).ready(function () {
             $this.prop("disabled", false);
         }
     });
-    
-    
 });
-

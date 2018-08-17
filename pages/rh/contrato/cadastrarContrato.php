@@ -95,12 +95,12 @@ if (isset($_GET['id'])){
                                                 <div class="form-group">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-4">
-                                                        email: <span class="text-danger">*</span>
+                                                        Email: <span class="text-danger" title="Informe seu E-mail Institucional do domínio ac.gov.br">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" required="true">
+                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" placeholder="Informe seu E-mail Institucional do domínio ac.gov.br" required="true">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -145,7 +145,7 @@ if (isset($_GET['id'])){
                                                     </div>
 
                                                     <div class="col-md-4">
-                                                        Data Nascimento: <span class="text-danger">*</span>
+                                                        Data de Nascimento: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-calendar inputPFa"></p>
@@ -282,7 +282,7 @@ if (isset($_GET['id'])){
                                                         </div>
                                                     </div> 
                                                     <div class="col-md-3">
-                                                        Nro. Cartão SUS:
+                                                        N° Cartão SUS:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -340,7 +340,7 @@ if (isset($_GET['id'])){
                                                                     <table class="table table-striped table-bordered table-hover table-condensed">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th class="text-capitalize text-center">Formação</th> 
+                                                                                <th class="text-capitalize text-center">Curso</th> 
                                                                                 <th class="text-capitalize text-center">Escolaridade</th>
                                                                                 <th class="text-capitalize text-center">Ação</th>
                                                                             </tr>

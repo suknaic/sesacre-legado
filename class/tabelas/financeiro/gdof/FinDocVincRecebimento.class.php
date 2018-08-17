@@ -3,8 +3,7 @@
 class FinDocVincRecebimento {
 
     private $idDocVincRecebimento = null;
-    private $idDocTipoLotacao = null;
-    private $idLotacao = null;
+    private $idDocLotacao = null;
     private $idPessoa = null;
 
     function getIdDocVincRecebimento() {
@@ -16,25 +15,16 @@ class FinDocVincRecebimento {
         return $this;
     }
 
-    function getIdDocTipoLotacao() {
-        return $this->idDocTipoLotacao;
+    function getIdDocLotacao() {
+        return $this->idDocLotacao;
     }
 
-    function getIdLotacao() {
-        return $this->idLotacao;
-    }
-    
     function getIdPessoa(){
         return $this->idPessoa;
     }
 
-    function setIdDocTipoLotacao($idDocTipoLotacao) {
-        $this->idDocTipoLotacao = $idDocTipoLotacao;
-        return $this;
-    }
-
-    function setIdLotacao($idLotacao) {
-        $this->idLotacao = $idLotacao;
+    function setIdDocLotacao($idDocLotacao) {
+        $this->idDocLotacao = $idDocLotacao;
         return $this;
     }
     

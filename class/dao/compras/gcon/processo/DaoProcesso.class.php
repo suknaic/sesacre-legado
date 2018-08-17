@@ -72,7 +72,7 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_processo_unidade PU ON PU.id_processo = PRO.id_processo
                                             LEFT JOIN gco_unidade_contempladas UNI ON UNI.id_unidade_contempladas = PU.id_unidade_contempladas                                        
                                             LEFT JOIN gco_anotacao ANO ON ANO.id_processo = PRO.id_processo
-                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, id_anotacao  desc)
+                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, dh_anotacao  desc)
                                             LEFT JOIN gco_processo_tipo_gasto GPTPG ON GPTPG.id_processo = PRO.id_processo
                                             LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = GPTPG.id_tipo_gasto
                                             LEFT JOIN gco_processo_central GPC ON GPC.id_processo = PRO.id_processo
@@ -82,7 +82,7 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade   
                                     $filtro 
                                             GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PES.id_pessoa,SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
-                                            ORDER BY PRO.id_processo, ANO.id_anotacao DESC");
+                                            ORDER BY PRO.id_processo, ANO.dh_anotacao DESC");
             $list->execute();
             if ($list->rowCount() >= 0) {
                 return $list->fetchAll(PDO::FETCH_ASSOC);
@@ -137,8 +137,8 @@ class DaoProcesso extends ProcessoExtd {
                                     LEFT JOIN ses_pessoa PE ON PE.id_pessoa = ANO.id_pessoa
                                     LEFT JOIN gco_unidade_contempladas UNI ON UNI.id_unidade_contempladas = PU.id_unidade_contempladas
                                     WHERE PRO.id_processo = :id_processo AND PRO.st_ativo='1'
-                                    GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PE.id_pessoa, SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
-                                    ORDER BY ANO.id_anotacao DESC");
+                                    GROUP BY PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PE.id_pessoa, SIT.id_situacao, ANO.dh_anotacao, ANO.id_anotacao 
+                                    ORDER BY ANO.dh_anotacao DESC");
             $veri->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $veri->execute();
 
@@ -440,7 +440,7 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_processo_unidade PU ON PU.id_processo = PRO.id_processo
                                             LEFT JOIN gco_unidade_contempladas UNI ON UNI.id_unidade_contempladas = PU.id_unidade_contempladas                                        
                                             LEFT JOIN gco_anotacao ANO ON ANO.id_processo = PRO.id_processo
-                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, id_anotacao  desc)
+                                            LEFT JOIN gco_situacao SIT ON SIT.id_situacao = (select DISTINCT ON (id_processo) id_situacao from gco_anotacao where id_processo = PRO.id_processo order by id_processo, dh_anotacao  desc)
                                             LEFT JOIN gco_processo_tipo_gasto GPTPG ON GPTPG.id_processo = PRO.id_processo
                                             LEFT JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = GPTPG.id_tipo_gasto
                                             LEFT JOIN gco_processo_central GPC ON GPC.id_processo = PRO.id_processo
@@ -449,8 +449,8 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_area_abrangencia AREA on AREA.id_processo = PRO.id_processo
                                             LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade  
                                         WHERE (PRO.id_processo=:id_processo) AND PRO.st_ativo='1' 
-                                            GROUP BY PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PES.id_pessoa,SIT.id_situacao, ANO.dh_anotacao, ANO,id_anotacao 
-                                            ORDER BY ANO.id_anotacao DESC");
+                                            GROUP BY PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, PES.id_pessoa, SIT.id_situacao, ANO.dh_anotacao, ANO.id_anotacao
+                                            ORDER BY ANO.dh_anotacao DESC");
             $processo->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $processo->execute();
             if ($processo->rowCount() > 0) {
@@ -472,7 +472,7 @@ class DaoProcesso extends ProcessoExtd {
                                         INNER JOIN ses_pessoa as PE ON PE.id_pessoa = ANO.id_pessoa
                                         INNER JOIN gco_situacao as SIT ON SIT.id_situacao = ANO.id_situacao
                                     WHERE ANO.id_processo =:id_processo
-                                        ORDER BY ANO.id_anotacao");
+                                        ORDER BY ANO.dh_anotacao DESC");
             $dados->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $dados->execute();
             if ($dados->rowCount() >= 0) {
@@ -502,7 +502,7 @@ class DaoProcesso extends ProcessoExtd {
                                             LEFT JOIN gco_area_abrangencia AREA on AREA.id_processo = PRO.id_processo
                                             LEFT JOIN ses_cidade CID ON CID.id_cidade = AREA.id_cidade                                         
                                         WHERE PRO.st_ativo=:status
-                                        GROUP by PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, SIT.id_situacao, TIG.id_tipo_gasto, PE.id_pessoa, ANO.id_anotacao");
+                                        GROUP BY PRO.id_processo, OBJ.id_objeto, MOD.id_modalidade, UNI.id_unidade_contempladas, SIT.id_situacao, TIG.id_tipo_gasto, PE.id_pessoa, ANO.id_anotacao");
             $processos->bindValue(':status', 0, PDO::PARAM_STR);
             $processos->execute();
             if ($processos->rowCount() >= 0) {
@@ -535,7 +535,7 @@ class DaoProcesso extends ProcessoExtd {
                                     INNER JOIN gco_situacao SIT ON SIT.id_situacao = ANO.id_situacao
                                     INNER JOIN ses_pessoa PE ON PE.id_pessoa = ANO.id_pessoa                                        
                                     WHERE PRO.id_processo =:id_processo AND PRO.st_ativo='1'
-                                    order by ANO.id_anotacao desc 
+                                    ORDER BY ANO.dh_anotacao desc 
                                     limit 1");
             $dados->bindValue(":id_processo", $this->getIdProcesso(), PDO::PARAM_INT);
             $dados->execute();

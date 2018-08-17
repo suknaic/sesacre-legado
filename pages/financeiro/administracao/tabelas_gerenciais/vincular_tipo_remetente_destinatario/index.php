@@ -49,7 +49,7 @@
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Vincular Tramitação</h1>                       
+                        <h1 class="page-header text-overflow">Vincular Tipo de Remetente/Destinatário</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -69,89 +69,48 @@
                                         <div class="panel-body">
                                             <div class="row">
 
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="tp_parm_tramitacao">
-                                                            Tramitação: <span class="text-danger">*</span>
+                                                
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group" id="remetente_conteudo">
+                                                        <label for="id_doc_tipo">
+                                                            Tipo de Remetente/Destinatário: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="tp_parm_tramitacao" class="form-control">                                                                
-                                                                <option value="0">Selecione a Tramitação</option>
-                                                                <option value="1">Encaminhar</option>
-                                                                <option value="2">Receber</option>
+                                                            <select id="id_doc_tipo" class="form-control">
+                                                                <?php
+                                                                    echo $selectDocTipos;
+                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    
-                                                </div>
-
-                                                
-
-                                                <div class="col-md-4">
-                                                    <div id="primeiro">
-                                                        <div class="form-group" id="remetente_conteudo">
-                                                            <label for="id_doc_tipo_remetente">
-                                                                Tipo de Remetente: <span class="text-danger">*</span>
-                                                            </label>                                                        
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">
-                                                                    <p class="fa fa-list inputPFa"></p>
-                                                                </span>
-                                                                <select id="id_doc_tipo_remetente" class="form-control">
-                                                                    <?php
-                                                                        echo $selectTipoRemetente;
-                                                                    ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
 
 
-                                                <div class="col-md-4">
-                                                    <div id="segundo">
-                                                        <div class="form-group" id="destinatario_conteudo">
-                                                            <label for="id_doc_tipo_destinatario">
-                                                                Tipo de Destinatário: <span class="text-danger">*</span>
-                                                            </label>                                                        
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">
-                                                                    <p class="fa fa-list inputPFa"></p>
-                                                                </span>
-                                                                <select id="id_doc_tipo_destinatario" class="form-control">
-                                                                    <?php
-                                                                        echo $selectTipoDestinatario;
-                                                                    ?>
-                                                                </select>
-                                                            </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group" id="destinatario_conteudo">
+                                                        <label for="id_doc_lotacao">
+                                                            Remetente/Destinatário: <span class="text-danger">*</span>
+                                                        </label>                                                        
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                <p class="fa fa-list inputPFa"></p>
+                                                            </span>
+                                                            <select id="id_doc_lotacao" class="form-control">
+                                                                <option value="0">Selecione um Remetente/Destinatário</option>
+                                                                <?php
+                                                                    echo $selectLotacoes;
+                                                                ?>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 
                                             </div>
-                                            <div class="row">
-                                                
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="id_documento_situacao">
-                                                            Situação do Documento Fiscal: <span class="text-danger">*</span>
-                                                        </label>                                                        
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <p class="fa fa-list inputPFa"></p>
-                                                            </span>
-                                                            <select id="id_documento_situacao" class="form-control">
-                                                                <?php echo $selectSitDoc; ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- End <div class="form-group"> -->
                                        
 
                                         </div>
@@ -186,7 +145,7 @@
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Lista de Tramitação</h3>
+                                <h3 class="panel-title">Lista dos Tipos de Remetente/Destinatário</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -196,9 +155,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Tipo de Remetente/Destinatário</th>
-                                                        <th>Tramitação</th>
-                                                        <th>Tipo de Destinatário/Remetente</th>
-                                                        <th>Situação</th>
+                                                        <th>Destinatário/Remetente</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

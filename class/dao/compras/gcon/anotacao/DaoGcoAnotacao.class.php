@@ -32,7 +32,7 @@ class DaoGcoAnotacao extends GcoAnotacaoExtd {
                                     FROM gco_anotacao as anotacao 
                                     INNER JOIN ses_pessoa as pessoa ON pessoa.id_pessoa = anotacao.id_pessoa
                                   WHERE anotacao.id_processo = :idProcesso 
-                                  ORDER BY anotacao.id_anotacao DESC');
+                                  ORDER BY anotacao.dh_anotacao DESC');
             $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
             $sql->execute();
             if ($sql->rowCount() >= 0) {
@@ -49,7 +49,7 @@ class DaoGcoAnotacao extends GcoAnotacaoExtd {
                                         FROM gco_anotacao as anotacao 
                                             INNER JOIN ses_pessoa as pessoa ON pessoa.id_pessoa=anotacao.id_usuario
                                                  WHERE anotacao.id_processo=:idProcesso
-                                                      ORDER BY anotacao.id_anotacao');
+                                                      ORDER BY anotacao.dh_anotacao DESC');
             $sql->bindValue(':idProcesso', $this->getIdProcesso(), PDO::PARAM_INT);
             $sql->execute();
             if ($sql->rowCount() >= 0) {

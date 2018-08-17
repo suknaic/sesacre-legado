@@ -32,22 +32,18 @@ $(document).ready(function () {
        
         switch (tp_tramitacao) {
             case 1:
-                $("#labelTpLotacao").html('Tipo do Destinatário: <span class="text-danger">*</span>');
-                $("#labelLotacao").html('Destinatário: <span class="text-danger">*</span>');
-                $('#tipo_lotacao option[value="0"]').text("Selecione o Tipo de Destinatário");
-                $('#id_lotacao option[value="0"]').text("Selecione um Destinatário");
+                $("#labelTpLotacao").html('Tipo do Destinatário/Destinatário: <span class="text-danger">*</span>');
+                $('#id_doc_lotacao option[value="0"]').text("Selecione o Tipo de Destinatário/Destinatário");
                 break;
                 
             case 2:
-                $("#labelTpLotacao").html('Tipo do Remetente: <span class="text-danger">*</span>');
-                $("#labelLotacao").html('Remetente: <span class="text-danger">*</span>');
-                $('#tipo_lotacao option[value="0"]').text("Selecione o Tipo de Remetente");
-                $('#id_lotacao option[value="0"]').text("Selecione um Remetente");
+                $("#labelTpLotacao").html('Tipo do Remetente/Remetente: <span class="text-danger">*</span>');
+                $('#id_doc_lotacao option[value="0"]').text("Selecione o Tipo de Remetente/Remetente");
+
                 break;
         }
        
-        $('#id_lotacao').select2();
-        $('#tipo_lotacao').select2();
+        $('#id_doc_lotacao').select2();
     });
     
     

@@ -1,16 +1,16 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/DocDestinatario.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocParmTramitacao.class.php";
 
 
 $session = new Session('ajax');
 
 
 switch ($_REQUEST['acao']) {
-    CASE 'retornaTiposDestinatarios':
+    CASE 'retornaParmTramitacoes':
         try {
-            $prog = new DocDestinatario();            
+            $prog = new DocParmTramitacao();            
             echo $prog->listaTodos();
             return;
             break;
@@ -20,15 +20,18 @@ switch ($_REQUEST['acao']) {
             break;
         }
         
-    CASE 'cadastrarTiposDestinatarios':
+    CASE 'cadastrarParmTramitacao':
         try {
                                 
-            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);                        
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             
-            $prog = new DocDestinatario();
+            $prog = new DocParmTramitacao();
             
-            $prog->setIdDocTipoDestinatario((int)$filtro['idDocTpDest']);
-            $prog->setIdLotacao((int)$filtro['idLotacao']);
+            $prog->setIdDocTipoDestinatario((int)$filtro['idDocTpDestinatario']);
+            $prog->setIdDocTipoRemetente((int)$filtro['idDocTpRemetente']);
+            $prog->setIdDocumentoSituacao((int)$filtro['idDocSit']);
+            $prog->setTpDocParmTramitacao((int)$filtro['tpParmTramitacao']);
+            
             
             echo $prog->cadastrar();
             return;
@@ -39,14 +42,14 @@ switch ($_REQUEST['acao']) {
             break;
         }     
         
-    CASE 'removerTiposDestinatarios':
+    CASE 'removerParmTramitacao':
         try {
                            
             $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);             
             
-            $prog = new DocDestinatario();
+            $prog = new DocParmTramitacao();
             
-            $prog->setIdDocDestinatario((int)$filtro);
+            $prog->setIdDocParmTramitacao((int)$filtro);
             
             echo $prog->excluir();            
             return;
