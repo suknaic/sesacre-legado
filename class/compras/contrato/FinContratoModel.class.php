@@ -1428,7 +1428,7 @@ class FinContratoModel {
 
                 $filter[] = "cont.id_contrato in(" . $idContrato . ")";
             }
-            
+
             if (!empty($dados['contratado'])) {
                 $filter[] = "itens.id_pessoa = '" . $dados['contratado'] . "'";
             }
@@ -1439,7 +1439,7 @@ class FinContratoModel {
             } else {
                 return false;
             }
-         
+
 
 //            $daoContrato->retornaContratoCombo($pdo, $filtro);
             $daoContrato->retornaContratoComValores($pdo, $filtro);
@@ -1451,7 +1451,7 @@ class FinContratoModel {
             }
             $tabela = '';
             $central = 0;
-            
+
             foreach ($result as $linha) {
                 $daoContrato->setIdContrato($linha["id_contrato"]);
                 $daoContrato->retornaCentraisContrato($pdo);
@@ -1466,17 +1466,17 @@ class FinContratoModel {
                     $tabela .= $l["nm_lotacao"] . "<br/>";
                 }
                 $tabela .= '</td>';
-                
-               
-               if (!empty($linha['total_geral'])) { //Para evitar divisão por '0'
-                   $percentualUtilizado = ($linha['total_utilizado'] * 100) / $linha['total_geral']; 
-               } else {
-                   $percentualUtilizado = 0;
-               }
-                
-                
-                $tabela.= '<td class = "text-center">'. number_format($percentualUtilizado,2,",",".") .'</td>';
-                
+
+
+                if (!empty($linha['total_geral'])) { //Para evitar divisão por '0'
+                    $percentualUtilizado = ($linha['total_utilizado'] * 100) / $linha['total_geral'];
+                } else {
+                    $percentualUtilizado = 0;
+                }
+
+
+                $tabela .= '<td class = "text-center">' . number_format($percentualUtilizado, 2, ",", ".") . '</td>';
+
                 $tabela .= '<td class = "text-center">';
                 if ($linha['fl_bloqueado'] == 0) {
                     $tabela .= '<button type = "button" title = "bloquear" class = "bloquear" value = "' . $linha['id_contrato'] . '">
@@ -1697,8 +1697,7 @@ class FinContratoModel {
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
                     $item->setIdUnidadeMedida($result['id_unidade_medida']);    
                     $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);                    
-                    $item->setQtItensAux($result['qt_itens_aux']);
-                    
+                    $item->setQtItensAux($result['qt_itens_aux']);                    
                     $cont->setItems($item);
                 }
             }
@@ -2171,7 +2170,7 @@ class FinContratoModel {
             $daoContrato->retornaDadosContratoGdof($pdo, $nr_pedido);
             if ($daoContrato->sucesso()) {
                 $campos = $daoContrato->getMsgRetorno();
-                
+
                 $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingOne">
@@ -2189,32 +2188,32 @@ class FinContratoModel {
                                                 
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Licitação:</b></div>
-                                                        <div class="col-sm-10">'.$campos["cd_pregao"].'</div>
+                                                        <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo de gasto:</b></div>
-                                                        <div class="col-sm-10">'.$campos["nm_tipo_gasto"].'</div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Objeto:</b></div>
-                                                        <div class="col-sm-10">'.$campos["nm_objeto"].'</div>
+                                                        <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Modalidade:</b></div>
-                                                        <div class="col-sm-10">'.$campos["nm_modalidade"].'</div>
+                                                        <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Fornecedor:</b></div>
-                                                        <div class="col-sm-10">'.$campos["nm_pessoa"].'</div>
+                                                        <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
-                                                        <div class="col-sm-10">'.$campos["cpfcnpj"].'</div>
+                                                        <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2229,8 +2228,7 @@ class FinContratoModel {
             return;
         }
     }
-    
-    
+
     public function retornaDadosContratoJson() {
         try {
             //variaveis do sistema
@@ -2240,8 +2238,8 @@ class FinContratoModel {
             $daoContrato->setIdContrato($this->id_contrato);
             $retorno = '';
             $daoContrato->pesquisaDadosContrato($pdo);
-            if ($daoContrato->sucesso()) {                
-                return json_encode($daoContrato->getMsgRetorno());                
+            if ($daoContrato->sucesso()) {
+                return json_encode($daoContrato->getMsgRetorno());
             }
 
             return $retorno;
@@ -2249,28 +2247,27 @@ class FinContratoModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    
+
     public function retornaPesquisaComSaldoCondicao(string $filtro, PDO $pdo = null) {
         $this->sucesso = false;
         try {
-            if(empty($pdo)){
+            if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            $daoContrato = new DaoFinContrato();                     
+            $daoContrato = new DaoFinContrato();
             $daoContrato->retornaContratoComValores($pdo, $filtro);
             if ($daoContrato->sucesso()) {
-                $this->sucesso = true;                
+                $this->sucesso = true;
                 $this->msgRetorno = $daoContrato->getMsgRetorno();
             } else {
                 $this->sucesso = false;
-                $this->msgRetorno = $daoContrato->getMsgRetorno();                
-            }           
+                $this->msgRetorno = $daoContrato->getMsgRetorno();
+            }
         } catch (Exception $e) {
             $this->sucesso = false;
-            $this->msgRetorno = $e->getMessage();            
+            $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
 }

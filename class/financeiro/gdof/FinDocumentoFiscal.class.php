@@ -342,8 +342,8 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setNrProcessoAdministrativo($this->nr_processo_administrativo);
             $daoFinDocumentoFiscal->setNrDocumentoFiscal($this->nr_documento_fiscal);
-            $daoFinDocumentoFiscal->setMmCompetencia("03");
-            $daoFinDocumentoFiscal->setAaCompetencia("2018");
+            $daoFinDocumentoFiscal->setMmCompetencia(explode("/", $this->competencia)[0]);
+            $daoFinDocumentoFiscal->setAaCompetencia(explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
@@ -356,6 +356,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
+                var_dump($daoFinDocumentoFiscal->getMsgRetorno());
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o documento fiscal");
             }
 
@@ -468,7 +469,7 @@ class FinDocumentoFiscal {
             $dadosPedido = '';
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
-           $daoFinDocumentoFiscal->retornaIfPedidoPorIdDocumento($pdo);
+            $daoFinDocumentoFiscal->retornaIfPedidoPorIdDocumento($pdo);
             if ($daoFinDocumentoFiscal->sucesso()) {
                 $campos = $daoFinDocumentoFiscal->getMsgRetorno();
 
@@ -522,6 +523,161 @@ class FinDocumentoFiscal {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
+    }
+
+    public function retornaDadosEmpenho($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosEmpenho = '';
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinDocumentoFiscal->retornaIfEmpenhoPorIdDocumento($pdo);
+
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                $campos = $daoFinDocumentoFiscal->getMsgRetorno();
+
+                $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
+                                                        aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="panel-body">
+                                                
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nm_tipo_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosEmpenho;
+            }
+            return $dadosEmpenho;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaTabelaOrdemGdof($pdo, $excluir = false) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $tabela = '';
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinDocumentoFiscal->retornaOrdemVinculadaAoDocumentoFiscal($pdo);
+
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $valor) {
+                    $tabela .= '<tr id = "' . $valor["id_ordem"] . '" class= "tabOrdem">
+                                    <td class="text-center">' . $valor["ordem"] . '</td>
+                                    <td class="text-center">' . $valor["tipo"] . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>';
+                    if ($excluir) {
+                        $tabela .= ' <td class="text-center">
+                                        <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "' . $valor["id_ordem"] . '">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                     </td>';
+                    }
+
+                    $tabela .= '</tr>';
+                }
+            }
+
+            return $tabela;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaTabelaEntregaGdof($pdo, $excluir = false) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $tabela = '';
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinDocumentoFiscal->retornaEntregaVinculadoAoDocumentoFiscal($pdo);
+            $totalEntrega = 0;
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
+                    $totalEntrega += $campos["valor"];
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
+                                 <td class = "text-center">' . $campos["ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["dataaviso"] . '</td>
+                                 <td class = "text-center">' . $campos["datalimite"] . '</td>
+                                 <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["entreguedia"] . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">' . $campos["situacao"] . '</td>';
+                    if ($excluir) {
+                        $tabela .= ' <td class="text-center">
+                                      <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+                                       </button>
+                                     </td>';
+                    }
+                }
+                $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
+                $tabela .= '<tr>
+                                <td class="text-right" colspan="6">Total</td>
+                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" >' . $totalEntrega . '</td>
+                                <td class="text-right" colspan="2"></td>
+                            </tr>';
+            }
+
+            return $tabela;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaDadosDocumento($pdo) {
+
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+
+        $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+        $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+        $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
+        return $daoFinDocumentoFiscal->getMsgRetorno();
     }
 
 }

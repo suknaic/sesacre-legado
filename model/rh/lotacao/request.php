@@ -84,7 +84,26 @@ switch ($_REQUEST['acao']) {
 
             $lotacao = new Lotacao();
             $lotacao->setId_lotacao((int) $get['idLotacao']);
-            echo $lotacao->removerLotacao();
+            echo $lotacao->desativarLotacao();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+    case 'ativarLotacao':
+        try {
+
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+            $get = filter_input(INPUT_GET, 'lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $lotacao = new Lotacao();
+            $lotacao->setId_lotacao((int) $get['idLotacao']);
+            echo $lotacao->ativarLotacao();
             return;
             break;
         } catch (Exception $e) {

@@ -864,6 +864,7 @@ $(document).ready(function () {
 
                 "success": function (response) {
                     //$this.prop("disabled", false);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -872,8 +873,7 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         console.log(response);
                         return false;
                     }
@@ -881,7 +881,7 @@ $(document).ready(function () {
                         if (response.tipoExibicao === "console") {
                             console.log('Console Mensagem');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -889,21 +889,18 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            top.location.href = "/pages/rh/funcionario/index.php";
-                        });
+                        func.fechaModalHref('/pages/rh/funcionario/index.php');
                         return false;
                     } else {
-                        console.log('Ultimo else');
                         console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
                     console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });

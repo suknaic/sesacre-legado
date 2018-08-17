@@ -3,7 +3,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/sistema/SesVinculo.clas
 
 class DaoSesVinculo extends SesVinculo{
     
-    
     function insert(SesVinculo $vinculo, $pdo) {
         try {
             $result = $pdo->prepare("INSERT INTO ses_vinculo (nm_vinculo) "
@@ -34,20 +33,31 @@ class DaoSesVinculo extends SesVinculo{
             $result = $pdo->prepare("DELETE FROM ses_vinculo WHERE id_vinculo = :idVinculo");
             $result->bindValue(":idVinculo", $vinculo->getIdVinculo(), PDO::PARAM_INT);
             $result->execute();
-
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();            
         }
     }
     
-    function desativa(SesVinculo $vinculo, $pdo){
+    function desativar(SesVinculo $vinculo, $pdo){
         try {
-            $result = $pdo->prepare("UPDATE ses_vinculo SET st_ativo = 0 "
-                    . "WHERE id_vinculo = :idVinculo ");
+            $result = $pdo->prepare("UPDATE ses_vinculo SET st_ativo = 0 
+                                            WHERE id_vinculo = :idVinculo ");
             $result->bindValue(":idVinculo", $vinculo->getIdVinculo(), PDO::PARAM_INT);                  
             $result->execute();
-            return "Sucesso";
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();            
+        }
+    }
+    
+    function ativar($pdo){
+        try {
+            $result = $pdo->prepare("UPDATE ses_vinculo SET st_ativo = 1 
+                                            WHERE id_vinculo = :idVinculo ");
+            $result->bindValue(":idVinculo", $this->getIdVinculo(), PDO::PARAM_INT);                  
+            $result->execute();
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();            
         }

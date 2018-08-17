@@ -80,7 +80,7 @@ if(!$session->vPCompras()){
                     $html.="<div class='lado_E'><b>Técnico Responsável: </b></div><div class='lado_Vazio'></div>";
                 }
                 if($dados['cd_pregao'] != null && $dados['cd_pregao'] !=""){
-                    $html.="<div class='lado_E'><b>Pregão: </b></div><div class='lado_D'>".$dados['cd_pregao']."</div>";
+                    $html.="<div class='lado_E'><b>N° do Edital: </b></div><div class='lado_D'>".$dados['cd_pregao']."</div>";
                 }
                 if($dados['nm_modalidade'] != null && $dados['nm_modalidade'] !=""){
                     $html.="<div class='lado_E'><b>Modalidade: </b></div><div class='lado_D'>".$dados['nm_modalidade']."</div>";

@@ -309,4 +309,55 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
 
+    public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select p.id_pedido, nr_pedido, emp.id_empenho, emp.nr_empenho,
+                        emp.dt_empenho_safira, emp.vl_empenho
+                        from fin_empenho as emp
+                        inner join fin_pedido as p
+                        on p.id_pedido = emp.id_pedido
+                        where nr_empenho = :nr_empenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+    public function retornaDadosEmpenho(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_empenho where id_empenho = :idEmpenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
 }

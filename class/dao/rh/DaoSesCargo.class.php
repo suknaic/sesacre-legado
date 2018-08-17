@@ -34,8 +34,7 @@ class DaoSesCargo extends SesCargo {
             $result = $pdo->prepare("DELETE FROM ses_cargo WHERE Id_cargo = :idCargo");
             $result->bindValue(":idCargo", $this->getId_cargo(), PDO::PARAM_INT);
             $result->execute();
-
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -43,11 +42,23 @@ class DaoSesCargo extends SesCargo {
 
     function desativa($pdo) {
         try {
-            $result = $pdo->prepare("UPDATE ses_cargo SET st_ativo = 0 "
-                    . "WHERE Id_cargo = :idCargo ");
+            $result = $pdo->prepare("UPDATE ses_cargo SET st_ativo = '0' 
+                                        WHERE Id_cargo = :idCargo ");
             $result->bindValue(":idCargo", $this->getId_cargo(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return TRUE;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+    
+    function ativa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_cargo SET st_ativo = '1' 
+                                        WHERE Id_cargo = :idCargo ");
+            $result->bindValue(":idCargo", $this->getId_cargo(), PDO::PARAM_INT);
+            $result->execute();
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -62,10 +73,9 @@ class DaoSesCargo extends SesCargo {
 
         $retorno = FALSE;
 
-        $sql = "SELECT id_cargo, nm_cargo"
-                . " FROM ses_cargo"
-                . " WHERE st_ativo = '1'"
-                . " ORDER BY nm_cargo";
+        $sql = "SELECT id_cargo, nm_cargo, st_ativo 
+                    FROM ses_cargo
+                        ORDER BY nm_cargo";
         try {
             $sth = $pdo->prepare($sql);
             $sth->execute();
@@ -87,7 +97,6 @@ class DaoSesCargo extends SesCargo {
      * @return boolean
      */
     function retornaCargo($pdo) {
-
         $retorno = FALSE;
         $sql = "SELECT id_cargo, nm_cargo, st_ativo
                  FROM ses_cargo

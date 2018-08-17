@@ -91,7 +91,7 @@ class DaoSesLotacao extends SesLotacao {
     }
 
     //*********************************************************************************************************
-    function excluirLotacao($pdo) {
+    function desativarLotacao($pdo) {
         try {
             $result = $pdo->prepare("UPDATE ses_lotacao SET st_ativo = '0' 
                                      WHERE id_lotacao = :idLotacao");
@@ -103,7 +103,19 @@ class DaoSesLotacao extends SesLotacao {
             //return false;
         }
     }
-
+    //*********************************************************************************************************
+    function ativarLotacao($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_lotacao SET st_ativo = '1' 
+                                     WHERE id_lotacao = :idLotacao");
+            $result->bindValue(":idLotacao", $this->getId_lotacao(), PDO::PARAM_INT);
+            $result->execute();
+            return "Sucesso";
+        } catch (PDOException $e) {
+            return $e->getMessage();
+            //return false;
+        }
+    }
 //*******************************************************************************************************************************************************************
     /*
      * Retornar todas os dados das Lotações
@@ -293,7 +305,7 @@ class DaoSesLotacao extends SesLotacao {
                     left join ses_cidade ci on l.id_cidade = ci.id_cidade
                     left join ses_estado e on ci.id_estado = e.id_estado
                     left join ses_telefone t on l.id_lotacao = t.id_lotacao
-                where l.st_ativo = '1'
+                
                 $filtro
 		group by l.id_lotacao, lc.id_lotacao_categoria, p.id_pessoa, pj.id_pessoa_juridica, lc.nm_lotacao_categoria, l.nm_lotacao, pai, juridica, ci.nm_cidade, e.nm_sigla
                 ORDER BY lc.nm_lotacao_categoria, l.nm_lotacao";
@@ -328,7 +340,7 @@ class DaoSesLotacao extends SesLotacao {
                  left join ses_pessoa_juridica pj on l.id_pessoa_juridica = pj.id_pessoa_juridica
                  left join ses_pessoa p2 on pj.id_pessoa = p2.id_pessoa
                  WHERE l.id_lotacao = :idLotacao
-                 and l.st_ativo = '1'";
+                 ";
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":idLotacao", $this->getId_lotacao(), PDO::PARAM_INT);

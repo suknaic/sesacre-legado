@@ -269,22 +269,16 @@
                                     </a>
 
                                     <ul class="collapse">
-                                        <li>
-                                            <a href="/pages/financeiro/gdof/unidade/cad_gdof/index.php">Unidades</a>
-                                        </li>
 
                                         <li>
-                                            <a href="#">Central demandante</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
-
                                         <li>
-                                            <a href="#">Liquidação</a>
+                                            <a href="#">Encaminhar Documento Fiscal</a>
                                         </li>
-
                                         <li>
-                                            <a href="#">Financeiro</a>
+                                            <a href="#">Receber Documento Fiscal</a>
                                         </li>
-
                                     </ul>
                                 </li>
 
@@ -311,7 +305,7 @@
                                                     <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_tramitacao/">Vincular Tramitação</a>
+                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_encaminhamento_recebimento">Vincular Encaminhamento / Recebimento</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -322,13 +316,16 @@
                                             </a>
                                             <ul class="collapse">
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Cadastrar Tipo de Gasto e Elemento</a>
+                                                    <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_destinatario/">Tipo de Destinatário</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao">Tipo de Destinatário / Remetente</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincula_destinatario/">Vincular Tipo de Destinatário/Destinatário</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario">Vincular Tipo de Destinatário / Remetente</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao">Vincular Tramitação</a>
                                                 </li>
                                             </ul>
 

@@ -588,9 +588,9 @@ $(document).ready(function () {
                 id_tecnico: $("#tecnico_process").val(),
                 centrais_atendimento: central
             };
-        
-            if (processo.ada_process === "" & processo.id_unidade === "" & processo.id_tecnico === "" & processo.id_area === "" & processo.id_situacao === "" & processo.data_process === "" & tipoDeGasto === null & central === null) {
-                return func.modalAlert(func.msgPreencherCampos);
+
+            if (processo.ada_process === "" || processo.id_unidade === "0" || processo.id_tecnico === "0" || processo.id_area === "0" || processo.id_situacao === "0" || processo.data_process === "" || tipoDeGasto.length === 0 || central.length === 0) {
+                func.modalAlert(func.msgPreencherCampos);
                 return false;
             }
 
@@ -603,6 +603,8 @@ $(document).ready(function () {
                     "atualizaProcesso": processo
                 },
                 "success": function (response) {
+                    // console.log(response);
+                    // return;
                     if (response.trim() === "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

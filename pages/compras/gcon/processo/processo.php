@@ -69,7 +69,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/gcon/gconPermi.load.php
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="panel-body">N° Pregão:
+                                        <div class="panel-body">N° do Edital:
                                             <input type="numberelivel" class="form-control" name="nume_pregao_process" id="nume_pregao_process" min="1" maxlength="20"/>
                                         </div>
                                     </div>
