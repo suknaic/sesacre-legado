@@ -95,12 +95,12 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="cnpj_nome">CNPJ/Nome Contratado:</label>
+                                                <label for="id_contratado">CNPJ/Nome Contratado:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="cnpj_nome" class="form-control">
+                                                    <select id="id_contratado" class="form-control">
                                                         <option value="0">Selecione o CNPJ/Nome Contratado</option>
                                                         <?php echo $$pessoaJuridicaOptions; ?>
                                                     </select>
@@ -208,7 +208,7 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="destinatario" class="form-control">
-                                                    
+                                                        <option value="0">Selecione um Destinatário</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -316,7 +316,6 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>

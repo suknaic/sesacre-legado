@@ -1,6 +1,7 @@
 <?php
 
-class FinDocTramitacao {    
+class DocTramitacao {
+
     private $idDocTramitacao = null;
     private $idDocumentoFiscal = null;
     private $idPessoa = null;
@@ -81,6 +82,5 @@ class FinDocTramitacao {
         $this->idDocumentoSituacao = $idDocumentoSituacao;
         return $this;
     }
-
-
 }
+
