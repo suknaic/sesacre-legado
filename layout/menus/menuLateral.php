@@ -269,22 +269,16 @@
                                     </a>
 
                                     <ul class="collapse">
-                                        <li>
-                                            <a href="/pages/financeiro/gdof/unidade/cad_gdof/index.php">Unidades</a>
-                                        </li>
 
                                         <li>
-                                            <a href="#">Central demandante</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
-
                                         <li>
-                                            <a href="#">Liquidação</a>
+                                            <a href="#">Encaminhar Documento Fiscal</a>
                                         </li>
-
                                         <li>
-                                            <a href="#">Financeiro</a>
+                                            <a href="#">Receber Documento Fiscal</a>
                                         </li>
-
                                     </ul>
                                 </li>
 
@@ -326,6 +320,9 @@
                                                 </li>
                                                 <li>
                                                     <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao">Tipo de Destinatário / Remetente</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario">Vincular Tipo de Destinatário / Remetente</a>
                                                 </li>
                                                 <li>
                                                     <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao">Vincular Tramitação</a>

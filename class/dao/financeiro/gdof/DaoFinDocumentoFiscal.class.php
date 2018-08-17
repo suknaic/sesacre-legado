@@ -258,6 +258,52 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
+    public function retornaDocumentosFiscais(PDO $pdo) {
+        try {
+            $sql = "select
+                        doc.id_documento_fiscal,
+                        pedido.nr_pedido,
+                        emp.nr_empenho,
+                        tpDoc.nm_tipo_documento,
+                        doc.vl_documento,
+                        (
+                           trim(to_char(doc.mm_competencia, '09')) || '/' || doc.aa_competencia
+                        )
+                        as competencia 
+                     from
+                        fin_documento_fiscal as doc 
+                        inner join
+                           fin_tipo_documento as tpDoc 
+                           on tpDoc.id_tipo_documento = doc.id_tipo_documento 
+                        inner join
+                           fin_entrega_documento as entDoc 
+                           on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_entrega_confirmacao as entrega 
+                           on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                        inner join
+                           fin_ordem as ordem 
+                           on ordem.id_ordem = entrega.id_ordem 
+                        inner join
+                           fin_empenho as emp 
+                           on emp.id_pedido = ordem.id_pedido 
+                        inner join
+                           fin_pedido as pedido 
+                           on ordem.id_pedido = pedido.id_pedido 
+                        inner join
+                           fin_tipo_empenho as tpEmp 
+                           on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                        inner join
+                           fin_fornecedor as fornecedor 
+                           on fornecedor.id_fornecedor = pedido.id_fornecedor 
+                        inner join
+                           fin_contrato as contrato 
+                           on contrato.id_contrato = fornecedor.id_contrato";
+        } catch (PDOException $ex) {
+            
+        }
+    }
+
     public function retornaDadosDocumento(PDO $pdo) {
         try {
             $sql = "select * from fin_documento_fiscal where id_documento_fiscal = :documento";

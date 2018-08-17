@@ -19,11 +19,10 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
     function insert(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "insert into fin_doc_vinc_recebimento (id_pessoa, id_lotacao, id_doc_tipo_lotacao) values (:id_pessoa,:id_lotacao,:id_doc_tipo_lotacao)";
+                $sql = "insert into fin_doc_vinc_recebimento (id_pessoa, id_doc_lotacao) values (:id_pessoa,:id_lotacao,:id_doc_lotacao)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_pessoa', $this->getIdPessoa(), PDO::PARAM_INT);
-                $stmt->bindValue(':id_lotacao', $this->getIdLotacao(), PDO::PARAM_INT);
-                $stmt->bindValue(':id_doc_tipo_lotacao', $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(':id_doc_lotacao', $this->getIdDocLotacao(), PDO::PARAM_INT);
                 
                 $stmt->execute();
                 $this->sucesso = true;
@@ -57,22 +56,23 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
             if (!empty($pdo)) {
                 $sql = "select
                             id_doc_vinc_recebimento,
-                            fdvr.id_doc_tipo_lotacao,
+                            fdl.id_doc_tipo_lotacao,
                             fdtl.nm_doc_tipo_lotacao,
                             fdvr.id_pessoa,
                             sp.nm_pessoa,
-                            fdvr.id_lotacao,
+                            fdl.id_lotacao,
                             sl.nm_lotacao,
                             '2' as tramitacao
                          from
                             fin_doc_vinc_recebimento as fdvr,
+                            fin_doc_lotacao as fdl,
                             fin_doc_tipo_lotacao as fdtl,
                             ses_pessoa as sp,
                             ses_lotacao as sl 
                          where
-                            fdvr.id_doc_tipo_lotacao = fdtl.id_doc_tipo_lotacao 
-                            and fdvr.id_pessoa = sp.id_pessoa 
-                            and fdvr.id_lotacao = sl.id_lotacao
+                            fdvr.id_doc_lotacao = fdl.id_doc_lotacao 
+                            and fdl.id_lotacao = sl.id_lotacao
+                            and fdvr.id_pessoa = sp.id_pessoa
                             ". $this->filtroSql() . "
                          order by fdtl.nm_doc_tipo_lotacao, sl.nm_lotacao, sp.nm_pessoa";
                 $stmt = $pdo->prepare($sql);
@@ -81,16 +81,12 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
                     $stmt->bindValue(":id_doc_vinc_recebimento", $this->getIdDocVincRecebimento(), PDO::PARAM_INT);
                 }
                 
-                if ($this->getIdDocTipoLotacao()) {
-                    $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                if ($this->getIdDocLotacao()) {
+                    $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
                 }
 
                 if ($this->getIdPessoa()) {
                     $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
-                }
-                
-                if ($this->getIdLotacao()) {
-                    $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
                 }
                 
                 $stmt->execute();
@@ -118,17 +114,14 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
             $filtro .= " and fdvr.id_doc_vinc_recebimento = :id_doc_vinc_recebimento ";
         }
         
-        if ($this->getIdDocTipoLotacao()) {
-            $filtro .= " and fdvr.id_doc_tipo_lotacao = :id_doc_tipo_lotacao ";
+        if ($this->getIdDocLotacao()) {
+            $filtro .= " and fdvr.id_tipo_lotacao = :id_doc_lotacao ";
         }
         
         if ($this->getIdPessoa()) {
             $filtro .= " and fdvr.id_pessoa = :id_pessoa ";
         }
-        
-        if ($this->getIdLotacao()) {
-            $filtro .= " and fdvr.id_lotacao = :id_lotacao ";
-        }
+
         
         return $filtro;
     }
