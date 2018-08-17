@@ -40,7 +40,8 @@ class DocVincEncaminhamento {
     public function cadastrar(){
         try {  
             
-            if (empty($this->getIdLotacao()) or empty($this->getIdPessoa()) or empty($this->getIdDocLotacao())){
+            if (empty($this->getIdPessoa()) or empty($this->getIdDocLotacao())){
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
            
@@ -53,10 +54,10 @@ class DocVincEncaminhamento {
                                    ->setIdPessoa($this->getIdPessoa());
             
             //verifica se já existe o registro, o banco já possui a constraint, para informar o usuário
-            $daoFinDocVincEncaminhamento->select($pdo);
+            //'1' é passado fixo para o select filtrar apenas os 'Encaminhamentos'
+            $daoFinDocVincEncaminhamento->select($pdo,1);
             
             if ($daoFinDocVincEncaminhamento->getSucesso()) {
-                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "O registro já existe, não é possível incluir outro.");
             }
             
@@ -118,7 +119,7 @@ class DocVincEncaminhamento {
         }
     }
 
-    function listaTodos() {
+    function listaTodos(int $tipoTramitacao = 0) {
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -137,13 +138,13 @@ class DocVincEncaminhamento {
             }
 
             
-            $daoFinDocVincEncaminhamento->select($pdo);
+            $daoFinDocVincEncaminhamento->select($pdo,$tipoTramitacao);
             
             if ($daoFinDocVincEncaminhamento->getSucesso()) {
                 foreach ($daoFinDocVincEncaminhamento->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
                                     . "<td>".$linha['nm_pessoa']."</td>"
-                                    . "<td>Encaminhar</td>"
+                                    . "<td>".$linha['ds_tramitacao']."</td>"
                                     . "<td>".$linha['nm_lotacao']."</td>"
                                     . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
                                     . "<td class='text-center'>"

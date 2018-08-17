@@ -57,12 +57,11 @@ $(document).ready(function () {
             
             var Dados = {
                 idPessoa: $("#id_pessoa option:selected").val(),
-                idTipoLot: $("#tipo_lotacao option:selected").val(),
-                idLotacao: $("#id_lotacao option:selected").val(),
+                idDocLotacao: $("#id_doc_lotacao option:selected").val(),
                 tpTramitacao: $("#tp_tramitacao option:selected").val()
             }
 
-            if (Dados.idPessoa == "0" || Dados.idTipoLot == "0" || Dados.idLotacao == "0" || Dados.tpTramitacao == "0"){
+            if (Dados.idPessoa == "0" || Dados.idDocLotacao == "0" || Dados.tpTramitacao == "0"){
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;

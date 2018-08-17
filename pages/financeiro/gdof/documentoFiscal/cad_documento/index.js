@@ -5,6 +5,7 @@ $(document).ready(function () {
     //Mascara do sistema
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
+    $('#competencia').mask("99/9999");
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();

@@ -118,7 +118,7 @@ class DocVincRecebimento {
         }
     }
 
-    function listaTodos() {
+    function listaTodos(int $tipoTramitacao = 0) {
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -137,13 +137,13 @@ class DocVincRecebimento {
             }
 
             
-            $daoFinDocVincRecebimento->select($pdo);
+            $daoFinDocVincRecebimento->select($pdo,$tipoTramitacao);
             
             if ($daoFinDocVincRecebimento->getSucesso()) {
                 foreach ($daoFinDocVincRecebimento->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
                                     . "<td>".$linha['nm_pessoa']."</td>"
-                                    . "<td>Receber</td>"
+                                    . "<td>".$linha['ds_tramitacao']."</td>"
                                     . "<td>".$linha['nm_lotacao']."</td>"
                                     . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
                                     . "<td class='text-center'>"
