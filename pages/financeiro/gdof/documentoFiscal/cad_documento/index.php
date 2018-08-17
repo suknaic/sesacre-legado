@@ -166,11 +166,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-1"><a class="addOrdens btn btn-info">+</a></div>
                                                             <div class="col-sm-6"></div>
                                                         </div>
-                                                        <div class="form-group">
+                                                        <div class="form-group hidden">
                                                             <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
-                                                        <div class="form-group">
+                                                        <div class="form-group hidden">
                                                             <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
