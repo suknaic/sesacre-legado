@@ -239,6 +239,160 @@ $(document).ready(function () {
         });
     });
 
+    $('body').on('click', '.btn-desativar', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-desativar').attr("nome");
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a Desativar do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Funcao = {
+                        id: id
+                    };
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/sistema/funcao/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "desativarFuncao",
+                            "funcao": Funcao
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, "success");
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    
+    $('body').on('click', '.btn-ativar', function (e) {
+        var $this = $(this);
+        var id = $this.val();
+        var item = $this.closest('td').find('.btn-ativar').attr("nome");
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja continuar com a Ativar do Item <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Funcao = {
+                        id: id
+                    };
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/sistema/funcao/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "ativarFuncao",
+                            "funcao": Funcao
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, "success");
+                                func.fechaModalReload();
+                                return false;
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();
         var id = $(this).val();
@@ -263,7 +417,6 @@ $(document).ready(function () {
         $("#nm_funcao").focus();
     });
 
-
     $('body').on('keypress', '.formVinculo', function (e) {
         var key = e.which;
         if (key == 13) {
@@ -271,5 +424,4 @@ $(document).ready(function () {
             return false;
         }
     });
-
 });

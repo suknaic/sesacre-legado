@@ -222,6 +222,16 @@ class pessoaFisica {
                 $pdo->rollBack();
                 return;
             }
+//************************************************************************
+            print_r(new DateTime());
+            $pdo->rollBack();
+            return;
+//            if ($this->dt_nascimento > date('d:m:Y')new DateTime();) {
+//                $this->setSuccess(false);
+//                $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
+//                $pdo->rollBack();
+//                return;
+//            }
 //*****************************************
             $result = $pessoaFisica->insert($pdo);
 //*****************************************
@@ -388,6 +398,15 @@ class pessoaFisica {
             if ($validaCpf) {
                 $this->setSuccess(false);
                 $this->setMsg(STR_CPF_EXISTE);
+                $pdo->rollBack();
+                return;
+            }
+//************************************************************************
+            $dtNascimento = strtotime(Metodos::ConverteDataING($this->dt_nascimento));
+            $dtAtual =strtotime(date("d-m-Y"));
+            if ($dtNascimento >= $dtAtual) {
+                $this->setSuccess(false);
+                $this->setMsg('Data de Nascimento é Maior ou Igual a Data Atual.');
                 $pdo->rollBack();
                 return;
             }

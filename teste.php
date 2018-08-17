@@ -28,36 +28,49 @@
 //    echo 'ERROR: ' . $e->getMessage();
 //}
 
-try {
-    // ******************** Conexão com o 192.168.0.31 ***********************
-    $pdo = new PDO('mysql:host=192.168.0.31;dbname=sesacre', 'suporte', '6832152624');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//try {
+//    // ******************** Conexão com o 192.168.0.31 ***********************
+//    $pdo = new PDO('mysql:host=192.168.0.31;dbname=sesacre', 'suporte', '6832152624');
+//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = $pdo->prepare('SELECT ANO.dataAnotacao, ANO.idSituacao, ANO.idUsuario, ANO.desAnotacao, PRO.adaCPr, PRO.idProcesso
-                            FROM  LP_Anotacao ANO
-                                INNER JOIN LP_Processo PRO ON ANO.idProcesso = PRO.idProcesso
-                                    WHERE ANO.idUsuario IN (8062)
-                                        GROUP BY PRO.idProcesso, ANO.idAnotacao
-                        ');
-    $sql->execute();
-    $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
-    $idPessoa = 1723;
-    $insert = '';
-    $newSit = 43;
-    foreach ($resultado as $dados) {
-        $insert.= " INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario, dh_anotacao)
-                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", "; 
-        if ($dados['idSituacao'] == '0' || $dados['idSituacao'] == NULL || $dados['idSituacao'] == '15'){
-            $insert.= $newSit;
-        } else {
-            $insert.= $dados['idSituacao'];
-        }
-        $insert.= ", " . $idPessoa . ", " . $idPessoa . ", '" . $dados['dataAnotacao'] . "' );<br>";
-    }
-    echo $insert;
-} catch (PDOException $e) {
-    echo 'ERROR: ' . $e->getMessage();
-}
+//    $sql = $pdo->prepare('SELECT ANO.dataAnotacao, ANO.idSituacao, ANO.idUsuario, ANO.desAnotacao, PRO.adaCPr, PRO.idProcesso
+//                            FROM  LP_Anotacao ANO
+//                                INNER JOIN LP_Processo PRO ON ANO.idProcesso = PRO.idProcesso
+//                                    WHERE ANO.idUsuario IN (8062)
+//                                        GROUP BY PRO.idProcesso, ANO.idAnotacao
+//                        ');
+//    $sql = $pdo->prepare('SELECT DISTINCT (PRO.adaCPr), ANO.dataAnotacao, ANO.idSituacao, ANO.idUsuario, ANO.desAnotacao, PRO.adaCPr, PRO.idProcesso
+//                            FROM  LP_Anotacao ANO
+//                                INNER JOIN LP_Processo PRO ON ANO.idProcesso = PRO.idProcesso
+//                                    WHERE ANO.idUsuario IN (8062)
+//                                        GROUP BY PRO.adaCPr
+//                        ');
+//    $sql->execute();
+//    $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+//    $idPessoa = 1723;
+//    $insert = '';
+//    $newSit = 43;
+//    foreach ($resultado as $dados) {
+//                echo $dados['adaCPr'] . '<br>';
+//        $insert.= " INSERT INTO gco_anotacao(ds_anotacao, id_processo, id_situacao, id_pessoa, id_usuario, dh_anotacao)
+//                                VALUES('" . utf8_encode($dados['desAnotacao']) . "', " . $dados['idProcesso'] . ", ";
+//        if ($dados['idSituacao'] == '0' || $dados['idSituacao'] == NULL || $dados['idSituacao'] == '15'){
+//            $insert.= $newSit;
+//        } else {
+//            $insert.= $dados['idSituacao'];
+//        }
+//        $insert.= ", " . $idPessoa . ", " . $idPessoa . ", '" . $dados['dataAnotacao'] . "' );<br>";
+//    }
+//    for ($i = 1; $i > count($resultado); $i++) {
+//        if ($resultado[$i] == $resultado[$i+1]) {
+//
+//        } else {
+//            echo $resultado[$i];
+//        }
+//    }
+//} catch (PDOException $e) {
+//    echo 'ERROR: ' . $e->getMessage();
+//}
 
 // ************************************************************************************************************************************************************
 

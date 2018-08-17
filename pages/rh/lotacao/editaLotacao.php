@@ -76,7 +76,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                             <div class="form-group">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-5">
-                                                    Categoria: <span class="text-danger"> * </span><i class="fa fa-question-circle" title="Informe a Categoria da Lotação"></i>
+                                                    Categoria: <span class="text-danger"> * </span><i class="fa fa-question-circle" title="Informar o que a Lotação é."></i>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
