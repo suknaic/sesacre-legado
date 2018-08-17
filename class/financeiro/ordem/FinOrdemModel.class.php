@@ -590,8 +590,11 @@ class FinOrdemModel {
             $daoFinOrdem->setIdPedido($this->id_pedido);
             $daoFinOrdem->ordemGdof($pdo);
             $options = '<option value="0" selected="true">Selecione uma ordem</option>';
-            foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
-                $options .= '<option value="' . $campos["id_ordem"] . '">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
+            
+            if (!$daoFinOrdem->getMsgRetorno() == 'Nenhum registro encontrado') {
+                foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
+                    $options .= '<option value="' . $campos["id_ordem"] . '">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
+                }
             }
             return $options;
         } catch (Exception $exc) {
@@ -617,19 +620,19 @@ class FinOrdemModel {
     public function montaTabelaOrdemGdof($dados) {
         try {
             $tabela = '';
-            foreach ($dados as $key => $valor){
-                $tabela .= '<tr id = "'.$valor["id_ordem"].'" class= "tabOrdem">
-                                <td class="text-center">'.$valor["nr_ordem"].'</td>
-                                <td class="text-center">'.$valor["tipo_ordem"].'</td>
-                                <td class="text-center">'.$valor["valorOrdem"].'</td>
+            foreach ($dados as $key => $valor) {
+                $tabela .= '<tr id = "' . $valor["id_ordem"] . '" class= "tabOrdem">
+                                <td class="text-center">' . $valor["nr_ordem"] . '</td>
+                                <td class="text-center">' . $valor["tipo_ordem"] . '</td>
+                                <td class="text-center">' . $valor["valorOrdem"] . '</td>
                                 <td class="text-center">
-                                <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "'.$valor["id_ordem"].'">
+                                <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "' . $valor["id_ordem"] . '">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                                 </td>    
                             </tr>';
             }
-             return $tabela;
+            return $tabela;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

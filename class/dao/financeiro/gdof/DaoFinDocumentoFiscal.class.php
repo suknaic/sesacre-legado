@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_documento_situacao, id_tipo_documento) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idDocumentoSituacao, :idTipoDocumento)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -37,7 +37,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":flGrp", $this->getFlGrp(), PDO::PARAM_INT);
             $stmt->bindValue(":nrGrp", $this->getNrGrpNumero(), PDO::PARAM_INT);
             $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
-            $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
@@ -86,7 +85,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     on pf.id_pessoa = p.id_pessoa
                     left join ses_pessoa_juridica as pj
                     on pj.id_pessoa = p.id_pessoa
-                    where doc.id_documento_fiscal  = :documento";
+                    where doc.id_documento_fiscal = :documento";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();

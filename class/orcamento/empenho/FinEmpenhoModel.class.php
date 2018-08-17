@@ -389,7 +389,7 @@ class FinEmpenhoModel {
                         }
                     } else {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro4", "alert", "Não existe saldo no QDD para esse empenho");
+                        return Metodos::retornoAjax("Erro", "alert", "Não existe saldo no QDD para esse empenho");
                     }
                 } else {
                     $pdo->rollBack();
@@ -424,7 +424,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->retornaEmpenhoGdof($pdo);
-            
+
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
 
@@ -468,6 +468,52 @@ class FinEmpenhoModel {
                 return $dadosEmpenho;
             }
             return $dadosEmpenho;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function trEmpenhoBuscaLiquidacao() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinEmpenho = new DaoFinEmpenho();
+        $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        $retorno = '';
+        if ($daoFinEmpenho->sucesso()) {
+            foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
+                $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
+                <td>' . $linha["pedido"] . '</td>
+                <td>' . $linha["ds_pedido"] . '</td>
+                <td>' . $linha["nm_tipo_gasto"] . '</td>    
+                <td>' . $linha["nr_fonte"] . '</td>
+                <td>' . $linha["ds_despesa_elemento"] . '</td>
+                <td>' . Metodos::ConverteValorBr($linha["vl_pedido"], 4) . '</td>
+                <td>' . $linha["tp_contrato"] . '</td>
+                <td>' . $linha["contrato"] . '</td>    
+                <td>' . $linha["nm_modalidade"] . '</td>
+                <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
+                <td>' . $linha["nr_empenho"] . '</td>
+                </tr>';
+            }
+        }
+    }
+
+    /**
+     * Retorna os dados do empenho 
+     */
+    public function retornaDadosEmpenho($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                return $daoFinEmpenho->getMsgRetorno();
+            }
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

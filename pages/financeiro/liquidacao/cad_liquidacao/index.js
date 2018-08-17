@@ -15,14 +15,16 @@ $(document).ready(function () {
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaPedido",
+                "acao": "retornaEmpenho",
                 "dados": dados
 
             },
             "success": function (response) {
+                console.log(response);
+                return false;
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
             }
         });
@@ -42,7 +44,7 @@ $(document).ready(function () {
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaContratosGdof",
+                "acao": "retornaContratosLiquidacao",
                 "dados": dados
 
             },
