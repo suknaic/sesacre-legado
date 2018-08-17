@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/ver_documento/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/edit_documento/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -45,22 +45,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                 <!--===================================================-->
                 <div id="content-container">
                     <!--Page Title-->
-                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Detalhes do Documento Fiscal</h1> 
+                        <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
                     </div>
-                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--End page title-->
-                    <ol class="breadcrumb">
-                        <li><a href="#">Voltar</a></li>                        
-                    </ol>
-
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form data-toggle="valisenha123
-                              dator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
+                        <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
+                            <input type="hidden" class="idPedido" id="idPedido" value="<?php echo $id;?>" />
                             <div class="panel">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Informações do documento fiscal</h3>
+                                </div>
+
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -96,6 +93,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº ordem:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectOrdem" id="selectOrdem">
+                                                                        <option value="0" selected="true">Selecione uma ordem</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addOrdens btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
@@ -113,10 +123,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th>Nº da Ordem</th>
                                                                             <th>Tipo ordem</th>
                                                                             <th>Valor da Ordem</th>
+                                                                            <th>Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php echo $finDocumentoFiscal->retornaTabelaOrdemGdof(null, false); ?>
+                                                                        <?php echo $finDocumentoFiscal->retornaTabelaOrdemGdof(null, true); ?>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
@@ -139,6 +150,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectEntrega" id="selectEntrega">
+                                                                        <option value="0" selected="true">Selecione uma entrega</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addEntrega btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <div class="col-sm-12">
                                                                 <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
@@ -151,10 +175,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Entregue Dia</th>
                                                                             <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdof(null, false); ?>
+                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdof(null, true); ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -182,7 +207,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="processoAdm" id="processoAdm" 
-                                                                           value="<?php echo $documento["nr_processo_administrativo"]; ?>" disabled="true"/>
+                                                                           value="<?php echo $documento["nr_processo_administrativo"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -210,7 +235,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="nr_documento" id="nr_documento" 
-                                                                           value="<?php echo $documento["nr_documento_fiscal"]; ?>" disabled="true"/>
+                                                                           value="<?php echo $documento["nr_documento_fiscal"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -221,7 +246,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="tpDocumento" id="tpDocumento" disabled="true">
+                                                                    <select class="form-control select" name="tpDocumento" id="tpDocumento">
                                                                         <?php echo FinTipoDocumento::retornaOptionsTipoDocumento($documento["id_tipo_documento"]); ?>
                                                                     </select>
                                                                 </div>
@@ -235,7 +260,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="competencia" id="competencia" 
-                                                                           value="<?php echo $documento["mm_competencia"] . '/' . $documento["aa_competencia"]; ?>" disabled="true"/>
+                                                                           value="<?php echo $documento["mm_competencia"] . '/' . $documento["aa_competencia"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -247,7 +272,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="emissao" id="emissao" 
-                                                                           value="<?php echo Metodos::ConverteDataBR($documento["dt_emissao"]); ?>" disabled="true"/>
+                                                                           value="<?php echo Metodos::ConverteDataBR($documento["dt_emissao"]); ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -259,7 +284,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="atesto" id="atesto" 
-                                                                           value="<?php echo Metodos::ConverteDataBR($documento["dt_atesto"]); ?>" disabled="true"/>
+                                                                           value="<?php echo Metodos::ConverteDataBR($documento["dt_atesto"]); ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -270,7 +295,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="valorDocumentoFiscal" id="valorDocumentoFiscal" 
+                                                                    <input type="text" class="form-control" name="valorDocumentoFiscal" id="valorDocumentoFiscal"
                                                                            value="<?php echo Metodos::ConverteValorBr($documento["vl_documento"], 4); ?>" disabled="true"/>
                                                                 </div>
                                                             </div>
@@ -291,50 +316,39 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     <div class="panel-heading" role="tab">
                                                         <h4 class="panel-title">Lançado no GRP</h4>
                                                     </div>
-
-                                                    <?php if ($documento["fl_grp"] == " ") { ?>
-
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2">
-                                                                    <label><input type="radio" id="grp_sim" value="1" name="grp_cod" disabled="true">Sim</label>
-                                                                    <label><input type="radio" id="grp_nao" value="0" name="grp_cod" checked="checked" disabled="true">Não</label>
-                                                                </div>
-
-                                                                <div class="col-sm-3 divNumeroGrp hidden">
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                        <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
-                                                                               value="<?php echo $documento["nr_grp_numero"]; ?>" disabled="true"/>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7"></div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2">
+                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked="checked">Sim</label>
+                                                                <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
                                                             </div>
-                                                        </div>
-                                                    <?php } else { ?>
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2">
-                                                                    <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked="checked" disabled="true">Sim</label>
-                                                                    <label><input type="radio" id="grp_nao" value="0" name="grp_cod" disabled="true">Não</label>
-                                                                </div>
 
-                                                                <div class="col-sm-3 divNumeroGrp">
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                        <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
-                                                                               value="<?php echo $documento["nr_grp_numero"]; ?>" disabled="true"/>
-                                                                    </div>
+                                                            <div class="col-sm-3 divNumeroGrp">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
+                                                                           value="<?php echo $documento["nr_grp_numero"]; ?>"/>
                                                                 </div>
-                                                                <div class="col-sm-7"></div>
                                                             </div>
+                                                            <div class="col-sm-7"></div>
                                                         </div>
-                                                    <?php } ?>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body">
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </form>
                     </div>
@@ -385,6 +399,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/financeiro/gdof/unidade/cad_gdof/index.js"></script>
+        <script src="/pages/financeiro/gdof/documentoFiscal/edit_documento/index.js"></script>
     </body>
 </html>
