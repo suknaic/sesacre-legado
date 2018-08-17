@@ -257,18 +257,22 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
-    public function retornaDocumentosFiscais(PDO $pdo) {
+    public function retornaTrDocumentosFiscais(PDO $pdo, string $filtroSql = "") {
         try {
             $sql = "select
-                        doc.id_documento_fiscal,
+                        doc.nr_documento_fiscal,
                         pedido.nr_pedido,
+                        contrato.nr_contrato,
                         emp.nr_empenho,
+                        protoc.id_protocolo,
                         tpDoc.nm_tipo_documento,
-                        doc.vl_documento,
                         (
-                           trim(to_char(doc.mm_competencia, '09')) || '/' || doc.aa_competencia
+                           trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
                         )
-                        as competencia 
+                        as competencia,
+                        doc.vl_documento,
+                        tramit.destinatario,
+                        tramit.nm_situacao 
                      from
                         fin_documento_fiscal as doc 
                         inner join
@@ -287,8 +291,14 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            fin_empenho as emp 
                            on emp.id_pedido = ordem.id_pedido 
                         inner join
+                           fin_protocolo as protoc 
+                           on protoc.id_ordem = ordem.id_ordem 
+                        inner join
                            fin_pedido as pedido 
                            on ordem.id_pedido = pedido.id_pedido 
+                        inner join
+                           pla_tipo_gasto as tipoGasto 
+                           on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
                         inner join
                            fin_tipo_empenho as tpEmp 
                            on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
@@ -297,9 +307,47 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on fornecedor.id_fornecedor = pedido.id_fornecedor 
                         inner join
                            fin_contrato as contrato 
-                           on contrato.id_contrato = fornecedor.id_contrato";
-        } catch (PDOException $ex) {
+                           on contrato.id_contrato = fornecedor.id_contrato 
+                        left join
+                           (
+                              select
+                                 docTramit.id_doc_tramitacao,
+                                 docTramit.id_documento_fiscal,
+                                 docSitTramit.id_documento_situacao,
+                                 docSitTramit.nm_situacao,
+                                 lotDest.id_lotacao,
+                                 lotDest.nm_lotacao as destinatario 
+                              from
+                                 fin_doc_tramitacao as docTramit 
+                                 inner join
+                                    fin_doc_lotacao as docDest 
+                                    on docTramit.id_doc_destino = docDest.id_doc_lotacao 
+                                 inner join
+                                    ses_lotacao as lotDest 
+                                    on lotDest.id_lotacao = docDest.id_lotacao 
+                                 inner join
+                                    fin_doc_tipo_lotacao as tipoLot 
+                                    on tipoLot.id_doc_tipo_lotacao = docDest.id_doc_tipo_lotacao 
+                                 inner join
+                                    fin_documento_situacao as docSitTramit 
+                                    on docSitTramit.id_documento_situacao = docTramit.id_documento_situacao 
+                           )
+                           as tramit 
+                           on tramit.id_doc_tramitacao = doc.id_doc_tramitacao 
+                           and tramit.id_documento_fiscal = tramit.id_documento_fiscal " . $filtroSql;
+            $stmt = $pdo->prepare($sql);
             
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 
@@ -322,4 +370,4 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
-}
+}    

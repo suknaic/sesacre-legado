@@ -13,9 +13,9 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaDocVincTramitacoes':
         try {
             $prog = new DocVincRecebimento();
-            $prog2 = new DocVincEncaminhamento();
+//            $prog2 = new DocVincEncaminhamento();
             echo $prog->listaTodos();
-            echo $prog2->listaTodos();
+//            echo $prog2->listaTodos();
             return;
             break;
         } catch (Error $e) {
@@ -44,15 +44,13 @@ switch ($_REQUEST['acao']) {
             
             if ($filtro['tpTramitacao'] == '1') {
                 $prog = new DocVincEncaminhamento();
-                $prog->setIdDocTipoLotacao($filtro['idTipoLot'])
-                        ->setIdLotacao($filtro['idLotacao'])
+                $prog->setIdDocLotacao($filtro['idDocLotacao'])
                         ->setIdPessoa($filtro['idPessoa']);
             
                 echo $prog->cadastrar();
             } else {
                 $prog = new DocVincRecebimento();
-                $prog->setIdDocTipoLotacao($filtro['idTipoLot'])
-                        ->setIdLotacao($filtro['idLotacao'])
+                $prog->setIdDocLotacao($filtro['idDocLotacao'])
                         ->setIdPessoa($filtro['idPessoa']);
             
                 echo $prog->cadastrar();
