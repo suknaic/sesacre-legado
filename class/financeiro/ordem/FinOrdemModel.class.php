@@ -591,7 +591,7 @@ class FinOrdemModel {
             $daoFinOrdem->ordemGdof($pdo);
             $options = '<option value="0" selected="true">Selecione uma ordem</option>';
             
-            if (!$daoFinOrdem->getMsgRetorno() == 'Nenhum registro encontrado') {
+            if (!($daoFinOrdem->getMsgRetorno() == 'Nenhum registro encontrado')) {
                 foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
                     $options .= '<option value="' . $campos["id_ordem"] . '">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';
                 }
