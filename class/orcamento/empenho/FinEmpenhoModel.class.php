@@ -482,21 +482,16 @@ class FinEmpenhoModel {
         $retorno = '';
         if ($daoFinEmpenho->sucesso()) {
             foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
-                $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
-                <td>' . $linha["pedido"] . '</td>
-                <td>' . $linha["ds_pedido"] . '</td>
-                <td>' . $linha["nm_tipo_gasto"] . '</td>    
-                <td>' . $linha["nr_fonte"] . '</td>
-                <td>' . $linha["ds_despesa_elemento"] . '</td>
-                <td>' . Metodos::ConverteValorBr($linha["vl_pedido"], 4) . '</td>
-                <td>' . $linha["tp_contrato"] . '</td>
-                <td>' . $linha["contrato"] . '</td>    
-                <td>' . $linha["nm_modalidade"] . '</td>
-                <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
-                <td>' . $linha["nr_empenho"] . '</td>
+                $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '"  idEmpenho="' . $dados["id_empenho"] . '" nrPedido="' . $dados["nr_pedido"] . '" 
+                    style="cursor:pointer;">
+                <td>' . $dados["nr_pedido"] . '</td>
+                <td>' . $dados["nr_empenho"] . '</td>
+                <td>' . $dados["dt_empenho_safira"] . '</td>    
+                <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>
                 </tr>';
             }
         }
+        return $retorno;
     }
 
     /**

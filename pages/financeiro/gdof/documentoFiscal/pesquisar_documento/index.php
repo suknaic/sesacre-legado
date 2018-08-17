@@ -60,7 +60,7 @@ require_once "index.load.php";
 
                         <div class="panel">
                             <div class="panel-heading">
-                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/gdof/unidade/cad_gdof/" role="button">
+                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.php" role="button">
                                     <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
                                     Novo Documento Fiscal
                                 </a>

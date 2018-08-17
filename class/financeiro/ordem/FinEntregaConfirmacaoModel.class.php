@@ -497,9 +497,9 @@ class FinEntregaConfirmacaoModel {
                                     <td class="text-center">' . $c["nr_item"] . '</td>
                                     <td class="text-center">' . $c["tp_material"] . '</td>
                                     <td class="text-center">' . $c["nr_lote"] . '</td>
-                                    <td class="text-center">' . $c["qt_itens_entrega"] . '</td>
-                                    <td class="text-center">' . $c["vl_itens_entrega"] . '</td>
-                                    <td class="text-center">' . $c["entregue"] . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($c["qt_itens_entrega"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($c["vl_itens_entrega"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($c["entregue"],4) . '</td>
                                     <td class="text-center">
                                     <button type="button" title="Excluir itens" class="excluir text-danger" value="' . $c["id_entrega_itens"] . '" 
                                      nomeitem ="' . $c["nm_material"] . '" idEntrega = "' . $c["id_entrega_confirmacao"] . '">
@@ -610,52 +610,52 @@ class FinEntregaConfirmacaoModel {
 
     public function retornaTabelaEntregasGdof($idEntregas) {
         try {
-            
+
             if (empty($idEntregas)) {
                 return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
             }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $arrayIdEntregas = array();
-          
+
             foreach ($idEntregas as $linha) {
                 $arrayIdEntregas [] = $linha;
             }
-            
+
             $idEntregas = implode(' , ', $arrayIdEntregas);
-            
+
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->retornaEntregaGdof($pdo, $idEntregas);
             $tabela = '';
-            
-            if($daoFinEntregaConfirmacao->sucesso()){
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
                 $totalEntrega = 0;
-                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos){
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos) {
                     $totalEntrega += $campos["valor"];
-                    $tabela .= '<tr id= "ent'.$campos["id_entrega_confirmacao"].'" ordem = "'.$campos["id_ordem"].'" class = "trEntregas" idEntrega = "'.$campos["id_entrega_confirmacao"].'">
-                                 <td class = "text-center">'.$campos["nr_entrega_confirmacao"].'</td>
-                                 <td class = "text-center">'.$campos["ordem"].'</td>
-                                 <td class = "text-center">'.$campos["dataaviso"].'</td>
-                                 <td class = "text-center">'.$campos["datalimite"].'</td>
-                                 <td class = "text-center">'.$campos["nr_prazo_ordem"].'</td>
-                                 <td class = "text-center">'.$campos["entreguedia"].'</td>
-                                 <td class = "text-center">'. Metodos::ConverteValorBr($campos["valor"],4).'</td>
-                                 <td class = "text-center">'.$campos["situacao"].'</td>
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
+                                 <td class = "text-center">' . $campos["ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["dataaviso"] . '</td>
+                                 <td class = "text-center">' . $campos["datalimite"] . '</td>
+                                 <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["entreguedia"] . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">' . $campos["situacao"] . '</td>
                                  <td class = "text-center">
-                                 <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="'.$campos["id_entrega_confirmacao"].'">
+                                 <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                                 </td>
                                 </tr>';
                 }
-                $totalEntrega = Metodos::ConverteValorBr($totalEntrega ,4);
+                $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
                 $tabela .= '<tr>
                                 <td class="text-right" colspan="6">Total</td>
-                                <td class="text-center valorEntregaTotal" valor= "'.$totalEntrega.'" >'.$totalEntrega.'</td>
+                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" >' . $totalEntrega . '</td>
                                 <td class="text-right" colspan="2"></td>
                             </tr>';
             }
-           
+
             return $tabela;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

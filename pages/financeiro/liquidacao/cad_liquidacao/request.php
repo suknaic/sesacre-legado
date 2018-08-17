@@ -18,7 +18,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
-            $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
+            echo $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
             return;
             break;
         } catch (Error $e) {
@@ -31,9 +31,6 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaContratosLiquidacao':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $finEmpenhoModel = new FinEmpenhoModel();
-            $finEmpenhoModel->setIdPedido($dados["id_empenho"]);
-            var_dump($finEmpenhoModel->retornaDadosEmpenho(null));
             $finContratoModel = new FinContratoModel();
             echo $finContratoModel->retornaContratoGdof(null, $dados["nr_pedido"]);
             return;

@@ -23,8 +23,6 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response);
-                return false;
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
             }
         });
@@ -33,7 +31,7 @@ $(document).ready(function () {
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
         var dados = {
-            "nr_pedido": $("#codItemPesquisa").val(),
+            "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
             "id_pedido": $("body").find(".selecionaItem").attr("pedido")
         }
 
@@ -41,7 +39,7 @@ $(document).ready(function () {
          * retornaContratosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaContratosLiquidacao",
@@ -49,6 +47,7 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
+                console.log(response);
                 $(".contratos").html("");
                 $(".contratos").append(response);
             }
@@ -57,7 +56,7 @@ $(document).ready(function () {
          * retornaDadosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaPedidoGdof",
@@ -73,7 +72,7 @@ $(document).ready(function () {
          * retornaDadosEmpenho
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaEmpenhoGdof",
@@ -89,7 +88,7 @@ $(document).ready(function () {
          * retornaDadosOrdem
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOrdemGdof",
@@ -106,7 +105,7 @@ $(document).ready(function () {
     $("body").on("change", "#selectOrdem", function (e) {
         var idOrdem = $("body").find("#selectOrdem").val();
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTipoValorOrdem",
@@ -144,7 +143,7 @@ $(document).ready(function () {
 
         $.ajax({
             "method": "POST",
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaOrdem",
@@ -162,7 +161,7 @@ $(document).ready(function () {
     //retorna options entrega
     function retornaOptionsDaEntrega(infTabOrdem) {
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
@@ -217,7 +216,7 @@ $(document).ready(function () {
     function atualizaTabelaEntrega(infTabEntrega) {
 
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaEntrega",

@@ -322,7 +322,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
-                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
