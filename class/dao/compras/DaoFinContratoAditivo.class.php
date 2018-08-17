@@ -217,7 +217,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
     public function todosItensComExecutado($pdo = null) {
         if ($pdo != null) {
             try {
-                $sql = "SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
+                $sql = "SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens, CI.vl_itens AS qt_itens_aux"
                         . " , CI.id_cont_itens_aditivo"
                         . " , NULL AS id_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS id_contrato_instrumento, NULL AS id_contrato_base_calculo"
@@ -235,7 +235,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " AND C.tp_contrato = '2' AND C.st_ativo = '1'"
                         . " GROUP BY C.id_contrato, CI.id_cont_itens"
                         . " UNION ALL"
-                        . " SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
+                        . " SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens, CI.qt_itens_aux"
                         . " , CI.id_cont_itens_aditivo"
                         . " , CA.id_contrato_motivo, CA.id_contrato_finalidade, CA.id_contrato_instrumento, CA.id_contrato_base_calculo"
                         . " , CA.id_contrato_unidade_calculo, CA.id_contrato_aquisicao"
@@ -413,7 +413,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
         if ($pdo != null){
             try{
                 $sql = "SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
-                        . " , CI.id_cont_itens_aditivo"
+                        . " , CI.qt_itens_aux, CI.id_cont_itens_aditivo"
                         . " , NULL AS nm_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS id_contrato_unidade_calculo"
                         . " , NULL AS nr_percentual_indice, 'contrato' AS tipo"
@@ -430,7 +430,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
                         . " AND C.tp_contrato = '2' AND C.st_ativo = '1'"
                         . " UNION ALL"
                         . " SELECT C.id_contrato, C.nr_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
-                        . " , CI.id_cont_itens_aditivo"
+                        . " , CI.qt_itens_aux, CI.id_cont_itens_aditivo"
                         . " , CM.nm_contrato_motivo, CA.id_contrato_finalidade"
                         . " , CA.id_contrato_unidade_calculo"
                         . " , CA.nr_percentual_indice, 'aditivo_valor' AS tipo"
