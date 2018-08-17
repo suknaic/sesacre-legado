@@ -19,6 +19,7 @@ class FinItensTb {
     private $idUnidadeMedida = null;
     private $flValorVariavel = null;
     private $idContItensAditivo = null;
+    private $qtItensAux = null;
 
     function getIdContItens() {
         return $this->idContItens;
@@ -148,8 +149,15 @@ class FinItensTb {
         $this->idContItensAditivo = $idContItensAditivo;
         return $this;
     }
+    
+    function getQtItensAux() {
+        return $this->qtItensAux;
+    }
 
-
+    function setQtItensAux($qtItensAux) {
+        $this->qtItensAux = $qtItensAux;
+        return $this;
+    }
 
 
 

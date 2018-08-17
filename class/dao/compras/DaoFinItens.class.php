@@ -756,7 +756,7 @@ class DaoFinItens extends FinItensTb {
                     . " , ITEM.pc_desconto, ITEM.nr_item, ITEM.nm_marca, ITEM.nm_modelo"
                     . " , ITEM.fl_valor_variavel, ITEM.ds_itens"
                     . " , ITEM.id_material, ITEM.id_cont_itens_alt, ITEM.id_cont_itens_aditivo"
-                    . " , ITEM.id_unidade_medida"
+                    . " , ITEM.qt_itens_aux, ITEM.id_unidade_medida"
                     . " , MAT.nm_material, MAT.nm_desc_material, MAT.nm_grupo, MAT.nm_sub_grupo"
                     . " , MAT.cd_elemento_despesa, MAT.tp_material"
                     . " , UNID.nm_unidade_medida, MAT.cd_desc_material"
@@ -787,10 +787,10 @@ class DaoFinItens extends FinItensTb {
             try {
                 $sql = "INSERT INTO fin_cont_itens (nr_item, nr_lote, nm_marca, nm_modelo, qt_itens, vl_itens, pc_desconto"
                         . " , fl_valor_variavel, ds_itens, id_material, id_fornecedor, id_cont_itens_alt, id_unidade_medida"
-                        . " , id_cont_itens_aditivo)"
+                        . " , id_cont_itens_aditivo, qt_itens_aux)"
                         . " VALUES (:nrItem, :lote, :marca, :modelo, :qtd, :vl, :desconto"
                         . " , :flValorVariavel, :dsItem"
-                        . " , :material, :fornecedor, :fornecedor_alt, :unidadeMedida, :idContItensAditivo)";                    
+                        . " , :material, :fornecedor, :fornecedor_alt, :unidadeMedida, :idContItensAditivo, :qtItensAux)";                    
                 
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nrItem", $this->getNrItem(), PDO::PARAM_INT);
@@ -807,6 +807,7 @@ class DaoFinItens extends FinItensTb {
                 $stmt->bindValue(":fornecedor_alt", $this->getIdContItensAlt(), PDO::PARAM_INT);
                 $stmt->bindValue(":unidadeMedida", $this->getIdUnidadeMedida(), PDO::PARAM_INT);
                 $stmt->bindValue(":idContItensAditivo", $this->getIdContItensAditivo(), PDO::PARAM_INT);
+                $stmt->bindValue(":qtItensAux", $this->getQtItensAux(), PDO::PARAM_STR);
                 $stmt->execute();
                 $this->sucesso = true;
                 $this->msgRetorno = '';
@@ -833,7 +834,7 @@ class DaoFinItens extends FinItensTb {
                     . " , ITEM.pc_desconto, ITEM.fl_valor_variavel"
                     . " , ITEM.ds_itens, ITEM.id_material"
                     . " , ITEM.id_fornecedor, ITEM.id_cont_itens_alt"
-                    . " , ITEM.id_cont_itens_aditivo, ITEM.id_unidade_medida"                                            
+                    . " , ITEM.id_cont_itens_aditivo, ITEM.id_unidade_medida, ITEM.qt_itens_aux"                                            
                     . " FROM fin_cont_itens AS ITEM"                    
                     . " WHERE ITEM.id_fornecedor = :fornecedor";
                     
@@ -879,7 +880,7 @@ class DaoFinItens extends FinItensTb {
     public function quantidadeItensExecutado(string $itens, PDO $pdo = null){
         if (!empty($pdo)){
             try {
-                $sql = "SELECT CI.id_cont_itens, CI.qt_itens, CI.vl_itens"
+                $sql = "SELECT CI.id_cont_itens, CI.qt_itens, CI.vl_itens, CI.qt_itens_aux"
                         . " , COALESCE(sum(FPO.qt_itens_pre), 0) as qtd_quantitativo"
                         . " , (CI.qt_itens - COALESCE(sum(FPO.qt_itens_pre), 0)) as saldo_quantitativo"
                         . " FROM fin_cont_itens CI"

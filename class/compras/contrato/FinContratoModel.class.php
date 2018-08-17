@@ -1697,6 +1697,7 @@ class FinContratoModel {
                     $item->setIdContItensAlt($result['id_cont_itens_alt']);
                     $item->setIdUnidadeMedida($result['id_unidade_medida']);    
                     $item->setIdContItensAditivo($result['id_cont_itens_aditivo']);                    
+                    $item->setQtItensAux($result['qt_itens_aux']);
                     
                     $cont->setItems($item);
                 }
@@ -1792,7 +1793,7 @@ class FinContratoModel {
 
             //primeiro result é para verificar ser o contrato foi armazenado no banco de daods
             $daoContrato->insertContratoParaAditivo($pdo);
-            if (!$daoContrato->sucesso()) {
+            if (!$daoContrato->sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $daoContrato->getMsgRetorno();
                 $pdo->rollBack();
@@ -1868,15 +1869,15 @@ class FinContratoModel {
 
 
             //cadastrar gestor titular
-            if (!empty($gestorTitular)) {
+            if (!empty($gestorTitular)){
                 $finGestor = new FinGestorModel();
                 $finGestor->setIdContrato($daoContrato->getIdContrato());
                 $finGestor->setTpGestor(1);
                 $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());
-                foreach ($gestorTitular as $valor) {
+                foreach ($gestorTitular as $valor){
                     $finGestor->setIdPessoa($valor);
                     $finGestor->cadastraGestorAditivo($pdo);
-                    if (!$finGestor->sucesso()) {
+                    if (!$finGestor->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $finGestor->getMsgRetorno();
                         $pdo->rollBack();
@@ -1886,16 +1887,16 @@ class FinContratoModel {
             }
 
             //cadastrar gestor substituto
-            if (!empty($gestorSubstituto)) {
+            if (!empty($gestorSubstituto)){
                 $finGestor = new FinGestorModel();
                 $finGestor->setIdContrato($daoContrato->getIdContrato());
                 $finGestor->setTpGestor(2);
                 $finGestor->setDtIniGestor($daoContrato->getDtIniVigenciaContrato());
-                foreach ($gestorSubstituto as $valor) {
+                foreach ($gestorSubstituto as $valor){
                     $finGestor->setIdPessoa($valor);
 
                     $finGestor->cadastraGestorAditivo($pdo);
-                    if (!$finGestor->sucesso()) {
+                    if (!$finGestor->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $finGestor->getMsgRetorno();
                         $pdo->rollBack();
@@ -1905,15 +1906,15 @@ class FinContratoModel {
             }
 
             //cadastrar fiscal
-            if (!empty($fiscal)) {
+            if (!empty($fiscal)){
                 $finFiscaisModel = new FinFiscaisModel();
                 $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                 $finFiscaisModel->setDtIniFiscal($daoContrato->getDtIniVigenciaContrato());
                 $finFiscaisModel->setTpFiscal(1);
-                foreach ($fiscal as $valor) {
+                foreach ($fiscal as $valor){
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->cadastraFiscalAditivo($pdo);
-                    if (!$finFiscaisModel->sucesso()) {
+                    if (!$finFiscaisModel->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $finFiscaisModel->getMsgRetorno();
                         $pdo->rollBack();
@@ -1923,15 +1924,15 @@ class FinContratoModel {
             }
 
             //cadastrar fiscal substituto
-            if (!empty($fiscalSubstituto)) {
+            if (!empty($fiscalSubstituto)){
                 $finFiscaisModel = new FinFiscaisModel();
                 $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                 $finFiscaisModel->setDtIniFiscal($daoContrato->getDtIniVigenciaContrato());
                 $finFiscaisModel->setTpFiscal(2);
-                foreach ($fiscalSubstituto as $valor) {
+                foreach ($fiscalSubstituto as $valor){
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->cadastraFiscalAditivo($pdo);
-                    if (!$finFiscaisModel->sucesso()) {
+                    if (!$finFiscaisModel->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $finFiscaisModel->getMsgRetorno();
                         $pdo->rollBack();
@@ -1942,7 +1943,7 @@ class FinContratoModel {
 
 
             //cadastrar Subfiscal
-            if (!empty($subFiscal)) {
+            if (!empty($subFiscal)){
                 $subFiscalModel = new SubFiscalModel();
                 $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                 $subFiscalModel->setDtIniSubFiscal($daoContrato->getDtIniVigenciaContrato());
@@ -1950,7 +1951,7 @@ class FinContratoModel {
                 foreach ($subFiscal as $valor) {
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->cadastraSubFiscalAditivo($pdo);
-                    if (!$subFiscalModel->sucesso()) {
+                    if (!$subFiscalModel->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $subFiscalModel->getMsgRetorno();
                         $pdo->rollBack();
@@ -1960,15 +1961,15 @@ class FinContratoModel {
             }
 
             //cadastrar Subfiscal substituto
-            if (!empty($subFiscalSubstituto)) {
+            if (!empty($subFiscalSubstituto)){
                 $subFiscalModel = new SubFiscalModel();
                 $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                 $subFiscalModel->setDtIniSubFiscal($daoContrato->getDtIniVigenciaContrato());
                 $subFiscalModel->setTpSubFiscal(2);
-                foreach ($subFiscalSubstituto as $valor) {
+                foreach ($subFiscalSubstituto as $valor){
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->cadastraSubFiscalAditivo($pdo);
-                    if (!$subFiscalModel->sucesso()) {
+                    if (!$subFiscalModel->sucesso()){
                         $this->sucesso = false;
                         $this->msgRetorno = $subFiscalModel->getMsgRetorno();
                         $pdo->rollBack();
