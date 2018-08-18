@@ -41,7 +41,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaPedidoGdof':
+    CASE 'retornaPedidoLiquidacao':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
@@ -55,7 +55,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaEmpenhoGdof':
+    CASE 'retornaEmpenhoLiquidacao':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
@@ -63,32 +63,6 @@ switch ($_REQUEST['acao']) {
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
             echo $finEmpenhoModel->retornaEmpenhoGdof(null);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-
-
-    CASE 'cadastrarDocumentoFiscal':
-        try {
-            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-            $finDocumentoFiscal = new FinDocumentoFiscal();
-            $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
-            $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
-            $finDocumentoFiscal->setIdTipoDocumento($dados["tpDocumento"]);
-            $finDocumentoFiscal->setCompetencia($dados["competencia"]);
-            $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
-            $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
-            $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
-            $finDocumentoFiscal->setFlGrp($dados["grp"]);
-            $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
-            $finDocumentoFiscal->setEntrega($entrega);
-            echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;
             break;
         } catch (Error $e) {

@@ -53,7 +53,7 @@ class DocVincRecebimento {
                                    ->setIdPessoa($this->getIdPessoa());
             
             //verifica se já existe o registro, o banco já possui a constraint, para informar o usuário
-            $daoFinDocVincRecebimento->select($pdo);
+            $daoFinDocVincRecebimento->select($pdo, 2);
             
 
             if ($daoFinDocVincRecebimento->getSucesso()) {

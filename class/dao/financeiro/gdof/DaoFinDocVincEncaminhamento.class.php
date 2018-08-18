@@ -51,7 +51,7 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
         }
     }
     
-    function select(PDO $pdo = null){
+    function select(PDO $pdo = null, $idTipoTramitacao = 0){
         try {
             if (!empty($pdo)) {
                 //Filtro para indicar se é '1 - Encaminhar' ou '2 - Receber'.
@@ -117,7 +117,7 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
                 $stmt = $pdo->prepare($sql);
                 
                 if ($idTipoTramitacao > 0) { //Indica se é '1 - Encaminhar' ou '2 - Receber'
-                    $stmt->bindValue(":id_tipo_tramitacao",$idTramitacao,PDO::PARAM_INT);
+                    $stmt->bindValue(":id_tipo_tramitacao",$idTipoTramitacao,PDO::PARAM_INT);
                 }
                 
                 if($this->getIdDocVincEncaminhamento()){
