@@ -2,12 +2,11 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/financeiro/gdof/FinDocVincRecebimento.class.php";
 
-
 class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
 
     private $sucesso = false;
     private $msgRetorno = null;
-    
+
     function getSucesso() {
         return $this->sucesso;
     }
@@ -16,14 +15,14 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
         return $this->msgRetorno;
     }
 
-    function insert(PDO $pdo = null){
+    function insert(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "insert into fin_doc_vinc_recebimento (id_pessoa, id_doc_lotacao) values (:id_pessoa,:id_doc_lotacao)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_pessoa', $this->getIdPessoa(), PDO::PARAM_INT);
                 $stmt->bindValue(':id_doc_lotacao', $this->getIdDocLotacao(), PDO::PARAM_INT);
-                
+
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -34,13 +33,13 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function delete(PDO $pdo = null){
+
+    function delete(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "delete from fin_doc_vinc_recebimento where id_doc_vinc_recebimento = :id_doc_vinc_recebimento";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":id_doc_vinc_recebimento",$this->getIdDocVincRecebimento(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_vinc_recebimento", $this->getIdDocVincRecebimento(), PDO::PARAM_INT);
                 $this->sucesso = $stmt->execute();
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -50,19 +49,19 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function select(PDO $pdo = null, int $idTipoTramitacao = 0){
+
+    function select(PDO $pdo = null, int $idTipoTramitacao = 0) {
         try {
             if (!empty($pdo)) {
-                
+
                 //Filtro para indicar se é '1 - Encaminhar' ou '2 - Receber'.
                 //Como o resultado da consulta é referente ao union de 2 tabelas(fin_doc_vinc_encaminhamento e fin_doc_vinc_recebimento)
                 //foi adicionado esse filtro que é passado por parametro
                 $filtroTipo = "";
-                if($idTipoTramitacao > 0) {
+                if ($idTipoTramitacao > 0) {
                     $filtroTipo = " where id_tipo_tramitacao = :id_tipo_tramitacao ";
                 }
-                
+
                 $sql = "with encaminhamento_recebimento as 
                         (
                            select
@@ -116,15 +115,15 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
                         from
                            encaminhamento_recebimento " . $this->filtroSql($filtroTipo) . " order by nm_lotacao,nm_pessoa,ds_tramitacao";
                 $stmt = $pdo->prepare($sql);
-                
+
                 if ($idTipoTramitacao > 0) { //Indica se é '1 - Encaminhar' ou '2 - Receber'
-                    $stmt->bindValue(":id_tipo_tramitacao",$idTipoTramitacao,PDO::PARAM_INT);
+                    $stmt->bindValue(":id_tipo_tramitacao", $idTipoTramitacao, PDO::PARAM_INT);
                 }
-                
-                if($this->getIdDocVincRecebimento()){
+
+                if ($this->getIdDocVincRecebimento()) {
                     $stmt->bindValue(":id_tramitacao", $this->getIdDocVincRecebimento(), PDO::PARAM_INT);
                 }
-                
+
                 if ($this->getIdDocLotacao()) {
                     $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
                 }
@@ -132,41 +131,69 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
                 if ($this->getIdPessoa()) {
                     $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
                 }
-                
+
                 $stmt->execute();
-                
+
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
-                
             } else {
-                 $this->msgRetorno = 'Sem conexão com o banco de dados';
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function filtroSql(string $filtro = ""){
-        
+
+    function filtroSql(string $filtro = "") {
+
         if ($this->getIdDocVincRecebimento()) {
             $filtro .= empty($filtro) ? " where id_tramitacao = :id_tramitacao " : " and id_tramitacao = :id_tramitacao ";
         }
-        
+
         if ($this->getIdDocLotacao()) {
             $filtro .= empty($filtro) ? " where id_doc_lotacao = :id_doc_lotacao " : " and id_doc_lotacao = :id_doc_lotacao ";
         }
-        
+
         if ($this->getIdPessoa()) {
             $filtro .= empty($filtro) ? " where id_pessoa = :id_pessoa " : " and id_pessoa = :id_pessoa ";
         }
 
-        
+
         return $filtro;
     }
-}
 
+    public function retornaLotacaoTipoRecibementoPorUsuario(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select  docLotacao.id_doc_lotacao, lotacao.nm_lotacao, docTipo.nm_doc_tipo_lotacao
+                        from fin_doc_vinc_recebimento as recebimento
+                        inner join fin_doc_lotacao as docLotacao
+                        on docLotacao.id_doc_lotacao = recebimento.id_doc_lotacao
+                        inner join ses_lotacao as lotacao 
+                        on lotacao.id_lotacao = docLotacao.id_lotacao
+                        inner join fin_doc_tipo_lotacao as docTipo
+                        on docTipo.id_doc_tipo_lotacao = docLotacao.id_doc_tipo_lotacao
+                        where recebimento.id_pessoa = :usuario";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":usuario", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->execute();
+
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+}

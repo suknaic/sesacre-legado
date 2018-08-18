@@ -7,33 +7,31 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
     private $sucesso = false;
     private $msgRetorno = null;
 
-    public function getSucesso()
-    {
+    public function getSucesso() {
         return $this->sucesso;
     }
 
-    public function getMsgRetorno()
-    {
+    public function getMsgRetorno() {
         return $this->msgRetorno;
     }
 
-    function insert(PDO $pdo = null){
+    function insert(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "insert into
-                            fin_doc_tramitacao (id_documento_fiscal, id_pessoa, id_lotacao_origem, id_lotacao_destino, id_documento_situacao, ds_doc_tramitacao) 
+                            fin_doc_tramitacao (id_documento_fiscal, id_pessoa, id_doc_origem, id_doc_destino, id_documento_situacao, ds_doc_tramitacao, id_tipo_tramitacao) 
                         values
                             (
-                                :id_documento_fiscal, :id_pessoa, :id_lotacao_origem, :id_lotacao_destino, :id_documento_situacao, :ds_doc_tramitacao
+                                :id_documento_fiscal, :id_pessoa, :id_lotacao_origem, :id_lotacao_destino, :id_documento_situacao, :ds_doc_tramitacao, :tp_tramitacao
                             )";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_documento_fiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
                 $stmt->bindValue(':id_pessoa', $this->getIdPessoa(), PDO::PARAM_INT);
-                $stmt->bindValue(':id_lotacao_origem', $this->getIdLotacaoOrigem(), PDO::PARAM_INT);
-                $stmt->bindValue(':id_lotacao_destino', $this->getIdLotacaoDestino(), PDO::PARAM_INT);
+                $stmt->bindValue(':id_lotacao_origem', $this->getIdDocOrigem(), PDO::PARAM_INT);
+                $stmt->bindValue(':id_lotacao_destino', $this->getIdDocDestino(), PDO::PARAM_INT);
                 $stmt->bindValue(':id_documento_situacao', $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(':ds_doc_tramitacao', $this->getDsDocTramitacao(), PDO::PARAM_STR);
-                
+                $stmt->bindValue(':tp_tramitacao', $this->getIdTipoTramitacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -45,12 +43,12 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
         }
     }
 
-    function select(PDO $pdo = null){
+    function select(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "select * from fin_doc_tramitacao " . $this->filtroSql();
                 $stmt = $pdo->prepare($sql);
-                
+
                 if ($this->getIdDocumentoFiscal()) {
                     $stmt->bindValue(':id_documento_fiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
                 }
@@ -66,9 +64,9 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
                 if ($this->getIdDocumentoSituacao()) {
                     $stmt->bindValue(':id_documento_situacao', $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
                 }
-                
+
                 $stmt->execute();
-                
+
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
@@ -84,9 +82,9 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
         }
     }
 
-    private function filtroSql(){
+    private function filtroSql() {
         $filtro = "";
-        
+
         if ($this->getIdDocumentoFiscal) {
             $filtro .= empty($filtro) ? " where id_documento_fiscal = :id_documento_fiscal " : " and id_documento_fiscal = :id_documento_fiscal ";
         }
@@ -109,4 +107,19 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
 
         return $filtro;
     }
+
+    public function atualizaIdDocTramitacaoDocumento(PDO $pdo) {
+        try {
+            $sql = "update fin_documento_fiscal set id_doc_tramitacao = :tramitacao where id_documento_fiscal = :documento";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":tramitacao", $this->getIdDocTramitacao(), PDO::PARAM_INT);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            $this->sucesso = true;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
 }

@@ -21,6 +21,8 @@ class FinDocumentoFiscal {
     private $id_documento_situacao = null;
     private $id_tipo_documento = null;
     private $entrega = null;
+    private $id_pessoa = null;
+    private $id_doc_tramitacao = null;
 
     /**
      * @return mixed
@@ -328,6 +330,42 @@ class FinDocumentoFiscal {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIdPessoa() {
+        return $this->id_pessoa;
+    }
+
+    /**
+     * @param mixed $id_pessoa
+     *
+     * @return self
+     */
+    public function setIdPessoa($id_pessoa) {
+        $this->id_pessoa = $id_pessoa;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdDocTramitacao() {
+        return $this->id_doc_tramitacao;
+    }
+
+    /**
+     * @param mixed $id_doc_tramitacao
+     *
+     * @return self
+     */
+    public function setIdDocTramitacao($id_doc_tramitacao) {
+        $this->id_doc_tramitacao = $id_doc_tramitacao;
+
+        return $this;
+    }
+
     public function salvaDocumentoFiscal() {
         try {
             if (empty($this->nr_processo_administrativo) && empty($this->nr_documento_fiscal) && empty($this->id_tipo_documento) && empty($this->dt_atesto) &&
@@ -350,8 +388,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
             $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
             $daoFinDocumentoFiscal->setFlEncontroContas(0);
-            $daoFinDocumentoFiscal->setIdLotacao(1);
-            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1);
+            $daoFinDocumentoFiscal->setIdLotacao($this->id_lotacao);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
@@ -376,6 +413,25 @@ class FinDocumentoFiscal {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
                 }
+            }
+
+            //codigo abaixo cadastra a tramitacao  "Aguardando Tramitação" e a situacao "Cadastrado" do documento fiscal
+            $docTramitacao = new DocTramitacao();
+            $docTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $docTramitacao->setIdPessoa($this->id_pessoa);
+            $docTramitacao->setIdDocOrigem($this->id_lotacao);
+            $docTramitacao->setIdDocumentoSituacao(1);
+            $docTramitacao->setDsDocTramitacao($this->ds_observacao);
+            $docTramitacao->setIdTipoTramitacao(1);
+            if (!$docTramitacao->cadastraTramitacao($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
+            }
+            //codigo abaixo cadastra a tramitacao  "Aguardando Encaminhamento" e a situacao "Cadastrado" do documento fiscal
+            $docTramitacao->setIdTipoTramitacao(2);
+            if (!$docTramitacao->cadastraTramitacao($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
             }
 
             $pdo->commit();

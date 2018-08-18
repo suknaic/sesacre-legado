@@ -101,6 +101,22 @@ $(document).ready(function () {
         $('#modalItem').modal('hide');
     });
 
+
+    /**
+     * retornaUmDestinatario
+     */
+    $.ajax({
+        "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaDestinatario",
+
+        },
+        "success": function (response) {
+            $("#destinatario").append(response);
+        }
+    });
+
     $("body").on("change", "#selectOrdem", function (e) {
         var idOrdem = $("body").find("#selectOrdem").val();
         $.ajax({
@@ -273,6 +289,11 @@ $(document).ready(function () {
                 func.modalAlert("Nenhuma entrega foi adicionada.");
                 return false;
             }
+            
+            if ($("#destinatario option:selected").val() == 0) {
+                func.modalAlert("Nenhuma Destinatário foi selecionado.");
+                return false;
+            }
 
             var grp = "";
 
@@ -293,7 +314,8 @@ $(document).ready(function () {
                 "atesto": $("#atesto").val(),
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,
-                "grpNumero": $("#nr_grp").val()
+                "grpNumero": $("#nr_grp").val(),
+                "destinatario": $("#destinatario option:selected").val()
             }
 
             $.ajax({

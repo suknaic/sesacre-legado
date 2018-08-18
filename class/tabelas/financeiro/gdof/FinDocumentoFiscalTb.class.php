@@ -17,8 +17,8 @@ class FinDocumentoFiscalTb {
     private $ds_observacao = null;
     private $st_ativo = null;
     private $id_lotacao = null;
-    private $id_documento_situacao = null;
     private $id_tipo_documento = null;
+    private $id_doc_tramitacao = null;
 
     /**
      * @return mixed
@@ -293,24 +293,6 @@ class FinDocumentoFiscalTb {
     /**
      * @return mixed
      */
-    public function getIdDocumentoSituacao() {
-        return $this->id_documento_situacao;
-    }
-
-    /**
-     * @param mixed $id_documento_situacao
-     *
-     * @return self
-     */
-    public function setIdDocumentoSituacao($id_documento_situacao) {
-        $this->id_documento_situacao = $id_documento_situacao;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getIdTipoDocumento() {
         return $this->id_tipo_documento;
     }
@@ -322,6 +304,24 @@ class FinDocumentoFiscalTb {
      */
     public function setIdTipoDocumento($id_tipo_documento) {
         $this->id_tipo_documento = $id_tipo_documento;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdDocTramitacao() {
+        return $this->id_doc_tramitacao;
+    }
+
+    /**
+     * @param mixed $id_doc_tramitacao
+     *
+     * @return self
+     */
+    public function setIdDocTramitacao($id_doc_tramitacao) {
+        $this->id_doc_tramitacao = $id_doc_tramitacao;
 
         return $this;
     }

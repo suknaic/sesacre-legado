@@ -118,27 +118,18 @@ class DocFiscalPesquisa {
             $daoFinDocumentoFiscal->retornaTrDocumentosFiscais($pdo, $this->montaFiltroSQL());
             
             if ($daoFinDocumentoFiscal->sucesso()) {
-//
-//                <th>Nº Doc. Fiscal</th>
-//                                                    <th>Nº Pedido</th>
-//                                                    <th>Nº Empenho</th>
-//                                                    <th>Tipo</th>
-//                                                    <th>Competência</th>
-//                                                    <th>Destinatário</th>
-//                                                    <th>Valor</th>
-//                                                    <th>Tramitação</th>
-//                                                    <th>Situação</th>
+
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
-                                    . "<td>".$linha['nr_documento_fiscal']."</td>"
-                                    . "<td>".$linha['nr_pedido']."</td>"
-                                    . "<td>".$linha['nr_empenho']."</td>"
-                                    . "<td>".$linha['nm_tipo_documento']."</td>"
-                                    . "<td>".$linha['competencia']."</td>"
-                                    . "<td>".$linha['destinatario']."</td>"
-                                    . "<td>".$linha['vl_documento']."</td>"
-                                    . "<td></td>"
-                                    . "<td>".$linha['nm_situacao']."</td>"
+                                    . "<td class='text-center'>".$linha['nr_documento_fiscal']."</td>"
+                                    . "<td class='text-center'>".$linha['nr_pedido']."</td>"
+                                    . "<td class='text-center'>".$linha['nr_empenho']."</td>"
+                                    . "<td class='text-center'>".$linha['nm_tipo_documento']."</td>"
+                                    . "<td class='text-center'>".$linha['competencia']."</td>"
+                                    . "<td class='text-center'>".$linha['nm_lotacao']."</td>"
+                                    . "<td class='text-center'>".$linha['vl_documento']."</td>"
+                                    . "<td class='text-center'>".$linha['nm_tipo_tramitacao']."</td>"
+                                    . "<td class='text-center'>".$linha['nm_situacao']."</td>"
                                     . "<td class='text-center'>"
                                     . "</td>"
                              . "</tr>";
@@ -189,7 +180,7 @@ class DocFiscalPesquisa {
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= empty($filtroSql) ? (" where tramit.id_documento_situacao = ". $this->getSitDocFiscal()) : (" and tramit.id_documento_situacao = ". $this->getSitDocFiscal());
+            $filtroSql .= empty($filtroSql) ? (" where situacao.id_documento_situacao = ". $this->getSitDocFiscal()) : (" and tramit.id_documento_situacao = ". $this->getSitDocFiscal());
         }
 
         if ($this->getDestinatario()) {

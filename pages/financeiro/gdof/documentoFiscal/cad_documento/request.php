@@ -8,6 +8,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinEntregaDocumento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocVincRecebimento.class.php";
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocTramitacao.class.php";
 
 $session = new Session('ajax');
 
@@ -137,11 +140,25 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
+    CASE 'retornaDestinatario':
+        try {
+            $docVincRecebimento = new DocVincRecebimento();
+            $docVincRecebimento->setIdPessoa($session->getIdUser());
+            echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo();
+            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
     CASE 'cadastrarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-           
+
             $finDocumentoFiscal = new FinDocumentoFiscal();
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
             $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
@@ -153,6 +170,8 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
             $finDocumentoFiscal->setEntrega($entrega);
+            $finDocumentoFiscal->setIdLotacao($dados["destinatario"]);
+            $finDocumentoFiscal->setIdPessoa($session->getIdUser());
             echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;
             break;

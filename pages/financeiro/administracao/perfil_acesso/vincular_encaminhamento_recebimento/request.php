@@ -9,7 +9,7 @@ $session = new Session('ajax');
 
 
 switch ($_REQUEST['acao']) {
-    
+
     CASE 'retornaDocVincTramitacoes':
         try {
             $prog = new DocVincRecebimento();
@@ -25,13 +25,12 @@ switch ($_REQUEST['acao']) {
         }
     CASE 'retornaLotacoes':
         try {
-            $filtro = filter_input(INPUT_GET,'dados', FILTER_DEFAULT);
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $prog = new DocLotacao();
-            $prog->setIdDocTipoLotacao((int)$filtro);
+            $prog->setIdDocTipoLotacao((int) $filtro);
             echo $prog->optionsLotacao();
             return;
             break;
-            
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
@@ -40,26 +39,25 @@ switch ($_REQUEST['acao']) {
 
     CASE 'salvarDocVincTramitacao':
         try {
-            $filtro = filter_input(INPUT_POST,'dados',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
-            
+            $filtro = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             if ($filtro['tpTramitacao'] == '1') {
                 $prog = new DocVincEncaminhamento();
                 $prog->setIdDocLotacao($filtro['idDocLotacao'])
                         ->setIdPessoa($filtro['idPessoa']);
-            
+
                 echo $prog->cadastrar();
             } else {
                 $prog = new DocVincRecebimento();
                 $prog->setIdDocLotacao($filtro['idDocLotacao'])
                         ->setIdPessoa($filtro['idPessoa']);
-            
+
                 echo $prog->cadastrar();
             }
-            
-            
+
+
             return;
             break;
-            
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
@@ -68,23 +66,23 @@ switch ($_REQUEST['acao']) {
 
     CASE 'removerDocVincTramitacao':
         try {
-                           
-            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);             
-            
+
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             if ($filtro['tipo'] == '1') { //Encaminhar
                 $prog = new DocVincEncaminhamento();
-            
-                $prog->setIdDocVincEncaminhamento((int)$filtro['id']);
 
-                echo $prog->excluir();   
+                $prog->setIdDocVincEncaminhamento((int) $filtro['id']);
+
+                echo $prog->excluir();
             } else {                      //Receber
                 $prog = new DocVincRecebimento();
-            
-                $prog->setIdDocVincRecebimento((int)$filtro['id']);
 
-                echo $prog->excluir();   
+                $prog->setIdDocVincRecebimento((int) $filtro['id']);
+
+                echo $prog->excluir();
             }
-                     
+
             return;
             break;
         } catch (Error $e) {
