@@ -34,10 +34,10 @@ require_once "index.load.php";
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
-            <?php 
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
-                //Modal Alert
-                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            <?php
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+            //Modal Alert
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -74,7 +74,7 @@ require_once "index.load.php";
                                             <div class="form-group">
                                                 <label for="id_doc_fis">Número do Documento Fiscal:</label>
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
+                                                    <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
                                                     <input type="text" id="id_doc_fis" class="form-control" value=""/>
@@ -115,7 +115,7 @@ require_once "index.load.php";
                                             <div class="form-group">
                                                 <label for="nr_protocolo">Número do Protocolo:</label>
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
+                                                    <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
                                                     <input type="text" id="nr_protocolo" class="form-control" value=""/>
@@ -126,7 +126,7 @@ require_once "index.load.php";
                                             <div class="form-group">
                                                 <label for="nr_contrato">Número do Contrato:</label>
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
+                                                    <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
                                                     <input type="text" id="nr_contrato" class="form-control" value=""/>
@@ -137,7 +137,7 @@ require_once "index.load.php";
                                             <div class="form-group">
                                                 <label for="nr_pedido">Número do Pedido de Necessidade:</label>
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
+                                                    <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
                                                     <input type="text" id="nr_pedido" class="form-control" value=""/>
@@ -151,7 +151,7 @@ require_once "index.load.php";
                                             <div class="form-group">
                                                 <label for="nr_empenho">Número do Empenho:</label>
                                                 <div class="input-group">
-                                                        <span class="input-group-addon">
+                                                    <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
                                                     <input type="text" id="nr_empenho" class="form-control" value=""/>
@@ -180,13 +180,13 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
-                                                        <?php echo $selectSitDoc;?>
+                                                        <?php echo $selectSitDoc; ?>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                        
+
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -196,20 +196,23 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="tramitacao" class="form-control">
-                                                    
+                                                        <option value="0" selected="true">Selecione uma Tramitação</option>
+                                                        <option value="1">Encaminhar</option>
+                                                        <option value="2">Receber</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="destinatario">Destinatário:</label>
+                                                <label for="destinatario">Remetente/Destinatário:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="destinatario" class="form-control">
-                                                        <option value="0">Selecione um Destinatário</option>
+                                                        <option value="0">Selecione um Remetente/Destinatário</option>
+                                                        <?php echo $selectLotacoes; ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -249,7 +252,7 @@ require_once "index.load.php";
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                                                                                                                                                                                                                
+
                                             </tbody>
                                         </table>            
                                     </div>
@@ -293,7 +296,7 @@ require_once "index.load.php";
         <!--===================================================-->
         <!-- END OF CONTAINER -->
 
-       
+
 
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
@@ -321,8 +324,8 @@ require_once "index.load.php";
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
-        
+
         <!-- END JAVASCRIPT -->
-        
+
     </body>
 </html>

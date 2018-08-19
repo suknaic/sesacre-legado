@@ -3,7 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocumentoFiscal.class.php";
 
 class DocFiscalPesquisa {
-    
+
     private $nrDocFiscal = null;
     private $anoDocFiscal = null;
     private $contratado = null;
@@ -14,7 +14,7 @@ class DocFiscalPesquisa {
     private $tpGasto = null;
     private $sitDocFiscal = null;
     private $destinatario = null;
-    
+
     function getNrDocFiscal() {
         return $this->nrDocFiscal;
     }
@@ -105,90 +105,89 @@ class DocFiscalPesquisa {
         return $this;
     }
 
-    
     function listaTodos() {
         try {
             $retorno = "";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            
-            
+
+
             $daoFinDocumentoFiscal->retornaTrDocumentosFiscais($pdo, $this->montaFiltroSQL());
-            
+
             if ($daoFinDocumentoFiscal->sucesso()) {
 
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
-                    $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
-                                    . "<td class='text-center'>".$linha['nr_documento_fiscal']."</td>"
-                                    . "<td class='text-center'>".$linha['nr_pedido']."</td>"
-                                    . "<td class='text-center'>".$linha['nr_empenho']."</td>"
-                                    . "<td class='text-center'>".$linha['nm_tipo_documento']."</td>"
-                                    . "<td class='text-center'>".$linha['competencia']."</td>"
-                                    . "<td class='text-center'>".$linha['nm_lotacao']."</td>"
-                                    . "<td class='text-center'>".$linha['vl_documento']."</td>"
-                                    . "<td class='text-center'>".$linha['nm_tipo_tramitacao']."</td>"
-                                    . "<td class='text-center'>".$linha['nm_situacao']."</td>"
-                                    . "<td class='text-center'>"
-                                    . "</td>"
-                             . "</tr>";
+                    $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"
+                            . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
+                            . "<td class='text-center'>" . $linha['competencia'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
+                            . "<td class='text-center'>
+                                    <button type='button' title='Ver documento fiscal' class='ver_documento' value='".$linha['id_documento_fiscal']."'>
+                                    <i class='fa fa-file-text-o text-info' aria-hidden='true'></i>
+                                    </button>
+                               </td>"
+                            . "</tr>";
                 }
             }
-            
+
             return $retorno;
-            
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    
-    private function montaFiltroSQL(){
+
+    private function montaFiltroSQL() {
         //Verifica os atributos que serão filtrados
         $filtroSql = "";
         if ($this->getNrDocFiscal()) {
-            $filtroSql .= empty($filtroSql) ? (" where doc.nr_documento_fiscal ilike \'%". $this->getNrDocFiscal() ."%\' ") : (" and  doc.nr_documento_fiscal ilike \'%". $this->getNrDocFiscal() ."%\' ");
+            $filtroSql .= " and  doc.nr_documento_fiscal ilike \'%" . $this->getNrDocFiscal() . "%\' ";
         }
 
         if ($this->getAnoDocFiscal()) {
-            $filtroSql .= empty($filtroSql) ? (" where doc.aa_competencia = ".$this->getAnoDocFiscal()) : (" and doc.aa_competencia = ".$this->getAnoDocFiscal());
+            $filtroSql .= " and doc.aa_competencia = " . $this->getAnoDocFiscal();
         }
 
         if ($this->getContratado()) {
-            $filtroSql .= empty($filtroSql) ? (" where fornecedor.id_pessoa = " .$this->getContratado() ) : (" and fornecedor.id_pessoa = " .$this->getContratado());
+            $filtroSql .= " and fornecedor.id_pessoa = " . $this->getContratado();
         }
 
         if ($this->getNrProtocolo()) {
-            $filtroSql .= empty($filtroSql) ? (" where protoc.id_protocolo = " . $this->getNrProtocolo()) : (" and  protoc.id_protocolo = " . $this->getNrProtocolo());
+            $filtroSql .= " and  protoc.id_protocolo = " . $this->getNrProtocolo();
         }
 
         if ($this->getNrContrato()) {
-            $filtroSql .= empty($filtroSql) ? (" where contrato.nr_contrato ilike \'%" . $this->getNrContrato() ."%\' ") : (" and contrato.nr_contrato ilike \'%" . $this->getNrContrato() ."%\' ");
+            $filtroSql .= " and contrato.nr_contrato ilike \'%" . $this->getNrContrato() . "%\' ";
         }
 
         if ($this->getNrPedido()) {
-            $filtroSql .= empty($filtroSql) ? (" where pedido.nr_pedido ilike \'%" . $this->getNrPedido() ."%\' ") : (" and pedido.nr_pedido ilike \'%" . $this->getNrPedido() ."%\' ");
+            $filtroSql .= " and pedido.nr_pedido ilike \'%" . $this->getNrPedido() . "%\' ";
         }
 
         if ($this->getNrEmpenho()) {
-            $filtroSql .= empty($filtroSql) ? (" where emp.nr_empenho ilike \'%" . $this->getNrEmpenho() ."%\' ") : (" and emp.nr_empenho ilike \'%" . $this->getNrEmpenho() ."%\' ");
+            $filtroSql .= " and emp.nr_empenho ilike \'%" . $this->getNrEmpenho() . "%\' ";
         }
 
         if ($this->getTpGasto()) {
-            $filtroSql .= empty($filtroSql) ? (" where tipoGasto.id_tipo_gasto = ". $this->getTpGasto()) : (" and tipoGasto.id_tipo_gasto = ". $this->getTpGasto());
+            $filtroSql .= " and tipoGasto.id_tipo_gasto = " . $this->getTpGasto();
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= empty($filtroSql) ? (" where situacao.id_documento_situacao = ". $this->getSitDocFiscal()) : (" and tramit.id_documento_situacao = ". $this->getSitDocFiscal());
+            $filtroSql .= " and tramit.id_documento_situacao = " . $this->getSitDocFiscal();
         }
 
         if ($this->getDestinatario()) {
-            $filtroSql .= empty($filtroSql) ? (" where tramit.destinatario = " . $this->getDestinatario() ) : (" and tramit.destinatario = " . $this->getDestinatario());
+            $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getDestinatario();
         }
-        
+
         return $filtroSql;
     }
 
 }
-

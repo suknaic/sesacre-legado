@@ -168,9 +168,11 @@ class DocVincRecebimento {
                 foreach ($daoFinDocVincRecebimento->getMsgRetorno() as $linha) {
 
                     if ($linha["id_doc_lotacao"] == $idLotacao) {
-                        $options .= '<option value="' . $linha["id_doc_lotacao"] . '" selected="true">' . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
+                        $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
+                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
                     } else {
-                        $options .= '<option value="' . $linha["id_doc_lotacao"] . '">' . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
+                        $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
+                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
                     }
                 }
             }

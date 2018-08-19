@@ -6,7 +6,7 @@ $(document).ready(function () {
         width: '100%'
     });
 
-    function lista(){
+    function lista() {
         var Dados = {
             nrDocFis: $("#id_doc_fis").val(),
             anoDocFis: $("#ano_doc_fis option:selected").val(),
@@ -26,11 +26,20 @@ $(document).ready(function () {
                 "acao": "retornaDocumentosFiscais",
                 "dados": Dados
             },
-            "success": function (response) {  
-                func.carregaTabelaPadrao('tabela', response, [4]);
+            "success": function (response) {
+                func.carregaTabelaPadrao('tabela', response, [4], true);
             }
         });
     }
-    
-    lista();
+
+    $("body").on("click", ".btn-pesquisar", function () {
+        lista();
+    });
+
+    $('body').on('click', '.ver_documento', function (e) {
+        var id = $(this).val();
+        window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
+    });
+
+
 });

@@ -170,7 +170,7 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
     public function retornaLotacaoTipoRecibementoPorUsuario(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select  docLotacao.id_doc_lotacao, lotacao.nm_lotacao, docTipo.nm_doc_tipo_lotacao
+                $sql = "select lotacao.id_lotacao, docLotacao.id_doc_lotacao, lotacao.nm_lotacao, docTipo.nm_doc_tipo_lotacao
                         from fin_doc_vinc_recebimento as recebimento
                         inner join fin_doc_lotacao as docLotacao
                         on docLotacao.id_doc_lotacao = recebimento.id_doc_lotacao

@@ -315,7 +315,8 @@ $(document).ready(function () {
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,
                 "grpNumero": $("#nr_grp").val(),
-                "destinatario": $("#destinatario option:selected").val()
+                "id_lotacao": $("#destinatario option:selected").val(),
+                "destinatario": $("#destinatario option:selected").attr("id_doc_lotacao")
             }
 
             $.ajax({

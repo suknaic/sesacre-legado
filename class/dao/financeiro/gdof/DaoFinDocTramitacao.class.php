@@ -18,12 +18,9 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
     function insert(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "insert into
-                            fin_doc_tramitacao (id_documento_fiscal, id_pessoa, id_doc_origem, id_doc_destino, id_documento_situacao, ds_doc_tramitacao, id_tipo_tramitacao) 
-                        values
-                            (
-                                :id_documento_fiscal, :id_pessoa, :id_lotacao_origem, :id_lotacao_destino, :id_documento_situacao, :ds_doc_tramitacao, :tp_tramitacao
-                            )";
+                $sql = "insert into fin_doc_tramitacao (id_documento_fiscal, id_pessoa, id_doc_origem, id_doc_destino, id_documento_situacao, 
+                            ds_doc_tramitacao, id_tipo_tramitacao, fl_pesquisa) values(:id_documento_fiscal, :id_pessoa, :id_lotacao_origem, 
+                            :id_lotacao_destino, :id_documento_situacao, :ds_doc_tramitacao, :tp_tramitacao, :flPesquisa)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_documento_fiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
                 $stmt->bindValue(':id_pessoa', $this->getIdPessoa(), PDO::PARAM_INT);
@@ -32,6 +29,7 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
                 $stmt->bindValue(':id_documento_situacao', $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(':ds_doc_tramitacao', $this->getDsDocTramitacao(), PDO::PARAM_STR);
                 $stmt->bindValue(':tp_tramitacao', $this->getIdTipoTramitacao(), PDO::PARAM_INT);
+                $stmt->bindValue(':flPesquisa', $this->getFlPesquisa(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -108,18 +106,18 @@ class DaoFinDocTramitacao extends FinDocTramitacao {
         return $filtro;
     }
 
-    public function atualizaIdDocTramitacaoDocumento(PDO $pdo) {
-        try {
-            $sql = "update fin_documento_fiscal set id_doc_tramitacao = :tramitacao where id_documento_fiscal = :documento";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":tramitacao", $this->getIdDocTramitacao(), PDO::PARAM_INT);
-            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
-            $stmt->execute();
-            $this->sucesso = true;
-        } catch (Exception $ex) {
-            $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
-        }
-    }
+//    public function atualizaIdDocTramitacaoDocumento(PDO $pdo) {
+//        try {
+//            $sql = "update fin_documento_fiscal set id_doc_tramitacao = :tramitacao where id_documento_fiscal = :documento";
+//            $stmt = $pdo->prepare($sql);
+//            $stmt->bindValue(":tramitacao", $this->getIdDocTramitacao(), PDO::PARAM_INT);
+//            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+//            $stmt->execute();
+//            $this->sucesso = true;
+//        } catch (Exception $ex) {
+//            $this->sucesso = false;
+//            $this->msgRetorno = $ex->getMessage();
+//        }
+//    }
 
 }

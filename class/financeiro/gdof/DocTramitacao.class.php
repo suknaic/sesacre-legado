@@ -13,6 +13,7 @@ class DocTramitacao {
     private $id_doc_destino = null;
     private $id_documento_situacao = null;
     private $id_tipo_tramitacao = null;
+    private $fl_pesquisa = null;
 
     /**
      * @return mixed
@@ -176,6 +177,24 @@ class DocTramitacao {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFlPesquisa() {
+        return $this->fl_pesquisa;
+    }
+
+    /**
+     * @param mixed $fl_pesquisa
+     *
+     * @return self
+     */
+    public function setFlPesquisa($fl_pesquisa) {
+        $this->fl_pesquisa = $fl_pesquisa;
+
+        return $this;
+    }
+
     public function cadastraTramitacao($pdo) {
         if (empty($pdo)) {
             $conexao = new Conexao();
@@ -190,30 +209,27 @@ class DocTramitacao {
         $daoFinDocTramitacao->setIdDocumentoSituacao($this->id_documento_situacao);
         $daoFinDocTramitacao->setDsDocTramitacao($this->ds_doc_tramitacao);
         $daoFinDocTramitacao->setIdTipoTramitacao($this->id_tipo_tramitacao);
+        $daoFinDocTramitacao->setFlPesquisa($this->fl_pesquisa);
         $daoFinDocTramitacao->insert($pdo);
-
+        
         $this->id_doc_tramitacao = ($pdo->lastInsertId('fin_doc_tramitacao_id_doc_tramitacao_seq'));
         if (!Log::SalvaLogI('fin_doc_tramitacao', $this->id_doc_tramitacao, $pdo)) {
             return false;
         }
-
-        $this->atualizaTramitacaoDocumento($pdo);
-
-
-        return $daoFinDocTramitacao->getSucesso();
-    }
-
-    public function atualizaTramitacaoDocumento(PDO $pdo) {
-        if (empty($pdo)) {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-        }
         
-        $daoFinDocTramitacao = new DaoFinDocTramitacao();
-        $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
-        $daoFinDocTramitacao->setIdDocTramitacao($this->id_doc_tramitacao);
-        $daoFinDocTramitacao->atualizaIdDocTramitacaoDocumento($pdo);
         return $daoFinDocTramitacao->getSucesso();
     }
 
+//    public function atualizaTramitacaoDocumento(PDO $pdo) {
+//        if (empty($pdo)) {
+//            $conexao = new Conexao();
+//            $pdo = $conexao->connect();
+//        }
+//
+//        $daoFinDocTramitacao = new DaoFinDocTramitacao();
+//        $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+//        $daoFinDocTramitacao->setIdDocTramitacao($this->id_doc_tramitacao);
+//        $daoFinDocTramitacao->atualizaIdDocTramitacaoDocumento($pdo);
+//        return $daoFinDocTramitacao->getSucesso();
+//    }
 }

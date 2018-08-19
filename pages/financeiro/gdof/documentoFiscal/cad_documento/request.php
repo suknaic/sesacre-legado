@@ -170,7 +170,8 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
             $finDocumentoFiscal->setEntrega($entrega);
-            $finDocumentoFiscal->setIdLotacao($dados["destinatario"]);
+            $finDocumentoFiscal->setIdLotacao($dados["id_lotacao"]);
+            $finDocumentoFiscal->setIdDocOrigem($dados["destinatario"]);
             $finDocumentoFiscal->setIdPessoa($session->getIdUser());
             echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;

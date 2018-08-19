@@ -11,6 +11,7 @@ class FinDocTramitacao {
     private $id_doc_destino = null;
     private $id_documento_situacao = null;
     private $id_tipo_tramitacao = null;
+    private $fl_pesquisa = null;
 
     /**
      * @return mixed
@@ -170,6 +171,24 @@ class FinDocTramitacao {
      */
     public function setIdTipoTramitacao($id_tipo_tramitacao) {
         $this->id_tipo_tramitacao = $id_tipo_tramitacao;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlPesquisa() {
+        return $this->fl_pesquisa;
+    }
+
+    /**
+     * @param mixed $fl_pesquisa
+     *
+     * @return self
+     */
+    public function setFlPesquisa($fl_pesquisa) {
+        $this->fl_pesquisa = $fl_pesquisa;
 
         return $this;
     }
