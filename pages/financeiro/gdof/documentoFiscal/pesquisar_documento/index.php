@@ -190,13 +190,13 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="tramitacao">Tramitação:</label>
+                                                <label for="tramitacao">Trâmite:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="tramitacao" class="form-control">
-                                                        <option value="0" selected="true">Selecione uma Tramitação</option>
+                                                        <option value="0" selected="true">Selecione uma Trâmite</option>
                                                         <option value="1">Aguardando</option>
                                                         <option value="3">Encaminhado</option>
                                                         <option value="5">Recebido</option>
@@ -247,7 +247,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Competência</th>
                                                     <th class="text-center">Remetente/Destinatário</th>
                                                     <th class="text-center">Valor</th>
-                                                    <th class="text-center">Tramitação</th>
+                                                    <th class="text-center">Trâmite</th>
                                                     <th class="text-center">Situação</th>
                                                     <th class="text-center">Ações</th> 
                                                 </tr>

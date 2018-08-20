@@ -401,11 +401,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Destinatário</h4>
+                                                        <h4 class="panel-title">Remetente</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo destinatário:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
                                                             
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
