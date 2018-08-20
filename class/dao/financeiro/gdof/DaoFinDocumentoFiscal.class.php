@@ -518,8 +518,17 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
 
-                    inner join fin_doc_tramitacao as tramitacao
-                    on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
+                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
+						, TA.id_documento_fiscal, TA.id_doc_tramitacao
+						, TA.id_documento_situacao, TA.id_tipo_tramitacao
+							, TA.id_doc_origem, TA.id_doc_destino
+						, TA.fl_pesquisa
+								from fin_doc_tramitacao t
+								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
+					where TA.fl_pesquisa = '0' 
+						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
+					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
+
 
                     inner join fin_documento_situacao as situacao
                     on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
