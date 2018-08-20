@@ -45,10 +45,8 @@ switch ($_REQUEST['acao']) {
     CASE 'removerParmTramitacao':
         try {
                            
-            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);             
-            
-            $prog = new DocParmTramitacao();
-            
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);                        
+            $prog = new DocParmTramitacao();            
             $prog->setIdDocParmTramitacao((int)$filtro);
             
             echo $prog->excluir();            
