@@ -23,6 +23,7 @@ switch ($_REQUEST['acao']) {
                  ->setNrEmpenho($dados['nrEmpenho'])
                  ->setTpGasto((int)$dados['tpGasto'])
                  ->setSitDocFiscal((int)$dados['sitDoc'])
+                 ->setTramitacao((int)$dados["tramitacao"])   
                  ->setDestinatario((int)$dados['destinatario']);
             
             echo $prog->listaTodos();

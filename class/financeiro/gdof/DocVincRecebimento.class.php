@@ -171,12 +171,26 @@ class DocVincRecebimento {
                         $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
                                 . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
                     } else {
-                        $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
+                        $options .= '<option value="' . $linha["id_lotacao"] . '"  id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
                                 . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
                     }
                 }
             }
             return $options;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function retornaIdLotacaoUsuarioRecebimento() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinDocVincRecebimento = new DaoFinDocVincRecebimento();
+            $daoFinDocVincRecebimento->setIdPessoa($this->idPessoa);
+            $daoFinDocVincRecebimento->retornaLotacaoTipoRecibementoPorUsuario($pdo);
+            return $daoFinDocVincRecebimento->getMsgRetorno();
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

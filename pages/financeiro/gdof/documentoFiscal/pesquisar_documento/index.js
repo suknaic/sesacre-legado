@@ -18,6 +18,7 @@ $(document).ready(function () {
             tpGasto: $("#tipo_gasto option:selected").val(),
             sitDoc: $("#situacao option:selected").val(),
             destinatario: $("#destinatario option:selected").val(),
+            tramitacao: $("#tramitacao option:selected").val()
         }
         $.ajax({
             "url": "request.php",
