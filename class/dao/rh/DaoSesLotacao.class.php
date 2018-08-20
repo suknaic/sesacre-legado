@@ -97,10 +97,9 @@ class DaoSesLotacao extends SesLotacao {
                                      WHERE id_lotacao = :idLotacao");
             $result->bindValue(":idLotacao", $this->getId_lotacao(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
-            //return false;
         }
     }
     //*********************************************************************************************************
@@ -110,10 +109,9 @@ class DaoSesLotacao extends SesLotacao {
                                      WHERE id_lotacao = :idLotacao");
             $result->bindValue(":idLotacao", $this->getId_lotacao(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return TRUE;
         } catch (PDOException $e) {
             return $e->getMessage();
-            //return false;
         }
     }
 //*******************************************************************************************************************************************************************
@@ -477,6 +475,23 @@ class DaoSesLotacao extends SesLotacao {
             $sql->execute();
             if ($sql->rowCount() > 0) {
                 return $sql->fetch(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function verificarExistenciaLotacaoNome($pdo) {
+        try {
+            $sql = $pdo->prepare('  SELECT id_lotacao, nm_lotacao 
+                                        FROM ses_lotacao
+                                            WHERE nm_lotacao =:nmLotacao');
+            $sql->bindValue(':nmLotacao', $this->getNm_lotacao(), PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return TRUE;
+            } else {
+                return FALSE;
             }
         } catch (PDOException $ex) {
             return $ex->getMessage();

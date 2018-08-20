@@ -192,7 +192,7 @@ function Funcoes() {
 
 
 
-    this.fechaModalReload = function (href = null) {
+    this.fechaModalReload = function () {
         $('.modal-alert').on('hidden.bs.modal', function (e) {
             location.reload();
         });

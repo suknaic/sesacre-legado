@@ -1,6 +1,6 @@
 <?php
 
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoa.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/formacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoaFisica.class.php";
 
 class pessoaFisica {
@@ -258,12 +258,24 @@ class pessoaFisica {
         }
     }
 
-    public function cadastrarCompetencia($pdo) {
+    /**
+     * @param $pdo
+     * @return type|void
+     */
+    public function cadastrarCompetencia($pdo, $escolaridade = null) {
         try {
 
             $pessoaFisica = new DaoSesPessoaFisica();
             $pessoaFisica->setId_escolaridade_formacao_competencia($this->id_escolaridade_formacao_competencia);
             $pessoaFisica->setId_pessoa_fisica($this->id_pessoa_fisica);
+
+            $formacao = new Formacao();
+            $formacao->setId_formacao($this->id_escolaridade_formacao_competencia);
+            $resultado = $formacao->retornarFormacao($pdo);
+
+            if ($resultado['id_escolaridade'] != $escolaridade){
+                return Metodos::retornoAjax('Erro', 'alert', 'Curso Não Corresponde ao Nível de Escolaridade.');
+            }
 //          ****************************************************************************
             $result = $pessoaFisica->insertCompetencia($pdo);
 //          ****************************************************************************

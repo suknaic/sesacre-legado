@@ -60,8 +60,10 @@ if (isset($_GET['id'])){
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro de Novo Contrato</h1> 
                     </div>
-                    <div class= "text-center text-bold text-danger" >
-                        <?php echo $nro; ?>º Contrato
+                    <div class= "text-center text-bold text-danger" id="contContrato">
+                        <?php
+                            echo $nro.'° Contrato';
+                        ?>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -459,7 +461,7 @@ if (isset($_GET['id'])){
                                                 <div class="form-group"> 
                                                     <div class="col-md-3"></div>
                                                     <div class="col-md-3">
-                                                        Telefone Residêncial:
+                                                        Telefone Residencial:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -492,7 +494,7 @@ if (isset($_GET['id'])){
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_vinculo" class="form-control">
-                                                                    <option value="0">Selecione Vínculo</option>                                                                
+                                                                    <option value="0">Selecione o Vínculo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -506,7 +508,7 @@ if (isset($_GET['id'])){
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_pessoa_juridica" class="form-control">
-                                                                    <option value="0">Selecione Empresa</option>                                                                
+                                                                    <option value="0">Selecione a Empresa</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -514,7 +516,7 @@ if (isset($_GET['id'])){
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            Data Admissão: <span class="text-danger">*</span>
+                                                            Data de Admissão: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-calendar inputPFa"></p>
@@ -535,7 +537,7 @@ if (isset($_GET['id'])){
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            Matrícula Nº: <span class="text-danger">*</span>
+                                                            Matrícula: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
@@ -550,7 +552,7 @@ if (isset($_GET['id'])){
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_cargo" class="form-control">
-                                                                    <option value="0">Selecione Cargo</option>                                                                
+                                                                    <option value="0">Selecione o Cargo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -578,7 +580,7 @@ if (isset($_GET['id'])){
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_lotacao" class="form-control">
-                                                                        <option value="0">Selecione Lotação</option>                                                                
+                                                                        <option value="0">Selecione a Lotação</option>
                                                                         <?php
                                                                         // echo $lotacoes;
                                                                         ?>
@@ -592,7 +594,7 @@ if (isset($_GET['id'])){
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_funcao" class="form-control">
-                                                                        <option value="0">Selecione Função</option>                                                                
+                                                                        <option value="0">Selecione a Função</option>
                                                                         <?php
                                                                         // echo $lotacoes;
                                                                         ?>

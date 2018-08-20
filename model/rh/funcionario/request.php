@@ -169,7 +169,7 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->setId_escolaridade_formacao_competencia($_REQUEST['competencia']);
             $pessoaFisica->setId_pessoa_fisica($_REQUEST['pessoaFisica']);
-            $pessoaFisica->cadastrarCompetencia($pdo);
+            echo $pessoaFisica->cadastrarCompetencia($pdo, $_REQUEST['escolaridade']);
 
             break;
         } catch (Exception $e) {

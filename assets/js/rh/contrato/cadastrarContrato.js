@@ -48,8 +48,8 @@ function returnContratoEditar() {
             //********************************************************
             //$("#id_cidade").val(response[0]['id_cidade']).change();
             $("#id_pais_endereco").val(response[0]['id_pais_endereco']);
-            listaEstadoNaturalidadeCombo(response[0]['id_pais_endereco'], 2, response[0]['id_estado_endereco'])
-            listaCidadeCombo(response[0]['id_estado_endereco'], 2, response[0]['id_cidade_endereco'])
+            listaEstadoNaturalidadeCombo(response[0]['id_pais_endereco'], 2, response[0]['id_estado_endereco']);
+            listaCidadeCombo(response[0]['id_estado_endereco'], 2, response[0]['id_cidade_endereco']);
             //*************************************************************************
             $("#nr_telefone_residencial").val(response[0]['nr_telefone_residencial']);
             $("#nr_telefone_celular").val(response[0]['nr_telefone_celular']);
@@ -57,6 +57,22 @@ function returnContratoEditar() {
             $("#nr_matricula").val(response[0]['nr_matricula']);
             returnCompetencia(response[0]['id_pessoa_fisica']);
 
+            $(".nr").mask("99");
+            $("#nr_cpf").mask("999.999.999-99");
+            $("#nr_cep").mask("99999-999");
+            $(".data").mask("99/99/9999");
+            $("#nr_telefone_residencial").mask("(99) 9999-9999");
+            $("#nr_telefone_celular").mask("(99) 9 9999-9999");
+            $("#nr_cns").mask("999 9999 9999 9999");
+            // if (response[0]['nr_contratos'] === 0) {
+            //     $("#contContrato").append(
+            //         response[0]['nr_contratos']+1+'° Contrato'
+            //     );
+            // } else {
+            //     $("#contContrato").append(
+            //         response[0]['nr_contratos']+'° Contrato'
+            //     );
+            // }
         }
     });
 }
@@ -473,6 +489,7 @@ $(document).ready(function () {
     $(".data").mask("99/99/9999");
     $("#nr_telefone_residencial").mask("(99) 9999-9999");
     $("#nr_telefone_celular").mask("(99) 9 9999-9999");
+    $("#nr_cns").mask("999 9999 9999 9999");
     //datapiker, plugins para data
     $('.data').datepicker({
         format: 'dd/mm/yyyy',
@@ -510,7 +527,7 @@ $(document).ready(function () {
 
         //********carga hoaria da lotação não deve exceder a carga horaria do funcionario**************** 
         if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário")
+            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
             return;
         }
         //********data inicial da função na lotação tem de ser inferior a data final**********************
@@ -520,7 +537,7 @@ $(document).ready(function () {
             var cargaHorariaLotacao = 0;
             $("#tabelaLotacao tbody tr").each(function () {
                 if (lotacaoId == $(this).find(".lotacao").attr("idLotacao") && funcaoId == $(this).find(".funcao").attr("idFuncao")) {
-                    func.modalAlert(" Lotação e Função já existem!!!")
+                    func.modalAlert(" Lotação e Função já existem!!!");
                     flag = 1;
                 }
                 cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
@@ -530,7 +547,7 @@ $(document).ready(function () {
             return;
         }
         if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionario")
+            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionario");
             return;
         }
 
@@ -606,16 +623,17 @@ $(document).ready(function () {
     $("body").on("click", ".btn-add", function (e) {
         var pessoaFisica = $("#id_pessoa_fisica").val();
         var competencia = $("#id_competencia").val();
+        var escolaridade = $("#id_escolaridade").val();
         if (competencia == 0) {
-            alert("informe Competência");
+            alert("Informe a Competência");
             $("#id_competencia").focus();
             return;
         }
         //********************************************************************************* 
         var flag = 0;
         if ($(this).closest(".panelCompetencia").find(".competenciaLinha").length > 0) {
-            $("#tabela tbody tr").each(function () {
-                if (competencia == $(this).find(".escolaridade").attr("idEscolaridadeFormacao")) {
+            $("#corpoCompetencia").each(function () {
+                if (competencia == $(this).find(".escolaridade").attr("idescolaridadeformacao")) {
                     flag = 1;
                     func.modalAlert(" O Item já Existe!!!")
                 }
@@ -632,12 +650,27 @@ $(document).ready(function () {
             "data": {
                 "acao": "inserirCompetencia",
                 "competencia": competencia,
-                "pessoaFisica": pessoaFisica
+                "pessoaFisica": pessoaFisica,
+                "escolaridade": escolaridade
             },
             "success":
                     function (response) {
-                        //console.log(response);
-                        returnCompetencia(pessoaFisica);
+                        console.log(response);
+                        try {
+                            response = JSON.parse(response);
+                        } catch (e) {
+                            returnCompetencia(pessoaFisica);
+                        }
+                        if (response.tipoMsg === "Erro") {
+                            if (response.tipoExibicao === "console") {
+                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            } else if (response.tipoExibicao === "alert") {
+                                func.modalAlert(response.msg);
+                                return false;
+                            }
+                        }
                     }
         });
     });
@@ -733,7 +766,7 @@ $(document).ready(function () {
                 telefone_celular: $("#nr_telefone_celular").val(),
                 email: $("#nm_email").val(),
                 obs: $("#ds_observacao").val()
-            }
+            };
             $cpf = $("#nr_cpf").val().replace(/(\.|\/|\-)/g, "");
             var DadosPessoaFisica = {
                 idPessoaFisica: idPessoaFisica,
