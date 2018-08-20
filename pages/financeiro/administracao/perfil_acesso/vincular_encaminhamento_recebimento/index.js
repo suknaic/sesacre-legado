@@ -129,18 +129,10 @@ $(document).ready(function () {
 
         var $this = $(this);
         var dados = $(this).closest('tr').data('objeto');
-        var tipo = dados.tramitacao;
-        
-        var id = 0;
-        if (tipo == '1') { //Encaminhamento
-            id = dados.id_doc_vinc_encaminhamento;
-        } else if(tipo == '2'){ //Recebimento
-            id = dados.id_doc_vinc_recebimento;
-        }
-        
+        var tipo = dados.id_tipo_tramitacao;
+        var id = dados.id_tramitacao;
         
         var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text() + ' - ' + $this.closest('tr').find('td:eq(2)').text() ;
-
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',

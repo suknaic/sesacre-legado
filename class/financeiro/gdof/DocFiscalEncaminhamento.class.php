@@ -264,7 +264,7 @@ class DocFiscalEncaminhamento {
         //Verifica os atributos que serão filtrados
         $filtroSql = "";
         if ($this->getNrDocFiscal()) {
-            $filtroSql .= " and  doc.nr_documento_fiscal ilike \'%" . $this->getNrDocFiscal() . "%\' ";
+            $filtroSql .= " and  doc.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
         }
 
         if ($this->getAnoDocFiscal()) {
@@ -280,15 +280,15 @@ class DocFiscalEncaminhamento {
         }
 
         if ($this->getNrContrato()) {
-            $filtroSql .= " and contrato.nr_contrato ilike \'%" . $this->getNrContrato() . "%\' ";
+            $filtroSql .= " and contrato.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
         }
 
         if ($this->getNrPedido()) {
-            $filtroSql .= " and pedido.nr_pedido ilike \'%" . $this->getNrPedido() . "%\' ";
+            $filtroSql .= " and pedido.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
         }
 
         if ($this->getNrEmpenho()) {
-            $filtroSql .= " and emp.nr_empenho ilike \'%" . $this->getNrEmpenho() . "%\' ";
+            $filtroSql .= " and emp.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
         }
 
         if ($this->getTpGasto()) {
