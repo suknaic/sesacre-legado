@@ -40,6 +40,54 @@ require_once "index.load.php";
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
+            <!--Div resposta do sucessor do ajax-->
+            <div id="alerta" style="text-align: center"></div>
+
+            <div id="modalEncaminhar" class="modal fade" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog">
+                    <form id="formEncaminhar" role="form" action="#" method="post">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Encaminhar</h4>
+                            </div>
+                            <div class="modal-body" id="modalDiv">
+
+                                <div class="form-group">
+                                    <label for="tipoDestinatario">Tipo de Destinatário:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <p class="fa fa-list inputPFa"></p>
+                                        </span>
+                                        <select id="tipoDestinatario" class="form-control">
+                                            <option value="0" selected="true">Selecione um tipo</option>
+                                            <?php echo $docFiscalEncaminhamento->retornaOptionsTipoDestinatarioUsuario(); ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="destinatario">Destinatário:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <p class="fa fa-list inputPFa"></p>
+                                        </span>
+                                        <select id="destinatario" class="form-control">
+                                            <option value="0" selected="true">Escolha um tipo primeiro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" id="fecharErro" data-dismiss="modal">Fechar</button>
+                                <button type="button" class="btn btn-primary enviarEncaminhamento">Enviar</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </form>
+                </div><!-- /.modal-dialog -->
+            </div>
+
+
             <div class="boxed">
 
                 <!--CONTENT CONTAINER-->
@@ -49,7 +97,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Pesquisar Documento Fiscal</h1>                       
+                        <h1 class="page-header text-overflow">Encaminhamento de Documento Fiscal</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -59,13 +107,6 @@ require_once "index.load.php";
                     <div id="page-content">
 
                         <div class="panel">
-                            <div class="panel-heading">
-
-                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.php" role="button">
-                                    <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                    Novo Documento Fiscal
-                                </a>
-                            </div>
                             <form>
                                 <div class="panel-body">
                                     <br>
@@ -83,7 +124,7 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="ano_doc_fis">Ano:</label>
+                                                <label for="ano_doc_fis">Exercício do Docuemento Fiscal:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
@@ -103,7 +144,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="id_contratado" class="form-control">
                                                         <option value="0">Selecione o CNPJ/Nome Contratado</option>
-                                                        <?php echo $pessoaJuridicaOptions; ?>
+                                                        <?php echo $$pessoaJuridicaOptions; ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -190,34 +231,19 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="tramitacao">Trâmite:</label>
+                                                <label for="destinatario">Tipo Remetente/Remetente:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="tramitacao" class="form-control">
-                                                        <option value="0" selected="true">Selecione uma Trâmite</option>
-                                                        <option value="1">Aguardando</option>
-                                                        <option value="3">Encaminhado</option>
-                                                        <option value="5">Recebido</option>
+                                                    <select id="remetente" class="form-control">
+                                                        <option value="0">Selecione um Remetente</option>
+                                                        <?php echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo(0); ?>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="destinatario">Remetente/Destinatário:</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="destinatario" class="form-control">
-                                                        <option value="0">Selecione um Remetente/Destinatário</option>
-                                                        <?php echo $selectLotacoes; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="col-md-8"></div>
                                     </div>
                                 </div>
                             </form>
@@ -245,9 +271,9 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Tipo</th>
                                                     <th class="text-center">Competência</th>
-                                                    <th class="text-center">Remetente/Destinatário</th>
+                                                    <th class="text-center">Remetente</th>
                                                     <th class="text-center">Valor</th>
-                                                    <th class="text-center">Trâmite</th>
+                                                    <th class="text-center">Tramitação</th>
                                                     <th class="text-center">Situação</th>
                                                     <th class="text-center">Ações</th> 
                                                 </tr>

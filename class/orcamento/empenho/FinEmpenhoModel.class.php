@@ -389,7 +389,7 @@ class FinEmpenhoModel {
                         }
                     } else {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro4", "alert", "Não existe saldo no QDD para esse empenho");
+                        return Metodos::retornoAjax("Erro", "alert", "Não existe saldo no QDD para esse empenho");
                     }
                 } else {
                     $pdo->rollBack();
@@ -424,7 +424,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->retornaEmpenhoGdof($pdo);
-            
+
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
 
@@ -468,6 +468,47 @@ class FinEmpenhoModel {
                 return $dadosEmpenho;
             }
             return $dadosEmpenho;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function trEmpenhoBuscaLiquidacao() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinEmpenho = new DaoFinEmpenho();
+        $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        $retorno = '';
+        if ($daoFinEmpenho->sucesso()) {
+            foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
+                $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '"  idEmpenho="' . $dados["id_empenho"] . '" nrPedido="' . $dados["nr_pedido"] . '" 
+                    style="cursor:pointer;">
+                <td>' . $dados["nr_pedido"] . '</td>
+                <td>' . $dados["nr_empenho"] . '</td>
+                <td>' . $dados["dt_empenho_safira"] . '</td>    
+                <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>
+                </tr>';
+            }
+        }
+        return $retorno;
+    }
+
+    /**
+     * Retorna os dados do empenho 
+     */
+    public function retornaDadosEmpenho($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                return $daoFinEmpenho->getMsgRetorno();
+            }
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

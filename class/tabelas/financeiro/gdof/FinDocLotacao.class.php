@@ -5,6 +5,7 @@ class FinDocLotacao {
     private $idDocLotacao = null;
     private $idDocTipoLotacao = null;
     private $idLotacao = null;
+    private $stAtivo = null;
 
     function getIdDocLotacao() {
         return $this->idDocLotacao;
@@ -32,5 +33,16 @@ class FinDocLotacao {
         $this->idLotacao = $idLotacao;
         return $this;
     }
+    
+    function getStAtivo() {
+        return $this->stAtivo;
+    }
+
+    function setStAtivo($stAtivo) {
+        $this->stAtivo = $stAtivo;
+        return $this;
+    }
+
+
 }
 

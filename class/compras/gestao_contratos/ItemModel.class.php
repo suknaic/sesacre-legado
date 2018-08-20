@@ -21,6 +21,7 @@ class ItemModel {
     private $descItem = null;
     private $idUnidadeMedida = null;
     private $flValorVariavel = null;
+    private $qtItensAux = null;
     
     private $sucesso = false;
     private $msgRetorno = null;
@@ -162,6 +163,14 @@ class ItemModel {
         return $this;
     }
     
+    function getQtItensAux() {
+        return $this->qtItensAux;
+    }
+
+    function setQtItensAux($qtItensAux) {
+        $this->qtItensAux = $qtItensAux;
+        return $this;
+    }       
     
     public function cadastrarItem() {
         try {
@@ -928,6 +937,7 @@ class ItemModel {
                 $daoFinItens->setIdUnidadeMedida($value->getIdUnidadeMedida()); 
                 $daoFinItens->setIdContItensAlt($value->getIdContItensAlt());
                 $daoFinItens->setIdContItensAditivo($value->getIdContItensAditivo());
+                $daoFinItens->setQtItensAux($value->getQtItensAux());
                 
                 $daoFinItens->cadastrarItemAditivo($pdo);
                 if(!$daoFinItens->Sucesso()){

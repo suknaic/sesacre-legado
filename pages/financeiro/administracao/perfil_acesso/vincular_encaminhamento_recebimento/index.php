@@ -57,6 +57,24 @@
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+<!--                        <div id="vueApp">
+                            
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-success btn-rounded"
+                                       v-on:click.stop="carregaUsuarios">Load Users</a>
+                                </div>
+                            </div>  /row 
+                            
+                            <div class="row" v-if="debug">
+                                <div class="col-sm-12">
+                                    <h3>
+                                    Vuejs Debug Data
+                                    </h3>
+                                    <pre>{{ $data | json }}</pre>
+                                </div>
+                            </div>  /row 
+                        </div>-->
 
                         <!-- Inicio Form -->
                         <div class="row">
@@ -247,6 +265,9 @@
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
+<!--        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="indexVue.js"></script>-->
         <script src="index.js"></script>
         <!-- select2 -->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>

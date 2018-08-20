@@ -47,7 +47,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
+                        <h1 class="page-header text-overflow">Cadastro da Liquidação</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--Modal itens content-->
@@ -55,11 +55,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Busca de Pedido</h4>
+                                    <h4 class="modal-title">Busca de empenho</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número do pedido" class="form-control">
+                                        <input type="text" id="codItemPesquisa" placeholder="Número do empenho" class="form-control">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" id="btn-pesquisa">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
@@ -74,16 +74,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     <thead>
                                                         <tr>
                                                             <th>Pedido</th>
-                                                            <th>Descrição</th>
-                                                            <th>Tipo de gasto</th>
-                                                            <th>Fonte</th>
-                                                            <th>Despesa</th>
-                                                            <th>Valor</th>
-                                                            <th>Ata</th>
-                                                            <th>Contrato</th>
-                                                            <th>Modalidade</th>
-                                                            <th>Projeto/Atividade</th>
                                                             <th>Empenho</th>
+                                                            <th>Descrição</th>
+                                                            <th>Valor do Empenho</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -108,7 +101,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            Pesquisa Pedido:<span class="text-danger">*</span>
+                                            Pesquisa Empenho:<span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                 <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
@@ -143,61 +136,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                         </div>
                                     </div>
                                 </div>
-                                <!--Form das ordens-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Ordem</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº ordem:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="selectOrdem" id="selectOrdem">
-                                                                        <option value="0" selected="true">Selecione uma ordem</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-1"><a class="addOrdens btn btn-info">+</a></div>
-                                                            <div class="col-sm-6"></div>
-                                                        </div>
-                                                        <div class="form-group hidden">
-                                                            <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
-                                                            <div class="col-sm-10"></div>
-                                                        </div>
-                                                        <div class="form-group hidden">
-                                                            <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
-                                                            <div class="col-sm-10"></div>
-                                                        </div>
 
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-5 infoOrdem">
-                                                                <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Nº da Ordem</th>
-                                                                            <th>Tipo ordem</th>
-                                                                            <th>Valor da Ordem</th>
-                                                                            <th>Ação</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody></tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <!--Form das entrega-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -205,16 +144,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Entrega</h4>
+                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="selectEntrega" id="selectEntrega">
-                                                                        <option value="0" selected="true">Selecione uma entrega</option>
+                                                                        <option value="0" selected="true">Selecione um Documento Fiscal</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -226,13 +165,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th class="text-center">Nº da Entrega</th>
-                                                                            <th class="text-center">Nº da Ordem</th>
-                                                                            <th class="text-center">Data do Aviso</th>
-                                                                            <th class="text-center">Data Limite para Entrega</th>
-                                                                            <th class="text-center">Prazo para Entrega</th>
-                                                                            <th class="text-center">Entregue Dia</th>
-                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Nº Documento Fiscal</th>
+                                                                            <th class="text-center">Tipo Documento Fiscal</th>
+                                                                            <th class="text-center">Competência</th>
+                                                                            <th class="text-center">Data Emissão</th>
+                                                                            <th class="text-center">Data Atesto</th>
+                                                                            <th class="text-center">Saldo</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
@@ -257,38 +195,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="processoAdm" id="processoAdm" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--form processo administratio da despesa publica-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
                                                         <h4 class="panel-title">Dados do Documento Fiscal</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Documento Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Liquidação:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -299,123 +210,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="tpDocumento" id="tpDocumento">
-                                                                        <option value="0" selected="true">Selecione uma tipo de documento</option>
-                                                                        <option value="1">Cupom fiscal</option>
-                                                                        <option value="2">Recibo</option>
-                                                                        <option value="3">Nota fiscal</option>
-                                                                        <option value="4">Fatura</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Competência:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="competencia" id="competencia" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de emissão:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="emissao" id="emissao" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de atesto:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="atesto" id="atesto" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Valor:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="valorDocumentoFiscal" id="valorDocumentoFiscal" disabled="true"/>
+                                                                    <input type="text" class="form-control" name="valor_liquidacao" id="valor_liquidacao" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--form lançado no grp-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" >
-                                        <div class="panel-body">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Lançado no GRP</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2">
-                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked="checked">Sim</label>
-                                                                <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
-                                                            </div>
 
-                                                            <div class="col-sm-3 divNumeroGrp">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_grp" id="nr_grp" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--form lotacao-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" >
-                                        <div class="panel-body">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Remetente</h4>
-                                                    </div>
-                                                    <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
-                                                            
+                                                            <div class="col-sm-2"><b>Data da Liquidação:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="destinatario" id="destinatario">
-                                                                        <option value="0" selected="true">Selecione uma tipo</option>
-                                                                    </select>
+                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="data_liquidacao" id="data_liquidacao" />
                                                                 </div>
                                                             </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
 
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Observação:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"></textarea>
+                                                            </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
                                                     </div>
@@ -485,6 +305,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.js"></script>
+        <script src="/pages/financeiro/liquidacao/cad_liquidacao/index.js"></script>
     </body>
 </html>

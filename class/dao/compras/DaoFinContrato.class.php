@@ -241,11 +241,11 @@ class DaoFinContrato extends FinContratoTb {
             }
         }
     }
-    
-    public function retornaContratoComValores($pdo = null, $condicao = ''){
+
+    public function retornaContratoComValores($pdo = null, $condicao = '') {
         if ($pdo != null) {
             try {
-                
+
                 $sql = "WITH total AS 
                         (
                            SELECT
@@ -388,7 +388,7 @@ class DaoFinContrato extends FinContratoTb {
                         WHERE
                            itens.sit_fornecedor = '1' 
                            and cont.st_ativo = '1' "
-                           . $condicao .
+                        . $condicao .
                         " group by
                            itens.id_fornecedor,
                            cont.nr_contrato,
@@ -400,7 +400,7 @@ class DaoFinContrato extends FinContratoTb {
                            cont.fl_bloqueado 
                         order by
                            itens.id_fornecedor";
-                
+
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -712,6 +712,12 @@ class DaoFinContrato extends FinContratoTb {
         }
     }
 
+    /**
+     * Esse metodo e usando no Gdof na liquidaçao e pagamento
+     * @param PDO $pdo
+     * @param type $nr_pedido
+     */
+    
     public function retornaDadosContratoGdof(PDO $pdo, $nr_pedido) {
         try {
             if (!empty($pdo)) {
@@ -758,7 +764,7 @@ class DaoFinContrato extends FinContratoTb {
             $this->sucesso = false;
         }
     }
-    
+
     public function pesquisaDadosContrato($pdo = null) {
         if ($pdo != null) {
             try {
@@ -782,6 +788,26 @@ class DaoFinContrato extends FinContratoTb {
                         . " LEFT JOIN gco_modalidade M ON M.id_modalidade = PRO.id_modalidade"
                         . " WHERE C.id_contrato = :idContrato AND C.st_ativo = '1' "
                         . " AND C.sq_contrato = 0 AND C.tp_contrato = '2'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (PDOException $e) {
+                $this->msgRetorno = $e->getMessage();
+                $this->sucesso = false;
+            }
+        }
+    }
+
+    public function retornaContratoPorEmpenho($pdo = null, $idEmpenho) {
+        if ($pdo != null) {
+            try {
+                $sql = "";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idContrato", $this->getIdContrato(), PDO::PARAM_STR);
                 $stmt->execute();

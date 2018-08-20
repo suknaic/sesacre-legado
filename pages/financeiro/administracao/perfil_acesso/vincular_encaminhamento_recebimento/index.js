@@ -57,12 +57,11 @@ $(document).ready(function () {
             
             var Dados = {
                 idPessoa: $("#id_pessoa option:selected").val(),
-                idTipoLot: $("#tipo_lotacao option:selected").val(),
-                idLotacao: $("#id_lotacao option:selected").val(),
+                idDocLotacao: $("#id_doc_lotacao option:selected").val(),
                 tpTramitacao: $("#tp_tramitacao option:selected").val()
             }
 
-            if (Dados.idPessoa == "0" || Dados.idTipoLot == "0" || Dados.idLotacao == "0" || Dados.tpTramitacao == "0"){
+            if (Dados.idPessoa == "0" || Dados.idDocLotacao == "0" || Dados.tpTramitacao == "0"){
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
@@ -130,18 +129,10 @@ $(document).ready(function () {
 
         var $this = $(this);
         var dados = $(this).closest('tr').data('objeto');
-        var tipo = dados.tramitacao;
-        
-        var id = 0;
-        if (tipo == '1') { //Encaminhamento
-            id = dados.id_doc_vinc_encaminhamento;
-        } else if(tipo == '2'){ //Recebimento
-            id = dados.id_doc_vinc_recebimento;
-        }
-        
+        var tipo = dados.id_tipo_tramitacao;
+        var id = dados.id_tramitacao;
         
         var item = $this.closest('tr').find('td:eq(0)').text() + ' - ' + $this.closest('tr').find('td:eq(1)').text() + ' - ' + $this.closest('tr').find('td:eq(2)').text() ;
-
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',

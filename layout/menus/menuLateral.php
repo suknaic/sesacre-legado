@@ -274,7 +274,7 @@
                                             <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
                                         <li>
-                                            <a href="#">Encaminhar Documento Fiscal</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/encaminha_documento/index.php">Encaminhar Documento Fiscal</a>
                                         </li>
                                         <li>
                                             <a href="#">Receber Documento Fiscal</a>
@@ -305,7 +305,7 @@
                                                     <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_encaminhamento_recebimento">Vincular Encaminhamento / Recebimento</a>
+                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_encaminhamento_recebimento/">Vincular Encaminhamento / Recebimento</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -319,13 +319,13 @@
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao">Tipo de Destinatário / Remetente</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao/">Tipo de Remetente / Destinatário</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario">Vincular Tipo de Destinatário / Remetente</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario/">Vincular Tipo de Remetente / Destinatário</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao">Vincular Tramitação</a>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao/">Vincular Tramitação</a>
                                                 </li>
                                             </ul>
 

@@ -1,6 +1,8 @@
 <?php
 
-class FinDocTramitacao {
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocTramitacao.class.php";
+
+class DocTramitacao {
 
     private $id_doc_tramitacao = null;
     private $id_documento_fiscal = null;
@@ -193,4 +195,41 @@ class FinDocTramitacao {
         return $this;
     }
 
+    public function cadastraTramitacao($pdo) {
+        if (empty($pdo)) {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+        }
+
+        $daoFinDocTramitacao = new DaoFinDocTramitacao();
+        $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+        $daoFinDocTramitacao->setIdPessoa($this->id_pessoa);
+        $daoFinDocTramitacao->setIdDocOrigem($this->id_doc_origem);
+        $daoFinDocTramitacao->setIdDocDestino($this->id_doc_destino);
+        $daoFinDocTramitacao->setIdDocumentoSituacao($this->id_documento_situacao);
+        $daoFinDocTramitacao->setDsDocTramitacao($this->ds_doc_tramitacao);
+        $daoFinDocTramitacao->setIdTipoTramitacao($this->id_tipo_tramitacao);
+        $daoFinDocTramitacao->setFlPesquisa($this->fl_pesquisa);
+        $daoFinDocTramitacao->insert($pdo);
+        
+        $this->id_doc_tramitacao = ($pdo->lastInsertId('fin_doc_tramitacao_id_doc_tramitacao_seq'));
+        if (!Log::SalvaLogI('fin_doc_tramitacao', $this->id_doc_tramitacao, $pdo)) {
+            return false;
+        }
+        
+        return $daoFinDocTramitacao->getSucesso();
+    }
+
+//    public function atualizaTramitacaoDocumento(PDO $pdo) {
+//        if (empty($pdo)) {
+//            $conexao = new Conexao();
+//            $pdo = $conexao->connect();
+//        }
+//
+//        $daoFinDocTramitacao = new DaoFinDocTramitacao();
+//        $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+//        $daoFinDocTramitacao->setIdDocTramitacao($this->id_doc_tramitacao);
+//        $daoFinDocTramitacao->atualizaIdDocTramitacaoDocumento($pdo);
+//        return $daoFinDocTramitacao->getSucesso();
+//    }
 }
