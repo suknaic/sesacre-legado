@@ -305,7 +305,7 @@
                                                     <a href="/pages/financeiro/central_responsavel/index.php">Vincular Central de Demanda</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_encaminhamento_recebimento">Vincular Encaminhamento / Recebimento</a>
+                                                    <a href="/pages/financeiro/administracao/perfil_acesso/vincular_encaminhamento_recebimento/">Vincular Encaminhamento / Recebimento</a>
                                                 </li>
                                             </ul>
                                         </li>
