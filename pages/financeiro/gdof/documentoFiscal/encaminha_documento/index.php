@@ -144,7 +144,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="id_contratado" class="form-control">
                                                         <option value="0">Selecione o CNPJ/Nome Contratado</option>
-                                                        <?php echo $$pessoaJuridicaOptions; ?>
+                                                        <?php echo $pessoaJuridicaOptions; ?>
                                                     </select>
                                                 </div>
                                             </div>

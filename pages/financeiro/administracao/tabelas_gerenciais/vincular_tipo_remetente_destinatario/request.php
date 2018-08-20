@@ -36,4 +36,23 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    
+    CASE 'removerDocLotacao':
+        try {
+                           
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);                        
+            $prog = new DocLotacao();            
+            $prog->setIdDocLotacao((int)$filtro);
+            
+            echo $prog->excluir();            
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+        
+        
 }

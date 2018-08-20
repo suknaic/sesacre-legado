@@ -84,7 +84,7 @@ $(document).ready(function () {
                 "destinatario": $("#destinatario").val(),
                 "id": id
             }
-
+            $('#modalEncaminhar').modal('hide');
             $.ajax({
                 "url": "/pages/financeiro/gdof/documentoFiscal/encaminha_documento/request.php",
                 "method": "POST",
@@ -94,9 +94,8 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
-                    return false;
-                    $this.prop("disabled", false);
+                    
+                    
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
