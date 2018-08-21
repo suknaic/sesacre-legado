@@ -1144,7 +1144,7 @@ $(document).ready(function () {
                 matricula: DadosContrato.nrMatricula,
                 cargo: DadosContrato.idCargo
             };
-//            console.log(DadosObrigatorio);
+
             $campo = 0;
             $i = 0;
             $.each(DadosObrigatorio, function (index, value) {
@@ -1159,7 +1159,6 @@ $(document).ready(function () {
                     } else if ($i >= 17 && $i <= 22) {
                         func.modalAlert(func.msgPreencherCampos + "  - Dados Funcionais (" + index + ")");
                     }
-                    console.log($i + "-" + index + "=>" + value);
                     $campo = 1;
                     return false;
                 }

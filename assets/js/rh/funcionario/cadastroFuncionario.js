@@ -738,7 +738,6 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    console.log($i+"-"+index+"=>"+value);
                     if ($i <= 12) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
                     } else if ($i >= 13 && $i <= 16) {
@@ -746,7 +745,6 @@ $(document).ready(function () {
                     } else if ($i >= 17 && $i <= 22) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Funcionais (" + index + ")");
                     }
-                    console.log($i + "-" + index + "=>" + value);
                     $campo = 1;
                     return false;
                 }
@@ -766,12 +764,6 @@ $(document).ready(function () {
                 return false;
             }
 //***********************************************
-//console.log(DadosPessoa);
-//console.log(DadosPessoaFisica);
-//console.log(DadosCompetencia);
-//console.log(DadosContrato);
-//console.log(DadosContrato_Lotacao);
-//return false;
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
                 "dataType": "html",
@@ -785,7 +777,6 @@ $(document).ready(function () {
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
-                    //$this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -794,13 +785,11 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
                         console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
                             console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
@@ -814,7 +803,6 @@ $(document).ready(function () {
                         return false;
                         //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
-                        console.log('Ultimo else');
                         console.log(response);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
