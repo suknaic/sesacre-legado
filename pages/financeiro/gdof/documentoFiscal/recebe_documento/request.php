@@ -25,8 +25,24 @@ switch ($_REQUEST['acao']) {
                     ->setTpGasto((int) $dados['tpGasto'])
                     ->setSitDocFiscal((int) $dados['sitDoc'])
                     ->setIdUsuario($session->getIdUser())
-                    ->setRemetente((int) $dados['remetente']);
+                    ->setDestinatario((int) $dados['destinatario']);
             echo $prog->listaTodos();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    CASE 'cadastrarRecebimento':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT);
+            $prog = new DocFiscalRecebimento();
+            $prog->setIdUsuario($session->getIdUser());
+            $prog->setIdDocumentoFiscal((int)$dados);
+            echo $prog->cadastrarRecebimento();
+        
             return;
             break;
         } catch (Error $e) {

@@ -10,8 +10,8 @@ $(document).ready(function () {
     });
     
     //Inverte a posição do select para tipo de Remetente e Destinatário
-    $('body').on('change','#tp_doc_tramitacao',function(e){
-        var tipo_tramitacao = $("#tp_doc_tramitacao option:selected").val();
+    $('body').on('change','#tp_parm_tramitacao',function(e){
+        var tipo_tramitacao = $("#tp_parm_tramitacao option:selected").val();
         if (tipo_tramitacao == '1') { //Encaminhar
             $('#remetente_conteudo').prependTo('#primeiro');
             $('#destinatario_conteudo').prependTo('#segundo');

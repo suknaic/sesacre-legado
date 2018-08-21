@@ -195,5 +195,32 @@ class DaoFinDocVincRecebimento extends FinDocVincRecebimento {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    function retornaTodosDocLotacao(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_doc_vinc_recebimento, id_pessoa, id_doc_lotacao "
+                        . "from fin_doc_vinc_recebimento where id_doc_lotacao = :id_doc_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = true;
+                    $this->msgRetorno = "";
+                }
+                
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
 }

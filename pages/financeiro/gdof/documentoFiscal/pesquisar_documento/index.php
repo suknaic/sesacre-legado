@@ -197,7 +197,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="tramitacao" class="form-control">
                                                         <option value="0" selected="true">Selecione uma Trâmite</option>
-                                                        <option value="1">Aguardando</option>
+                                                        <option value="1">Aguardando Tramitação</option>
                                                         <option value="3">Encaminhado</option>
                                                         <option value="5">Recebido</option>
                                                     </select>
@@ -206,13 +206,12 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="destinatario">Remetente/Destinatário:</label>
+                                                <label for="destinatario">Tipo de Remetente e Remetente/Tipo de Destinatário e Destinatário:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="destinatario" class="form-control">
-                                                        <option value="0">Selecione um Remetente/Destinatário</option>
                                                         <?php echo $selectLotacoes; ?>
                                                     </select>
                                                 </div>

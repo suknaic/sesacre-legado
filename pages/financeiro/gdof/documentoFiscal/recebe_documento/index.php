@@ -43,7 +43,7 @@ require_once "index.load.php";
             <!--Div resposta do sucessor do ajax-->
             <div id="alerta" style="text-align: center"></div>
 
-            <div id="modalEncaminhar" class="modal fade" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+<!--            <div id="modalEncaminhar" class="modal fade" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
                 <div class="modal-dialog">
                     <form id="formEncaminhar" role="form" action="#" method="post">
                         <div class="modal-content">
@@ -61,7 +61,7 @@ require_once "index.load.php";
                                         </span>
                                         <select id="tipoDestinatario" class="form-control">
                                             <option value="0" selected="true">Selecione um tipo</option>
-                                            <?php echo $docFiscalEncaminhamento->retornaOptionsTipoDestinatarioUsuario(); ?>
+                                            <?php //echo $docFiscalEncaminhamento->retornaOptionsTipoDestinatarioUsuario(); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -82,10 +82,10 @@ require_once "index.load.php";
                                 <button type="button" class="btn btn-default" id="fecharErro" data-dismiss="modal">Fechar</button>
                                 <button type="button" class="btn btn-primary enviarEncaminhamento">Enviar</button>
                             </div>
-                        </div><!-- /.modal-content -->
+                        </div> /.modal-content 
                     </form>
-                </div><!-- /.modal-dialog -->
-            </div>
+                </div> /.modal-dialog 
+            </div>-->
 
 
             <div class="boxed">
@@ -97,7 +97,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Encaminhamento de Documento Fiscal</h1>                       
+                        <h1 class="page-header text-overflow">Recebimento de Documento Fiscal</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -144,7 +144,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="id_contratado" class="form-control">
                                                         <option value="0">Selecione o CNPJ/Nome Contratado</option>
-                                                        <?php echo $$pessoaJuridicaOptions; ?>
+                                                        <?php echo $pessoaJuridicaOptions; ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -231,14 +231,14 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="destinatario">Tipo Remetente/Remetente:</label>
+                                                <label for="destinatario">Tipo Destinatário/Destinatário:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="remetente" class="form-control">
-                                                        <option value="0">Selecione um Remetente</option>
-                                                        <?php echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo(0); ?>
+                                                    <select id="destinatario" class="form-control">
+                                                        <option value="0">Selecione um Tipo de Destinatário/Destinatário</option>
+                                                        <?php echo $docVincEncaminhamento->optionsLotacaoEncaminhamentoPorUsuarioETipo(0); ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -271,7 +271,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Tipo</th>
                                                     <th class="text-center">Competência</th>
-                                                    <th class="text-center">Remetente</th>
+                                                    <th class="text-center">Destinatário</th>
                                                     <th class="text-center">Valor</th>
                                                     <th class="text-center">Tramitação</th>
                                                     <th class="text-center">Situação</th>

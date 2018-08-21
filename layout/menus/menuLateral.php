@@ -274,10 +274,10 @@
                                             <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
                                         </li>
                                         <li>
-                                            <a href="/pages/financeiro/gdof/documentoFiscal/encaminha_documento/index.php">Encaminhar Documento Fiscal</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/encaminha_documento/">Encaminhar Documento Fiscal</a>
                                         </li>
                                         <li>
-                                            <a href="#">Receber Documento Fiscal</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/recebe_documento/">Receber Documento Fiscal</a>
                                         </li>
                                     </ul>
                                 </li>

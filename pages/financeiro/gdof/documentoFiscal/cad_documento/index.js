@@ -119,6 +119,9 @@ $(document).ready(function () {
 
     $("body").on("change", "#selectOrdem", function (e) {
         var idOrdem = $("body").find("#selectOrdem").val();
+        if(idOrdem == 0){
+            return false;
+        }
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
@@ -140,6 +143,10 @@ $(document).ready(function () {
     var infTabOrdem = {};
 
     $("body").on("click", ".addOrdens", function (e) {
+
+        if($("#selectOrdem option:selected").val() == 0){
+            return false;
+        }
 
         array = {
             "id_ordem": $("#selectOrdem option:selected").val(),
@@ -239,6 +246,7 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
+                console.log(response)
                 $("#tabelaEntrega").find("tbody").html(response);
                 $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
             }
@@ -286,11 +294,13 @@ $(document).ready(function () {
             });
 
             if (entregas.length <= 0) {
+                $this.prop("disabled", false);
                 func.modalAlert("Nenhuma entrega foi adicionada.");
                 return false;
             }
             
             if ($("#destinatario option:selected").val() == 0) {
+                $this.prop("disabled", false);
                 func.modalAlert("Nenhuma Destinatário foi selecionado.");
                 return false;
             }

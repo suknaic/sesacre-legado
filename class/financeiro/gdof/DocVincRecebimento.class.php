@@ -7,6 +7,8 @@ class DocVincRecebimento {
     private $idDocVincRecebimento = null;
     private $idDocLotacao = null;
     private $idPessoa = null;
+    private $sucesso = false;
+    private $msgRetorno = null;        
 
     function getIdDocVincRecebimento() {
         return $this->idDocVincRecebimento;
@@ -33,6 +35,13 @@ class DocVincRecebimento {
     function setIdPessoa($idPessoa) {
         $this->idPessoa = $idPessoa;
         return $this;
+    }
+    function getSucesso() {
+        return $this->sucesso;
+    }
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
     }
 
     public function cadastrar() {
@@ -193,6 +202,60 @@ class DocVincRecebimento {
             return $daoFinDocVincRecebimento->getMsgRetorno();
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    function excluirTodosDocLotacao(PDO $pdo = null){
+        $this->sucesso = false;
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+            }
+                                                
+            /**
+             * Lista todos os Doc Vinc Recebimento, de acordo com o ID Doc Lotação
+             * 
+             */           
+                                    
+            $daoFinDocVincRecebimento = new DaoFinDocVincRecebimento();
+            $daoFinDocVincRecebimento->setIdDocLotacao($this->idDocLotacao);
+            $daoFinDocVincRecebimento->retornaTodosDocLotacao($pdo);
+            if(!$daoFinDocVincRecebimento->getSucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinDocVincRecebimento->getMsgRetorno(); 
+                return;
+            }
+            
+            $result = $daoFinDocVincRecebimento->getMsgRetorno();
+            if(empty($result)){
+                $this->sucesso = true;
+                $this->msgRetorno = "Não possui Registro";
+                return;
+            }
+            
+            foreach ($result as $key => $value) {
+                $daoFinDocVincRecebimento->setIdDocVincRecebimento($value['id_doc_vinc_recebimento']);
+                if (!Log::SalvaLogD('fin_doc_vinc_recebimento', $daoFinDocVincRecebimento->getIdDocVincRecebimento(), $pdo)) {                    
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no LOG";
+                    return;
+                }
+                $daoFinDocVincRecebimento->delete($pdo);
+                if (!$daoFinDocVincRecebimento->getSucesso()) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = $daoFinDocVincRecebimento->getMsgRetorno();
+                    return;                    
+                }
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Excluido geral";                                               
+            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();            
         }
     }
 

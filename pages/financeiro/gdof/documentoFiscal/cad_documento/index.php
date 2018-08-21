@@ -154,7 +154,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº ordem:</b></div>
+                                                            <div class="col-sm-2"><b>Nº Ordem:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -182,7 +182,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                     <thead>
                                                                         <tr>
                                                                             <th>Nº da Ordem</th>
-                                                                            <th>Tipo ordem</th>
+                                                                            <th>Tipo Ordem</th>
                                                                             <th>Valor da Ordem</th>
                                                                             <th>Ação</th>
                                                                         </tr>
@@ -209,7 +209,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Entrega:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -261,7 +261,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Protocolo Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -288,7 +288,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Documento Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Documento Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -299,7 +299,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -316,7 +316,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Competência:</b></div>
+                                                            <div class="col-sm-2"><b>Competência:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -327,7 +327,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de emissão:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Emissão:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -338,7 +338,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de atesto:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Atesto:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
