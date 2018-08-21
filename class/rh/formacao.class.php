@@ -367,6 +367,24 @@ class Formacao {
         }
     }
 
+    public function retornarFormacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $formacao = new DaoSesFormacao();
+            $formacao->setId_escolaridade_formacao($this->id_formacao);
+
+            $verifica = $formacao->retornaFormacao($pdo);
+            if ($verifica === FALSE) {
+                return '';
+            } else {
+                return $verifica;
+            }
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
 }
 
 ?>

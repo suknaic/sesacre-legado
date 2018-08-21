@@ -1,6 +1,6 @@
 <?php
 
-//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoa.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/formacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoaFisica.class.php";
 
 class pessoaFisica {
@@ -223,15 +223,17 @@ class pessoaFisica {
                 return;
             }
 //************************************************************************
-            print_r(new DateTime());
-            $pdo->rollBack();
+            $dtNascimento = strtotime($this->dt_nascimento);
+            $dtAtual = strtotime(new DateTime());
+            var_dump($dtNascimento);
+            var_dump($dtAtual);
             return;
-//            if ($this->dt_nascimento > date('d:m:Y')new DateTime();) {
-//                $this->setSuccess(false);
-//                $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
-//                $pdo->rollBack();
-//                return;
-//            }
+            if ($dtNascimento > $dtAtual) {
+                $this->setSuccess(false);
+                $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
+                $pdo->rollBack();
+                return;
+            }
 //*****************************************
             $result = $pessoaFisica->insert($pdo);
 //*****************************************
@@ -258,12 +260,24 @@ class pessoaFisica {
         }
     }
 
-    public function cadastrarCompetencia($pdo) {
+    /**
+     * @param $pdo
+     * @return type|void
+     */
+    public function cadastrarCompetencia($pdo, $escolaridade = null) {
         try {
 
             $pessoaFisica = new DaoSesPessoaFisica();
             $pessoaFisica->setId_escolaridade_formacao_competencia($this->id_escolaridade_formacao_competencia);
             $pessoaFisica->setId_pessoa_fisica($this->id_pessoa_fisica);
+
+            $formacao = new Formacao();
+            $formacao->setId_formacao($this->id_escolaridade_formacao_competencia);
+            $resultado = $formacao->retornarFormacao($pdo);
+
+            if ($resultado['id_escolaridade'] != $escolaridade){
+                return Metodos::retornoAjax('Erro', 'alert', 'Curso Não Corresponde ao Nível de Escolaridade.');
+            }
 //          ****************************************************************************
             $result = $pessoaFisica->insertCompetencia($pdo);
 //          ****************************************************************************

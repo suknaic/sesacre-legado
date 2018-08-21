@@ -389,7 +389,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        func.fechaModalReload();
+                        func.fechaModalHref('/pages/rh/lotacao/index.php');
                         return false;
                     } else {
                         console.log(response);
@@ -465,8 +465,6 @@ $(document).ready(function () {
                                 listaCidadeComboUf(response[0]['id_estado'], cidade);
                             }
                         });
-                        //$("#ibge").val(dados.ibge);
-                        //console.log(dados);
                     } //end if.
                     else {
                         //CEP pesquisado não foi encontrado.
@@ -486,15 +484,19 @@ $(document).ready(function () {
     });
     //**************************************************************************
     $('body').on('click', '.pesquisaPessoaJuridica', function (e) {
-        func.carregaTabelaPadrao('tabelaPessoa', null, null, true);
         $('#tipo').val(2);
+        $('#modalTitulo').html('Pesquisa de Empresa');
+        $("#nm_pessoa").attr("placeholder", "Nome da Empresa").val("").focus().blur();
         $('#nm_pessoa').val("");
+        func.carregaTabelaPadrao('tabelaPessoa', null, null, true);
         $('#nm_pessoa').focus();
     });
     $('body').on('click', '.pesquisaPessoaFisica', function (e) {
-        func.carregaTabelaPadrao('tabelaPessoa', null, null, true);
         $('#tipo').val(1);
+        $('#modalTitulo').html('Pesquisa de Pessoa');
+        $("#nm_pessoa").attr("placeholder", "Nome da Pessoa").val("").focus().blur();
         $('#nm_pessoa').val("");
+        func.carregaTabelaPadrao('tabelaPessoa', null, null, true);
         $('#nm_pessoa').focus();
     });
     $('body').on('click', '#btn-pesquisa', function (e) {

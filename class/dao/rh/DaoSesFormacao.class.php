@@ -81,7 +81,7 @@ class DaoSesFormacao extends SesFormacao {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":idFormacao", $this->getId_escolaridade_formacao(), PDO::PARAM_INT);
             $sth->execute();
-            if ($sth->rowCount() >= 1) {
+            if ($sth->rowCount() >= 0) {
                 return $sth->fetch(PDO::FETCH_ASSOC);
             } else {
                 return $retorno;

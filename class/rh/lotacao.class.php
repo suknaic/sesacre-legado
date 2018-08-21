@@ -323,6 +323,17 @@ class Lotacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $busca);
             }
+
+            //********* Verifica Existencia do Nome da Lotacao **********
+            if ($this->nm_lotacao != $busca['nm_lotacao']) {
+                if ($lotacao->verificarExistenciaLotacaoNome($pdo)) {
+                    $sucesso = false;
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE.'(<strong>Lotação Com Mesmo Nome.</strong>)');
+                }
+            }
+            //***********************************************************
+
             //*****************************************
             $result = $lotacao->update($pdo);
             //*****************************************
@@ -335,7 +346,7 @@ class Lotacao {
 
             if (Log::SalvaLogU('ses_lotacao', $this->getId_lotacao(), $busca, $pdo)) {
                 $pdo->commit();
-                return Metodos::retornoAjax("ok", "alert", STR_EDICAO_SUCESSO);
+                return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
             } else {
                 $sucesso = false;
                 $pdo->rollBack();
@@ -538,15 +549,14 @@ class Lotacao {
             }
 
             $rs = $lotacao->desativarLotacao($pdo);
-            if ($rs != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
+            if (!$rs) {
                 $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             //***********************************************************************
             if (LOG::SalvaLogU('ses_lotacao', $this->id_lotacao, $busca, $pdo)) {
                 $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
             }
             //***********************************************************************************
         } catch (Exception $exc) {
@@ -565,19 +575,18 @@ class Lotacao {
 
             $busca = $lotacao->retornaLotacao($pdo);
             if (!$busca) {
-                return Metodos::retornoAjax('Erro', 'alert', 'Registro Não Encontrado.');
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
             }
 
             $rs = $lotacao->ativarLotacao($pdo);
-            if ($rs != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
+            if (!$rs) {
                 $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             //***********************************************************************
             if (LOG::SalvaLogU('ses_lotacao', $this->id_lotacao, $busca, $pdo)) {
                 $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", STR_ATIVADO_SUCESSO);
             }
             //***********************************************************************************
         } catch (Exception $exc) {
