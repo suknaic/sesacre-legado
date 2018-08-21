@@ -106,7 +106,7 @@ class DocLotacao {
     
     function optionsTipoLotacao(){
         try {
-            $retorno = "<option value=0>Selecione um Destinatário/Remetente</option>";
+            $retorno = "<option value=0>Selecione um Tipo de Remetente/Tipo de Destinatário</option>";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             

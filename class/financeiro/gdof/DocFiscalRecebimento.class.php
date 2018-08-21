@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocum
 
 class DocFiscalRecebimento {
 
+    private $idDocumentoFiscal = null;
     private $nrDocFiscal = null;
     private $anoDocFiscal = null;
     private $contratado = null;
@@ -15,7 +16,17 @@ class DocFiscalRecebimento {
     private $sitDocFiscal = null;
     private $destinatario = null;
     private $id_usuario = null;
+    
+    function getIdDocumentoFiscal() {
+        return $this->idDocumentoFiscal;
+    }
 
+    function setIdDocumentoFiscal($idDocumentoFiscal) {
+        $this->idDocumentoFiscal = $idDocumentoFiscal;
+        return $this;
+    }
+
+    
     public function getIdUsuario() {
         return $this->id_usuario;
     }
@@ -238,17 +249,12 @@ class DocFiscalRecebimento {
                                     <button type='button' title='Ver documento fiscal' class='ver_documento' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-file-text-o text-info' aria-hidden='true'></i>
                                     </button>
-                                    <button type='button' title='editar' class='editar' value='" . $linha['id_documento_fiscal'] . "'>
-                                     <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>
-                                    </button>
                                     
-                                    <button title='Encaminha documento fiscal' type='button' class='enviarDoCumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
-                                    <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
+                                    
+                                    <button title='Receber documento fiscal' type='button' class='receberDocumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
+                                    <i class='fa fa-download fa-lg text-info' aria-hidden='true'></i>
                                     </button>    
                                     
-                                    <button type='button' title='Excluir documento fiscal' class='excluir text-danger' value='" . $linha['id_documento_fiscal'] . "'>
-                                    <i class='fa fa-trash' aria-hidden='true'></i>
-                                    </button>
                                </td>"
                             . "</tr>";
                 }
@@ -296,33 +302,38 @@ class DocFiscalRecebimento {
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramit.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
         }
 
-        if ($this->getRemetente()) {
-            $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getRemetente();
+        if ($this->getDestinatario()) {
+            $filtroSql .= " and docLotacaoDestino.id_lotacao = " . $this->getDestinatario();
         } else {
-            $docVincRecebimento = new DocVincRecebimento();
-            $docVincRecebimento->setIdPessoa($this->id_usuario);
-            $idLotacoesOrigem = [];
+            $docVincEncaminhamento = new DocVincEncaminhamento();
+            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
+            $idLotacoesDestino = [];
 
-            foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
-                $idLotacoesOrigem[] = $dados["id_lotacao"];
+            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
+                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
+                    $idLotacoesOrigem[] = $dados["id_lotacao"];
+                }
             }
-
-            $filtroSql .= " and docLotacaoOrigem.id_lotacao in (" . implode(' , ', $idLotacoesOrigem) . ") ";
+            
+            if (!empty($idLotacoesDestino)) {
+                $filtroSql .= " and docLotacaoDestino.id_lotacao in (" . implode(' , ', $idLotacoesOrigem) . ") ";
+            }
+            
         }
 
 
         return $filtroSql;
     }
 
-    public function retornaOptionsTipoDestinatarioUsuario() {
+    public function retornaOptionsTipoRemetenteUsuario() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $options = '';
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->retornaTipoLotacaoParaEncaminhamento($pdo, $this->id_usuario);
+        $daoFinDocumentoFiscal->retornaTipoLotacaoParaRecebimento($pdo, $this->id_usuario);
         if ($daoFinDocumentoFiscal->sucesso()) {
             foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $dados) {
                 $options .= '<option value = "' . $dados["id_doc_tipo_lotacao"] . '">' . $dados["nm_doc_tipo_lotacao"] . '</option>';
@@ -331,12 +342,12 @@ class DocFiscalRecebimento {
         return $options;
     }
 
-    public function retornaDestinatiroPorTipo(int $tipo = 0) {
+    public function retornaRemetentePorTipo(int $tipo = 0) {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->retornaDestinatarioPorTipo($pdo, $tipo);
-        $options = '<option value="0" selected="true">Selecione um Destinatário</option>';
+        $daoFinDocumentoFiscal->retornaRemetentePorTipo($pdo, $tipo);
+        $options = '<option value="0" selected="true">Selecione um Remetente</option>';
 
         if ($daoFinDocumentoFiscal->sucesso()) {
             foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $dados) {
@@ -346,50 +357,99 @@ class DocFiscalRecebimento {
         return $options;
     }
 
-    public function cadastrarEncaminhamento($dados) {
+    public function cadastrarRecebimento() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $pdo->beginTransaction();
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
+        $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
         $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
         if (!$daoFinDocumentoFiscal->sucesso()) {
             return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a origem");
         }
 
         $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
+        $destino = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_destino"];
+        
+        $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];
+        $tipo_destinatario = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_destinatario"];        
+        
+        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo, $tipo_remetente, $tipo_destinatario, '2'); //Ultimo parametro indica que é Recebimento
 
-        $daoFinDocumentoFiscal->retornaSituacaoDoParametro($pdo, $origem, $dados["tipoDestinatario"]);
         if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a situaçao");
+            return Metodos::retornoAjax("Erro", "alert", "O parâmetro da vinculação da tramitação não está cadastrado para este tipo de remetente/ tipo de destinatário");
         }
 
         $situacao = $daoFinDocumentoFiscal->getMsgRetorno()["id_documento_situacao"];
 
-        //codigo abaixo cadastra a tramitacao encaminhado
+        //codigo abaixo cadastra a tramitacao recebido
         $docTramitacao = new DocTramitacao();
         $docTramitacao->setIdPessoa($this->id_usuario);
         $docTramitacao->setIdDocOrigem($origem);
-        $docTramitacao->setIdDocDestino($dados["destinatario"]);
+        $docTramitacao->setIdDocDestino($destino);
         $docTramitacao->setIdDocumentoSituacao($situacao);
-        $docTramitacao->setIdTipoTramitacao(3);
-        $docTramitacao->setIdDocumentoFiscal($dados["id"]);
+        $docTramitacao->setIdTipoTramitacao(5);
+        $docTramitacao->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
         $docTramitacao->setFlPesquisa(1);
         if (!$docTramitacao->cadastraTramitacao($pdo)) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
         }
 
-        //codigo abaixo cadastra a tramitacao aguardando recebimento
+        //codigo abaixo cadastra a tramitacao aguardando encaminhamento
+        $docTramitacao->setIdDocOrigem($destino);
+        $docTramitacao->setIdDocDestino(null);
         $docTramitacao->setFlPesquisa(0);
-        $docTramitacao->setIdTipoTramitacao(4);
+        $docTramitacao->setIdTipoTramitacao(2);
         if (!$docTramitacao->cadastraTramitacao($pdo)) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
         }
         
         $pdo->commit();
-        return Metodos::retornoAjax("ok", "html", "Documento encaminhado com sucesso");
+        return Metodos::retornoAjax("ok", "html", "Documento recebido com sucesso");
     }
+    
+//    public function optionsLotacaoEncaminhamentoPorUsuarioETipo(int $idLotacao = 0) {
+//        try {
+//            $conexao = new Conexao();
+//            $pdo = $conexao->connect();
+//            $options = '';
+//
+//            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
+//            $daoFinDocVincEncaminhamento->setIdPessoa($this->idPessoa);
+//            $daoFinDocVincEncaminhamento->retornaLotacaoTipoEncaminhamentoPorUsuario($pdo);
+//            if ($daoFinDocVincEncaminhamento->getSucesso()) {
+//                foreach ($daoFinDocVincEncaminhamento->getMsgRetorno() as $linha) {
+//
+//                    if ($linha["id_doc_lotacao"] == $idLotacao) {
+//                        $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
+//                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
+//                    } else {
+//                        $options .= '<option value="' . $linha["id_lotacao"] . '"  id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
+//                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
+//                    }
+//                }
+//            }
+//            return $options;
+//        } catch (Exception $ex) {
+//            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+//        }
+//    }
+//    
+//    
+//    public function retornaIdLotacaoUsuarioEncaminhamento() {
+//        try {
+//            $conexao = new Conexao();
+//            $pdo = $conexao->connect();
+//
+//            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
+//            $daoFinDocVincEncaminhamento->setIdPessoa($this->idPessoa);
+//            $daoFinDocVincEncaminhamento->retornaLotacaoTipoEncaminhamentoPorUsuario($pdo);
+//            return $daoFinDocVincEncaminhamento->getMsgRetorno();
+//        } catch (Exception $ex) {
+//            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+//        }
+//    }
 
 }

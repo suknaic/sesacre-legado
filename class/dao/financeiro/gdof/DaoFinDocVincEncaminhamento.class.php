@@ -168,5 +168,34 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
         
         return $filtro;
     }
+    
+    public function retornaLotacaoTipoEncaminhamentoPorUsuario(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select lotacao.id_lotacao, docLotacao.id_doc_lotacao, lotacao.nm_lotacao, docTipo.nm_doc_tipo_lotacao
+                        from fin_doc_vinc_encaminhamento as encaminhamento
+                        inner join fin_doc_lotacao as docLotacao
+                        on docLotacao.id_doc_lotacao = encaminhamento.id_doc_lotacao
+                        inner join ses_lotacao as lotacao 
+                        on lotacao.id_lotacao = docLotacao.id_lotacao
+                        inner join fin_doc_tipo_lotacao as docTipo
+                        on docTipo.id_doc_tipo_lotacao = docLotacao.id_doc_tipo_lotacao
+                        where encaminhamento.id_pessoa = :usuario";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":usuario", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->execute();
+
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 }
 

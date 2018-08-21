@@ -238,12 +238,17 @@ class DocFiscalEncaminhamento {
                                     <button type='button' title='Ver documento fiscal' class='ver_documento' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-file-text-o text-info' aria-hidden='true'></i>
                                     </button>
+                                    <button type='button' title='editar' class='editar' value='" . $linha['id_documento_fiscal'] . "'>
+                                     <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>
+                                    </button>
                                     
-                                    <button title='Receber documento fiscal' type='button' class='recebeDocumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
+                                    <button title='Encaminha documento fiscal' type='button' class='enviarDoCumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
                                     </button>    
                                     
-
+                                    <button type='button' title='Excluir documento fiscal' class='excluir text-danger' value='" . $linha['id_documento_fiscal'] . "'>
+                                    <i class='fa fa-trash' aria-hidden='true'></i>
+                                    </button>
                                </td>"
                             . "</tr>";
                 }
@@ -291,7 +296,7 @@ class DocFiscalEncaminhamento {
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramit.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
         }
 
         if ($this->getRemetente()) {
@@ -301,11 +306,16 @@ class DocFiscalEncaminhamento {
             $docVincRecebimento->setIdPessoa($this->id_usuario);
             $idLotacoesOrigem = [];
 
-            foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
-                $idLotacoesOrigem[] = $dados["id_lotacao"];
+            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
+                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
+                    $idLotacoesOrigem[] = $dados["id_lotacao"];
+                }   
             }
-
-            $filtroSql .= " and docLotacaoOrigem.id_lotacao in (" . implode(' , ', $idLotacoesOrigem) . ") ";
+            
+            if (!empty($idLotacoesOrigem)) {
+                $filtroSql .= " and docLotacaoOrigem.id_lotacao in (" . implode(' , ', $idLotacoesOrigem) . ") ";
+            }
+            
         }
 
 
@@ -388,3 +398,4 @@ class DocFiscalEncaminhamento {
     }
 
 }
+

@@ -288,11 +288,14 @@ class DocFiscalPesquisa {
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramit.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
         }
 
         if ($this->getTramitacao()) {
-            if ($this->getTramitacao() == '3') {
+            if($this->getTramitacao() == '1'){ //Aguardando Tramitação
+                $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
+            }
+            if ($this->getTramitacao() == '3') { //Encaminhado
                 $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
 
                 if ($this->getDestinatario()) {
@@ -300,7 +303,7 @@ class DocFiscalPesquisa {
                 }
             }
 
-            if ($this->getTramitacao() == '5') {
+            if ($this->getTramitacao() == '5') { //Recebido
                 $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
 
                 if ($this->getDestinatario()) {

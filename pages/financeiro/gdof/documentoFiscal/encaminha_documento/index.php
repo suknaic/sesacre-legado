@@ -231,13 +231,13 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="destinatario">Tipo Remetente/Remetente:</label>
+                                                <label for="remetente">Tipo Remetente/Remetente:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="remetente" class="form-control">
-                                                        <option value="0">Selecione um Remetente</option>
+                                                        <option value="0">Selecione um Tipo de Remetente/Remetente</option>
                                                         <?php echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo(0); ?>
                                                     </select>
                                                 </div>
