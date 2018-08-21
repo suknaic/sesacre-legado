@@ -51,6 +51,32 @@ class DaoFinDocLotacao extends FinDocLotacao {
         }
     }
     
+    function desativa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE fin_doc_lotacao SET st_ativo = 0 "
+                    . "WHERE id_doc_lotacao = :idDocLotacao ");
+            $result->bindValue(":idDocLotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;           
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
+    function ativar($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE fin_doc_lotacao SET st_ativo = 1 "
+                    . "WHERE id_doc_lotacao = :idDocLotacao ");
+            $result->bindValue(":idDocLotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;           
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
     function select(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
@@ -59,7 +85,8 @@ class DaoFinDocLotacao extends FinDocLotacao {
                                 fdtl.id_doc_tipo_lotacao, 
                                 nm_doc_tipo_lotacao,
                                 sl.id_lotacao,
-                                nm_lotacao
+                                nm_lotacao,
+                                fdl.st_ativo
                         from 
                                 fin_doc_lotacao fdl,
                                 fin_doc_tipo_lotacao fdtl,
@@ -140,7 +167,34 @@ class DaoFinDocLotacao extends FinDocLotacao {
         
         return $filtro;
     }
+    
+    function verificaTramitacaoExiste(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_doc_tramitacao"
+                        . " where id_doc_origem = :id_doc_lotacao"
+                        . " OR"
+                        . " id_doc_destino = :id_doc_destino";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_destino", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }                
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
 
-
+    }
 }
 

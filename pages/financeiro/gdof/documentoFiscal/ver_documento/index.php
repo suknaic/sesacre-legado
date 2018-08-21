@@ -95,6 +95,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         <h4 class="panel-title">Dados da Ordem</h4>
                                                     </div>
                                                     <div class="panel-body">
+                                                        <!--
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
@@ -103,7 +104,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
-
+                                                        -->
 
                                                         <div class="form-group">
                                                             <div class="col-sm-5 infoOrdem">

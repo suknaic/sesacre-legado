@@ -169,6 +169,7 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
         return $filtro;
     }
     
+
     public function retornaLotacaoTipoEncaminhamentoPorUsuario(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -184,18 +185,42 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":usuario", $this->getIdPessoa(), PDO::PARAM_INT);
                 $stmt->execute();
-
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
-            }
+            } 
         } catch (Exception $ex) {
+            $this->sucesso = true;
+            $this->msgRetorno = "";
+        }
+    }
+
+    function retornaTodosDocLotacao(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_doc_vinc_encaminhamento, id_pessoa, id_doc_lotacao "
+                        . "from fin_doc_vinc_encaminhamento where id_doc_lotacao = :id_doc_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
     }
+
 }
 

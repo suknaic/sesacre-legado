@@ -652,7 +652,7 @@ class Pedido {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Funcional programatica:</b></div>
+                                                        <div class="col-sm-2"><b>'.STR_FUNCIONAL_PROGRAMATICA.':</b></div>
                                                         <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
                                                     </div>
                                                     
@@ -662,7 +662,7 @@ class Pedido {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do pedido:</b></div>
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
                                                         <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
                                                     </div>
                                                 </div>

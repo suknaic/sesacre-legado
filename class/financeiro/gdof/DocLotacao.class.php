@@ -1,6 +1,8 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocVincEncaminhamento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocVincRecebimento.class.php";
 
 class DocLotacao {
 
@@ -82,23 +84,126 @@ class DocLotacao {
             $daoFinDocLotacao = new DaoFinDocLotacao();
             $daoFinDocLotacao->setIdDocLotacao($this->getIdDocLotacao());
             
-            $idDocLotacao = $daoFinDocLotacao->getIdDocLotacao();
-            if (!Log::SalvaLogD('fin_doc_lotacao', $idDocLotacao, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            $daoFinDocLotacao->selectLinha($pdo);
+            if(!$daoFinDocLotacao->getSucesso()){
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }                        
+            
+            $busca = $daoFinDocLotacao->getMsgRetorno();
+                        
+            /**
+             * Se o Doc Lotação tiver alguma dependencia, então não poderá ser excluido
+             */
+            
+            
+            /**
+             * Exclui todas as Pessoas que estão com autorização para encaminar
+             * ou receber
+             */          
+            
+            $docEncaminha = new DocVincEncaminhamento();
+            $docEncaminha->setIdDocLotacao($daoFinDocLotacao->getIdDocLotacao());
+            $docEncaminha->excluirTodosDocLotacao($pdo);
+            if(!$docEncaminha->getSucesso()){
+                return Metodos::retornoAjax("Erro", "console", $docEncaminha->getMsgRetorno());
             }
             
-            $daoFinDocLotacao->delete($pdo);
-            if ($daoFinDocLotacao->getSucesso()) {
+            
+            $docRecebe = new DocVincRecebimento();
+            $docRecebe->setIdDocLotacao($daoFinDocLotacao->getIdDocLotacao());
+            $docRecebe->excluirTodosDocLotacao($pdo);
+            if(!$docRecebe->getSucesso()){
+                return Metodos::retornoAjax("Erro", "console", $docRecebe->getMsgRetorno());
+            }
+                        
+            /*
+             * Verifica se o Doc Lotação está sendo utilizado 
+             * em alguma tramitação
+             */
+            $daoFinDocLotacao->verificaTramitacaoExiste($pdo);
+            /*
+             * Se o retorno for True, então existe alguma Tramitação com o Doc Lotação
+             * então teremos que desativar o Doc Lotação
+             */            
+            if($daoFinDocLotacao->getSucesso()){
+                                                                
+                $daoFinDocLotacao->desativa($pdo);
+                if(!$daoFinDocLotacao->getSucesso()){                
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());
+                }
+
+                if (!Log::SalvaLogU('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $busca, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());                                                            
+                }      
                 $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());
-                $pdo->rollBack();
+                return Metodos::retornoAjax("ok", "html", "Por Já existir um Tipo de Remetente/Destinatário Tramitado, então o "
+                        . "registro foi desativado.");
+                
+            //Se não existe tramitação, então podemos Excluir o Doc Lotação da Base
+            }else{              
+                if (!Log::SalvaLogD('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                $daoFinDocLotacao->delete($pdo);
+                if ($daoFinDocLotacao->getSucesso()) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());
+                    
+                }                                
             }
             
-            return $retorno;
+                                    
             
+            $pdo->rollBack();
+            $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            return $retorno;                                                                                   
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function ativar(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinDocLotacao = new DaoFinDocLotacao();
+            $daoFinDocLotacao->setIdDocLotacao($this->getIdDocLotacao());
+            
+            $daoFinDocLotacao->selectLinha($pdo);
+            if(!$daoFinDocLotacao->getSucesso()){
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }                        
+            
+            $busca = $daoFinDocLotacao->getMsgRetorno();
+                                    
+            if($daoFinDocLotacao->getSucesso()){
+                                                                
+                $daoFinDocLotacao->ativar($pdo);
+                if(!$daoFinDocLotacao->getSucesso()){                
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());
+                }
+
+                if (!Log::SalvaLogU('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $busca, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocLotacao->getMsgRetorno());                                                            
+                }      
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Registro Ativado Com Sucesso.");                            
+            }
+                                                            
+            $pdo->rollBack();
+            $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            return $retorno;                                                                                   
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
@@ -143,11 +248,25 @@ class DocLotacao {
             
             if ($daoFinDocLotacao->getSucesso()) {
                 foreach ($daoFinDocLotacao->getMsgRetorno() as $linha) {
+                    
+                    $icone = "fa-trash";
+                    $nomeBtn = "btn-excluir";
+                    $corBtn = "text-danger";
+                    $title = "Remover";
+                    if($linha['st_ativo'] == 0){
+                        $icone = "fa-check";
+                        $nomeBtn = "btn-ativar";
+                        $corBtn = "text-success";
+                        $title = "Ativar";
+                    }
+                    
+                    
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
                                     . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
                                     . "<td>".$linha['nm_lotacao']."</td>"
                                     . "<td class='text-center'>"
-                                        . "<button type='button' class='btn btn-default btn-xs btn-excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden=true></i></button>"
+                                        . "<button type='button' class='btn btn-default btn-xs ".$nomeBtn."' title='".$title."'>"
+                                        . "<i class='fa ".$icone." fa-lg ".$corBtn."' aria-hidden=true></i></button>"
                                     . "</td>"
                              . "</tr>";
                 }

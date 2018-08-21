@@ -439,7 +439,7 @@ if (isset($_GET['id'])){
                                                 </div>
                                                 <div class="form-group"> 
                                                     <div class="col-md-2"></div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-4">
                                                         Bairro: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -455,6 +455,14 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="input-group">
+                                                            <br>
+                                                            <button class="btn btn-primary btn-rounded cep" type="button">
+                                                                <i class="fa fa-search" aria-hidden="true"></i> CEP
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
