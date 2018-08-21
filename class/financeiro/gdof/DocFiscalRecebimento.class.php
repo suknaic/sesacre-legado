@@ -368,13 +368,14 @@ class DocFiscalRecebimento {
             return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a origem");
         }
 
-        $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
-        $destino = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_destino"];
+        //Aqui a busca as informações da tramitação que encaminhou o documento para definir o novo destinatario 
+        $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_destino"];
+        $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_destinatario"];
+        $destino = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
+        $tipo_destinatario = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];   
         
-        $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];
-        $tipo_destinatario = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_destinatario"];        
         
-        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo, $tipo_remetente, $tipo_destinatario, '2'); //Ultimo parametro indica que é Recebimento
+        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo, $tipo_destinatario,$tipo_remetente, '2'); //Ultimo parametro indica que é Recebimento
 
         if (!$daoFinDocumentoFiscal->sucesso()) {
             return Metodos::retornoAjax("Erro", "alert", "O parâmetro da vinculação da tramitação não está cadastrado para este tipo de remetente/ tipo de destinatário");

@@ -357,7 +357,9 @@ class DocFiscalEncaminhamento {
         $pdo->beginTransaction();
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
         $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
+        
         $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+       
         if (!$daoFinDocumentoFiscal->sucesso()) {
             return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a origem");
         }
@@ -388,11 +390,15 @@ class DocFiscalEncaminhamento {
         //codigo abaixo cadastra a tramitacao aguardando recebimento
         $docTramitacao->setFlPesquisa(0);
         $docTramitacao->setIdTipoTramitacao(4);
+        
+        //Ao ser encaminhado, a origem do documento passa a ser o local para onde foi enviado
+        $docTramitacao->setIdDocOrigem($dados["destinatario"]);
+        $docTramitacao->setIdDocDestino(null);
         if (!$docTramitacao->cadastraTramitacao($pdo)) {
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
         }
-        
+
         $pdo->commit();
         return Metodos::retornoAjax("ok", "html", "Documento encaminhado com sucesso");
     }

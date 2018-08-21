@@ -558,7 +558,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     on lotacaoDestino.id_lotacao =  docLotacaoDestino.id_lotacao
 
                     left join fin_doc_vinc_recebimento as recebimento
-                    on recebimento.id_doc_lotacao = docLotacaoDestino.id_doc_lotacao 
+                    on recebimento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
                     where tramitacao.fl_pesquisa = '0' and tpTramitacao.id_tipo_tramitacao = 4 and recebimento.id_pessoa = :pessoa and recebimento.id_doc_lotacao is not null  " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
@@ -711,6 +711,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     left join fin_doc_lotacao as tipoLotDestino
                     on tipoLotDestino.id_doc_lotacao = tramitacao.id_doc_destino
                     where id_documento_fiscal = :documento
+                    and tramitacao.id_doc_destino is not null
                     order by id_doc_tramitacao desc 
                     limit 1";
             $stmt = $pdo->prepare($sql);
@@ -730,7 +731,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
     }
     
     public function retornaSituacaoDoParametro(PDO $pdo, int $lotacaoOrigem=0, int $tipo=0){
-            try {
+        try {
             $sql = "select parmametro.id_documento_situacao
                     from fin_doc_lotacao as docLotacao
 

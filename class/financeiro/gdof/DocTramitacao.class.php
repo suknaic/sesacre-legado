@@ -196,28 +196,34 @@ class DocTramitacao {
     }
 
     public function cadastraTramitacao($pdo) {
-        if (empty($pdo)) {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinDocTramitacao = new DaoFinDocTramitacao();
+            $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinDocTramitacao->setIdPessoa($this->id_pessoa);
+            $daoFinDocTramitacao->setIdDocOrigem($this->id_doc_origem);
+            $daoFinDocTramitacao->setIdDocDestino($this->id_doc_destino);
+            $daoFinDocTramitacao->setIdDocumentoSituacao($this->id_documento_situacao);
+            $daoFinDocTramitacao->setDsDocTramitacao($this->ds_doc_tramitacao);
+            $daoFinDocTramitacao->setIdTipoTramitacao($this->id_tipo_tramitacao);
+            $daoFinDocTramitacao->setFlPesquisa($this->fl_pesquisa);
+            $daoFinDocTramitacao->insert($pdo);
+  
+
+            $this->id_doc_tramitacao = ($pdo->lastInsertId('fin_doc_tramitacao_id_doc_tramitacao_seq'));
+            if (!Log::SalvaLogI('fin_doc_tramitacao', $this->id_doc_tramitacao, $pdo)) {
+                return false;
+            }
+
+            return $daoFinDocTramitacao->getSucesso();
+        } catch (PDOException $exc) {
+            print_r( $exc->getMessage());
         }
 
-        $daoFinDocTramitacao = new DaoFinDocTramitacao();
-        $daoFinDocTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
-        $daoFinDocTramitacao->setIdPessoa($this->id_pessoa);
-        $daoFinDocTramitacao->setIdDocOrigem($this->id_doc_origem);
-        $daoFinDocTramitacao->setIdDocDestino($this->id_doc_destino);
-        $daoFinDocTramitacao->setIdDocumentoSituacao($this->id_documento_situacao);
-        $daoFinDocTramitacao->setDsDocTramitacao($this->ds_doc_tramitacao);
-        $daoFinDocTramitacao->setIdTipoTramitacao($this->id_tipo_tramitacao);
-        $daoFinDocTramitacao->setFlPesquisa($this->fl_pesquisa);
-        $daoFinDocTramitacao->insert($pdo);
-        
-        $this->id_doc_tramitacao = ($pdo->lastInsertId('fin_doc_tramitacao_id_doc_tramitacao_seq'));
-        if (!Log::SalvaLogI('fin_doc_tramitacao', $this->id_doc_tramitacao, $pdo)) {
-            return false;
-        }
-        
-        return $daoFinDocTramitacao->getSucesso();
     }
 
 //    public function atualizaTramitacaoDocumento(PDO $pdo) {
