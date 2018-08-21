@@ -621,7 +621,9 @@ class FinEntregaConfirmacaoModel {
             foreach ($idEntregas as $linha) {
                 $arrayIdEntregas [] = $linha;
             }
-
+            echo "<pre>";
+            print_r($arrayIdEntregas);
+            echo "</pre>";
             $idEntregas = implode(' , ', $arrayIdEntregas);
 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();

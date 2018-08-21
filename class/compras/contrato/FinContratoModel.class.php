@@ -2192,7 +2192,7 @@ class FinContratoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Tipo de gasto:</b></div>
+                                                        <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
                                                     </div>
                                                     

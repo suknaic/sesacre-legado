@@ -406,10 +406,17 @@ class FinDocumentoFiscal {
 
     public function salvaDocumentoFiscal() {
         try {
-            if (empty($this->nr_processo_administrativo) && empty($this->nr_documento_fiscal) && empty($this->id_tipo_documento) && empty($this->dt_atesto) &&
-                    empty($this->dt_emissao) && empty($this->vl_documento) && empty($this->entrega)) {
+            if (empty($this->nr_processo_administrativo) || empty($this->nr_documento_fiscal) 
+                    || empty($this->id_tipo_documento) || empty($this->dt_atesto)
+                    || empty($this->dt_emissao) || empty($this->vl_documento) || empty($this->entrega)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+            
+            //Valida campos obrigatórios
+            
+            
+            
+            
             //conexao
             $conexao = new Conexao();
             $pdo = $conexao->connect();
