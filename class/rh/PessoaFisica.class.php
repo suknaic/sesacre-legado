@@ -224,10 +224,7 @@ class pessoaFisica {
             }
 //************************************************************************
             $dtNascimento = strtotime($this->dt_nascimento);
-            $dtAtual = strtotime(new DateTime());
-            var_dump($dtNascimento);
-            var_dump($dtAtual);
-            return;
+            $dtAtual = strtotime(date("d-m-Y"));
             if ($dtNascimento > $dtAtual) {
                 $this->setSuccess(false);
                 $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
@@ -416,8 +413,8 @@ class pessoaFisica {
                 return;
             }
 //************************************************************************
-            $dtNascimento = strtotime(Metodos::ConverteDataING($this->dt_nascimento));
-            $dtAtual =strtotime(date("d-m-Y"));
+            $dtNascimento = strtotime($this->dt_nascimento);
+            $dtAtual = strtotime(date("d-m-Y"));
             if ($dtNascimento >= $dtAtual) {
                 $this->setSuccess(false);
                 $this->setMsg('Data de Nascimento é Maior ou Igual a Data Atual.');

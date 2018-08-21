@@ -139,7 +139,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="tp_sexo" class="form-control">
-                                                                <option value="0">Selecione Sexo</option>                                                                
+                                                                <option value="0">Selecione o Sexo</option>
                                                                 <option value="1">Feminino</option>
                                                                 <option value="2">Masculino</option>
                                                             </select>
@@ -166,7 +166,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_pais_naturalidade" class="form-control pais">
-                                                                <option value="0">Selecione País</option>                                                                
+                                                                <option value="0">Selecione o País</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -180,7 +180,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado_naturalidade" class="form-control estado">
-                                                                <option value="0">Selecione Estado</option>                                                                
+                                                                <option value="0">Selecione o Estado</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -194,7 +194,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_naturalidade" class="form-control idCidade">
-                                                                <option value="0">Selecione Naturalidade</option>                                                                
+                                                                <option value="0">Selecione a Naturalidade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -238,7 +238,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado" class="form-control estado">
-                                                                <option value="0">Selecione</option>                                                                
+                                                                <option value="0">Selecione o Orgão Expeditor</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -276,7 +276,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado_civil" class="form-control">
-                                                                <option value="0">Selecione</option>                                                                
+                                                                <option value="0">Selecione o Estado Civil</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -299,7 +299,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_escolaridade" class="form-control">
-                                                                <option value="0">Selecione</option>                                                                
+                                                                <option value="0">Selecione a Escolaridade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -318,7 +318,7 @@ if (isset($_GET['id'])){
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_competencia" class="form-control formacao competencia">
-                                                                    <option value="0">Selecione Competência</option>                                                                
+                                                                    <option value="0">Selecione a Competência</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -379,7 +379,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_pais_endereco" class="form-control pais">
-                                                                <option value="0">Selecione País</option>                                                                
+                                                                <option value="0">Selecione o País</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -393,7 +393,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado_endereco" class="form-control estado">
-                                                                <option value="0">Selecione Estado</option>                                                                
+                                                                <option value="0">Selecione o Estado</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -407,7 +407,7 @@ if (isset($_GET['id'])){
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_cidade" class="form-control idCidade">
-                                                                <option value="0">Selecione Cidade</option>                                                                
+                                                                <option value="0">Selecione a Cidade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -567,7 +567,7 @@ if (isset($_GET['id'])){
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2 demissao" style="display:none">
+                                                        <div class="col-md-2 demissao">
                                                             Data Demissão: 
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
