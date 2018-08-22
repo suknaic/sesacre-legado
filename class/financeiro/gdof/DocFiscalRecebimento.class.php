@@ -363,9 +363,13 @@ class DocFiscalRecebimento {
         $pdo->beginTransaction();
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
         $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
-        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+        
+        //$daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+        //
+        //Retorna o Ultimo Encaminhamento para registrar o recebimento
+        $daoFinDocumentoFiscal->retornaOrigemDestinoUltimaTramitacao($pdo);
         if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a origem");
+            return Metodos::retornoAjax("Erro", "alert", "Erro retornar os dados da última tramitação.");
         }
 
         //Aqui a busca as informações da tramitação que encaminhou o documento para definir o novo destinatario 

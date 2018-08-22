@@ -698,20 +698,13 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
-    public function retornaUltimaOrigemDocumento(PDO $pdo) {
+    public function retornaUltimoTipoRemetenteTramitacao(PDO $pdo) {
         try {
-//            $sql = "select id_doc_origem,id_doc_destino from fin_doc_tramitacao 
-//                    where id_documento_fiscal = :documento
-//                    order by id_doc_tramitacao desc 
-//                    limit 1";
-            $sql = "select id_doc_origem,tipoLotOrigem.id_doc_tipo_lotacao as tipo_remetente,id_doc_destino, tipoLotDestino.id_doc_tipo_lotacao as tipo_destinatario
-                    from fin_doc_tramitacao as tramitacao
-                    left join fin_doc_lotacao as tipoLotOrigem
-                    on tipoLotOrigem.id_doc_lotacao = tramitacao.id_doc_origem
-                    left join fin_doc_lotacao as tipoLotDestino
-                    on tipoLotDestino.id_doc_lotacao = tramitacao.id_doc_destino
+            $sql = "select id_doc_origem,id_doc_tipo_lotacao as tipo_remetente
+                    from fin_doc_tramitacao
+                    inner join fin_doc_lotacao tipoLot
+                    on tipoLot.id_doc_lotacao = id_doc_origem 
                     where id_documento_fiscal = :documento
-                    and tramitacao.id_doc_destino is not null
                     order by id_doc_tramitacao desc 
                     limit 1";
             $stmt = $pdo->prepare($sql);
@@ -721,7 +714,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 $this->sucesso = true;
             } else {
-                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->msgRetorno = "Não foi possível encontrar o remetente da última tramitação.";
                 $this->sucesso = false;
             }
         } catch (PDOException $ex) {
@@ -729,6 +722,89 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function verificaPermissaoEncaminhar(PDO $pdo, int $idPessoa = 0, int $tipoRemetente = 0){
+        try {
+            $sql = "select count(*) from fin_doc_vinc_encaminhamento as encaminhar
+                    inner join fin_doc_lotacao as tipoLotacao
+                    on encaminhar.id_doc_lotacao = tipoLotacao.id_doc_lotacao
+                    where tipoLotacao.id_doc_tipo_lotacao = :tipo_remetente
+                    and encaminhar.id_pessoa = :pessoa";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+            $stmt->bindValue(':tipo_remetente', $tipoRemetente, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem permissão para encaminhar.";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaOrigemDestinoUltimaTramitacao(PDO $pdo){
+        try {
+            $sql = "select id_doc_origem,tipoOrigem.id_doc_tipo_lotacao as tipo_remetente ,id_doc_destino, tipoDestino.id_doc_tipo_lotacao as tipo_destinatario  from fin_doc_tramitacao as tramitacao
+                    inner join fin_doc_lotacao as tipoOrigem
+                    on tipoOrigem.id_doc_lotacao = tramitacao.id_doc_origem
+                    inner join fin_doc_lotacao as tipoDestino
+                    on tipoDestino.id_doc_lotacao = tramitacao.id_doc_destino
+                    where id_documento_fiscal = :documento
+                    and id_doc_origem is not null
+                    and id_doc_destino is not null
+                    order by id_doc_tramitacao desc";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem permissão para encaminhar.";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+//    public function retornaUltimaOrigemDocumento(PDO $pdo) {
+//        try {
+////            $sql = "select id_doc_origem from fin_doc_tramitacao 
+////                    where id_documento_fiscal = :documento
+////                    order by id_doc_tramitacao desc 
+////                    limit 1";
+//            $sql = "select id_doc_origem,tipoLotOrigem.id_doc_tipo_lotacao as tipo_remetente,id_doc_destino, tipoLotDestino.id_doc_tipo_lotacao as tipo_destinatario
+//                    from fin_doc_tramitacao as tramitacao
+//                    left join fin_doc_lotacao as tipoLotOrigem
+//                    on tipoLotOrigem.id_doc_lotacao = tramitacao.id_doc_origem
+//                    left join fin_doc_lotacao as tipoLotDestino
+//                    on tipoLotDestino.id_doc_lotacao = tramitacao.id_doc_destino
+//                    where id_documento_fiscal = :documento
+//                    and tramitacao.id_doc_destino is not null
+//                    order by id_doc_tramitacao desc 
+//                    limit 1";
+//            $stmt = $pdo->prepare($sql);
+//            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+//            $stmt->execute();
+//            if ($stmt->rowCount() > 0) {
+//                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+//                $this->sucesso = true;
+//            } else {
+//                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+//                $this->sucesso = false;
+//            }
+//        } catch (PDOException $ex) {
+//            $this->sucesso = false;
+//            $this->msgRetorno = $ex->getMessage();
+//        }
+//    }
     
     public function retornaSituacaoDoParametro(PDO $pdo, int $lotacaoOrigem=0, int $tipo=0){
         try {
