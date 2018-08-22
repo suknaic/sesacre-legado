@@ -309,8 +309,9 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 						, TA.fl_pesquisa
 								from fin_doc_tramitacao t
 								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-					where TA.fl_pesquisa = '1' 
+                                                where ta.fl_pesquisa = '1'
 						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
+                                                
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
                     inner join fin_documento_situacao as situacao
@@ -426,7 +427,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 						, TA.fl_pesquisa
 								from fin_doc_tramitacao t
 								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-					where TA.fl_pesquisa = '0' 
 						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
@@ -457,7 +457,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     left join fin_doc_vinc_encaminhamento as encaminhamento
                     on encaminhamento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
-                    where tramitacao.fl_pesquisa = '0' and tpTramitacao.id_tipo_tramitacao = 2 and encaminhamento.id_pessoa = :pessoa and encaminhamento.id_doc_lotacao is not null  " . $filtroSql;
+                    where tramitacao.fl_pesquisa = '0' and encaminhamento.id_pessoa = :pessoa and tpTramitacao.id_tipo_tramitacao = 2  and encaminhamento.id_doc_lotacao is not null  " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
             $stmt->execute();
@@ -528,7 +528,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 						, TA.fl_pesquisa
 								from fin_doc_tramitacao t
 								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-					where TA.fl_pesquisa = '0' 
 						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
