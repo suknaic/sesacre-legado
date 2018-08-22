@@ -292,7 +292,7 @@ $(document).ready(function () {
     $(".ant").click(function () {
 // aba que esta ativa no momento
         $('.nav > .active').prev('li').find('a').trigger('click');
-    })
+    });
     //******************************************************************************************
     $("body").on("change", "#id_cidade", function (e) {
         $("#ds_logradouro").val("");
@@ -359,7 +359,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $(".data").datepicker('hide');
-            //return false;
         }
     });
     //*********************************************************************
@@ -372,7 +371,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $("#dt_fim").val($("#dt_demissao").val());
-            //return false;
         }
     });
     $("#dt_admissao").datepicker().on('changeDate', function () {
@@ -382,7 +380,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $("#dt_inicio").val($("#dt_admissao").val());
-            //return false;
         }
     });
     $('#nr_carga_horaria').on('focus blur', function (e) {
@@ -475,24 +472,17 @@ $(document).ready(function () {
         
         if (seguir === 1) {
             func.modalAlert("A (DATA INÍCIO) da Nova Lotação do Funcionário é Menor ou igual a (DATA FIM) da Lotação ainda Vigente.");
-//            func.modalAlert("Teste 1");
             return false;
         }
 
         if (seguir === 2) {
             func.modalAlert("Não é Possível Inserir uma Nova Lotação pois a uma Lotação ainda Vigente.");
-//            func.modalAlert("Teste 2");
             return false;
         }
         if (seguir === 3) {
             func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
-//            func.modalAlert("Teste 3");
             return false;
         }
-//        if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-//            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
-//            return;
-//        }
 
 //********************************************************************************
         if (lotacaoId == 0) {
@@ -540,7 +530,7 @@ $(document).ready(function () {
                     <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
                     <td class='text-center'><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
                  </tr>";
-        $(linha).appendTo('.corpoTabelaLotacao')
+        $(linha).appendTo('.corpoTabelaLotacao');
         $("#nr_carga_horaria2").val("");
         $("#dt_inicio").val("");
         $("#dt_fim").val("");
@@ -583,7 +573,7 @@ $(document).ready(function () {
                     <td class='text-center'>" + competencia[1] + "</td>\n\
                     <td class='text-center'><button type='button' title='Remover' class='excluirLinha' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
                  </tr>";
-        $(linha).appendTo('.corpoTabela')
+        $(linha).appendTo('.corpoTabela');
 
         $("#id_competencia").val(0);
         $("#id_competencia").select2({
@@ -673,7 +663,7 @@ $(document).ready(function () {
                 var dataIni = new Date(x);
                 var dataFim = new Date(y);
                 if (dataIni > dataFim) {
-                    alert(" A data de Admissão não pode ser maior que a data de Demissão");
+                    func.modalAlert(" A data de Admissão não pode ser maior que a data de Demissão");
                     return;
                 }
             }
@@ -692,8 +682,6 @@ $(document).ready(function () {
                 x = 1;
                 var DadosContrato_Lotacao = [];
                 $("#tabelaLotacao tbody tr").each(function () {
-//alert($(this).find(".escolaridade").attr("idEscolaridadeFormacao"));
-//var coluna =  $(this).children();
                     DadosContrato_Lotacao.push({
                         chLotacao: $(this).find(".cargaLotacao").attr("ch"),
                         idLotacao: $(this).find(".lotacao").attr("idLotacao"),
@@ -706,32 +694,32 @@ $(document).ready(function () {
 //*******************************************************************
             var DadosObrigatorio = {
                 //**************1-12***********************
-                email: DadosPessoa.email,
-                nomeCivil: DadosPessoaFisica.nomeCivil,
-                tpSexo: DadosPessoaFisica.tpSexo,
-                dataNascimento: DadosPessoaFisica.dtNascimento,
-                naturalidade: DadosPessoa.naturalidade,
-                cpf: DadosPessoaFisica.cpf,
-                rg: DadosPessoaFisica.rg,
-                orgaoExpedidor: DadosPessoaFisica.orgaoExpedidor,
-                orgaoExpedidorEstado: DadosPessoaFisica.orgaoExpedidorEst,
-                mae: DadosPessoaFisica.mae,
-                estadoCivil: DadosPessoaFisica.estadoCivil,
-                escolaridade: DadosPessoaFisica.escolaridade,
+                "Email": DadosPessoa.email,
+                "Nome Civil": DadosPessoaFisica.nomeCivil,
+                "Sexo": DadosPessoaFisica.tpSexo,
+                "Data de Nascimento": DadosPessoaFisica.dtNascimento,
+                "Naturalidade": DadosPessoa.naturalidade,
+                "CPF": DadosPessoaFisica.cpf,
+                "Registro Geral": DadosPessoaFisica.rg,
+                "Orgão Expedidor": DadosPessoaFisica.orgaoExpedidor,
+                "Orgão Expedidor Estado": DadosPessoaFisica.orgaoExpedidorEst,
+                "Mãe": DadosPessoaFisica.mae,
+                "Estado Civil": DadosPessoaFisica.estadoCivil,
+                "Escolaridade": DadosPessoaFisica.escolaridade,
                 //***************13-16*****************************
-                cidadeEndereco: DadosPessoa.cidade,
-                logradouro: DadosPessoa.logradouro,
-                bairro: DadosPessoa.bairro,
-                telefoneCelular: DadosPessoa.telefone_celular,
+                "Cidade Endereço": DadosPessoa.cidade,
+                "Logradouro": DadosPessoa.logradouro,
+                "Bairro": DadosPessoa.bairro,
+                "Telefone Celular": DadosPessoa.telefone_celular,
                 //******************17-22****************************
-                vinculo: DadosContrato.vinculo,
-                empresa: DadosContrato.pessoaJuridica,
-                datatAdmissao: DadosContrato.dtAdmissao,
-                cargaHorariaContrato: DadosContrato.nrCargaHoraria,
-                matricula: DadosContrato.nrMatricula,
-                cargo: DadosContrato.idCargo
+                "Vínculo": DadosContrato.vinculo,
+                "Empresa": DadosContrato.pessoaJuridica,
+                "Data de Admissão": DadosContrato.dtAdmissao,
+                "Carga Horária do Contrato": DadosContrato.nrCargaHoraria,
+                "Matrícula": DadosContrato.nrMatricula,
+                "Cargo": DadosContrato.idCargo
             };
-//            console.log(DadosObrigatorio);
+
             $campo = 0;
             $i = 0;
             $.each(DadosObrigatorio, function (index, value) {
@@ -739,11 +727,11 @@ $(document).ready(function () {
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
                     if ($i <= 12) {
-                        func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
                     } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - Endereço / Contato (" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
                     } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + " - Dados Funcionais (" + index + ")");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
                     }
                     $campo = 1;
                     return false;
@@ -756,7 +744,6 @@ $(document).ready(function () {
             if (DadosContrato.nrMatricula == "" || DadosContrato.dtAdmissao == "" || DadosContrato.nrCargaHoraria == "" || DadosContrato.vinculo == 0
                     || DadosContrato.nrCargaHoraria == 0 || DadosContrato.pessoaJuridica == 0 || DadosContrato.id_cargo == 0) {
                 func.modalAlert(func.msgPreencherCampos + " (Dados Funcionais)");
-                //$this.prop("disabled", false);
                 return false;
             }
             if (x == 0) {
@@ -784,14 +771,14 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -799,19 +786,18 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        func.fechaModalReload();
+                        func.fechaModalHref('/pages/rh/funcionario/index.php');
                         return false;
-                        //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
                         console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
                     console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -852,7 +838,6 @@ $(document).ready(function () {
                         $("#ds_logradouro").val(dados.logradouro);
                         $("#ds_bairro").val(dados.bairro);
                         $("#ds_logradouro").focus();
-                        //$("#cidade").val(dados.localidade);
                         var uf = dados.uf;
                         var cidade = dados.localidade;
                         $.ajax({
@@ -870,7 +855,6 @@ $(document).ready(function () {
                                     console.log(response);
                                     return false;
                                 }
-//                              console.log(response);
                                 $("#id_pais_endereco").val(response[0]["id_pais"]).change();
                                 listaEstadoNaturalidadeCombo(response[0]['id_pais'], 2, response[0]['id_estado']);
                                 listaCidadeComboUf(response[0]['id_estado'], cidade);

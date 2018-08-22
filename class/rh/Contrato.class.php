@@ -118,6 +118,16 @@ class Contrato {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+
+            //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
+            $dtAdm = strtotime($dadosContrato['dtAdmissao']);
+            $dtAtual = strtotime(date("d-m-Y"));
+            if ($dtAdm > $dtAtual) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
+            }
+            //********************************************************************************************************
+
             //**************************** Pessoa ********************************************************************
             $pessoa = new Pessoa();
             $telefoneRes = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
@@ -302,6 +312,16 @@ class Contrato {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+
+            //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
+            $dtAdm = strtotime($dadosContrato['dtAdmissao']);
+            $dtAtual = strtotime(date("d-m-Y"));
+            if ($dtAdm > $dtAtual) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
+            }
+            //********************************************************************************************************
+
             //**************************** Pessoa ********************************************************************
             $telefoneRes = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
             $telefoneCel = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_celular']);
@@ -345,16 +365,11 @@ class Contrato {
             $pessoaFisica->setId_escolaridade_formacao(($dadosPessoaFisica['escolaridade']));
             //******************************************
             $pessoaFisica->editarPessoaFisica($pdo);
-            // print_r($pessoaFisica);
-            //return;
             //******************************************
             if ($pessoaFisica->getSuccess() == FALSE) {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
                 return $retorno;
             }
-//            print_r($pessoa);
-//            print_r($pessoaFisica);
-//            return;
             //*************************contratos***********************************************************************
             $contrato = new DaoSesContrato();
             $contrato->setSt_ativo('1');
@@ -363,7 +378,6 @@ class Contrato {
                 $data2 = Metodos::ConverteDataING($dadosContrato['dtDemissao']);
                 $data = new DateTime();
                 $data = $data->format('Y-m-d');
-                // print_r($data);
                 if ($data > $data2) {
                     $contrato->setSt_ativo('0');
                 }
@@ -380,9 +394,6 @@ class Contrato {
             $contrato->setNr_matricula($dadosContrato['nrMatricula']);
             //*******************************************************************
             if (empty($contrato->getId_contrato())) {
-//                print_r($contrato);
-//                print_r($dadosContratoLotacao);
-//                return;
                 $rs = $contrato->insert($pdo);
                 if ($rs != "Sucesso") {
                     $sucesso = false;
@@ -391,8 +402,6 @@ class Contrato {
                     return $retorno;
                 }
                 $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
-//                print_r($contrato);
-//                return;
                 //*********************************Contrato / Lotação*************************************************
                 if (count($dadosContratoLotacao) > 0) {
                     foreach ($dadosContratoLotacao as $linha => $v) {
