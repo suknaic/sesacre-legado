@@ -309,6 +309,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 						, TA.fl_pesquisa
 								from fin_doc_tramitacao t
 								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
+
                                                 where ta.fl_pesquisa = '1'
 						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
                                                 
@@ -859,5 +860,78 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    
+    public function verificaPermissaoPessoaSituacaoAtual(int $idPessoa, int $idSituacao, PDO $pdo) {
+        try {
+            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal
+                    , situacao.nm_situacao, situacao.id_documento_situacao
+                    , tpTramitacao.nm_tipo_tramitacao, tpTramitacao.id_tipo_tramitacao
+                    , case 
+                    when lotacaoDestino.nm_lotacao is not null then concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '),lotacaoDestino.nm_lotacao)
+                    when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
+                    end as nm_lotacao, encaminhamento.id_doc_lotacao
+                    from fin_documento_fiscal as doc 
+                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
+                            , TA.id_documento_fiscal, TA.id_doc_tramitacao
+                            , TA.id_documento_situacao, TA.id_tipo_tramitacao
+                            , TA.id_doc_origem, TA.id_doc_destino
+                            , TA.fl_pesquisa
+                            from fin_doc_tramitacao t
+                            INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal                            
+                            order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
+                    on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
+
+                    inner join fin_documento_situacao as situacao
+                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
+
+                    inner join fin_tipo_tramitacao as tpTramitacao
+                    on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
+
+                    left join fin_doc_lotacao as docLotacaoOrigem
+                    on docLotacaoOrigem.id_doc_lotacao = tramitacao.id_doc_origem
+
+                    left join fin_doc_tipo_lotacao as docTipoLotacaoOrigem
+                    on docTipoLotacaoOrigem.id_doc_tipo_lotacao = docLotacaoOrigem.id_doc_tipo_lotacao
+
+                    left join ses_lotacao as lotacaoOrigem
+                    on lotacaoOrigem.id_lotacao =  docLotacaoOrigem.id_lotacao 
+
+                    left join fin_doc_lotacao as docLotacaoDestino
+                    on docLotacaoDestino.id_doc_lotacao = tramitacao.id_doc_destino
+
+                    left join fin_doc_tipo_lotacao as docTipoLotacaoDestino
+                    on docTipoLotacaoDestino.id_doc_tipo_lotacao = docLotacaoDestino.id_doc_tipo_lotacao
+
+                    left join ses_lotacao as lotacaoDestino
+                    on lotacaoDestino.id_lotacao =  docLotacaoDestino.id_lotacao
+
+                    left join fin_doc_vinc_encaminhamento as encaminhamento
+                    on encaminhamento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
+
+                    where tramitacao.fl_pesquisa = '0'                     
+                    and encaminhamento.id_doc_lotacao is not null                        
+                    and encaminhamento.id_pessoa = :idPessoa 
+                    and doc.id_documento_fiscal = :idDocFiscal
+                    and situacao.id_documento_situacao = :idDocumentoSituacao";
+                                        
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idPessoa", $idPessoa, PDO::PARAM_INT);
+            $stmt->bindValue(":idDocFiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->bindValue(":idDocumentoSituacao", $idSituacao, PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 
 }

@@ -4,6 +4,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocFiscalEncaminhamento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocVincRecebimento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocTramitacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
+
 
 $session = new Session('ajax');
 
@@ -57,6 +59,22 @@ switch ($_REQUEST['acao']) {
             $prog->setIdUsuario($session->getIdUser());
             echo $prog->cadastrarEncaminhamento($dados);
         
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    case 'removerDocumentoFiscal':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $doc = new FinDocumentoFiscal();
+            $doc->setIdDocumentoFiscal((int)$dados['id']);
+            $doc->setIdPessoa($session->getIdUser());
+            $doc->setDsObservacao(trim($dados['justificativa']));
+            echo $doc->removerDocumentoFiscal();
             return;
             break;
         } catch (Error $e) {

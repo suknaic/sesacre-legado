@@ -584,18 +584,7 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
 
     public function retornaValorAguardandoAutorizacaoFinanceiro(PDO $pdo, $idQddValor) {
         try {
-            if (!empty($pdo)) {
-                /*
-                $sql = "select coalesce(sum(clt.vl_central_liberacao_trans),0.0000) as saldo
-                        from fin_central_liberacao as cl
-                        inner join fin_central_liberacao_trans as clt
-                        on cl.id_central_liberacao = clt.id_central_liberacao
-                        where id_qdd_valor = :idQddValor
-                        and cl.id_lotacao = :central
-                        and cl.id_tipo_gasto = :tipoGasto
-                        and cl.st_central_liberacao = '1'";
-                 * 
-                 */
+            if (!empty($pdo)) {                
                 $sql = "select coalesce(sum(clt.vl_central_liberacao_trans),0.0000) as saldo
                         from fin_central_liberacao as cl
                         inner join fin_central_liberacao_trans as clt
