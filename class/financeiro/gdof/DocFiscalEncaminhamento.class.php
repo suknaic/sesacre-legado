@@ -358,17 +358,28 @@ class DocFiscalEncaminhamento {
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
         $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
         
-        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+//        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+        
+        //Aqui irá retornar o último tipo do remetente
+        $daoFinDocumentoFiscal->retornaUltimoTipoRemetenteTramitacao($pdo);
        
         if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a origem");
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao retornar o tipo de Remetente da última tramitação.");
+        }
+        $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];
+        
+        $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
+        
+        //verifica se usuário pode efetuar o encaminhamento deste documento 
+        $daoFinDocumentoFiscal->verificaPermissaoEncaminhar($pdo, $this->getIdUsuario(),$origem);
+        if (!$daoFinDocumentoFiscal->sucesso()) {
+            return Metodos::retornoAjax("Erro", "alert", "Usuário não possui permissão para tramitar este documento.");
         }
 
-        $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
-
-        $daoFinDocumentoFiscal->retornaSituacaoDoParametro($pdo, $origem, $dados["tipoDestinatario"]);
+//        $daoFinDocumentoFiscal->retornaSituacaoDoParametro($pdo, $origem, $dados["tipoDestinatario"]);
+        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo,$tipo_remetente, $dados["tipoDestinatario"], '1'); //Ultimo parametro indica que é um encaminhamento
         if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna a situaçao");
+            return Metodos::retornoAjax("Erro", "alert", "Esta tramitação não está cadastrada nos parâmetros da Vinculação da Tramitação");
         }
 
         $situacao = $daoFinDocumentoFiscal->getMsgRetorno()["id_documento_situacao"];
