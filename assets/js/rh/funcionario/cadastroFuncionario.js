@@ -486,22 +486,22 @@ $(document).ready(function () {
 
 //********************************************************************************
         if (lotacaoId == 0) {
-            func.modalAlert(" Informe Lotação");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Lotação)</strong>");
             $("#id_lotacao").focus();
             return;
         }
         if (funcaoId == 0) {
-            func.modalAlert(" Informe Função");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Função)</strong>");
             $("#id_funcao").focus();
             return;
         }
         if (nr_carga_horaria2 == 0) {
-            func.modalAlert(" Informe Carga Horária da Lotação");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Carga Horária da Lotação)</strong>");
             $("#nr_carga_horaria2").focus();
             return;
         }
         if ($("#dt_inicio").val() == "") {
-            func.modalAlert(" Informe Data de inicio da Função na Lotação");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Data de inicio da Função na Lotação)</strong>");
             //$("#dt_inicio").focus();
             return;
         }
@@ -513,7 +513,7 @@ $(document).ready(function () {
             var dataIni = new Date(x);
             var dataFim = new Date(y);
             if (dataIni > dataFim) {
-                func.modalAlert(" A data Inicio não pode ser maior que a data fim");
+                func.modalAlert("A data Inicio Não Pode Ser Maior que a Data Fim");
                 return;
             }
         }
@@ -701,8 +701,8 @@ $(document).ready(function () {
                 "Naturalidade": DadosPessoa.naturalidade,
                 "CPF": DadosPessoaFisica.cpf,
                 "Registro Geral": DadosPessoaFisica.rg,
-                "Orgão Expedidor": DadosPessoaFisica.orgaoExpedidor,
-                "Orgão Expedidor Estado": DadosPessoaFisica.orgaoExpedidorEst,
+                "Órgão Expedidor": DadosPessoaFisica.orgaoExpedidor,
+                "Órgão Expedidor Estado": DadosPessoaFisica.orgaoExpedidorEst,
                 "Mãe": DadosPessoaFisica.mae,
                 "Estado Civil": DadosPessoaFisica.estadoCivil,
                 "Escolaridade": DadosPessoaFisica.escolaridade,
@@ -747,7 +747,7 @@ $(document).ready(function () {
                 return false;
             }
             if (x == 0) {
-                func.modalAlert(" Informar Lotação e Função");
+                func.modalAlert(func.msgPreencherCampos + "<strong>(Lotação e Função)</strong>");
                 return false;
             }
 //***********************************************

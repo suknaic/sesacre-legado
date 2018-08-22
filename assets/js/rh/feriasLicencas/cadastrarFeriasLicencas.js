@@ -18,7 +18,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $(".data").datepicker('hide');
-            //return false;
         }
     });
     //****************************************************
@@ -70,11 +69,11 @@ $(document).ready(function () {
             var data2 = $("#dt_fim").val();
             //***************validações***************************
             if (idSituacao == 0) {
-                func.modalAlert("Selecione a Situação");
+                func.modalAlert(func.msgPreencherCampos+" <strong>(Situação)</strong>");
                 return;
             }
             if (data1 == "") {
-                func.modalAlert(" Informe Data de Início");
+                func.modalAlert(func.msgPreencherCampos+" <strong>(Data de Início)</strong>");
                 return;
             }
             if ($("#dt_fim").val().length > 3) {
@@ -86,7 +85,7 @@ $(document).ready(function () {
                 var dataFim = new Date(y);
 
                 if (dataIni > dataFim) {
-                    func.modalAlert(" A data Inicio não Pode ser Maior que a Data Fim");
+                    func.modalAlert("A data Inicio não Pode ser Maior que a Data Fim.");
                     return;
                 }
             }
@@ -118,15 +117,13 @@ $(document).ready(function () {
                                 response = JSON.parse(response);
                             } catch (e) {
                                 func.modalAlert(func.msgErroPadrao, 'danger');
-                                console.log("Parse JSON");
                                 console.log(response);
                                 return false;
                             }
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
                                     console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
@@ -137,9 +134,8 @@ $(document).ready(function () {
                                 func.fechaModalReload();
                                 return false;
                             } else {
-                                console.log('Ultimo else');
                                 console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         }
@@ -162,7 +158,6 @@ $(document).ready(function () {
         if (e.isDefaultPrevented()) {
         } else {
             top.location.href = "/pages/rh/contrato/index.php";
-
         }
     });
     //************************************************************
@@ -207,7 +202,6 @@ $(document).ready(function () {
             },
             "success":
                     function (response) {
-
                         func.carregaTabelaPadrao('tabela', response, [5], true);
                     }
 
@@ -240,12 +234,12 @@ $(document).ready(function () {
         $idContratoSituacao = $("#id_situacao2").val();
         //**************************************************
         if ($idContratoSituacao == 0) {
-            alert(" Selecione Situação");
+            func.modalAlert(func.msgPreencherCampos + "<strong>(Situação)</strong>");
             $("#nr_ch_editar").focus();
             return;
         }
         if ($("#dt_inicio_editar").val() == "") {
-            alert("Informe Data de Inicio da Função na Lotação");
+            func.modalAlert(func.msgPreencherCampos + "<strong>(Data de Inicio da Função na Lotação)</strong>");
             $("#dt_inicio_editar").focus();
             return;
         }
@@ -262,7 +256,7 @@ $(document).ready(function () {
             var dataFim = new Date(y);
 
             if (dataIni > dataFim) {
-                func.modalAlert(" A data Inicio não pode ser maior que a data fim");
+                func.modalAlert("A Data Inicio Não Pode ser Maior que a Data Fim.");
                 return;
             }
         }
@@ -298,34 +292,28 @@ $(document).ready(function () {
                         try {
                             response = JSON.parse(response);
                         } catch (e) {
-                            func.modalAlert(func.msgErroPadrao);
-                            console.log("Parse JSON");
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             console.log(response);
                             return false;
                         }
                         if (response.tipoMsg === "Erro") {
                             if (response.tipoExibicao === "console") {
-                                console.log('Console Mensagem');
                                 console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             } else if (response.tipoExibicao === "alert") {
                                 func.modalAlert(response.msg);
                                 return false;
                             }
                         } else if (response.tipoMsg === "ok") {
-                            func.modalAlert(response.msg, 'primary');
+                            func.modalAlert(response.msg, 'success');
                             returnHistorico(contratoId);
                             return false;
-                            //top.location = "/pages/rh/pessoaFisica/index.php";
                         } else {
-                            console.log('Ultimo else');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
-
-
                     }
         })
         //falta
@@ -362,7 +350,6 @@ $(document).ready(function () {
                             "idContratoHistorico": idContratoHistorico
                         },
                         "success": function (response) {
-                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -370,29 +357,28 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
+                                func.modalAlert(response.msg, 'success');
                                 returnHistorico($idContrato);
                                 return false;
                             } else {
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            //console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });

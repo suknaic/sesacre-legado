@@ -57,12 +57,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             <p class="fa fa-list inputPFa"></p>
                                         </span>
                                         <select id="id_situacao2" class="form-control ">
-                                            <option value="0">Selecione Situação</option>                                                                
+                                            <option value="0">Selecione a Situação</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-3 dataIni_editar">
-                                    <label>Data de inicio</label>
+                                    <label>Data de Início</label>
                                     <div class="mui-textfield mui-textfield">
                                         <input type="text"  id="dt_inicio_editar" name="dt_inicio_editar" required="" class="form-control dtInicio_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>
                                     </div>
@@ -117,12 +117,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="id_situacao" class="form-control situacao">
-                                                            <option value="0">Selecione Situação</option>                                                                
+                                                            <option value="0">Selecione a Situação</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    Data Inicio: <span class="text-danger">*</span>
+                                                    Data Início: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-calendar inputPFa"></p>

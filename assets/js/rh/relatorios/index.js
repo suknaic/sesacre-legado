@@ -135,17 +135,19 @@ $(document).ready(function () {
         var competencia = $.trim($("#id_competencia").val());
         //************************************************************************************************
         if (tipo == 0) {
-            func.modalAlert(" É necessário informar o tipo de Relatório");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Tipo de Relatório)</strong>");
             return false;
         }
         //************************************************************************************************
         if (cargo == 0 && funcao == 0 && vinculo == 0 && lotacao == 0 && dataIni == "" && dataFim == "" && competencia == 0) {
 //alert("É necessário informar no mínimo um filtro para imprimir");
-            func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
+//             func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
+            func.modalAlert(func.msgPreencherCampos);
             return false;
         }
         if (dataIni.length == 10 && dataFim.length == 0) {
-            func.modalAlert(" Ao informar a Data Inicio é preciso também informar a Data Fim");
+            // func.modalAlert(func.msgPreencherCampos + " Ao informar a Data Inicio é preciso também informar a Data Fim");
+            func.modalAlert(func.msgPreencherCampos + ' <strong>(Data Inicio e Data Fim)</strong>');
             return false;
         }
 //********data fim tem de ser inferior a data inicio**********************
@@ -158,11 +160,12 @@ $(document).ready(function () {
                 var dataInicial = new Date(x);
                 var dataFinal = new Date(y);
                 if (dataInicial > dataFinal) {
-                    func.modalAlert(" A data de Inicio não pode ser maior que a data Fim");
+                    func.modalAlert("A data de Inicio Não Pode Ser Maior que a Data Fim");
                     return false;
                 }
             } else {
-                func.modalAlert(" Ao informar a Data Fim é preciso também informar a Data Inicio");
+                // func.modalAlert("Ao informar a Data Fim é preciso também informar a Data Inicio");
+                func.modalAlert(func.msgPreencherCampos + ' <strong>(Data Inicio e Data Fim)</strong>');
                 return false;
             }
         }

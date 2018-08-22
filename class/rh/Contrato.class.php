@@ -126,6 +126,12 @@ class Contrato {
                 $pdo->rollBack();
                 return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
             }
+
+            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
+            if ($email != 'ac.gov.br') {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
+            }
             //********************************************************************************************************
 
             //**************************** Pessoa ********************************************************************
@@ -727,8 +733,6 @@ class Contrato {
             $pdo->commit();
             $retorno = Metodos::retornoAjax("ok", "alert", STR_CADASTRO_SUCESSO);
             return $retorno;
-//            print_r($contrato);
-//            return;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -769,7 +773,7 @@ class Contrato {
             $result = $rh->retornaTodosFuncionarios($pdo, $filtro, $ferias);
 
             if (!$result) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Registro de Funcionário Não Encontrado.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
                 return $retorno;
             } else {
                 foreach ($result as $v) {
