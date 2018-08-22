@@ -335,6 +335,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             </div>
                                         </div>
                                     </div>
+                                                                       
+                                </div>
+                                <!--                                Historico tramitacao-->
+
+                                <div class="form-group">
+                                    <div  class="col-sm-12" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Tramitação</h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="10"><?php echo $historico; ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>

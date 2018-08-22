@@ -19,6 +19,10 @@ $finDocumentoFiscal->setIdDocumentoFiscal($id);
 
 $documento = ($finDocumentoFiscal->retornaDadosDocumento(null));
 
+$historico = $finDocumentoFiscal->retornaHistoricoTramitacao();
+//echo "<pre>";
+//print_r($historico);
+//echo "</pre>";
 
 if(empty($documento)){
     header("Location: /pages/index.php");
