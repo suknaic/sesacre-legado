@@ -25,6 +25,22 @@ class FinDocumentoFiscal {
     private $id_doc_tramitacao = null;
     private $id_doc_origem = null;
     private $id_doc_destino = null;
+    
+    
+    private $docSitCadastrado = 1;
+    private $docSitALiquidar = 2;
+    private $docSitLiquidado = 3;
+    private $docSitAPagar = 4;
+    private $docSitPagoParcial = 5;
+    private $docSitPago = 6;
+    private $docSitCancelado = 7;
+    
+    private $tpTramAguardandoTramitacao = 1;
+    private $tpTramAguardandoEncaminhamento = 2;
+    private $tpTramEncaminhado = 3;
+    private $tpTramAguardandoRecebimento = 4;
+    private $tpTramRecebido = 5;
+    private $tpTramTramitacaoFinalizada = 6;           
 
     /**
      * @return mixed
@@ -403,6 +419,58 @@ class FinDocumentoFiscal {
 
         return $this;
     }
+    
+    function getDocSitCadastrado() {
+        return $this->docSitCadastrado;
+    }
+
+    function getDocSitALiquidar() {
+        return $this->docSitALiquidar;
+    }
+
+    function getDocSitLiquidado() {
+        return $this->docSitLiquidado;
+    }
+
+    function getDocSitAPagar() {
+        return $this->docSitAPagar;
+    }
+
+    function getDocSitPagoParcial() {
+        return $this->docSitPagoParcial;
+    }
+
+    function getDocSitPago() {
+        return $this->docSitPago;
+    }
+
+    function getDocSitCancelado() {
+        return $this->docSitCancelado;
+    }
+
+    function getTpTramAguardandoTramitacao() {
+        return $this->tpTramAguardandoTramitacao;
+    }
+
+    function getTpTramAguardandoEncaminhamento() {
+        return $this->tpTramAguardandoEncaminhamento;
+    }
+
+    function getTpTramEncaminhado() {
+        return $this->tpTramEncaminhado;
+    }
+
+    function getTpTramAguardandoRecebimento() {
+        return $this->tpTramAguardandoRecebimento;
+    }
+
+    function getTpTramRecebido() {
+        return $this->tpTramRecebido;
+    }
+
+    function getTpTramTramitacaoFinalizada() {
+        return $this->tpTramTramitacaoFinalizada;
+    }       
 
     public function salvaDocumentoFiscal() {
         try {
@@ -486,6 +554,73 @@ class FinDocumentoFiscal {
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
+    
+    function removerDocumentoFiscal(){
+        try {                        
+            $this->id_pessoa = (int) $this->id_pessoa;
+            if(empty($this->id_documento_fiscal) 
+                || empty($this->id_pessoa)
+                || empty(trim($this->ds_observacao))){
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+                        
+            //Somente será permitido cancelar um documento fiscal
+            //Se o documento estiver com a situação cadastrado
+            $idSituacao = $this->getDocSitCadastrado();            
+            $justificativa = trim($this->ds_observacao);
+            
+            $dao = new DaoFinDocumentoFiscal();
+            $dao->setIdDocumentoFiscal((int)$this->id_documento_fiscal);            
+            $dao->verificaPermissaoPessoaSituacaoAtual($this->id_pessoa, $idSituacao, $pdo);
+            if(!$dao->sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Documento Fiscal só pode ser Cancelado, quando Estiver na Situação Cadastrado.");
+            }
+            $result = $dao->getMsgRetorno();                        
+            
+            $docTramitacao = new DocTramitacao();
+            $docTramitacao->setIdPessoa($this->id_pessoa);
+            $docTramitacao->setIdDocOrigem($result['id_doc_lotacao']);
+            $docTramitacao->setIdDocDestino(NULL);
+            $docTramitacao->setDsDocTramitacao($justificativa);
+            $docTramitacao->setIdDocumentoSituacao($this->getDocSitCancelado());
+            $docTramitacao->setIdTipoTramitacao($this->getTpTramTramitacaoFinalizada());
+            $docTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $docTramitacao->setFlPesquisa("1");            
+            if (!$docTramitacao->cadastraTramitacao($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
+            }
+            
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Cancelamento do Documento Fiscal Realizado com Sucesso.");
+            
+            $pdo->rollBack();
+            echo "<pre>";
+            print_r($dao->getMsgRetorno());
+            echo "</pre>";
+            
+            
+            return;
+            
+            /**
+             * Valida se o Documento Fiscal está no 
+             */
+            
+            
+           
+                
+            
+            
+            return Metodos::retornoAjax("Erro", "console", "Não foi possível concluir o Cancelamento do Documento Fiscal.");
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
     }
 
@@ -724,6 +859,27 @@ class FinDocumentoFiscal {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaHistoricoTramitacao(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
+            $daoFinDocumentoFiscal->retornaTramitacaoDocumentoFiscal($pdo);
+            
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
+                    $retorno .= $linha["historico"] . "\n";
+                }
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
 
     public function retornaTabelaEntregaGdof($pdo, $excluir = false) {
         try {
@@ -783,5 +939,6 @@ class FinDocumentoFiscal {
         $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
         return $daoFinDocumentoFiscal->getMsgRetorno();
     }
+    
 
 }

@@ -222,6 +222,7 @@ class DocTramitacao {
             return $daoFinDocTramitacao->getSucesso();
         } catch (PDOException $exc) {
             print_r( $exc->getMessage());
+            return false;
         }
 
     }

@@ -178,7 +178,7 @@
                         
                          <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Lista de Usuários por Tipo de Tramitação e Destinatário/Remetente</h3>
+                                <h3 class="panel-title">Lista de Usuários por Tipo de Tramitação e Remetente/Destinatário</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -189,8 +189,8 @@
                                                     <tr>
                                                         <th>Usuário</th>
                                                         <th>Tramitação</th>
-                                                        <th>Destinatário/Remetente</th>
-                                                        <th>Tipo do Destinatário/Remetente</th>
+                                                        <th>Remetente/Destinatário</th>
+                                                        <th>Tipo do Remetente/Destinatário</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

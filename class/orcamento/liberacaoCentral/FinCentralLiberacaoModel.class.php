@@ -279,6 +279,7 @@ class FinCentralLiberacaoModel {
             if ((!is_array($dados) || count($dados) < 1) || strlen((string) $ano) != 4) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+            
             //conexao com o banco de dados
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -322,9 +323,10 @@ class FinCentralLiberacaoModel {
                         return Metodos::retornoAjax("Erro", "alert", "Não existe qdd cadastrado com essas informações!");
                     }
                     
-                    $daoFinCentralLiberacao->retornaValorAguardandoAutorizacaoFinanceiro($pdo, $qddValor->getIdQddValor());
+                    $daoFinCentralLiberacao->retornaValorAguardandoAutorizacaoFinanceiro($pdo, $qddValor->getIdQddValor());                                                            
                     
-                    if ((float) $qddValor->getVlAtual() < ($qddValor->getVlLiberado() + $daoFinCentralLiberacao->getMsgRetorno()['saldo'])) {
+                    if ((float) $qddValor->getVlAtual() < ($qddValor->getVlLiberado() + 
+                            $daoFinCentralLiberacao->getMsgRetorno()['saldo']) + Metodos::ConverteValorIng($v["valor"])) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Valor liberado e maior que o saldo atual!");
                     }
@@ -337,7 +339,7 @@ class FinCentralLiberacaoModel {
                         $erro = true;
                     }
                 }
-
+                                
                 if ($erro == false) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);

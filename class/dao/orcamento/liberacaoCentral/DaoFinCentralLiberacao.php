@@ -584,19 +584,17 @@ class DaoFinCentralLiberacao extends FinCentralLiberacaoTb {
 
     public function retornaValorAguardandoAutorizacaoFinanceiro(PDO $pdo, $idQddValor) {
         try {
-            if (!empty($pdo)) {
+            if (!empty($pdo)) {                
                 $sql = "select coalesce(sum(clt.vl_central_liberacao_trans),0.0000) as saldo
                         from fin_central_liberacao as cl
                         inner join fin_central_liberacao_trans as clt
                         on cl.id_central_liberacao = clt.id_central_liberacao
-                        where id_qdd_valor = :idQddValor
-                        and cl.id_lotacao = :central
-                        and cl.id_tipo_gasto = :tipoGasto
+                        where id_qdd_valor = :idQddValor                        
                         and cl.st_central_liberacao = '1'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idQddValor", $idQddValor, PDO::PARAM_INT);
-                $stmt->bindValue(":central", $this->getIdLotacao(), PDO::PARAM_INT);
-                $stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
+                //$stmt->bindValue(":central", $this->getIdLotacao(), PDO::PARAM_INT);
+                //$stmt->bindValue(":tipoGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 $this->sucesso = true;

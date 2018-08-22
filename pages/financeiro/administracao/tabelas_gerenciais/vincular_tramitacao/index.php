@@ -197,7 +197,7 @@
                                                     <tr>
                                                         <th>Tipo de Remetente/Destinatário</th>
                                                         <th>Tramitação</th>
-                                                        <th>Tipo de Destinatário/Remetente</th>
+                                                        <th>Tipo de Remetente/Destinatário</th>
                                                         <th>Situação</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
