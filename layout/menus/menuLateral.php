@@ -271,7 +271,7 @@
                                     <ul class="collapse">
 
                                         <li>
-                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Pesquisar Documento Fiscal</a>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Documento Fiscal</a>
                                         </li>
                                         <li>
                                             <a href="/pages/financeiro/gdof/documentoFiscal/encaminha_documento/">Encaminhar Documento Fiscal</a>
