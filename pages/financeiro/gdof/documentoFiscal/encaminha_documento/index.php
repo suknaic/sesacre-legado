@@ -273,7 +273,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Competência</th>
                                                     <th class="text-center">Destinatário</th>
                                                     <th class="text-center">Valor</th>
-                                                    <th class="text-center">Tramitação</th>
+                                                    <th class="text-center">Trâmite</th>
                                                     <th class="text-center">Situação</th>
                                                     <th class="text-center">Ações</th> 
                                                 </tr>

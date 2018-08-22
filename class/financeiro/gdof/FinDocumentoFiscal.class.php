@@ -583,6 +583,11 @@ class FinDocumentoFiscal {
             }
             $result = $dao->getMsgRetorno();
             
+//            echo "<pre>";
+//            print_r($result);
+//            echo "</pre>";
+//            return;
+            
             $docTramitacao = new DocTramitacao();
             $docTramitacao->setIdPessoa($this->id_pessoa);
             $docTramitacao->setIdDocOrigem($result['id_doc_lotacao']);
@@ -591,15 +596,14 @@ class FinDocumentoFiscal {
             $docTramitacao->setIdDocumentoSituacao($this->getDocSitCancelado());
             $docTramitacao->setIdTipoTramitacao($this->getTpTramTramitacaoFinalizada());
             $docTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
-            $docTramitacao->setFlPesquisa("1");
-            $docTramitacao->cadastraTramitacao($pdo);
+            $docTramitacao->setFlPesquisa("1");            
             if (!$docTramitacao->cadastraTramitacao($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
             }
             
             $pdo->commit();
-            $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            return Metodos::retornoAjax("ok", "html", "Cancelamento do Documento Fiscal Realizado com Sucesso.");
             
             $pdo->rollBack();
             echo "<pre>";
