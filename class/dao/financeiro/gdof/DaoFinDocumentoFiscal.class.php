@@ -420,18 +420,13 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     inner join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
-
-                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
-						, TA.id_documento_fiscal, TA.id_doc_tramitacao
-						, TA.id_documento_situacao, TA.id_tipo_tramitacao
-							, TA.id_doc_origem, TA.id_doc_destino
-						, TA.fl_pesquisa
-								from fin_doc_tramitacao t
-								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
+                 
+                    inner join (select DISTINCT ON (t.id_documento_fiscal) *
+                                from fin_doc_tramitacao t				
+                                order by t.id_documento_fiscal
+                                , t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
-
-
+                                        
                     inner join fin_documento_situacao as situacao
                     on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
 
@@ -522,15 +517,11 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
 
-                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
-						, TA.id_documento_fiscal, TA.id_doc_tramitacao
-						, TA.id_documento_situacao, TA.id_tipo_tramitacao
-							, TA.id_doc_origem, TA.id_doc_destino
-						, TA.fl_pesquisa
-								from fin_doc_tramitacao t
-								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
-					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
+                    inner join (select select DISTINCT ON (t.id_documento_fiscal) *
+                                from fin_doc_tramitacao t				
+                                order by t.id_documento_fiscal
+                                , t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
+                                on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
 
                     inner join fin_documento_situacao as situacao
@@ -872,14 +863,10 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
                     end as nm_lotacao, encaminhamento.id_doc_lotacao
                     from fin_documento_fiscal as doc 
-                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
-                            , TA.id_documento_fiscal, TA.id_doc_tramitacao
-                            , TA.id_documento_situacao, TA.id_tipo_tramitacao
-                            , TA.id_doc_origem, TA.id_doc_destino
-                            , TA.fl_pesquisa
-                            from fin_doc_tramitacao t
-                            INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal                            
-                            order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
+                    inner join (select DISTINCT ON (t.id_documento_fiscal) *
+                                from fin_doc_tramitacao t				
+                                order by t.id_documento_fiscal
+                                , t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                     on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
                     inner join fin_documento_situacao as situacao

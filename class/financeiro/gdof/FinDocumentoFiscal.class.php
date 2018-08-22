@@ -579,14 +579,9 @@ class FinDocumentoFiscal {
             $dao->setIdDocumentoFiscal((int)$this->id_documento_fiscal);            
             $dao->verificaPermissaoPessoaSituacaoAtual($this->id_pessoa, $idSituacao, $pdo);
             if(!$dao->sucesso()){
-                return Metodos::retornoAjax("Erro", "alert", "Usuário não tem permissão para Cancelar esse Documento.");
+                return Metodos::retornoAjax("Erro", "alert", "Documento Fiscal só pode ser Cancelado, quando Estiver na Situação Cadastrado.");
             }
-            $result = $dao->getMsgRetorno();
-            
-//            echo "<pre>";
-//            print_r($result);
-//            echo "</pre>";
-//            return;
+            $result = $dao->getMsgRetorno();                        
             
             $docTramitacao = new DocTramitacao();
             $docTramitacao->setIdPessoa($this->id_pessoa);
