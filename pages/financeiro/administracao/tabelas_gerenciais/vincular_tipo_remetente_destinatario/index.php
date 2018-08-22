@@ -155,7 +155,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Tipo de Remetente/Destinatário</th>
-                                                        <th>Destinatário/Remetente</th>
+                                                        <th>Remetente/Destinatário</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
