@@ -372,8 +372,12 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
-    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens) {
+    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null) {
         try {
+            $sqlDocumentoFiscal = " and entDoc.id_documento_fiscal is null";
+            if(!empty($idDocumentoFiscal)){
+               $sqlDocumentoFiscal = $sqlDocumentoExiste;
+            }
             $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
                     from fin_protocolo as protocolo
@@ -385,8 +389,11 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     on entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
                     where protocolo.id_ordem in(" . $idOrdens . ")
                     and protocolo.st_protocolo = '2'
-                    and entDoc.id_documento_fiscal is null ";
+                    ".$sqlDocumentoFiscal." ";
             $stmt = $pdo->prepare($sql);
+            if(!empty($idDocumentoFiscal)){
+                $stmt->bindValue(":idDocumentoFiscal", $idDocumentoFiscal, PDO::PARAM_INT);
+            }
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->sucesso = true;

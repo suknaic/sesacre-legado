@@ -238,7 +238,7 @@ class DocVincEncaminhamento {
                 return;
             }
             
-            $result = $daoFinDocVincEncaminhamento->getMsgRetorno();
+            $result = $daoFinDocVincEncaminhamento->getMsgRetorno();           
             if(empty($result)){
                 $this->sucesso = true;
                 $this->msgRetorno = "Não possui Registro";

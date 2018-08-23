@@ -587,13 +587,23 @@ class FinEntregaConfirmacaoModel {
             }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $arrayIdOrdens = array();
-            foreach ($dados as $linha) {
+            $arrayIdOrdens = array();            
+            $sqlDocumentoExiste = "";
+            $idDocumentoFiscal = 0;
+            foreach ($dados as $key => $linha){
                 $arrayIdOrdens [] = $linha["id_ordem"];
+                if(array_key_exists("id_documento_fiscal", $linha)){
+                    if(!empty($linha['id_documento_fiscal'])){
+                        $idDocumentoFiscal = (int)$linha['id_documento_fiscal'];
+                        $sqlDocumentoExiste = " and (entDoc.id_documento_fiscal is null "
+                                . "OR entDoc.id_documento_fiscal = :idDocumentoFiscal)";
+                    }
+                }
+                
             }
             $idOrdens = implode(' , ', $arrayIdOrdens);
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens);
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();            
+            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens, $sqlDocumentoExiste, $idDocumentoFiscal);
             $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
 
             if ($daoFinEntregaConfirmacao->sucesso()) {

@@ -81,7 +81,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'cadastrarDocumentoFiscal':
+    CASE 'editarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

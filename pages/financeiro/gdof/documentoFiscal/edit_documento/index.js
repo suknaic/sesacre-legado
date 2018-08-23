@@ -14,22 +14,25 @@ $(document).ready(function () {
          * retornaDadosOrdem
          */
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+            "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOrdemGdof",
                 "dados": $("body").find("#idPedido").val()
 
             },
-            "success": function (response) {
+            "success": function (response) {                
                 $("#selectOrdem").html(response);
             }
         });
 
     $("body").on("change", "#selectOrdem", function (e) {
-        var idOrdem = $("body").find("#selectOrdem").val();
+        var idOrdem = $("body").find("#selectOrdem").val();     
+        if(idOrdem == 0){
+            return false;
+        }
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+            "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTipoValorOrdem",
@@ -49,7 +52,9 @@ $(document).ready(function () {
     var infTabOrdem = {};
 
     $("body").on("click", ".addOrdens", function (e) {
-
+        if($("#selectOrdem option:selected").val() == 0){
+            return false;
+        }
         array = {
             "id_ordem": $("#selectOrdem option:selected").val(),
             "nr_ordem": $("#selectOrdem option:selected").text(),
@@ -67,7 +72,7 @@ $(document).ready(function () {
 
         $.ajax({
             "method": "POST",
-            "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+            "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaOrdem",
@@ -78,14 +83,26 @@ $(document).ready(function () {
                 $("#tabelaOrdem").find("tbody").html(response);
             }
         });
-
         retornaOptionsDaEntrega(infTabOrdem);
-
     });
+    
+    $(".tabOrdem").each(function(){
+        array = {
+            "id_ordem": $(this).attr('id'),
+            "nr_ordem": $(this).find("td:eq(0)").text(),
+            "tipo_ordem": $(this).find("td:eq(1)").text(),
+            "valorOrdem": $(this).find("td:eq(2)").text(),
+            "id_documento_fiscal" : $("#idPedido").val()
+        }
+        infTabOrdem[$(this).attr('id')] = array;        
+    });
+    retornaOptionsDaEntrega(infTabOrdem);        
+    
+    
     //retorna options entrega
-    function retornaOptionsDaEntrega(infTabOrdem) {
+    function retornaOptionsDaEntrega(infTabOrdem) {      
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+            "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
@@ -96,8 +113,7 @@ $(document).ready(function () {
                 $("#selectEntrega").html(response);
             }
         });
-    }
-
+    }    
     //excluir ordem 
     $("body").on("click", ".excluirOrdem", function (e) {
         var $this = $(this);
@@ -130,8 +146,14 @@ $(document).ready(function () {
     });
 
     var infTabEntrega = [];
+    $(".trEntregas").each(function(){
+        infTabEntrega.push($(this).attr('identrega'));       
+    });
 
-    $("body").on("click", ".addEntrega", function (e) {
+    $("body").on("click", ".addEntrega", function (e) {        
+        if($("#selectEntrega option:selected").val() == 0){
+            return false;
+        }
         infTabEntrega.push($("#selectEntrega option:selected").val());
         atualizaTabelaEntrega(infTabEntrega);
     });
@@ -140,7 +162,7 @@ $(document).ready(function () {
     function atualizaTabelaEntrega(infTabEntrega) {
 
         $.ajax({
-            "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+            "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaEntrega",
@@ -167,6 +189,11 @@ $(document).ready(function () {
         
         if (qtdEntrega > 0) {
             atualizaTabelaEntrega(infTabEntrega);
+        }else{
+            let valor = "0,0000";
+            $("#tabelaEntrega").find(".valorEntregaTotal").attr("valor", valor);
+            $("#tabelaEntrega").find(".valorEntregaTotal").text(valor);
+            $("#valorDocumentoFiscal").val(valor);
         }
     });
 
@@ -211,6 +238,7 @@ $(document).ready(function () {
             }
 
             var dados = {
+                "documento_fiscal": $("#idPedido").val(),
                 "processoAdm": $("#processoAdm").val(),
                 "nr_documento": $("#nr_documento").val(),
                 "tpDocumento": $("#tpDocumento option:selected").val(),
@@ -223,7 +251,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/pages/financeiro/gdof/documentoFiscal/edit_documento/request.php",
+                "url": "request.php",
                 "method": "POST",
                 "dataType": "html",
                 "data": {
