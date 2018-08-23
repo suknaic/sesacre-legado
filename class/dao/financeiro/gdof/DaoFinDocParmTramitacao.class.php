@@ -56,18 +56,18 @@ class DaoFinDocParmTramitacao extends FinDocParmTramitacao {
         try {
             if (!empty($pdo)) {
                 $sql = "select
-                        id_doc_parm_tramitacao,
-                        id_doc_tipo_remetente,
-                        id_doc_tipo_destinatario,
-                        tp_doc_parm_tramitacao,
-                        id_documento_situacao 
-                     from
-                        fin_doc_parm_tramitacao 
-                     where
-                        (
-                           id_doc_tipo_remetente = :id_doc_tipo_remetente 
-                           or id_doc_tipo_destinatario = :id_doc_tipo_destinatario
-                        )";
+                            id_doc_parm_tramitacao,
+                            id_doc_tipo_remetente,
+                            id_doc_tipo_destinatario,
+                            tp_doc_parm_tramitacao,
+                            id_documento_situacao 
+                         from
+                            fin_doc_parm_tramitacao 
+                         where
+                            (
+                               id_doc_tipo_remetente = :id_doc_tipo_remetente 
+                               or id_doc_tipo_destinatario = :id_doc_tipo_destinatario
+                            )";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':id_doc_tipo_remetente', $this->getIdDocTipoRemetente(), PDO::PARAM_INT);
@@ -79,6 +79,7 @@ class DaoFinDocParmTramitacao extends FinDocParmTramitacao {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
+                    $this->msgRetorno = 'Nenhum registro encontrado';
                 }
             }
             

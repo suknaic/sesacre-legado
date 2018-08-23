@@ -138,10 +138,11 @@ class DocParmTramitacao {
     
     function excluirTodosParmTramitacao(PDO $pdo = null){
         try {
+            $retorno = "";
             if(empty($pdo)){
-                $conexao = new Conexao();
-                $pdo = $conexao->connect();
-                $pdo->beginTransaction();
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem conexão com o Banco";
+                return true;
             }
             
             /**
@@ -159,9 +160,11 @@ class DocParmTramitacao {
             $daoFinDocParmTramitacao->setIdDocTipoDestinatario($this->getIdDocTipoDestinatario());
             $daoFinDocParmTramitacao->retornaTodosParmTipoLotacao($pdo);
             
+            //Se não encontrar nenhum registro, retorna true para continuar a operação.
+            //Se nenhum parâmetro for encontrado para o tipo informado, a exlcusão ocorrerá normalmente
             if(!$daoFinDocParmTramitacao->getSucesso()){
-                $this->sucesso = false;
-                $this->msgRetorno = $daoFinDocParmTramitacao->getMsgRetorno(); 
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinDocParmTramitacao->getMsgRetorno() ; 
                 return;
             }
             

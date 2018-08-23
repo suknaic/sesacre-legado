@@ -1,6 +1,8 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/financeiro/gdof/FinDocTipoLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocParmTramitacao.class.php";
 
 class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
 
@@ -28,7 +30,7 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -47,7 +49,7 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -64,9 +66,92 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function ativa(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_doc_tipo_lotacao set st_ativo = '1' where id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                
+                $this->sucesso = $stmt->execute();
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+    function desativa(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_doc_tipo_lotacao set st_ativo = '0' where id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                
+                $this->sucesso = $stmt->execute();
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+//    function selectDocLotacaoAtivosPorTipo(PDO $pdo = null){
+//        try {
+//            if (!empty($pdo)) {
+//                $sql = "select id_doc_lotacao,id_doc_tipo_lotacao,id_lotacao,st_ativo 
+//                        from fin_doc_lotacao
+//                        where id_doc_tipo_lotacao = :id_doc_tipo_lotacao
+//                        and st_ativo = '1'";
+//                $stmt = $pdo->prepare($sql);
+//                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+//                $stmt->execute();
+//                
+//                if ($stmt->rowCount() > 0) {
+//                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//                    $this->sucesso = true;
+//                } else {
+//                    $this->sucesso = false;
+//                }
+//            } else {
+//                $this->msgRetorno = 'Sem conexão com o banco de dados';
+//            }
+//        } catch (PDOException $exc) {
+//            echo $exc->getTraceAsString();
+//        }
+//    }
+    
+    function selectDocLotacaoTodosPorTipo(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select id_doc_lotacao,id_doc_tipo_lotacao,id_lotacao,st_ativo 
+                        from fin_doc_lotacao
+                        where id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            echo $exc->getTraceAsString();
         }
     }
     
@@ -92,7 +177,7 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -101,7 +186,7 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
     function selectLinha(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select * from fin_doc_tipo_lotacao where id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
+                $sql = "select id_doc_tipo_lotacao,nm_doc_tipo_lotacao from fin_doc_tipo_lotacao where id_doc_tipo_lotacao = :id_doc_tipo_lotacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -116,7 +201,7 @@ class DaoFinDocTipoLotacao extends FinDocTipoLotacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
