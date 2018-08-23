@@ -116,21 +116,21 @@ $(document).ready(function () {
         var ano = $.trim($("#ano").val());
         //************************************************************************************************
         if (tipo == 0) {
-            func.modalAlert(" É necessário informar o tipo de Relatório");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Tipo de Relatório)</strong>");
             return false;
         }
         if (ano == 0) {
-            func.modalAlert(" É necessário informar o Ano para o Relatório");
+            func.modalAlert(func.msgPreencherCampos +" <strong>(Ano)</strong>");
             return false;
         }
     //************************************************************************************************
         if (ano == 0 && mes == 0 && vinculo == 0 && lotacao == 0 && situacao == 0) {
-        //alert("É necessário informar no mínimo um filtro para imprimir");
-            func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
+            // func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
+            func.modalAlert(func.msgPreencherCampos);
             return false;
         }
         if (mes != 0 && ano == 0) {
-            func.modalAlert("Selecione o Ano");
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Ano)</strong>");
             return false;
         }
      

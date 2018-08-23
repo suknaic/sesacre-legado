@@ -63,8 +63,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                 <div class="panel">
                                     <!--===================================================-->
                                     <div class="panel-heading ">
-                                        <h3 class="panel-title">                                                                                       
-                                            Relatório de Férias, Licenças e Concessões:
+                                        <h3 class="panel-title">
+                                            Relatório de Férias, Licenças e Concessões em PDF:
                                         </h3>
                                     </div>
                                     <!--Horizontal Form-->
@@ -76,13 +76,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                             <div class="form-group">
                                                 <div class="col-md-1"> </div>
                                                 <div class="col-md-4">
-                                                    Quebre de Paginas:<span class="text-danger">*</span>                                                        
+                                                    Tipo de Relatório:<span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="tipo" class="form-control">
-                                                            <option value="0">Selecione Tipo de Relatório</option>                                                                
+                                                            <option value="0">Selecione o Tipo de Relatório</option>
                                                             <option value="1">Por Lotação</option>
                                                             <option value="2">Por Vínculo</option>
 
@@ -96,7 +96,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 <div class="col-md-1">
                                                     <div class="input-group">
                                                         <br>
-                                                        Data:
+                                                        Período:
                                                     </div>
 
                                                 </div>
@@ -150,7 +150,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_situacao" class="form-control">
-                                                                <option value="0">Selecione Situação</option>                                                                
+                                                                <option value="0">Selecione a Situação</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -165,7 +165,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_lotacao" class="form-control">
-                                                                <option value="0">Selecione Lotação</option>                                                                
+                                                                <option value="0">Selecione a Lotação</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
@@ -182,7 +182,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_vinculo" class="form-control">
-                                                                <option value="0">Selecione Vínculo</option>                                                                
+                                                                <option value="0">Selecione a Vínculo</option>
                                                                 <?php
                                                                 // echo $lotacoes;
                                                                 ?>
