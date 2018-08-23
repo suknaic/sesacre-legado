@@ -406,6 +406,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/financeiro/gdof/unidade/cad_gdof/index.js"></script>
+        <!-- <script src="/pages/financeiro/gdof/unidade/cad_gdof/index.js"></script> -->
     </body>
 </html>
