@@ -63,7 +63,7 @@ require_once "index.load.php";
 
                                 <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/gdof/documentoFiscal/cad_documento/index.php" role="button">
                                     <i class="fa fa-plus-circle fa-1x" style="margin-right: 5px"></i>
-                                    Novo Documento Fiscal
+                                    Cadastrar Documento Fiscal
                                 </a>
                             </div>
                             <form>
@@ -83,7 +83,7 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="ano_doc_fis">Ano:</label>
+                                                <label for="ano_doc_fis">Exercício do Documento Fiscal:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
