@@ -300,7 +300,9 @@ class DocFiscalPesquisa {
         }
         
         if ($this->getDestinatario()) {
-            $filtroSql .= " and (tramitacao.id_doc_destino = " . $this->getDestinatario() . " or tramitacao.id_doc_origem = ". $this->getDestinatario() ." )";
+            $encaminhado = "tramitacao.id_tipo_tramitacao = 3"; //Quando tramitação for de 'Encaminhado', deve usar como parametro o ID_DOC_DESTINO
+            $outros      = "tramitacao.id_tipo_tramitacao <> 3"; //Quando for DIFERENTE de 'Encaminhado', deve usar como parametro o ID_DOC_ORIGEM
+            $filtroSql .= " and ((tramitacao.id_doc_destino = " . $this->getDestinatario() . " and ".$encaminhado.") or (tramitacao.id_doc_origem = ". $this->getDestinatario() ." and ".$outros."))";
         }
 //            if($this->getTramitacao() == '1'){ //Aguardando Tramitação
 //                $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
