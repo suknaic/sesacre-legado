@@ -69,9 +69,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
-                                        <h3 class="panel-title">Formulário de Pesquisa
-
-                                        </h3>
+                                        <h3 class="panel-title">Formulário de Pesquisa</h3>
                                     </div>
 
                                     <!--Horizontal Form-->

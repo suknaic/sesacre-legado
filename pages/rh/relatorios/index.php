@@ -49,7 +49,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
 
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
+                    <div id="page-title">
+                        <h1 class="page-header text-overflow">
+                            Diversos em PDF
+                        </h1>
+                    </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
@@ -62,11 +66,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <!--===================================================-->
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">
-                                            Diversos em PDF:
-                                        </h3>
-                                    </div>
+<!--                                    <div class="panel-heading ">-->
+<!--                                        <h3 class="panel-title">-->
+<!--                                            Diversos em PDF:-->
+<!--                                        </h3>-->
+<!--                                    </div>-->
                                     <!--Horizontal Form-->
 
                                     <!--===================================================-->

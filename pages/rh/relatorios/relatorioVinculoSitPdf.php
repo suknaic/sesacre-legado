@@ -27,7 +27,7 @@ $dados = $banco->pesquisaRelatorioSituacao($idVinculo, $idSitacao, $idSituacao, 
 //return FALSE;
 if (empty($dados)) {
     echo '<script language="javaScript">
-              window.alert("Não Existe Registro para esta Pesquisa");
+              window.alert("Registros Não Encontrados.");
               window.close();
           </script>';
     return false;
@@ -336,7 +336,8 @@ $mpdf->AddPage();
 $html = utf8_encode($html);
 $mpdf->WriteHTML($html);
 $mpdf->debug = false;
-$output = $mpdf->Output();
+$mpdf->SetTitle('Relatório de Férias, Licenças e Concessões');
+$output = $mpdf->Output('Relatório de Férias, Licenças e Concessões.pdf', 'I');
 exit();
 
 //função para gerar a tabela
