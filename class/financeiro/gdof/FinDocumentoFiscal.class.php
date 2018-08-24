@@ -605,12 +605,7 @@ class FinDocumentoFiscal {
             if(empty($entregas)){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar as Entregas.");
             }
-            /*
-            echo "<pre>";
-            print_r($this->entrega);
-            echo "</pre>";
-            */
-            $this->entrega = [460, 450];
+       
             $arrayInsert = array();
             $arrayRemove = array();
                         
@@ -622,10 +617,10 @@ class FinDocumentoFiscal {
             $arrayInsert = array_diff($this->entrega, $arrayAux);
             $arrayRemove = array_diff($arrayAux, $this->entrega);
             
-            echo "<pre>";
-            print_r($arrayInsert);
-            print_r($arrayRemove);
-            echo "</pre>";
+//            echo "<pre>";
+//            print_r($arrayInsert);
+//            print_r($arrayRemove);
+//            echo "</pre>";
             
             
             //Registros que terão insert
@@ -642,55 +637,17 @@ class FinDocumentoFiscal {
             //Registros que terão delete
             if(!empty($arrayRemove)){
                 foreach ($arrayRemove as $key => $value) {
-                    
+                    $finEntregaDocumento->setIdEntregaDocumento($key);
+                    $finEntregaDocumento->removerEntregaDocumento($pdo);
+                    if(!$finEntregaDocumento->Sucesso()){
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao remover a(s) entrega(s) do documento fiscal."); 
+                    }
                 }
                 
                 
             }
             
-            
-            foreach ($entregas as $key => $value) {
-                $key = array_search($value['id_entrega_confirmacao'], $this->entrega);
-            }
-            
-            
-            foreach ($this->entrega as $kU => $vU) {
-                $key = array_search($vU, array_column($entregas, "id_entrega_confirmacao"));
-                //Se ele não Achou o Id da Entrega No Banco, então esse registro terá um insert
-                if($key == ""){
-                    $arrayInsert = $vU;
-                }
-                //Se ele achou o Registro, então não se faz nada
-                
-                //echo $key." \n - ";
-                continue;
-                $flagAchou = false;
-                                
-                foreach ($entregas as $kB => $vB) {
-                    if($vU == $vB['id_entrega_confirmacao']){
-                        $flagAchou = true;
-                        break;
-                    }                                                            
-                }
-                
-                if(!$flagAchou){
-                    $arrayInsert[] = $vU;
-                }
-                
-                $key = array_search($value, array_column($entregas, "id_entrega_confirmacao"));
-                
-                echo $key." \n - ";
-            }
-            
-            
-            echo "<pre>";
-            print_r($entregas);
-            echo "</pre>";
-            
-            
-            
-            
-            return;
             //Adiciona ou Exclui as Entregas para o Documento Fiscal
             
             
