@@ -94,7 +94,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $(".data").datepicker('hide');
-            //return false;
         }
     });
 //******************************************************************************************
@@ -106,8 +105,6 @@ $(document).ready(function () {
     });
     //*****************************************
     $('body').on('click', '.btn-gerar', function () {
-//        func.modalAlert(" Página em Construção");
-//        return false;
         var tipo = $("#tipo").val();
         var vinculo = $("#id_vinculo").val();
         var lotacao = $("#id_lotacao").val();
@@ -125,7 +122,6 @@ $(document).ready(function () {
         }
     //************************************************************************************************
         if (ano == 0 && mes == 0 && vinculo == 0 && lotacao == 0 && situacao == 0) {
-            // func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
             func.modalAlert(func.msgPreencherCampos);
             return false;
         }

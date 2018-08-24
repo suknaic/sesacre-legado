@@ -29,7 +29,7 @@ $rs = $banco->pesquisaRelatorioVinculo($idCargulo, $idLotacao, $idCargo, $idFunc
 //return FALSE;
 if (empty($rs)) {
     echo '<script language="javaScript">
-              window.alert("Não Existe Registro para esta Pesquisa");
+              window.alert("Registros Não Encontrados.");
               window.close();
           </script>';
     return false;
@@ -313,7 +313,8 @@ $mpdf->AddPage();
 $html = utf8_encode($html);
 $mpdf->WriteHTML($html);
 $mpdf->debug = false;
-$output = $mpdf->Output();
+$mpdf->SetTitle('Relatório de Funcionários por Cargo');
+$output = $mpdf->Output('Relatório de Funcionários por Cargo.pdf', 'I');
 exit();
 
 //função para gerar a tabela

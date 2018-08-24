@@ -42,31 +42,30 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
             ?>
 
             <div class="boxed">
-
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-
+                    <div id="page-title">
+                        <h1 class="page-header text-overflow">
+                            Relatório de Férias, Licenças e Concessões em PDF
+                        </h1>
+                    </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-
                         <!-- Inicio Form -->
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <!--===================================================-->
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">
-                                            Relatório de Férias, Licenças e Concessões em PDF:
-                                        </h3>
-                                    </div>
+<!--                                    <div class="panel-heading ">-->
+<!---->
+<!--                                    </div>-->
                                     <!--Horizontal Form-->
 
                                     <!--===================================================-->
@@ -75,7 +74,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <div class="col-md-1"> </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4" title="Selecione o Tipo de Relatório">
                                                     Tipo de Relatório:<span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -92,15 +91,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-1"></div>
-                                                <div class="col-md-1">
-                                                    <div class="input-group">
-                                                        <br>
-                                                        Período:
-                                                    </div>
+<!--                                                <div class="col-md-1"></div>-->
+<!--                                                <div class="col-md-1">-->
+<!--                                                    <div class="input-group">-->
+<!--                                                        <br>-->
+<!--                                                        <h3>Período:</h3>-->
+<!--                                                    </div>-->
 
-                                                </div>
-                                                <div class="col-md-2">
+<!--                                                </div>-->
+                                                <div class="col-md-2"  title="Selecione o Ano">
                                                     Ano:<span class="text-danger">*</span> 
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -114,7 +113,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2">
+                                                <div class="col-md-2"  title="Selecione o Mês">
                                                     Mês:
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -137,13 +136,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         </select>
                                                     </div>
                                                 </div>
-                                                
                                             </div>
                                             <hr>
                                             <div class="quebres">
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4" title="Selecione a Situação">
                                                         Situação:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -158,7 +156,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                         </div>
                                                     </div>
                                                     
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6"  title="Selecione o Lotação">
                                                         Lotação:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -175,7 +173,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 </div>    
                                                 <div class="form-group">    
                                                     <div class="col-md-1"></div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4"  title="Selecione o Vínculo">
                                                         Vínculo:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -199,10 +197,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                         <!-- <div class="panel-body"> -->
                                         <!-- Footer Form -->
                                         <div class="panel-footer text-center">
-                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar" title="Limpar Todos Campos">
                                                 Limpar
                                             </button>     
-                                            <button class="btn btn-primary btn-rounded btn-gerar" type="button">
+                                            <button class="btn btn-primary btn-rounded btn-gerar" type="button" title="Gerar Relatório">
                                                 <i class="fa fa-print" aria-hidden="true"></i> Gerar
                                             </button>
                                         </div>

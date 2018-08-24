@@ -52,6 +52,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                 <!--===================================================-->
                 <div id="content-container">
                     <!--Page content-->
+                    <div id="page-title">
+                        <h1 class="page-header text-overflow">Gráficos</h1>
+                    </div>
                     <!--===================================================-->
                     <div id="page-content">
                         <!-- Inicio Form -->
@@ -59,17 +62,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <!--===================================================-->
-                                    <div class="panel-heading ">
-                                        <h3 class="panel-title">                                                                                       
-                                            Pesquisa:
-                                        </h3>
-                                    </div>
+<!--                                    <div class="panel-heading ">-->
+<!--                                        <h3 class="panel-title">                                                                                       -->
+<!--                                            Pesquisa:-->
+<!--                                        </h3>-->
+<!--                                    </div>-->
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formRelatorio">
                                         <div class="panel-body">
                                             <div class="form-group">
-                                                <div class="col-md-1"></div>
+                                                <div class="col-md-2"></div>
                                                 <div class="col-md-1">
                                                     <h3>Período:</h3>
                                                 </div>
@@ -95,12 +98,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                             </div>
                                             <!-- End <div class="form-group"> -->
                                             <div class="form-group">
+                                                <div class="col-md-1"></div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-1">
-                                                    <i class="fa fa-question-circle" title="Todos os Funcionários Cadastrados no Sistema"> Todos</i> 
+
                                                     <div class="checkbox checkbox-info checkbox-circle">
                                                         <input id="checkbox8" type="checkbox" class="todos">
-                                                        <label for="checkbox8"></label>
+                                                        <label for="checkbox8">Todos <i class="fa fa-question-circle" title="Todos os Funcionários Cadastrados no Sistema"></i></label>
                                                     </div>
                                                 </div>
                                             </div>
