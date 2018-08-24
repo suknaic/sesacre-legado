@@ -40,9 +40,43 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    function update(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "UPDATE fin_documento_fiscal SET nr_processo_administrativo = :nrProcessoAdministrativo"
+                        . " , nr_documento_fiscal = :nrDocumentoFiscal, mm_competencia = :mmCompetencia"
+                        . " , aa_competencia = :aaCompetencia, dt_emissao = :dtEmissao"
+                        . " , dt_atesto = :dtAtesto, vl_documento = :vlDocumento"
+                        . " , fl_grp = :flGrp, nr_grp_numero = :nrGrpNumero"
+                        . " , id_tipo_documento = :idTipoDocumento"
+                        . " WHERE id_documento_fiscal = :idDocumentoFiscal";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':idDocumentoFiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+                $stmt->bindValue(":nrProcessoAdministrativo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
+                $stmt->bindValue(":nrDocumentoFiscal", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
+                $stmt->bindValue(":mmCompetencia", $this->getMmCompetencia(), PDO::PARAM_INT);
+                $stmt->bindValue(":aaCompetencia", $this->getAaCompetencia(), PDO::PARAM_INT);
+                $stmt->bindValue(":dtEmissao", $this->getDtEmissao(), PDO::PARAM_STR);
+                $stmt->bindValue(":dtAtesto", $this->getDtAtesto(), PDO::PARAM_STR);
+                $stmt->bindValue(":vlDocumento", $this->getVlDocumento(), PDO::PARAM_STR);                
+                $stmt->bindValue(":flGrp", $this->getFlGrp(), PDO::PARAM_INT);
+                $stmt->bindValue(":nrGrpNumero", $this->getNrGrpNumero(), PDO::PARAM_STR);                
+                $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+                                
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -748,6 +782,30 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaPrimeiroTipoRemetenteTramitacao(PDO $pdo) {
+        try {
+            $sql = "select * from fin_doc_tramitacao 
+                where id_documento_fiscal = :idDocumentoFiscal 
+                order by dh_doc_tramitacao desc limit 1";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idDocumentoFiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível encontrar o remetente da última tramitação.";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    
+    //select * from fin_doc_tramitacao where id_documento_fiscal = 3 order by dh_doc_tramitacao desc limit 1
     
     public function verificaPermissaoEncaminhar(PDO $pdo, int $idPessoa = 0, int $tipoRemetente = 0){
         try {

@@ -262,7 +262,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="competencia" id="competencia" 
-                                                                           value="<?php echo $documento["mm_competencia"] . '/' . $documento["aa_competencia"]; ?>"/>
+                                                                           value="<?php echo (strlen($documento["mm_competencia"]) == 2 ? $documento["mm_competencia"] : "0".$documento["mm_competencia"]) . '/' . $documento["aa_competencia"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -340,12 +340,44 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!--form lotacao-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
+                                                            
+                                                            <div class="col-sm-8">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="destinatario" id="destinatario" disabled="true">
+                                                                        <option value="0">Selecione uma tipo</option>
+                                                                        <?php echo $selectRemetente; ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
                                         </div>
                                     </div>

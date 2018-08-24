@@ -5,6 +5,8 @@ $(document).ready(function () {
     //Mascara do sistema
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
+    
+    $('#competencia').mask("99/9999");
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
@@ -218,25 +220,18 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var entregas = [];
 
-            $(".trEntregas").each(function () {
+            $(".trEntregas").each(function (){
                 entregas.push($(this).attr("identrega"));
             });
 
-            if (entregas.length <= 0) {
+            if (entregas.length <= 0){
+                $this.prop("disabled", false);
                 func.modalAlert("Nenhuma entrega foi adicionada.");
                 return false;
             }
 
-            var grp = "";
-
-            if ($('input[name=grp_cod]:checked').val() === 1) {
-                grp = $("#grp_sim").val();
-
-            } else if ($('input[name=grp_cod]:checked').val() === 0) {
-                grp = $("#grp_nao").val();
-
-            }
-
+            var grp = $('input[name=grp_cod]:checked').val();          
+            
             var dados = {
                 "documento_fiscal": $("#idPedido").val(),
                 "processoAdm": $("#processoAdm").val(),

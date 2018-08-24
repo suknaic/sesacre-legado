@@ -746,5 +746,46 @@ class Pedido {
             return;
         }
     }
+    
+    public function alterarJustificativa() {
+        try {
+            if (empty($this->dsPedido) || empty($this->idPedido)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            $daoFinPedido = new DaoFinPedido();
+            //chamando a funcao que retorna o numero do pedido de necessidade
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->setDsPedido($this->dsPedido);
+           
+            $daoFinPedido->retornaDadosPedido($pdo);
+            if(!$daoFinPedido->Sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
+            }
+            $busca = $daoFinPedido->getMsgRetorno();
+           
+            
+            //Edita o Registro no banco
+            $daoFinPedido->mudarJustificativa($pdo);
+            if(!$daoFinPedido->Sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
+            }
+             
+           
+            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            $pdo->commit();                   
+            return Metodos::retornoAjax("ok", "html", "Edição Realizada com Sucesso.");
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
 
 }

@@ -144,7 +144,7 @@ $(document).ready(function () {
         item = item.nr_documento_fiscal;        
 
         bootbox.confirm({
-            title: 'Caixa de Confirmação',
+            title: 'Cancelamento do Documento Fiscal',
             message: 'Você tem Certeza que deseja continuar com o \n\
                 Cancelamento do Documento Fiscal <span class="text-danger">' + item + '</span>?\n\
                 <br> \n\

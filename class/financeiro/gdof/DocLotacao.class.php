@@ -96,8 +96,7 @@ class DocLotacao {
         }  
     }
     
-    function excluir(){
-        
+    function excluir(){        
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $pdo->beginTransaction();
@@ -107,9 +106,7 @@ class DocLotacao {
         }else{
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", $this->getMsgRetorno());
-        }
-        
-        
+        }                
     }
     
     
@@ -126,11 +123,10 @@ class DocLotacao {
             $daoFinDocLotacao->setIdDocLotacao($this->getIdDocLotacao());
             
             $daoFinDocLotacao->selectLinha($pdo);
-            if(!$daoFinDocLotacao->getSucesso()){    
+            if(!$daoFinDocLotacao->getSucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = STR_ERROR;
-                return true;
-                
+                return true;                
             }                        
             
             $busca = $daoFinDocLotacao->getMsgRetorno();            
@@ -147,12 +143,12 @@ class DocLotacao {
             
             $docEncaminha = new DocVincEncaminhamento();
             $docEncaminha->setIdDocLotacao($daoFinDocLotacao->getIdDocLotacao());
-            $docEncaminha->excluirTodosDocLotacao($pdo);          
+            $docEncaminha->excluirTodosDocLotacao($pdo);         
             if(!$docEncaminha->getSucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $docEncaminha->getMsgRetorno();
-                return true;                
-            }           
+                return true;           
+            }        
             
             $docRecebe = new DocVincRecebimento();
             $docRecebe->setIdDocLotacao($daoFinDocLotacao->getIdDocLotacao());
@@ -160,7 +156,7 @@ class DocLotacao {
             if(!$docRecebe->getSucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = $docRecebe->getMsgRetorno();
-                return true; 
+                return true;
             }
                         
             /*
@@ -172,37 +168,34 @@ class DocLotacao {
              * Se o retorno for True, então existe alguma Tramitação com o Doc Lotação
              * então teremos que desativar o Doc Lotação
              */            
-            if($daoFinDocLotacao->getSucesso()){
-                                                                
+            if($daoFinDocLotacao->getSucesso()){                                                              
                 $daoFinDocLotacao->desativa($pdo);
-                if(!$daoFinDocLotacao->getSucesso()){                
+                if(!$daoFinDocLotacao->getSucesso()){           
                     $pdo->rollBack();
                     $this->sucesso = false;
                     $this->msgRetorno = $daoFinDocLotacao->getMsgRetorno();
                     return true;
                 }
-
-                if (!Log::SalvaLogU('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $busca, $pdo)) {
+                if (!Log::SalvaLogU('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $busca, $pdo)){
                     $pdo->rollBack();
                     $this->sucesso = false;
                     $this->msgRetorno = $daoFinDocLotacao->getMsgRetorno();
                     return true;                                                            
-                }      
+                }
                 $this->sucesso = true;
                 $this->excluido = false;
                 $this->msgRetorno = "Por Já existir um Tipo de Remetente/Destinatário Tramitado, então o registro foi desativado.";
-                return true;                                
-                
+                return true;                
             //Se não existe tramitação, então podemos Excluir o Doc Lotação da Base
             }else{              
-                if (!Log::SalvaLogD('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $pdo)) {
+                if (!Log::SalvaLogD('fin_doc_lotacao', $daoFinDocLotacao->getIdDocLotacao(), $pdo)){
                     $pdo->rollBack();
                     $this->sucesso = false;
                     $this->msgRetorno = STR_ERROR;
                     return true;                   
                 }
                 $daoFinDocLotacao->delete($pdo);
-                if ($daoFinDocLotacao->getSucesso()) {
+                if ($daoFinDocLotacao->getSucesso()){
                     $this->sucesso = true;
                     $this->excluido = true;
                     $this->msgRetorno = "STR_REMOCAO_SUCESSO";
@@ -213,13 +206,12 @@ class DocLotacao {
                     $this->msgRetorno = $daoFinDocLotacao->getMsgRetorno();
                     return true;                     
                 }                                
-            }
-                                                            
+            }                                                            
             $pdo->rollBack();
             $this->sucesso = false;
             $this->msgRetorno = STR_ERROR;
             return true;                                                                                              
-        } catch (Exception $ex) {
+        } catch (Exception $ex){
             $pdo->rollBack();
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
