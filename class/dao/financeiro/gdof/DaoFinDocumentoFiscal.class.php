@@ -40,9 +40,43 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    function update(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "UPDATE fin_documento_fiscal SET nr_processo_administrativo = :nrProcessoAdministrativo"
+                        . " , nr_documento_fiscal = :nrDocumentoFiscal, mm_competencia = :mmCompetencia"
+                        . " , aa_competencia = :aaCompetencia, dt_emissao = :dtEmissao"
+                        . " , dt_atesto = :dtAtesto, vl_documento = :vlDocumento"
+                        . " , fl_grp = :flGrp, nr_grp_numero = :nrGrpNumero"
+                        . " , id_tipo_documento = :idTipoDocumento"
+                        . " WHERE id_documento_fiscal = :idDocumentoFiscal";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':idDocumentoFiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+                $stmt->bindValue(":nrProcessoAdministrativo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
+                $stmt->bindValue(":nrDocumentoFiscal", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
+                $stmt->bindValue(":mmCompetencia", $this->getMmCompetencia(), PDO::PARAM_INT);
+                $stmt->bindValue(":aaCompetencia", $this->getAaCompetencia(), PDO::PARAM_INT);
+                $stmt->bindValue(":dtEmissao", $this->getDtEmissao(), PDO::PARAM_STR);
+                $stmt->bindValue(":dtAtesto", $this->getDtAtesto(), PDO::PARAM_STR);
+                $stmt->bindValue(":vlDocumento", $this->getVlDocumento(), PDO::PARAM_STR);                
+                $stmt->bindValue(":flGrp", $this->getFlGrp(), PDO::PARAM_INT);
+                $stmt->bindValue(":nrGrpNumero", $this->getNrGrpNumero(), PDO::PARAM_STR);                
+                $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+                                
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -259,86 +293,121 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaTrDocumentosFiscais(PDO $pdo, string $filtroSql = "") {
         try {
-            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
-                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
-                    situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao,
-                    case 
-                      when lotacaoDestino.nm_lotacao is not null then concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '),lotacaoDestino.nm_lotacao)
-                      when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
-                    end as nm_lotacao  
-                    from fin_documento_fiscal as doc 
-
-                    inner join fin_tipo_documento as tpDoc 
-                    on tpDoc.id_tipo_documento = doc.id_tipo_documento 
-
-                    inner join (SELECT DISTINCT ON (id_documento_fiscal) *
-			FROM fin_entrega_documento
-		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
-
-                    inner join fin_entrega_confirmacao as entrega 
-                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-
-                    inner join  fin_ordem as ordem 
-                    on ordem.id_ordem = entrega.id_ordem 
-
-                    inner join fin_empenho as emp 
-                    on emp.id_pedido = ordem.id_pedido 
-
-                    inner join fin_protocolo as protoc 
-                    on protoc.id_ordem = ordem.id_ordem 
-
-                    inner join fin_pedido as pedido 
-                    on ordem.id_pedido = pedido.id_pedido 
-
-                    inner join pla_tipo_gasto as tipoGasto 
-                    on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
-
-                    inner join fin_tipo_empenho as tpEmp 
-                    on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
-
-                    inner join fin_fornecedor as fornecedor 
-                    on fornecedor.id_fornecedor = pedido.id_fornecedor 
-
-                    inner join fin_contrato as contrato 
-                    on contrato.id_contrato = fornecedor.id_contrato 
-
-                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
-						, TA.id_documento_fiscal, TA.id_doc_tramitacao
-						, TA.id_documento_situacao, TA.id_tipo_tramitacao
-							, TA.id_doc_origem, TA.id_doc_destino
-						, TA.fl_pesquisa
-								from fin_doc_tramitacao t
-								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-
-                                                where ta.fl_pesquisa = '1'
-						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
-                                                
-					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
-
-                    inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
-
-                    inner join fin_tipo_tramitacao as tpTramitacao
-                    on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
-
-                    left join fin_doc_lotacao as docLotacaoOrigem
-                    on docLotacaoOrigem.id_doc_lotacao = tramitacao.id_doc_origem
-                    
-                    left join fin_doc_tipo_lotacao as docTipoLotacaoOrigem
-                    on docTipoLotacaoOrigem.id_doc_tipo_lotacao = docLotacaoOrigem.id_doc_tipo_lotacao
-                    
-                    left join ses_lotacao as lotacaoOrigem
-                    on lotacaoOrigem.id_lotacao =  docLotacaoOrigem.id_lotacao 
-                    
-                    left join fin_doc_lotacao as docLotacaoDestino
-                    on docLotacaoDestino.id_doc_lotacao = tramitacao.id_doc_destino
-                    
-                    left join fin_doc_tipo_lotacao as docTipoLotacaoDestino
-                    on docTipoLotacaoDestino.id_doc_tipo_lotacao = docLotacaoDestino.id_doc_tipo_lotacao
-                    
-                    left join ses_lotacao as lotacaoDestino
-                    on lotacaoDestino.id_lotacao =  docLotacaoDestino.id_lotacao
-                    where tramitacao.fl_pesquisa = '1'  " . $filtroSql;
+            $sql = "select
+                        doc.id_documento_fiscal,
+                        doc.nr_documento_fiscal,
+                        pedido.nr_pedido,
+                        contrato.nr_contrato,
+                        emp.nr_empenho,
+                        protoc.id_protocolo,
+                        tpDoc.nm_tipo_documento,
+                        (
+                           trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
+                        )
+                        as competencia,
+                        doc.vl_documento,
+                        situacao.nm_situacao,
+                        tpTramitacao.nm_tipo_tramitacao,
+                        case
+                           when
+                              tramitacao.id_tipo_tramitacao = '3' 
+                           then
+                              concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '), lotacaoDestino.nm_lotacao) 
+                           else
+                              concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '), lotacaoOrigem.nm_lotacao) 
+                        end
+                        as nm_lotacao 
+                     from
+                        fin_documento_fiscal as doc 
+                        inner join
+                           fin_tipo_documento as tpDoc 
+                           on tpDoc.id_tipo_documento = doc.id_tipo_documento 
+                        inner join
+                           (
+                              SELECT DISTINCT
+                                 ON (id_documento_fiscal) * 
+                              FROM
+                                 fin_entrega_documento 
+                           )
+                           AS entDoc 
+                           on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_entrega_confirmacao as entrega 
+                           on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                        inner join
+                           fin_ordem as ordem 
+                           on ordem.id_ordem = entrega.id_ordem 
+                        inner join
+                           fin_empenho as emp 
+                           on emp.id_pedido = ordem.id_pedido 
+                        inner join
+                           fin_protocolo as protoc 
+                           on protoc.id_ordem = ordem.id_ordem 
+                        inner join
+                           fin_pedido as pedido 
+                           on ordem.id_pedido = pedido.id_pedido 
+                        inner join
+                           pla_tipo_gasto as tipoGasto 
+                           on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
+                        inner join
+                           fin_tipo_empenho as tpEmp 
+                           on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                        inner join
+                           fin_fornecedor as fornecedor 
+                           on fornecedor.id_fornecedor = pedido.id_fornecedor 
+                        inner join
+                           fin_contrato as contrato 
+                           on contrato.id_contrato = fornecedor.id_contrato 
+                        inner join
+                           (
+                              select DISTINCT
+                                 ON (t.id_documento_fiscal) 'asd',
+                                 TA.id_documento_fiscal,
+                                 TA.id_doc_tramitacao,
+                                 TA.id_documento_situacao,
+                                 TA.id_tipo_tramitacao,
+                                 TA.id_doc_origem,
+                                 TA.id_doc_destino,
+                                 TA.fl_pesquisa 
+                              from
+                                 fin_doc_tramitacao t 
+                                 INNER JOIN
+                                    fin_doc_tramitacao TA 
+                                    on TA.id_documento_fiscal = t.id_documento_fiscal 
+                              where
+                                 ta.fl_pesquisa = '1' 
+                              order by
+                                 t.id_documento_fiscal,
+                                 TA.dh_doc_tramitacao DESC
+                           )
+                           AS tramitacao 
+                           on tramitacao.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_documento_situacao as situacao 
+                           on situacao.id_documento_situacao = tramitacao.id_documento_situacao 
+                        inner join
+                           fin_tipo_tramitacao as tpTramitacao 
+                           on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao 
+                        left join
+                           fin_doc_lotacao as docLotacaoOrigem 
+                           on docLotacaoOrigem.id_doc_lotacao = tramitacao.id_doc_origem 
+                        left join
+                           fin_doc_tipo_lotacao as docTipoLotacaoOrigem 
+                           on docTipoLotacaoOrigem.id_doc_tipo_lotacao = docLotacaoOrigem.id_doc_tipo_lotacao 
+                        left join
+                           ses_lotacao as lotacaoOrigem 
+                           on lotacaoOrigem.id_lotacao = docLotacaoOrigem.id_lotacao 
+                        left join
+                           fin_doc_lotacao as docLotacaoDestino 
+                           on docLotacaoDestino.id_doc_lotacao = tramitacao.id_doc_destino 
+                        left join
+                           fin_doc_tipo_lotacao as docTipoLotacaoDestino 
+                           on docTipoLotacaoDestino.id_doc_tipo_lotacao = docLotacaoDestino.id_doc_tipo_lotacao 
+                        left join
+                           ses_lotacao as lotacaoDestino 
+                           on lotacaoDestino.id_lotacao = docLotacaoDestino.id_lotacao 
+                     where
+                        tramitacao.fl_pesquisa = '1' " . $filtroSql;
 
             $stmt = $pdo->prepare($sql);
 
@@ -574,23 +643,38 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaTipoLotacaoParaEncaminhamento(PDO $pdo, int $idPessoa = 0) {
         try {
-            $sql = "select tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao
-                    from fin_doc_vinc_encaminhamento as encaminhamento
-
-                    inner join fin_doc_lotacao as lotacaoTipo
-                    on lotacaoTipo.id_doc_lotacao = encaminhamento.id_doc_lotacao
-
-                    inner join fin_doc_tipo_lotacao as tipoLotacao
-                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
-
-                    inner join fin_doc_parm_tramitacao as parametro
-                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
-
-                    inner join fin_doc_tipo_lotacao as tipoLotacaoDestinario
-                    on tipoLotacaoDestinario.id_doc_tipo_lotacao = parametro.id_doc_tipo_destinatario
-
-                    where encaminhamento.id_pessoa = :pessoa
-                    group by tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao";
+//            $sql = "select tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao
+//                    from fin_doc_vinc_encaminhamento as encaminhamento
+//
+//                    inner join fin_doc_lotacao as lotacaoTipo
+//                    on lotacaoTipo.id_doc_lotacao = encaminhamento.id_doc_lotacao
+//
+//                    inner join fin_doc_tipo_lotacao as tipoLotacao
+//                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
+//
+//                    inner join fin_doc_parm_tramitacao as parametro
+//                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
+//
+//                    inner join fin_doc_tipo_lotacao as tipoLotacaoDestinario
+//                    on tipoLotacaoDestinario.id_doc_tipo_lotacao = parametro.id_doc_tipo_destinatario
+//
+//                    where encaminhamento.id_pessoa = :pessoa
+//                    group by tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao";
+            $sql = "select docTpDest.id_doc_tipo_lotacao, docTpDest.nm_doc_tipo_lotacao
+                    from fin_doc_vinc_encaminhamento as enc
+                    inner join fin_doc_lotacao as docLot
+                    on docLot.id_doc_lotacao = enc.id_doc_lotacao
+                    inner join  fin_doc_tipo_lotacao as docTpLot
+                    on docTpLot.id_doc_tipo_lotacao = docLot.id_doc_tipo_lotacao
+                    inner join fin_doc_parm_tramitacao as param
+                    on param.id_doc_tipo_remetente = docTpLot.id_doc_tipo_lotacao
+                    inner join fin_doc_tipo_lotacao as docTpDest
+                    on docTpDest.id_doc_tipo_lotacao = param.id_doc_tipo_destinatario
+                    inner join ses_pessoa as pessoa
+                    on pessoa.id_pessoa = enc.id_pessoa
+                    where param.tp_doc_parm_tramitacao = '1' --Encaminhar
+                    and enc.id_pessoa = :pessoa
+                    order by docTpDest.nm_doc_tipo_lotacao";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
             $stmt->execute();
@@ -607,40 +691,40 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-    public function retornaTipoLotacaoParaRecebimento(PDO $pdo, int $idPessoa = 0){
-        try {
-            $sql = "select tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao
-                    from fin_doc_vinc_recebimento as recebimento
-
-                    inner join fin_doc_lotacao as lotacaoTipo
-                    on lotacaoTipo.id_doc_lotacao = recebimento.id_doc_lotacao
-
-                    inner join fin_doc_tipo_lotacao as tipoLotacao
-                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
-
-                    inner join fin_doc_parm_tramitacao as parametro
-                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
-
-                    inner join fin_doc_tipo_lotacao as tipoLotacaoRemetente
-                    on tipoLotacaoRemetente.id_doc_tipo_lotacao = parametro.id_doc_tipo_remetente
-
-                    where recebimento.id_pessoa = :pessoa
-                    group by tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                $this->sucesso = true;
-            } else {
-                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
-                $this->sucesso = false;
-            }
-        } catch (PDOException $ex) {
-            $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
-        }
-    }
+//    public function retornaTipoLotacaoParaRecebimento(PDO $pdo, int $idPessoa = 0){
+//        try {
+//            $sql = "select tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao
+//                    from fin_doc_vinc_recebimento as recebimento
+//
+//                    inner join fin_doc_lotacao as lotacaoTipo
+//                    on lotacaoTipo.id_doc_lotacao = recebimento.id_doc_lotacao
+//
+//                    inner join fin_doc_tipo_lotacao as tipoLotacao
+//                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
+//
+//                    inner join fin_doc_parm_tramitacao as parametro
+//                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
+//
+//                    inner join fin_doc_tipo_lotacao as tipoLotacaoRemetente
+//                    on tipoLotacaoRemetente.id_doc_tipo_lotacao = parametro.id_doc_tipo_remetente
+//
+//                    where recebimento.id_pessoa = :pessoa
+//                    group by tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao";
+//            $stmt = $pdo->prepare($sql);
+//            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+//            $stmt->execute();
+//            if ($stmt->rowCount() > 0) {
+//                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//                $this->sucesso = true;
+//            } else {
+//                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+//                $this->sucesso = false;
+//            }
+//        } catch (PDOException $ex) {
+//            $this->sucesso = false;
+//            $this->msgRetorno = $ex->getMessage();
+//        }
+//    }
     
 
     public function retornaDestinatarioPorTipo(PDO $pdo, $tipo) {
@@ -713,6 +797,30 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaPrimeiroTipoRemetenteTramitacao(PDO $pdo) {
+        try {
+            $sql = "select * from fin_doc_tramitacao 
+                where id_documento_fiscal = :idDocumentoFiscal 
+                order by dh_doc_tramitacao desc limit 1";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idDocumentoFiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Não foi possível encontrar o remetente da última tramitação.";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    
+    //select * from fin_doc_tramitacao where id_documento_fiscal = 3 order by dh_doc_tramitacao desc limit 1
     
     public function verificaPermissaoEncaminhar(PDO $pdo, int $idPessoa = 0, int $tipoRemetente = 0){
         try {

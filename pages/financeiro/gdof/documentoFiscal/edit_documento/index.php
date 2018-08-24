@@ -48,6 +48,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
                     </div>
+                     <ol class="breadcrumb">
+                         <li><a href="../encaminha_documento/">Voltar</a></li>                        
+                    </ol>
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
@@ -105,6 +108,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-1"><a class="addOrdens btn btn-info">+</a></div>
                                                             <div class="col-sm-6"></div>
                                                         </div>
+                                                        <!--
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo de Ordem:</b> <span id="tipoOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
@@ -113,6 +117,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <div class="col-sm-2"><b>Valor da Ordem:</b> <span id="valorOrdem"></span> </div>
                                                             <div class="col-sm-10"></div>
                                                         </div>
+                                                        -->
 
 
                                                         <div class="form-group">
@@ -202,7 +207,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Protocolo Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -230,7 +235,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Documento Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Documento Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -242,7 +247,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -255,19 +260,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Competência:</b></div>
+                                                            <div class="col-sm-2"><b>Competência:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="competencia" id="competencia" 
-                                                                           value="<?php echo $documento["mm_competencia"] . '/' . $documento["aa_competencia"]; ?>"/>
+                                                                           value="<?php echo (strlen($documento["mm_competencia"]) == 2 ? $documento["mm_competencia"] : "0".$documento["mm_competencia"]) . '/' . $documento["aa_competencia"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de emissão:</b></div>
+                                                            <div class="col-sm-2"><b>Data de emissão:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -279,7 +284,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de atesto:</b></div>
+                                                            <div class="col-sm-2"><b>Data de atesto:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -291,7 +296,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-2"><b>Valor:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
@@ -319,13 +324,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2">
-                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" checked="checked">Sim</label>
-                                                                <label><input type="radio" id="grp_nao" value="0" name="grp_cod">Não</label>
+                                                                <?php 
+                                                                    $checkSim = "";
+                                                                    $checkNao = "";
+                                                                    $inputDisplayNone = "";
+                                                                    if($documento['fl_grp'] == 1){
+                                                                        $checkSim = "checked='checked'";
+                                                                    }else{
+                                                                        $inputDisplayNone = "display: none;";
+                                                                        $checkNao = "checked='checked'";
+                                                                    }                                                                                                                                        
+                                                                ?>
+                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" <?php echo $checkSim; ?>>Sim</label>
+                                                                <label><input type="radio" id="grp_nao" value="0" name="grp_cod" <?php echo $checkNao; ?>>Não</label>
                                                             </div>
 
-                                                            <div class="col-sm-3 divNumeroGrp">
+                                                            <div class="col-sm-3 divNumeroGrp" style="<?php echo $inputDisplayNone; ?>">
                                                                 <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px;"></p></span>
                                                                     <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
                                                                            value="<?php echo $documento["nr_grp_numero"]; ?>"/>
                                                                 </div>
@@ -338,12 +354,44 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!--form lotacao-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
+                                                            
+                                                            <div class="col-sm-8">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="destinatario" id="destinatario" disabled="true">
+                                                                        <option value="0">Selecione uma tipo</option>
+                                                                        <?php echo $selectRemetente; ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
                                         </div>
                                     </div>

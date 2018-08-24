@@ -87,6 +87,26 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    
+    public function mudarJustificativa($pdo = null){
+        try{
+            if (!empty($pdo)){
+                $sql = "UPDATE fin_pedido SET ds_pedido = :dsPedido WHERE id_pedido = :idPedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->bindValue(":dsPedido", $this->getDsPedido(), PDO::PARAM_STR);                
+                $stmt->execute();
+                $this->sucesso = true;
+            } else{
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e){
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
 
     public function retornaDadosPedido($pdo = null) {
         try {
@@ -99,6 +119,7 @@ class DaoFinPedido extends FinPedidoTb {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
+                    $this->msgRetorno = 'Sem conexão';
                     $this->sucesso = false;
                 }
             } else {

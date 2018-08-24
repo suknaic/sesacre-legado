@@ -41,6 +41,14 @@ $(document).ready(function () {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
     });
+    
+    $('body').on('click', '.editar', function (e) {
+        var id = $(this).val();
+        window.location.href = "/pages/financeiro/gdof/documentoFiscal/edit_documento/index.php?&id=" + id;
+    });
+    
+    
+    
 
     $("body").on('click', '.enviarDoCumento', function () {
         id = $(this).val();
@@ -144,7 +152,7 @@ $(document).ready(function () {
         item = item.nr_documento_fiscal;        
 
         bootbox.confirm({
-            title: 'Caixa de Confirmação',
+            title: 'Cancelamento do Documento Fiscal',
             message: 'Você tem Certeza que deseja continuar com o \n\
                 Cancelamento do Documento Fiscal <span class="text-danger">' + item + '</span>?\n\
                 <br> \n\

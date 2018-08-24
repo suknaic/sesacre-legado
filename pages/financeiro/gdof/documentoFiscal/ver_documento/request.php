@@ -109,20 +109,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
             return;
             break;
-        }
-
-    CASE 'retornaOptionsDaEntrega':
-        try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            echo $finEntregaConfirmacaoModel->retornaOptionsEntregaOrdemGdof($dados);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
+        }  
 
     CASE 'retornaTabelaEntrega':
         try {

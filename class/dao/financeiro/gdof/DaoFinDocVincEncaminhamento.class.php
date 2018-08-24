@@ -212,8 +212,8 @@ class DaoFinDocVincEncaminhamento extends FinDocVincEncaminhamento {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
-
-                    $this->sucesso = false;
+                    $this->sucesso = true;
+                    $this->msgRetorno = "";
                 }
             }
         } catch (Exception $exc) {

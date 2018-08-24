@@ -9,6 +9,16 @@ class DocParmTramitacao {
     private $idDocTipoDestinatario = null;
     private $tpDocParmTramitacao = null;
     private $idDocumentoSituacao = null;
+    private $sucesso = false;
+    private $msgRetorno = null;        
+    
+    function getSucesso() {
+        return $this->sucesso;
+    }
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
     
     function getIdDocParmTramitacao() {
         return $this->idDocParmTramitacao;
@@ -123,6 +133,70 @@ class DocParmTramitacao {
             
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console",$ex->getMessage());
+        }
+    }
+    
+    function excluirTodosParmTramitacao(PDO $pdo = null){
+        try {
+            $retorno = "";
+            if(empty($pdo)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem conexão com o Banco";
+                return true;
+            }
+            
+            /**
+             * Lista todos os Doc Vinc Parm Tramitacao, de acordo com o ID Doc Tipo Lotação (ID Doc Tipo Remetente e ID Doc Tipo Destinatário)
+             * 
+             */
+            
+            /**
+             * Exclui todos os Parametros que possua o Tipo de Lotação como Remetente ou Destinatário
+             *
+             */  
+            
+            $daoFinDocParmTramitacao = new DaoFinDocParmTramitacao();
+            $daoFinDocParmTramitacao->setIdDocTipoRemetente($this->getIdDocTipoRemetente());
+            $daoFinDocParmTramitacao->setIdDocTipoDestinatario($this->getIdDocTipoDestinatario());
+            $daoFinDocParmTramitacao->retornaTodosParmTipoLotacao($pdo);
+            
+            //Se não encontrar nenhum registro, retorna true para continuar a operação.
+            //Se nenhum parâmetro for encontrado para o tipo informado, a exlcusão ocorrerá normalmente
+            if(!$daoFinDocParmTramitacao->getSucesso()){
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinDocParmTramitacao->getMsgRetorno() ; 
+                return;
+            }
+            
+            $result = $daoFinDocParmTramitacao->getMsgRetorno();
+            if(empty($result)){
+                $this->sucesso = true;
+                $this->msgRetorno = "Não possui Registro";
+                return;
+            }
+            
+            foreach ($result as $key => $value) {
+                $daoFinDocParmTramitacao->setIdDocParmTramitacao($value['id_doc_parm_tramitacao']);
+                if (!Log::SalvaLogD('fin_doc_parm_tramitacao', $daoFinDocParmTramitacao->getIdDocParmTramitacao(), $pdo)) {                    
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no LOG";
+                    return;
+                }
+                $daoFinDocParmTramitacao->delete($pdo);
+                if (!$daoFinDocParmTramitacao->getSucesso()) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = $daoFinDocParmTramitacao->getMsgRetorno();
+                    return;                    
+                }
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Excluido geral";  
+            
+            
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();     
         }
     }
     

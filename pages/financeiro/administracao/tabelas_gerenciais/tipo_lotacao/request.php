@@ -62,6 +62,24 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    CASE 'ativarTipoLotacao':
+        try {
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);                        
+            
+            $prog = new DocTipoLotacao();
+            
+            $prog->setIdDocTipoLotacao($filtro);
+            
+            
+            echo $prog->ativar();
+            return;
+            break;
+        } catch (Exception $exc) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
     CASE 'retornaTiposLotacoes':
         try {
             $prog = new DocTipoLotacao();            
