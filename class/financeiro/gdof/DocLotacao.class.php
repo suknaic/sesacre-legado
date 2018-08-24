@@ -11,7 +11,19 @@ class DocLotacao {
     private $idLotacao = null;
     private $sucesso = false;
     private $msgRetorno = null;
-           
+    
+    private $excluido = null;
+    
+    function getExcluido() {
+        return $this->excluido;
+    }
+
+    function setExcluido($excluido) {
+        $this->excluido = $excluido;
+        return $this;
+    }
+
+               
     function getIdDocLotacao() {
         return $this->idDocLotacao;
     }
@@ -171,6 +183,7 @@ class DocLotacao {
                     return true;                                                            
                 }
                 $this->sucesso = true;
+                $this->excluido = false;
                 $this->msgRetorno = "Por Já existir um Tipo de Remetente/Destinatário Tramitado, então o registro foi desativado.";
                 return true;                
             //Se não existe tramitação, então podemos Excluir o Doc Lotação da Base
@@ -184,6 +197,7 @@ class DocLotacao {
                 $daoFinDocLotacao->delete($pdo);
                 if ($daoFinDocLotacao->getSucesso()){
                     $this->sucesso = true;
+                    $this->excluido = true;
                     $this->msgRetorno = "STR_REMOCAO_SUCESSO";
                     return true;                    
                 } else {
@@ -215,12 +229,18 @@ class DocLotacao {
             $daoFinDocLotacao = new DaoFinDocLotacao();
             $daoFinDocLotacao->setIdDocLotacao($this->getIdDocLotacao());
             
+            //Aqui verifica se o Tipo do Remetente/Destinatário(ou tipo lotação) está ativo, se não estiver ativo, a operação será cancelada
+            $daoFinDocLotacao->retornaTipoDocLotaEstaAtivo($pdo);
+            if(!$daoFinDocLotacao->getSucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "O Tipo do Remtente/Destinatário não está ativo ou não existe. Para reativar este registro será necessário ativar o Tipo do Remetente/Destinatário.");
+            }   
+            
             $daoFinDocLotacao->selectLinha($pdo);
             if(!$daoFinDocLotacao->getSucesso()){
                 $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }                        
+            }               
             
-            $busca = $daoFinDocLotacao->getMsgRetorno();
+            $busca = $daoFinDocLotacao->getMsgRetorno();            
                                     
             if($daoFinDocLotacao->getSucesso()){
                                                                 

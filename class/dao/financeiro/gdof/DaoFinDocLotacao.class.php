@@ -126,6 +126,34 @@ class DaoFinDocLotacao extends FinDocLotacao {
         }
     }
     
+    function retornaTipoDocLotaEstaAtivo(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select docLot.id_doc_lotacao, docTpLot.id_doc_tipo_lotacao
+                        from fin_doc_lotacao as docLot 
+                        inner join fin_doc_tipo_lotacao as docTpLot
+                        on docTpLot.id_doc_tipo_lotacao = docLot.id_doc_tipo_lotacao
+                        and docTpLot.st_ativo = '1'
+                        where docLot.id_doc_lotacao = :id_doc_lotacao";
+                
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+    
     function selectLinha(PDO $pdo = null){
         try {
             if (!empty($pdo)) {

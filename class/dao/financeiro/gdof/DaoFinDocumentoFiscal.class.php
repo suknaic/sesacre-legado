@@ -293,86 +293,121 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaTrDocumentosFiscais(PDO $pdo, string $filtroSql = "") {
         try {
-            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
-                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
-                    situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao,
-                    case 
-                      when lotacaoDestino.nm_lotacao is not null then concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '),lotacaoDestino.nm_lotacao)
-                      when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
-                    end as nm_lotacao  
-                    from fin_documento_fiscal as doc 
-
-                    inner join fin_tipo_documento as tpDoc 
-                    on tpDoc.id_tipo_documento = doc.id_tipo_documento 
-
-                    inner join (SELECT DISTINCT ON (id_documento_fiscal) *
-			FROM fin_entrega_documento
-		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
-
-                    inner join fin_entrega_confirmacao as entrega 
-                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-
-                    inner join  fin_ordem as ordem 
-                    on ordem.id_ordem = entrega.id_ordem 
-
-                    inner join fin_empenho as emp 
-                    on emp.id_pedido = ordem.id_pedido 
-
-                    inner join fin_protocolo as protoc 
-                    on protoc.id_ordem = ordem.id_ordem 
-
-                    inner join fin_pedido as pedido 
-                    on ordem.id_pedido = pedido.id_pedido 
-
-                    inner join pla_tipo_gasto as tipoGasto 
-                    on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
-
-                    inner join fin_tipo_empenho as tpEmp 
-                    on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
-
-                    inner join fin_fornecedor as fornecedor 
-                    on fornecedor.id_fornecedor = pedido.id_fornecedor 
-
-                    inner join fin_contrato as contrato 
-                    on contrato.id_contrato = fornecedor.id_contrato 
-
-                    inner join (select DISTINCT ON (t.id_documento_fiscal) 'asd'
-						, TA.id_documento_fiscal, TA.id_doc_tramitacao
-						, TA.id_documento_situacao, TA.id_tipo_tramitacao
-							, TA.id_doc_origem, TA.id_doc_destino
-						, TA.fl_pesquisa
-								from fin_doc_tramitacao t
-								INNER JOIN fin_doc_tramitacao TA on TA.id_documento_fiscal = t.id_documento_fiscal
-
-                                                where ta.fl_pesquisa = '1'
-						order by t.id_documento_fiscal, TA.dh_doc_tramitacao DESC) AS tramitacao 
-                                                
-					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
-
-                    inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
-
-                    inner join fin_tipo_tramitacao as tpTramitacao
-                    on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
-
-                    left join fin_doc_lotacao as docLotacaoOrigem
-                    on docLotacaoOrigem.id_doc_lotacao = tramitacao.id_doc_origem
-                    
-                    left join fin_doc_tipo_lotacao as docTipoLotacaoOrigem
-                    on docTipoLotacaoOrigem.id_doc_tipo_lotacao = docLotacaoOrigem.id_doc_tipo_lotacao
-                    
-                    left join ses_lotacao as lotacaoOrigem
-                    on lotacaoOrigem.id_lotacao =  docLotacaoOrigem.id_lotacao 
-                    
-                    left join fin_doc_lotacao as docLotacaoDestino
-                    on docLotacaoDestino.id_doc_lotacao = tramitacao.id_doc_destino
-                    
-                    left join fin_doc_tipo_lotacao as docTipoLotacaoDestino
-                    on docTipoLotacaoDestino.id_doc_tipo_lotacao = docLotacaoDestino.id_doc_tipo_lotacao
-                    
-                    left join ses_lotacao as lotacaoDestino
-                    on lotacaoDestino.id_lotacao =  docLotacaoDestino.id_lotacao
-                    where tramitacao.fl_pesquisa = '1'  " . $filtroSql;
+            $sql = "select
+                        doc.id_documento_fiscal,
+                        doc.nr_documento_fiscal,
+                        pedido.nr_pedido,
+                        contrato.nr_contrato,
+                        emp.nr_empenho,
+                        protoc.id_protocolo,
+                        tpDoc.nm_tipo_documento,
+                        (
+                           trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
+                        )
+                        as competencia,
+                        doc.vl_documento,
+                        situacao.nm_situacao,
+                        tpTramitacao.nm_tipo_tramitacao,
+                        case
+                           when
+                              tramitacao.id_tipo_tramitacao = '3' 
+                           then
+                              concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '), lotacaoDestino.nm_lotacao) 
+                           else
+                              concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '), lotacaoOrigem.nm_lotacao) 
+                        end
+                        as nm_lotacao 
+                     from
+                        fin_documento_fiscal as doc 
+                        inner join
+                           fin_tipo_documento as tpDoc 
+                           on tpDoc.id_tipo_documento = doc.id_tipo_documento 
+                        inner join
+                           (
+                              SELECT DISTINCT
+                                 ON (id_documento_fiscal) * 
+                              FROM
+                                 fin_entrega_documento 
+                           )
+                           AS entDoc 
+                           on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_entrega_confirmacao as entrega 
+                           on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                        inner join
+                           fin_ordem as ordem 
+                           on ordem.id_ordem = entrega.id_ordem 
+                        inner join
+                           fin_empenho as emp 
+                           on emp.id_pedido = ordem.id_pedido 
+                        inner join
+                           fin_protocolo as protoc 
+                           on protoc.id_ordem = ordem.id_ordem 
+                        inner join
+                           fin_pedido as pedido 
+                           on ordem.id_pedido = pedido.id_pedido 
+                        inner join
+                           pla_tipo_gasto as tipoGasto 
+                           on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
+                        inner join
+                           fin_tipo_empenho as tpEmp 
+                           on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                        inner join
+                           fin_fornecedor as fornecedor 
+                           on fornecedor.id_fornecedor = pedido.id_fornecedor 
+                        inner join
+                           fin_contrato as contrato 
+                           on contrato.id_contrato = fornecedor.id_contrato 
+                        inner join
+                           (
+                              select DISTINCT
+                                 ON (t.id_documento_fiscal) 'asd',
+                                 TA.id_documento_fiscal,
+                                 TA.id_doc_tramitacao,
+                                 TA.id_documento_situacao,
+                                 TA.id_tipo_tramitacao,
+                                 TA.id_doc_origem,
+                                 TA.id_doc_destino,
+                                 TA.fl_pesquisa 
+                              from
+                                 fin_doc_tramitacao t 
+                                 INNER JOIN
+                                    fin_doc_tramitacao TA 
+                                    on TA.id_documento_fiscal = t.id_documento_fiscal 
+                              where
+                                 ta.fl_pesquisa = '1' 
+                              order by
+                                 t.id_documento_fiscal,
+                                 TA.dh_doc_tramitacao DESC
+                           )
+                           AS tramitacao 
+                           on tramitacao.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_documento_situacao as situacao 
+                           on situacao.id_documento_situacao = tramitacao.id_documento_situacao 
+                        inner join
+                           fin_tipo_tramitacao as tpTramitacao 
+                           on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao 
+                        left join
+                           fin_doc_lotacao as docLotacaoOrigem 
+                           on docLotacaoOrigem.id_doc_lotacao = tramitacao.id_doc_origem 
+                        left join
+                           fin_doc_tipo_lotacao as docTipoLotacaoOrigem 
+                           on docTipoLotacaoOrigem.id_doc_tipo_lotacao = docLotacaoOrigem.id_doc_tipo_lotacao 
+                        left join
+                           ses_lotacao as lotacaoOrigem 
+                           on lotacaoOrigem.id_lotacao = docLotacaoOrigem.id_lotacao 
+                        left join
+                           fin_doc_lotacao as docLotacaoDestino 
+                           on docLotacaoDestino.id_doc_lotacao = tramitacao.id_doc_destino 
+                        left join
+                           fin_doc_tipo_lotacao as docTipoLotacaoDestino 
+                           on docTipoLotacaoDestino.id_doc_tipo_lotacao = docLotacaoDestino.id_doc_tipo_lotacao 
+                        left join
+                           ses_lotacao as lotacaoDestino 
+                           on lotacaoDestino.id_lotacao = docLotacaoDestino.id_lotacao 
+                     where
+                        tramitacao.fl_pesquisa = '1' " . $filtroSql;
 
             $stmt = $pdo->prepare($sql);
 

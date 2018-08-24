@@ -5,6 +5,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocTi
 class DocTipoLotacao {
     private $idDocTipoLotacao = null;
     private $nmDocTipoLotacao = null;
+    private $sucesso = false;
+    private $mensagens = null;
+    
+    function getSucesso() {
+        return $this->sucesso;
+    }
+
+    function getMensagens() {
+        return $this->mensagens;
+    }
+
+    function setSucesso($sucesso) {
+        $this->sucesso = $sucesso;
+        return $this;
+    }
+
+    function setMensagens($mensagens) {
+        $this->mensagens = $mensagens;
+        return $this;
+    }
     
     function getIdDocTipoLotacao() {
         return $this->idDocTipoLotacao;
@@ -36,7 +56,9 @@ class DocTipoLotacao {
             
             if ($daoFinDocTipoLotacao->getSucesso()) {
                 foreach ($daoFinDocTipoLotacao->getMsgRetorno() as $linha) {
-                    $retorno .= '<option value='.$linha['id_doc_tipo_lotacao'].'>'.$linha['nm_doc_tipo_lotacao'].'</option>';
+                    if ($linha['st_ativo'] == '1') {
+                        $retorno .= '<option value='.$linha['id_doc_tipo_lotacao'].'>'.$linha['nm_doc_tipo_lotacao'].'</option>';
+                    }
                 }
             } else {
                 $retorno = $daoFinDocTipoLotacao->getMsgRetorno();
@@ -140,24 +162,97 @@ class DocTipoLotacao {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+           
             $daoDocTipoLotacao = new DaoFinDocTipoLotacao();
             $daoDocTipoLotacao->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
             
-            $idDocTipoLotacao = $daoDocTipoLotacao->getIdDocTipoLotacao();
-            if (!Log::SalvaLogD('fin_doc_tipo_lotacao', $idDocTipoLotacao, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            
+            $daoDocTipoLotacao->selectLinha($pdo);
+            if(!$daoDocTipoLotacao->getSucesso()){    
+                $this->sucesso = false;
+                $this->mensagens = STR_ERROR;
+                return true;
+                
+            }                        
+            
+            $busca = $daoDocTipoLotacao->getMsgRetorno();       
+            
+            
+            //Neste trecho irá  eliminar os parâmetros que possuem este tipo de remetente/destinatário
+            $parmTramitacao = new DocParmTramitacao();
+            $parmTramitacao->setIdDocTipoRemetente($this->getIdDocTipoLotacao());
+            $parmTramitacao->setIdDocTipoDestinatario($this->getIdDocTipoLotacao());
+            $parmTramitacao->excluirTodosParmTramitacao($pdo);          
+            if(!$parmTramitacao->getSucesso()){
+                $this->sucesso = false;
+                $this->mensagens = $parmTramitacao->getMsgRetorno();
+                return true;                
+            }
+            //****************************************************************************************
+            
+            //Neste trecho irá desativar ou excluir os registros da Fin_doc_lotacao que possuem o ID Doc Tipo Lotacao
+            $daoDocTipoLotacao->selectDocLotacaoTodosPorTipo($pdo);
+            $arrayAuxiliar = null;
+
+            if ($daoDocTipoLotacao->getSucesso()) {
+
+                $arrayAuxiliar = $daoDocTipoLotacao->getMsgRetorno();
+                $docLotacao = new DocLotacao();
+                
+                foreach ($daoDocTipoLotacao->getMsgRetorno() as $key => $linha) {
+                    
+                    //irá executar a exclusão apenas para os ativos
+                    if ($linha["st_ativo"] == '1') {
+                        $docLotacao->setIdDocLotacao($linha['id_doc_lotacao']);
+                        $docLotacao->excluirDocLotacaoCompleto($pdo);
+
+                        if(!$docLotacao->getSucesso()){            
+                            return Metodos::retornoAjax("Erro", "console", $docLotacao->getMsgRetorno());      
+                        }
+                        
+                        //remove do array o registro que for excluido de fato
+                        if($docLotacao->getExcluido()){
+                            unset($arrayAuxiliar[$key]);
+                        }
+                    }
+                    
+                }
+            }
+            //*******************************************************************************************************
+            
+            //Verifica se ainda existe algum registro vinculado para definir se irá desativar o registro ou excluir
+            //se houver outros registros vinculados, será feito a desativação
+            if (!empty($arrayAuxiliar)) {
+                $daoDocTipoLotacao->desativa($pdo);
+                if ($daoDocTipoLotacao->getSucesso()) {
+                    
+                    if (!Log::SalvaLogU('fin_doc_tipo_lotacao', $daoDocTipoLotacao->getIdDocTipoLotacao(), $busca, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "console", STR_ERROR);                                                     
+                    }    
+                    
+                    $pdo->commit();
+                    $retorno = Metodos::retornoAjax("ok", "html", "Por existir outras informações vinculadas a este registro, será feito a desativação deste.");
+                } else {
+                    $pdo->rollBack();
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDocTipoLotacao->getMsgRetorno());
+                }
+            } else {
+                if (!Log::SalvaLogD('fin_doc_tipo_lotacao', $daoDocTipoLotacao->getIdDocTipoLotacao(), $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+
+                $daoDocTipoLotacao->delete($pdo);
+                if ($daoDocTipoLotacao->getSucesso()) {
+                    $pdo->commit();
+                    $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+                } else {
+                    $pdo->rollBack();
+                    $retorno = Metodos::retornoAjax("Erro", "console", $daoDocTipoLotacao->getMsgRetorno());
+                }
             }
             
-            $daoDocTipoLotacao->delete($pdo);
-            if ($daoDocTipoLotacao->getSucesso()) {
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoDocTipoLotacao->getMsgRetorno());
-                $pdo->rollBack();
-            }
             
             return $retorno;
             
@@ -178,18 +273,67 @@ class DocTipoLotacao {
             if ($daoDocTipoLotacao->getSucesso()) {
                 foreach ($daoDocTipoLotacao->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
-                                    . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
-                                    . "<td class='text-center'>"
-                                        . "<button type='button' class='btn btn-default btn-xs btn-alterar'><i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden=true></i></button>"
-                                        . "<button type='button' class='btn btn-default btn-xs btn-excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden=true></i></button>"
-                                    . "</td>"
-                             . "</tr>";
+                                    . "<td>".$linha['nm_doc_tipo_lotacao']."</td>";
+                    
+                    if($linha['st_ativo'] == '1'){
+                        $retorno .=  "<td class='text-center'>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-alterar' title='Editar'><i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden=true></i></button>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-excluir' title='Excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden=true></i></button>"
+                                    . "</td>";
+                    } else {
+                        $retorno .=  "<td class='text-center'>"
+                                        . "<button type='button' class='btn btn-default btn-xs btn-ativar' title='Ativar'><i class='fa fa-check fa-lg text-success' aria-hidden=true></i></button>"
+                                    . "</td>";
+                    }
+                    $retorno .= "</tr>";
                 }
             }
             
             return $retorno;
             
         } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    
+    function ativar(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinDocTipoLotacao = new DaoFinDocTipoLotacao();
+            $daoFinDocTipoLotacao->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+            
+            $daoFinDocTipoLotacao->selectLinha($pdo);
+            if(!$daoFinDocTipoLotacao->getSucesso()){
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }                        
+            
+            $busca = $daoFinDocTipoLotacao->getMsgRetorno();
+                                    
+            if($daoFinDocTipoLotacao->getSucesso()){
+                                                                
+                $daoFinDocTipoLotacao->ativa($pdo);
+                if(!$daoFinDocTipoLotacao->getSucesso()){                
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocTipoLotacao->getMsgRetorno());
+                }
+
+                if (!Log::SalvaLogU('fin_doc_tipo_lotacao', $daoFinDocTipoLotacao->getIdDocTipoLotacao(), $busca, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinDocTipoLotacao->getMsgRetorno());                                                            
+                }      
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Registro Ativado Com Sucesso.");                            
+            }
+                                                            
+            $pdo->rollBack();
+            $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            return $retorno;                                                                                   
+        } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
     }
