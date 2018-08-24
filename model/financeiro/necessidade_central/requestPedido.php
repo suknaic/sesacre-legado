@@ -250,5 +250,25 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+        
+    case 'editar_justificativa':
+        try {
+           
+            $idPedido = filter_input(INPUT_POST, 'pedido', FILTER_DEFAULT);
+            $justificativa = filter_input(INPUT_POST, 'justificativa', FILTER_DEFAULT);
+            
+            $pedido = new Pedido();
+            $pedido->setIdPedido((int)$idPedido);
+            $pedido->setDsPedido(trim($justificativa));           
+           
+            echo $pedido->alterarJustificativa();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 ?>

@@ -7,6 +7,16 @@ class FinEntregaDocumento {
     private $id_entrega_documento = null;
     private $id_documento_fiscal = null;
     private $id_entrega_confirmacao = null;
+    private $sucesso = false;
+    private $msgRetorno = null;
+    
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }   
+ 
+    public function Sucesso(){
+        return $this->sucesso;
+    }
 
     /**
      * @return mixed
@@ -85,5 +95,27 @@ class FinEntregaDocumento {
 
         return true;
     }
+    
+    
+    public function retornaTodosDocumentoFiscal(PDO $pdo = null){
+        try{
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $dao = new DaoFinEntregaDocumento();
+            $dao->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $dao->retornaPorDocumentoFiscal($pdo);
+            $this->sucesso = $dao->sucesso();
+            $this->msgRetorno = $dao->getMsgRetorno();                                                            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    
+    
 
 }

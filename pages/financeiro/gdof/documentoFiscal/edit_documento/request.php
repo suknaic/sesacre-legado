@@ -87,9 +87,11 @@ switch ($_REQUEST['acao']) {
             $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
            
             $finDocumentoFiscal = new FinDocumentoFiscal();
+            $finDocumentoFiscal->setIdPessoa($session->getIdUser());
+            $finDocumentoFiscal->setIdDocumentoFiscal((int)$dados['documento_fiscal']);
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
             $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
-            $finDocumentoFiscal->setIdTipoDocumento($dados["tpDocumento"]);
+            $finDocumentoFiscal->setIdTipoDocumento((int)$dados["tpDocumento"]);
             $finDocumentoFiscal->setCompetencia($dados["competencia"]);
             $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
             $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
@@ -97,7 +99,7 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
             $finDocumentoFiscal->setEntrega($entrega);
-            echo $finDocumentoFiscal->salvaDocumentoFiscal();
+            echo $finDocumentoFiscal->editaDocumentoFiscal();
             return;
             break;
         } catch (Error $e) {
