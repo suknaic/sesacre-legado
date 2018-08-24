@@ -10,6 +10,10 @@ $(document).ready(function () {
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
     });
+    
+    $('body').find('select').select2({
+        width: '100%'
+    });
 
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
