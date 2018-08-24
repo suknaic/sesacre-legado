@@ -20,9 +20,6 @@ $finDocumentoFiscal->setIdDocumentoFiscal($id);
 $documento = ($finDocumentoFiscal->retornaDadosDocumento(null));
 
 $tramitacao = $finDocumentoFiscal->retornaPrimeiraTramitacao();
-//echo "<pre>";
-//print_r($tramitacao);
-//echo "</pre>";
 
 $docVincRecebimento = new DocVincRecebimento();
 $docVincRecebimento->setIdPessoa($session->getIdUser());

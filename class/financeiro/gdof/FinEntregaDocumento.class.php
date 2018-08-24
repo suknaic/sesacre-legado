@@ -96,17 +96,65 @@ class FinEntregaDocumento {
         return true;
     }
     
+    public function removerEntregaDocumento(PDO $pdo = null) {
+        try{
+                    
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEntregaDocumento = new DaoFinEntregaDocumento();
+            $daoFinEntregaDocumento->setIdEntregaDocumento($this->id_entrega_documento);
+           
+            if (!Log::SalvaLogD('fin_entrega_documento', $daoFinEntregaDocumento->getIdEntregaDocumento(), $pdo)) {                
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro no Log para remover Entrega Documento";
+                return true;
+            }                
+
+            $daoFinEntregaDocumento->remove($pdo);
+            if (!$daoFinEntregaDocumento->sucesso()){                
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaDocumento->getMsgRetorno();
+                return true;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Removido com Sucesso";
+
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
     
     public function retornaTodosDocumentoFiscal(PDO $pdo = null){
         try{
             if(empty($pdo)){
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
-            }
-            
+            }            
             $dao = new DaoFinEntregaDocumento();
             $dao->setIdDocumentoFiscal($this->id_documento_fiscal);
             $dao->retornaPorDocumentoFiscal($pdo);
+            $this->sucesso = $dao->sucesso();
+            $this->msgRetorno = $dao->getMsgRetorno();                                                            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retorna(PDO $pdo = null){
+        try{
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }            
+            $dao = new DaoFinEntregaDocumento();
+            $dao->setIdEntregaDocumento($this->id_entrega_documento);
+            $dao->retorna($pdo);
             $this->sucesso = $dao->sucesso();
             $this->msgRetorno = $dao->getMsgRetorno();                                                            
         } catch (Exception $ex) {

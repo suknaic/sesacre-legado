@@ -41,6 +41,14 @@ $(document).ready(function () {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
     });
+    
+    $('body').on('click', '.editar', function (e) {
+        var id = $(this).val();
+        window.location.href = "/pages/financeiro/gdof/documentoFiscal/edit_documento/index.php?&id=" + id;
+    });
+    
+    
+    
 
     $("body").on('click', '.enviarDoCumento', function () {
         id = $(this).val();
