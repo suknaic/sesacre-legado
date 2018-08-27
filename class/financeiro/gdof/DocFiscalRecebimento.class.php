@@ -308,12 +308,12 @@ class DocFiscalRecebimento {
         if ($this->getDestinatario()) {
             $filtroSql .= " and docLotacaoDestino.id_lotacao = " . $this->getDestinatario();
         } else {
-            $docVincEncaminhamento = new DocVincEncaminhamento();
-            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
+            $docVincRecebimento = new DocVincRecebimento();
+            $docVincRecebimento->setIdPessoa($this->id_usuario);
             $idLotacoesDestino = [];
 
-            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
-                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
+            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
+                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
                     $idLotacoesOrigem[] = $dados["id_lotacao"];
                 }
             }
