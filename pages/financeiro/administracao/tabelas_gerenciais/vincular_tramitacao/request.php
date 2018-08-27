@@ -27,8 +27,15 @@ switch ($_REQUEST['acao']) {
             
             $prog = new DocParmTramitacao();
             
-            $prog->setIdDocTipoDestinatario((int)$filtro['idDocTpDestinatario']);
-            $prog->setIdDocTipoRemetente((int)$filtro['idDocTpRemetente']);
+            if ($filtro['tpParmTramitacao'] == 1) {
+                $prog->setIdDocTipoDestinatario((int)$filtro['idDocTpDestinatario']);
+                $prog->setIdDocTipoRemetente((int)$filtro['idDocTpRemetente']);
+            } else {
+                //Se for receber, o destinatário é o ponto de partida, ou seja, a origem.
+                //Por esse motivo será feito a troca quando for 'Receber'
+                $prog->setIdDocTipoDestinatario((int)$filtro['idDocTpRemetente']);
+                $prog->setIdDocTipoRemetente((int)$filtro['idDocTpDestinatario']);
+            }
             $prog->setIdDocumentoSituacao((int)$filtro['idDocSit']);
             $prog->setTpDocParmTramitacao((int)$filtro['tpParmTramitacao']);
             

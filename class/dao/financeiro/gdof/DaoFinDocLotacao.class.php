@@ -77,6 +77,56 @@ class DaoFinDocLotacao extends FinDocLotacao {
         }
     }
     
+    function selectAtivos(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select 
+                                id_doc_lotacao,
+                                fdtl.id_doc_tipo_lotacao, 
+                                nm_doc_tipo_lotacao,
+                                sl.id_lotacao,
+                                nm_lotacao,
+                                fdl.st_ativo
+                        from 
+                                fin_doc_lotacao fdl,
+                                fin_doc_tipo_lotacao fdtl,
+                                ses_lotacao sl
+                        where
+                                fdl.st_ativo = '1'
+                        and     fdl.id_doc_tipo_lotacao = fdtl.id_doc_tipo_lotacao
+                        and	fdl.id_lotacao = sl.id_lotacao ". $this->filtroSql() . " order by nm_doc_tipo_lotacao,nm_lotacao";
+                $stmt = $pdo->prepare($sql);
+                
+                if($this->getIdDocLotacao()){
+                    $stmt->bindValue(":id_doc_lotacao", $this->getIdDocLotacao(), PDO::PARAM_INT);
+                }
+                
+                if ($this->getIdDocTipoLotacao()) {
+                    $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                }
+
+                if ($this->getIdLotacao()) {
+                    $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                }
+                
+                $stmt->execute();
+                
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+                
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     function select(PDO $pdo = null){
         try {
             if (!empty($pdo)) {

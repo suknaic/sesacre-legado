@@ -73,6 +73,12 @@ class DocLotacao {
             $daoFinDocLotacao = new DaoFinDocLotacao();
             $daoFinDocLotacao->setIdLotacao($this->getIdLotacao())
                                   ->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+            
+            $daoFinDocLotacao->select($pdo);
+            if ($daoFinDocLotacao->getSucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", 'O registro já existe, tente ativá-lo se o mesmo estiver desativado.');
+            }
+            
             $daoFinDocLotacao->insert($pdo);
             
             if ($daoFinDocLotacao->getSucesso()) {
@@ -198,7 +204,7 @@ class DocLotacao {
                 if ($daoFinDocLotacao->getSucesso()){
                     $this->sucesso = true;
                     $this->excluido = true;
-                    $this->msgRetorno = "STR_REMOCAO_SUCESSO";
+                    $this->msgRetorno = STR_REMOCAO_SUCESSO;
                     return true;                    
                 } else {
                     $pdo->rollBack();

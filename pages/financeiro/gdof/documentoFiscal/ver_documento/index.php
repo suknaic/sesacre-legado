@@ -112,7 +112,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                     <thead>
                                                                         <tr>
                                                                             <th>Nº da Ordem</th>
-                                                                            <th>Tipo ordem</th>
+                                                                            <th>Tipo Ordem</th>
                                                                             <th>Valor da Ordem</th>
                                                                         </tr>
                                                                     </thead>
@@ -243,7 +243,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de emissão:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Emissão:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -255,7 +255,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de atesto:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Atesto:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>

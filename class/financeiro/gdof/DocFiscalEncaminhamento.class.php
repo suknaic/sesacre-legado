@@ -220,6 +220,7 @@ class DocFiscalEncaminhamento {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
 
             $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->montaFiltroSQL(), $this->id_usuario);
+            
 
             if ($daoFinDocumentoFiscal->sucesso()) {
                 //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
@@ -235,6 +236,7 @@ class DocFiscalEncaminhamento {
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
@@ -310,12 +312,12 @@ class DocFiscalEncaminhamento {
         if ($this->getRemetente()) {
             $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getRemetente();
         } else {
-            $docVincRecebimento = new DocVincRecebimento();
-            $docVincRecebimento->setIdPessoa($this->id_usuario);
+            $docVincEncaminhamento = new DocVincEncaminhamento();
+            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
             $idLotacoesOrigem = [];
 
-            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
-                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
+            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
+                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
                     $idLotacoesOrigem[] = $dados["id_lotacao"];
                 }   
             }
