@@ -364,8 +364,9 @@ class DocFiscalRecebimento {
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
         $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
         
-        //$daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
-        //
+//        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+//        $recebedor = $daoFinDocumentoFiscal->getMsgRetorno()['id_doc_origem'];
+        
         //Retorna o Ultimo Encaminhamento para registrar o recebimento
         $daoFinDocumentoFiscal->retornaOrigemDestinoUltimaTramitacao($pdo);
         if (!$daoFinDocumentoFiscal->sucesso()) {
@@ -402,7 +403,7 @@ class DocFiscalRecebimento {
         }
 
         //codigo abaixo cadastra a tramitacao aguardando encaminhamento
-        $docTramitacao->setIdDocOrigem($destino);
+        $docTramitacao->setIdDocOrigem($origem);
         $docTramitacao->setIdDocDestino(null);
         $docTramitacao->setFlPesquisa(0);
         $docTramitacao->setIdTipoTramitacao(2);

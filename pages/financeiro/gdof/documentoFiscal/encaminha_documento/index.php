@@ -238,7 +238,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="remetente" class="form-control">
                                                         <option value="0">Selecione um Tipo de Remetente/Remetente</option>
-                                                        <?php echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo(0); ?>
+                                                        <?php echo $docVincEncaminhamento->optionsLotacaoEncaminhamentoPorUsuarioETipo(0); ?>
                                                     </select>
                                                 </div>
                                             </div>

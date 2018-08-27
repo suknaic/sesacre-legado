@@ -660,7 +660,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 //
 //                    where encaminhamento.id_pessoa = :pessoa
 //                    group by tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao";
-            $sql = "select docTpDest.id_doc_tipo_lotacao, docTpDest.nm_doc_tipo_lotacao
+            $sql = "select distinct docTpDest.id_doc_tipo_lotacao, docTpDest.nm_doc_tipo_lotacao
                     from fin_doc_vinc_encaminhamento as enc
                     inner join fin_doc_lotacao as docLot
                     on docLot.id_doc_lotacao = enc.id_doc_lotacao
@@ -856,7 +856,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     where id_documento_fiscal = :documento
                     and id_doc_origem is not null
                     and id_doc_destino is not null
-                    order by id_doc_tramitacao desc";
+                    order by id_doc_tramitacao desc
+                    limit 1";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();
@@ -873,12 +874,12 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-//    public function retornaUltimaOrigemDocumento(PDO $pdo) {
-//        try {
-////            $sql = "select id_doc_origem from fin_doc_tramitacao 
-////                    where id_documento_fiscal = :documento
-////                    order by id_doc_tramitacao desc 
-////                    limit 1";
+    public function retornaUltimaOrigemDocumento(PDO $pdo) {
+        try {
+            $sql = "select id_doc_origem from fin_doc_tramitacao 
+                    where id_documento_fiscal = :documento
+                    order by id_doc_tramitacao desc 
+                    limit 1";
 //            $sql = "select id_doc_origem,tipoLotOrigem.id_doc_tipo_lotacao as tipo_remetente,id_doc_destino, tipoLotDestino.id_doc_tipo_lotacao as tipo_destinatario
 //                    from fin_doc_tramitacao as tramitacao
 //                    left join fin_doc_lotacao as tipoLotOrigem
@@ -889,21 +890,21 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 //                    and tramitacao.id_doc_destino is not null
 //                    order by id_doc_tramitacao desc 
 //                    limit 1";
-//            $stmt = $pdo->prepare($sql);
-//            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
-//            $stmt->execute();
-//            if ($stmt->rowCount() > 0) {
-//                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
-//                $this->sucesso = true;
-//            } else {
-//                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
-//                $this->sucesso = false;
-//            }
-//        } catch (PDOException $ex) {
-//            $this->sucesso = false;
-//            $this->msgRetorno = $ex->getMessage();
-//        }
-//    }
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
     
     public function retornaSituacaoDoParametro(PDO $pdo, int $lotacaoOrigem=0, int $tipo=0){
         try {
@@ -1069,7 +1070,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on tpLotDestino.id_doc_tipo_lotacao = docTpLotDestino.id_doc_tipo_lotacao 
                         left join
                            ses_lotacao as lotacaoDestino 
-                           on lotacaoDestino.id_lotacao = tpLotOrigem.id_lotacao 
+                           on lotacaoDestino.id_lotacao = tpLotDestino.id_lotacao 
                      where
                         id_documento_fiscal = :documento 
                      order by

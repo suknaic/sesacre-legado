@@ -220,6 +220,7 @@ class DocFiscalEncaminhamento {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
 
             $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->montaFiltroSQL(), $this->id_usuario);
+            
 
             if ($daoFinDocumentoFiscal->sucesso()) {
                 //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
@@ -310,12 +311,12 @@ class DocFiscalEncaminhamento {
         if ($this->getRemetente()) {
             $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getRemetente();
         } else {
-            $docVincRecebimento = new DocVincRecebimento();
-            $docVincRecebimento->setIdPessoa($this->id_usuario);
+            $docVincEncaminhamento = new DocVincEncaminhamento();
+            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
             $idLotacoesOrigem = [];
 
-            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
-                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
+            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
+                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
                     $idLotacoesOrigem[] = $dados["id_lotacao"];
                 }   
             }

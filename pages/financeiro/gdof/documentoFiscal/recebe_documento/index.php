@@ -238,7 +238,7 @@ require_once "index.load.php";
                                                     </span>
                                                     <select id="destinatario" class="form-control">
                                                         <option value="0">Selecione um Tipo de Destinatário/Destinatário</option>
-                                                        <?php echo $docVincEncaminhamento->optionsLotacaoEncaminhamentoPorUsuarioETipo(0); ?>
+                                                        <?php echo $docVincRecebimento->optionsLotacaoRecebimentoPorUsuarioETipo(0); ?>
                                                     </select>
                                                 </div>
                                             </div>
