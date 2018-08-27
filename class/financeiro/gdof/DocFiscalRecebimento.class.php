@@ -242,6 +242,7 @@ class DocFiscalRecebimento {
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"

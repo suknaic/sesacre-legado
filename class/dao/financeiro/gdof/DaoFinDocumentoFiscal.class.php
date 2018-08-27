@@ -145,7 +145,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select DISTINCT (p.nr_pedido), p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
-                    p.vl_pedido
+                    p.vl_pedido, desp.cd_despesa, desp.ds_despesa
                     from fin_documento_fiscal as doc
                     inner join fin_entrega_documento as entDocumento
                     on entDocumento.id_documento_fiscal  = doc.id_documento_fiscal
@@ -161,6 +161,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     on programa.id_programa_trabalho = p.id_programa_trabalho
                     inner join view_despesa_elemento as despesa
                     on despesa.id_despesa_elemento = p.id_despesa_elemento
+                    inner join fin_despesa as desp
+                    on desp.id_despesa = p.id_despesa
                     where doc.id_documento_fiscal = :documento";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -296,6 +298,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select
                         doc.id_documento_fiscal,
                         doc.nr_documento_fiscal,
+                        to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, 
                         pedido.nr_pedido,
                         contrato.nr_contrato,
                         emp.nr_empenho,
@@ -446,7 +449,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaDocumentoFiscaisEncaminha(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
         try {
-            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
+            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
 
@@ -542,7 +545,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
     
     public function retornaDocumentoFiscaisRecebe(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
         try {
-            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
+            $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao,
 

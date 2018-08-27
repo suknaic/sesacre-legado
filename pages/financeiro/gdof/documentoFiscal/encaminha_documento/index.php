@@ -137,13 +137,13 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="id_contratado">CNPJ/Nome Contratado:</label>
+                                                <label for="id_contratado">CPF/CNPJ do Fornecedor:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="id_contratado" class="form-control">
-                                                        <option value="0">Selecione o CNPJ/Nome Contratado</option>
+                                                        <option value="0">Selecione o CPF/CNPJ do Fornecedor</option>
                                                         <?php echo $pessoaJuridicaOptions; ?>
                                                     </select>
                                                 </div>
@@ -272,6 +272,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Tipo</th>
                                                     <th class="text-center">Competência</th>
                                                     <th class="text-center">Remetente</th>
+                                                    <th class="text-center">Data de Emissão</th>
                                                     <th class="text-center">Valor</th>
                                                     <th class="text-center">Trâmite</th>
                                                     <th class="text-center">Situação</th>
