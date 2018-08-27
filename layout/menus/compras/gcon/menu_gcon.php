@@ -1,7 +1,5 @@
-<?php
 
-echo '
-<ul class="dropdown-menu" id="menu" style="margin-left: 135px">
+<ul class="dropdown-menu" id="menu" style="margin-left: 250px;">
     <li class="text-center">
         <a href="/pages/compras/gcon/">Processo</a><hr>
     </li>
@@ -20,4 +18,4 @@ echo '
     <li class="text-center">
         <a href="/pages/compras/gcon/usuario/">Usuários</a>
     </li>
-</ul>';
+</ul>
