@@ -863,8 +863,13 @@ class FinDocumentoFiscal {
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-2"><b>Elemento de Despesa:</b></div>
                                                         <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . '- ' . $campos["ds_despesa_elemento"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Sub-Elemento:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . '- ' . $campos["ds_despesa"] . '</div>
                                                     </div>
 
                                                     <div class="form-group">

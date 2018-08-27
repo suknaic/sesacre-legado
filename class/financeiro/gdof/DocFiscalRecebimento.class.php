@@ -242,6 +242,7 @@ class DocFiscalRecebimento {
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
@@ -308,12 +309,12 @@ class DocFiscalRecebimento {
         if ($this->getDestinatario()) {
             $filtroSql .= " and docLotacaoDestino.id_lotacao = " . $this->getDestinatario();
         } else {
-            $docVincEncaminhamento = new DocVincEncaminhamento();
-            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
+            $docVincRecebimento = new DocVincRecebimento();
+            $docVincRecebimento->setIdPessoa($this->id_usuario);
             $idLotacoesDestino = [];
 
-            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
-                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
+            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
+                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
                     $idLotacoesOrigem[] = $dados["id_lotacao"];
                 }
             }
@@ -364,8 +365,9 @@ class DocFiscalRecebimento {
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
         $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
         
-        //$daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
-        //
+//        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
+//        $recebedor = $daoFinDocumentoFiscal->getMsgRetorno()['id_doc_origem'];
+        
         //Retorna o Ultimo Encaminhamento para registrar o recebimento
         $daoFinDocumentoFiscal->retornaOrigemDestinoUltimaTramitacao($pdo);
         if (!$daoFinDocumentoFiscal->sucesso()) {
@@ -379,7 +381,7 @@ class DocFiscalRecebimento {
         $tipo_destinatario = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];   
         
         
-        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo, $tipo_destinatario,$tipo_remetente, '2'); //Ultimo parametro indica que é Recebimento
+        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo, $tipo_remetente,$tipo_destinatario, '2'); //Ultimo parametro indica que é Recebimento
 
         if (!$daoFinDocumentoFiscal->sucesso()) {
             return Metodos::retornoAjax("Erro", "alert", "O parâmetro da vinculação da tramitação não está cadastrado para este tipo de remetente/ tipo de destinatário");
@@ -402,7 +404,7 @@ class DocFiscalRecebimento {
         }
 
         //codigo abaixo cadastra a tramitacao aguardando encaminhamento
-        $docTramitacao->setIdDocOrigem($destino);
+        $docTramitacao->setIdDocOrigem($origem);
         $docTramitacao->setIdDocDestino(null);
         $docTramitacao->setFlPesquisa(0);
         $docTramitacao->setIdTipoTramitacao(2);

@@ -592,6 +592,11 @@ class FinEntregaConfirmacaoModel {
             $idDocumentoFiscal = 0;
             foreach ($dados as $key => $linha){
                 $arrayIdOrdens [] = $linha["id_ordem"];
+                /*
+                 * o ComboBox precisa vir preenchido mesmo se for na edição
+                 * Então ele irá trazer as Entregas e se tiver o documento fiscal, ele irá trazer as ordens que 
+                 * estão vinculado a ele
+                 */                
                 if(array_key_exists("id_documento_fiscal", $linha)){
                     if(!empty($linha['id_documento_fiscal'])){
                         $idDocumentoFiscal = (int)$linha['id_documento_fiscal'];

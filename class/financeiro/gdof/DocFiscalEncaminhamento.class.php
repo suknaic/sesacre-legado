@@ -220,10 +220,15 @@ class DocFiscalEncaminhamento {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
 
             $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->montaFiltroSQL(), $this->id_usuario);
+            
 
             if ($daoFinDocumentoFiscal->sucesso()) {
-
+                //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
+                $finDoc = new FinDocumentoFiscal();
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
+                    
+                                        
+                    
                     $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
@@ -231,6 +236,7 @@ class DocFiscalEncaminhamento {
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
@@ -238,18 +244,22 @@ class DocFiscalEncaminhamento {
                                     <button type='button' title='Ver documento fiscal' class='ver_documento' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-file-text-o text-info' aria-hidden='true'></i>
                                     </button>
-                                    <button type='button' title='editar' class='editar' value='" . $linha['id_documento_fiscal'] . "'>
-                                     <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>
-                                    </button>
+                                    
                                     
                                     <button title='Encaminha documento fiscal' type='button' class='enviarDoCumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
-                                    </button>    
+                                    </button>";  
+                    if($linha['id_documento_situacao'] == $finDoc->getDocSitCadastrado()){
+                    $retorno .= "  <button type='button' title='editar' class='editar' value='" . $linha['id_documento_fiscal'] . "'>
+                                     <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>
+                                    </button>
                                     
                                     <button type='button' title='Excluir documento fiscal' class='excluir text-danger' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-trash' aria-hidden='true'></i>
-                                    </button>
-                               </td>"
+                                    </button>";
+                    }
+                    
+                    $retorno .= "</td>"
                             . "</tr>";
                 }
             }
@@ -302,12 +312,12 @@ class DocFiscalEncaminhamento {
         if ($this->getRemetente()) {
             $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getRemetente();
         } else {
-            $docVincRecebimento = new DocVincRecebimento();
-            $docVincRecebimento->setIdPessoa($this->id_usuario);
+            $docVincEncaminhamento = new DocVincEncaminhamento();
+            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
             $idLotacoesOrigem = [];
 
-            if ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento()) {
-                foreach ($docVincRecebimento->retornaIdLotacaoUsuarioRecebimento() as $dados) {
+            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
+                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
                     $idLotacoesOrigem[] = $dados["id_lotacao"];
                 }   
             }
