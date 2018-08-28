@@ -49,6 +49,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--Modal itens content-->
                     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
@@ -102,9 +105,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-content">
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
-                                <div class="panel-heading">
+<!--                                <div class="panel-heading">
                                     <h3 class="panel-title">Informações do documento fiscal</h3>
-                                </div>
+                                </div>-->
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">

@@ -19,7 +19,18 @@ class FinDocumentoFiscalTb {
     private $id_lotacao = null;
     private $id_tipo_documento = null;
     private $id_doc_tramitacao = null;
+    private $id_documento_situacao = null;
+    
+    function getIdDocumentoSituacao() {
+        return $this->id_documento_situacao;
+    }
 
+    function setIdDocumentoSituacao($id_documento_situacao) {
+        $this->id_documento_situacao = $id_documento_situacao;
+        return $this;
+    }
+
+    
     /**
      * @return mixed
      */

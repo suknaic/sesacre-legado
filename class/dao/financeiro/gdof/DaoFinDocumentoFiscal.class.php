@@ -79,6 +79,24 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    function atualizaSituacaoDocumentoFiscal(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_documento_fiscal set id_documento_situacao = :id_documento_situacao where id_documento_fiscal = :id_documento_fiscal";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':id_documento_situacao', $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
+                $stmt->bindValue(':id_documento_fiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
     /**
      * Retorna as informaçoes do contrato por id do documento fiscal 
