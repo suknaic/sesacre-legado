@@ -314,72 +314,53 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 </div>
                                 <!--form lançado no grp-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" >
-                                        <div class="panel-body">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;" >
+                                        <div class="panel-body">                                            
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
                                                         <h4 class="panel-title">Lançado no GRP</h4>
                                                     </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2">
-                                                                <?php 
-                                                                    $checkSim = "";
-                                                                    $checkNao = "";
-                                                                    $inputDisplayNone = "";
-                                                                    if($documento['fl_grp'] == 1){
-                                                                        $checkSim = "checked='checked'";
-                                                                    }else{
-                                                                        $inputDisplayNone = "display: none;";
-                                                                        $checkNao = "checked='checked'";
-                                                                    }                                                                                                                                        
-                                                                ?>
-                                                                <label><input type="radio" id="grp_sim" value="1" name="grp_cod" <?php echo $checkSim; ?>>Sim</label>
-                                                                <label><input type="radio" id="grp_nao" value="0" name="grp_cod" <?php echo $checkNao; ?>>Não</label>
-                                                            </div>
-
-                                                            <div class="col-sm-3 divNumeroGrp" style="<?php echo $inputDisplayNone; ?>">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px;"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
-                                                                           value="<?php echo $documento["nr_grp_numero"]; ?>"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
+                                                    <div class="panel-body">                                                       
+                                                        <div class="col-sm-2">
+                                                            <?php 
+                                                                $checkSim = "";
+                                                                $checkNao = "";
+                                                                $inputDisplayNone = "";
+                                                                if($documento['fl_grp'] == 1){
+                                                                    $checkSim = "checked='checked'";
+                                                                }else{
+                                                                    $inputDisplayNone = "display: none;";
+                                                                    $checkNao = "checked='checked'";
+                                                                }                                                                                                                                        
+                                                            ?>
+                                                            <label><input type="radio" id="grp_sim" value="1" name="grp_cod" <?php echo $checkSim; ?>>Sim</label>
+                                                            <label><input type="radio" id="grp_nao" value="0" name="grp_cod" <?php echo $checkNao; ?>>Não</label>
                                                         </div>
+
+                                                        <div class="col-sm-3 divNumeroGrp" style="<?php echo $inputDisplayNone; ?>">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px;"></p></span>
+                                                                <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
+                                                                       value="<?php echo $documento["nr_grp_numero"]; ?>"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-7"></div>                                                        
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </div>                                            
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!--form lotacao-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" >
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Remetente</h4>
+                                                        <h4 class="panel-title">Tramitação</h4>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
-                                                            
-                                                            <div class="col-sm-8">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="destinatario" id="destinatario" disabled="true">
-                                                                        <option value="0">Selecione uma tipo</option>
-                                                                        <?php echo $selectRemetente; ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-sm-2"></div>
-                                                        </div>
+                                                        <textarea class="form-control" rows="10" readonly="true"><?php echo $historico; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

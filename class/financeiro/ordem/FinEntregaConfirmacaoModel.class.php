@@ -681,5 +681,38 @@ class FinEntregaConfirmacaoModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+    
+    
+    public function retornaEntregasAptasParaDocumentoFiscal(PDO $pdo, $idEntregas, $idDocSitCancelado) {
+        try {
+
+            if (empty($idEntregas)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdEntregas = array();
+
+            foreach ($idEntregas as $linha) {
+                $arrayIdEntregas [] = $linha;
+            }
+            
+            $idEntregas = implode(' , ', $arrayIdEntregas);
+
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->verificaEntregasAptasParaDocFiscal($pdo, $idEntregas, $idDocSitCancelado);            
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();              
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }           
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
 }

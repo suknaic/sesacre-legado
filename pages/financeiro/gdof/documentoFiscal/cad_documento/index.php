@@ -411,7 +411,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="destinatario" id="destinatario">
-                                                                        <option value="0" selected="true">Selecione uma tipo</option>
+                                                                        <option value="0" selected="true">Selecione um Tipo Remetente/Remetente</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
