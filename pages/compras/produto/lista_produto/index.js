@@ -38,8 +38,8 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.selecionaItem', function (e){
-        let item = $(this).data('item') 
-        let info = $(this).data('info')        
+        let item = $(this).data('item');
+        let info = $(this).data('info');
         preencheCamposItem(info);                                       
         $('#modalItem').modal('hide');     
         buscaExisteContrato(info.id_material);        
