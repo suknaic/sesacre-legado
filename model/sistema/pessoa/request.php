@@ -648,7 +648,7 @@ switch ($_REQUEST['acao']) {
             $tipoPessoa = isset($pessoaPost['tipoPessoa']) ? $pessoaPost['tipoPessoa'] : NULL;
             $cpf = isset($pessoaPost['cpf']) ? $pessoaPost['cpf'] : NULL;
             $cnpj = isset($pessoaPost['cnpj']) ? $pessoaPost['cnpj'] : NULL;
-            
+
             if ($tipoPessoa == 1) {
                 $pessoaFisica = new pessoaFisica();
                 echo $pessoaFisica->retornaTrPessoaFisica($nome, $cpf);
