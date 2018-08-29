@@ -425,15 +425,15 @@ class DaoFinPedido extends FinPedidoTb {
             if (!empty($pdo)) {
                 $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                         programa.cd_programa_trabalho, programa.ds_programa_trabalho,
-                        despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
+                        despesa.cd_despesa, despesa.ds_despesa,
                         p.vl_pedido
                         from fin_pedido as p
                         inner join fin_fonte as f
                         on f.id_fonte = p.id_fonte
                         inner join view_programa_trabalho as programa
                         on programa.id_programa_trabalho = p.id_programa_trabalho
-                        inner join view_despesa_elemento as despesa
-                        on despesa.id_despesa_elemento = p.id_despesa_elemento
+                        inner join view_despesa as despesa
+                        on despesa.id_despesa = p.id_despesa
                         where p.nr_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_INT);

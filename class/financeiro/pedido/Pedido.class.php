@@ -663,7 +663,7 @@ class Pedido {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Despesa:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . '- ' . $campos["ds_despesa_elemento"] . '</div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . '- ' . $campos["ds_despesa"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
