@@ -393,6 +393,19 @@ class DocFiscalEncaminhamento {
         }
 
         $situacao = $daoFinDocumentoFiscal->getMsgRetorno()["id_documento_situacao"];
+        
+        
+        //-------------Atualiza a situação do Documento Fiscal--------------------------------
+        $daoFinDocumentoFiscal->setIdDocumentoSituacao($situacao);
+        $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
+        
+        
+        if (!$daoFinDocumentoFiscal->sucesso()) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Documento Fiscal, por favor entre em contato com o Administrador do sistema.");
+        }
+        //-------------FIM Atualiza a situação do Documento Fiscal----------------------------
+        
 
         //codigo abaixo cadastra a tramitacao encaminhado
         $docTramitacao = new DocTramitacao();

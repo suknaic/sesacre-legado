@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -38,6 +38,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":nrGrp", $this->getNrGrpNumero(), PDO::PARAM_INT);
             $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+            $stmt->bindParam(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -90,6 +91,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
+                $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {

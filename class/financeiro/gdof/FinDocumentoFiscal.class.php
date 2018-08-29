@@ -40,7 +40,9 @@ class FinDocumentoFiscal {
     private $tpTramEncaminhado = 3;
     private $tpTramAguardandoRecebimento = 4;
     private $tpTramRecebido = 5;
-    private $tpTramTramitacaoFinalizada = 6;           
+    private $tpTramTramitacaoFinalizada = 6;   
+    
+    private $msgErros = null;
 
     /**
      * @return mixed
@@ -503,6 +505,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setFlEncontroContas(0);
             $daoFinDocumentoFiscal->setIdLotacao($this->id_lotacao);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
+            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1); //Adicionado a Situação do Documento Fiscal no ato do Cadastro. Essa informação estará vinculada diretamente com o GDOF
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
@@ -761,6 +764,16 @@ class FinDocumentoFiscal {
                 return Metodos::retornoAjax("Erro", "alert", "Documento Fiscal só pode ser Cancelado, quando Estiver na Situação Cadastrado.");
             }
             $result = $dao->getMsgRetorno();                        
+            
+            //Seta a situação do Documento fiscal como 'Cancelado'
+            $this->setIdDocumentoSituacao($this->getDocSitCancelado());
+            
+            
+            //Verifica se a atualização da situação do documento fiscal ocorreu tudo bem
+            if (!$this->atualizaSituacaoDocumentoGDOF($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
+            }
             
             $docTramitacao = new DocTramitacao();
             $docTramitacao->setIdPessoa($this->id_pessoa);
@@ -1116,5 +1129,40 @@ class FinDocumentoFiscal {
         return $daoFinDocumentoFiscal->getMsgRetorno();
     }
     
+    public function atualizaSituacaoDocumentoGDOF(PDO $pdo) {
+        try {
+            
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
+            $daoFinDocumentoFiscal->setIdDocumentoSituacao($this->getIdDocumentoSituacao());
+  
+            $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
+            if(!$daoFinDocumentoFiscal->sucesso()){
+                $this->msgErros = "Não foi possível localizar os Dados do Documento Fiscal. ";
+                return false;
+            }
+            
+            $busca = $daoFinDocumentoFiscal->getMsgRetorno();
+            
+            //Atualiza a Situação do Documento Fiscal
+            $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
+
+            if (!$daoFinDocumentoFiscal->sucesso()) {
+                $this->msgErros = "Erro ao atualizar a situação do Documento Fiscal. ";
+                return false;
+            }
+            
+            if (!Log::SalvaLogU('fin_documento_fiscal', $daoFinDocumentoFiscal->getIdDocumentoFiscal(), $busca, $pdo)) {              
+                $this->msgErros = "Erro ao registrar a operação de atualização da situação do Documento Fiscal no LOG.";
+                return false;
+            }
+
+            return $daoFinDocumentoFiscal->sucesso();
+        } catch (PDOException $exc) {
+            print_r( $exc->getMessage());
+            return false;
+        }
+
+    }
 
 }

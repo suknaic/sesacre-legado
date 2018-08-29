@@ -374,9 +374,13 @@ class DocFiscalRecebimento {
             return Metodos::retornoAjax("Erro", "alert", "Erro retornar os dados da última tramitação.");
         }
 
-        //Aqui a busca as informações da tramitação que encaminhou o documento para definir o novo destinatario 
+        //Aqui a busca as informações da tramitação que encaminhou o documento para definir o novo destinatario
+        //O 'origem' será o recebedor do GDOF e o 'destino' será o remetente do GDOF, ambos serão baseado na última tramitação
+        //
+        //A 'origem' será o receptor do documento fiscal que no caso é o destinatário da tramitação anterior
         $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_destino"];
         $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_destinatario"];
+        //O 'destino' faz referência a quem encaminhou o documento fiscal da tramitação anterior
         $destino = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
         $tipo_destinatario = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];   
         
@@ -388,6 +392,16 @@ class DocFiscalRecebimento {
         }
 
         $situacao = $daoFinDocumentoFiscal->getMsgRetorno()["id_documento_situacao"];
+        
+         //-------------Atualiza a situação do Documento Fiscal--------------------------------
+        $daoFinDocumentoFiscal->setIdDocumentoSituacao($situacao);
+        $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
+        
+        if (!$daoFinDocumentoFiscal->sucesso()) {
+            $pdo->rollBack();
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Documento Fiscal, por favor entre em contato com o Administrador do sistema.");
+        }
+        //-------------FIM Atualiza a situação do Documento Fiscal----------------------------
 
         //codigo abaixo cadastra a tramitacao recebido
         $docTramitacao = new DocTramitacao();
