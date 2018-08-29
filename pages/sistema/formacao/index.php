@@ -82,7 +82,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="id_escolaridade" class="form-control">
-                                                            <option value="0">Selecione Escolaridade</option>                                                                
+                                                            <option value="0">Selecione a Escolaridade</option>
                                                             <?php
                                                             // echo $lotacoes;
                                                             ?>
@@ -91,7 +91,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                                 </div>
                                                 <div class="col-sm-6">
                                                     Nome do Curso: <span class="text-danger obrigatorio">*</span>
-                                                    <input type="text" placeholder="Nome da Formação" id="nm_formacao" class="form-control" required autofocus>
+                                                    <input type="text" placeholder="Nome do Curso" id="nm_formacao" class="form-control" required autofocus>
                                                 </div>
                                             </div>                                                                                     
                                         </div>

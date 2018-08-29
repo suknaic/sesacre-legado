@@ -306,8 +306,6 @@ $(document).ready(function () {
                             "formacao": Formacao
                         },
                         "success": function (response) {
-                            console.log(response);
-                            return false;
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -436,6 +434,7 @@ $(document).ready(function () {
         $("#id_escolaridade").val(0).change();
         $("#nm_formacao").val("");
         $("#nm_formacao").focus();
+        $('.obrigatorio').show();
     });
 
     $('body').on('click', '.btn-edit', function (e) {

@@ -1200,13 +1200,13 @@ class ItemModel {
                 
                 foreach ($v as $key => $value) {                    
                     $tbody .= "<tr>";
-                        $tbody .= "<td>".$value['nr_contrato']."</td>";
+                        $tbody .= "<td class='text-danger'>".$value['nr_contrato']."</td>";
                         $tbody .= "<td>".$value['ds_objeto']."</td>";
                         $tbody .= "<td>".$value['nm_tipo_gasto']."</td>";
                         $tbody .= "<td>".$value['nm_pessoa']."</td>";
                         $tbody .= "<td>".$value['nm_modalidade']."</td>";
-                        $tbody .= "<td style='text-align: center;'>".$value['dt_ini_vigencia_contrato']."</td>";
-                        $tbody .= "<td style='text-align: center;'>".$value['dt_fim_vigencia_contrato']."</td>";
+                        $tbody .= "<td class='text-danger' style='text-align: center;'>".$value['dt_ini_vigencia_contrato']."</td>";
+                        $tbody .= "<td class='text-danger' style='text-align: center;'>".$value['dt_fim_vigencia_contrato']."</td>";
                         $tbody .= "<td style='text-align: right;'>".$value['total_geral']."</td>";
                         $tbody .= "<td style='text-align: right;' >".$value['total_utilizado']."</td>";
                         $tbody .= "<td style='text-align: center;'>".$value['percentual']."</td>";

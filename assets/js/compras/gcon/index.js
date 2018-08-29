@@ -153,9 +153,9 @@ $(document).ready(function () {
     });
     
     //***** Temporário *****
-    $('body').on('click', '.btn-migrar', function (e) {
-        top.location = "/model/compras/gcon/upload/migrarUploads.php";
-    });
+    // $('body').on('click', '.btn-migrar', function (e) {
+    //     top.location = "/model/compras/gcon/upload/migrarUploads.php";
+    // });
     //**********************
     
     $('body').on('click', '.btn-pesquisar', function (e) {

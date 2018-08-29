@@ -167,7 +167,7 @@ class Funcao {
 
             $busca = $funcao->retornaFuncao($pdo);
 
-            if ($busca) {
+            if (!$busca) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
@@ -183,10 +183,8 @@ class Funcao {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a um Funcionário.");
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -225,8 +223,6 @@ class Funcao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $result);
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -265,8 +261,6 @@ class Funcao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $result);
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

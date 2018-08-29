@@ -42,7 +42,6 @@ $(document).ready(function () {
                     "funcao": Funcao
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -66,9 +65,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, "success");
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.fechaModalReload();
                         return false;
                     } else {
                         func.modalAlert(func.msgErroPadrao, 'danger');
@@ -220,9 +217,7 @@ $(document).ready(function () {
                                 }
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, "success");
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.fechaModalReload();
                                 return false;
                             } else {
                                 func.modalAlert(func.msgErroPadrao, 'danger');

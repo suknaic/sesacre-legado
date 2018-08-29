@@ -78,16 +78,16 @@ class Escolaridade {
             if (Log::SalvaLogI('ses_escolaridade', $esc->getIdEscolaridade(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro de Escolaridade Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -126,7 +126,7 @@ class Escolaridade {
             $buscaId = $esc->retornaEscolaridade($pdo);
 
             if (!$buscaId) {
-                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -139,7 +139,7 @@ class Escolaridade {
             }
 
             if (!Log::SalvaLogU('ses_escolaridade', $esc->getIdEscolaridade(), $buscaId, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -151,7 +151,7 @@ class Escolaridade {
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "console", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -194,7 +194,7 @@ class Escolaridade {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a uma Pessoa.");
             }
 
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);

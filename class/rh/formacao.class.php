@@ -199,7 +199,7 @@ class Formacao {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             }else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão desse Curso. Este registro está Vinculado a uma Pessoa.");
             }
 
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
@@ -234,8 +234,6 @@ class Formacao {
             }
 
             $result = $formacao->desativar($pdo);
-            var_dump($result);
-            return;
             if ($result === TRUE) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
@@ -243,8 +241,6 @@ class Formacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -284,7 +280,6 @@ class Formacao {
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

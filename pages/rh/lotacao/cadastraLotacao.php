@@ -110,7 +110,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    Email: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
+                                                    E-mail: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
