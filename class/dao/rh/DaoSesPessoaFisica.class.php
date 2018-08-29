@@ -606,7 +606,7 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
         $sql = "select PF.*, P.nm_pessoa
                 from ses_pessoa P 
                 inner join ses_pessoa_fisica PF on P.id_pessoa = PF.id_pessoa
-                where PF.id_pessoa_fisica not in (select id_pessoa_fisica from ses_contrato where st_ativo = '1')
+                where PF.id_pessoa_fisica in (select id_pessoa_fisica from ses_contrato where st_ativo = '1')
                 and P.st_ativo = '1' and PF.st_ativo = '1'
                 order by P.nm_pessoa";
         try {
