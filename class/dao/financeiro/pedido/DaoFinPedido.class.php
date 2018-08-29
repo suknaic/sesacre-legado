@@ -455,9 +455,10 @@ class DaoFinPedido extends FinPedidoTb {
         try {
             if (!empty($pdo)) {
                 $sql = "select DISTINCT(p.id_pedido), concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as pedido, p.ds_pedido,
-                        tp.nm_tipo_gasto, font.nr_fonte, desp.ds_despesa_elemento, p.vl_pedido,
+                        tp.nm_tipo_gasto, font.nr_fonte, desp.ds_despesa_elemento, p.vl_pedido, p.st_pedido, p.st_pedido as status,
                         concat(concat(cont.nr_contrato,'/') , to_char(cont.dt_ini_vigencia_contrato, 'yyyy'))  as contrato, cont.tp_contrato,
-                        modalidade.nm_modalidade, pt.cd_programa_trabalho, pt.ds_programa_trabalho, emp.nr_empenho
+                        modalidade.nm_modalidade, pt.cd_programa_trabalho, pt.ds_programa_trabalho, emp.nr_empenho,ordemAux.sit_protocolo,
+                        ordemAux.ordens 
                         from fin_pedido p 
                         inner join fin_ordem as ordem
                         on ordem.id_pedido = p.id_pedido
@@ -479,6 +480,22 @@ class DaoFinPedido extends FinPedidoTb {
                         on gcon.id_processo = cont.id_processo
                         left join gco_modalidade as modalidade
                         on modalidade.id_modalidade = gcon.id_modalidade
+                        left join
+                        (
+                           select
+                              fo.id_pedido,
+                              array_agg(fo.id_ordem) as ordens,
+                              string_agg(trim(fpro.st_protocolo), '') as sit_protocolo
+                           from
+                              fin_ordem as fo 
+                              left join
+                                 fin_protocolo as fpro
+                                 on fo.id_ordem = fpro.id_ordem
+                           group by
+                              fo.id_pedido 
+                        )
+                        as ordemAux 
+                        on ordemAux.id_pedido = p.id_pedido
                         where p.nr_pedido = :numero";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrPedido(), PDO::PARAM_INT);

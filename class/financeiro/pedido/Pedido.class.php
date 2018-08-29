@@ -582,9 +582,13 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setNrPedido($this->nrPedido);
             $daoFinPedido->retornaPedidoOrdemGdof($pdo);
-            $retorno = '';
+            $retorno = '';            
+             //Carrega a status os possíveis
+            $opcoesStatus = $this->getPedidoNecessidadeStatus();                        
+            
             if ($daoFinPedido->Sucesso()) {
                 foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $statusPedido = $this->retornaStatusPedido($linha, $opcoesStatus);
                     $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
                 <td>' . $linha["pedido"] . '</td>
                 <td>' . $linha["ds_pedido"] . '</td>
@@ -597,6 +601,7 @@ class Pedido {
                 <td>' . $linha["nm_modalidade"] . '</td>
                 <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
                 <td>' . $linha["nr_empenho"] . '</td>
+                <td>' . $statusPedido . '</td>
                 </tr>';
                 }
             }
