@@ -1,6 +1,8 @@
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
+    
+    var url = "request.php";
 
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
@@ -11,7 +13,7 @@ $(document).ready(function () {
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
         $.ajax({
-            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "retornaEmpenho",
@@ -22,6 +24,14 @@ $(document).ready(function () {
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
             }
         });
+    });
+    
+    $('body').on('keypress', '#codItemPesquisa', function (e) {
+        let key = e.which;
+        if (key == 13){
+            $("#btn-pesquisa").trigger('click');
+            return false;
+        }
     });
 
     $('body').on('click', '.selecionaItem', function (e) {
@@ -35,7 +45,7 @@ $(document).ready(function () {
          * retornaContratosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "retornaContratosLiquidacao",
@@ -51,7 +61,7 @@ $(document).ready(function () {
          * retornaDadosPedido
          */
         $.ajax({
-            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "retornaPedidoLiquidacao",
@@ -67,7 +77,7 @@ $(document).ready(function () {
          * retornaDadosEmpenho
          */
         $.ajax({
-            "url": "/pages/financeiro/liquidacao/cad_liquidacao/request.php",
+            "url": url,
             "dataType": 'html',
             "data": {
                 "acao": "retornaEmpenhoLiquidacao",

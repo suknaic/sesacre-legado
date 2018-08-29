@@ -485,6 +485,8 @@ class FinEmpenhoModel {
                 $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '"  idEmpenho="' . $dados["id_empenho"] . '" nrPedido="' . $dados["nr_pedido"] . '" 
                     style="cursor:pointer;">
                 <td>' . $dados["nr_pedido"] . '</td>
+                    <td>' . $dados["nr_pedido"] . '</td>
+                        <td>' . $dados["nr_pedido"] . '</td>
                 <td>' . $dados["nr_empenho"] . '</td>
                 <td>' . $dados["dt_empenho_safira"] . '</td>    
                 <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>
