@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/cad_documento/index.load.php";
+require_once "index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -16,9 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!-- Font Awesome [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <!-- themify icons [ REQUIRED ] -->
-        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">
-        <!--Select2-->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">        
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
@@ -49,6 +47,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro da Liquidação</h1> 
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--Modal itens content-->
                     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
@@ -73,10 +74,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Pedido</th>
-                                                            <th>Empenho</th>
-                                                            <th>Descrição</th>
-                                                            <th>Valor do Empenho</th>
+                                                            <th>Nº Empenho</th>
+                                                            <th>Tipo de Empenho</th>
+                                                            <th>Fonte</th>
+                                                            <th>Elemento de Despesa</th>                                                            
+                                                            <th>Valor Total</th>
+                                                            <th>Saldo</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -93,18 +96,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <div class="panel">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Informações do documento fiscal</h3>
-                                </div>
+                        <form class="form-horizontal" id="form-documento" role="form">
+                            <div class="panel">                                
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
                                             Pesquisa Empenho:<span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
+                                                <input class="form-control" type="text" name="item" id="item" disabled />
                                                 <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
                                                     <button type="button" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i></button>
                                                 </span>
@@ -295,9 +295,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
-        <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
-        <!--Select2-->
-        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>        
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
@@ -305,6 +303,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/financeiro/liquidacao/cad_liquidacao/index.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>

@@ -312,12 +312,12 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select p.id_pedido, nr_pedido, emp.id_empenho, emp.nr_empenho,
+                $sql = "SELECT p.id_pedido, nr_pedido, emp.id_empenho, emp.nr_empenho,
                         emp.dt_empenho_safira, emp.vl_empenho
-                        from fin_empenho as emp
-                        inner join fin_pedido as p
-                        on p.id_pedido = emp.id_pedido
-                        where nr_empenho = :nr_empenho";
+                        FROM fin_empenho AS emp
+                        INNER JOIN fin_pedido AS p
+                        ON p.id_pedido = emp.id_pedido
+                        WHERE nr_empenho = :nr_empenho";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
                 $stmt->execute();
