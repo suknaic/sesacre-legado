@@ -87,6 +87,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             <th>Modalidade</th>
                                                             <th>Projeto/Atividade</th>
                                                             <th>Empenho</th>
+                                                            <th>Situação</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

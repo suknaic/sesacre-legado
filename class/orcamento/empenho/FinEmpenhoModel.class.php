@@ -435,7 +435,7 @@ class FinEmpenhoModel {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
                                                         aria-expanded="false" aria-controls="collapseThree" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Pedido do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
@@ -479,17 +479,20 @@ class FinEmpenhoModel {
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        echo "<pre>";
+        print_r($daoFinEmpenho->getMsgRetorno());
+        echo "</pre>";
         $retorno = '';
         if ($daoFinEmpenho->sucesso()) {
             foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
                 $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '"  idEmpenho="' . $dados["id_empenho"] . '" nrPedido="' . $dados["nr_pedido"] . '" 
                     style="cursor:pointer;">
-                <td>' . $dados["nr_pedido"] . '</td>
-                    <td>' . $dados["nr_pedido"] . '</td>
-                        <td>' . $dados["nr_pedido"] . '</td>
                 <td>' . $dados["nr_empenho"] . '</td>
-                <td>' . $dados["dt_empenho_safira"] . '</td>    
-                <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>
+                <td>' . $dados["nm_tipo_empenho"] . '</td>
+                <td>' . $dados["nr_fonte"] . '</td>
+                <td>' . $dados["cd_despesa_elemento"] . '</td>
+                <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>    
+                <td>' . Metodos::ConverteValorBr($dados["saldo"], 4) . '</td>
                 </tr>';
             }
         }

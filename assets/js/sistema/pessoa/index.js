@@ -68,7 +68,7 @@ $(document).ready(function () {
                 cpf: $cpf,
                 cnpj: $cnpj,
                 tipoPessoa: $("#tipoPessoa").val()
-            }
+            };
             $.ajax({
                 "url": "/model/sistema/pessoa/request.php",
                 "dataType": 'html',
