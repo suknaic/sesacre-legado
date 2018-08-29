@@ -78,7 +78,7 @@ $(document).ready(function () {
                     pessoa: Pessoa,
                 },
                 "success": function (response) {
-                    //console.log(response);
+                    // console.log(response);
                     func.carregaTabelaPadrao('tabela', response, [8], true);
 
                 }
