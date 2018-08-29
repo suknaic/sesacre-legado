@@ -372,25 +372,34 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         }
     }
 
-    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null) {
+    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens
+            , string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado) {
         try {
-            $sqlDocumentoFiscal = " and entDoc.id_documento_fiscal is null";
+            $sqlDocumentoFiscal = " AND (entDoc.id_documento_fiscal IS NULL"
+                    . " OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
             if(!empty($idDocumentoFiscal)){
                $sqlDocumentoFiscal = $sqlDocumentoExiste;
             }
-            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+            $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
-                    from fin_protocolo as protocolo
-                    inner join fin_entrega_confirmacao as confirmacao
-                    on protocolo.id_protocolo = confirmacao.id_protocolo
-                    inner join fin_ordem as ordem
-                    on confirmacao.id_ordem = ordem.id_ordem
-                    left join fin_entrega_documento as entDoc
-                    on entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                    where protocolo.id_ordem in(" . $idOrdens . ")
-                    and protocolo.st_protocolo = '2'
-                    ".$sqlDocumentoFiscal." ";
+                    FROM fin_protocolo as protocolo
+                    INNER JOIN fin_entrega_confirmacao as confirmacao
+                    ON protocolo.id_protocolo = confirmacao.id_protocolo
+                    INNER JOIN fin_ordem as ordem
+                    ON confirmacao.id_ordem = ordem.id_ordem
+                    LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
+                        FROM fin_entrega_documento
+                        ORDER BY id_entrega_confirmacao, id_entrega_documento desc 
+                    ) AS entDoc ON entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao                    
+                    LEFT JOIN ( select DISTINCT ON (t.id_documento_fiscal) *
+                            FROM fin_doc_tramitacao t				
+                            ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
+                    ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
+                    WHERE protocolo.id_ordem in(" . $idOrdens . ")
+                    AND protocolo.st_protocolo = '2'
+                    ".$sqlDocumentoFiscal." ";            
             $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idDocumentoSituacao", $idDocSitCadastrado, PDO::PARAM_INT);
             if(!empty($idDocumentoFiscal)){
                 $stmt->bindValue(":idDocumentoFiscal", $idDocumentoFiscal, PDO::PARAM_INT);
             }
@@ -440,6 +449,44 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 $this->sucesso = false;
             }
         } catch (Exception $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
+    
+    /**
+     * Passando um conjunto de Id Entrega Confirmação, irá ser verifica e retornado quais delas podem
+     * ser utilizadas para cadastro no documento fiscal
+     * @param PDO $pdo
+     * @param string $idsEntregas
+     * @param int $idDocSitCadastrado
+     */
+    public function verificaEntregasAptasParaDocFiscal(PDO $pdo, string $idsEntregas, int $idDocSitCancelado) {
+        try {
+            
+            $sql = "SELECT confirmacao.id_entrega_confirmacao
+                    FROM fin_entrega_confirmacao as confirmacao
+                    LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
+                    FROM fin_entrega_documento
+                    ORDER BY id_entrega_confirmacao, id_entrega_documento desc 
+                    ) AS entDoc ON entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao                    
+                    LEFT JOIN ( select DISTINCT ON (t.id_documento_fiscal) *
+                        FROM fin_doc_tramitacao t				
+                        ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
+                    ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
+                    WHERE confirmacao.id_entrega_confirmacao IN (".$idsEntregas.") AND
+                    (entDoc.id_documento_fiscal IS NULL OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";                        
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idDocumentoSituacao", $idDocSitCancelado, PDO::PARAM_INT);            
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = true;
+                $this->msgRetorno = array();
+            }
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }

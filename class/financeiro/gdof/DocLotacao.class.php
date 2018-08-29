@@ -342,4 +342,27 @@ class DocLotacao {
         }
     }
     
+    public function retornaDadosCompleto(PDO $pdo = null){
+        try{            
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }            
+            $dao = new DaoFinDocLotacao();
+            $dao->setIdDocLotacao($this->idDocLotacao);
+            $dao->selectAtivos($pdo);
+            if(!$dao->getSucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $dao->getMsgRetorno();
+                return false;
+            }
+            $this->sucesso = true;
+            $this->msgRetorno = $dao->getMsgRetorno();           
+            return true;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 }

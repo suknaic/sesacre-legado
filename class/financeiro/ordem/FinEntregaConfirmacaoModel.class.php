@@ -600,15 +600,20 @@ class FinEntregaConfirmacaoModel {
                 if(array_key_exists("id_documento_fiscal", $linha)){
                     if(!empty($linha['id_documento_fiscal'])){
                         $idDocumentoFiscal = (int)$linha['id_documento_fiscal'];
-                        $sqlDocumentoExiste = " and (entDoc.id_documento_fiscal is null "
-                                . "OR entDoc.id_documento_fiscal = :idDocumentoFiscal)";
+                        $sqlDocumentoExiste = " and (entDoc.id_documento_fiscal is null"
+                                . " OR entDoc.id_documento_fiscal = :idDocumentoFiscal"
+                                . " OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
                     }
                 }
                 
             }
+            
+            $finDocumentoFiscal = new FinDocumentoFiscal();            
+            
             $idOrdens = implode(' , ', $arrayIdOrdens);
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();            
-            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens, $sqlDocumentoExiste, $idDocumentoFiscal);
+            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens
+                    , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado());
             $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
@@ -674,6 +679,39 @@ class FinEntregaConfirmacaoModel {
             return $tabela;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    
+    public function retornaEntregasAptasParaDocumentoFiscal(PDO $pdo, $idEntregas, $idDocSitCancelado) {
+        try {
+
+            if (empty($idEntregas)) {
+                return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $arrayIdEntregas = array();
+
+            foreach ($idEntregas as $linha) {
+                $arrayIdEntregas [] = $linha;
+            }
+            
+            $idEntregas = implode(' , ', $arrayIdEntregas);
+
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->verificaEntregasAptasParaDocFiscal($pdo, $idEntregas, $idDocSitCancelado);            
+
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();              
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }           
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 

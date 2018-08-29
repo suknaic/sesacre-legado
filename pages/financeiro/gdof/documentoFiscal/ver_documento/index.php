@@ -285,7 +285,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 </div>
                                 <!--form lançado no grp-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" >
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
@@ -349,7 +349,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
 
                                                     <div class="panel-body">
-                                                        <textarea class="form-control" rows="10"><?php echo $historico; ?></textarea>
+                                                        <textarea class="form-control" rows="10" readonly="true"><?php echo $historico; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

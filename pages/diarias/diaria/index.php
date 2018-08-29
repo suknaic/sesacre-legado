@@ -221,7 +221,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                    <span class="input-group-addon">
                                                        <p class="fa fa-file-text-o inputPFa"></p>
                                                    </span>
-                                                   <textarea id="ds_locais_executado" class="form-control"><?php echo $ds_servico_executado;?></textarea>
+                                                   <textarea id="ds_locais_executado" class="form-control"><?php echo $ds_locais_executado;?></textarea>
                                                </div>
                                            </div>
                                        </div>
