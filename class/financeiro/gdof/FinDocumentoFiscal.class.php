@@ -505,7 +505,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setFlEncontroContas(0);
             $daoFinDocumentoFiscal->setIdLotacao($this->id_lotacao);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
-            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1); //Adicionado a Situação do Documento Fiscal no ato do Cadastro. Essa informação estará vinculada diretamente com o GDOF
+//            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1); //Adicionado a Situação do Documento Fiscal no ato do Cadastro. Essa informação estará vinculada diretamente com o GDOF
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
