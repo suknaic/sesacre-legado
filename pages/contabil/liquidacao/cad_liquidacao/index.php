@@ -15,6 +15,8 @@ require_once "index.load.php";
         <link href="/assets/lib/template/css/nifty.min.css" rel="stylesheet">
         <!-- Font Awesome [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!-- themify icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">        
         <!--DataTables [ OPT ]-->
@@ -152,17 +154,17 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="selectEntrega" id="selectEntrega">
+                                                                    <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
                                                                         <option value="0" selected="true">Selecione um Documento Fiscal</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-1"><a class="addEntrega btn btn-info">+</a></div>
+                                                            <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
                                                             <div class="col-sm-6"></div>
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
-                                                                <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="text-center">Nº Documento Fiscal</th>
@@ -170,6 +172,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Competência</th>
                                                                             <th class="text-center">Data Emissão</th>
                                                                             <th class="text-center">Data Atesto</th>
+                                                                            <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Saldo</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
@@ -296,6 +299,10 @@ require_once "index.load.php";
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>        
+        
+        <!--Select2-->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>

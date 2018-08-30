@@ -105,5 +105,65 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
         }
-    }                       
+    }
+    
+    function retornaDocumentosPorEmpenho($pdo){
+        $this->sucesso = false;
+        $sql = "select distinct
+                    empenho.nr_empenho,
+                    docFis.id_documento_fiscal,
+                    docFis.nr_documento_fiscal,
+                    tpDoc.nm_tipo_documento,
+                    (
+                       trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
+                    )
+                    as competencia,
+                    to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,
+                    to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto,
+                    to_char(vl_documento,'999G999G999D9999') as vl_documento,
+                    docFis.id_documento_situacao,
+                    docSit.nm_situacao 
+                 from
+                    fin_empenho as empenho 
+                    inner join
+                       fin_ordem as ordem 
+                       on ordem.id_pedido = empenho.id_pedido 
+                    inner join
+                       fin_entrega_confirmacao as entConfirm 
+                       on entConfirm.id_ordem = ordem.id_ordem 
+                    inner join
+                       fin_entrega_documento as entDoc 
+                       on entDoc.id_entrega_confirmacao = entConfirm.id_entrega_confirmacao 
+                    inner join
+                       fin_documento_fiscal as docFis 
+                       on docFis.id_documento_fiscal = entDoc.id_documento_fiscal 
+                    inner join
+                       fin_tipo_documento as tpDoc 
+                       on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
+                    left join
+                       fin_documento_situacao as docSit 
+                       on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                 where
+                    docFis.id_documento_situacao = 2 	--Somente 'A Liquidar'
+                 and
+                    empenho.id_empenho = :id_empenho
+                 order by
+                    empenho.nr_empenho,
+                    docFis.nr_documento_fiscal";
+        try {
+            $result = $pdo->prepare($sql);            
+            $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1){
+                $this->sucesso = true; 
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;                
+                $this->msgRetorno = "Não encontrou Registros";                
+            }            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
 }

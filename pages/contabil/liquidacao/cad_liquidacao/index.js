@@ -3,6 +3,13 @@ $(document).ready(function () {
     func = new Funcoes();
     
     var url = "request.php";
+    
+    //select2
+    $('body').find('select').select2({
+        width: '100%'
+    });
+    
+    $('#data_liquidacao').mask("99/99/9999");
 
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
@@ -38,7 +45,8 @@ $(document).ready(function () {
         var $this = $(this);
         var dados = {
             "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
-            "id_pedido": $("body").find(".selecionaItem").attr("pedido")
+            "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
+            "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
 
         /**
@@ -89,7 +97,43 @@ $(document).ready(function () {
                 $(".empenho").append(response);
             }
         });
+        
+        /**
+         * retornaDocumentosEmpenho
+         */
+        
+
+        $.ajax({
+            "url": url,
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaDocFiscaisLiquidacao",
+                "dados": dados
+            },
+            "success": function (response){
+                $("#selectDocumentoFiscal").html("");
+                $("#selectDocumentoFiscal").append(response);
+            }
+        });
+        
         $('#modalItem').modal('hide');
+    });
+    
+    $('body').on('click','.addDocumento', function(e){
+       var documento = $("#selectDocumentoFiscal option:selected").data('objeto');
+       var linhaTabela = `<tr>
+                            <td class="text-center">${documento.nr_documento_fiscal}</td>
+                            <td class="text-center">${documento.nm_tipo_documento}</td>
+                            <td class="text-center">${documento.competencia}</td>
+                            <td class="text-center">${documento.dt_emissao}</td>
+                            <td class="text-center">${documento.dt_atesto}</td>
+                            <td class="text-center">${documento.vl_documento}</td>
+                            <td class="text-center">${documento.vl_documento}</td>
+                            <td class="text-center">${documento.nm_situacao}</td>
+                            <td class="text-center"></td>
+                         </tr>`;
+        
+        $('#tabelaDocumentos tbody').append(linhaTabela);
     });
 
 });

@@ -7,8 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinEntregaDocumento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
 
 $session = new Session('ajax');
 
@@ -71,5 +70,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'retornaDocFiscaisLiquidacao':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdEmpenho($dados['id_empenho']);
+            echo $liquidacao->retornaOptionsDocsEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 }
 

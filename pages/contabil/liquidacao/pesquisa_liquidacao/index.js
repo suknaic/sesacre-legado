@@ -8,23 +8,22 @@ $(document).ready(function () {
 
     function lista() {
         var Dados = {
-            nrDocFis: $("#id_doc_fis").val(),
-            anoDocFis: $("#ano_doc_fis option:selected").val(),
+            nrDocFis: $("#nr_liquidacao").val(),
+            anoDocFis: $("#ano_liquidacao option:selected").val(),
             contratado: $("#id_contratado option:selected").val(),
             nrProtocolo: $("#nr_protocolo").val(),
             nrContrato: $("#nr_contrato").val(),
             nrPedido: $("#nr_pedido").val(),
             nrEmpenho: $("#nr_empenho").val(),
+            nrDocumentoFiscal: $("#nr_documento_fiscal").val(),
             tpGasto: $("#tipo_gasto option:selected").val(),
-            sitDoc: $("#situacao option:selected").val(),
-            destinatario: $("#destinatario option:selected").val(),
-            tramitacao: $("#tramitacao option:selected").val()
+            situacao: $("#situacao option:selected").val()
         }
         $.ajax({
             "url": "request.php",
             "dataType": 'html',
             "data": {
-                "acao": "retornaDocumentosFiscais",
+                "acao": "retornaLiquidacoes",
                 "dados": Dados
             },
             "success": function (response) {

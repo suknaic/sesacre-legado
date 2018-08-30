@@ -72,23 +72,23 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="id_doc_fis">Número do Documento Fiscal:</label>
+                                                <label for="nr_liquidacao">Número da Liquidação:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="id_doc_fis" class="form-control" value=""/>
+                                                    <input type="text" id="nr_liquidacao" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="ano_doc_fis">Exercício do Documento Fiscal:</label>
+                                                <label for="ano_liquidacao">Exercício da Liquidação:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="ano_doc_fis" class="form-control">
+                                                    <select id="ano_liquidacao" class="form-control">
                                                         <?php echo Metodos::retornaAnosSelect(); ?>
                                                     </select>
                                                 </div>
@@ -160,6 +160,17 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
+                                                <label for="nr_documento_fiscal">Número do Documento Fiscal:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                    </span>
+                                                    <input type="text" id="nr_documento_fiscal" class="form-control" value=""/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
                                                 <label for="tipo_gasto">Tipo de Gasto:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
@@ -172,6 +183,12 @@ require_once "index.load.php";
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                        </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="situacao">Situação:</label>
@@ -180,44 +197,16 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
-                                                        <?php echo $selectSitDoc; ?>
+                                                        <?php echo $selectSitLiq; ?>
                                                     </select>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="tramitacao">Trâmite:</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="tramitacao" class="form-control">
-                                                        <option value="0" selected="true">Selecione uma Trâmite</option>
-                                                        <option value="1">Aguardando Tramitação</option>
-                                                        <option value="3">Encaminhado</option>
-                                                        <option value="5">Recebido</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="destinatario">Tipo de Remetente e Remetente/Tipo de Destinatário e Destinatário:</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="destinatario" class="form-control">
-                                                        <?php echo $selectLotacoes; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </form>
                             <div class="panel-footer text-center">
@@ -239,17 +228,15 @@ require_once "index.load.php";
                                         <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">Nº Doc. Fiscal</th>
+                                                    <th class="text-center">Nº Liquidação</th>
                                                     <th class="text-center">Nº Pedido</th>
                                                     <th class="text-center">Nº Empenho</th>
-                                                    <th class="text-center">Tipo</th>
-                                                    <th class="text-center">Competência</th>
-                                                    <th class="text-center">Remetente/Destinatário</th>
-                                                    <th class="text-center">Data de Emissão</th>
+                                                    <th class="text-center">Nº Doc. Fiscal</th>
+                                                    <th class="text-center">CPF/CNPJ Fornecedor</th>
+                                                    <th class="text-center">Data Liquidação</th>
                                                     <th class="text-center">Valor</th>
-                                                    <th class="text-center">Trâmite</th>
                                                     <th class="text-center">Situação</th>
-                                                    <th class="text-center">Ações</th> 
+                                                    <th class="text-center">Ação</th> 
                                                 </tr>
                                             </thead>
                                             <tbody>

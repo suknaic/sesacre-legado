@@ -334,6 +334,33 @@
                                 </li>
                             </ul>
                         </li>
+                        
+                         <!--Menu list Finaceiro-->
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-money" aria-hidden="true"></i>
+                                <span class="menu-title">Contábil</span>
+                                <i class="arrow"></i>
+                            </a>
+                            <!--Submenu-->
+                            <ul class="collapse">
+                                <li>
+                                    <a href="#">Empenho</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
+                                </li>
+                                <li>
+                                    <a href="#">Pagamento</a>
+                                </li>
+                                <li>
+                                     <a href="#">
+                                        <span class="menu-title">Administração</span>
+                                        <i class="arrow"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <!--Menu list Compras-->
                         <li>
                             <a href="#">
