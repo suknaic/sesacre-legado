@@ -208,7 +208,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                 </div>
                             </div>
                             <div class="row">                
-                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                <div class="col-md-4 col-sm-4 col-xs-12" style="cursor: pointer;" id="grafico_pedido">
                                     <div style="width: 100%; padding: 10px 17px; display: inline-block; background: #fff; border: 1px solid #E6E9ED; -webkit-column-break-inside:avoid;-moz-column-break-inside:avoid;column-break-inside:avoid;opacity:1;transition:all .2s ease;">
                                         <div>
                                             <h3>Pedidos de Necessidade</h3>
