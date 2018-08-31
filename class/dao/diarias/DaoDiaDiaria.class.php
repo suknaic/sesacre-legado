@@ -994,17 +994,15 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
-    function selectDiariaNrPedido(PDO $pdo = null){
+    function selectNrPedido(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
                 $sql = "select 
-                        diaria.id_diaria,pedido.id_pedido,pedido.nr_pedido
-                        from dia_diaria as diaria
-                        left join fin_pedido as pedido
-                        on pedido.id_pedido = diaria.id_pedido
-                        where id_diaria = :id_diaria";
+                        pedido.nr_pedido
+                        from fin_pedido as pedido
+                        where pedido.id_pedido = :id_pedido";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(':id_diaria', $this->getIdDiaria(),PDO::PARAM_INT);
+                $stmt->bindValue(':id_pedido', $this->getIdPedido(),PDO::PARAM_INT);
                 
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 

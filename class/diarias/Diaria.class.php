@@ -44,7 +44,6 @@ class Diaria {
 
     private $flRetorno            = null;
     private $idPedido             = null;
-    private $nrPedido            = null; //Guarda o número do pedido de necessidade pois o número do pedido pode não ser o mesmo da chave primária ID
     private $anoPedido           = null;
     private $idDiariaPai         = null;
     private $idRelatorio          = null;
@@ -61,15 +60,6 @@ class Diaria {
     private $msgErros = null;
     
     private $usuarioSessao = null;
-    
-    function getNrPedido() {
-        return $this->nrPedido;
-    }
-
-    function setNrPedido($nrPedido) {
-        $this->nrPedido = $nrPedido;
-        return $this;
-    }
     
     function getUsuarioPedido() {
         return $this->usuarioPedido;
@@ -1860,7 +1850,7 @@ class Diaria {
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
             
             //Busca o número do pedido de necessidade para registrar no histórico
-            $daoDiaDiaria->selectDiariaNrPedido($pdo);
+            $daoDiaDiaria->selectNrPedido($pdo);
             
             if (!$daoDiaDiaria->getSucesso()) {
                 return $daoDiaDiaria->getMsgRetorno();
@@ -1911,7 +1901,7 @@ class Diaria {
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
             
             //Busca o número do pedido de necessidade para registrar no histórico
-            $daoDiaDiaria->selectDiariaNrPedido($pdo);
+            $daoDiaDiaria->selectNrPedido($pdo);
             
             if (!$daoDiaDiaria->getSucesso()) {
                 return $daoDiaDiaria->getMsgRetorno();
