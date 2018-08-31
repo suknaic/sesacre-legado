@@ -994,6 +994,34 @@ class DaoDiaDiaria extends DiaDiaria {
         }
     }
     
+    function selectDiariaNrPedido(PDO $pdo = null){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select 
+                        diaria.id_diaria,pedido.id_pedido,pedido.nr_pedido
+                        from dia_diaria as diaria
+                        left join fin_pedido as pedido
+                        on pedido.id_pedido = diaria.id_pedido
+                        where id_diaria = :id_diaria";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':id_diaria', $this->getIdDiaria(),PDO::PARAM_INT);
+                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) { 
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                }  else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhuma diária encontrada.";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        }  catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     function selectDiariaPedido(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
