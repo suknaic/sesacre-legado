@@ -57,7 +57,7 @@ class Formacao {
             $busca = $formacao->buscaFormacaoPorNome($pdo);
 
             if ($this->id_escolaridade == 2) {
-                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido o Cadastro de Formação com Escolaridade Ensino Médio e Fundamental.");
+                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido o Cadastro de Curso com Escolaridade Ensino Médio e Fundamental.");
             }
 
             if (!$busca) {
@@ -118,7 +118,7 @@ class Formacao {
 
             // *** Bloqueio para permitir a edição de formação com escolaridade ensino fundamental ***
             if ($this->id_escolaridade == 2) {
-                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido a Edição de Formação com Escolaridade Ensino Médio e Fundamental.");
+                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido a Edição de Curso com Escolaridade Ensino Médio e Fundamental.");
             }
             //****************************************************************************************
 

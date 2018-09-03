@@ -19,26 +19,26 @@ switch ($_REQUEST['acao']) {
     case 'cadastrarLotacaoDetalhe':
         try {
 
-            $getLotacao = filter_input(INPUT_GET, 'dadosLotacaoDetalhe', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $getTelefone = filter_input(INPUT_GET, 'dadosTelefone', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            print_r($getLotacao);
-//            print_r($getTelefone);
+            $dadosLotacaoDetalhe = filter_input(INPUT_GET, 'dadosLotacaoDetalhe', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dadosTelefone = filter_input(INPUT_GET, 'dadosTelefone', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+//            print_r($dadosLotacaoDetalhe);
+//            print_r($dadosTelefone);
 //            return;
             $lotacaoDetalhe = new LotacaoDetalhe();
-            $lotacaoDetalhe->setId_pai($getLotacao['idPaiLotacao']);
-            $lotacaoDetalhe->setNm_lotacao($getLotacao['nomeLotacao']);
-            $lotacaoDetalhe->setId_lotacao_categoria($getLotacao['idCategoria']);
-            $lotacaoDetalhe->setNr_cnpj($getLotacao['cnpj']);
-            $lotacaoDetalhe->setNm_email($getLotacao['email']);
-            $lotacaoDetalhe->setId_pessoa_juridica($getLotacao['pessoaJuridica']);
-            $lotacaoDetalhe->setId_pessoa($getLotacao['pessoa']);
-            $lotacaoDetalhe->setDs_logradouro($getLotacao['logradouro']);
-            $lotacaoDetalhe->setDs_bairro($getLotacao['bairro']);
-            $lotacaoDetalhe->setNr_cep($getLotacao['cep']);
-            $lotacaoDetalhe->setMp_latitude($getLotacao['latitude']);
-            $lotacaoDetalhe->setMp_longitute($getLotacao['longitude']);
-            $lotacaoDetalhe->setId_cidade($getLotacao['cidade']);
-            $lotacaoDetalhe->setNr_telefone($getTelefone);
+            $lotacaoDetalhe->setId_pai($dadosLotacaoDetalhe['idPaiLotacao'] == '' ? null : (int)$dadosLotacaoDetalhe['idPaiLotacao']);
+            $lotacaoDetalhe->setNm_lotacao_detalhe($dadosLotacaoDetalhe['nomeLotacaoDetalhe'] == '' ? null : $dadosLotacaoDetalhe['nomeLotacaoDetalhe']);
+            $lotacaoDetalhe->setId_lotacao_categoria($dadosLotacaoDetalhe['idCategoria'] == '' ? null : (int)$dadosLotacaoDetalhe['idCategoria']);
+            $lotacaoDetalhe->setNr_cnpj($dadosLotacaoDetalhe['cnpj'] == '' ? null : $dadosLotacaoDetalhe['cnpj']);
+            $lotacaoDetalhe->setNm_email($dadosLotacaoDetalhe['email'] == '' ? null : $dadosLotacaoDetalhe['email']);
+            $lotacaoDetalhe->setId_pessoa_juridica($dadosLotacaoDetalhe['pessoaJuridica'] == '' ? null : (int)$dadosLotacaoDetalhe['pessoaJuridica']);
+            $lotacaoDetalhe->setId_pessoa($dadosLotacaoDetalhe['pessoa'] == '' ? null : (int)$dadosLotacaoDetalhe['pessoa']);
+            $lotacaoDetalhe->setDs_logradouro($dadosLotacaoDetalhe['logradouro'] == '' ? null : $dadosLotacaoDetalhe['logradouro']);
+            $lotacaoDetalhe->setDs_bairro($dadosLotacaoDetalhe['bairro'] == '' ? null : $dadosLotacaoDetalhe['bairro']);
+            $lotacaoDetalhe->setNr_cep($dadosLotacaoDetalhe['cep'] == '' ? null : $dadosLotacaoDetalhe['cep']);
+            $lotacaoDetalhe->setMp_latitude($dadosLotacaoDetalhe['latitude'] == '' ? null : $dadosLotacaoDetalhe['latitude']);
+            $lotacaoDetalhe->setMp_longitute($dadosLotacaoDetalhe['longitude'] == '' ? null : $dadosLotacaoDetalhe['longitude']);
+            $lotacaoDetalhe->setId_cidade($dadosLotacaoDetalhe['cidade'] == '' ? null : (int)$dadosLotacaoDetalhe['cidade']);
+            $lotacaoDetalhe->setNr_telefone($dadosTelefone);
             
             echo $lotacaoDetalhe->cadastrarlotacaoDetalhe();
             return;
@@ -194,8 +194,8 @@ switch ($_REQUEST['acao']) {
             $lotacaoPai = isset($_POST['lotacaoPai']) ? filter_input(INPUT_POST, 'lotacaoPai', FILTER_DEFAULT) : NULL;
 
             //***************************
-            $lotacao = new Lotacao();
-            echo $lotacao->retornaTrLotacao($nome, $categoria, $lotacaoPai);
+            $lotacao = new LotacaoDetalhe();
+            echo $lotacao->retornarLotacoes($nome, $categoria, $lotacaoPai);
             return;
             break;
         } catch (Exception $e) {

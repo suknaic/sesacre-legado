@@ -731,14 +731,17 @@ class Lotacao {
                                             </button>";
                     if ($v['st_ativo'] == '0') {
                         $retorno.= "        <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
-                                                <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                                <i class='ion-checkmark-round fa-lg text-success' aria-hidden='true'></i>                                
                                             </button>";
                     } else {
                         $retorno.= "        <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
-                                                <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                                <i class='ion-close-round fa-lg text-danger' aria-hidden='true'></i>                                
                                             </button>";
                     }
-                    $retorno.=          "</td>
+                    $retorno.=          "   <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>                                
+                                            </button>
+                                        </td>
                                 </tr>";
                 }
             }

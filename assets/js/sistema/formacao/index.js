@@ -166,9 +166,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, "success");
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.fechaModalReload();
                         return false;
                     } else {
                         func.modalAlert(func.msgErroPadrao, 'danger');
