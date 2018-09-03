@@ -192,10 +192,10 @@ class LotacaoDetalhe {
 
     public function cadastrarlotacaoDetalhe() {
         try {
-            if ($this->id_lotacao && $this->id_lotacao_categoria && $this->id_cidade) {
+            if (empty($this->id_lotacao_categoria && $this->nm_lotacao_detalhe && $this->id_pai && $this->id_pessoa_juridica && $this->ds_logradouro && $this->ds_bairro && $this->nr_cep && $this->id_cidade)) {
                 return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
             }
-
+            return Metodos::retornoAjax('Erro', 'alert', 'Tudo ok Até Aqui!');
             //********** Conexão *********
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -253,6 +253,76 @@ class LotacaoDetalhe {
             //*********************************************************************
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public function retornarLotacoes($nome, $categoria, $lotacaoPai) {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $rh = new DaoSesLotacaoDetalhe();
+            $filtro = "";
+            //*****************************************************************
+            $filter = array();
+            if (!empty($nome)) {
+                $filter[] = "ld.nm_lotacao ilike '%$nome%'";
+            }
+            if (!empty($categoria)) {
+                $filter[] = "lc.id_lotacao_categoria = $categoria";
+            }
+            if (!empty($lotacaoPai)) {
+                $filter[] = "pa.id_lotacao = $lotacaoPai";
+            }
+
+            if (count($filter) > 0) {
+                $filtro = " and " . implode(' and ', $filter);
+            }
+            //******************************************************************
+            $result = $rh->retornarLotacoesPesquisa($pdo, $filtro);
+            var_dump($result);
+            if (!$result) {
+                return $retorno;
+            } else {
+                foreach ($result as $v) {
+                    //************ formatar mascara do telefone ****************
+                    $telefone = explode(",", $v['nr_telefone']);
+                    $numeros = "";
+                    foreach ($telefone as $nr) {
+                        $numeros .= Metodos::formataTelefone(trim($nr)) . ", ";
+                    }
+                    $numeros = substr($numeros, 0, strlen($numeros) - 2);
+                    //**********************************************************
+                    $idlotacao = $v['id_lotacao'];
+                    $retorno .= "<tr>";
+                    $retorno .= "   <td>" . $v['nm_lotacao'] . "</td>
+                                        <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
+                                        <td>" . $v['ds_logradouro'] . "</td>   
+                                        <td>" . $v['ds_bairro'] . "</td>
+                                        <td>" . $v['responsavel'] . "</td>   
+                                        <td>" . $numeros . "</td> 
+                                        <td>" . $v['pai'] . "</td>
+                                        <td style='text-align: center;'>                           
+                                            <button type='button' class='btn btn-default btn-edit btn-xs'                               
+                                                  title='Editar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                  <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                            </button>";
+                    if ($v['st_ativo'] == '0') {
+                        $retorno.= "        <button type='button' class='btn btn-default btn-ativar btn-xs' title='Ativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                <i class='ion-checkmark-round text-success' aria-hidden='true'></i>                                
+                                            </button>";
+                    } else {
+                        $retorno.= "        <button type='button' class='btn btn-default btn-desativar btn-xs' title='Desativar' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+                                                <i class='ion-close-round text-danger' aria-hidden='true'></i>                                
+                                            </button>";
+                    }
+                    $retorno.=          "</td>
+                                </tr>";
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
         }
     }
 
