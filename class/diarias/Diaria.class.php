@@ -60,7 +60,6 @@ class Diaria {
     private $msgErros = null;
     
     private $usuarioSessao = null;
-
     
     function getUsuarioPedido() {
         return $this->usuarioPedido;
@@ -337,7 +336,7 @@ class Diaria {
         return $stEstagios;
     }
     
-    function retornaSituacaoDiaria(int $st_estagio = 0, int $id_pedido = 0, int $ano_pedido = 0){
+    function retornaSituacaoDiaria(int $st_estagio = 0, int $nr_pedido = 0, int $ano_pedido = 0){
         $retorno = "";
         try {
             switch ($st_estagio) {
@@ -354,7 +353,7 @@ class Diaria {
                     $retorno = '<span class="label label-primary">Aguardando pedido de necessidade</span>';
                     break;
                 case 5:
-                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$id_pedido .'/'.$ano_pedido.'</span>';
+                    $retorno = '<span class="label label-primary">Vinculado ao pedido de necessidade nº '.$nr_pedido .'/'.$ano_pedido.'</span>';
                     break;
                 case 6:
                     $retorno = '<span class="label label-danger">Pedido de necessidade cancelado</span>';
@@ -733,7 +732,7 @@ class Diaria {
                                 <div class="form-group">
                                     <label class="control-label col-sm-3" for="central_solicitante">Central de Demanda do Solicitante:</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="central_solicitante" value="'.$daoDiaDiaria->getMsgRetorno()[0]['central_demanda'].'e" disabled>
+                                        <input type="text" class="form-control" name="central_solicitante" value="'.$daoDiaDiaria->getMsgRetorno()[0]['central_demanda'].'" disabled>
                                     </div>
                                 </div>
                             </form>
@@ -878,7 +877,7 @@ class Diaria {
             if ($daoDiaDiaria->getSucesso()) {
                 foreach ($daoDiaDiaria->getMsgRetorno() as $linha) {
                     $estagio = $linha['st_estagio'];
-                    $pedido = is_null($linha['id_pedido']) ? 0 : $linha['id_pedido'];
+                    $pedido = is_null($linha['nr_pedido']) ? 0 : $linha['nr_pedido'];
                     $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
                     //Pega a data atual e a data final do último itinerario ,para verificação posterior do cadastro do relatório de viagem
@@ -1617,12 +1616,35 @@ class Diaria {
             $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
             $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
             $daoDiaDiariaDestino->selectDestinosResumo($pdo);
+
+            $retorno = $daoDiaDiariaDestino->getMsgRetorno();
             
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function retornaDatasItinerarios(PDO $pdo = null){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
+            $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
+            
+            $daoDiaDiariaDestino->selectDestinosDatas($pdo);
+            $retorno = "";
             if ($daoDiaDiariaDestino->getSucesso()) {
-                $retorno = $daoDiaDiariaDestino->getMsgRetorno();
+                foreach ($daoDiaDiariaDestino->getMsgRetorno() as $linha) {
+                    $retorno .= "De: ".$linha['dt_ini'].", às ".$linha['hr_ini']." até ".$linha['dt_fim'].", às ".$linha['hr_fim'] . "<br>";
+                }
+
             }
             
             return $retorno;
+            
         } catch (Exception $exc) {
             $retorno = "";
         }
@@ -1836,7 +1858,7 @@ class Diaria {
     public function desvinculaPedidoDiaria(PDO $pdo = null) {
         $retorno = "";
         try {
-            $observacao = 'Cancelado pedido de necessidade nº '. $this->getIdPedido(). ' vinculado a esta diária.';
+            
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
             $daoDiaDiaria->setIdPedido($this->getIdPedido());
@@ -1849,6 +1871,17 @@ class Diaria {
 
             //Se não der erro na seleção da diaria, atribui à variável
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
+            
+            //Busca o número do pedido de necessidade para registrar no histórico
+            $daoDiaDiaria->selectNrPedido($pdo);
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                return $daoDiaDiaria->getMsgRetorno();
+            }
+            
+//            $observacao = 'Cancelado pedido de necessidade nº '. $this->getIdPedido(). ' vinculado a esta diária.';
+            $observacao = 'Cancelado pedido de necessidade nº '. $daoDiaDiaria->getMsgRetorno()['nr_pedido']. ' vinculado a esta diária.';
+            
             //Atualiza a diária com o nº do pedido
             $daoDiaDiaria->desvinculaDiariaPedido($pdo);
             
@@ -1876,7 +1909,7 @@ class Diaria {
     public function vinculaPedidoDiaria(PDO $pdo = null){
         $retorno = "";
         try {
-            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'/'.$this->getAnoPedido().'.' ;
+
             $daoDiaDiaria = new DaoDiaDiaria();
             $daoDiaDiaria->setIdDiaria($this->getIdDiaria());
             $daoDiaDiaria->setIdPedido($this->getIdPedido());
@@ -1889,6 +1922,17 @@ class Diaria {
 
             //Se não der erro na seleção da diaria, atribui à variável
             $reg_antigo = $daoDiaDiaria->getMsgRetorno();
+            
+            //Busca o número do pedido de necessidade para registrar no histórico
+            $daoDiaDiaria->selectNrPedido($pdo);
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                return $daoDiaDiaria->getMsgRetorno();
+            }
+            
+//            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$this->getIdPedido().'/'.$this->getAnoPedido().'.' ;
+            $observacao  = 'Diária vinculada ao Pedido de necessidade nº '.$daoDiaDiaria->getMsgRetorno()['nr_pedido'].'/'.$this->getAnoPedido().'.' ;
+            
             //Atualiza a diária com o nº do pedido
             $daoDiaDiaria->vinculaDiariaPedido($pdo);
             

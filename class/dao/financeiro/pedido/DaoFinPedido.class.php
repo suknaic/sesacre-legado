@@ -425,15 +425,15 @@ class DaoFinPedido extends FinPedidoTb {
             if (!empty($pdo)) {
                 $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                         programa.cd_programa_trabalho, programa.ds_programa_trabalho,
-                        despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
+                        despesa.cd_despesa, despesa.ds_despesa,
                         p.vl_pedido
                         from fin_pedido as p
                         inner join fin_fonte as f
                         on f.id_fonte = p.id_fonte
                         inner join view_programa_trabalho as programa
                         on programa.id_programa_trabalho = p.id_programa_trabalho
-                        inner join view_despesa_elemento as despesa
-                        on despesa.id_despesa_elemento = p.id_despesa_elemento
+                        inner join view_despesa as despesa
+                        on despesa.id_despesa = p.id_despesa
                         where p.nr_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_INT);
@@ -559,6 +559,112 @@ class DaoFinPedido extends FinPedidoTb {
                 }
             }
         } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaQuantidadeTipoSolicitacao(PDO $pdo = null){
+        try{
+            
+            if(!empty($pdo)){
+                $sql = "SELECT P.id_tipo_solicitacao, count(P.id_pedido) AS quantidade"
+                        . " , TS.nm_tipo_solicitacao"
+                        . " FROM fin_pedido P"
+                        . " INNER JOIN fin_tipo_solicitacao TS ON TS.id_tipo_solicitacao = P.id_tipo_solicitacao"
+                        . " WHERE P.st_pedido <> '0' AND P.st_pedido IN ('11','12','13','14','15','16')"
+                        . " GROUP BY P.id_tipo_solicitacao, TS.id_tipo_solicitacao";
+                $stmt = $pdo->prepare($sql);                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "";
+                }                                                                      
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem Conexão";
+            }                        
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaSituacaoPorSolicitacao(PDO $pdo = null){
+        try{
+            
+            if(!empty($pdo)){
+                $sql = "SELECT P.st_pedido, P.id_pedido, ordem.sit_protocolo, ordem.ordens "
+                        . " , P.st_pedido as status"
+                        . " FROM fin_pedido P"
+                        . " LEFT JOIN
+                               (
+                                  SELECT
+                                     fo.id_pedido,
+                                     array_agg(fo.id_ordem) as ordens,
+                                     string_agg(trim(fpro.st_protocolo), '') as sit_protocolo
+                                  FROM
+                                     fin_ordem as fo 
+				     left join
+				        fin_protocolo as fpro
+				        on fo.id_ordem = fpro.id_ordem
+                                  GROUP BY
+                                     fo.id_pedido 
+                               )
+                               AS ordem 
+                               ON ordem.id_pedido = P.id_pedido"
+                        . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao"
+                        . " AND P.st_pedido IN ('11','12','13','14','15','16')"
+                        . "";
+                $stmt = $pdo->prepare($sql);  
+                $stmt->bindValue(":id_tipo_solicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "";
+                }                                                                      
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem Conexão";
+            }                        
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaQuantidadeLotacaoPorSolicitacaoSituacao(PDO $pdo = null){
+        try{
+            
+            if(!empty($pdo)){
+                $sql = "SELECT P.id_lotacao, count(P.id_pedido) AS quantidade, L.nm_lotacao"
+                        . " FROM fin_pedido P"
+                        . " INNER JOIN ses_lotacao L ON L.id_lotacao = P.id_lotacao"
+                        . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao"
+                        . " AND P.st_pedido = :st_pedido"
+                        . " GROUP BY P.id_lotacao, L.id_lotacao";
+                $stmt = $pdo->prepare($sql);  
+                $stmt->bindValue(":id_tipo_solicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":st_pedido", $this->getStPedido(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "";
+                }                                                                      
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem Conexão";
+            }                        
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }

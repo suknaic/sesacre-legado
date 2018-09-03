@@ -90,6 +90,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
+                $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {

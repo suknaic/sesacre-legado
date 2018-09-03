@@ -3,6 +3,17 @@ $(document).ready(function () {
     //*********************************************************************
     func = new Funcoes();
     // var tabela = $('#tabela').DataTable();
+    
+    
+    $('body').on('click', '#grafico_pedido', function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else { 
+            e.preventDefault();                        
+            location.href = "/pages/financeiro/necessidade_central/relatorios/tipo_administracao/";
+            
+        }
+    });
 
     function aniversario() {
         $.ajax({
