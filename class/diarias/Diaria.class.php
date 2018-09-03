@@ -1616,12 +1616,35 @@ class Diaria {
             $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
             $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
             $daoDiaDiariaDestino->selectDestinosResumo($pdo);
+
+            $retorno = $daoDiaDiariaDestino->getMsgRetorno();
             
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+    
+    function retornaDatasItinerarios(PDO $pdo = null){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoDiaDiariaDestino = new DaoDiaDiariaDestino();
+            $daoDiaDiariaDestino->setIdDiaria($this->getIdDiaria());
+            
+            $daoDiaDiariaDestino->selectDestinosDatas($pdo);
+            $retorno = "";
             if ($daoDiaDiariaDestino->getSucesso()) {
-                $retorno = $daoDiaDiariaDestino->getMsgRetorno();
+                foreach ($daoDiaDiariaDestino->getMsgRetorno() as $linha) {
+                    $retorno .= "De: ".$linha['dt_ini'].", às ".$linha['hr_ini']." até ".$linha['dt_fim'].", às ".$linha['hr_fim'] . "<br>";
+                }
+
             }
             
             return $retorno;
+            
         } catch (Exception $exc) {
             $retorno = "";
         }
