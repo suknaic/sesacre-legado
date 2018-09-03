@@ -9,11 +9,21 @@ $(document).ready(function () {
         width: '100%'
     });
     
-    $('#data_liquidacao').mask("99/99/9999");
+    $('#dt_liquidacao').mask("99/99/9999");
 
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
+    });
+    
+    //Masca para valor
+    $("body").on("focus", "#vl_liquidacao", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
     });
 
     //função para pesquisa licitacao do gcon
@@ -120,20 +130,138 @@ $(document).ready(function () {
     });
     
     $('body').on('click','.addDocumento', function(e){
-       var documento = $("#selectDocumentoFiscal option:selected").data('objeto');
-       var linhaTabela = `<tr>
-                            <td class="text-center">${documento.nr_documento_fiscal}</td>
-                            <td class="text-center">${documento.nm_tipo_documento}</td>
-                            <td class="text-center">${documento.competencia}</td>
-                            <td class="text-center">${documento.dt_emissao}</td>
-                            <td class="text-center">${documento.dt_atesto}</td>
-                            <td class="text-center">${documento.vl_documento}</td>
-                            <td class="text-center">${documento.vl_documento}</td>
-                            <td class="text-center">${documento.nm_situacao}</td>
-                            <td class="text-center"></td>
-                         </tr>`;
         
-        $('#tabelaDocumentos tbody').append(linhaTabela);
+        var documento = $("#selectDocumentoFiscal option:selected").data('objeto');
+        
+        //Se não selecionou nenhum documento fiscal, retornar
+        if (documento == undefined) {
+            return false;
+        }
+        
+        var erro = false;
+        
+        //percorre os documentos fiscais já inseridos ,caso já tenha sido inserido retorna erro e não continua
+        $("tr.documentoFiscal").each(function() {
+            if (documento.id_documento_fiscal == $(this).data('id')) {
+                func.modalAlert("Documento fiscal já adicionado");
+                erro = true;
+            }
+        });
+        
+        if (!erro) {
+            $("#vl_liquidacao").prop("disabled",true);
+            
+            
+            var vl_liquidacao;
+            
+            if ($("#vl_liquidacao").val() == "") {
+                vl_liquidacao = 0;
+            } else {
+                vl_liquidacao = $("#vl_liquidacao").val();
+            }
+          
+            
+            var valor_total = (vl_liquidacao + func.converteValorIng(documento.vl_documento));
+            
+            $("#vl_liquidacao").val(valor_total);
+            var linhaTabela = `<tr data-id=${documento.id_documento_fiscal} class="documentoFiscal">
+                             <td class="text-center">${documento.nr_documento_fiscal}</td>
+                             <td class="text-center">${documento.nm_tipo_documento}</td>
+                             <td class="text-center">${documento.competencia}</td>
+                             <td class="text-center">${documento.dt_emissao}</td>
+                             <td class="text-center">${documento.dt_atesto}</td>
+                             <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">${documento.nm_situacao}</td>
+                             <td class="text-center"><button type="button" class="text-danger" title="Remover Documento Fiscal"><i class='fa fa-trash' aria-hidden='true'></i></button></td>
+                          </tr>`;
+
+            $('#tabelaDocumentos tbody').append(linhaTabela);
+        }
+        
+    });
+    
+    
+    $("body").on("click", ".btn-salvar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            
+            var documentos = [];
+
+            $(".documentoFiscal").each(function () {
+                documentos.push($(this).data("id"));
+            });
+
+            var dados = {
+                "idEmpenho": $("#id_empenho").val(),
+                "idLotacao": $("#idLotacao").val(),
+                "idDocTipoLotacao": $("#idDocTipoLotacao").val(),
+                "nrLiquidacao": $("#nr_liquidacao").val(),
+                "vlLiquidacao": $("#vl_liquidacao").val(),
+                "dtLiquidacao": $("#dt_liquidacao").val(),
+                "obsLiquidacao": $("#desc_liquidacao").val(),
+                "docsLiquidacao": documentos
+            }
+            
+            console.log(dados);
+
+//            $.ajax({
+//                "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+//                "method": "POST",
+//                "dataType": "html",
+//                "data": {
+//                    "acao": "cadastrarDocumentoFiscal",
+//                    "dados": dados,
+//                    "entrega": entregas
+//                },
+//                "success": function (response) {
+//                    console.log(response);
+//                    $this.prop("disabled", false);
+//                    if (response.trim() == "SessaoExpirada") {
+//                        func.modalAlert(func.msgSemPermissao);
+//                        return false;
+//                    }
+//
+//                    try {
+//                        response = JSON.parse(response);
+//                    } catch (e) {
+//                        func.modalAlert(func.msgErroPadrao);
+//                        console.log("Parse JSON");
+//                        return false;
+//                    }
+//
+//                    if (response.tipoMsg === "Erro") {
+//                        if (response.tipoExibicao === "console") {
+//                            console.log('Console Mensagem');
+//                            func.modalAlert(func.msgErroPadrao);
+//                            return false;
+//                        } else if (response.tipoExibicao === "alert") {
+//                            func.modalAlert(response.msg);
+//                            return false;
+//                        }
+//                    } else if (response.tipoMsg === "ok") {
+//                        func.modalAlert(response.msg, 'success');
+//                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+//                            location.reload();
+//                        });
+//                        return false;
+//                    } else {
+//                        console.log('Ultimo else');
+//                        func.modalAlert(func.msgErroPadrao);
+//                        return false;
+//                    }
+//                },
+//                "error": function (response) {
+//                    $this.prop("disabled", false);
+//                    func.modalAlert(func.msgErroPadrao);
+//                    return false;
+//                }
+//            });
+        }
     });
 
 });

@@ -198,7 +198,7 @@ require_once "index.load.php";
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
+                                                        <h4 class="panel-title">Dados da Liquidação</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
@@ -206,7 +206,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_documento" id="nr_documento" />
+                                                                    <input class="form-control" type="text" name="nr_liquidacao" id="nr_liquidacao" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -217,7 +217,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="valor_liquidacao" id="valor_liquidacao" />
+                                                                    <input type="text" class="form-control" name="vl_liquidacao" id="vl_liquidacao" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -228,7 +228,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="data_liquidacao" id="data_liquidacao" />
+                                                                    <input class="form-control" type="text" name="dt_liquidacao" id="dt_liquidacao" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
