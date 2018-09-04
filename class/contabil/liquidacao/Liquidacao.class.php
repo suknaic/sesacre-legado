@@ -16,6 +16,8 @@ class Liquidacao {
     
     private $documentos = null;
     
+    
+    
     function getNrLiquidacao() {
         return $this->nrLiquidacao;
     }
@@ -101,8 +103,8 @@ class Liquidacao {
         return $this;
     }
 
-    function setDocumentos(FinDocumentoFiscal $documento) {
-        $this->documentos[] = $documento;
+    function setDocumentos($documento) {
+        $this->documentos = $documento;
     }
 
     
@@ -130,6 +132,41 @@ class Liquidacao {
         }
     }
 
+    
+    public function salvarLiquidacao(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
+                             ->setIdLiquidacaoSituacao(1)
+                             ->setIdLotacao($this->getIdLotacao())
+                             ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
+                             ->setNrLiquidacao($this->getNrLiquidacao())
+                             ->setDtLiquidacao($this->getDtLiquidacao())
+                             ->setVlLiquidacao($this->getVlLiquidacao())
+                             ->setDsLiquidacao($this->getDsLiquidacao());
+            
+//            $daoConLiquidacao->insert($pdo);
+            
+            //Percorre os documentos vinculados a liquidação
+            if ($this->getDocumentos()) {
+                
+//                $daoConLiquidacaoDoc = new DaoConLiquidacaoDoc();
+                foreach ($this->getDocumentos() as $indice => $documento) {
+                    echo '<pre>';
+//                    print_r($documento[$indice]);
+                    echo '</pre>';
+                    return;
+                }
+            }
+            
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
     
 }
 

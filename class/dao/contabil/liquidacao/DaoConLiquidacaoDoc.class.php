@@ -107,5 +107,19 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
         }
     }  
     
+    function retornaDocumentosFiscaisDiferentesDeALiquidar($pdo){
+        $this->sucesso = false;
+        $sql = "select * from fin_documento_fiscal
+                where id_documento_fiscal in (:documentos)
+                and id_documento_situacao <> 2 --diferente de 'A Liquidar'";
+        try {
+            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+            
+    }
+    
                         
 }

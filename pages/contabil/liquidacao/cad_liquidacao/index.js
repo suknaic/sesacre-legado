@@ -152,16 +152,14 @@ $(document).ready(function () {
             $("#vl_liquidacao").prop("disabled",true);
             
             
-            var vl_liquidacao;
+            var vl_liquidacao = "0";
             
-            if ($("#vl_liquidacao").val() == "") {
-                vl_liquidacao = 0;
-            } else {
+            if (!($("#vl_liquidacao").val() == "")) {
                 vl_liquidacao = $("#vl_liquidacao").val();
             }
           
             
-            var valor_total = (vl_liquidacao + func.converteValorIng(documento.vl_documento));
+            var valor_total = (func.converteValorIngFloat(vl_liquidacao) + func.converteValorIngFloat(documento.vl_documento)).toFixed(4);
             
             $("#vl_liquidacao").val(valor_total);
             var linhaTabela = `<tr data-id=${documento.id_documento_fiscal} class="documentoFiscal">
@@ -207,60 +205,58 @@ $(document).ready(function () {
                 "docsLiquidacao": documentos
             }
             
-            console.log(dados);
 
-//            $.ajax({
-//                "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
-//                "method": "POST",
-//                "dataType": "html",
-//                "data": {
-//                    "acao": "cadastrarDocumentoFiscal",
-//                    "dados": dados,
-//                    "entrega": entregas
-//                },
-//                "success": function (response) {
-//                    console.log(response);
-//                    $this.prop("disabled", false);
-//                    if (response.trim() == "SessaoExpirada") {
-//                        func.modalAlert(func.msgSemPermissao);
-//                        return false;
-//                    }
-//
-//                    try {
-//                        response = JSON.parse(response);
-//                    } catch (e) {
-//                        func.modalAlert(func.msgErroPadrao);
-//                        console.log("Parse JSON");
-//                        return false;
-//                    }
-//
-//                    if (response.tipoMsg === "Erro") {
-//                        if (response.tipoExibicao === "console") {
-//                            console.log('Console Mensagem');
-//                            func.modalAlert(func.msgErroPadrao);
-//                            return false;
-//                        } else if (response.tipoExibicao === "alert") {
-//                            func.modalAlert(response.msg);
-//                            return false;
-//                        }
-//                    } else if (response.tipoMsg === "ok") {
-//                        func.modalAlert(response.msg, 'success');
-//                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-//                            location.reload();
-//                        });
-//                        return false;
-//                    } else {
-//                        console.log('Ultimo else');
-//                        func.modalAlert(func.msgErroPadrao);
-//                        return false;
-//                    }
-//                },
-//                "error": function (response) {
-//                    $this.prop("disabled", false);
-//                    func.modalAlert(func.msgErroPadrao);
-//                    return false;
-//                }
-//            });
+            $.ajax({
+                "url": "request.php",
+                "method": "POST",
+                "dataType": "html",
+                "data": {
+                    "acao": "cadastrarLiquidacao",
+                    "dados": dados
+                },
+                "success": function (response) {
+                    console.log(response);
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            location.reload();
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
         }
     });
 

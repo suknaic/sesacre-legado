@@ -84,6 +84,21 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'cadastrarLiquidacao':
+        try {
+            $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setDocumentos($dados['docsLiquidacao']);
+            echo $liquidacao->salvarLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 
 }
 
