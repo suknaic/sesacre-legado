@@ -12,11 +12,11 @@ class LiquidacaoHistorico {
     private $dhLiquidacaoHistorico = null;
     private $dsLiquidacao = null;
     
-    private $mesagens = null;
+    private $mensagens = null;
     private $sucesso = null;
     
-    function getMesagens() {
-        return $this->mesagens;
+    function getMensagens() {
+        return $this->mensagens;
     }
 
     function getSucesso() {
@@ -100,22 +100,22 @@ class LiquidacaoHistorico {
                 
                 $daoConLiquidacaoHistorico->insert($pdo);
             
-                if ($daoConLiquidacaoHistorico->getSucesso()) {
+                if ($daoConLiquidacaoHistorico->Sucesso()) {
                     $idLiquidacaoHistorico = $pdo->lastInsertId('con_liquidacao_historico_id_liquidacao_historico_seq');
                     if (!Log::SalvaLogI('con_liquidacao_historico', $idLiquidacaoHistorico, $pdo)) {
-                        $this->mesagens = "Erro ao salvar o Histórico da Liquidação no LOG. Operação Cadastro.";
+                        $this->mensagens = "Erro ao salvar o Histórico da Liquidação no LOG. Operação Cadastro.";
                     }
                     $this->sucesso = true;
                 } else {
-                    $this->mesagens = $daoConLiquidacaoHistorico->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoHistorico->getMsgRetorno();
                 }
                 
             } else {
-                $this->mesagens = "Sem conexão com o banco de dados";
+                $this->mensagens = "Sem conexão com o banco de dados";
             }
         } catch (Exception $exc) {
             $this->sucesso = false;
-            $this->mesagens = $exc->getMessage();
+            $this->mensagens = $exc->getMessage();
         }
     }
 

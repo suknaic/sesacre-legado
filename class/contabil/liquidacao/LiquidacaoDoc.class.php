@@ -7,11 +7,11 @@ class LiquidacaoDoc {
     private $idLiquidacao = null;
     private $idDocumentoFiscal = null;
     
-    private $mesagens = null;
+    private $mensagens = null;
     private $sucesso = null;
     
-    function getMesagens() {
-        return $this->mesagens;
+    function getMensagens() {
+        return $this->mensagens;
     }
 
     function getSucesso() {
@@ -57,23 +57,23 @@ class LiquidacaoDoc {
                 
                 $daoConLiquidacaoDoc->insert($pdo);
             
-                if ($daoConLiquidacaoDoc->getSucesso()) {
+                if ($daoConLiquidacaoDoc->Sucesso()) {
                     $idLiquidacaoDoc = $pdo->lastInsertId('con_liquidacao_doc_id_liquidacao_doc_seq');
                     if (!Log::SalvaLogI('con_liquidacao_doc', $idLiquidacaoDoc, $pdo)) {
-                        $this->mesagens = "Erro ao salvar o Documento Fiscal da Liquidação no LOG. Operação Cadastro.";
+                        $this->mensagens = "Erro ao salvar o Documento Fiscal da Liquidação no LOG. Operação Cadastro.";
                     }
                     $this->sucesso = true;
                 } else {
-                    $this->mesagens = $daoConLiquidacaoDoc->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
             } else {
-                $this->mesagens = "Sem conexão com o banco de dados";
+                $this->mensagens = "Sem conexão com o banco de dados";
             }
  
         } catch (Exception $exc) {
             //Se der algum erro, registra o erro no objeto
             $this->sucesso = false;
-            $this->mesagens = $exc->getMessage();
+            $this->mensagens = $exc->getMessage();
         }
     }
     
@@ -86,7 +86,7 @@ class LiquidacaoDoc {
                 $daoConLiquidacaoDoc->setIdLiquidacaoDoc($this->getIdLiquidacaoDoc());
                 
                 if (!Log::SalvaLogD('con_liquidacao_doc', $daoConLiquidacaoDoc->getIdLiquidacaoDoc(), $pdo)) {
-                    $this->mesagens = "Erro ao salvar o Documento Fiscal da Liquidação no LOG. . Operação Exclusão.";
+                    $this->mensagens = "Erro ao salvar o Documento Fiscal da Liquidação no LOG. . Operação Exclusão.";
                 }
                 
                 $daoConLiquidacaoDoc->delete($pdo);
@@ -94,16 +94,40 @@ class LiquidacaoDoc {
                 if ($daoConLiquidacaoDoc->Sucesso()) {
                     $this->sucesso = true;
                 } else {
-                    $this->mesagens = $daoConLiquidacaoDoc->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
                 
             } else {
-                $this->mesagens = "Sem conexão com o banco de dados";
+                $this->mensagens = "Sem conexão com o banco de dados";
             }
         } catch (Exception $exc) {
             //Se der algum erro, registra o erro no objeto
             $this->sucesso = false;
-            $this->mesagens = $exc->getMessage();
+            $this->mensagens = $exc->getMessage();
+        }
+    }
+    
+    function retornaDocumentosPorLiquidacao(PDO $pdo = null){
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $daoConLiquidacaoDoc = new DaoConLiquidacaoDoc();
+                $daoConLiquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
+                $daoConLiquidacaoDoc->retornaPorLiquidacao($pdo);
+                
+                if ($daoConLiquidacaoDoc->Sucesso()) {
+                    $this->sucesso = true;
+                    return $daoConLiquidacaoDoc->getMsgRetorno();
+                } else {
+                     $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
+                }
+            } else {
+                $this->mensagens = "Sem conexão com o banco de dados";
+            }
+        } catch (Exception $exc) {
+            //Se der algum erro, registra o erro no objeto
+            $this->sucesso = false;
+            $this->mensagens = $exc->getMessage();
         }
     }
 }

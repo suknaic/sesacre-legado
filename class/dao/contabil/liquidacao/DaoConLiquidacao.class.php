@@ -19,13 +19,14 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
                       
             $result = $pdo->prepare("INSERT INTO con_liquidacao (nr_liquidacao, id_empenho"
-                    . " , id_liquidacao_situacao, id_lotacao, dt_liquidacao, vl_liquidacao"
+                    . " , id_liquidacao_situacao, id_doc_tipo_lotacao, id_lotacao, dt_liquidacao, vl_liquidacao"
                     . " , ds_liquidacao)"
-                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao"
+                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao, :id_doc_tipo_lotacao"
                     . " , :id_lotacao, :dt_liquidacao, :vl_liquidacao, :ds_liquidacao);");                                        
             $result->bindValue(":nr_liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
             $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
             $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $result->bindValue(":dt_liquidacao", $this->getDtLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":vl_liquidacao", $this->getVlLiquidacao(), PDO::PARAM_STR);
@@ -41,12 +42,12 @@ class DaoConLiquidacao extends ConLiquidacao {
     function update($pdo) {
         try {
             $result = $pdo->prepare("UPDATE con_liquidacao SET nr_liquidacao = :nr_liquidacao"
-                    . " , id_lotacao = :id_lotacao, dt_liquidacao = :dt_liquidacao, vl_liquidacao = :vl_liquidacao"
+                    . " , dt_liquidacao = :dt_liquidacao, vl_liquidacao = :vl_liquidacao"
                     . " , ds_liquidacao = :ds_liquidacao"
                     . " WHERE id_liquidacao = :id_liquidacao ");
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->bindValue(":nr_liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);                        
-            $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+//            $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $result->bindValue(":dt_liquidacao", $this->getDtLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":vl_liquidacao", $this->getVlLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":ds_liquidacao", !empty($this->getDsLiquidacao()) ? $this->getDsLiquidacao() : null, PDO::PARAM_STR);                       
