@@ -174,7 +174,7 @@ class DaoDiaRelatorioDestino extends DiaRelatorioDestino {
                  
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
-                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 }
             } else {
