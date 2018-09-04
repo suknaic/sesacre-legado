@@ -180,7 +180,7 @@ $html .="
             </div>
             
             <div class='esquerda'><b>Período do afastamento:</b></div>
-            De  ".$destino['dt_ini'].",  às  ".$destino['hr_ini']. " hs.  a  ".$destino['dt_fim'].",  às  ".$destino['hr_fim']."
+            ".$destino."
             <br/><br/>";
 
     if ($locomocao) {
