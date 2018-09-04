@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/liquidacao/DaoConL
 
 class Liquidacao {
 
+    private $idLiquidacao = null;
     private $nrLiquidacao = null;
     private $idEmpenho = null;
     private $idLiquidacaoSituacao = null;
@@ -16,7 +17,14 @@ class Liquidacao {
     
     private $documentos = null;
     
-    
+    function getIdLiquidacao() {
+        return $this->idLiquidacao;
+    }
+
+    function setIdLiquidacao($idLiquidacao) {
+        $this->idLiquidacao = $idLiquidacao;
+        return $this;
+    }
     
     function getNrLiquidacao() {
         return $this->nrLiquidacao;
@@ -149,24 +157,40 @@ class Liquidacao {
                              ->setVlLiquidacao($this->getVlLiquidacao())
                              ->setDsLiquidacao($this->getDsLiquidacao());
             
-//            $daoConLiquidacao->insert($pdo);
+            $daoConLiquidacao->insert($pdo);
             
-            //Percorre os documentos vinculados a liquidação
-            if ($this->getDocumentos()) {
-                
-//                $daoConLiquidacaoDoc = new DaoConLiquidacaoDoc();
-                foreach ($this->getDocumentos() as $indice => $documento) {
-                    echo '<pre>';
-//                    print_r($documento[$indice]);
-                    echo '</pre>';
-                    return;
+            if ($daoConLiquidacao->getSucesso()) {
+                $idLiquidacao = $pdo->lastInsertId('con_liquidacao_id_liquidacao_seq');
+                if (!Log::SalvaLogI('con_liquidacao', $idLiquidacao, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar a Liquidação no LOG. Operação Cadastro.");
                 }
+                $this->setIdLiquidacao($idLiquidacao);
+                
+                //percorre Documentos da Liquidação
+                if ($this->getDocumentos()) {
+                    
+                    //Objetos
+                    $liquidacaoDoc = new LiquidacaoDoc();
+                    
+                    $liquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
+                    
+                    foreach ($this->getDocumentos() as $indice => $documento) {
+                        $liquidacaoDoc->setIdDocumentoFiscal($documento[$indice]);
+                        $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
+                    }
+                }
+            } else {
+                return Metodos::retornoAjax("Erro", "alert", $daoConLiquidacao->getMsgRetorno());
             }
+           
             
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
     }
+    
+    
     
 }
 

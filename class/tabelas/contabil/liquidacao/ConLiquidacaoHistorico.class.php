@@ -9,6 +9,17 @@ class ConLiquidacaoHistorico {
     private $dh_liquidacao_historico = null;
     private $ds_liquidacao = null;
     
+    private $id_doc_tipo_lotacao = null;
+    
+    function getIdDocTipoLotacao() {
+        return $this->id_doc_tipo_lotacao;
+    }
+
+    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+        return $this;
+    }
+    
     /**
      * Get the value of Id Liquidacao Historico
      *
