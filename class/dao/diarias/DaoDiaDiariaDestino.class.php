@@ -45,9 +45,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
-            $this->sucesso = false;
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -86,9 +86,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
-            $this->sucesso = false;
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -103,8 +103,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -122,8 +123,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -177,8 +179,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -231,8 +234,9 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     
@@ -258,8 +262,34 @@ class DaoDiaDiariaDestino extends DiaDiariaDestino {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
-            echo $exc->getTraceAsString();
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
+        }
+    }
+    
+    function selectDestinosDatas(PDO $pdo = null){
+        try {
+            $sql = "select to_char(dh_fim,'dd/mm/yyyy') as dt_fim,
+                    to_char(dh_fim,'hh24:mi') as hr_fim,
+                    to_char(dh_inicio,'dd/mm/yyyy') as dt_ini,
+                    to_char(dh_inicio,'hh24:mi') as hr_ini,
+                    round((qt_diaria_destino * vl_diaria_destino),2) as soma_total 
+                    from dia_diaria_destino
+                    where id_diaria = :id_diaria
+                    order by dh_inicio";
+            $stmt = $pdo->prepare($sql);
+                
+            $stmt->bindValue(":id_diaria",$this->getIdDiaria(), PDO::PARAM_INT);
+
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) { 
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            }
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;
         }
     }
     

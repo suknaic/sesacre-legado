@@ -13,6 +13,7 @@ $session = new Session();
     $dados = $diaria->retornaDadosRelatorio();
     $destinos = $diaria->retornaTrsRelatorio();
     $resumo = $diaria->retornaInfoResumidaRelatorio();
+    $datasItinerarios = $diaria->retornaDatasItinerarios();
     
     $tpInicial = ' ';
     $tpProrrogacao = ' ';
@@ -167,7 +168,7 @@ $session = new Session();
                     <br/>
                     <div class='lateral'>
                        <b> Período provável do afastamento:</b><br/>
-                       De: ".$resumo['dt_ini'].", às ".$resumo['hr_ini']." até ".$resumo['dt_fim'].", às ".$resumo['hr_fim']."
+                       ".$datasItinerarios."
                     </div>
                     <table>
                         <tr>

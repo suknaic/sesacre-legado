@@ -74,12 +74,12 @@ class DaoDiaDiaria extends DiaDiaria {
                             . "ds_locais_executado = :ds_locais_executado , "
                             . "ds_obs = :ds_obs , "
                             . "dt_criacao = :dt_criacao , "
-                            . "id_pessoa_solicitante = :id_pessoa_solicitante, "
+//                            . "id_pessoa_solicitante = :id_pessoa_solicitante, "
 //                            . "fl_retorno = :fl_retorno, "
                             . "id_pedido = :id_pedido, "
                             . "id_diaria_pai = :id_diaria_pai, "
-                            . "nr_protocolo = :nr_protocolo, "
-                            . "id_central_solicitante = :id_central_solicitante "
+                            . "nr_protocolo = :nr_protocolo "
+//                            . "id_central_solicitante = :id_central_solicitante "
                         . " where id_diaria = :id_diaria";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_tipo", $this->getIdTipo(), PDO::PARAM_INT);
@@ -93,13 +93,13 @@ class DaoDiaDiaria extends DiaDiaria {
                 $stmt->bindValue(":ds_locais_executado", $this->getDsLocaisExecutado(),PDO::PARAM_STR);
                 $stmt->bindValue(":ds_obs", $this->getDsObs(),PDO::PARAM_STR);
                 $stmt->bindValue(":dt_criacao", $this->getDtCriacao(), PDO::PARAM_STR);
-                $stmt->bindValue(":id_pessoa_solicitante", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
+//                $stmt->bindValue(":id_pessoa_solicitante", $this->getIdPessoaSolicitante(), PDO::PARAM_INT);
 //                $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_diaria_pai", $this->getIdDiariaPai(), PDO::PARAM_INT);
                 $stmt->bindValue(":nr_protocolo", $this->getNrProtocolo(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_diaria", $this->getIdDiaria(), PDO::PARAM_INT);
-                $stmt->bindValue(":id_central_solicitante", $this->getIdCentralSolicitante(), PDO::PARAM_INT);
+//                $stmt->bindValue(":id_central_solicitante", $this->getIdCentralSolicitante(), PDO::PARAM_INT);
                 
                 $stmt->execute();
                 $this->sucesso = true;

@@ -457,7 +457,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="id_central_solicitante" class="form-control">
+                                                    <select id="id_central_solicitante" class="form-control" <?php echo $disabled;?>>
                                                         <?php
                                                             echo $selectCentralSolicitante;
                                                         ?>

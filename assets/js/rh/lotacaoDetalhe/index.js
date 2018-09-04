@@ -1,7 +1,7 @@
 //******************************************************************************************
 function listaCategoriaCombo() {
     $.ajax({
-        "url": "/model/rh/lotacao/request.php",
+        "url": "/model/rh/lotacaoDetalhe/request.php",
         "dataType": 'html',
         "data": {
             acao: "listaCategoriaOption"
@@ -19,7 +19,7 @@ listaCategoriaCombo();
 //******************************************************************************************
 function listaLotacaoCombo() {
     $.ajax({
-        "url": "/model/rh/lotacao/request.php",
+        "url": "/model/rh/lotacaoDetalhe/request.php",
         "dataType": 'html',
         "data": {
             acao: "listaLotacaoOption",
@@ -70,7 +70,7 @@ $(document).ready(function () {
             var categoria = $("#id_categoria").val();
             var lotacaoPai = $("#id_pai").val();
             $.ajax({
-                "url": "/model/rh/lotacao/request.php",
+                "url": "/model/rh/lotacaoDetalhe/request.php",
                 "dataType": 'html',
                 "method": "POST",
                 "data": {
@@ -80,7 +80,7 @@ $(document).ready(function () {
                     lotacaoPai: lotacaoPai
                 },
                 "success": function (response) {
-                    //console.log(response);
+                    console.log(response);
                     func.carregaTabelaPadrao('tabela', response, [7], true);
                 }
             });
@@ -122,7 +122,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/rh/lotacao/request.php",
+                        "url": "/model/rh/lotacaoDetalhe/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "removerLotacao",
