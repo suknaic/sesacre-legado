@@ -762,9 +762,14 @@ class Relatorio {
             $daoDiaRelatorioDestino = new DaoDiaRelatorioDestino();
             $daoDiaRelatorioDestino->setIdRelatorio($this->getIdRelatorio());
             $daoDiaRelatorioDestino->selectDestinosResumo($pdo);
+            $retorno = "";
             if ($daoDiaRelatorioDestino->getSucesso()) {
-                $retorno = $daoDiaRelatorioDestino->getMsgRetorno();
+                foreach ($daoDiaRelatorioDestino->getMsgRetorno() as $linha) {
+                    $retorno .= "De: ".$linha['dt_ini'].", às ".$linha['hr_ini']." até ".$linha['dt_fim'].", às ".$linha['hr_fim'] . "<br>";
+                }
+
             } 
+            
             return $retorno;
         } catch (Exception $exc) {
             $retorno = "";

@@ -1202,8 +1202,8 @@ class Diaria {
 
                 $daoDiaDiaria->setDtCriacao(Metodos::ConverteDataING($this->getDtCriacao()));
 
-                $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
-                $daoDiaDiaria->setIdCentralSolicitante($this->getIdCentralSolicitante());
+//                $daoDiaDiaria->setIdPessoaSolicitante($this->getIdPessoaSolicitante());
+//                $daoDiaDiaria->setIdCentralSolicitante($this->getIdCentralSolicitante());
                 $daoDiaDiaria->setIdPedido($this->getIdPedido());
 
                 if($this->getIdDiariaPai()){

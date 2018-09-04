@@ -105,7 +105,7 @@ class DaoDiaRelatorio extends DiaRelatorio {
     public function infoProposto(PDO $pdo = null){
         try {
             if (!empty($pdo)) {
-                $sql = "select (select nm_pessoa from ses_pessoa p where p.id_pessoa = dia.id_pessoa_proposto) as nm_proposto, 
+                $sql = "select rel.id_relatorio, (select nm_pessoa from ses_pessoa p where p.id_pessoa = dia.id_pessoa_proposto) as nm_proposto, 
                             (select nm_funcao from ses_funcao f where f.id_funcao = dia.id_funcao_proposto) as fn_proposto, 
                             (select nm_lotacao from ses_lotacao l where l.id_lotacao = dia.id_lotacao_proposto) as lt_proposto,
                             (SELECT c.nr_matricula
@@ -119,7 +119,8 @@ class DaoDiaRelatorio extends DiaRelatorio {
                             rel.ds_locais_executado,
                             dia.nr_protocolo
                      from dia_relatorio rel, dia_diaria dia 
-                     where dia.id_relatorio = :id_relatorio";
+                     where dia.id_relatorio = rel.id_relatorio
+                     and rel.id_relatorio = :id_relatorio";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_relatorio",$this->getIdRelatorio(), PDO::PARAM_INT);
                 $stmt->execute();
