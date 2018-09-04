@@ -186,21 +186,6 @@ class Pedido {
         $this->ano = $ano;
     }
 
-    public function getSituacaoPedidos(): array {
-        $arr_situacao = array(
-            '0' => 'Cancelado',
-            '9' => 'Aguardando Finalização da Pré-Ordem',
-            '10' => 'Aguardando Autorização do Gerente de Ação',
-            '11' => 'Aguardando Autorização do Gerente da Central',
-            '12' => 'Aguardando Autorização do Gerente de Planejamento',
-            '13' => 'Aguardando Autorização do Gerente Financeiro',
-            '14' => 'Aguardando Autorização do Ordenador de Despesa',
-            '15' => 'Empenho',
-            '16' => 'Ordem'
-        );
-        return $arr_situacao;
-    }
-
     private function getPedidoNecessidadeStatus(): array {
         $arr_status = array(
             '9' => 'Aguardando Finaliza a Pre-Ordem',
@@ -211,9 +196,14 @@ class Pedido {
             '14' => 'Aguardando Autorização Ordenador de Despesa',
             '15' => 'Aguardando Empenho',
             '16' => 'Aguardando Ordem',
-            '17' => 'Aguardando Entrega',
-            '18' => 'Aguardando Pagamento',
-            '19' => 'Aguardando Finalização da Entrega'
+            '17' => 'Aguardando Execuçao',
+            '18' => 'Aguardando Finalizar Execução',
+            '19' => 'Aguardando Entrega',
+            '20' => 'Aguardando Finalizar Entrega',
+            '21' => 'Aguardando Liquidação',
+            '22' => 'Aguardando Pagamento',
+            '23' => 'Tramitação Finalizada',
+
         );
         return $arr_status;
     }
@@ -585,10 +575,10 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setNrPedido($this->nrPedido);
             $daoFinPedido->retornaPedidoOrdemGdof($pdo);
-            $retorno = '';            
-             //Carrega a status os possíveis
-            $opcoesStatus = $this->getPedidoNecessidadeStatus();                        
-            
+            $retorno = '';
+            //Carrega a status os possíveis
+            $opcoesStatus = $this->getPedidoNecessidadeStatus();
+
             if ($daoFinPedido->Sucesso()) {
                 foreach ($daoFinPedido->getMsgRetorno() as $linha) {
                     $statusPedido = $this->retornaStatusPedido($linha, $opcoesStatus);
@@ -660,7 +650,7 @@ class Pedido {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>'.STR_FUNCIONAL_PROGRAMATICA.':</b></div>
+                                                        <div class="col-sm-2"><b>' . STR_FUNCIONAL_PROGRAMATICA . ':</b></div>
                                                         <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
                                                     </div>
                                                     
@@ -729,9 +719,9 @@ class Pedido {
             return;
         }
     }
-    
+
     private function retornaNovoStatusPedido(array $dados) {
-        try {            
+        try {
             $status = $dados['status'];
             if (!empty($dados['ordens'])) { //Se existir ordens, o status é 'Aguardando entrega'
                 $status = "17";
@@ -762,9 +752,9 @@ class Pedido {
             $daoFinPedido->setIdTipoGasto($this->idTipoGasto);
             $daoFinPedido->setIdLotacao($this->idLotacao);
             $daoFinPedido->retornaValoresPedido($pdo);
-            if($daoFinPedido->Sucesso()){
+            if ($daoFinPedido->Sucesso()) {
                 return $daoFinPedido->getMsgRetorno();
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception $ex) {
@@ -773,7 +763,7 @@ class Pedido {
             return;
         }
     }
-    
+
     public function alterarJustificativa() {
         try {
             if (empty($this->dsPedido) || empty($this->idPedido)) {
@@ -786,55 +776,55 @@ class Pedido {
             //chamando a funcao que retorna o numero do pedido de necessidade
             $daoFinPedido->setIdPedido($this->idPedido);
             $daoFinPedido->setDsPedido($this->dsPedido);
-           
+
             $daoFinPedido->retornaDadosPedido($pdo);
-            if(!$daoFinPedido->Sucesso()){
+            if (!$daoFinPedido->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
             }
             $busca = $daoFinPedido->getMsgRetorno();
-            
-            
+
+
             //Edita o Registro no banco
             $daoFinPedido->mudarJustificativa($pdo);
-            if(!$daoFinPedido->Sucesso()){
+            if (!$daoFinPedido->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $daoFinPedido->getMsgRetorno());
             }
-             
-            
-            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)){
+
+
+            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
 
-            $pdo->commit();                   
+            $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Edição Realizada com Sucesso.");
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
+
     public function listaTipoSolicitacaoQuantidadeJSON() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->retornaQuantidadeTipoSolicitacao($pdo);
-           
+
             $arrayQuantidade = array();
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
                 $arrayQuantidade[$value['id_tipo_solicitacao']] = array(
                     "name" => $value['nm_tipo_solicitacao'],
-                    "y" => $value['quantidade']                    
+                    "y" => $value['quantidade']
                 );
-            }           
-            return json_encode($arrayQuantidade);            
+            }
+            return json_encode($arrayQuantidade);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
+
     public function listaSituacaoQuantidadePorSolicitacaoJSON() {
         try {
             $conexao = new Conexao();
@@ -842,46 +832,51 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdTipoSolicitacao($this->idTipoSolicitacao);
             $daoFinPedido->retornaSituacaoPorSolicitacao($pdo);
-                                   
-            $opcoesStatus = $this->getPedidoNecessidadeStatus();    
-            
+
+            $opcoesStatus = $this->getPedidoNecessidadeStatus();
+
             $result = $daoFinPedido->getMsgRetorno();
-            
+
             $arrayQuantidade = array();
-            foreach ($result as $key => $value){               
+            foreach ($result as $key => $value) {
                 $statusPedido = $this->retornaStatusPedido($value, $opcoesStatus);
-                $statusNovo = $this->retornaNovoStatusPedido($value);                
-                if(array_key_exists($statusNovo, $arrayQuantidade)){
+                $statusNovo = $this->retornaNovoStatusPedido($value);
+                if (array_key_exists($statusNovo, $arrayQuantidade)) {
                     $arrayQuantidade[$statusNovo]['y'] = $arrayQuantidade[$statusNovo]['y'] + 1;
-                }else{
+                } else {
                     $arrayQuantidade[$statusNovo] = array(
                         "name" => $statusPedido,
                         "y" => 1
                     );
-                }                
-            }           
-            return json_encode($arrayQuantidade);                          
+                }
+            }
+            return json_encode($arrayQuantidade);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    public function listaLotacaoQuantidadePorSolicitacaoSituacaoJSON(){
+
+    public function listaLotacaoQuantidadePorSolicitacaoSituacaoJSON() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdTipoSolicitacao($this->idTipoSolicitacao);
             $daoFinPedido->setStPedido($this->stPedido);
+
+            $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);
+
+
             $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);            
+
             $arrayQuantidade = array();
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
                 $arrayQuantidade[$value['id_lotacao']] = array(
                     "name" => $value['nm_lotacao'],
-                    "y" => $value['quantidade']                    
+                    "y" => $value['quantidade']
                 );
-            }           
-            return json_encode($arrayQuantidade);            
+            }
+            return json_encode($arrayQuantidade);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -915,6 +910,50 @@ class Pedido {
             
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    /**
+     * Funçao responsavel por atualiza a tramitaçao do pedido de necessidade
+     * @param PDO $pdo
+     */
+    public function atualizaTramitacaoPedido(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->setStPedido($this->stPedido);
+            $daoFinPedido->updateTramitacao($pdo);
+            return $daoFinPedido->Sucesso();
+        } catch (Exception $ex) {
+            
+        }
+    }
+    /**
+     * Esse metodo e reponsavel por verificar ser a tramitaçao passa e maior 
+     * que a tramitaçao existente no doumento fiscal
+     * @param PDO $pdo
+     * @return type
+     */
+    public function VerificarMaiorTramitacao(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->updateTramitacao($pdo);
+            return $daoFinPedido->Sucesso();
+        } catch (Exception $ex) {
+            
         }
     }
 

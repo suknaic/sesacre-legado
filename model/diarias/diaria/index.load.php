@@ -52,6 +52,7 @@ $id_cidade_inicio = '';
 $fl_pernoite = '';
 $st_estagio = '';
 $edita = true;
+$disabled = "";
 
 //Se encontrou a diária preenche as informações
 if ($jsonDiaria != ""){
@@ -72,6 +73,7 @@ if ($jsonDiaria != ""){
     $selectFuncaoProposto= $contrato->optionsFuncoesContrato(null,$objDiaria->id_pessoa_proposto, $objDiaria->id_funcao_proposto);
     
     $selectCentralSolicitante = $diaria->retornaCentraisOption($objDiaria->id_pessoa_solicitante,$objDiaria->id_central_solicitante);
+    $disabled = 'disabled';
     $nm_usuario = $objDiaria->nm_solicitante;
     
     $ds_servico_executado = $objDiaria->ds_servico_executado;
