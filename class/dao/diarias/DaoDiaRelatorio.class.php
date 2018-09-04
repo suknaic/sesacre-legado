@@ -42,12 +42,14 @@ class DaoDiaRelatorio extends DiaRelatorio {
                 $sql = "update dia_relatorio "
                         . "set "
                             . "ds_servico_executado = :ds_servico_executado, "
+                            . "ds_locais_executado  = :ds_locais_executado,"
                             . "dt_relatorio_destino = :dt_relatorio_destino, "
                             . "fl_retorno = :fl_retorno"
                         . " where id_relatorio = :id_relatorio";
                 $stmt = $pdo->prepare($sql);
                 
                 $stmt->bindValue(":ds_servico_executado", $this->getDsServicoExecutado(), PDO::PARAM_STR);
+                $stmt->bindValue(":ds_locais_executado", $this->getDsLocaisExecutado(), PDO::PARAM_STR);
                 $stmt->bindValue(":dt_relatorio_destino", $this->getDtRelatorioDestino(), PDO::PARAM_STR);
                 $stmt->bindValue(":fl_retorno", $this->getFlRetorno(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_relatorio", $this->getIdRelatorio(), PDO::PARAM_INT);
