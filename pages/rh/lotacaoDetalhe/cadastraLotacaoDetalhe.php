@@ -94,7 +94,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
                                                         </span>
-                                                        <input type="text" class="form-control" name="nm_lotacao" id="nm_lotacao" required="true">
+                                                        <input type="text" class="form-control" name="nm_lotacao" id="nm_lotacao_detalhe" required="true">
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    email: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
+                                                    E-mail: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -119,7 +119,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    Lotação Pai: <span class="text-danger"></span>
+                                                    Lotação Pai: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
@@ -180,7 +180,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             <div class="form-group">    
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-5">
-                                                    Logradouro: <span class="text-danger"></span>
+                                                    Logradouro: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -189,7 +189,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    Bairo: <span class="text-danger"></span>
+                                                    Bairo: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -202,7 +202,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             <div class="form-group"> 
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-2">
-                                                    CEP:
+                                                    CEP: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -296,13 +296,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <input type="text" class="form-control" name="nr_telefone" id="nr_telefone" placeholder="(__) ____-____">
                                                         </div>
                                                     </div>
-                                                        <!--<i class='fa fa-check-circle fa-2x text-success'></i>-->
-                                                    <div class="col-md-1">
-
-                                                        <div class="checkbox checkbox-info checkbox-circle">
-                                                            <i class="fa fa-question-circle" title="Informe se o Telefone é Principal da Lotação"></i>
+                                                    <div class="col-md-2">
+                                                        <div class="checkbox checkbox-info checkbox-circle"><br>
                                                             <input id="checkbox8" type="checkbox" class="st_principal">
-                                                            <label for="checkbox8"> É Principal </label>
+                                                            <label for="checkbox8"> É Principal <i class="fa fa-question-circle" title="Selecione caso este seja o Telefone Principal da Lotação"></i></label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-1"></div>
@@ -416,8 +413,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
-
-
     </body>
 </html>

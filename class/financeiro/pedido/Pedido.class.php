@@ -208,9 +208,12 @@ class Pedido {
             '11' => 'Aguardando Autorização do Responsável da Central',
             '12' => 'Aguardando Autorização de Orçamentário',
             '13' => 'Aguardando Autorização Financeiro',
-            '14' => 'Aguardando Autorização Ordenador de despesa',
+            '14' => 'Aguardando Autorização Ordenador de Despesa',
             '15' => 'Aguardando Empenho',
-            '16' => 'Aguardando Ordem'
+            '16' => 'Aguardando Ordem',
+            '17' => 'Aguardando Entrega',
+            '18' => 'Aguardando Pagamento',
+            '19' => 'Aguardando Finalização da Entrega'
         );
         return $arr_status;
     }
@@ -870,8 +873,7 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdTipoSolicitacao($this->idTipoSolicitacao);
             $daoFinPedido->setStPedido($this->stPedido);
-            $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);
-           
+            $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);            
             $arrayQuantidade = array();
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
                 $arrayQuantidade[$value['id_lotacao']] = array(
@@ -880,6 +882,37 @@ class Pedido {
                 );
             }           
             return json_encode($arrayQuantidade);            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaPorSolicitacaoSituacaoLotacaoTR(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdTipoSolicitacao($this->idTipoSolicitacao);
+            $daoFinPedido->setStPedido($this->stPedido);
+            $daoFinPedido->setIdLotacao($this->idLotacao);
+            $daoFinPedido->retornaPorSolicitacaoSituacaoLotacao($pdo);                                    
+            foreach ($daoFinPedido->getMsgRetorno() as $value) {
+                if(!empty($value['nr_cnpj'])){
+                    $value['nr_cnpj'] = Metodos::formataCnpj($value['nr_cnpj']);
+                }
+                $retorno .= "  <tr> 
+                                    <td class='text-center'>" . $value['pedido'] . "</td>                                    
+                                    <td class='text-center'>" . $value['nm_tipo_gasto'] . "</td>
+                                    <td class='text-center'>" . $value['nr_fonte'] . "</td>
+                                    <td class='text-center'>" . $value['cd_despesa_elemento'] . "</td>
+                                    <td class='text-center'>" . $value['nr_contrato'] . "</td>
+                                    <td class='text-center'>" . $value['nm_pessoa'] . "</td>
+                                    <td class='text-center'>" . $value['nr_cnpj'] . "</td>
+                                    </tr>";
+            }           
+            return $retorno;
+            
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

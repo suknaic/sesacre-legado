@@ -26,7 +26,10 @@ require_once "index.load.php";
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
-        <link rel="stylesheet" href="/assets/css/estilo.css">                      
+        <link rel="stylesheet" href="/assets/css/estilo.css">    
+        <style>
+           
+        </style>
         <!--        *******************************************************************************************************-->
 
     </head>
@@ -46,17 +49,12 @@ require_once "index.load.php";
                 <!--===================================================-->
                 <div id="content-container">
                     <!--Page content-->
-                    <div id="page-title">
-                        <h1 class="page-header text-overflow">Pedido de Necessidade Por Tipo de Solicitação</h1>
-                    </div>
+                   
                     <!--===================================================-->
                     <div id="page-content">
                                               
                         <div class="col-sm-12">
-                            <div class="panel  panelTipoSolicitacao" style="display: none;">    
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Gráfico de Pedidos De Necessidade Por Tipo De Solicação</h3>
-                                </div>
+                            <div class="panel  panelTipoSolicitacao" style="display: none;">                                    
                                 <div class="panel-body">
                                     <div id="graficoSolicitacao" style="height: 400px"></div>
                                 </div>
@@ -83,9 +81,9 @@ require_once "index.load.php";
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="panel  panelFuncionario" style="display: none;">    
-                                <div class="panel-heading">
-                                    <h3 class="panel-title titulo"></h3>
+                            <div class="panel panelPedidos" style="display: none;">    
+                                <div class="panel-heading text-center">
+                                    <h1 class="panel-title titulo"></h1>                                    
                                 </div>
                                 <div class="panel-body">
                                     <div class="panel-body">
@@ -95,8 +93,13 @@ require_once "index.load.php";
                                                     <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                         <thead>
                                                             <tr>                                                        
-                                                                <th>Central</th>
-                                                                <th class="text-center">Quantidade</th>                                                               
+                                                                <th class='text-center'>Nº Pedido</th>                                                                
+                                                                <th class='text-center'>Tipo de Gasto</th>
+                                                                <th class='text-center'>Fonte</th>
+                                                                <th class='text-center'>Elemento de Despesa</th>
+                                                                <th class='text-center'>Nº Contrato</th>
+                                                                <th class='text-center'>Fornecedor</th>
+                                                                <th class='text-center'>CPF/CNPJ do Fornecedor</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

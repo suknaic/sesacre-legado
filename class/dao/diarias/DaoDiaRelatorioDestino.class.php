@@ -161,19 +161,20 @@ class DaoDiaRelatorioDestino extends DiaRelatorioDestino {
     function selectDestinosResumo(PDO $pdo = null) {
         try{
             if (!empty($pdo)) {
-                $sql = "select to_char(max(dh_fim),'dd/mm/yyyy') as dt_fim,
-                                to_char(max(dh_fim),'hh24:mi') as hr_fim,
-                                to_char(min(dh_inicio),'dd/mm/yyyy') as dt_ini,
-                                to_char(min(dh_inicio),'hh24:mi') as hr_ini
-                         from dia_relatorio_destino  
-                         where id_relatorio = :id_relatorio";
+                $sql = "select to_char(dh_fim,'dd/mm/yyyy') as dt_fim,
+                        to_char(dh_fim,'hh24:mi') as hr_fim,
+                        to_char(dh_inicio,'dd/mm/yyyy') as dt_ini,
+                        to_char(dh_inicio,'hh24:mi') as hr_ini
+                        from dia_relatorio_destino  
+                        where id_relatorio = :id_relatorio
+                        order by dh_inicio, dh_fim";
                 $stmt = $pdo->prepare($sql);
                 
                 $stmt->bindValue(":id_relatorio",$this->getIdRelatorio(), PDO::PARAM_INT);
                  
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) { 
-                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 }
             } else {

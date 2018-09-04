@@ -572,7 +572,7 @@ class DaoFinPedido extends FinPedidoTb {
                         . " , TS.nm_tipo_solicitacao"
                         . " FROM fin_pedido P"
                         . " INNER JOIN fin_tipo_solicitacao TS ON TS.id_tipo_solicitacao = P.id_tipo_solicitacao"
-                        . " WHERE P.st_pedido <> '0' AND P.st_pedido IN ('11','12','13','14','15','16')"
+                        . " WHERE P.st_pedido <> '0' AND P.st_pedido NOT IN ('0', '9', '10')"
                         . " GROUP BY P.id_tipo_solicitacao, TS.id_tipo_solicitacao";
                 $stmt = $pdo->prepare($sql);                
                 $stmt->execute();
@@ -617,7 +617,7 @@ class DaoFinPedido extends FinPedidoTb {
                                AS ordem 
                                ON ordem.id_pedido = P.id_pedido"
                         . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao"
-                        . " AND P.st_pedido IN ('11','12','13','14','15','16')"
+                        . " AND P.st_pedido NOT IN ('0', '9', '10')"
                         . "";
                 $stmt = $pdo->prepare($sql);  
                 $stmt->bindValue(":id_tipo_solicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
@@ -642,13 +642,34 @@ class DaoFinPedido extends FinPedidoTb {
     public function retornaQuantidadeLotacaoPorSolicitacaoSituacao(PDO $pdo = null){
         try{
             
-            if(!empty($pdo)){
-                $sql = "SELECT P.id_lotacao, count(P.id_pedido) AS quantidade, L.nm_lotacao"
+            if(!empty($pdo)){              
+                
+                $sql = "SELECT id_lotacao, count(id_pedido) AS quantidade, nm_lotacao"                        
+                        . " FROM (SELECT P.id_lotacao, P.id_pedido, L.nm_lotacao"
+                        . " , CASE 
+                                WHEN (ordem.ordens IS NOT NULL AND (ordem.sit_protocolo !~* '1|2' OR ordem.sit_protocolo IS NULL)) THEN '17'
+                                WHEN (ordem.ordens IS NOT NULL AND ordem.sit_protocolo ~* '2') THEN '18'
+                                WHEN (ordem.ordens IS NOT NULL AND ordem.sit_protocolo ~* '1' AND ordem.sit_protocolo !~* '2') THEN '19'
+                                ELSE P.st_pedido
+                            END AS status"
                         . " FROM fin_pedido P"
                         . " INNER JOIN ses_lotacao L ON L.id_lotacao = P.id_lotacao"
-                        . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao"
-                        . " AND P.st_pedido = :st_pedido"
-                        . " GROUP BY P.id_lotacao, L.id_lotacao";
+                        . " LEFT JOIN
+                                (
+                                SELECT
+                                   fo.id_pedido,
+                                   array_agg(fo.id_ordem) as ordens,
+                                   string_agg(trim(fpro.st_protocolo), '') as sit_protocolo
+                                FROM fin_ordem as fo 
+                                    left join
+                                       fin_protocolo as fpro
+                                       on fo.id_ordem = fpro.id_ordem
+                                GROUP BY fo.id_pedido 
+                                ) AS ordem ON ordem.id_pedido = P.id_pedido"
+                        . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao) AS tabela"
+                        . " WHERE status = :st_pedido "
+                        . " GROUP BY tabela.id_lotacao, tabela.nm_lotacao";                       
+                
                 $stmt = $pdo->prepare($sql);  
                 $stmt->bindValue(":id_tipo_solicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":st_pedido", $this->getStPedido(), PDO::PARAM_STR);
@@ -669,5 +690,70 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaPorSolicitacaoSituacaoLotacao(PDO $pdo = null){
+        try{
+            
+            if(!empty($pdo)){              
+                
+                $sql = "SELECT id_lotacao, id_pedido, pedido, nm_tipo_gasto, nr_fonte, nr_contrato, cd_despesa_elemento"
+                        . " , nm_pessoa, nr_cnpj"                        
+                        . " FROM (SELECT P.id_lotacao, P.id_pedido, TG.nm_tipo_gasto, F.nr_fonte"
+                        . " , C.nr_contrato, DE.cd_despesa_elemento, PES.nm_pessoa, PJ.nr_cnpj"
+                        . " , concat(concat(concat(P.nr_pedido, '/')),to_char(P.dt_pedido, 'yyyy')) as pedido"
+                        . " , CASE 
+                                WHEN (ordem.ordens IS NOT NULL AND (ordem.sit_protocolo !~* '1|2' OR ordem.sit_protocolo IS NULL)) THEN '17'
+                                WHEN (ordem.ordens IS NOT NULL AND ordem.sit_protocolo ~* '2') THEN '18'
+                                WHEN (ordem.ordens IS NOT NULL AND ordem.sit_protocolo ~* '1' AND ordem.sit_protocolo !~* '2') THEN '19'
+                                ELSE P.st_pedido
+                            END AS status"
+                        . " FROM fin_pedido P"
+                        . " INNER JOIN view_despesa_elemento DE ON DE.id_despesa_elemento = P.id_despesa_elemento"
+                        . " INNER JOIN pla_tipo_gasto TG ON TG.id_tipo_gasto = P.id_tipo_gasto"
+                        . " INNER JOIN fin_fonte F ON F.id_fonte = P.id_fonte"                        
+                        . " LEFT JOIN fin_fornecedor FO ON FO.id_fornecedor = P.id_fornecedor"                        
+                        . " LEFT JOIN ses_pessoa PES ON PES.id_pessoa = FO.id_pessoa"
+                        . " LEFT JOIN ses_pessoa_juridica PJ ON PJ.id_pessoa = PES.id_pessoa"
+                        . " LEFT JOIN fin_contrato C ON C.id_contrato = FO.id_contrato"                        
+                        . " LEFT JOIN
+                                (
+                                SELECT
+                                   fo.id_pedido,
+                                   array_agg(fo.id_ordem) as ordens,
+                                   string_agg(trim(fpro.st_protocolo), '') as sit_protocolo
+                                FROM fin_ordem as fo 
+                                    left join
+                                       fin_protocolo as fpro
+                                       on fo.id_ordem = fpro.id_ordem
+                                GROUP BY fo.id_pedido 
+                                ) AS ordem ON ordem.id_pedido = P.id_pedido"
+                        . " WHERE P.st_pedido <> '0' AND P.id_tipo_solicitacao = :id_tipo_solicitacao"
+                        . " AND P.id_lotacao = :id_lotacao) AS tabela"
+                        . " WHERE status = :st_pedido"
+                        . " ORDER BY id_pedido";
+                                           
+                
+                $stmt = $pdo->prepare($sql);  
+                $stmt->bindValue(":id_tipo_solicitacao", $this->getIdTipoSolicitacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":st_pedido", $this->getStPedido(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "";
+                }                                                                      
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem Conexão";
+            }                        
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 
 }

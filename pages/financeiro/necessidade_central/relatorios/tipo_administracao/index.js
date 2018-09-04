@@ -9,6 +9,7 @@ $(document).ready(function () {
         }
 
         $("#" + nomeTabela).find("tbody").html(response);
+        var colunaEscondida = []
         var table = $('#' + nomeTabela).dataTable({
             "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
             "order": [],
@@ -21,6 +22,50 @@ $(document).ready(function () {
             buttons: [
                 {
                     extend: 'pageLength'
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    footer: true,
+                    exportOptions: {
+                        columns: function (idx) {
+                            if ($.inArray(idx, colunaEscondida) < 0) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'TABLOID',
+                    text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                    footer: true,
+                    exportOptions: {
+                        columns: function (idx) {
+                            if ($.inArray(idx, colunaEscondida) < 0) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print"></i> Imprimir',
+                    footer: true,
+                    exportOptions: {
+                        columns: function (idx) {
+                            if ($.inArray(idx, colunaEscondida) < 0) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
                 }
             ]
         });
@@ -36,7 +81,7 @@ $(document).ready(function () {
         dt_fim: 0,
         todos: 1
     };
-    var title = "Todos os Pedidos de Necessidade da SESACRE Cadastrados no Sistema";
+    var title = "Pedidos de Necessidade por Tipo de Solicitação";
     //************************************************************************************************
     $.ajax({
         "url": "request.php",
@@ -57,7 +102,7 @@ $(document).ready(function () {
             $(".panelTipoSolicitacao").show();
             $(".panelSituacao").hide();
             $(".panelCentral").hide();
-            $(".panelFuncionario").hide();
+            $(".panelPedidos").hide();
         }
     });
   
@@ -141,7 +186,7 @@ $(document).ready(function () {
         var Dados = {            
             idTipoSolicitacao: idTipoSolicitacao
         };
-        title = "Pedidos de Necessidade do Tipo de Solicitação: " + nmTipoSolicitacao;
+        title = "Pedidos de Necessidade do Tipo de Solicitação <b>" + nmTipoSolicitacao + "</b> por Situação";
        
         $.ajax({
             "url": "request.php",
@@ -158,17 +203,17 @@ $(document).ready(function () {
                     console.log(response);
                     return false;
                 }              
-                graficoSituacaoHig(title, response, idTipoSolicitacao)
+                graficoSituacaoHig(title, response, idTipoSolicitacao, nmTipoSolicitacao)
                 $(".panelTipoSolicitacao").show();
                 $(".panelSituacao").show();
                 $(".panelCentral").hide();
-                $(".panelFuncionario").hide();
+                $(".panelPedidos").hide();
                 carregaTabela('tabela', null, true);                
             }
         });
     }
     //********************************************************************************************************************************************************
-    function graficoSituacaoHig(title, response, idTipoSolicitacao) {
+    function graficoSituacaoHig(title, response, idTipoSolicitacao, nmTipoSolicitacao) {
         //*********************************************
         var dados = {};
         dados.a = [];
@@ -195,9 +240,6 @@ $(document).ready(function () {
             tooltip: {
                 pointFormat: '<b>{point.y}</b> Pedidos ≃ <b>{point.percentage:.1f}%</b>'
             },
-            subtitle: {
-                text: 'Fonte: Banco de Dados da Sesacre'
-            },
             plotOptions: {
                 pie: {
                     innerSize: 100,
@@ -206,7 +248,7 @@ $(document).ready(function () {
                     point: {
                         events: {
                             click: function () {                                
-                                graficoCentral(this.id, this.name, idTipoSolicitacao);                                
+                                graficoCentral(this.id, this.name, idTipoSolicitacao, nmTipoSolicitacao);                                
                             },
                         }
                     }
@@ -221,7 +263,7 @@ $(document).ready(function () {
     }
     
     //********************************************************************************************************************************************************
-    function graficoCentral(idSituacao, nmSituacao, idTipoSolicitacao) {
+    function graficoCentral(idSituacao, nmSituacao, idTipoSolicitacao, nmTipoSolicitacao) {
         //************************************************************************************************
                       
         var title = "";
@@ -229,7 +271,7 @@ $(document).ready(function () {
             idSituacao: idSituacao,
             idTipoSolicitacao: idTipoSolicitacao
         };
-        title = "Pedidos de Necessidade com a Situação: " + nmSituacao;
+        title = "Pedidos de Necessidade do Tipo de Solicitação <b>" + nmTipoSolicitacao + "</b> com a Situação <b>"+nmSituacao+ "</b> por Central de Demanda";        
        
         $.ajax({
             "url": "request.php",
@@ -239,27 +281,25 @@ $(document).ready(function () {
                 acao: "pesquisaCentralPorTipoDeSolicitacaoSituacao",
                 dados: Dados
             },
-            "success": function (response) {
-                console.log(response);
-                console.log('graficoCentral')
+            "success": function (response) {                
                 try {
                     response = JSON.parse(response);
                 } catch (e) {
                     console.log(response);
                     return false;
                 }              
-                graficoCentralHig(title, response, idSituacao, idTipoSolicitacao)
+                graficoCentralHig(title, response, idSituacao, idTipoSolicitacao, nmTipoSolicitacao, nmSituacao)
                 $(".panelTipoSolicitacao").show();
                 $(".panelSituacao").show();
                 $(".panelCentral").show();
-                $(".panelFuncionario").hide();
+                $(".panelPedidos").hide();
                 carregaTabela('tabela', null, true);                
             }
         });
     }
     
     //********************************************************************************************************************************************************
-    function graficoCentralHig(title, response, idSituacao, idTipoSolicitacao) {
+    function graficoCentralHig(title, response, idSituacao, idTipoSolicitacao, nmTipoSolicitacao, nmSituacao) {
         //*********************************************
         var dados = {};
         dados.a = [];
@@ -286,9 +326,6 @@ $(document).ready(function () {
             tooltip: {
                 pointFormat: '<b>{point.y}</b> Pedidos ≃ <b>{point.percentage:.1f}%</b>'
             },
-            subtitle: {
-                text: 'Fonte: Banco de Dados da Sesacre'
-            },
             plotOptions: {
                 pie: {
                     innerSize: 100,
@@ -297,7 +334,7 @@ $(document).ready(function () {
                     point: {
                         events: {
                             click: function () {                                
-                                graficoFuncionario(this.id, this.name, idSituacao, idTipoSolicitacao);                                
+                                graficoFuncionario(this.id, this.name, idSituacao, idTipoSolicitacao, nmTipoSolicitacao, nmSituacao);                                
                             },
                         }
                     }
@@ -312,32 +349,30 @@ $(document).ready(function () {
     }
 
     //********************************************************************************************************************************************************
-    function graficoFuncionario(idLotacao, nmLotacao, idSituacao, idTipoSolicitacao) {
+    function graficoFuncionario(idLotacao, nmLotacao, idSituacao, idTipoSolicitacao, nmTipoSolicitacao, nmSituacao) {
 
         //************************************************************************************************
        
         var title = "";
        
-        var Dados = {
-            dt_inicio: 0,
-            dt_fim: 0,
-            todos: 1,
-            idVinculo: idVinculo,
-            idLotacao: idLotacao
-        };
-        title = "Pedidos de Necessidade na Lotação: " + nmLotacao;
+        var Dados = {        
+            idLotacao: idLotacao,
+            idSituacao: idSituacao,
+            idTipoSolicitacao: idTipoSolicitacao
+        };        
+        title = "Central de Demanda "+ nmLotacao;
         
         $.ajax({
-            "url": "/model/rh/relatorios/request.php",
+            "url": "request.php",
             "dataType": 'html',
-            "method": 'POST',
+            "method": 'GET',
             "data": {
-                acao: "pesquisaGraficoFuncionario",
+                acao: "pesquisaPedidos",
                 dados: Dados
             },
-            "success": function (response) {
-                $(".panelFuncionario").show();
-                $(".titulo").text(title);
+            "success": function (response) {                
+                $(".panelPedidos").show();
+                $(".titulo").text(title);                
                 carregaTabela('tabela', response, true);
             }
         });
