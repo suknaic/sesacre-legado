@@ -1,46 +1,56 @@
-$(document).ready(function () {
-    //instacinado fucoes js
-    func = new Funcoes();
+//instacinado fucoes js
+func = new Funcoes();
 
+$(document).ready(function () {
+    
+    retonaOptiosSituacao();
+    
     $('body').find('select').select2({
         width: '100%'
     });
 
-    function lista() {
-        var Dados = {
-            nrDocFis: $("#nr_liquidacao").val(),
-            anoDocFis: $("#ano_liquidacao option:selected").val(),
-            contratado: $("#id_contratado option:selected").val(),
-            nrProtocolo: $("#nr_protocolo").val(),
-            nrContrato: $("#nr_contrato").val(),
-            nrPedido: $("#nr_pedido").val(),
-            nrEmpenho: $("#nr_empenho").val(),
-            nrDocumentoFiscal: $("#nr_documento_fiscal").val(),
-            tpGasto: $("#tipo_gasto option:selected").val(),
-            situacao: $("#situacao option:selected").val()
-        }
-        $.ajax({
-            "url": "request.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaLiquidacoes",
-                "dados": Dados
-            },
-            "success": function (response) {
-                
-                func.carregaTabelaPadrao('tabela', response, [4], true);
-            }
-        });
-    }
 
     $("body").on("click", ".btn-pesquisar", function () {
         lista();
     });
 
-    $('body').on('click', '.ver_documento', function (e) {
+    $('body').on('click', '.ver-liquidacao', function (e) {
         var id = $(this).val();
-        window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
+        window.open("/pages/contabil/liquidacao/ver_liquidacao/index.php?&id=" + id);
+    });
+    
+    $('body').on('click', '.editar-liquidacao', function (e) {
+        var id = $(this).val();
+        window.open("/pages/contabil/liquidacao/edit_liquidacao/index.php?&id=" + id);
     });
 
 
 });
+
+
+function lista() {
+   
+    $.ajax({
+        "url": "request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaLiquidacoes"
+        },
+        "success": function (response) {
+            func.carregaTabelaPadrao('tabela', response, [4], true);
+        }
+    });
+}
+
+function retonaOptiosSituacao(){
+    $.ajax({
+        "url": "request.php",
+        "dataType": "html",
+        "data": {
+            "acao": "retornaOptionsSituacaoLiquidacao"
+        },
+        "success": function (response){
+            $("#situacao").html(response);
+        }
+    });
+}

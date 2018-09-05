@@ -117,9 +117,9 @@ class LiquidacaoDoc {
                 
                 if ($daoConLiquidacaoDoc->Sucesso()) {
                     $this->sucesso = true;
-                    return $daoConLiquidacaoDoc->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 } else {
-                     $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
             } else {
                 $this->mensagens = "Sem conexão com o banco de dados";

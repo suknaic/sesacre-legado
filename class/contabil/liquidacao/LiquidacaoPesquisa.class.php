@@ -1,5 +1,8 @@
 <?php
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/liquidacao/DaoConLiquidacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/liquidacao/DaoConLiquidacaoSituacao.class.php";
+
 class LiquidacaoPesquisa {
     private $nrLiquidacao = null;
     private $anoLiquidacao = null;
@@ -100,6 +103,64 @@ class LiquidacaoPesquisa {
     function setSituacao($situacao) {
         $this->situacao = $situacao;
         return $this;
+    }
+    
+    public function retornaOptionsSituacao(){
+        $opcoes = "<option value=0>Selecione uma situação</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoConLiquidacaoSituacao = new DaoConLiquidacaoSituacao();
+            $daoConLiquidacaoSituacao->retornaTodos($pdo);
+            
+            if ($daoConLiquidacaoSituacao->Sucesso()) {
+                foreach ($daoConLiquidacaoSituacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option value=".$linha['id_liquidacao_situacao'].">".$linha['nm_liquidacao_situacao']."</option>";   
+                }
+            }
+            return $opcoes;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+    
+    public function retornaLiquidacoes(){
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->retornaLiquidacoes($pdo);
+            
+            if ($daoConLiquidacao->Sucesso()) {
+                foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
+                    $retorno .= "<tr data-id=".$linha['id_liquidacao'].">"
+                                . "<td class='text-center'>".$linha['nr_liquidacao']."</td>"
+                                . "<td class='text-center'>".$linha['nr_pedido']."</td>"
+                                . "<td class='text-center'>".$linha['nr_empenho']."</td>"
+                                . "<td class='text-center'>".$linha['documentos_fiscais']."</td>"
+                                . "<td class='text-center'>".$linha['nr_cnpj']." - ".$linha['nm_fantasia']."</td>"
+                                . "<td class='text-center'>".$linha['dt_liquidacao']."</td>"
+                                . "<td class='text-center'>".$linha['vl_liquidacao']."</td>"
+                                . "<td class='text-center'>".$linha['nm_liquidacao_situacao']."</td>"
+                                . "<td>"
+                                    . "<button type='button' title='Ver Liquidação' class='ver-liquidacao' value=".$linha['id_liquidacao'].">"
+                                        . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
+                                    . "</button>"
+                                    . "<button type='button' title='Editar Liquidação' class='editar-liquidacao' value=".$linha['id_liquidacao'].">"
+                                        . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
+                                    . "</button>"
+                                . "</td>"
+                            . "</tr>";
+                }
+            }
+            
+            return $retorno;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
     }
 
 

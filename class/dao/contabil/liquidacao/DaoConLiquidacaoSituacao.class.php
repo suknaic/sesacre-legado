@@ -100,5 +100,29 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
         }
-    }                       
+    }
+    
+    function retornaTodos($pdo){
+        $this->sucesso = false;
+        $sql = " SELECT *"                    
+                . " FROM con_liquidacao_situacao";
+        try {
+            $result = $pdo->prepare($sql);   
+            $result->execute();
+            if ($result->rowCount() >= 1){
+                $this->sucesso = true; 
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;                
+                $this->msgRetorno = "Não encontrou Registros";                
+            }         
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage(); 
+        }
+        
+
+        
+        
+    }
 }

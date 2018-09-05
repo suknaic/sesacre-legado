@@ -197,7 +197,6 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
-                                                        <?php echo $selectSitLiq; ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -219,7 +218,7 @@ require_once "index.load.php";
 
                     <div class="panel">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Lista de Documentos Fiscais</h3>
+                            <h3 class="panel-title">Lista de Liquidações</h3>
                         </div>
                         <div class="panel-body">
                             <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
