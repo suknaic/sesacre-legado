@@ -403,6 +403,23 @@ class FinOrdemModel {
                 return Metodos::retornoAjax("Erro", "alert", $daoFinOrdem->getMsgRetorno());
             }
 
+            $pedido = new Pedido();
+            $pedido->setIdPedido($ordem[0]->idPedido);
+            //verificar ser a ordem e de exuçao/serviço ou entrega
+            var_dump($linha->tp);
+            if ($linha->tp == '1') {
+                $pedido->setStPedido("17");
+            } else if ($linha->tp == '2') {
+                $pedido->setStPedido("19");
+            }
+            
+            var_dump($pedido->VerificarMaiorTramitacao($pdo));
+            return false;
+            if (!$pedido->VerificarMaiorTramitacao($pdo)) {
+                $pedido->atualizaTramitacaoPedido($pdo);
+            }
+
+
             if (!$erro) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
@@ -590,7 +607,7 @@ class FinOrdemModel {
             $daoFinOrdem->setIdPedido($this->id_pedido);
             $daoFinOrdem->ordemGdof($pdo);
             $options = '<option value="0" selected="true">Selecione uma ordem</option>';
-            
+
             if (!($daoFinOrdem->getMsgRetorno() == 'Nenhum registro encontrado')) {
                 foreach ($daoFinOrdem->getMsgRetorno() as $campos) {
                     $options .= '<option value="' . $campos["id_ordem"] . '">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</option>';

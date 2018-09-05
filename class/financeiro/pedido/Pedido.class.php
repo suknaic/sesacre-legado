@@ -203,7 +203,6 @@ class Pedido {
             '21' => 'Aguardando Liquidação',
             '22' => 'Aguardando Pagamento',
             '23' => 'Tramitação Finalizada',
-
         );
         return $arr_status;
     }
@@ -867,7 +866,7 @@ class Pedido {
             $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);
 
 
-            $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);            
+            $daoFinPedido->retornaQuantidadeLotacaoPorSolicitacaoSituacao($pdo);
 
             $arrayQuantidade = array();
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
@@ -881,8 +880,8 @@ class Pedido {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    public function retornaPorSolicitacaoSituacaoLotacaoTR(){
+
+    public function retornaPorSolicitacaoSituacaoLotacaoTR() {
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -891,9 +890,9 @@ class Pedido {
             $daoFinPedido->setIdTipoSolicitacao($this->idTipoSolicitacao);
             $daoFinPedido->setStPedido($this->stPedido);
             $daoFinPedido->setIdLotacao($this->idLotacao);
-            $daoFinPedido->retornaPorSolicitacaoSituacaoLotacao($pdo);                                    
+            $daoFinPedido->retornaPorSolicitacaoSituacaoLotacao($pdo);
             foreach ($daoFinPedido->getMsgRetorno() as $value) {
-                if(!empty($value['nr_cnpj'])){
+                if (!empty($value['nr_cnpj'])) {
                     $value['nr_cnpj'] = Metodos::formataCnpj($value['nr_cnpj']);
                 }
                 $retorno .= "  <tr> 
@@ -905,9 +904,8 @@ class Pedido {
                                     <td class='text-center'>" . $value['nm_pessoa'] . "</td>
                                     <td class='text-center'>" . $value['nr_cnpj'] . "</td>
                                     </tr>";
-            }           
+            }
             return $retorno;
-            
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -931,9 +929,10 @@ class Pedido {
             $daoFinPedido->updateTramitacao($pdo);
             return $daoFinPedido->Sucesso();
         } catch (Exception $ex) {
-            
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
+
     /**
      * Esse metodo e reponsavel por verificar ser a tramitaçao passa e maior 
      * que a tramitaçao existente no doumento fiscal
@@ -950,10 +949,20 @@ class Pedido {
 
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
-            $daoFinPedido->updateTramitacao($pdo);
-            return $daoFinPedido->Sucesso();
-        } catch (Exception $ex) {
+            $daoFinPedido->retornaTramitacao($pdo);
             
+            if (!$daoFinPedido->Sucesso()) {
+                return false;
+            }
+            var_dump($daoFinPedido->getMsgRetorno()["st_pedido"]);
+            var_dump($this->stPedido);
+            if ($daoFinPedido->getMsgRetorno()["st_pedido"] > $this->stPedido) {
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $ex) {
+            return false;
         }
     }
 

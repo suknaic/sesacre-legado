@@ -1060,8 +1060,13 @@ class Autorizacao {
                                     <td class="text-center">
                                     <a type="button" href="/pages/financeiro/autorizacoes/central/autorCentral.php?id=' . $l["id_pedido"] . '" class="button">
                                         <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
-                                    </a>
-                                    </td>
+                                    </a>';
+                    if (!empty($l['id_diaria'])) {
+                        $retorno .= '<a href="/pages/diarias/diaria/index.php?id='.$l['id_diaria'].'" target="_blank"><button type="button" title="Visualizar"><i class="fa fa-file-text-o  text-primary" aria-hidden="true"></i></button></a>'
+                                 .  '<a href="/pages/diarias/diaria/imprimir.php?id='.$l['id_diaria'].'" target="_blank"><button title="Imprimir proposta e concessão da Diária" type="button"><i class="fa fa-print" aria-hidden="true"></i></button></a>';
+                    }
+                    
+                    $retorno .= '</td>
                                 </tr>';
                 }
             }

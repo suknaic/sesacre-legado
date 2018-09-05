@@ -755,7 +755,7 @@ class DaoFinPedido extends FinPedidoTb {
     public function updateTramitacao(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
-                $sql = "update fin_pedido set st_pedido = :tramitacao where id_pedido = :pedido";
+                $sql = "update fin_pedido SET st_pedido = :tramitacao where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":tramitacao", $this->getStPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
@@ -771,11 +771,11 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
-    public function retornaSituacao(PDO $pdo = null) {
+    public function retornaTramitacao(PDO $pdo = null) {
         try {
 
             if (!empty($pdo)) {
-                $sql = "select st_pedido where id_pedido = :pedido";
+                $sql = "select st_pedido from fin_pedido  where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
