@@ -57,7 +57,8 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
 case 
 	when ds_itens is null then mat.nm_desc_material
     when ds_itens is not null then itens.ds_itens
-end itenDescricao, mat.cd_elemento_despesa, mat.tp_material, itens.nr_lote, orItens.qt_itens_ordem, orItens.vl_itens_ordem,
+end itenDescricao, mat.cd_elemento_despesa, mat.tp_material, itens.nr_lote, 
+to_char(orItens.qt_itens_ordem, '9G999G990D9999') as qt_itens_ordem, to_char(orItens.vl_itens_ordem, '9G999G990D9999') as vl_itens_ordem ,
 /* Inicio da sql que calcula o valor ultilado dos itens */
 coalesce(
 	(select 
