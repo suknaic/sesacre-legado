@@ -43,6 +43,10 @@ class FinDocumentoFiscal {
     private $tpTramTramitacaoFinalizada = 6;   
     
     private $msgErros = null;
+    
+    public function getMsgErros() {
+        return $this->msgErros;
+    }
 
     /**
      * @return mixed

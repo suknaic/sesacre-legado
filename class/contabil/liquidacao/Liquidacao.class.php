@@ -18,9 +18,40 @@ class Liquidacao {
     private $documentos = null;
     
     private $usuario = null;
-    
     private $mensagens = null;
     private $sucesso = null;
+    
+    private $motivoCancelamento = null;
+    
+    private $sitLiquidado = 1;
+    private $sitPagoParcial = 2;
+    private $sitPago = 3;
+    private $sitCancelado = 4;
+    
+    function getMotivoCancelamento() {
+        return $this->motivoCancelamento;
+    }
+
+    function setMotivoCancelamento($motivoCancelamento) {
+        $this->motivoCancelamento = $motivoCancelamento;
+        return $this;
+    }
+
+    function getSitLiquidado() {
+        return $this->sitLiquidado;
+    }
+
+    function getSitPagoParcial() {
+        return $this->sitPagoParcial;
+    }
+
+    function getSitPago() {
+        return $this->sitPago;
+    }
+
+    function getSitCancelado() {
+        return $this->sitCancelado;
+    }
     
     function getMensagens() {
         return $this->mensagens;
@@ -152,6 +183,32 @@ class Liquidacao {
         }
     }
     
+    function retornaHistorico(){
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoConLiquidacaoHistorico = new DaoConLiquidacaoHistorico();
+            $daoConLiquidacaoHistorico->setIdLiquidacao($this->getIdLiquidacao());
+            
+            $daoConLiquidacaoHistorico->historico($pdo);
+            
+            if ($daoConLiquidacaoHistorico->Sucesso()) {
+                foreach ($daoConLiquidacaoHistorico->getMsgRetorno() as $linha) {
+                    $retorno .= $linha['historico'] . "\n";
+                }
+            } else {
+                $retorno = $daoConLiquidacaoHistorico->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+
+        
+    }
+    
     public function montaTabelaDocumentosLiquidacao(bool $edita = true) {
         try {
             $tabela = '';
@@ -172,19 +229,18 @@ class Liquidacao {
                                 . "<td class='text-center'>".$linha['dt_atesto']."</td>"
                                 . "<td class='text-center'>".$linha['vl_documento']."</td>"
                                 . "<td class='text-center'>".$linha['vl_documento']."</td>"
-                                . "<td class='text-center'>".$linha['nm_situacao']."</td>";
-                    if ($edita) {
-                        $tabela .= "<td class='text-center'>"
+                                . "<td class='text-center'>".$linha['nm_situacao']."</td>"
+                                . "<td class='text-center'>"
                                     . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=".$linha['id_documento_fiscal'].">"
                                         . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
-                                    . "</button>"
-                                    . "<button type='button' title='Remover Documento Fiscal' class='remover-documento'>"
+                                    . "</button>";
+                    if ($edita) {
+                        $tabela .=  "<button type='button' title='Remover Documento Fiscal' class='remover-documento'>"
                                         . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
-                                    . "</button>"
-                                . "</td>";
+                                    . "</button>";
                     }
                         
-                     $tabela .= "</tr>";
+                     $tabela .= "</td></tr>";
                 }
             }
             return $tabela;
@@ -221,6 +277,7 @@ class Liquidacao {
         try {
             if (!empty($pdo)) {
                 $daoConLiquidacao = new DaoConLiquidacao();
+                $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
                 
                 $filtroDocumentos = implode(', ', $this->getDocumentos());
                 
@@ -256,7 +313,7 @@ class Liquidacao {
             
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
-                             ->setIdLiquidacaoSituacao(1)
+                             ->setIdLiquidacaoSituacao($this->getSitLiquidado())
                              ->setIdLotacao($this->getIdLotacao())
                              ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                              ->setNrLiquidacao($this->getNrLiquidacao())
@@ -272,11 +329,16 @@ class Liquidacao {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar a Liquidação no LOG. Operação Cadastro.");
                 }
-                $this->setIdLiquidacao($idLiquidacao);
+                $this->setIdLiquidacao($idLiquidacao); //Id da Liquidação
+                $this->setIdLiquidacaoSituacao($this->getSitLiquidado()); //Status da Liquidação
                 
-                if($this->verificaDocumentosDiferenteDeALiquidar($pdo)){
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                //Se a edição da liquidação possuir documentos fiscais, 
+                //verifica se os mesmos encontram-se na situação de 'A Liquidar'
+                if ($this->getDocumentos()) {
+                    if($this->verificaDocumentosDiferenteDeALiquidar($pdo)){
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                    }
                 }
                 
                 //Salva os Documentos Fiscais na Liquidação
@@ -342,6 +404,7 @@ class Liquidacao {
             if (!empty($pdo)) {
                 $liquidacaoHistorico = new LiquidacaoHistorico();
                 $liquidacaoHistorico->setIdLotacao($this->getIdLotacao())
+                                    ->setIdLiquidacao($this->getIdLiquidacao())
                                     ->setIdPessoa($this->getUsuario())
                                     ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                                     ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao())
@@ -396,6 +459,9 @@ class Liquidacao {
             
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
             
+//            //Guarda a situação da Liquidação para gerar o histórico
+//            $this->setIdLiquidacaoSituacao($daoConLiquidacao->getMsgRetorno()['id_liquidacao_situacao']);
+            
             //Atualiza a Liquidação
             $daoConLiquidacao->update($pdo);
             
@@ -408,10 +474,14 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
                 
-                
-                if($this->verificaDocumentosDiferenteDeALiquidar($pdo)){
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                //Se a edição da liquidação possuir documentos fiscais, 
+                //verifica se os mesmos encontram-se na situação de 'A Liquidar'
+                if ($this->getDocumentos()) {
+                    if($this->verificaDocumentosDiferenteDeALiquidar($pdo)){
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                        
+                    }
                 }
                 
                 //Atualiza os Documentos Fiscais na Liquidação
@@ -420,12 +490,11 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                 }
                 
-                if (!$this->salvarLiquidacaoHistorico($pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
-                }
-                
-                
+//                if (!$this->salvarLiquidacaoHistorico($pdo)) {
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
+//                }
+              
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                 
@@ -490,6 +559,7 @@ class Liquidacao {
                 //DOCUMENTOS QUE FORAM REMOVIDOS
                 if ($arrayRemove) {
                     foreach ($arrayRemove as $indice => $documento) {
+                        $liquidacaoDoc->setIdDocumentoFiscal($documento);
                         $liquidacaoDoc->setIdLiquidacaoDoc($indice);
                         $liquidacaoDoc->removerLiquidacaoDoc($pdo);
 
@@ -512,6 +582,85 @@ class Liquidacao {
              //Se der algum erro, registra o erro no objeto
             $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
+        }
+    }
+    
+    
+    function cancelarLiquidacao(){
+        try {
+            if (empty($this->getIdLiquidacao()) || empty($this->getMotivoCancelamento())) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
+                             ->setIdLiquidacaoSituacao($this->getSitCancelado());
+            
+            $daoConLiquidacao->retorna($pdo);
+            if (!$daoConLiquidacao->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados desta Liquidação");
+            }
+            
+            $dadosLiquidacao = $daoConLiquidacao->getMsgRetorno();
+            
+            $idLiquidacao =$this->getIdLiquidacao();
+            if (!Log::SalvaLogU('con_liquidacao', $idLiquidacao,$dadosLiquidacao ,$pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoConLiquidacao->mudaSituacao($pdo);
+            if (!$daoConLiquidacao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoConLiquidacao->getMsgRetorno());
+            }
+            
+            //Seta as informações complementares para salvar no histórico
+            $this->setIdLiquidacaoSituacao($this->getSitCancelado())
+                  ->setIdLotacao($dadosLiquidacao['id_lotacao'])
+                  ->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);
+            
+            
+            //Busca os Documentos Fiscais associado a Liquidacao para voltar o status de 'A Liquidar'
+            $liquidacaoDoc = new LiquidacaoDoc();
+            $liquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
+
+            $liquidacaoDoc->retornaDocumentosPorLiquidacao($pdo);
+
+            if (!$liquidacaoDoc->getSucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
+            }
+            
+            $documentos = $liquidacaoDoc->getMensagens();//Retorna o resultado da consulta
+            
+            if ($documentos) {
+                $gdof = new FinDocumentoFiscal();
+                foreach ($documentos as $doc) {
+                    $gdof->setIdDocumentoFiscal($doc['id_documento_fiscal'])
+                         ->setIdDocumentoSituacao($gdof->getDocSitALiquidar());
+                    if (!$gdof->atualizaSituacaoDocumentoGDOF($pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", $gdof->getMsgErros());
+                    }
+                }
+            }
+            
+            //Salvar no histórico o cancelamento
+            if (!$this->salvarLiquidacaoHistorico($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
+            };
+            
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
+            
+        } catch (Exception $exc) {
+             //Se der algum erro, registra o erro no objeto
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
     

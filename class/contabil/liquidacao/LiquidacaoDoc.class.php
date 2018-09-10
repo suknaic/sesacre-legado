@@ -62,7 +62,13 @@ class LiquidacaoDoc {
                     if (!Log::SalvaLogI('con_liquidacao_doc', $idLiquidacaoDoc, $pdo)) {
                         $this->mensagens = "Erro ao salvar o Documento Fiscal da Liquidação no LOG. Operação Cadastro.";
                     }
-                    $this->sucesso = true;
+                    
+                    //Atualiza situação do GDOF
+                    $gdof = new FinDocumentoFiscal();
+                    $gdof->setIdDocumentoFiscal($this->getIdDocumentoFiscal())
+                         ->setIdDocumentoSituacao($gdof->getDocSitLiquidado());
+                    
+                    $this->sucesso = $gdof->atualizaSituacaoDocumentoGDOF($pdo);
                 } else {
                     $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
@@ -92,7 +98,13 @@ class LiquidacaoDoc {
                 $daoConLiquidacaoDoc->delete($pdo);
                 
                 if ($daoConLiquidacaoDoc->Sucesso()) {
-                    $this->sucesso = true;
+                    
+                    //Atualiza situação do GDOF
+                    $gdof = new FinDocumentoFiscal();
+                    $gdof->setIdDocumentoFiscal($this->getIdDocumentoFiscal())
+                         ->setIdDocumentoSituacao($gdof->getDocSitALiquidar());
+                    
+                    $this->sucesso = $gdof->atualizaSituacaoDocumentoGDOF($pdo);
                 } else {
                     $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
@@ -117,8 +129,6 @@ class LiquidacaoDoc {
                 
                 if ($daoConLiquidacaoDoc->Sucesso()) {
                     $this->sucesso = true;
-                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
-                } else {
                     $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
                 }
             } else {

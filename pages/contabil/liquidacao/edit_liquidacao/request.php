@@ -5,12 +5,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoDoc.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
+
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
     CASE 'atualizaLiquidacao':
         try {
             $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
+            if (empty($dados['docsLiquidacao'])) {
+                $dados['docsLiquidacao'] = array();
+            }
             
             $liquidacao = new Liquidacao();
             $liquidacao->setIdLiquidacao($dados['idLiquidacao'])

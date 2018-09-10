@@ -184,9 +184,7 @@ require_once "index.load.php";
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Observação:</b></div>
                                                             <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_liquidacao">
-                                                                    <?php echo $dadosLiquidacao['ds_liquidacao']?>
-                                                                </textarea>
+                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"><?php echo $dadosLiquidacao['ds_liquidacao']; ?></textarea>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
@@ -206,7 +204,7 @@ require_once "index.load.php";
                                                         <h4 class="panel-title text-center">Histórico</h4>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <textarea class="form-control" rows="10" readonly="true"></textarea>
+                                                        <textarea class="form-control" rows="10" readonly="true"><?php echo $historico;?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

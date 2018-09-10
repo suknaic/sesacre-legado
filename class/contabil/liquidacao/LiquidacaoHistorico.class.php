@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/liquidacao/DaoConL
 class LiquidacaoHistorico {
 
     private $idLiquidacaoHistorico = null;
+    private $idLiquidacao = null;
     private $idPessoa = null;
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
@@ -14,6 +15,15 @@ class LiquidacaoHistorico {
     
     private $mensagens = null;
     private $sucesso = null;
+    
+    function getIdLiquidacao() {
+        return $this->idLiquidacao;
+    }
+
+    function setIdLiquidacao($idLiquidacao) {
+        $this->idLiquidacao = $idLiquidacao;
+        return $this;
+    }
     
     function getMensagens() {
         return $this->mensagens;
@@ -93,6 +103,7 @@ class LiquidacaoHistorico {
                 
                 $daoConLiquidacaoHistorico = new DaoConLiquidacaoHistorico();
                 $daoConLiquidacaoHistorico->setIdPessoa($this->getIdPessoa())
+                                          ->setIdLiquidacao($this->getIdLiquidacao())
                                           ->setIdLotacao($this->getIdLotacao())
                                           ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                                           ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao())

@@ -15,6 +15,28 @@ class LiquidacaoPesquisa {
     private $tipoGasto = null;
     private $situacao = null;
     
+    private $sitLiquidado = 1;
+    private $sitPagoParcial = 2;
+    private $sitPago = 3;
+    private $sitCancelado = 4;
+    
+    function getSitLiquidado() {
+        return $this->sitLiquidado;
+    }
+
+    function getSitPagoParcial() {
+        return $this->sitPagoParcial;
+    }
+
+    function getSitPago() {
+        return $this->sitPago;
+    }
+
+    function getSitCancelado() {
+        return $this->sitCancelado;
+    }
+
+        
     function getNrLiquidacao() {
         return $this->nrLiquidacao;
     }
@@ -136,7 +158,7 @@ class LiquidacaoPesquisa {
             
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
-                    $retorno .= "<tr data-id=".$linha['id_liquidacao'].">"
+                    $retorno .= "<tr data-id=".$linha['id_liquidacao']." data-objeto='". json_encode($linha)."'>"
                                 . "<td class='text-center'>".$linha['nr_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['nr_pedido']."</td>"
                                 . "<td class='text-center'>".$linha['nr_empenho']."</td>"
@@ -145,15 +167,19 @@ class LiquidacaoPesquisa {
                                 . "<td class='text-center'>".$linha['dt_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['vl_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['nm_liquidacao_situacao']."</td>"
-                                . "<td>"
+                                . "<td class='text-center'>"
                                     . "<button type='button' title='Ver Liquidação' class='ver-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
-                                    . "</button>"
-                                    . "<button type='button' title='Editar Liquidação' class='editar-liquidacao' value=".$linha['id_liquidacao'].">"
+                                    . "</button>";
+                    if ($linha['id_liquidacao_situacao'] == $this->getSitLiquidado()) {
+                        $retorno .= "<button type='button' title='Editar Liquidação' class='editar-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
                                     . "</button>"
-                                . "</td>"
-                            . "</tr>";
+                                    . "<button type='button' title='Excluir Liquidação' class='excluir-liquidacao' value=".$linha['id_liquidacao'].">"
+                                        . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                                    . "</button>";
+                    }
+                    $retorno .= "</td></tr>";
                 }
             }
             
@@ -180,6 +206,10 @@ class LiquidacaoPesquisa {
         
         if ($this->getContratado()) {
             $retorno .= (empty($filtro)) ? " where pessoa.id_pessoa = ".$this->getContratado() : " and pessoa.id_pessoa = ".$this->getContratado(); 
+        }
+        
+        if($this->getSituacao()){
+            $retorno .= (empty($filtro)) ? " where liquidacao.id_liquidacao_situacao = ".$this->getSituacao() : " and liquidacao.id_liquidacao_situacao = ".$this->getSituacao(); 
         }
         
 //        if ($this->getNrProtocolo()) {

@@ -66,14 +66,14 @@ require_once "index.load.php";
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="tp_tramitacao">
+                                                        <label for="id_tramitacao">
                                                             Tramitação: <span class="text-danger">*</span>
                                                         </label>                                                        
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="tp_tramitacao" class="form-control">
+                                                            <select id="id_tramitacao" class="form-control">
                                                                 <?php
                                                                     echo $optionsTramitacao;
                                                                 ?>                                                            

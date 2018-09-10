@@ -279,6 +279,10 @@ function atualizaValorLiquidacao(){
         vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
     });
     
+    if (vl_liquidacao == 0){
+        $("#vl_liquidacao").prop("disabled",false);
+    }
+    
     $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
 }
 

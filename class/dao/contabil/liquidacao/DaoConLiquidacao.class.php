@@ -202,8 +202,6 @@ class DaoConLiquidacao extends ConLiquidacao {
                        fin_documento_situacao as docSit 
                        on docSit.id_documento_situacao = docFis.id_documento_situacao 
                  where
-                    docFis.id_documento_situacao = 2 	--Somente 'A Liquidar'
-                 and
                     liq.id_liquidacao = :id_liquidacao
                  order by
                     docFis.nr_documento_fiscal";
@@ -234,9 +232,10 @@ class DaoConLiquidacao extends ConLiquidacao {
                     pj.nr_cnpj,
                     pj.nm_fantasia,
                     to_char(liq.dt_liquidacao,'dd/mm/yyyy') as dt_liquidacao,
-                    to_char(liq.vl_liquidacao,'999G999G999D0999') as vl_liquidacao,
+                    to_char(liq.vl_liquidacao,'999G999G990D0999') as vl_liquidacao,
                     liqSit.nm_liquidacao_situacao,
-                    string_agg(docFis.nr_documento_fiscal, ', ') as documentos_fiscais 
+                    string_agg(docFis.nr_documento_fiscal, ', ') as documentos_fiscais,
+                    liq.id_liquidacao_situacao 
                  from
                     con_liquidacao as liq 
                     inner join
@@ -248,7 +247,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     inner join
                        fin_pedido as ped 
                        on ped.id_pedido = emp.id_pedido 
-                    inner join
+                    left join
                        con_liquidacao_doc as liqDoc 
                        on liqDoc.id_liquidacao = liq.id_liquidacao 
                     inner join
@@ -257,7 +256,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     inner join
                        ses_pessoa_juridica as pj 
                        on pj.id_pessoa = fornec.id_pessoa 
-                    inner join
+                    left join
                        fin_documento_fiscal as docFis 
                        on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
                  group by
@@ -292,7 +291,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.id_empenho,
                     liq.id_liquidacao,
                     liq.nr_liquidacao,
-                    liq.ds_liquidacao,
+                    trim(liq.ds_liquidacao) as ds_liquidacao,
                     to_char(liq.dt_liquidacao, 'dd/mm/yyyy') as dt_liquidacao,
                     trim(to_char(liq.vl_liquidacao, '999G999G999D0999')) as vl_liquidacao,
                     ped.id_pedido,
@@ -323,13 +322,29 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
     
-    function retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, string $documentos = ""){
+    function retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, string $documentos = "0"){ //Filtro com o número dos documentos temporário; Refatorar 
         $this->sucesso = false;
-        $sql = "select * from fin_documento_fiscal
-                where id_documento_fiscal in (".$documentos.")
-                and id_documento_situacao <> 2 --diferente de 'A Liquidar'";
+        $sql = "select
+                    * 
+                 from
+                    fin_documento_fiscal as docFis 
+                    left join
+                       con_liquidacao_doc as liqDoc 
+                       on liqDoc.id_documento_fiscal = docFis.id_documento_fiscal 
+                       and liqDoc.id_liquidacao = :id_liquidacao 
+                 where
+                    docFis.id_documento_fiscal in 
+                    (
+                       ".$documentos." 
+                    )
+                    and 
+                    (
+                       docFis.id_documento_situacao <> 2 		--diferente de 'A Liquidar'
+                       and liqDoc.id_documento_fiscal is null 		--e que não esteja vinculada a Liquidação, pois na atualização a situação do gdof já estará 'Liquidado'
+                    )";
         try {
-            $result = $pdo->prepare($sql);            
+            $result = $pdo->prepare($sql);   
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(),PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 

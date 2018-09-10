@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
 
 $session = new Session();
 
@@ -25,6 +26,7 @@ $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 //OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
+$historico = $liquidacao->retornaHistorico();
 
 $edita = false;
 $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao($edita);

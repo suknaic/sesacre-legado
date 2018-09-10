@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocLotacao.class.php";
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Tramitacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/tramitacao/Tramitacao.class.php";
 
 $session = new Session();
 
@@ -18,7 +18,7 @@ $selectUsuario = $contrato->retornaOptionUsuarioContrato($pdo);
 
 $tramitacao = new Tramitacao();
 
-$optionsTramitacao = $tramitacao->retornaOptionsTramitacao();
+$optionsTramitacao = $tramitacao->optionsTramitacao();
 
 $docLotacao = new DocLotacao();
 $selectDocLotacao = $docLotacao->optionsTipoLotacao();

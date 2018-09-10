@@ -72,13 +72,13 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
             $result = $pdo->prepare($sql);            
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->execute();
-            if ($result->rowCount() >= 1){
+//            if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
                 $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                $this->sucesso = false;                
-                $this->msgRetorno = "Não encontrou Registros";                
-            }            
+//            } else {
+//                $this->sucesso = false;                
+//                $this->msgRetorno = "Não encontrou Registros";                
+//            }            
         } catch (PDOException $e) {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 

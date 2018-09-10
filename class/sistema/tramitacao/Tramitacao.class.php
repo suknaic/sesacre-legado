@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/fin/DaoFinTramitacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/sistema/DaoSesTramitacao.class.php";
 
 class Tramitacao {
 
@@ -35,20 +35,18 @@ class Tramitacao {
         return $this;
     }
 
-    function retornaOptionsTramitacao(){
+    function optionsTramitacao(){
         $opcoes = "<option value=0>Selecione o Tipo da Tramitação</option>";
         try {
-            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             
-            $daoFinTramitacao = new DaoFinTramitacao();
-            $daoFinTramitacao->select($pdo);
+            $daoSesTramitacao = new DaoSesTramitacao();
+            $daoSesTramitacao->retornaTodos($pdo);
             
-             if ($daoFinTramitacao->getSucesso()) {
-                foreach ($daoFinTramitacao->getMsgRetorno() as $linha) {
-                    
-                    $opcoes .= "<option value='".$linha['id_tramitacao']."'>".$linha['nm_tramitacao']."</option>";
+            if ($daoSesTramitacao->getSucesso()) {
+                foreach ($daoSesTramitacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option value=".$linha['id_tramitacao'].">".$linha['nm_tramitacao']."</option>";
                 }
             }
             return $opcoes;

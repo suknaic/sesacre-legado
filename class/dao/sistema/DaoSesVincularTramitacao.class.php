@@ -7,6 +7,15 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
    private $sucesso = false;
    private $msgRetorno = null;
    
+   function getSucesso() {
+       return $this->sucesso;
+   }
+
+   function getMsgRetorno() {
+       return $this->msgRetorno;
+   }
+
+      
    function insert(PDO $pdo = null){
        try {
             if (!empty($pdo)) {

@@ -9,6 +9,16 @@ $(document).ready(function () {
     
     $('#dt_liquidacao').mask("99/99/9999");
     
+        //Masca para valor
+    $("body").on("focus", "#vl_liquidacao", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+    
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
