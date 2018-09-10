@@ -796,4 +796,29 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
+    public function retornaTipoSolicitacaoPedido(PDO $pdo = null) {
+        try {
+
+            if (!empty($pdo)) {
+                $sql = "select id_tipo_solicitacao from fin_pedido where id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Sem Conexão";
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
 }

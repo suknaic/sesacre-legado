@@ -937,7 +937,8 @@ class Pedido {
      * Esse metodo e reponsavel por verificar ser a tramitaçao passa e maior 
      * que a tramitaçao existente no doumento fiscal
      * @param PDO $pdo
-     * @return type
+     * @return retorna true ser o valor do pedido for maior que o da tranitacao
+     * caso contrario retorna false
      */
     public function VerificarMaiorTramitacao(PDO $pdo) {
         try {
@@ -950,16 +951,42 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
             $daoFinPedido->retornaTramitacao($pdo);
-            
+
             if (!$daoFinPedido->Sucesso()) {
                 return false;
             }
-            var_dump($daoFinPedido->getMsgRetorno()["st_pedido"]);
-            var_dump($this->stPedido);
+
             if ($daoFinPedido->getMsgRetorno()["st_pedido"] > $this->stPedido) {
                 return true;
             }
-            
+
+            return false;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+    /**
+     * Retorna Tipo de solicitacao do pedido de necessidade, inicialmente 
+     * foi feita para verificar qual status o pedido deve receber
+     * @param PDO $pdo
+     * @return boolean
+     */
+    public function retornaTipoSolicitacaoPedido(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->retornaTipoSolicitacaoPedido($pdo);
+                    
+            if($daoFinPedido->Sucesso()){
+                return $daoFinPedido->getMsgRetorno();
+            }
+
             return false;
         } catch (Exception $ex) {
             return false;

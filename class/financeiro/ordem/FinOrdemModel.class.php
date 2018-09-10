@@ -406,15 +406,14 @@ class FinOrdemModel {
             $pedido = new Pedido();
             $pedido->setIdPedido($ordem[0]->idPedido);
             //verificar ser a ordem e de exuçao/serviço ou entrega
-            var_dump($linha->tp);
-            if ($linha->tp == '1') {
+            
+            if ($ordem[0]->tipoOrdem == '1') {
                 $pedido->setStPedido("17");
-            } else if ($linha->tp == '2') {
+            } else if ($ordem[0]->tipoOrdem == '2') {
                 $pedido->setStPedido("19");
             }
             
-            var_dump($pedido->VerificarMaiorTramitacao($pdo));
-            return false;
+            
             if (!$pedido->VerificarMaiorTramitacao($pdo)) {
                 $pedido->atualizaTramitacaoPedido($pdo);
             }
