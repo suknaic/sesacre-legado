@@ -56,7 +56,7 @@ class LiquidacaoDoc {
                                     ->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
                 
                 $daoConLiquidacaoDoc->insert($pdo);
-            
+                
                 if ($daoConLiquidacaoDoc->Sucesso()) {
                     $idLiquidacaoDoc = $pdo->lastInsertId('con_liquidacao_doc_id_liquidacao_doc_seq');
                     if (!Log::SalvaLogI('con_liquidacao_doc', $idLiquidacaoDoc, $pdo)) {
@@ -70,7 +70,7 @@ class LiquidacaoDoc {
                     
                     $this->sucesso = $gdof->atualizaSituacaoDocumentoGDOF($pdo);
                 } else {
-                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno();
+                    $this->mensagens = $daoConLiquidacaoDoc->getMsgRetorno() ;
                 }
             } else {
                 $this->mensagens = "Sem conexão com o banco de dados";

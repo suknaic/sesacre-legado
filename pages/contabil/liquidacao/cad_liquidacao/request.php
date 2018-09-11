@@ -12,6 +12,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoD
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session('ajax');
 
@@ -89,6 +90,21 @@ switch ($_REQUEST['acao']) {
             break;
         }
         
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuario();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
+
     CASE 'cadastrarLiquidacao':
         try {
             $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -100,8 +116,8 @@ switch ($_REQUEST['acao']) {
             $liquidacao = new Liquidacao();
             $liquidacao->setIdEmpenho($dados['idEmpenho'])
                        ->setUsuario($session->getIdUser())
-                       ->setIdLotacao(128)
-                       ->setIdDocTipoLotacao(2)
+                       ->setIdLotacao($dados['idLotacao'])
+                       ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
                        ->setNrLiquidacao($dados['nrLiquidacao'])
                        ->setVlLiquidacao($dados['vlLiquidacao'])
                        ->setDtLiquidacao($dados['dtLiquidacao'])

@@ -19,8 +19,8 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
         try {                      
             $result = $pdo->prepare("INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal)"                    
                     . " VALUES (:id_liquidacao, :id_documento_fiscal);");                                                            
-            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_STR);
-            $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);            
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT); 
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {

@@ -50,6 +50,18 @@ $(document).ready(function () {
             return false;
         }
     });
+    
+    $.ajax({
+        "url": url,
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function(response){
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
+    });
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
@@ -206,15 +218,20 @@ $(document).ready(function () {
 
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),
-                "idLotacao": $("#idLotacao").val(),
-                "idDocTipoLotacao": $("#idDocTipoLotacao").val(),
+                "idLotacao": $("#id_remetente option:selected").data('lotacao'),
+                "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
                 "obsLiquidacao": $("#desc_liquidacao").val(),
                 "docsLiquidacao": documentos
             }
-            
+
+            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
+                    || dados.dtLiquidacao )) {
+                func.modalAlert("Por favor preencha as informações obrigatórias.");
+                return false;
+            }
 
             $.ajax({
                 "url": "request.php",

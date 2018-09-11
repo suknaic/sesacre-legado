@@ -374,14 +374,15 @@ class Liquidacao {
 
                     $liquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
 
-                    foreach ($this->getDocumentos() as $indice => $documento) {
-                        $liquidacaoDoc->setIdDocumentoFiscal($documento[$indice]);
+                    foreach ($this->getDocumentos() as $documento) {
+                        $liquidacaoDoc->setIdDocumentoFiscal($documento);
                         $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
 
                         if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
                             $this->sucesso = false;
                             $this->mensagens = $liquidacaoDoc->getMensagens();
                             return false;
+                            break;
                         }
                     }
                 }

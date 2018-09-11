@@ -9,6 +9,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
+
 $session = new Session();
 
 $id = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
@@ -25,14 +27,18 @@ $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 
 //OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
-//echo '<pre>';
-//print_r($dadosLiquidacao);
-//echo '<pre>';
+
 $optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
 
 $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();
 
 $historico = $liquidacao->retornaHistorico();
+
+$vincTramitacao = new VincularTramitacao();
+$vincTramitacao->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);
+$vincTramitacao->setIdLotacao($dadosLiquidacao['id_lotacao']);
+
+$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo();
 
 //DADOS DO CONTRATO
 $finContratoModel = new FinContratoModel();
