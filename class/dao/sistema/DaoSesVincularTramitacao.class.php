@@ -124,6 +124,49 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
        }
     }
    
-   
+   function selectTodosComDescritivos(PDO $pdo = null){
+        try {
+           if (!empty($pdo)) {
+                $sql = "select
+                            svt.id_vincular_tramitacao,
+                            tramitacao.id_tramitacao,
+                            tramitacao.nm_tramitacao,
+                            pessoa.id_pessoa,
+                            pessoa.nm_pessoa,
+                            lotacao.id_lotacao,
+                            lotacao.nm_lotacao,
+                            tipoLotacao.id_doc_tipo_lotacao,
+                            tipoLotacao.nm_doc_tipo_lotacao 
+                         from
+                            ses_vincular_tramitacao as svt 
+                            inner join
+                               ses_tramitacao as tramitacao 
+                               on tramitacao.id_tramitacao = svt.id_tramitacao 
+                            inner join
+                               ses_pessoa as pessoa 
+                               on pessoa.id_pessoa = svt.id_pessoa 
+                            inner join
+                               ses_lotacao as lotacao 
+                               on lotacao.id_lotacao = svt.id_lotacao 
+                            inner join
+                               fin_doc_tipo_lotacao as tipoLotacao 
+                               on tipoLotacao.id_doc_tipo_lotacao = svt.id_doc_tipo_lotacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+                
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+       } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+       }
+    }
 }
 

@@ -26,5 +26,31 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    CASE 'removerVincLiquidacao':
+        try {
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
+            
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdVincularTramitacao($filtro['id']);
+            echo $vincTramitacao->excluir();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaVinculos':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            echo $vincTramitacao->listaTodos();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 
 }

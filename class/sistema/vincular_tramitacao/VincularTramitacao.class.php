@@ -99,6 +99,69 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }  
     }
+    
+    function excluir(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdVincularTramitacao($this->getIdVincularTramitacao());
+            
+            $idVincularTramitacao = $daoSesVincularTramitacao->getIdVincularTramitacao();
+            if (!Log::SalvaLogD('ses_vincular_tramitacao', $idVincularTramitacao, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+            
+            $daoSesVincularTramitacao->delete($pdo);
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            } else {
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoSesVincularTramitacao->getMsgRetorno());
+                $pdo->rollBack();
+            }
+            
+            return $retorno;
+            
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function listaTodos(){
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->selectTodosComDescritivos($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
+                    $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
+                                . "<td class='text-center'>".$linha['nm_pessoa']."</td>"
+                                . "<td class='text-center'>".$linha['nm_tramitacao']."</td>"
+                                . "<td class='text-center'>".$linha['nm_lotacao']."</td>"
+                                . "<td class='text-center'>".$linha['nm_doc_tipo_lotacao']."</td>"
+                                . "<td class='text-center'>"
+                                    . "<button type='button' title='Remover Registro' class='remover-vinculo'>"
+                                        . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                                    . "</button>"
+                                . "</td>"
+                              . "</tr>";
+                }
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }  
+    }
 
 }
 

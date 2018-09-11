@@ -34,7 +34,11 @@ require_once "index.load.php";
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
-            <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; ?>
+            <?php 
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
+            //Modal Alert
+            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+            ?>
 
             <div class="boxed">
 
@@ -159,10 +163,10 @@ require_once "index.load.php";
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>Usuário</th>
-                                                        <th>Tramitação</th>
-                                                        <th>Remetente/Destinatário</th>
-                                                        <th>Tipo do Remetente/Destinatário</th>
+                                                        <th class="text-center">Usuário</th>
+                                                        <th class="text-center">Tramitação</th>
+                                                        <th class="text-center">Remetente/Destinatário</th>
+                                                        <th class="text-center">Tipo do Remetente/Destinatário</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
