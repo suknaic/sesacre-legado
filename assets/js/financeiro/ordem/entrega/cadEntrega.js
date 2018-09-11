@@ -126,9 +126,9 @@ $(document).ready(function () {
                             } else {
 
                                 var acao = 'Quantidade' + '<input type="text" name="qtd" id="qtd" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '" \n\
-                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd">' +
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm qtd" value="' + valores[i]['qt_itens_ordem'].trim() + '" disabled="true">' +
                                         '<br/>Valor' + '<input type="text" name="vl" id="vl" itemid="' + valores[i]['id_ordem_itens'] + '" tp="' + valores[i]['tp_material'] + '"  \n\
-                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm vl" >';
+                                        fl_valor="' + valores[i]['fl_valor_variavel'] + '" class="form-control input-sm vl" " value="' + valores[i]['vl_itens_ordem'].trim() + '" disabled="true">';
                             }
 
                         }

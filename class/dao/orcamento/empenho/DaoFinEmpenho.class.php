@@ -129,12 +129,14 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         try {
             $sql = "SELECT concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as nr_pedido, 
                     emp.id_empenho, empTipo.nm_tipo_empenho, emp.nr_empenho, emp.dh_empenho_sistema, emp.dt_empenho_safira, 
-                    emp.vl_empenho, emp.ds_empenho, emp.sit_empenho, p.nr_pedido
+                    emp.vl_empenho, emp.ds_empenho, emp.sit_empenho, p.nr_pedido, tpGasto.nm_tipo_gasto
                     FROM fin_empenho as emp
                     inner join fin_tipo_empenho as empTipo
                     on empTipo.id_tipo_empenho = emp.id_tipo_empenho
                     inner join fin_pedido as p
                     on p.id_pedido = emp.id_pedido
+                    inner join pla_tipo_gasto as tpGasto
+                    on tpGasto.id_tipo_gasto = p.id_tipo_gasto
                     where to_char(now(),'yyyy') = to_char(p.dt_pedido, 'yyyy')";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();

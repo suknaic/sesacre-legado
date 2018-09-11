@@ -54,76 +54,75 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
         try {
             if ($pdo != null) {
                 $sql = "select orItens.id_ordem_itens, itens.nr_item, mat.cd_desc_material, mat.nm_material, itens.fl_valor_variavel,  
-                        case 
-                                when ds_itens is null then mat.nm_desc_material
-                                when ds_itens is not null then itens.ds_itens
-                        end itenDescricao, mat.cd_elemento_despesa, mat.tp_material,
-                        itens.nr_lote, orItens.qt_itens_ordem, orItens.vl_itens_ordem,
-                        /* Inicio da sql que calcula o valor ultilado dos itens */
-                        coalesce(
-                        (select 
-                                case 
-                                        when ((mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0')
-                                                then round(sum(entItens.qt_itens_entrega),4)
-                                        when mat.tp_material is not null
-                                                then round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) 
-                                        else '0.0000'
-                                end saldo
-                                from fin_entrega_itens as entItens
-                                inner join fin_ordem_itens as ordemItens
-                                on ordemItens.id_ordem_itens =  entItens.id_ordem_itens
-                                inner join fin_pre_ordem as preOrdem
-                                on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
-                                inner join fin_cont_itens as itens 
-                                on itens.id_cont_itens =  preOrdem.id_cont_itens
-                                inner join pla_material as mat
-                                on mat.id_material = itens.id_material
-                                where entItens.id_ordem_itens = orItens.id_ordem_itens
-                                group by mat.tp_material, itens.fl_valor_variavel
-                        ),'0.0000') as entregue,
-                        /* Fim da sql que calcula o valor ultilado dos itens */
-                        /* Inicio da sql que calcula o saldo dos itens */
-                        (case 
-                                when (mat.tp_material = 'C' OR mat.tp_material = 'S') and itens.fl_valor_variavel = '0'
-                                        then round(orItens.qt_itens_ordem,4)
-                                when (mat.tp_material is not null)
-                                        then round((orItens.qt_itens_ordem * orItens.vl_itens_ordem),4)
-                        end 
-                        -
-                        coalesce(
-                        (select 
-                                case 
-                                        when ((mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0')
-                                                then round(sum(entItens.qt_itens_entrega),4)
-                                        when mat.tp_material is not null
-                                                then round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) 
-                                        else '0.0000'
-                                end saldo
-                                from fin_entrega_itens as entItens
-                                inner join fin_ordem_itens as ordemItens
-                                on ordemItens.id_ordem_itens =  entItens.id_ordem_itens
-                                inner join fin_pre_ordem as preOrdem
-                                on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
-                                inner join fin_cont_itens as itens 
-                                on itens.id_cont_itens =  preOrdem.id_cont_itens
-                                inner join pla_material as mat
-                                on mat.id_material = itens.id_material
-                                where entItens.id_ordem_itens = orItens.id_ordem_itens
-                                group by mat.tp_material, itens.fl_valor_variavel
-                        ),'0.0000')) as aguardandoentrega
-                        /* Fim da sql que calcula o saldo dos itens */
-                        from fin_ordem_itens as orItens
-                        inner join fin_pre_ordem as pre
-                        on pre.id_pre_ordem = orItens.id_pre_ordem
-                        inner join fin_pedido as p
-                        on p.id_pedido = pre.id_pedido
-                        inner join fin_cont_itens as itens
-                        on itens.id_cont_itens = pre.id_cont_itens
-                        inner join pla_material as mat
-                        on mat.id_material = itens.id_material
-                        inner join pla_unidade_medida as um
-                        on um.id_unidade_medida = itens.id_unidade_medida
-                        where orItens.id_ordem = :ordem";
+case 
+	when ds_itens is null then mat.nm_desc_material
+    when ds_itens is not null then itens.ds_itens
+end itenDescricao, mat.cd_elemento_despesa, mat.tp_material, itens.nr_lote, 
+to_char(orItens.qt_itens_ordem, '9G999G990D9999') as qt_itens_ordem, to_char(orItens.vl_itens_ordem, '9G999G990D9999') as vl_itens_ordem ,
+/* Inicio da sql que calcula o valor ultilado dos itens */
+coalesce(
+	(select 
+    		case 
+        when ((mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0')
+        then round(sum(entItens.qt_itens_entrega),4)
+        when mat.tp_material is not null
+        then round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) 
+        else '0.0000'
+     end saldo
+     from fin_entrega_itens as entItens
+     inner join fin_ordem_itens as ordemItens
+     on ordemItens.id_ordem_itens =  entItens.id_ordem_itens
+     inner join fin_pre_ordem as preOrdem
+     on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
+     inner join fin_cont_itens as itens 
+     on itens.id_cont_itens =  preOrdem.id_cont_itens
+     inner join pla_material as mat
+     on mat.id_material = itens.id_material
+     where entItens.id_ordem_itens = orItens.id_ordem_itens
+     group by mat.tp_material, itens.fl_valor_variavel
+     ),'0.0000') as entregue,
+ /* Fim da sql que calcula o valor ultilado dos itens */
+ /* Inicio da sql que calcula o saldo dos itens */
+    (case 
+     when (mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0'
+     then round(orItens.qt_itens_ordem,4)
+     when (mat.tp_material = 'S' OR itens.fl_valor_variavel = '1')
+     then round((orItens.qt_itens_ordem * orItens.vl_itens_ordem),4)
+     end 
+     -
+    coalesce((select 
+				case 
+                 when ((mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0')
+                 then round(sum(entItens.qt_itens_entrega),4)
+                 when (mat.tp_material = 'S' OR itens.fl_valor_variavel = '1')
+                 then round(sum((entItens.qt_itens_entrega * entItens.vl_itens_entrega)),4) 
+                 else '0.0000'
+    				 end saldo
+    				 from fin_entrega_itens as entItens
+                 inner join fin_ordem_itens as ordemItens
+                 on ordemItens.id_ordem_itens =  entItens.id_ordem_itens
+                 inner join fin_pre_ordem as preOrdem
+                 on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
+                 inner join fin_cont_itens as itens 
+                 on itens.id_cont_itens =  preOrdem.id_cont_itens
+                 inner join pla_material as mat
+                 on mat.id_material = itens.id_material
+                 where entItens.id_ordem_itens = orItens.id_ordem_itens
+                 group by mat.tp_material, itens.fl_valor_variavel
+               ),'0.0000')) as aguardandoentrega
+/* Fim da sql que calcula o saldo dos itens */
+from fin_ordem_itens as orItens
+inner join fin_pre_ordem as pre
+on pre.id_pre_ordem = orItens.id_pre_ordem
+inner join fin_pedido as p
+on p.id_pedido = pre.id_pedido
+inner join fin_cont_itens as itens
+on itens.id_cont_itens = pre.id_cont_itens
+inner join pla_material as mat
+on mat.id_material = itens.id_material
+inner join pla_unidade_medida as um
+on um.id_unidade_medida = itens.id_unidade_medida
+where orItens.id_ordem = :ordem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -373,12 +372,12 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
     }
 
     public function retornaDadosOptionGdof(PDO $pdo, $idOrdens
-            , string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado) {
+    , string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado) {
         try {
             $sqlDocumentoFiscal = " AND (entDoc.id_documento_fiscal IS NULL"
                     . " OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
-            if(!empty($idDocumentoFiscal)){
-               $sqlDocumentoFiscal = $sqlDocumentoExiste;
+            if (!empty($idDocumentoFiscal)) {
+                $sqlDocumentoFiscal = $sqlDocumentoExiste;
             }
             $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
@@ -397,10 +396,10 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
                     WHERE protocolo.id_ordem in(" . $idOrdens . ")
                     AND protocolo.st_protocolo = '2'
-                    ".$sqlDocumentoFiscal." ";            
+                    " . $sqlDocumentoFiscal . " ";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":idDocumentoSituacao", $idDocSitCadastrado, PDO::PARAM_INT);
-            if(!empty($idDocumentoFiscal)){
+            if (!empty($idDocumentoFiscal)) {
                 $stmt->bindValue(":idDocumentoFiscal", $idDocumentoFiscal, PDO::PARAM_INT);
             }
             $stmt->execute();
@@ -435,7 +434,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                     on confirmacao.id_ordem = ordem.id_ordem
                     inner join fin_entrega_itens as item
                     on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                    where confirmacao.id_entrega_confirmacao in(".$idEntrega.")
+                    where confirmacao.id_entrega_confirmacao in(" . $idEntrega . ")
                     group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo,
                     ordem.id_ordem
                     order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), 
@@ -453,7 +452,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
             $this->sucesso = false;
         }
     }
-    
+
     /**
      * Passando um conjunto de Id Entrega Confirmação, irá ser verifica e retornado quais delas podem
      * ser utilizadas para cadastro no documento fiscal
@@ -463,7 +462,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
      */
     public function verificaEntregasAptasParaDocFiscal(PDO $pdo, string $idsEntregas, int $idDocSitCancelado) {
         try {
-            
+
             $sql = "SELECT confirmacao.id_entrega_confirmacao
                     FROM fin_entrega_confirmacao as confirmacao
                     LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
@@ -474,10 +473,10 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                         FROM fin_doc_tramitacao t				
                         ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                     ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
-                    WHERE confirmacao.id_entrega_confirmacao IN (".$idsEntregas.") AND
-                    (entDoc.id_documento_fiscal IS NULL OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";                        
+                    WHERE confirmacao.id_entrega_confirmacao IN (" . $idsEntregas . ") AND
+                    (entDoc.id_documento_fiscal IS NULL OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":idDocumentoSituacao", $idDocSitCancelado, PDO::PARAM_INT);            
+            $stmt->bindValue(":idDocumentoSituacao", $idDocSitCancelado, PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->sucesso = true;

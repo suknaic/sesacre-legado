@@ -262,6 +262,7 @@ $(document).ready(function () {
                         valores[i]['nr_pedido'],
                         valores[i]['nr_empenho'],
                         valores[i]['ds_empenho'],
+                        valores[i]['nm_tipo_gasto'],
                         valores[i]['dh_empenho_sistema'],
                         valores[i]['dt_empenho_safira'],
                         Number(valores[i]['vl_empenho']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
@@ -277,6 +278,7 @@ $(document).ready(function () {
                         {title: "Nº Pedido"},
                         {title: "Nº Empenho"},
                         {title: "Descrição"},
+                        {title: "Tipo de gasto"},
                         {title: "Data Empenho no Sistema"},
                         {title: "Data Empenho no Safira"},
                         {title: "Valor do Empenho"}

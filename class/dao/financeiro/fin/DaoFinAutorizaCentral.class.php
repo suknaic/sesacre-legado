@@ -187,7 +187,8 @@ class DaoFinAutorizaCentral extends FinAutorizaCentral {
         try {
             if (!empty($pdo)) {
                 $sql = "select concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as numero, 
-                        p.ds_pedido, tp.nm_tipo_gasto, font.nr_fonte, desp.cd_despesa_elemento, coalesce(p.vl_pedido,'0.0000') as vl_pedido, p.id_pedido
+                        p.ds_pedido, tp.nm_tipo_gasto, font.nr_fonte, desp.cd_despesa_elemento, coalesce(p.vl_pedido,'0.0000') as vl_pedido, p.id_pedido,
+                        diaria.id_diaria
                         from fin_pedido as p
                         inner join pla_tipo_gasto as tp 
                         on tp.id_tipo_gasto = p.id_tipo_gasto
@@ -195,6 +196,8 @@ class DaoFinAutorizaCentral extends FinAutorizaCentral {
                         on font.id_fonte = p.id_fonte
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
+                        left join dia_diaria as diaria
+                        on diaria.id_pedido = p.id_pedido
                         where p.st_pedido = :tipoAutorizacao
                         and p.id_lotacao in (" . $this->getIdLotacao() . ") ";
                 $stmt = $pdo->prepare($sql);
@@ -221,7 +224,8 @@ class DaoFinAutorizaCentral extends FinAutorizaCentral {
         try {
             if (!empty($pdo)) {
                 $sql = "select concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as numero, 
-                        p.ds_pedido, tp.nm_tipo_gasto, font.nr_fonte, desp.cd_despesa_elemento, coalesce(p.vl_pedido,'0.0000') as vl_pedido, p.id_pedido
+                        p.ds_pedido, tp.nm_tipo_gasto, font.nr_fonte, desp.cd_despesa_elemento, coalesce(p.vl_pedido,'0.0000') as vl_pedido, p.id_pedido,
+                        diaria.id_diaria
                         from fin_pedido as p
                         inner join pla_tipo_gasto as tp 
                         on tp.id_tipo_gasto = p.id_tipo_gasto
@@ -229,6 +233,8 @@ class DaoFinAutorizaCentral extends FinAutorizaCentral {
                         on font.id_fonte = p.id_fonte
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
+                        left join dia_diaria as diaria
+                        on diaria.id_pedido = p.id_pedido
                         where p.st_pedido = :tipoAutorizacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':tipoAutorizacao', $this->getTipoAutorizacao(), PDO::PARAM_INT);

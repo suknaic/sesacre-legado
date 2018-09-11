@@ -326,13 +326,13 @@ class FinEmpenhoModel {
                 return Metodos::retornoAjax("Erro", "alert", "Empenho já foi cadastrado!");
             }
 
-            $daoFinEmpenho->updateStPedidoEmpenho($pdo, '16');
-
-            if (!$daoFinEmpenho->sucesso()) {
-                $pdo->rollBack();
-                $sucesso = false;
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar o status do pedido");
-            }
+//            $daoFinEmpenho->updateStPedidoEmpenho($pdo, '16');
+//
+//            if (!$daoFinEmpenho->sucesso()) {
+//                $pdo->rollBack();
+//                $sucesso = false;
+//                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar o status do pedido");
+//            }
 
             $daoFinEmpenho->insertEmpenho($pdo);
             $daoFinEmpenho->setIdEmpenho((is_numeric($pdo->lastInsertId('fin_empenho_id_empenho_seq'))) ? $pdo->lastInsertId('fin_empenho_id_empenho_seq') : null);
@@ -401,7 +401,18 @@ class FinEmpenhoModel {
                 $sucesso = false;
                 return Metodos::retornoAjax("Erro6", "alert", STR_ERROR);
             }
-
+            
+            $classPedido = new Pedido();
+            $classPedido->setIdPedido($this->id_pedido);
+            
+            if($classPedido->retornaTipoSolicitacaoPedido($pdo) != FALSE && $classPedido->retornaTipoSolicitacaoPedido($pdo) == 2){
+                $classPedido->setStPedido(16);
+                $classPedido->atualizaTramitacaoPedido($pdo);
+            }else if($classPedido->retornaTipoSolicitacaoPedido($pdo) != FALSE && $classPedido->retornaTipoSolicitacaoPedido($pdo) != 2){
+                $classPedido->setStPedido(21);
+                $classPedido->atualizaTramitacaoPedido($pdo);
+            }
+            
             if ($sucesso) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", "Empenho cadastrado com sucesso");
