@@ -94,10 +94,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                         <input type="hidden" id="id_protocolo" value="<?php echo $id; ?>" />
                                         <input type="hidden" id="idOrdem" value="<?php echo $ordem; ?>" />
                                         <p><strong>Pedido:</strong> <?php echo $dados["nr_pedido"]; ?></p>
-                                        <p><strong>Descrição:</strong> <?php echo $dados["ds_pedido"]; ?>/p>
-                                            <?php
-                                            if ($dados["tp_contrato"] == 1) {
-                                                ?>
+                                        <p><strong>Descrição:</strong> <?php echo $dados["ds_pedido"]; ?></p>
+                                        <?php
+                                        if ($dados["tp_contrato"] == 1) {
+                                            ?>
                                             <p><strong>ATA:</strong> <?php echo $dados["nr_contrato"]; ?></p>
                                         <?php } else { ?>
                                             <p><strong>Contrato:</strong> <?php echo $dados["nr_contrato"]; ?></p>
@@ -106,11 +106,50 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                         <p><strong>Ordem:</strong> <?php echo $dados["nr_ordem"]; ?></p>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <?php if ($situacao["st_protocolo"] < '2') { ?>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <div class="panel-body">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Dados para Entrega</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-striped table-bordered" id="tabela01">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Nº</th>
+                                                                <th class="text-center">Item</th>
+                                                                <th class="text-center">Descrição</th>
+                                                                <th class="text-center">Elemento de Despesa</th>
+                                                                <th class="text-center">Tipo</th>
+                                                                <th class="text-center">Lote</th>
+                                                                <th class="text-center">QTD</th>
+                                                                <th class="text-center">Valor unit</th>
+                                                                <th class="text-center">Entregue</th>
+                                                                <th class="text-center">Aguardando Entrega</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3') { ?>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Itens para Entrega</h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-3">
                                                     <label for="tipoOrdem">
                                                         Tipo da entrega: <span class="text-danger">*</span>
                                                     </label>                                                        
@@ -124,31 +163,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                             <option value="2">Total</option>
                                                         </select>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="col-sm-3">
-                                                <div class="panel-body">
+                                                </div>
+
+                                                <div class="col-sm-3">
                                                     Data de entrega:<span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
                                                         <input class="form-control data" type="text" name="data_entrega" id="data_entrega" required="true" />
                                                     </div>
+
                                                 </div>
+
                                             </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Itens para Entrega</h3>
-                                        </div>
-                                        <div class="panel-body">
-                                            <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-
-                                                <div class="row">
-                                                    <div class="col-sm-12">
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                                                         <table class="table table-striped table-bordered" id="tabela">
                                                             <thead>
                                                                 <tr>
@@ -173,7 +204,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                            <br/>
+                                            <button class="btn btn-success btn-salvar btn-rounded" type="button">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                             </button>
                                         </div>
@@ -185,7 +217,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega(); ?>
                                 </div>
-
+                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3') { ?>
+                                    <div class="panel ">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-rounded btn-finaliza" type="button">
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                                 <div class="panel">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Anotações

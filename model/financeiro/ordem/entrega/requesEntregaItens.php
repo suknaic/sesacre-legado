@@ -1,10 +1,12 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaItensModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemItensModel.class.php";
+
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -61,6 +63,20 @@ switch ($_REQUEST['acao']) {
             $finEntregaItensModel->setIdEntregaConfirmacao($itens["idEntrega"]);
             $finEntregaItensModel->setIdProtocolo($itens["idProtocolo"]);
             echo $finEntregaItensModel->removeItemEntrega();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'finalizaEntrega':
+        try {
+            $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
+            echo $finEntregaConfirmacaoModel->finalizaEntrega();
             return;
             break;
         } catch (Error $e) {

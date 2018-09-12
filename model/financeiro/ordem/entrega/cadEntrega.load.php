@@ -3,7 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 $session = new Session();
 
 $token = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
@@ -18,24 +18,23 @@ if (empty($token) && empty($token2)) {
         header("location: /index.php");
     }
 
-    $situacao = 0;
-
     $finProtocoloModel = new FinProtocoloModel();
     $finProtocoloModel->setIdOrdem($ordem);
     $finProtocoloModel->setIdProtocolo($id);
-    
-    $finProtocoloModel->retornaSituacaoProtocolo(null);
-    
-    if($finProtocoloModel->Sucesso()){
-        $situacao = $finProtocoloModel->getMsgRetorno();
-    }
-    
+ 
     $dados = [];
     $dados = $finProtocoloModel->inforLoadProtocolo();
+    
     
     $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
     $finEntregaConfirmacaoModel->setIdOrdem($ordem);
     
+    
+    $classOrdem = new FinOrdemModel();
+   
+    $classOrdem->setIdOrdem($ordem);
+    $situacao = $classOrdem->retornaValorSituacaoOrdem(null); 
+  
 }
 
 

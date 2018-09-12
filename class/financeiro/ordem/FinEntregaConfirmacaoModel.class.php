@@ -264,12 +264,13 @@ class FinEntregaConfirmacaoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-
+            //instanciando as classes 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $finEntregaItensModel = new FinEntregaItensModel();
             $finProtocoloModel = new FinProtocoloModel();
-            $this->id_protocolo = $dados[0]->id_protocolo;
+            $finOrdemModel = new FinOrdemModel();
 
+            $this->id_protocolo = $dados[0]->id_protocolo;
             $daoFinEntregaConfirmacao->setIdOrdem($dados[0]->idOrdem);
             $daoFinEntregaConfirmacao->setIdProtocolo($dados[0]->id_protocolo);
             $daoFinEntregaConfirmacao->setNrEntregaConfirmacao($this->retornaNumeroEntregaConfirmacao($pdo) + 1);
@@ -314,6 +315,15 @@ class FinEntregaConfirmacaoModel {
             if (!$finProtocoloModel->Sucesso()) {
                 $pdo->rollBack();
                 return $finProtocoloModel->getMsgRetorno();
+            }
+
+            if ($dados[0]->tipoEntrega == 2) {
+                $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
+
+                if (!$finOrdemModel->finalizaOrdem($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                }
             }
 
             //retorna os saldos dos itens
@@ -382,6 +392,12 @@ class FinEntregaConfirmacaoModel {
                 if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação");
+                }
+                //Finaliza a ordem
+                $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
+                if (!$finOrdemModel->finalizaOrdem($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
                 }
             }
 
@@ -499,7 +515,7 @@ class FinEntregaConfirmacaoModel {
                                     <td class="text-center">' . $c["nr_lote"] . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($c["qt_itens_entrega"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($c["vl_itens_entrega"], 4) . '</td>
-                                    <td class="text-center">' . Metodos::ConverteValorBr($c["entregue"],4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($c["entregue"], 4) . '</td>
                                     <td class="text-center">
                                     <button type="button" title="Excluir itens" class="excluir text-danger" value="' . $c["id_entrega_itens"] . '" 
                                      nomeitem ="' . $c["nm_material"] . '" idEntrega = "' . $c["id_entrega_confirmacao"] . '">
@@ -587,31 +603,30 @@ class FinEntregaConfirmacaoModel {
             }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            $arrayIdOrdens = array();            
+            $arrayIdOrdens = array();
             $sqlDocumentoExiste = "";
             $idDocumentoFiscal = 0;
-            foreach ($dados as $key => $linha){
+            foreach ($dados as $key => $linha) {
                 $arrayIdOrdens [] = $linha["id_ordem"];
                 /*
                  * o ComboBox precisa vir preenchido mesmo se for na edição
                  * Então ele irá trazer as Entregas e se tiver o documento fiscal, ele irá trazer as ordens que 
                  * estão vinculado a ele
-                 */                
-                if(array_key_exists("id_documento_fiscal", $linha)){
-                    if(!empty($linha['id_documento_fiscal'])){
-                        $idDocumentoFiscal = (int)$linha['id_documento_fiscal'];
+                 */
+                if (array_key_exists("id_documento_fiscal", $linha)) {
+                    if (!empty($linha['id_documento_fiscal'])) {
+                        $idDocumentoFiscal = (int) $linha['id_documento_fiscal'];
                         $sqlDocumentoExiste = " and (entDoc.id_documento_fiscal is null"
                                 . " OR entDoc.id_documento_fiscal = :idDocumentoFiscal"
                                 . " OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
                     }
                 }
-                
             }
-            
-            $finDocumentoFiscal = new FinDocumentoFiscal();            
-            
+
+            $finDocumentoFiscal = new FinDocumentoFiscal();
+
             $idOrdens = implode(' , ', $arrayIdOrdens);
-            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens
                     , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado());
             $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
@@ -641,7 +656,7 @@ class FinEntregaConfirmacaoModel {
             foreach ($idEntregas as $linha) {
                 $arrayIdEntregas [] = $linha;
             }
-            
+
             $idEntregas = implode(' , ', $arrayIdEntregas);
 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
@@ -681,8 +696,7 @@ class FinEntregaConfirmacaoModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    
+
     public function retornaEntregasAptasParaDocumentoFiscal(PDO $pdo, $idEntregas, $idDocSitCancelado) {
         try {
 
@@ -696,22 +710,44 @@ class FinEntregaConfirmacaoModel {
             foreach ($idEntregas as $linha) {
                 $arrayIdEntregas [] = $linha;
             }
-            
+
             $idEntregas = implode(' , ', $arrayIdEntregas);
 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->verificaEntregasAptasParaDocFiscal($pdo, $idEntregas, $idDocSitCancelado);            
+            $daoFinEntregaConfirmacao->verificaEntregasAptasParaDocFiscal($pdo, $idEntregas, $idDocSitCancelado);
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 $this->sucesso = true;
-                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();              
-            }else{
+                $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
+            } else {
                 $this->sucesso = false;
                 $this->msgRetorno = $daoFinEntregaConfirmacao->getMsgRetorno();
-            }           
+            }
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function finalizaEntrega() {
+        try {
+            //conexao com o banco
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            $finOrdemModel = new FinOrdemModel();
+            $finOrdemModel->setIdOrdem($this->id_ordem);
+            
+            if (!$finOrdemModel->finalizaOrdem($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+            }
+            
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");
+            
+        } catch (Exception $ex) {
+            
         }
     }
 

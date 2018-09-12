@@ -38,6 +38,53 @@ $(document).ready(function () {
                 }
             }
 
+
+            /**
+             * Codigo abaixo e para lista os itens da entrega sem a acao
+             */
+            let dataSet = [];
+            var oTable = $('#tabela').dataTable();
+            oTable.fnDestroy();
+            for (var i = valores.length - 1; i >= 0; i--) {
+
+                let valor = [
+                    valores[i]['nr_item'],
+                    valores[i]['cd_desc_material'] + '-' + valores[i]['nm_material'],
+                    valores[i]['itendescricao'],
+                    valores[i]['cd_elemento_despesa'],
+                    valores[i]['tp_material'],
+                    valores[i]['nr_lote'],
+                    valores[i]['qt_itens_ordem'],
+                    valores[i]['vl_itens_ordem'],
+                    valores[i]['entregue'],
+                    valores[i]['aguardandoentrega'],
+                ]
+                dataSet.push(valor)
+            }
+
+            $('#tabela01').DataTable({
+                data: dataSet,
+                "paging": false,
+                "searching": false,
+                language: {
+                    "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
+                },
+
+                columns: [
+                    {title: "Nº", className: "text-center"},
+                    {title: "Item", className: "text-center"},
+                    {title: "Descrição", className: "text-center"},
+                    {title: "Elemento de Despesa", className: "text-center"},
+                    {title: "Tipo", className: "text-center"},
+                    {title: "Lote", className: "text-center"},
+                    {title: "QTD", className: "text-center"},
+                    {title: "Valor unit", className: "text-center"},
+                    {title: "Entregue", className: "text-center"},
+                    {title: "Aguardando Entrega", className: "text-center"},
+                ]
+            });
+
+
             $("body").on("change", "#tipoEntrega", function () {
                 var $this = $(this).val();
 
@@ -77,6 +124,7 @@ $(document).ready(function () {
                     $('#tabela').DataTable({
                         data: dataSet,
                         "paging": false,
+                        "searching": false,
                         language: {
                             "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                         },
@@ -151,6 +199,7 @@ $(document).ready(function () {
                     $('#tabela').DataTable({
                         data: dataSet,
                         "paging": false,
+                        "searching": false,
                         language: {
                             "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                         },
@@ -231,6 +280,7 @@ $(document).ready(function () {
                     "itens": enc
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
 
                     if (response.tipoMsg === "Erro") {
@@ -256,6 +306,7 @@ $(document).ready(function () {
                     }
                 },
                 "error": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     func.modalAlert(func.msgErroPadrao);
                     return false;
@@ -316,6 +367,89 @@ $(document).ready(function () {
                         "dataType": "html",
                         "data": {
                             "acao": "excluirItemEntrega",
+                            "dados": dados
+                        },
+                        "success": function (response) {
+                            console.log(response);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao);
+                                console.log("Parse JSON");
+                                return false;
+                            }
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    console.log('Console Mensagem');
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    location.reload();
+                                });
+                                return false;
+                            } else {
+                                console.log('Ultimo else');
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+
+    $('body').on('click', '.btn-finaliza', function (e) {
+        var $this = $(this);
+        var id = $("#idOrdem").val();
+      
+
+        bootbox.confirm({
+            title: func.msgCaixaDeConfirmacao,
+            message: 'Você tem Certeza que deseja continuar com a Finalização da entrega',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var dados = {
+                        "idOrdem": id
+                    }
+
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",
+                        "method": "POST",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "finalizaEntrega",
                             "dados": dados
                         },
                         "success": function (response) {

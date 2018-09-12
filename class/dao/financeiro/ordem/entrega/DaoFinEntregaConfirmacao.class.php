@@ -395,7 +395,7 @@ where orItens.id_ordem = :ordem";
                             ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                     ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
                     WHERE protocolo.id_ordem in(" . $idOrdens . ")
-                    AND protocolo.st_protocolo = '2'
+                   
                     " . $sqlDocumentoFiscal . " ";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":idDocumentoSituacao", $idDocSitCadastrado, PDO::PARAM_INT);

@@ -354,7 +354,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem  = ordem.id_ordem
                         where ordem.id_pedido = :pedido
-                        and protocolo.st_protocolo = '2'";
+                        and ordem.sit_ordem = '3'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -405,6 +405,49 @@ class DaoFinOrdem extends FinOrdemTb {
                         on mat.id_material = itens.id_material
                         where ordem.id_ordem = :ordem
                         group by ordem.tp_ordem, mat.tp_material, fl_valor_variavel";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function atualizaSituacaoOrden(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_ordem set sit_ordem = :situacao where id_ordem = :ordem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $this->getSitOrdem(), PDO::PARAM_STR);
+                $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "erro conexao";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaSituacaoOrdem(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select sit_ordem from fin_ordem where id_ordem = :ordem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();

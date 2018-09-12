@@ -406,14 +406,14 @@ class FinOrdemModel {
             $pedido = new Pedido();
             $pedido->setIdPedido($ordem[0]->idPedido);
             //verificar ser a ordem e de exuçao/serviço ou entrega
-            
+
             if ($ordem[0]->tipoOrdem == '1') {
                 $pedido->setStPedido("17");
             } else if ($ordem[0]->tipoOrdem == '2') {
                 $pedido->setStPedido("19");
             }
-            
-            
+
+
             if (!$pedido->VerificarMaiorTramitacao($pdo)) {
                 $pedido->atualizaTramitacaoPedido($pdo);
             }
@@ -651,6 +651,49 @@ class FinOrdemModel {
             return $tabela;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function finalizaOrdem(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->setSitOrdem('3');
+            $daoFinOrdem->atualizaSituacaoOrden($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function retornaValorSituacaoOrdem($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->retornaSituacaoOrdem($pdo);
+            
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            return $daoFinOrdem->getMsgRetorno();
+        } catch (Exception $ex) {
+            return false;
         }
     }
 
