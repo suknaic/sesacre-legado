@@ -115,7 +115,7 @@ $(document).ready(function () {
                         Number(valores[i]['valor']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
                         Number(valores[i]['pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
                         Number(valores[i]['saldo']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}),
-                    ]
+                    ];
                     dataSet.push(valor)
                 }
                 $('#tabelaProgramaTrabalho').DataTable({
@@ -163,7 +163,7 @@ $(document).ready(function () {
                     let valor = [
                         valores[i]['nr_contrato'],
                         valores[i]['nm_objeto']
-                    ]
+                    ];
                     dataSet.push(valor)
                 }
                 $('#tabelaContratos').DataTable({
@@ -180,7 +180,7 @@ $(document).ready(function () {
         });
     }
 
-    listaContratos()
+    listaContratos();
 
     function listaLicitacoes() {
         let dataSet = [];
@@ -258,27 +258,97 @@ $(document).ready(function () {
                 }
                 $("#totalEmpenhos").append(valores.length);
                 for (var i = valores.length - 1; i >= 0; i--) {
+                    // ****** converta data do empenho no Sistema *******
+                    // **** DATA *****
+                    var auxSistemaData = valores[i]['dh_empenho_sistema'].split(':');
+                    var data = auxSistemaData[0].split(' ');
+                    var data1 = data[0].split('-');
+                    var data2 = data1[2] + '/' + data1[1] + '/' + data1[0];
+                    var dataSistema = data2.split(' ');
+
+                    // **** HORA ****
+                    var auxSistemaHora = valores[i]['dh_empenho_sistema'].split(' ');
+                    var hora = auxSistemaHora[1];
+                    var hora1 = hora.split('.');
+                    var hora2 = hora1[0];
+                    // *************************************************
+                    // ****** converta data do empenho no Safira *******
+                    var auxSafira = valores[i]['dt_empenho_safira'].split('-');
+                    var dataSafira = auxSafira[2] + '/' + auxSafira[1] + '/' + auxSafira[0];
+                    // *************************************************
                     let valor = [
                         valores[i]['nr_pedido'],
-                        valores[i]['nr_empenho'],
-                        valores[i]['ds_empenho'],
+                        valores[i]['nm_lotacao'],
                         valores[i]['nm_tipo_gasto'],
-                        valores[i]['dh_empenho_sistema'],
-                        valores[i]['dt_empenho_safira'],
+                        valores[i]['nr_empenho'],
+                        dataSistema +' - '+ hora2,
+                        dataSafira,
                         Number(valores[i]['vl_empenho']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
-                    ]
+                    ];
                     dataSet.push(valor)
                 }
                 $('#tabelaEmpenhos').DataTable({
+                    lengthMenu: [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
                     data: dataSet,
                     language: {
                         "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
                     },
+                    responsive: true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'pageLength'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            footer: true,
+                            exportOptions: {
+                                columns: function (idx) {
+                                    if ($.inArray(idx) < 0) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            orientation: 'landscape',
+                            pageSize: 'TABLOID',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            footer: true,
+                            exportOptions: {
+                                columns: function (idx) {
+                                    if ($.inArray(idx) < 0) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fa fa-print"></i> Imprimir',
+                            footer: true,
+                            exportOptions: {
+                                columns: function (idx) {
+                                    if ($.inArray(idx) < 0) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    ],
                     columns: [
                         {title: "Nº Pedido"},
-                        {title: "Nº Empenho"},
-                        {title: "Descrição"},
+                        {title: "Central de Demanda"},
                         {title: "Tipo de gasto"},
+                        {title: "Nº Empenho"},
                         {title: "Data Empenho no Sistema"},
                         {title: "Data Empenho no Safira"},
                         {title: "Valor do Empenho"}
@@ -286,7 +356,7 @@ $(document).ready(function () {
                 });
             },
             "error": function (response) {
-                console.log(response)
+                console.log(response);
                 $this.prop("disabled", false);
                 func.modalAlert(func.msgErroPadrao, 'danger');
                 return false;
@@ -294,12 +364,12 @@ $(document).ready(function () {
         });
     }
 
-    listaEmpenhos()
+    listaEmpenhos();
 
     function listaPedidos() {
         let dataSet = [];
 
-        let valores = []
+        let valores = [];
         var $this = $(this);
 
         $.ajax({
@@ -324,7 +394,7 @@ $(document).ready(function () {
                         valores[i]['dt_pedido'],
                         // valores[i]['st_pedido'],
                         Number(valores[i]['vl_pedido']).toLocaleString('pt-br', {style: 'currency', currency: 'BRL'})
-                    ]
+                    ];
                     dataSet.push(valor)
                 }
                 $('#tabelaPedidos').DataTable({
@@ -342,7 +412,7 @@ $(document).ready(function () {
                 });
             },
             "error": function (response) {
-                console.log(response)
+                console.log(response);
                 $this.prop("disabled", false);
                 func.modalAlert(func.msgErroPadrao, 'danger');
                 return false;
