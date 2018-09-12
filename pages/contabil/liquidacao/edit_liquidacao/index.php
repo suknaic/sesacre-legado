@@ -53,72 +53,18 @@ require_once "index.load.php";
                         <li><a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--Modal itens content-->
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Busca de empenho</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número do empenho" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button" id="btn-pesquisa">
-                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nº Empenho</th>
-                                                            <th>Tipo de Empenho</th>
-                                                            <th>Fonte</th>
-                                                            <th>Elemento de Despesa</th>                                                            
-                                                            <th>Valor Total</th>
-                                                            <th>Saldo</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
                             <div class="panel">                                
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Pesquisa Empenho:<span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="item" id="item" disabled />
-                                                <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
-                                                    <button type="button" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-
+                                            <?php echo $dadosContrato; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +72,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-
+                                            <?php echo $dadosPedido; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +80,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-
+                                            <?php echo $dadosEmpenho; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +101,7 @@ require_once "index.load.php";
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
-                                                                        <option value="0" selected="true">Selecione um Documento Fiscal</option>
+                                                                        <?php echo $optionsDocumentosFiscais; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -179,7 +125,7 @@ require_once "index.load.php";
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        <?php echo $tabelaDocumentosFiscais; ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -200,13 +146,14 @@ require_once "index.load.php";
                                                     <div class="panel-heading" role="tab" id="headingTwo">
                                                         <h4 class="panel-title">Dados da Liquidação</h4>
                                                     </div>
+                                                    <input type="hidden" id="id_liquidacao" value="<?php echo $dadosLiquidacao['id_liquidacao']?>" />
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Nº da Liquidação:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_liquidacao" id="nr_liquidacao" />
+                                                                    <input class="form-control" type="text" name="nr_liquidacao" id="nr_liquidacao" value="<?php echo $dadosLiquidacao['nr_liquidacao']?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -217,7 +164,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_liquidacao" id="vl_liquidacao" />
+                                                                    <input type="text" class="form-control" name="vl_liquidacao" id="vl_liquidacao" value="<?php echo $dadosLiquidacao['vl_liquidacao']?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -228,7 +175,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_liquidacao" id="dt_liquidacao" />
+                                                                    <input class="form-control" type="text" name="dt_liquidacao" id="dt_liquidacao" value="<?php echo $dadosLiquidacao['dt_liquidacao']?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -237,7 +184,7 @@ require_once "index.load.php";
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Observação:</b></div>
                                                             <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"></textarea>
+                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"><?php echo $dadosLiquidacao['ds_liquidacao']; ?></textarea>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
@@ -248,7 +195,7 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 
-                                <!-- CAMPO DO REMETENTE -->
+                                 <!-- CAMPO DO REMETENTE -->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body remetente">
@@ -263,8 +210,8 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="id_remetente" id="id_remetente">
-                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente" disabled>
+                                                                        <?php echo $selectRemetente; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -277,6 +224,23 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title text-center">Histórico</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="10" readonly="true"><?php echo $historico;?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">

@@ -453,7 +453,7 @@ class FinEmpenhoModel {
                                         
                                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
                                                 <div class="panel-body">
-                                                
+                                                    <input id="id_empenho" type="hidden" value="'.$campos['id_empenho'].'" />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
@@ -490,9 +490,9 @@ class FinEmpenhoModel {
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
-        echo "<pre>";
-        print_r($daoFinEmpenho->getMsgRetorno());
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($daoFinEmpenho->getMsgRetorno());
+//        echo "</pre>";
         $retorno = '';
         if ($daoFinEmpenho->sucesso()) {
             foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {

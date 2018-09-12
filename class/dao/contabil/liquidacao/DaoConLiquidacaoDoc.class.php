@@ -19,8 +19,8 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
         try {                      
             $result = $pdo->prepare("INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal)"                    
                     . " VALUES (:id_liquidacao, :id_documento_fiscal);");                                                            
-            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_STR);
-            $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);            
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT); 
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
@@ -72,13 +72,13 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
             $result = $pdo->prepare($sql);            
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->execute();
-            if ($result->rowCount() >= 1){
+//            if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
                 $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                $this->sucesso = false;                
-                $this->msgRetorno = "Não encontrou Registros";                
-            }            
+//            } else {
+//                $this->sucesso = false;                
+//                $this->msgRetorno = "Não encontrou Registros";                
+//            }            
         } catch (PDOException $e) {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
@@ -105,7 +105,5 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 
         }
-    }  
-    
-                        
+    }                      
 }

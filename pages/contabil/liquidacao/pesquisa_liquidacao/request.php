@@ -1,32 +1,24 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocFiscalPesquisa.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoPesquisa.class.php";
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoDoc.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 
 $session = new Session('ajax');
 
 
 switch ($_REQUEST['acao']) {
 
-    CASE 'retornaDocumentosFiscais':
+    CASE 'retornaOptionsSituacaoLiquidacao':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
             
-            $prog = new DocFiscalPesquisa();
-            
-            $prog->setNrDocFiscal($dados['nrDocFis'])
-                 ->setAnoDocFiscal((int)$dados['anoDocFis'])
-                 ->setContratado((int)$dados['contratado'])
-                 ->setNrProtocolo((int)$dados['nrProtocolo'])
-                 ->setNrContrato($dados['nrContrato'])
-                 ->setNrPedido($dados['nrPedido'])
-                 ->setNrEmpenho($dados['nrEmpenho'])
-                 ->setTpGasto((int)$dados['tpGasto'])
-                 ->setSitDocFiscal((int)$dados['sitDoc'])
-                 ->setTramitacao((int)$dados["tramitacao"])   
-                 ->setDestinatario((int)$dados['destinatario']);
-            
-            echo $prog->listaTodos();
+            $liquidacao = new LiquidacaoPesquisa();
+            echo $liquidacao->retornaOptionsSituacao();
             return;
             break;
         } catch (Error $e) {
@@ -34,4 +26,36 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'retornaLiquidacoes':
+        try {
+            $liquidacao = new LiquidacaoPesquisa();
+            echo $liquidacao->retornaLiquidacoes();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    CASE 'cancelarLiquidacao':
+        $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        
+        try {
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdLiquidacao($dados['id'])
+                       ->setUsuario($session->getIdUser())
+                       ->setMotivoCancelamento($dados['justificativa']);
+            echo $liquidacao->cancelarLiquidacao();
+            return;
+            break;
+            
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
 }

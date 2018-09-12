@@ -43,6 +43,10 @@ class FinDocumentoFiscal {
     private $tpTramTramitacaoFinalizada = 6;   
     
     private $msgErros = null;
+    
+    public function getMsgErros() {
+        return $this->msgErros;
+    }
 
     /**
      * @return mixed
@@ -1037,28 +1041,7 @@ class FinDocumentoFiscal {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-    
-    public function retornaHistoricoTramitacao(){
-        try {
-            $retorno = "";
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
-            $daoFinDocumentoFiscal->retornaTramitacaoDocumentoFiscal($pdo);
-            
-            if ($daoFinDocumentoFiscal->sucesso()) {
-                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
-                    $retorno .= $linha["historico"] . "\n";
-                }
-            } 
-            return $retorno;
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }
-    }
-
+   
     public function retornaTabelaEntregaGdof($pdo, $excluir = false) {
         try {
             if (empty($pdo)) {
@@ -1102,6 +1085,27 @@ class FinDocumentoFiscal {
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaHistoricoTramitacao(){
+        try {
+            $retorno = "";
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
+            $daoFinDocumentoFiscal->retornaTramitacaoDocumentoFiscal($pdo);
+            
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
+                    $retorno .= $linha["historico"] . "\n";
+                }
+            } 
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 

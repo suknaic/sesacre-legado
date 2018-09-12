@@ -334,6 +334,51 @@
                                 </li>
                             </ul>
                         </li>
+                        
+                         <!--Menu list Finaceiro-->
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-money" aria-hidden="true"></i>
+                                <span class="menu-title">Contábil</span>
+                                <i class="arrow"></i>
+                            </a>
+                            <!--Submenu-->
+                            <ul class="collapse">
+                                <li>
+                                    <a href="#">Empenho</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
+                                </li>
+                                <li>
+                                    <a href="#">Pagamento</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="menu-title">Administração</span>
+                                        <i class="arrow"></i>
+                                    </a>
+                                    <!--Submenu-->
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="#">
+                                                <span class="menu-title">Perfil de Acesso</span>
+                                                <i class="arrow"></i>
+                                            </a>
+                                            <!--Submenu-->
+                                            <ul class="collapse">
+                                                <li>
+                                                    <a href="/pages/contabil/administracao/perfil_acesso/vincular_perfil_acesso/">Vincular Perfil de Acesso</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/contabil/administracao/perfil_acesso/vincular_emp_liq_pagto/">Vincular Empenho / Liquidação / Pagamento</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                      </ul>
+                                </li>
+                            </ul>
+                        </li>
                         <!--Menu list Compras-->
                         <li>
                             <a href="#">

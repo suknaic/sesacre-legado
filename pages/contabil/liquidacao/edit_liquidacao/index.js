@@ -1,8 +1,6 @@
+func = new Funcoes();
+
 $(document).ready(function () {
-    //instacinado fucoes js
-    func = new Funcoes();
-    
-    var url = "request.php";
     
     //select2
     $('body').find('select').select2({
@@ -10,13 +8,8 @@ $(document).ready(function () {
     });
     
     $('#dt_liquidacao').mask("99/99/9999");
-
-    //busca pedido
-    $('#modalItem').on('shown.bs.modal', function () {
-        $('#codItemPesquisa').focus();
-    });
     
-    //Masca para valor
+        //Masca para valor
     $("body").on("focus", "#vl_liquidacao", function () {
         $(this).priceFormat({
             centsLimit: 4,
@@ -25,133 +18,16 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-
-    //função para pesquisa licitacao do gcon
-    $('body').on('click', '#btn-pesquisa', function (e) {
-        var dados = $("#codItemPesquisa").val();
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaEmpenho",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                func.carregaTabelaPadrao('tabelaItens', response, [], true);
-            }
-        });
-    });
-    
-    $('body').on('keypress', '#codItemPesquisa', function (e) {
-        let key = e.which;
-        if (key == 13){
-            $("#btn-pesquisa").trigger('click');
-            return false;
-        }
-    });
-    
-    $.ajax({
-        "url": url,
-        "dataType": 'html',
-        "data": {
-            "acao": "retornaTipoRemetenteERemetente"
-        },
-        "success": function(response){
-            $("#id_remetente").html("");
-            $("#id_remetente").append(response);
-        }
-    });
-
-    $('body').on('click', '.selecionaItem', function (e) {
-        var $this = $(this);
-        var dados = {
-            "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
-            "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
-            "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
-        }
-
-        /**
-         * retornaContratosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaContratosLiquidacao",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".contratos").html("");
-                $(".contratos").append(response);
-            }
-        });
-        /**
-         * retornaDadosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaPedidoLiquidacao",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".pedido").html("");
-                $(".pedido").append(response);
-            }
-        });
-        /**
-         * retornaDadosEmpenho
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaEmpenhoLiquidacao",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".empenho").html("");
-                $(".empenho").append(response);
-            }
-        });
-        
-        /**
-         * retornaDocumentosEmpenho
-         */
-        
-
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaDocFiscaisLiquidacao",
-                "dados": dados
-            },
-            "success": function (response){
-                $("#selectDocumentoFiscal").html("");
-                $("#selectDocumentoFiscal").append(response);
-            }
-        });
-        
-        $('#modalItem').modal('hide');
-    });
     
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
     });
     
-    
     $('body').on('click', '.remover-documento', function (e) {
         $(this).closest("tr").remove();
         atualizaValorLiquidacao();
     });
-    
     
     $('body').on('click','.addDocumento', function(e){
         
@@ -198,9 +74,7 @@ $(document).ready(function () {
             $('#tabelaDocumentos tbody').append(linhaTabela);
             atualizaValorLiquidacao();
         }
-        
     });
-    
     
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
@@ -217,28 +91,21 @@ $(document).ready(function () {
             });
 
             var dados = {
-                "idEmpenho": $("#id_empenho").val(),
-                "idLotacao": $("#id_remetente option:selected").data('lotacao'),
-                "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
+                "idLiquidacao": $("#id_liquidacao").val(),
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
                 "obsLiquidacao": $("#desc_liquidacao").val(),
                 "docsLiquidacao": documentos
             }
-
-            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
-                    || dados.dtLiquidacao )) {
-                func.modalAlert("Por favor preencha as informações obrigatórias.");
-                return false;
-            }
+            
 
             $.ajax({
                 "url": "request.php",
                 "method": "POST",
                 "dataType": "html",
                 "data": {
-                    "acao": "cadastrarLiquidacao",
+                    "acao": "atualizaLiquidacao",
                     "dados": dados
                 },
                 "success": function (response) {
@@ -286,7 +153,7 @@ $(document).ready(function () {
             });
         }
     });
-
+    
 });
 
 function atualizaValorLiquidacao(){
@@ -310,3 +177,7 @@ function valorComMascara(valor) {
     valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
     return valorStr.join(',');
 }
+    
+
+
+

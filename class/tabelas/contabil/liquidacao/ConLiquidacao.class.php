@@ -7,11 +7,22 @@ class ConLiquidacao {
     private $id_empenho = null;
     private $id_liquidacao_situacao = null;
     private $id_lotacao = null;
+    private $id_doc_tipo_lotacao = null;
     private $dt_liquidacao = null;
     private $vl_liquidacao = null;
     private $ds_liquidacao = null;
     private $st_ativo = null;
 
+    
+    function getIdDocTipoLotacao() {
+        return $this->id_doc_tipo_lotacao;
+    }
+
+    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+        return $this;
+    }
+        
     /**
      * Get the value of Id Liquidacao
      *

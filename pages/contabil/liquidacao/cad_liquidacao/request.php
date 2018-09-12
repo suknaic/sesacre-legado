@@ -7,8 +7,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoDoc.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinEntregaDocumento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session('ajax');
 
@@ -71,5 +75,63 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'retornaDocFiscaisLiquidacao':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdEmpenho($dados['id_empenho']);
+            echo $liquidacao->retornaOptionsDocsEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuario();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
+
+    CASE 'cadastrarLiquidacao':
+        try {
+            $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            
+            if (empty($dados['docsLiquidacao'])) {
+                $dados['docsLiquidacao'] = array();
+            }
+            
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdEmpenho($dados['idEmpenho'])
+                       ->setUsuario($session->getIdUser())
+                       ->setIdLotacao($dados['idLotacao'])
+                       ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
+                       ->setNrLiquidacao($dados['nrLiquidacao'])
+                       ->setVlLiquidacao($dados['vlLiquidacao'])
+                       ->setDtLiquidacao($dados['dtLiquidacao'])
+                       ->setDsLiquidacao($dados['obsLiquidacao'])
+                       ->setDocumentos($dados['docsLiquidacao']);
+            echo $liquidacao->salvarLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
 }
 

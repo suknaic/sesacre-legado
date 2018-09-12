@@ -1,25 +1,26 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/contabil/liquidacao/ConLiquidacaoSituacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/sistema/SesTramitacao.class.php";
 
-class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
+
+class DaoSesTramitacao extends SesTramitacao {
+
+    private $sucesso = false;
+    private $msgRetorno = null;
     
-    private $sucesso = null;
-    private $msgRetorno = null;    
-    
+    function getSucesso() {
+        return $this->sucesso;
+    }
+
     function getMsgRetorno() {
         return $this->msgRetorno;
-    }   
- 
-    function Sucesso(){
-        return $this->sucesso;
     }
 
     function insert($pdo) {
         try {                      
-            $result = $pdo->prepare("INSERT INTO con_liquidacao_situacao (nm_liquidacao_situacao)"                    
-                    . " VALUES (:nm_liquidacao_situacao);");                                        
-            $result->bindValue(":nm_liquidacao_situacao", $this->getNmLiquidacaoSituacao(), PDO::PARAM_STR);            
+            $result = $pdo->prepare("INSERT INTO ses_tramitacao (nm_tramitacao)"                    
+                    . " VALUES (:nm_tramitacao);");                                        
+            $result->bindValue(":nm_tramitacao", $this->getNmTramitacao(), PDO::PARAM_STR);            
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
@@ -30,8 +31,8 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     
     function delete($pdo){
         try {
-            $result = $pdo->prepare("DELETE FROM con_liquidacao_situacao WHERE id_liquidacao_situacao = :id_liquidacao_situacao");
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
+            $result = $pdo->prepare("DELETE FROM ses_tramitacao WHERE id_tramitacao = :id_tramitacao");
+            $result->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);            
             $result->execute();
             $this->sucesso = true; 
         } catch (PDOException $e) {
@@ -42,10 +43,10 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     
     function update($pdo) {
         try {
-            $result = $pdo->prepare("UPDATE con_liquidacao_situacao SET nm_liquidacao_situacao = :nm_liquidacao_situacao"                    
-                    . " WHERE id_liquidacao_situacao = :id_liquidacao_situacao");
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
-            $result->bindValue(":nm_liquidacao_situacao", $this->getNmLiquidacaoSituacao(), PDO::PARAM_STR);                                    
+            $result = $pdo->prepare("UPDATE ses_tramitacao SET nm_tramitacao = :nm_tramitacao"                    
+                    . " WHERE id_tramitacao = :id_tramitacao");
+            $result->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);
+            $result->bindValue(":nm_tramitacao", $this->getNmTramitacao(), PDO::PARAM_STR);                                    
             $result->execute();
             $this->sucesso = true; 
         } catch (PDOException $e) {
@@ -56,9 +57,9 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     
     function desativa($pdo){
         try {
-            $result = $pdo->prepare("UPDATE con_liquidacao_situacao SET st_ativo = '0'"                    
-                    . " WHERE id_liquidacao_situacao = :id_liquidacao_situacao ");
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
+            $result = $pdo->prepare("UPDATE ses_tramitacao SET st_ativo = '0'"                    
+                    . " WHERE id_tramitacao = :id_tramitacao ");
+            $result->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);            
             $result->execute();
             $this->sucesso = true; 
         } catch (PDOException $e) {
@@ -69,9 +70,9 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     
     function ativa($pdo){
         try {
-            $result = $pdo->prepare("UPDATE con_liquidacao_situacao SET st_ativo = '1'"                    
-                    . " WHERE id_liquidacao_situacao = :id_liquidacao_situacao ");
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
+            $result = $pdo->prepare("UPDATE ses_tramitacao SET st_ativo = '1'"                    
+                    . " WHERE id_tramitacao = :id_tramitacao ");
+            $result->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);            
             $result->execute();
             $this->sucesso = true; 
         } catch (PDOException $e) {
@@ -83,11 +84,11 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     function retorna($pdo) {
         $this->sucesso = false;
         $sql = " SELECT *"                    
-                . " FROM con_liquidacao_situacao"
-                . " WHERE id_liquidacao_situacao = :id_liquidacao_situacao";
+                . " FROM ses_tramitacao"
+                . " WHERE id_tramitacao = :id_tramitacao";
         try {
             $result = $pdo->prepare($sql);            
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
@@ -105,7 +106,7 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
     function retornaTodos($pdo){
         $this->sucesso = false;
         $sql = " SELECT *"                    
-                . " FROM con_liquidacao_situacao";
+                . " FROM ses_tramitacao";
         try {
             $result = $pdo->prepare($sql);   
             $result->execute();
@@ -125,4 +126,6 @@ class DaoConLiquidacaoSituacao extends ConLiquidacaoSituacao {
         
         
     }
+
 }
+

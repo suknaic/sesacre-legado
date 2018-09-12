@@ -286,7 +286,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select emp.nr_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                $sql = "select emp.nr_empenho, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                         tpEmp.nm_tipo_empenho, emp.vl_empenho
                         from fin_empenho as emp
                         inner join fin_tipo_empenho as tpEmp

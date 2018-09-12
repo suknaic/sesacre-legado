@@ -3,11 +3,33 @@
 class ConLiquidacaoHistorico {
 
     private $id_liquidacao_historico = null;
+    private $id_liquidacao = null;
     private $id_pessoa = null;
     private $id_lotacao = null;
     private $id_liquidacao_situacao = null;
     private $dh_liquidacao_historico = null;
     private $ds_liquidacao = null;
+    
+    private $id_doc_tipo_lotacao = null;
+    
+    function getIdLiquidacao() {
+        return $this->id_liquidacao;
+    }
+
+    function setIdLiquidacao($id_liquidacao) {
+        $this->id_liquidacao = $id_liquidacao;
+        return $this;
+    }
+
+        
+    function getIdDocTipoLotacao() {
+        return $this->id_doc_tipo_lotacao;
+    }
+
+    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+        return $this;
+    }
     
     /**
      * Get the value of Id Liquidacao Historico
