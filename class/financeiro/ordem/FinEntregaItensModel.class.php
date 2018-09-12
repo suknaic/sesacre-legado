@@ -152,7 +152,7 @@ class FinEntregaItensModel {
         }
     }
 
-    public function removeItemEntrega() {
+    public function removeItemEntrega($idOrdem = null) {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -163,7 +163,14 @@ class FinEntregaItensModel {
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $daoFinEntregaItens = new DaoFinEntregaItens();
             $finProtocolo = new FinProtocoloModel();
+            $finOrdemModel = new FinOrdemModel();
             //fim
+            $finOrdemModel->setIdOrdem($idOrdem);
+            $situacao = $finOrdemModel->retornaValorSituacaoOrdem($pdo);
+            
+            if($situacao ==  false || $situacao["sit_ordem"] == '3'){
+                return Metodos::retornoAjax("Erro", "alert", "O item não pode ser excluido pois a ordem estar finalizada.");
+            }
             //buscando a maior data no banco
             $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
             $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);

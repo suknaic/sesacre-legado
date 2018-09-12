@@ -333,6 +333,7 @@ $(document).ready(function () {
         var idEntrega = $this.closest('td').find('.excluir').attr("idEntrega");
         var idProtocolo = $("#id_protocolo").val();
         var item = $this.closest('td').find('.excluir').attr("nomeitem");
+        var idOrdem = $("#idOrdem").val();
 
         bootbox.confirm({
             title: func.msgCaixaDeConfirmacao,
@@ -352,7 +353,8 @@ $(document).ready(function () {
                     var dados = {
                         "idItem": id,
                         "idEntrega": idEntrega,
-                        "idProtocolo": idProtocolo
+                        "idProtocolo": idProtocolo,
+                        "idOrdem": idOrdem
                     }
 
                     if (id == "") {
