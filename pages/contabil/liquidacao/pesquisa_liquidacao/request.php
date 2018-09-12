@@ -32,7 +32,13 @@ switch ($_REQUEST['acao']) {
         try {
             $liquidacao = new LiquidacaoPesquisa();
             $liquidacao->setNrLiquidacao($dados['nrLiq'])
-                       ->setAnoLiquidacao($dados['']);
+                       ->setAnoLiquidacao($dados['exercicio'])
+                       ->setContratado($dados['fornecedor'])
+                       ->setNrPedido($dados['pedido'])
+                       ->setNrEmpenho($dados['empenho'])
+                       ->setNrDocumentoFiscal($dados['nrDoc'])
+                       ->setTipoGasto($dados['tpGasto'])
+                       ->setSituacao($dados['situacao']);
             echo $liquidacao->retornaLiquidacoes();
             return;
             break;
