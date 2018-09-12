@@ -111,7 +111,7 @@ require_once "index.load.php";
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-4">
+<!--                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nr_protocolo">Número do Protocolo:</label>
                                                 <div class="input-group">
@@ -121,7 +121,8 @@ require_once "index.load.php";
                                                     <input type="text" id="nr_protocolo" class="form-control" value=""/>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
+                                        
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nr_contrato">Número do Contrato:</label>
@@ -144,9 +145,6 @@ require_once "index.load.php";
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nr_empenho">Número do Empenho:</label>
@@ -158,6 +156,20 @@ require_once "index.load.php";
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
+<!--                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="nr_empenho">Número do Empenho:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                    </span>
+                                                    <input type="text" id="nr_empenho" class="form-control" value=""/>
+                                                </div>
+                                            </div>
+                                        </div>-->
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="nr_documento_fiscal">Número do Documento Fiscal:</label>
@@ -184,9 +196,22 @@ require_once "index.load.php";
                                             </div>
                                         </div>
                                         
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="situacao">Situação:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-list inputPFa"></p>
+                                                    </span>
+                                                    <select id="situacao" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                     
-                                    <div class="row">
+<!--                                    <div class="row">
                                         <div class="col-md-4">
                                         </div>
                                         <div class="col-md-4">
@@ -203,7 +228,7 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     
                                 </div>
