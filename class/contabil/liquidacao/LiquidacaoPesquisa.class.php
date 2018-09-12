@@ -7,7 +7,7 @@ class LiquidacaoPesquisa {
     private $nrLiquidacao = null;
     private $anoLiquidacao = null;
     private $contratado = null;
-    private $nrProtocolo = null;
+//    private $nrProtocolo = null;
     private $nrContrato = null;
     private $nrPedido = null;
     private $nrEmpenho = null;
@@ -49,9 +49,9 @@ class LiquidacaoPesquisa {
         return $this->contratado;
     }
 
-    function getNrProtocolo() {
-        return $this->nrProtocolo;
-    }
+//    function getNrProtocolo() {
+//        return $this->nrProtocolo;
+//    }
 
     function getNrContrato() {
         return $this->nrContrato;
@@ -92,10 +92,10 @@ class LiquidacaoPesquisa {
         return $this;
     }
 
-    function setNrProtocolo($nrProtocolo) {
-        $this->nrProtocolo = $nrProtocolo;
-        return $this;
-    }
+//    function setNrProtocolo($nrProtocolo) {
+//        $this->nrProtocolo = $nrProtocolo;
+//        return $this;
+//    }
 
     function setNrContrato($nrContrato) {
         $this->nrContrato = $nrContrato;
@@ -154,7 +154,11 @@ class LiquidacaoPesquisa {
             $pdo = $conexao->connect();
             
             $daoConLiquidacao = new DaoConLiquidacao();
-            $daoConLiquidacao->retornaLiquidacoes($pdo);
+//            echo '<pre>';
+//            print_r($this->montaFiltroSql());
+//            echo '</pre>';
+//            return;
+            $daoConLiquidacao->retornaLiquidacoes($pdo, $this->montaFiltroSql());
             
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
@@ -193,42 +197,41 @@ class LiquidacaoPesquisa {
     private function montaFiltroSql(){
         $filtro = "";
  
-        $array = array();
-        
+       
         if ($this->getNrLiquidacao()) {
             
-            $retorno .= (empty($filtro)) ? " where liquidacao.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " : " and liquidacao.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " ; 
+            $filtro .= (empty($filtro)) ? " where liq.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " : " and liq.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " ; 
         }
         
-//        if ($this->getAnoLiquidacao()) {
-
-//        }
+        if ($this->getAnoLiquidacao()) {
+            $filtro .= (empty($filtro)) ? " where extract(year from liq.dt_liquidacao) = ".$this->getAnoLiquidacao() : "and extract(year from liq.dt_liquidacao) = ".$this->getAnoLiquidacao();
+        }
         
         if ($this->getContratado()) {
-            $retorno .= (empty($filtro)) ? " where pessoa.id_pessoa = ".$this->getContratado() : " and pessoa.id_pessoa = ".$this->getContratado(); 
+            $filtro .= (empty($filtro)) ? " where pj.id_pessoa = ".$this->getContratado() : " and pj.id_pessoa = ".$this->getContratado(); 
         }
         
         if($this->getSituacao()){
-            $retorno .= (empty($filtro)) ? " where liquidacao.id_liquidacao_situacao = ".$this->getSituacao() : " and liquidacao.id_liquidacao_situacao = ".$this->getSituacao(); 
+            $filtro .= (empty($filtro)) ? " where liq.id_liquidacao_situacao = ".$this->getSituacao() : " and liq.id_liquidacao_situacao = ".$this->getSituacao(); 
         }
         
 //        if ($this->getNrProtocolo()) {
 //        }
         
         if ($this->getNrContrato()) {
-            $retorno .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " : " and contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " ; 
+            $filtro .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " : " and contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " ; 
         }
         
         if ($this->getNrPedido()) {
-            $retorno .= (empty($filtro)) ? " where pedido.nr_pedido ilike '%".$this->getNrPedido()."%' " : " and pedido.nr_pedido ilike '%".$this->getNrPedido()."%' " ; 
+            $filtro .= (empty($filtro)) ? " where ped.nr_pedido ilike '%".$this->getNrPedido()."%' " : " and ped.nr_pedido ilike '%".$this->getNrPedido()."%' " ; 
         }
         
         if ($this->getNrEmpenho()) {
-            $retorno .= (empty($filtro)) ? " where empenho.nr_empenho ilike '%".$this->getNrEmpenho()."%' " : " and empenho.nr_empenho ilike '%".$this->getNrEmpenho()."%' " ; 
+            $filtro .= (empty($filtro)) ? " where emp.nr_empenho ilike '%".$this->getNrEmpenho()."%' " : " and emp.nr_empenho ilike '%".$this->getNrEmpenho()."%' " ; 
         }
         
         if ($this->getNrDocumentoFiscal()) {
-            $retorno .= (empty($filtro)) ? " where docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " : " and docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " ; 
+            $filtro .= (empty($filtro)) ? " where docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " : " and docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " ; 
         }
         
         return $filtro;

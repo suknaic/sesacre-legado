@@ -22,7 +22,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">        
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">        
+        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
 
@@ -350,11 +352,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <!-- END JAVASCRIPT -->        
         <script src="/assets/js/index.js"></script>
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
 
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>                        
+        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>
         <!-- Chart JS [OPT]  -->
         <script src="/assets/lib/chartjs/Chart.min.js"></script>
 
@@ -539,7 +550,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                     <!--Modal header-->
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
-                        <h4 class="modal-title">Informações</h4>
+                        <h4 class="modal-title">Lista de Dados do Empenho</h4>
                     </div>
 
                     <!--Modal body-->
@@ -554,9 +565,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                     <!--Hover Rows-->
                                     <!--===================================================-->
                                     <div class="panel-body">
-
                                         <table id="tabelaEmpenhos" class="table table-striped table-bordered display" width="100%"></table>
-
                                     </div>
                                     <!--===================================================-->
                                     <!--End Hover Rows-->

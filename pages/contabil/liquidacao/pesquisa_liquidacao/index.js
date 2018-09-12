@@ -129,14 +129,27 @@ $(document).ready(function () {
 
 
 function lista() {
-   
+    var dados = {
+        nrLiq: $("#nr_liquidacao").val(),
+        exercicio: $("#ano_liquidacao option:selected").val(),
+        fornecedor: $("#id_contratado option:selected").val(),
+        contrato: $("#nr_contrato").val(),
+        pedido: $("#nr_pedido").val(),
+        empenho: $("#nr_empenho").val(),
+        nrDoc: $("#nr_documento_fiscal").val(),
+        tpGasto: $("#tipo_gasto option:selected").val(),
+        situacao: $("#situacao option:selected").val()
+    }
+    
     $.ajax({
         "url": "request.php",
         "dataType": 'html',
         "data": {
-            "acao": "retornaLiquidacoes"
+            "acao": "retornaLiquidacoes",
+            "dados": dados
         },
         "success": function (response) {
+            console.log(response);
             func.carregaTabelaPadrao('tabela', response, [4], true);
         }
     });

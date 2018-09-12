@@ -354,7 +354,8 @@ class DaoFinOrdem extends FinOrdemTb {
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem  = ordem.id_ordem
                         where ordem.id_pedido = :pedido
-                        and (ordem.sit_ordem = '3' or ordem.tp_ordem = '2')";
+                        and (ordem.sit_ordem = '3' or ordem.tp_ordem = '2')
+                        and ordem.sit_ordem <> '0' --não listar ORDEM cancelada";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
