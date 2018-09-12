@@ -250,7 +250,7 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response)
+//                console.log(response)
                 $("#tabelaEntrega").find("tbody").html(response);
                 $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
             }

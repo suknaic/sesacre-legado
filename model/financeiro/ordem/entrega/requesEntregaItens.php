@@ -62,7 +62,8 @@ switch ($_REQUEST['acao']) {
             $finEntregaItensModel->setIdEntregaItens($itens["idItem"]);
             $finEntregaItensModel->setIdEntregaConfirmacao($itens["idEntrega"]);
             $finEntregaItensModel->setIdProtocolo($itens["idProtocolo"]);
-            echo $finEntregaItensModel->removeItemEntrega();
+            
+            echo $finEntregaItensModel->removeItemEntrega($itens["idOrdem"]);
             return;
             break;
         } catch (Error $e) {

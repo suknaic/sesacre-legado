@@ -222,7 +222,7 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
     
-    function retornaLiquidacoes($pdo){
+    function retornaLiquidacoes($pdo,string $filtros = ""){
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
@@ -258,8 +258,9 @@ class DaoConLiquidacao extends ConLiquidacao {
                        on pj.id_pessoa = fornec.id_pessoa 
                     left join
                        fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
-                 group by
+                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal "
+                   .$filtros.
+                 " group by
                     liq.id_liquidacao,
                     liq.nr_liquidacao,
                     ped.nr_pedido,

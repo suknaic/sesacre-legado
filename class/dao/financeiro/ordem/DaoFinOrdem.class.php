@@ -354,7 +354,8 @@ class DaoFinOrdem extends FinOrdemTb {
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem  = ordem.id_ordem
                         where ordem.id_pedido = :pedido
-                        and ordem.sit_ordem = '3'";
+                        and (ordem.sit_ordem = '3' or ordem.tp_ordem = '2')
+                        and ordem.sit_ordem <> '0' --não listar ORDEM cancelada";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -384,12 +385,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                 when ordem.tp_ordem = '2' then 'EXECURÇÃO/SERVIÇO'
                         end tipo,
 
-                        case 
-                                when (mat.tp_material = 'C' OR mat.tp_material = 'P') and itens.fl_valor_variavel = '0'
-                                then	  sum(itensOrdem.qt_itens_ordem)
-                                when mat.tp_material = 'S' and itens.fl_valor_variavel = '1'
-                                then  sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem)
-                        end valor
+                        to_char(sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem),'999G999G990D0999') as valor
                         from fin_ordem as ordem
 
                         inner join fin_ordem_itens as itensOrdem

@@ -7,7 +7,7 @@ class LiquidacaoPesquisa {
     private $nrLiquidacao = null;
     private $anoLiquidacao = null;
     private $contratado = null;
-    private $nrProtocolo = null;
+//    private $nrProtocolo = null;
     private $nrContrato = null;
     private $nrPedido = null;
     private $nrEmpenho = null;
@@ -49,9 +49,9 @@ class LiquidacaoPesquisa {
         return $this->contratado;
     }
 
-    function getNrProtocolo() {
-        return $this->nrProtocolo;
-    }
+//    function getNrProtocolo() {
+//        return $this->nrProtocolo;
+//    }
 
     function getNrContrato() {
         return $this->nrContrato;
@@ -92,10 +92,10 @@ class LiquidacaoPesquisa {
         return $this;
     }
 
-    function setNrProtocolo($nrProtocolo) {
-        $this->nrProtocolo = $nrProtocolo;
-        return $this;
-    }
+//    function setNrProtocolo($nrProtocolo) {
+//        $this->nrProtocolo = $nrProtocolo;
+//        return $this;
+//    }
 
     function setNrContrato($nrContrato) {
         $this->nrContrato = $nrContrato;
@@ -154,7 +154,11 @@ class LiquidacaoPesquisa {
             $pdo = $conexao->connect();
             
             $daoConLiquidacao = new DaoConLiquidacao();
-            $daoConLiquidacao->retornaLiquidacoes($pdo);
+            echo '<pre>';
+            print_r($this->montaFiltroSql());
+            echo '</pre>';
+            return;
+            $daoConLiquidacao->retornaLiquidacoes($pdo, $this->montaFiltroSql());
             
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
@@ -200,9 +204,9 @@ class LiquidacaoPesquisa {
             $retorno .= (empty($filtro)) ? " where liquidacao.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " : " and liquidacao.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " ; 
         }
         
-//        if ($this->getAnoLiquidacao()) {
-
-//        }
+        if ($this->getAnoLiquidacao()) {
+            $retorno .= (empty($filtro)) ? " where extract(year from liquidacao.dt_liquidacao) = ".$this->getAnoLiquidacao() : "and extract(year from liquidacao.dt_liquidacao) = ".$this->getAnoLiquidacao();
+        }
         
         if ($this->getContratado()) {
             $retorno .= (empty($filtro)) ? " where pessoa.id_pessoa = ".$this->getContratado() : " and pessoa.id_pessoa = ".$this->getContratado(); 

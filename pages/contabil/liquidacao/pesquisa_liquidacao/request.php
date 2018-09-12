@@ -28,8 +28,11 @@ switch ($_REQUEST['acao']) {
         }
         
     CASE 'retornaLiquidacoes':
+        $dados = filter_input(INPUT_GET,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         try {
             $liquidacao = new LiquidacaoPesquisa();
+            $liquidacao->setNrLiquidacao($dados['nrLiq'])
+                       ->setAnoLiquidacao($dados['']);
             echo $liquidacao->retornaLiquidacoes();
             return;
             break;
