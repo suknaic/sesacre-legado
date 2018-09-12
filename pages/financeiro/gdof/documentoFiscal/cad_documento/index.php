@@ -106,9 +106,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-content">
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
-<!--                                <div class="panel-heading">
-                                    <h3 class="panel-title">Informações do documento fiscal</h3>
-                                </div>-->
+                                <!--                                <div class="panel-heading">
+                                                                    <h3 class="panel-title">Informações do documento fiscal</h3>
+                                                                </div>-->
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
@@ -237,12 +237,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Prazo para Entrega</th>
                                                                             <th class="text-center">Entregue Dia</th>
                                                                             <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Valor a reduzir da entrega</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        <tr class="entregaTotal">
+                                                                            
+                                                                        </tr>
                                                                     </tbody>
 
                                                                 </table>
@@ -410,7 +414,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo Remetente/Remetente:</b></div>
-                                                            
+
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>

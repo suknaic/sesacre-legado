@@ -237,6 +237,14 @@ function Funcoes() {
         //return (Math.round10(valor, -4)).toFixed(4);        
     }
 
+    //FUNÇAO QUE MASCARA O VALOR DE ACORDO COM O PADRAO BRL
+    this.converteValorBrDecimal = function (valor, decimais){
+        valor = Number(valor).toFixed(decimais);
+        let valorStr = valor.toString();
+        valorStr = valorStr.split('.');
+        valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
+        return valorStr.join(',');
+    }
 
 }
 

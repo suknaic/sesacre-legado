@@ -630,7 +630,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens
                     , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado());
             $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
-
+            
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campo) {
                     $options .= '<option value = "' . $campo["id_entrega_confirmacao"] . '">' . $campo["nr_entrega_confirmacao"] . '-' . $campo["ordem"] . '</option>';
@@ -667,7 +667,7 @@ class FinEntregaConfirmacaoModel {
                 $totalEntrega = 0;
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos) {
                     $totalEntrega += $campos["valor"];
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-valor=' . $campos["valor"] . '>
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
@@ -675,6 +675,8 @@ class FinEntregaConfirmacaoModel {
                                  <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
                                  <td class = "text-center">' . $campos["entreguedia"] . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</td>
+                                 <td class = "text-center valorRetirado"><input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]" /></td>      
                                  <td class = "text-center">' . $campos["situacao"] . '</td>
                                  <td class = "text-center">
                                  <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
@@ -683,12 +685,6 @@ class FinEntregaConfirmacaoModel {
                                 </td>
                                 </tr>';
                 }
-                $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
-                $tabela .= '<tr>
-                                <td class="text-right" colspan="6">Total</td>
-                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" >' . $totalEntrega . '</td>
-                                <td class="text-right" colspan="2"></td>
-                            </tr>';
             }
 
             return $tabela;
@@ -703,6 +699,7 @@ class FinEntregaConfirmacaoModel {
             if (empty($idEntregas)) {
                 return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
             }
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $arrayIdEntregas = array();
@@ -737,15 +734,14 @@ class FinEntregaConfirmacaoModel {
             $pdo->beginTransaction();
             $finOrdemModel = new FinOrdemModel();
             $finOrdemModel->setIdOrdem($this->id_ordem);
-            
+
             if (!$finOrdemModel->finalizaOrdem($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
             }
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");
-            
         } catch (Exception $ex) {
             
         }

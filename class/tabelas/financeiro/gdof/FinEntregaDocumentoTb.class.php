@@ -5,7 +5,7 @@ class FinEntregaDocumentoTb {
     private $id_entrega_documento = null;
     private $id_documento_fiscal = null;
     private $id_entrega_confirmacao = null;
-
+    private $vl_entrega_documento = null;
     /**
      * @return mixed
      */
@@ -56,6 +56,24 @@ class FinEntregaDocumentoTb {
      */
     public function setIdEntregaConfirmacao($id_entrega_confirmacao) {
         $this->id_entrega_confirmacao = $id_entrega_confirmacao;
+
+        return $this;
+    }
+    
+     /**
+     * @return mixed
+     */
+    public function getVlEntregaDocumento() {
+        return $this->vl_entrega_documento;
+    }
+
+    /**
+     * @param mixed $vl_entrega_documento
+     *
+     * @return self
+     */
+    public function setVlEntregaDocumento($vl_entrega_documento) {
+        $this->vl_entrega_documento = $vl_entrega_documento;
 
         return $this;
     }

@@ -374,8 +374,7 @@ where orItens.id_ordem = :ordem";
     public function retornaDadosOptionGdof(PDO $pdo, $idOrdens
     , string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado) {
         try {
-            $sqlDocumentoFiscal = " AND (entDoc.id_documento_fiscal IS NULL"
-                    . " OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
+            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
             if (!empty($idDocumentoFiscal)) {
                 $sqlDocumentoFiscal = $sqlDocumentoExiste;
             }
@@ -394,14 +393,8 @@ where orItens.id_ordem = :ordem";
                             FROM fin_doc_tramitacao t				
                             ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                     ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
-                    WHERE protocolo.id_ordem in(" . $idOrdens . ")
-                   
-                    " . $sqlDocumentoFiscal . " ";
+                    WHERE protocolo.id_ordem in(" . $idOrdens . ")";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":idDocumentoSituacao", $idDocSitCadastrado, PDO::PARAM_INT);
-            if (!empty($idDocumentoFiscal)) {
-                $stmt->bindValue(":idDocumentoFiscal", $idDocumentoFiscal, PDO::PARAM_INT);
-            }
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->sucesso = true;
@@ -417,16 +410,23 @@ where orItens.id_ordem = :ordem";
 
     public function retornaEntregaGdof(PDO $pdo, $idEntrega) {
         try {
-            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+            $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem, 
                     to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
                     to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
                     to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
-                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
+                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,
+                   
+                    (sum(item.vl_itens_entrega * item.qt_itens_entrega) 
+					-
+					(select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000') 
+					 from fin_entrega_documento as entDocumento
+					 where entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+				    )) as saldo ,
                     case 
-                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
-                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
-                     end situacao
+                    when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
+                    when confirmacao.sit_entrega = '2' then 'Entrega Total'
+                    end situacao
                     from fin_protocolo as protocolo
                     inner join fin_entrega_confirmacao as confirmacao
                     on protocolo.id_protocolo = confirmacao.id_protocolo
@@ -435,10 +435,9 @@ where orItens.id_ordem = :ordem";
                     inner join fin_entrega_itens as item
                     on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
                     where confirmacao.id_entrega_confirmacao in(" . $idEntrega . ")
-                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo,
-                    ordem.id_ordem
-                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), 
-                    confirmacao.nr_entrega_confirmacao ";
+                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo, ordem.id_ordem
+                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), confirmacao.nr_entrega_confirmacao";
+            
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {

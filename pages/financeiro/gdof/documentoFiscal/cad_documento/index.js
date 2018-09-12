@@ -10,9 +10,19 @@ $(document).ready(function () {
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
     });
-    
+
     $('body').find('select').select2({
         width: '100%'
+    });
+
+    //Masca para valor
+    $("body").on("focus", ".valorRetEntrega", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
     });
 
     //função para pesquisa licitacao do gcon
@@ -123,7 +133,7 @@ $(document).ready(function () {
 
     $("body").on("change", "#selectOrdem", function (e) {
         var idOrdem = $("body").find("#selectOrdem").val();
-        if(idOrdem == 0){
+        if (idOrdem == 0) {
             return false;
         }
         $.ajax({
@@ -148,7 +158,7 @@ $(document).ready(function () {
 
     $("body").on("click", ".addOrdens", function (e) {
 
-        if($("#selectOrdem option:selected").val() == 0){
+        if ($("#selectOrdem option:selected").val() == 0) {
             return false;
         }
 
@@ -234,42 +244,84 @@ $(document).ready(function () {
     var infTabEntrega = [];
 
     $("body").on("click", ".addEntrega", function (e) {
-        infTabEntrega.push($("#selectEntrega option:selected").val());
-        atualizaTabelaEntrega(infTabEntrega);
+        let idEntrega = Number($("#selectEntrega option:selected").val());
+
+        if (!infTabEntrega.includes(idEntrega)) {
+            infTabEntrega.push(idEntrega);
+
+            //CRIEI ESTA VARIAVEL QUE GUARDA APENAS O ID QUE ESTA SENDO ADICIONANDO, POIS NO BACKGROUND JA ESTA TRATADO PARA RECEBER UM ARRAY COM OS IDS
+            //AGORA O ARRAY SO RECEBE UM ID ESPECIFICO 
+            var idEntregas = [];
+            idEntregas.push($("#selectEntrega option:selected").val());
+            atualizaTabelaEntrega(/*infTabEntrega*/ idEntregas);
+        } else {
+            func.modalAlert("Esta entrega ja foi adicionada!");
+            return false;
+        }
+
     });
 
 
-    function atualizaTabelaEntrega(infTabEntrega) {
+    function atualizaTabelaEntrega(/*infTabEntrega*/ idEntrega) {
 
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTabelaEntrega",
-                "dados": infTabEntrega
-
+                "dados": idEntrega,
+                "valorRetirado": $("#valorRetEntrega").val()
             },
             "success": function (response) {
-//                console.log(response)
-                $("#tabelaEntrega").find("tbody").html(response);
-                $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
+                $("#tabelaEntrega").find("tbody").prepend(response);
+                totalizaEntregas();
+
             }
         });
     }
 
+    function totalizaEntregas() {
+        var totalEntregas = 0;
+        $(".trEntregas").each(function () {
+            totalEntregas = parseFloat($(this).data('valor')) + totalEntregas;
+        });
+
+        $("#tabelaEntrega").find(".entregaTotal").html("");
+
+        //Se existir entregas, vai inserir o totalizador
+        if (totalEntregas > 0) {
+            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
+                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorDocumentoFiscal}</td>
+                                    <td class="text-right" colspan="3"></td>`;
+            $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
+        }
+
+    }
+
+    $("body").on("keyup", ".valorRetEntrega", function (e) {
+        let valoresRetirados = 0;
+        $("input[name=valorRetEntrega\\[\\]]").each(function () {
+            valoresRetirados = func.converteValorIngFloat($(this).val()) + valoresRetirados;
+        });
+
+        let valorDocumentoFiscal = func.converteValorBrDecimal(valoresRetirados, 4);
+        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
+    });
+
 
     $("body").on("click", ".excluirEntrega", function (e) {
         var $this = $(this);
-        $("#ent" + $this.val()).remove();
-        infTabEntrega = [];
-        var qtdEntrega = 0;
-        $(".trEntregas").each(function () {
-            infTabEntrega.push($(this).attr("identrega"));
-            qtdEntrega++;
-        });
-        if (qtdEntrega > 0) {
-            atualizaTabelaEntrega(infTabEntrega);
+        var entregaId = Number($this.closest('tr').attr('identrega'));
+
+        //remover do array de entregas o ID da entrega
+        var indice = infTabEntrega.indexOf(entregaId);
+
+        if (indice > -1) {
+            infTabEntrega.splice(indice, 1);
         }
+        //---------------------------------------------
+        $this.closest('tr').remove();
+        totalizaEntregas();
     });
 
 
@@ -292,17 +344,22 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var entregas = [];
-
+            var valoresRetEntregas = [];
             $(".trEntregas").each(function () {
                 entregas.push($(this).attr("identrega"));
+                
             });
 
+            $("input[name=valorRetEntrega\\[\\]]").each(function () {
+                valoresRetEntregas.push($(this).val());
+            });
+            
             if (entregas.length <= 0) {
                 $this.prop("disabled", false);
                 func.modalAlert("Nenhuma entrega foi adicionada.");
                 return false;
             }
-            
+
             if ($("#destinatario option:selected").val() == 0) {
                 $this.prop("disabled", false);
                 func.modalAlert("Nenhuma Destinatário foi selecionado.");
@@ -340,7 +397,8 @@ $(document).ready(function () {
                 "data": {
                     "acao": "cadastrarDocumentoFiscal",
                     "dados": dados,
-                    "entrega": entregas
+                    "entrega": entregas,
+                    "valoresRetEntregas": valoresRetEntregas
                 },
                 "success": function (response) {
                     console.log(response);

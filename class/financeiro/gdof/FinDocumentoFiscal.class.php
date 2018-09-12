@@ -21,12 +21,11 @@ class FinDocumentoFiscal {
     private $id_documento_situacao = null;
     private $id_tipo_documento = null;
     private $entrega = null;
+    private $vlRetEntrega = null;
     private $id_pessoa = null;
     private $id_doc_tramitacao = null;
     private $id_doc_origem = null;
     private $id_doc_destino = null;
-    
-    
     private $docSitCadastrado = 1;
     private $docSitALiquidar = 2;
     private $docSitLiquidado = 3;
@@ -34,16 +33,14 @@ class FinDocumentoFiscal {
     private $docSitPagoParcial = 5;
     private $docSitPago = 6;
     private $docSitCancelado = 7;
-    
     private $tpTramAguardandoTramitacao = 1;
     private $tpTramAguardandoEncaminhamento = 2;
     private $tpTramEncaminhado = 3;
     private $tpTramAguardandoRecebimento = 4;
     private $tpTramRecebido = 5;
-    private $tpTramTramitacaoFinalizada = 6;   
-    
+    private $tpTramTramitacaoFinalizada = 6;
     private $msgErros = null;
-    
+
     public function getMsgErros() {
         return $this->msgErros;
     }
@@ -357,6 +354,24 @@ class FinDocumentoFiscal {
     /**
      * @return mixed
      */
+    public function getValorRetEntrega() {
+        return $this->vlRetEntrega;
+    }
+
+    /**
+     * @param mixed $valorRetentrega
+     *
+     * @return self
+     */
+    public function setValorRetEntrega($valorRetentrega) {
+        $this->vlRetEntrega = $valorRetentrega;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getIdPessoa() {
         return $this->id_pessoa;
     }
@@ -425,7 +440,7 @@ class FinDocumentoFiscal {
 
         return $this;
     }
-    
+
     function getDocSitCadastrado() {
         return $this->docSitCadastrado;
     }
@@ -476,26 +491,18 @@ class FinDocumentoFiscal {
 
     function getTpTramTramitacaoFinalizada() {
         return $this->tpTramTramitacaoFinalizada;
-    }       
+    }
 
     public function salvaDocumentoFiscal() {
         try {
-            if (empty($this->nr_processo_administrativo) || empty($this->nr_documento_fiscal) 
-                    || empty($this->id_tipo_documento) || empty($this->dt_atesto)
-                    || empty($this->dt_emissao) || empty($this->vl_documento) || empty($this->entrega)) {
+            if (empty($this->nr_processo_administrativo) || empty($this->nr_documento_fiscal) || empty($this->id_tipo_documento) || empty($this->dt_atesto) || empty($this->dt_emissao) || empty($this->vl_documento) || empty($this->entrega)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
             //Valida campos obrigatórios
-            
-            
-            
-            
             //conexao
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            //
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setNrProcessoAdministrativo($this->nr_processo_administrativo);
             $daoFinDocumentoFiscal->setNrDocumentoFiscal($this->nr_documento_fiscal);
@@ -513,48 +520,47 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
-                var_dump($daoFinDocumentoFiscal->getMsgRetorno());
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o documento fiscal");
             }
-            
+
             $this->id_documento_fiscal = ($pdo->lastInsertId('fin_documento_fiscal_id_documento_fiscal_seq'));
 
             if (!Log::SalvaLogI('fin_documento_fiscal', $this->id_documento_fiscal, $pdo)) {
                 return false;
             }
-            
-            //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
-            //Se ela não está vinculado a nenhuma documento fiscal ou se mesmo ela estando, o documento fiscal esteja
-            //cancelado
-            $finEntregaConfirmacao = new FinEntregaConfirmacaoModel();
-            $finEntregaConfirmacao->retornaEntregasAptasParaDocumentoFiscal($pdo, $this->entrega, $this->getDocSitCancelado());
-            if(!$finEntregaConfirmacao->sucesso()){
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
-                        . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
-            }
-            
-            $qtdEntregasUsuario = count($this->entrega);
-            $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());
-            if($qtdEntregaAptas != $qtdEntregasUsuario){
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
-                        . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
-            }         
-            
 
+//            //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
+//            //Se ela não está vinculado a nenhuma documento fiscal ou se mesmo ela estando, o documento fiscal esteja
+//            //cancelado
+//            $finEntregaConfirmacao = new FinEntregaConfirmacaoModel();
+//            $finEntregaConfirmacao->retornaEntregasAptasParaDocumentoFiscal($pdo, $this->entrega, $this->getDocSitCancelado());
+//            if(!$finEntregaConfirmacao->sucesso()){
+//                $pdo->rollBack();
+//                return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
+//                        . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
+//            }
+//            
+//            $qtdEntregasUsuario = count($this->entrega);
+//            $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());
+//            if($qtdEntregaAptas != $qtdEntregasUsuario){
+//                $pdo->rollBack();
+//                return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
+//                        . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
+//            }         
             //codigo abaixo cadastra as entregas do documento fiscal
             $finEntregaDocumento = new FinEntregaDocumento();
-            foreach ($this->entrega as $dados) {
+
+            for ($i = 0; $i < count($this->entrega); $i++) {
                 $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
-                $finEntregaDocumento->setIdEntregaConfirmacao($dados);
+                $finEntregaDocumento->setIdEntregaConfirmacao($this->entrega[$i]);
+                $finEntregaDocumento->setVlEntregaDocumento($this->vlRetEntrega[$i]);
 
                 if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
                 }
             }
-            
+
 
             //codigo abaixo cadastra a tramitacao  "Aguardando Tramitação" e a situacao "Cadastrado" do documento fiscal
             $docTramitacao = new DocTramitacao();
@@ -576,154 +582,147 @@ class FinDocumentoFiscal {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
             }
-                      
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-    
+
     public function editaDocumentoFiscal() {
         try {
-            if (empty($this->nr_processo_administrativo) || empty($this->nr_documento_fiscal) 
-                    || empty($this->id_tipo_documento) || empty($this->dt_atesto)
-                    || empty($this->dt_emissao) || empty($this->vl_documento) || empty($this->entrega)
-                    || empty($this->id_documento_fiscal)) {
+            if (empty($this->nr_processo_administrativo) || empty($this->nr_documento_fiscal) || empty($this->id_tipo_documento) || empty($this->dt_atesto) || empty($this->dt_emissao) || empty($this->vl_documento) || empty($this->entrega) || empty($this->id_documento_fiscal)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
-           
+
+
             //conexao
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             //Somente será permitido cancelar um documento fiscal
             //Se o documento estiver com a situação cadastrado
             $idSituacao = $this->getDocSitCadastrado();
-            
+
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            $daoFinDocumentoFiscal->setIdDocumentoFiscal((int)$this->id_documento_fiscal);  
-                                                          
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal((int) $this->id_documento_fiscal);
+
             $daoFinDocumentoFiscal->verificaPermissaoPessoaSituacaoAtual($this->id_pessoa, $idSituacao, $pdo);
-            if(!$daoFinDocumentoFiscal->sucesso()){
+            if (!$daoFinDocumentoFiscal->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Documento Fiscal só pode ser Editado, quando Estiver na Situação Cadastrado.");
-            }            
-                      
+            }
+
             $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
-            if(!$daoFinDocumentoFiscal->sucesso()){
+            if (!$daoFinDocumentoFiscal->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Documento Fiscal.");
             }
-            
+
             $busca = $daoFinDocumentoFiscal->getMsgRetorno();
-            
-            
+
+
             //Retorna todos as Entregas do documento fiscal
-            
-            
+
+
             $finEntregaDocumento = new FinEntregaDocumento();
             $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
             $finEntregaDocumento->retornaTodosDocumentoFiscal($pdo);
-            if(!$finEntregaDocumento->Sucesso()){
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar as Entregas.");
-            }            
-            $entregas = $finEntregaDocumento->getMsgRetorno();           
-            if(empty($entregas)){
+            if (!$finEntregaDocumento->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar as Entregas.");
             }
-       
+            $entregas = $finEntregaDocumento->getMsgRetorno();
+            if (empty($entregas)) {
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar as Entregas.");
+            }
+
             $arrayInsert = array();
             $arrayRemove = array();
-                        
+
             $arrayAux = array();
             foreach ($entregas as $key => $value) {
                 $arrayAux[$value['id_entrega_documento']] = $value['id_entrega_confirmacao'];
             }
-            
+
             $arrayInsert = array_diff($this->entrega, $arrayAux);
             $arrayRemove = array_diff($arrayAux, $this->entrega);
-            
+
 //            echo "<pre>";
 //            print_r($arrayInsert);
 //            print_r($arrayRemove);
 //            echo "</pre>";
-            
-            
             //Registros que terão insert
-            if(!empty($arrayInsert)){
-                                
+            if (!empty($arrayInsert)) {
+
                 //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
                 //Se ela não está vinculado a nenhuma documento fiscal ou se mesmo ela estando, o documento fiscal esteja
                 //cancelado
                 $finEntregaConfirmacao = new FinEntregaConfirmacaoModel();
                 $finEntregaConfirmacao->retornaEntregasAptasParaDocumentoFiscal($pdo, $arrayInsert, $this->getDocSitCancelado());
-                if(!$finEntregaConfirmacao->sucesso()){
+                if (!$finEntregaConfirmacao->sucesso()) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
-                            . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
+                                    . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
                 }
 
                 $qtdEntregasUsuario = count($arrayInsert);
                 $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());
-                if($qtdEntregaAptas != $qtdEntregasUsuario){
+                if ($qtdEntregaAptas != $qtdEntregasUsuario) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
-                            . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
-                }  
-                
-                
-                
-                foreach ($arrayInsert as $key => $value) {                                        
+                                    . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
+                }
+
+
+
+                foreach ($arrayInsert as $key => $value) {
                     $finEntregaDocumento->setIdEntregaConfirmacao($value);
                     if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
-                    }                    
+                    }
                 }
             }
-            
+
             //Registros que terão delete
-            if(!empty($arrayRemove)){
+            if (!empty($arrayRemove)) {
                 foreach ($arrayRemove as $key => $value) {
                     $finEntregaDocumento->setIdEntregaDocumento($key);
                     $finEntregaDocumento->removerEntregaDocumento($pdo);
-                    if(!$finEntregaDocumento->Sucesso()){
+                    if (!$finEntregaDocumento->Sucesso()) {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "Erro ao remover a(s) entrega(s) do documento fiscal."); 
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao remover a(s) entrega(s) do documento fiscal.");
                     }
                 }
-                
-                
             }
-            
+
             //Adiciona ou Exclui as Entregas para o Documento Fiscal
-          
-            
+
+
             $daoFinDocumentoFiscal->setNrProcessoAdministrativo($this->nr_processo_administrativo);
             $daoFinDocumentoFiscal->setNrDocumentoFiscal($this->nr_documento_fiscal);
-            $daoFinDocumentoFiscal->setMmCompetencia((int)explode("/",$this->competencia)[0]);
-            $daoFinDocumentoFiscal->setAaCompetencia((int)explode("/", $this->competencia)[1]);
+            $daoFinDocumentoFiscal->setMmCompetencia((int) explode("/", $this->competencia)[0]);
+            $daoFinDocumentoFiscal->setAaCompetencia((int) explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
-            $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);                        
+            $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
             $daoFinDocumentoFiscal->update($pdo);
-            if (!$daoFinDocumentoFiscal->sucesso()){
-                $pdo->rollBack();                
+            if (!$daoFinDocumentoFiscal->sucesso()) {
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $daoFinDocumentoFiscal->getMsgRetorno());
-            }                        
+            }
 
             if (!Log::SalvaLogU('fin_documento_fiscal', $daoFinDocumentoFiscal->getIdDocumentoFiscal(), $busca, $pdo)) {
-                $pdo->rollBack();                
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
-            
+
             //codigo abaixo cadastra as entregas do documento fiscal
             $finEntregaDocumento = new FinEntregaDocumento();
             foreach ($this->entrega as $dados) {
@@ -734,51 +733,49 @@ class FinDocumentoFiscal {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
                 }
-            }                     
-            
+            }
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
-    
-    function removerDocumentoFiscal(){
-        try {                        
+
+    function removerDocumentoFiscal() {
+        try {
             $this->id_pessoa = (int) $this->id_pessoa;
-            if(empty($this->id_documento_fiscal) 
-                || empty($this->id_pessoa)
-                || empty(trim($this->ds_observacao))){
+            if (empty($this->id_documento_fiscal) || empty($this->id_pessoa) || empty(trim($this->ds_observacao))) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-                        
+
             //Somente será permitido cancelar um documento fiscal
             //Se o documento estiver com a situação cadastrado
-            $idSituacao = $this->getDocSitCadastrado();            
+            $idSituacao = $this->getDocSitCadastrado();
             $justificativa = trim($this->ds_observacao);
-            
+
             $dao = new DaoFinDocumentoFiscal();
-            $dao->setIdDocumentoFiscal((int)$this->id_documento_fiscal);            
+            $dao->setIdDocumentoFiscal((int) $this->id_documento_fiscal);
             $dao->verificaPermissaoPessoaSituacaoAtual($this->id_pessoa, $idSituacao, $pdo);
-            if(!$dao->sucesso()){
+            if (!$dao->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Documento Fiscal só pode ser Cancelado, quando Estiver na Situação Cadastrado.");
             }
-            $result = $dao->getMsgRetorno();                        
-            
+            $result = $dao->getMsgRetorno();
+
             //Seta a situação do Documento fiscal como 'Cancelado'
             $this->setIdDocumentoSituacao($this->getDocSitCancelado());
-            
-            
+
+
             //Verifica se a atualização da situação do documento fiscal ocorreu tudo bem
             if (!$this->atualizaSituacaoDocumentoGDOF($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $this->msgErros);
             }
-            
+
             $docTramitacao = new DocTramitacao();
             $docTramitacao->setIdPessoa($this->id_pessoa);
             $docTramitacao->setIdDocOrigem($result['id_doc_lotacao']);
@@ -787,17 +784,16 @@ class FinDocumentoFiscal {
             $docTramitacao->setIdDocumentoSituacao($this->getDocSitCancelado());
             $docTramitacao->setIdTipoTramitacao($this->getTpTramTramitacaoFinalizada());
             $docTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
-            $docTramitacao->setFlPesquisa("1");            
+            $docTramitacao->setFlPesquisa("1");
             if (!$docTramitacao->cadastraTramitacao($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
             }
-            
+
             $pdo->commit();
-            return Metodos::retornoAjax("ok", "html", "Cancelamento do Documento Fiscal Realizado com Sucesso.");                                                  
-            
+            return Metodos::retornoAjax("ok", "html", "Cancelamento do Documento Fiscal Realizado com Sucesso.");
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 
@@ -1041,7 +1037,7 @@ class FinDocumentoFiscal {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-   
+
     public function retornaTabelaEntregaGdof($pdo, $excluir = false) {
         try {
             if (empty($pdo)) {
@@ -1087,8 +1083,8 @@ class FinDocumentoFiscal {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-    
-    public function retornaHistoricoTramitacao(){
+
+    public function retornaHistoricoTramitacao() {
         try {
             $retorno = "";
             $conexao = new Conexao();
@@ -1097,12 +1093,12 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
             $daoFinDocumentoFiscal->retornaTramitacaoDocumentoFiscal($pdo);
-            
+
             if ($daoFinDocumentoFiscal->sucesso()) {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
                     $retorno .= $linha["historico"] . "\n";
                 }
-            } 
+            }
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -1121,7 +1117,7 @@ class FinDocumentoFiscal {
         $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
         return $daoFinDocumentoFiscal->getMsgRetorno();
     }
-    
+
     public function retornaPrimeiraTramitacao(PDO $pdo = null) {
         if (empty($pdo)) {
             $conexao = new Conexao();
@@ -1132,22 +1128,22 @@ class FinDocumentoFiscal {
         $daoFinDocumentoFiscal->retornaPrimeiroTipoRemetenteTramitacao($pdo);
         return $daoFinDocumentoFiscal->getMsgRetorno();
     }
-    
+
     public function atualizaSituacaoDocumentoGDOF(PDO $pdo) {
         try {
-            
+
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
             $daoFinDocumentoFiscal->setIdDocumentoSituacao($this->getIdDocumentoSituacao());
-  
+
             $daoFinDocumentoFiscal->retornaDadosDocumento($pdo);
-            if(!$daoFinDocumentoFiscal->sucesso()){
+            if (!$daoFinDocumentoFiscal->sucesso()) {
                 $this->msgErros = "Não foi possível localizar os Dados do Documento Fiscal. ";
                 return false;
             }
-            
+
             $busca = $daoFinDocumentoFiscal->getMsgRetorno();
-            
+
             //Atualiza a Situação do Documento Fiscal
             $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
 
@@ -1155,18 +1151,17 @@ class FinDocumentoFiscal {
                 $this->msgErros = "Erro ao atualizar a situação do Documento Fiscal. ";
                 return false;
             }
-            
-            if (!Log::SalvaLogU('fin_documento_fiscal', $daoFinDocumentoFiscal->getIdDocumentoFiscal(), $busca, $pdo)) {              
+
+            if (!Log::SalvaLogU('fin_documento_fiscal', $daoFinDocumentoFiscal->getIdDocumentoFiscal(), $busca, $pdo)) {
                 $this->msgErros = "Erro ao registrar a operação de atualização da situação do Documento Fiscal no LOG.";
                 return false;
             }
 
             return $daoFinDocumentoFiscal->sucesso();
         } catch (PDOException $exc) {
-            print_r( $exc->getMessage());
+            print_r($exc->getMessage());
             return false;
         }
-
     }
 
 }
