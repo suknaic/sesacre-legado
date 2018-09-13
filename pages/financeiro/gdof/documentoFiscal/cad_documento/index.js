@@ -292,9 +292,9 @@ $(document).ready(function () {
 
         //Se existir entregas, vai inserir o totalizador
         if (totalEntregas > 0) {
-            let rodapeEntregas = `<td class="text-right" colspan="7">Total</td>
+            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
                                     <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorDocumentoFiscal}</td>
-                                    <td class="text-right" colspan="3"></td>`;
+                                    <td class="text-right" colspan="4"></td>`;
             $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
         }
 

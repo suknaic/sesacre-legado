@@ -208,4 +208,23 @@ class FinEntregaDocumento {
         }
     }
 
+    public function retornaSaldoEntregas(PDO $pdo = null) {
+        try {
+            
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $dao = new DaoFinEntregaDocumento();
+            $dao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $dao->retornaSaldoEntregas($pdo);
+            $this->sucesso = $dao->sucesso();
+            $this->msgRetorno = $dao->getMsgRetorno();
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
 }

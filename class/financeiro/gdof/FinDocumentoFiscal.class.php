@@ -555,6 +555,18 @@ class FinDocumentoFiscal {
                 $finEntregaDocumento->setIdEntregaConfirmacao($this->entrega[$i]);
                 $finEntregaDocumento->setVlEntregaDocumento($this->vlRetEntrega[$i]);
 
+                $finEntregaDocumento->retornaSaldoEntregas($pdo);
+
+                if (!$finEntregaDocumento->getSucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
+                }
+
+                if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($this->vlRetEntrega[$i]), 4)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
+                }
+
                 if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
