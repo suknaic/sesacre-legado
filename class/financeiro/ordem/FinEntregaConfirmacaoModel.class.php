@@ -677,7 +677,7 @@ class FinEntregaConfirmacaoModel {
                                  <td class = "text-center">' . $campos["entreguedia"] . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</td>
-                                 <td class = "text-center valorRetirado"><input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]" /></td>      
+                                 <td class = "text-center valorRetirado"><input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]"  value="0,0000"/></td>      
                                  <td class = "text-center">' . $campos["situacao"] . '</td>
                                  <td class = "text-center">
                                  <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
