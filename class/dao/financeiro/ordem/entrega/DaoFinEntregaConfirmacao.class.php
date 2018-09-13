@@ -403,7 +403,8 @@ where orItens.id_ordem = :ordem";
                     from  fin_entrega_itens as item
                     group by item.id_entrega_confirmacao) as saldoEntregas
                     on saldoEntregas.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                    WHERE protocolo.id_ordem in(" . $idOrdens . ") and saldoEntregas.saldo > 0";
+                    WHERE protocolo.id_ordem in(" . $idOrdens . ") and saldoEntregas.saldo > 0
+                    order by  confirmacao.nr_entrega_confirmacao, concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem)";
             
             
 //            $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,

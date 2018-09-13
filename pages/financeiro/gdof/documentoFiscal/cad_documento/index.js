@@ -293,15 +293,15 @@ $(document).ready(function () {
 
         $("#tabelaEntrega").find(".entregaTotal").html("");
 
-        //Se existir entregas, vai inserir o totalizador
-        if (totalEntregas > 0) {
-            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
-                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorEntregas}</td>
-                                    <td class="text-center valorSaldoTotal" valor=${totalSaldos}>${valorSaldos}</td>
-                                    <td class="text-center valorDocumentoTotal"></td>
-                                    <td class="text-right" colspan="4"></td>`;
-            $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
-        }
+//        //Se existir entregas, vai inserir o totalizador
+//        if (totalEntregas > 0) {
+//            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
+//                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorEntregas}</td>
+//                                    <td class="text-center valorSaldoTotal" valor=${totalSaldos}>${valorSaldos}</td>
+//                                    <td class="text-center valorDocumentoTotal"></td>
+//                                    <td class="text-right" colspan="4"></td>`;
+//            $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
+//        }
 
         //Atualiza a informaçao do valor do documento fiscal
 //        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
