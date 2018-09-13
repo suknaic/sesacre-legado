@@ -378,22 +378,50 @@ where orItens.id_ordem = :ordem";
             if (!empty($idDocumentoFiscal)) {
                 $sqlDocumentoFiscal = $sqlDocumentoExiste;
             }
+            
             $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
                     FROM fin_protocolo as protocolo
+
+                    INNER JOIN fin_ordem as ordem
+                    ON protocolo.id_ordem = ordem.id_ordem
+
                     INNER JOIN fin_entrega_confirmacao as confirmacao
                     ON protocolo.id_protocolo = confirmacao.id_protocolo
-                    INNER JOIN fin_ordem as ordem
-                    ON confirmacao.id_ordem = ordem.id_ordem
-                    LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
-                        FROM fin_entrega_documento
-                        ORDER BY id_entrega_confirmacao, id_entrega_documento desc 
-                    ) AS entDoc ON entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao                    
-                    LEFT JOIN ( select DISTINCT ON (t.id_documento_fiscal) *
-                            FROM fin_doc_tramitacao t				
-                            ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
-                    ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
-                    WHERE protocolo.id_ordem in(" . $idOrdens . ")";
+
+                    left JOIN (select 
+                            sum(item.vl_itens_entrega * item.qt_itens_entrega)  
+                        -
+                       (  select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000')  
+                          from fin_entrega_documento as entDocumento 
+                          inner join fin_documento_fiscal as documento
+                          on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
+                          where entDocumento.id_entrega_confirmacao = item.id_entrega_confirmacao
+                          and (documento.id_documento_situacao is null OR documento.id_documento_situacao <> '7')
+                       )
+                    as saldo, item.id_entrega_confirmacao
+                    from  fin_entrega_itens as item
+                    group by item.id_entrega_confirmacao) as saldoEntregas
+                    on saldoEntregas.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                    WHERE protocolo.id_ordem in(" . $idOrdens . ") and saldoEntregas.saldo > 0";
+            
+            
+//            $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+//                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
+//                    FROM fin_protocolo as protocolo
+//                    INNER JOIN fin_entrega_confirmacao as confirmacao
+//                    ON protocolo.id_protocolo = confirmacao.id_protocolo
+//                    INNER JOIN fin_ordem as ordem
+//                    ON confirmacao.id_ordem = ordem.id_ordem
+//                    LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
+//                        FROM fin_entrega_documento
+//                        ORDER BY id_entrega_confirmacao, id_entrega_documento desc 
+//                    ) AS entDoc ON entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao                    
+//                    LEFT JOIN ( select DISTINCT ON (t.id_documento_fiscal) *
+//                            FROM fin_doc_tramitacao t				
+//                            ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
+//                    ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
+//                    WHERE protocolo.id_ordem in(" . $idOrdens . ")";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
