@@ -118,8 +118,11 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                         -
 			(select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000') 
 			 from fin_entrega_documento as entDocumento
-			 where entDocumento.id_entrega_confirmacao = :confirmacao
-			)
+                         inner join fin_documento_fiscal as documento
+                         on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
+			 where entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                         and documento.id_documento_situacao <> 7
+			 )
                         as saldo
 			from fin_entrega_itens as item
 			where item.id_entrega_confirmacao = :confirmacao";
