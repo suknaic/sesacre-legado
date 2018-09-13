@@ -322,7 +322,7 @@ class FinEntregaConfirmacaoModel {
 
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
                 }
             }
 
@@ -397,7 +397,7 @@ class FinEntregaConfirmacaoModel {
                 $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem");
                 }
             }
 
@@ -738,7 +738,7 @@ class FinEntregaConfirmacaoModel {
 
             if (!$finOrdemModel->finalizaOrdem($pdo)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
             }
 
             $pdo->commit();

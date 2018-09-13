@@ -217,7 +217,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega(); ?>
                                 </div>
-                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3') { ?>
+                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3' && $finEntregaConfirmacaoModel->retornaSePodeFinalizarAEntrega()) { ?>
                                     <div class="panel ">
                                         <div class="panel-body">
                                             <div class="row">

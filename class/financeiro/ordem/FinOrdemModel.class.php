@@ -689,6 +689,24 @@ class FinOrdemModel {
             return false;
         }
     }
+    
+    public function retornaSePodeFinalizarAEntrega(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            
+            //verifica se a Ordem já possui entrega, se NÃO possuir, não permite a finalização da entrega 
+            $daoFinOrdem->retornaEntregasOrdem($pdo);
+
+            return $daoFinOrdem->Sucesso();
+            
+        } catch (Exception $exc) {
+            return false;
+        }
+    }
 
     public function retornaValorSituacaoOrdem($pdo) {
         try {
