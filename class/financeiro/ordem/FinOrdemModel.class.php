@@ -576,6 +576,13 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $pdo->beginTransaction();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
+            
+            //verifica se a Ordem já possui entrega, se possuir, aborta a operação
+            $daoFinOrdem->retornaEntregasOrdem($pdo);
+            if ($daoFinOrdem->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser cancelada, pois existe entrega(s) para a mesma.");
+            }
+            
             $daoFinOrdem->deleteOrdem($pdo);
             $busca = "";
             if (!$daoFinOrdem->Sucesso()) {
@@ -665,6 +672,13 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->setSitOrdem('3');
+            
+            //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
+            $daoFinOrdem->retornaEntregasOrdem($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser finalizada, pois não existe entrega(s) para a mesma.");
+            }
+            
             $daoFinOrdem->atualizaSituacaoOrden($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
