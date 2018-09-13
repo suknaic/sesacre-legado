@@ -116,16 +116,15 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                 $sql = "select 
                         sum(item.vl_itens_entrega * item.qt_itens_entrega)  
                         -
-			(select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000') 
-			 from fin_entrega_documento as entDocumento
-                         inner join fin_documento_fiscal as documento
-                         on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
-			 where entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                         and documento.id_documento_situacao <> 7
-			 )
-                        as saldo
-			from fin_entrega_itens as item
-			where item.id_entrega_confirmacao = :confirmacao";
+                        (select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000')  
+                        from fin_entrega_documento as entDocumento 
+                        inner join fin_documento_fiscal as documento
+                        on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
+                        where entDocumento.id_entrega_confirmacao = :confirmacao
+                        and (documento.id_documento_situacao is null OR documento.id_documento_situacao <> '7'))
+                         as saldo
+                        from fin_entrega_itens as item
+                        where item.id_entrega_confirmacao = :confirmacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
                 $stmt->execute();
