@@ -421,7 +421,10 @@ where orItens.id_ordem = :ordem";
 					-
 					(select COALESCE(sum(entDocumento.vl_entrega_documento),'0.0000') 
 					 from fin_entrega_documento as entDocumento
+                                         inner join fin_documento as documento
+                                         on documento.id_documento = entDocumento.id_documento
 					 where entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                                         and documento.id_documento_fiscal <> 7
 				    )) as saldo ,
                     case 
                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'

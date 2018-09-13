@@ -282,18 +282,23 @@ $(document).ready(function () {
 
     function totalizaEntregas() {
         var totalEntregas = 0;
+        var totalSaldos = 0;
         $(".trEntregas").each(function () {
             totalEntregas = parseFloat($(this).data('valor')) + totalEntregas;
+            totalSaldos = parseFloat($(this).data('saldo')) + totalSaldos;
         });
 
-        let valorDocumentoFiscal = func.converteValorBrDecimal(totalEntregas, 4);
+        let valorEntregas = func.converteValorBrDecimal(totalEntregas, 4);
+        let valorSaldos = func.converteValorBrDecimal(totalSaldos, 4);
 
         $("#tabelaEntrega").find(".entregaTotal").html("");
 
         //Se existir entregas, vai inserir o totalizador
         if (totalEntregas > 0) {
             let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
-                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorDocumentoFiscal}</td>
+                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorEntregas}</td>
+                                    <td class="text-center valorSaldoTotal" valor=${totalSaldos}>${valorSaldos}</td>
+                                    <td class="text-center valorDocumentoTotal"></td>
                                     <td class="text-right" colspan="4"></td>`;
             $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
         }
@@ -310,6 +315,7 @@ $(document).ready(function () {
 
         let valorDocumentoFiscal = func.converteValorBrDecimal(valoresRetirados, 4);
         $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
+        $(".valorDocumentoTotal").text(valorDocumentoFiscal);
     });
 
 

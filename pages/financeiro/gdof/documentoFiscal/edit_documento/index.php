@@ -368,15 +368,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+<!--                                <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
-                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                            <button class="btn btn-success btn-salvar btn-rounded" type="button">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
 
                             </div>
                         </form>

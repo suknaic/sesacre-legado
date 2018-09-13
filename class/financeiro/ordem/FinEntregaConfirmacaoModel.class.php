@@ -667,7 +667,8 @@ class FinEntregaConfirmacaoModel {
                 $totalEntrega = 0;
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos) {
                     $totalEntrega += $campos["valor"];
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-valor=' . $campos["valor"] . '>
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" '
+                            . ' data-valor=' . $campos["valor"] . ' data-saldo=' . $campos["saldo"] . '>
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
