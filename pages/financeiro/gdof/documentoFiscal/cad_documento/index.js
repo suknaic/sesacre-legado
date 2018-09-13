@@ -302,7 +302,8 @@ $(document).ready(function () {
 //                                    <td class="text-right" colspan="4"></td>`;
 //            $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
 //        }
-
+                    let rodapeEntregas = `<td class="text-right" colspan="11"></td>`;
+                    $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
         //Atualiza a informaçao do valor do documento fiscal
 //        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
     }
