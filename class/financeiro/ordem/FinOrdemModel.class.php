@@ -676,7 +676,7 @@ class FinOrdemModel {
             //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
             $daoFinOrdem->retornaEntregasOrdem($pdo);
             if (!$daoFinOrdem->Sucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser finalizada, pois não existe entrega(s) para a mesma.");
+                return false;
             }
             
             $daoFinOrdem->atualizaSituacaoOrden($pdo);

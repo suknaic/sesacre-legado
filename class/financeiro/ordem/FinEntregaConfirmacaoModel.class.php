@@ -747,5 +747,28 @@ class FinEntregaConfirmacaoModel {
             
         }
     }
+    
+    public function verificaEntregaVinculadaAoGDOF(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->getIdEntregaConfirmacao());
+            
+            //verifica se a Entrega está vinculada a algum Documento Fiscal, se possuir vinculo, não permite a remoção do item
+            $daoFinEntregaConfirmacao->retornaDocumentosVinculadosAEntrega($pdo);
+            if ($daoFinEntregaConfirmacao->Sucesso()) {
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
 
 }

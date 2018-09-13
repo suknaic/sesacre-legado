@@ -522,4 +522,28 @@ where orItens.id_ordem = :ordem";
         }
     }
 
+    public function retornaDocumentosVinculadosAEntrega(PDO $pdo){
+        try {
+            $sql = "select docFis.* from fin_entrega_documento as entDoc
+                    inner join fin_entrega_confirmacao as entConf
+                    on entConf.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
+                    inner join fin_documento_fiscal as docFis
+                    on docFis.id_documento_fiscal = entDoc.id_documento_fiscal
+                    where entConf.id_entrega_confirmacao = :id_entrega_confirmacao
+                    and (docFis.id_documento_situacao <> 7 or docFis.id_documento_situacao is null)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_entrega_confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Nenhum documento fiscal está vinculado a entrega";
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+            $this->sucesso = false;
+        }
+    }
 }

@@ -165,11 +165,19 @@ class FinEntregaItensModel {
             $finProtocolo = new FinProtocoloModel();
             $finOrdemModel = new FinOrdemModel();
             //fim
+            
+            //verificação se a Entrega do Item está vinculada a um documento fiscal(GDOF)
+            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            if ($finEntregaConfirmacaoModel->verificaEntregaVinculadaAoGDOF($pdo)) {
+                return Metodos::retornoAjax("Erro", "alert", "O item não pode ser excluido pois a entrega já gerou um Documento Fiscal.");
+            }
+            
+            
             $finOrdemModel->setIdOrdem($idOrdem);
             $situacao = $finOrdemModel->retornaValorSituacaoOrdem($pdo);
             
             if($situacao ==  false || $situacao["sit_ordem"] == '3'){
-                return Metodos::retornoAjax("Erro", "alert", "O item não pode ser excluido pois a ordem estar finalizada.");
+                return Metodos::retornoAjax("Erro", "alert", "O item não pode ser excluido pois a ordem está finalizada.");
             }
             //buscando a maior data no banco
             $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
@@ -276,7 +284,7 @@ class FinEntregaItensModel {
             }
         } catch (Exception $ex) {
             $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 

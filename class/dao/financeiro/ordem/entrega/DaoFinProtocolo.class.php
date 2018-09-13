@@ -34,7 +34,9 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         modalidade.nm_modalidade, processo.cd_pregao as licitacao,emp.nr_empenho, tpEmpenho.nm_tipo_empenho, 
                         emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
                         cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pt.cd_programa_trabalho, p.ds_pedido,
-                        pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido, ordem.sit_ordem
+                        pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido, ordem.sit_ordem,
+                        prot.id_protocolo, prot.nm_representante, prot.ds_protocolo, prot.nm_email_representante, to_char(prot.dh_recebimento,'DD/MM/YYYY') as dh_recebimento,
+                        prot.nr_rg_cpf
                         from fin_ordem as ordem
                         inner join fin_pedido as p
                         on p.id_pedido = ordem.id_pedido
@@ -62,6 +64,8 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         on processo.id_processo = cont.id_processo
                         inner join gco_modalidade as modalidade
                         on modalidade.id_modalidade = processo.id_modalidade
+                        left join fin_protocolo as prot
+                        on prot.id_ordem = ordem.id_ordem
                         where p.st_pedido > '0' 
                         and ordem.sit_ordem > '0'
                         and ordem.id_ordem  = :idOrdem";
