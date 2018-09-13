@@ -286,16 +286,20 @@ $(document).ready(function () {
             totalEntregas = parseFloat($(this).data('valor')) + totalEntregas;
         });
 
+        let valorDocumentoFiscal = func.converteValorBrDecimal(totalEntregas, 4);
+
         $("#tabelaEntrega").find(".entregaTotal").html("");
 
         //Se existir entregas, vai inserir o totalizador
         if (totalEntregas > 0) {
-            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
+            let rodapeEntregas = `<td class="text-right" colspan="7">Total</td>
                                     <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorDocumentoFiscal}</td>
                                     <td class="text-right" colspan="3"></td>`;
             $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
         }
 
+        //Atualiza a informaçao do valor do documento fiscal
+//        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
     }
 
     $("body").on("keyup", ".valorRetEntrega", function (e) {
