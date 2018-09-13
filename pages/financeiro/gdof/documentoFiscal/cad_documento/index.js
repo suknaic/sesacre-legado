@@ -24,6 +24,19 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    function limpaCampos(){
+        $("#tabelaOrdem tbody").html("");
+        $("#tabelaEntrega tbody").html("");
+        $("#processoAdm").val("");
+        $("#nr_documento").val("");
+        $("#competencia").val("");
+        $("#emissao").val("");
+        $("#atesto").val("");
+        $("#valorDocumentoFiscal").val("");
+        $("#tpDocumento").val("0").select2();
+        $("#destinatario").val("0").select2();
+    }
 
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
@@ -49,6 +62,7 @@ $(document).ready(function () {
             "id_pedido": $("body").find(".selecionaItem").attr("pedido")
         }
 
+        limpaCampos();
         /**
          * retornaContratosPedido
          */
