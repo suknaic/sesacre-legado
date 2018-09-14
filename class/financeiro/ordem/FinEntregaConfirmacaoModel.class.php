@@ -247,7 +247,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
-
+            
             if (empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)) {
                 return 0;
             }
@@ -547,17 +547,23 @@ class FinEntregaConfirmacaoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+            
+            $this->sucesso = true;
+            
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);            
             $daoFinEntregaConfirmacao->removeEntregaConfirmacao($pdo);
 
             if (!$daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = false;
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao excluir a entrega confirmação");
             }
 
             if (!Log::SalvaLogD("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $pdo)) {
+                $this->sucesso = false;
                 return Metodos::retornoAjax("Erro", "console", "Erro log delete entrega confirmacao");
             }
+
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -751,6 +757,7 @@ class FinEntregaConfirmacaoModel {
     public function verificaEntregaVinculadaAoGDOF(PDO $pdo) {
         try {
 
+            $this->sucesso = false;
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
@@ -762,6 +769,7 @@ class FinEntregaConfirmacaoModel {
             //verifica se a Entrega está vinculada a algum Documento Fiscal, se possuir vinculo, não permite a remoção do item
             $daoFinEntregaConfirmacao->retornaDocumentosVinculadosAEntrega($pdo);
             if ($daoFinEntregaConfirmacao->Sucesso()) {
+                $this->sucesso = true;
                 return true;
             }
             

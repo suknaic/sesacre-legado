@@ -166,13 +166,6 @@ class FinEntregaItensModel {
             $finOrdemModel = new FinOrdemModel();
             //fim
             
-            //verificação se a Entrega do Item está vinculada a um documento fiscal(GDOF)
-            $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-            if ($finEntregaConfirmacaoModel->verificaEntregaVinculadaAoGDOF($pdo)) {
-                return Metodos::retornoAjax("Erro", "alert", "O item não pode ser excluido pois a entrega já gerou um Documento Fiscal.");
-            }
-            
-            
             $finOrdemModel->setIdOrdem($idOrdem);
             $situacao = $finOrdemModel->retornaValorSituacaoOrdem($pdo);
             
@@ -181,7 +174,7 @@ class FinEntregaItensModel {
             }
             //buscando a maior data no banco
             $finEntregaConfirmacaoModel->setIdProtocolo($this->id_protocolo);
-            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo);
+            $finEntregaConfirmacaoModel->retornaUltimaDataEntrega($pdo); //Alterei para buscar a data das entregas confirmadas com o 'sit_entrega' maior que '0'. 
             $dataMaior = $finEntregaConfirmacaoModel->getMsgRetorno()["max"];
 
             //buscando a data do item a ser removido no banco
@@ -209,6 +202,13 @@ class FinEntregaItensModel {
             }
 
             $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            
+            $finEntregaConfirmacaoModel->verificaEntregaVinculadaAoGDOF($pdo);
+            if ($finEntregaConfirmacaoModel->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", "Esta entrega está vinculada a um documento fiscal ativo. " . $finEntregaConfirmacaoModel->getIdEntregaConfirmacao());
+            }
+            
             $finEntregaConfirmacaoModel->setSitEntrega(1);
             $finEntregaConfirmacaoModel->atualizaSituacaoEntrega($pdo);
 
@@ -225,14 +225,19 @@ class FinEntregaItensModel {
 
             if (!$daoFinEntregaItens->sucesso()) {
                 $finEntregaConfirmacaoModel->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-                $finEntregaConfirmacaoModel->excluirEntrega($pdo);
+                
+                //Para o Documento fiscal não perder o vinculo com a entrega
+                //não poderã excluir o registro da entrega_confirmacao, apenas mudará a situação da entrega
+//                $finEntregaConfirmacaoModel->excluirEntrega($pdo);
+                $finEntregaConfirmacaoModel->setSitEntrega(0);
+                $finEntregaConfirmacaoModel->atualizaSituacaoEntrega($pdo);
 
                 if (!$finEntregaConfirmacaoModel->sucesso()) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", "Erro ao excluir a entrega");
                 }
 
-                $finProtocolo->setIdProtocolo($this->id_protocolo);
+                $finProtocolo->setIdProtocolo($this->id_protocolo); 
                 $finProtocolo->setQtEntrega($finEntregaConfirmacaoModel->retornaNumeroEntregaConfirmacao($pdo));
                 $finProtocolo->atualizaQtEntrega($pdo);
 
@@ -240,7 +245,7 @@ class FinEntregaItensModel {
                     $erro = true;
                 }
             }
-
+            
             if (!Log::SalvaLogD("fin_entrega_itens", $this->id_entrega_itens, $pdo)) {
                 $erro = true;
             }
@@ -265,7 +270,7 @@ class FinEntregaItensModel {
             if (!$finProtocoloModel->atualizaSituacaoProtocolo($pdo)) {
                 $erro = true;
             }
-
+            
             $finEntregaConfirmacaoModel->verificaUltimaEntregaConfirmacao($pdo);
 
             if (!$finEntregaConfirmacaoModel->sucesso()) {

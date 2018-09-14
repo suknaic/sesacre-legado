@@ -426,7 +426,7 @@ class FinProtocoloModel {
             $daoFinProtocolo->retornaEntregueDiaProtocolo($pdo);
 
             if (!empty($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) && $fl_cancelamento == 0) {
-                if (strtotime($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) < strtotime($this->dt_confirmacao)) {
+                if (strtotime($daoFinProtocolo->getMsgRetorno()["dt_confirmacao"]) <= strtotime($this->dt_confirmacao)) {
                     $daoFinProtocolo->setDtConfirmacao($this->dt_confirmacao);
                 } else {
                     $this->sucesso = false;

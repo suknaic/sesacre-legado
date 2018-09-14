@@ -339,7 +339,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }

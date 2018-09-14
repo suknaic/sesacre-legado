@@ -52,7 +52,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="#">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Voltar</a></li>                        
                     </ol>
 
                     <!--Page content-->

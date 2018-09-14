@@ -199,7 +199,8 @@ where orItens.id_ordem = :ordem";
     public function retornaUltimaDataEntrega(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select max(dt_entrega) from fin_entrega_confirmacao where id_protocolo = :protocolo";
+//                $sql = "select max(dt_entrega) from fin_entrega_confirmacao where id_protocolo = :protocolo";
+                $sql = "select max(dt_entrega) from fin_entrega_confirmacao where id_protocolo = :protocolo and sit_entrega > 0"; //Sit_entrega = 0 ,a entrega foi cancelada.
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -220,7 +221,9 @@ where orItens.id_ordem = :ordem";
     public function retornaNumeroEntregaConfirmacao(PDO $pdo) {
         try {
             if ($pdo != null) {
-                $sql = "select max(nr_entrega_confirmacao) as nr_entrega_confirmacao from fin_entrega_confirmacao where id_protocolo = :protocolo";
+//                $sql = "select max(nr_entrega_confirmacao) as nr_entrega_confirmacao from fin_entrega_confirmacao where id_protocolo = :protocolo";
+                //Maçao 14.9.2018 - Gerar a numeração da entrega com base nas entregas parciais ou totais
+                $sql = "select max(nr_entrega_confirmacao) as nr_entrega_confirmacao from fin_entrega_confirmacao where id_protocolo = :protocolo and sit_entrega > 0";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -232,7 +235,7 @@ where orItens.id_ordem = :ordem";
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -333,12 +336,12 @@ where orItens.id_ordem = :ordem";
             $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
     }
-
+    
     public function verificarUltimaEntrega(PDO $pdo) {
         try {
             $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo";

@@ -198,8 +198,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                         </div>
                                         <br>
                                         <div class="row">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-5"></div>
+                                            <div class="col-sm-2">
                                                 <?php if( empty($dados['id_protocolo'])) { ?>
                                                     <button class="btn btn-success btn-salvar btn-rounded btn-block" type="button">
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
@@ -210,7 +210,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                     </button>
                                                 <?php } ?>
                                             </div>
-                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-5"></div>
                                         </div>
                                     </div>
 <!--                                    <div class="form-group">
