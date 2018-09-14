@@ -340,7 +340,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         pedido.nr_pedido,
                         contrato.nr_contrato,
                         emp.nr_empenho,
-                        protoc.id_protocolo,
                         tpDoc.nm_tipo_documento,
                         (
                            trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
@@ -381,9 +380,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         inner join
                            fin_empenho as emp 
                            on emp.id_pedido = ordem.id_pedido 
-                        inner join
-                           fin_protocolo as protoc 
-                           on protoc.id_ordem = ordem.id_ordem 
                         inner join
                            fin_pedido as pedido 
                            on ordem.id_pedido = pedido.id_pedido 
@@ -448,7 +444,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            ses_lotacao as lotacaoDestino 
                            on lotacaoDestino.id_lotacao = docLotacaoDestino.id_lotacao 
                      where
-                        tramitacao.fl_pesquisa = '1' " . $filtroSql;
+                        tramitacao.fl_pesquisa = '1' " . $filtroSql ." order by doc.nr_documento_fiscal desc";
 
             $stmt = $pdo->prepare($sql);
 
@@ -1082,7 +1078,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                      ( ' para o(a) ' || coalesce(docTpLotDestino.nm_doc_tipo_lotacao, '') || '/' || coalesce(lotacaoDestino.nm_lotacao, '')) 
                            else
                      ( ' pelo(a) ' || docTpLotOrigem.nm_doc_tipo_lotacao || '/' || lotacaoOrigem.nm_lotacao) 
-                        end) as historico
+                        end) as historico, tramitacao.ds_doc_tramitacao as obs
                      from
                         fin_doc_tramitacao as tramitacao 
                         inner join

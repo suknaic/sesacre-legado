@@ -2217,7 +2217,7 @@ class FinContratoModel {
                                                     </div>
                                                     
                                                      <div class="form-group">
-                                                        <div class="col-sm-2"><b>Processo Administratio da Despesa Publica:</b></div>
+                                                        <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
                                                         <div class="col-sm-10"></div>
                                                     </div>
                                                 </div>

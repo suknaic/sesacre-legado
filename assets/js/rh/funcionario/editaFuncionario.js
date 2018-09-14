@@ -1046,8 +1046,14 @@ $(document).ready(function () {
                 pessoaJuridica: $("#id_pessoa_juridica").val(),
                 idCargo: $("#id_cargo").val()
             };
+            console.log(DadosContrato.nrCargaHoraria);
+            if (DadosContrato.nrCargaHoraria == 20 || DadosContrato.nrCargaHoraria == 24 || DadosContrato.nrCargaHoraria == 30 || DadosContrato.nrCargaHoraria == 40 || DadosContrato.nrCargaHoraria == 44) {
+                segue = true;
+            } else {
+                segue = false;
+            }
 
-            if (DadosContrato.nrCargaHoraria != 20 || DadosContrato.nrCargaHoraria != 24 || DadosContrato.nrCargaHoraria != 30 || DadosContrato.nrCargaHoraria != 40 || DadosContrato.nrCargaHoraria != 44) {
+            if (segue == false) {
                 func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
                 return;
             }
