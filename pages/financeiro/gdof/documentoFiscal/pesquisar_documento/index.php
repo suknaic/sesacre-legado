@@ -200,6 +200,7 @@ require_once "index.load.php";
                                                         <option value="1">Aguardando Tramitação</option>
                                                         <option value="3">Encaminhado</option>
                                                         <option value="5">Recebido</option>
+                                                        <option value="6">Tramitação Finalizada</option>
                                                     </select>
                                                 </div>
                                             </div>

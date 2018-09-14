@@ -141,8 +141,6 @@ function lista() {
         situacao: $("#situacao option:selected").val()
     }
     
-
-    
     $.ajax({
         "url": "request.php",
         "dataType": 'html',

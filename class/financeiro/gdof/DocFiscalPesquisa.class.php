@@ -273,7 +273,7 @@ class DocFiscalPesquisa {
         }
 
         if ($this->getNrProtocolo()) {
-            $filtroSql .= " and  protoc.id_protocolo = " . $this->getNrProtocolo();
+            $filtroSql .= " and  doc.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
         }
 
         if ($this->getNrContrato()) {

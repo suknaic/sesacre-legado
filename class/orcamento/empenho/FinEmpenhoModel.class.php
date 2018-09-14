@@ -489,9 +489,7 @@ class FinEmpenhoModel {
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
-//        echo "<pre>";
-//        print_r($daoFinEmpenho->getMsgRetorno());
-//        echo "</pre>";
+
         $retorno = '';
         if ($daoFinEmpenho->sucesso()) {
             foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {

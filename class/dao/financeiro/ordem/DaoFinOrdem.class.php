@@ -463,5 +463,45 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    public function retornaEntregasOrdem(PDO $pdo){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select
+                            entItens.* 
+                         from
+                            fin_ordem as ordem 
+                            inner join
+                               fin_entrega_confirmacao as entConf 
+                               on entConf.id_ordem = ordem.id_ordem 
+                            inner join
+                               fin_ordem_itens as ordemItens 
+                               on ordemItens.id_ordem = ordem.id_ordem
+                            inner join
+                               fin_entrega_itens as entItens
+                               on entItens.id_entrega_confirmacao = entConf.id_entrega_confirmacao
+                         where
+                            ordem.id_ordem = :id_ordem
+                            and entConf.sit_entrega > '0'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+                
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
 
 }

@@ -247,7 +247,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdProtocolo($this->id_protocolo);
             $daoFinEntregaConfirmacao->retornaNumeroEntregaConfirmacao($pdo);
-
+            
             if (empty($daoFinEntregaConfirmacao->getMsgRetorno()->nr_entrega_confirmacao)) {
                 return 0;
             }
@@ -322,7 +322,7 @@ class FinEntregaConfirmacaoModel {
 
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
                 }
             }
 
@@ -397,7 +397,7 @@ class FinEntregaConfirmacaoModel {
                 $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem");
                 }
             }
 
@@ -547,17 +547,23 @@ class FinEntregaConfirmacaoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+            
+            $this->sucesso = true;
+            
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);            
             $daoFinEntregaConfirmacao->removeEntregaConfirmacao($pdo);
 
             if (!$daoFinEntregaConfirmacao->sucesso()) {
+                $this->sucesso = false;
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao excluir a entrega confirmação");
             }
 
             if (!Log::SalvaLogD("fin_entrega_confirmacao", $this->id_entrega_confirmacao, $pdo)) {
+                $this->sucesso = false;
                 return Metodos::retornoAjax("Erro", "console", "Erro log delete entrega confirmacao");
             }
+
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -630,7 +636,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens
                     , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado());
             $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
-
+            
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campo) {
                     $options .= '<option value = "' . $campo["id_entrega_confirmacao"] . '">' . $campo["nr_entrega_confirmacao"] . '-' . $campo["ordem"] . '</option>';
@@ -667,7 +673,8 @@ class FinEntregaConfirmacaoModel {
                 $totalEntrega = 0;
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos) {
                     $totalEntrega += $campos["valor"];
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" '
+                            . ' data-valor=' . $campos["valor"] . ' data-saldo=' . $campos["saldo"] . '>
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
@@ -675,6 +682,8 @@ class FinEntregaConfirmacaoModel {
                                  <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
                                  <td class = "text-center">' . $campos["entreguedia"] . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</td>
+                                 <td class = "text-center valorRetirado"><input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]"  value="0,0000"/></td>      
                                  <td class = "text-center">' . $campos["situacao"] . '</td>
                                  <td class = "text-center">
                                  <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
@@ -683,12 +692,6 @@ class FinEntregaConfirmacaoModel {
                                 </td>
                                 </tr>';
                 }
-                $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
-                $tabela .= '<tr>
-                                <td class="text-right" colspan="6">Total</td>
-                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" >' . $totalEntrega . '</td>
-                                <td class="text-right" colspan="2"></td>
-                            </tr>';
             }
 
             return $tabela;
@@ -703,6 +706,7 @@ class FinEntregaConfirmacaoModel {
             if (empty($idEntregas)) {
                 return Metodos::retornoAjax("Erro", "console", "Entrega não encontrada");
             }
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $arrayIdEntregas = array();
@@ -737,17 +741,41 @@ class FinEntregaConfirmacaoModel {
             $pdo->beginTransaction();
             $finOrdemModel = new FinOrdemModel();
             $finOrdemModel->setIdOrdem($this->id_ordem);
-            
+
             if (!$finOrdemModel->finalizaOrdem($pdo)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao finaliza a ordem");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
             }
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");
-            
         } catch (Exception $ex) {
             
+        }
+    }
+    
+    public function verificaEntregaVinculadaAoGDOF(PDO $pdo) {
+        try {
+
+            $this->sucesso = false;
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->getIdEntregaConfirmacao());
+            
+            //verifica se a Entrega está vinculada a algum Documento Fiscal, se possuir vinculo, não permite a remoção do item
+            $daoFinEntregaConfirmacao->retornaDocumentosVinculadosAEntrega($pdo);
+            if ($daoFinEntregaConfirmacao->Sucesso()) {
+                $this->sucesso = true;
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $ex) {
+            return false;
         }
     }
 
