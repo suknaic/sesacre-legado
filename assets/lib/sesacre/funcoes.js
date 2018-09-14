@@ -238,13 +238,25 @@ function Funcoes() {
     }
 
     //FUNÇAO QUE MASCARA O VALOR DE ACORDO COM O PADRAO BRL
-    this.converteValorBrDecimal = function (valor, decimais){
+    this.converteValorBrDecimal = function (valor, decimais) {
         valor = Number(valor).toFixed(decimais);
-        let valorStr = valor.toString();
-        valorStr = valorStr.split('.');
+        let valorStr = valor.split('.');
+
         valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
         return valorStr.join(',');
     }
+
+    Number.prototype.formatMoney = function (places, symbol, thousand, decimal) {
+        places = !isNaN(places = Math.abs(places)) ? places : 2;
+        symbol = symbol !== undefined ? symbol : "$";
+        thousand = thousand || ",";
+        decimal = decimal || ".";
+        var number = this,
+                negative = number < 0 ? "-" : "",
+                i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+                j = (j = i.length) > 3 ? j % 3 : 0;
+        return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+    };
 
 }
 
