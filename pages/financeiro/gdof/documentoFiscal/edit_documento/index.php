@@ -125,10 +125,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Nº da Ordem</th>
-                                                                            <th>Tipo ordem</th>
-                                                                            <th>Valor da Ordem</th>
-                                                                            <th>Ação</th>
+                                                                            <th class="text-center">Nº da Ordem</th>
+                                                                            <th class="text-center">Tipo ordem</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -179,6 +179,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Prazo para Entrega</th>
                                                                             <th class="text-center">Entregue Dia</th>
                                                                             <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Valor do Documento Fiscal</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
@@ -197,13 +199,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--form processo administratio da despesa publica-->
-                                <div class="form-group">
+<!--                                <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body ordem">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
                                                         <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <!--form processo administratio da despesa publica-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body ordem">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
@@ -217,23 +237,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--form processo administratio da despesa publica-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
-                                                    </div>
-                                                    <div class="panel-body">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Documento Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">

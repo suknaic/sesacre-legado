@@ -185,10 +185,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Nº da Ordem</th>
-                                                                            <th>Tipo Ordem</th>
-                                                                            <th>Valor Total</th>
-                                                                            <th>Ação</th>
+                                                                            <th class="text-center">Nº da Ordem</th>
+                                                                            <th class="text-center">Tipo Ordem</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody></tbody>

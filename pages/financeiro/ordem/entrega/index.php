@@ -205,9 +205,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
                                                     </button>
                                                 <?php } else { ?>
-                                                    <button class="btn btn-info btn-alterar btn-rounded btn-block" type="button">
+<!--                                                    <button class="btn btn-info btn-alterar btn-rounded btn-block" type="button">
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar Edição
-                                                    </button>
+                                                    </button>-->
                                                 <?php } ?>
                                             </div>
                                             <div class="col-sm-5"></div>

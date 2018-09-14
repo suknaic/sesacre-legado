@@ -111,9 +111,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaOrdem" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Nº da Ordem</th>
-                                                                            <th>Tipo Ordem</th>
-                                                                            <th>Valor da Ordem</th>
+                                                                            <th class="text-center">Nº da Ordem</th>
+                                                                            <th class="text-center">Tipo Ordem</th>
+                                                                            <th class="text-center">Valor Total</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -151,6 +151,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Prazo para Entrega</th>
                                                                             <th class="text-center">Entregue Dia</th>
                                                                             <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Valor do Documento Fiscal</th>
                                                                             <th class="text-center">Situação</th>
                                                                         </tr>
                                                                     </thead>
@@ -168,7 +170,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--form processo administratio da despesa publica-->
-                                <div class="form-group">
+<!--                                <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body ordem">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -183,7 +185,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="processoAdm" id="processoAdm" 
-                                                                           value="<?php echo $documento["nr_processo_administrativo"]; ?>" disabled="true"/>
+                                                                           value="" disabled="true"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -194,7 +196,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
 
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -206,7 +208,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Documento Nº:</b></div>
+                                                            <div class="col-sm-2"><b>Protocolo Nº:</b> <span class="text-danger">*</span></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="processoAdm" id="processoAdm" disabled="true" value="<?php echo $documento["nr_processo_administrativo"]; ?>"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Documento Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -218,7 +230,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo de Documento Fiscal:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -231,7 +243,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Competência:</b></div>
+                                                            <div class="col-sm-2"><b>Competência:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -243,7 +255,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de Emissão:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Emissão:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -255,7 +267,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de Atesto:</b></div>
+                                                            <div class="col-sm-2"><b>Data de Atesto:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -267,7 +279,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>

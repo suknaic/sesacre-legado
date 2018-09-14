@@ -869,6 +869,10 @@ class FinDocumentoFiscal {
                                                         <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
                                                         <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
                                                     </div>
+                                                     <div class="form-group">
+                                                        <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
+                                                        <div class="col-sm-10"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                          </div>
@@ -1072,6 +1076,8 @@ class FinDocumentoFiscal {
                                  <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
                                  <td class = "text-center">' . $campos["entreguedia"] . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">[valor do saldo]</td>
+                                 <td class = "text-center">[valor lançado na entrega]</td>
                                  <td class = "text-center">' . $campos["situacao"] . '</td>';
                     if ($excluir) {
                         $tabela .= ' <td class="text-center">
@@ -1108,7 +1114,9 @@ class FinDocumentoFiscal {
 
             if ($daoFinDocumentoFiscal->sucesso()) {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
-                    $retorno .= $linha["historico"] . "\n";
+                    $obs = $linha['obs'] ?? "";
+                    
+                    $retorno .= $linha["historico"] . (!empty($obs) ? (". Motivo: " . $obs) : "") ."\n";
                 }
             }
             return $retorno;
