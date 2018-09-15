@@ -24,8 +24,8 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-    
-    function limpaCampos(){
+
+    function limpaCampos() {
         $("#tabelaOrdem tbody").html("");
         $("#tabelaEntrega tbody").html("");
         $("#processoAdm").val("");
@@ -288,49 +288,34 @@ $(document).ready(function () {
             },
             "success": function (response) {
                 $("#tabelaEntrega").find("tbody").prepend(response);
-                totalizaEntregas();
+
 
             }
         });
     }
 
-    function totalizaEntregas() {
-        var totalEntregas = 0;
-        var totalSaldos = 0;
-        $(".trEntregas").each(function () {
-            totalEntregas = parseFloat($(this).data('valor')) + totalEntregas;
-            totalSaldos = parseFloat($(this).data('saldo')) + totalSaldos;
-        });
-
-        let valorEntregas = func.converteValorBrDecimal(totalEntregas, 4);
-        let valorSaldos = func.converteValorBrDecimal(totalSaldos, 4);
-
-        $("#tabelaEntrega").find(".entregaTotal").html("");
-
-//        //Se existir entregas, vai inserir o totalizador
-//        if (totalEntregas > 0) {
-//            let rodapeEntregas = `<td class="text-right" colspan="6">Total</td>
-//                                    <td class="text-center valorEntregaTotal" valor=${totalEntregas}>${valorEntregas}</td>
-//                                    <td class="text-center valorSaldoTotal" valor=${totalSaldos}>${valorSaldos}</td>
-//                                    <td class="text-center valorDocumentoTotal"></td>
-//                                    <td class="text-right" colspan="4"></td>`;
-//            $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
-//        }
-                    let rodapeEntregas = `<td class="text-right" colspan="11"></td>`;
-                    $("#tabelaEntrega").find(".entregaTotal").html(rodapeEntregas);
-        //Atualiza a informaçao do valor do documento fiscal
-//        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
-    }
-
-    $("body").on("keyup", ".valorRetEntrega", function (e) {
+    function calculaValorDocumento() {
         let valoresRetirados = 0;
         $("input[name=valorRetEntrega\\[\\]]").each(function () {
-            valoresRetirados = func.converteValorIngFloat($(this).val()) + valoresRetirados;
+            valoresRetirados = (parseFloat(func.tranformaStringEmValorCalculavel($(this).val())) + valoresRetirados);
+
+            if (valoresRetirados > '999999999.9999') {
+                func.modalAlert("Valor do documento fiscal ultrapassa o valor máximo permitido");
+                $(this).prop("disabled", true);
+                return false;
+            }
         });
+
+
+
 
         let valorDocumentoFiscal = func.converteValorBrDecimal(valoresRetirados, 4);
         $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
         $(".valorDocumentoTotal").text(valorDocumentoFiscal);
+    }
+
+    $("body").on("keyup", ".valorRetEntrega", function (e) {
+        calculaValorDocumento();
     });
 
 
@@ -346,7 +331,7 @@ $(document).ready(function () {
         }
         //---------------------------------------------
         $this.closest('tr').remove();
-        totalizaEntregas();
+        calculaValorDocumento();
     });
 
 
@@ -372,13 +357,13 @@ $(document).ready(function () {
             var valoresRetEntregas = [];
             $(".trEntregas").each(function () {
                 entregas.push($(this).attr("identrega"));
-                
+
             });
 
             $("input[name=valorRetEntrega\\[\\]]").each(function () {
                 valoresRetEntregas.push($(this).val());
             });
-            
+
             if (entregas.length <= 0) {
                 $this.prop("disabled", false);
                 func.modalAlert("Nenhuma entrega foi adicionada.");
