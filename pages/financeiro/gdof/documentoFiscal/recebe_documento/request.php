@@ -18,7 +18,7 @@ switch ($_REQUEST['acao']) {
             $prog->setNrDocFiscal($dados['nrDocFis'])
                     ->setAnoDocFiscal((int) $dados['anoDocFis'])
                     ->setContratado((int) $dados['contratado'])
-                    ->setNrProtocolo((int) $dados['nrProtocolo'])
+                    ->setNrProtocolo($dados['nrProtocolo'])
                     ->setNrContrato($dados['nrContrato'])
                     ->setNrPedido($dados['nrPedido'])
                     ->setNrEmpenho($dados['nrEmpenho'])

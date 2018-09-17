@@ -354,14 +354,25 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var entregas = [];
-            var valoresRetEntregas = [];
+//            var valoresRetEntregas = [];
+            
             $(".trEntregas").each(function () {
-                entregas.push($(this).attr("identrega"));
+                
+                //converte o valor informado para a entrega em formato inglês com 4 casas
+                var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
+                valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
+                
+                //converte o valor do saldo para o formato inglês com 4 casas
+                var valor_saldo_ingles = $(this).data('saldo');
+                valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
+                
+                var entrega = {
+                    idEntrega: $(this).attr("identrega"),
+                    vlSaldo: valor_saldo_ingles,
+                    vlDocumento: valor_entrega_ingles
+                }
+                entregas.push(entrega);
 
-            });
-
-            $("input[name=valorRetEntrega\\[\\]]").each(function () {
-                valoresRetEntregas.push($(this).val());
             });
 
             if (entregas.length <= 0) {
@@ -397,7 +408,8 @@ $(document).ready(function () {
                 "grp": grp,
                 "grpNumero": $("#nr_grp").val(),
                 "id_lotacao": $("#destinatario option:selected").val(),
-                "destinatario": $("#destinatario option:selected").attr("id_doc_lotacao")
+                "destinatario": $("#destinatario option:selected").attr("id_doc_lotacao"),
+                "entregas": entregas
             }
 
             $.ajax({
@@ -407,8 +419,8 @@ $(document).ready(function () {
                 "data": {
                     "acao": "cadastrarDocumentoFiscal",
                     "dados": dados,
-                    "entrega": entregas,
-                    "valoresRetEntregas": valoresRetEntregas
+//                    "entrega": entregas,
+//                    "valoresRetEntregas": valoresRetEntregas
                 },
                 "success": function (response) {
                     console.log(response);

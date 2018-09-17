@@ -8,6 +8,7 @@ class FinEntregaDocumento {
     private $id_documento_fiscal = null;
     private $id_entrega_confirmacao = null;
     private $vl_entrega_documento = null;
+    private $vl_entrega_saldo = null;
     private $sucesso = false;
     private $msgRetorno = null;
 
@@ -82,7 +83,17 @@ class FinEntregaDocumento {
 
         return $this;
     }
+    
+    function getVlEntregaSaldo() {
+        return $this->vl_entrega_saldo;
+    }
 
+    function setVlEntregaSaldo($vl_entrega_saldo) {
+        $this->vl_entrega_saldo = $vl_entrega_saldo;
+        return $this;
+    }
+
+    
     /**
      * @return mixed
      */
@@ -127,7 +138,13 @@ class FinEntregaDocumento {
         $daoFinEntregaDocumento = new DaoFinEntregaDocumento();
         $daoFinEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
         $daoFinEntregaDocumento->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
-        $daoFinEntregaDocumento->setVlEntregaDocumento(Metodos::ConverteValorIng($this->vl_entrega_documento));
+//        $daoFinEntregaDocumento->setVlEntregaDocumento(Metodos::ConverteValorIng($this->vl_entrega_documento));
+//        $daoFinEntregaDocumento->setVlEntregaSaldo(Metodos::ConverteValorIng($this->vl_entrega_saldo));
+        
+        //OS VALORES DO DOCUMENTO E DO SALDO JÁ ESTÃO EM FORMATO INGLÊS
+        $daoFinEntregaDocumento->setVlEntregaDocumento($this->vl_entrega_documento);
+        $daoFinEntregaDocumento->setVlEntregaSaldo($this->vl_entrega_saldo);
+        
         $daoFinEntregaDocumento->insertEntregaDocumento($pdo);
         //log do pedido de necessidade
         $daoFinEntregaDocumento->setIdEntregaDocumento($pdo->lastInsertId('fin_entrega_documento_id_entrega_documento_seq'));

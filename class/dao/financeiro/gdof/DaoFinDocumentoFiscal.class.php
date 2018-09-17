@@ -291,30 +291,69 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaEntregaVinculadoAoDocumentoFiscal(PDO $pdo) {
         try {
-            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
-                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem, 
-                    to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
-                    to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
-                    to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
-                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
-                    case 
-                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
-                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
-                    end situacao
-                    from fin_documento_fiscal as doc
-                    inner join fin_entrega_documento as entDoc
-                    on entDoc.id_documento_fiscal =  doc.id_documento_fiscal
-                    inner join fin_entrega_confirmacao as confirmacao
-                    on confirmacao.id_entrega_confirmacao  =  entDoc.id_entrega_confirmacao
-                    inner join fin_protocolo as protocolo
-                    on protocolo.id_protocolo = confirmacao.id_protocolo
-                    inner join fin_ordem as ordem
-                    on confirmacao.id_ordem = ordem.id_ordem
-                    inner join fin_entrega_itens as item
-                    on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                    where doc.id_documento_fiscal = :documento
-                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo, ordem.id_ordem
-                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), confirmacao.nr_entrega_confirmacao";
+//            $sql = "select confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
+//                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem, 
+//                    to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
+//                    to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite, ordem.nr_prazo_ordem,
+//                    to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as entreguedia,
+//                    sum(item.vl_itens_entrega * item.qt_itens_entrega) as valor, ordem.id_ordem,  
+//                    case 
+//                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
+//                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
+//                    end situacao
+//                    from fin_documento_fiscal as doc
+//                    inner join fin_entrega_documento as entDoc
+//                    on entDoc.id_documento_fiscal =  doc.id_documento_fiscal
+//                    inner join fin_entrega_confirmacao as confirmacao
+//                    on confirmacao.id_entrega_confirmacao  =  entDoc.id_entrega_confirmacao
+//                    inner join fin_protocolo as protocolo
+//                    on protocolo.id_protocolo = confirmacao.id_protocolo
+//                    inner join fin_ordem as ordem
+//                    on confirmacao.id_ordem = ordem.id_ordem
+//                    inner join fin_entrega_itens as item
+//                    on item.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+//                    where doc.id_documento_fiscal = :documento
+//                    group by confirmacao.id_entrega_confirmacao, protocolo.id_protocolo, ordem.id_ordem
+//                    order by concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem), confirmacao.nr_entrega_confirmacao";
+            $sql = "select
+                        entrega.id_entrega_confirmacao,
+                        entrega.nr_entrega_confirmacao,
+                        ordem.id_ordem,
+                        concat(concat(ordem.nr_ordem, '/'), ordem.aa_ordem) as ordem,
+                        to_char(protocolo.dh_recebimento, 'DD/MM/YYYY') as dataaviso,
+                        to_char(protocolo.dt_entrega, 'DD/MM/YYYY') as datalimite,
+                        ordem.nr_prazo_ordem,
+                        to_char(entrega.dt_entrega, 'DD/MM/YYYY') as entreguedia,
+                        (
+                           select
+                              sum(itens.vl_itens_entrega * itens.qt_itens_entrega) 
+                           from
+                              fin_entrega_itens as itens 
+                           where
+                              itens.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
+                        )
+                        as vl_ordem,
+                        entDoc.vl_entrega_documento,
+                        entDoc.vl_entrega_saldo,
+                        case 
+                             when entrega.sit_entrega = '1' then 'Entrega Parcial'
+                             when entrega.sit_entrega = '2' then 'Entrega Total'
+                        end situacao 
+                     from
+                        fin_documento_fiscal as doc 
+                        inner join
+                           fin_entrega_documento as entDoc 
+                           on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
+                        inner join
+                           fin_entrega_confirmacao as entrega 
+                           on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                        inner join
+                           fin_protocolo as protocolo 
+                           on protocolo.id_protocolo = entrega.id_protocolo 
+                        inner join
+                           fin_ordem as ordem 
+                           on ordem.id_ordem = entrega.id_ordem
+                    where doc.id_documento_fiscal = :documento order by entrega.id_entrega_confirmacao";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();
@@ -484,7 +523,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
     public function retornaDocumentoFiscaisEncaminha(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
         try {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
-                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
+                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, to_char(doc.vl_documento,'999G999G990D0000') as vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
 
                     case 

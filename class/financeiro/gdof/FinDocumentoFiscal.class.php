@@ -547,31 +547,60 @@ class FinDocumentoFiscal {
 //                return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
 //                        . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
 //            }         
+
+            
             //codigo abaixo cadastra as entregas do documento fiscal
             $finEntregaDocumento = new FinEntregaDocumento();
-
-            for ($i = 0; $i < count($this->entrega); $i++) {
-                $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
-                $finEntregaDocumento->setIdEntregaConfirmacao($this->entrega[$i]);
-                $finEntregaDocumento->setVlEntregaDocumento($this->vlRetEntrega[$i]);
-
+            
+            $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
+            
+            //Percorre as entregas do documento fiscal
+            foreach ($this->getEntrega() as $entrega) {
+                $finEntregaDocumento->setIdEntregaConfirmacao($entrega['idEntrega']);
+                $finEntregaDocumento->setVlEntregaDocumento($entrega['vlDocumento']);
+                $finEntregaDocumento->setVlEntregaSaldo($entrega['vlSaldo']);
+                
                 $finEntregaDocumento->retornaSaldoEntregas($pdo);
-
+                
                 if (!$finEntregaDocumento->getSucesso()) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
                 }
 
-                if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($this->vlRetEntrega[$i]), 4)) {
+                if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($entrega["vlDocumento"], 4)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
                 }
-
+                
                 if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
                 }
             }
+
+            
+//            for ($i = 0; $i < count($this->entrega); $i++) {
+//                $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
+//                $finEntregaDocumento->setIdEntregaConfirmacao($this->entrega[$i]);
+//                $finEntregaDocumento->setVlEntregaDocumento($this->vlRetEntrega[$i]);
+//
+//                $finEntregaDocumento->retornaSaldoEntregas($pdo);
+//
+//                if (!$finEntregaDocumento->getSucesso()) {
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
+//                }
+//
+//                if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($this->vlRetEntrega[$i]), 4)) {
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
+//                }
+//
+//                if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
+//                }
+//            }
 
 
             //codigo abaixo cadastra a tramitacao  "Aguardando Tramitação" e a situacao "Cadastrado" do documento fiscal
@@ -1067,7 +1096,7 @@ class FinDocumentoFiscal {
             $totalEntrega = 0;
             if ($daoFinDocumentoFiscal->sucesso()) {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
-                    $totalEntrega += $campos["valor"];
+                    $totalEntrega += $campos["vl_entrega_documento"];
                     $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
@@ -1075,9 +1104,9 @@ class FinDocumentoFiscal {
                                  <td class = "text-center">' . $campos["datalimite"] . '</td>
                                  <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
                                  <td class = "text-center">' . $campos["entreguedia"] . '</td>
-                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
-                                 <td class = "text-center">[valor do saldo]</td>
-                                 <td class = "text-center">[valor lançado na entrega]</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_ordem"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_entrega_saldo"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_entrega_documento"], 4) . '</td>
                                  <td class = "text-center">' . $campos["situacao"] . '</td>';
                     if ($excluir) {
                         $tabela .= ' <td class="text-center">
@@ -1089,8 +1118,56 @@ class FinDocumentoFiscal {
                 }
                 $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
                 $tabela .= '<tr>
-                                <td class="text-right" colspan="6">Total</td>
-                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" >' . $totalEntrega . '</td>
+                                <td class="text-right" colspan="8"><b>Total</b></td>
+                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" ><b>' . $totalEntrega . '</b></td>
+                                <td class="text-right" colspan="2"></td>
+                            </tr>';
+            }
+
+            return $tabela;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaTabelaEntregaGdofEdicao($pdo, $excluir = false) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $tabela = '';
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinDocumentoFiscal->retornaEntregaVinculadoAoDocumentoFiscal($pdo);
+            $totalEntrega = 0;
+            if ($daoFinDocumentoFiscal->sucesso()) {
+                foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
+                    $totalEntrega += $campos["vl_entrega_documento"];
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
+                                 <td class = "text-center">' . $campos["ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["dataaviso"] . '</td>
+                                 <td class = "text-center">' . $campos["datalimite"] . '</td>
+                                 <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["entreguedia"] . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_ordem"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_entrega_saldo"], 4) . '</td>
+                                 <td class = "text-center" valorRetirado"><input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]"  value="'.Metodos::ConverteValorBr($campos["vl_entrega_documento"], 4).'"/></td>
+                                 <td class = "text-center">' . $campos["situacao"] . '</td>';
+                    if ($excluir) {
+                        $tabela .= ' <td class="text-center">
+                                      <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+                                       </button>
+                                     </td>';
+                    }
+                }
+                $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
+                $tabela .= '<tr>
+                                <td class="text-right" colspan="8"><b>Total</b></td>
+                                <td class="text-center valorEntregaTotal" valor= "' . $totalEntrega . '" ><b>' . $totalEntrega . '</b></td>
                                 <td class="text-right" colspan="2"></td>
                             </tr>';
             }

@@ -305,31 +305,6 @@ class DocFiscalPesquisa {
             $outros      = "tramitacao.id_tipo_tramitacao <> 3"; //Quando for DIFERENTE de 'Encaminhado', deve usar como parametro o ID_DOC_ORIGEM
             $filtroSql .= " and ((tramitacao.id_doc_destino = " . $this->getDestinatario() . " and ".$encaminhado.") or (tramitacao.id_doc_origem = ". $this->getDestinatario() ." and ".$outros."))";
         }
-//            if($this->getTramitacao() == '1'){ //Aguardando Tramitação
-//                $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
-//            }
-//            if ($this->getTramitacao() == '3') { //Encaminhado
-//                $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
-//
-//                if ($this->getDestinatario()) {
-//                    $filtroSql .= " and docLotacaoDestino.id_lotacao = " . $this->getDestinatario();
-//                }
-//            }
-//
-//            if ($this->getTramitacao() == '5') { //Recebido
-//                $filtroSql .= " and tramitacao.id_tipo_tramitacao = " . $this->getTramitacao();
-//
-//                if ($this->getDestinatario()) {
-//                    $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getDestinatario();
-//                }
-//            }
-//       
-//
-//            if ($this->getDestinatario()) {
-//                $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getDestinatario();
-//            }
-      
-
 
 
         return $filtroSql;

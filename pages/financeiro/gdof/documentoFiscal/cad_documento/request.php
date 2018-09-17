@@ -157,8 +157,8 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $valoresRetEntregas = filter_input(INPUT_POST, 'valoresRetEntregas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+//            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+//            $valoresRetEntregas = filter_input(INPUT_POST, 'valoresRetEntregas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             $finDocumentoFiscal = new FinDocumentoFiscal();
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
@@ -170,8 +170,9 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
-            $finDocumentoFiscal->setEntrega($entrega);
-            $finDocumentoFiscal->setValorRetEntrega($valoresRetEntregas);
+            $finDocumentoFiscal->setEntrega($dados["entregas"]); //Agora os IDs ,valores e saldos da entrega estão na variável '$dados["entregas"]'
+//            $finDocumentoFiscal->setEntrega($entrega);
+//            $finDocumentoFiscal->setValorRetEntrega($valoresRetEntregas);
             $finDocumentoFiscal->setIdLotacao($dados["id_lotacao"]);
             $finDocumentoFiscal->setIdDocOrigem($dados["destinatario"]);
             $finDocumentoFiscal->setIdPessoa($session->getIdUser());

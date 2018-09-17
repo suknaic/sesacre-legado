@@ -6,6 +6,7 @@ class FinEntregaDocumentoTb {
     private $id_documento_fiscal = null;
     private $id_entrega_confirmacao = null;
     private $vl_entrega_documento = null;
+    private $vl_entrega_saldo = null;
     /**
      * @return mixed
      */
@@ -77,5 +78,16 @@ class FinEntregaDocumentoTb {
 
         return $this;
     }
+    
+    function getVlEntregaSaldo() {
+        return $this->vl_entrega_saldo;
+    }
+
+    function setVlEntregaSaldo($vl_entrega_saldo) {
+        $this->vl_entrega_saldo = $vl_entrega_saldo;
+        return $this;
+    }
+
+
 
 }

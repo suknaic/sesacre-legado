@@ -22,11 +22,12 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                 return false;
             }
 
-            $sql = "insert into fin_entrega_documento (id_documento_fiscal, id_entrega_confirmacao, vl_entrega_documento) values (:documento, :entrega, :vlEntrega)";
+            $sql = "insert into fin_entrega_documento (id_documento_fiscal, id_entrega_confirmacao, vl_entrega_documento, vl_entrega_saldo) values (:documento, :entrega, :vlEntrega, :vlSaldo)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->bindValue(":vlEntrega", $this->getVlEntregaDocumento(), PDO::PARAM_STR);
+            $stmt->bindValue(":vlSaldo", $this->getVlEntregaSaldo(), PDO::PARAM_STR);
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {

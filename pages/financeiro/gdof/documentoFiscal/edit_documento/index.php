@@ -186,7 +186,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdof(null, true); ?>
+                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdofEdicao(null, true); ?>
                                                                     </tbody>
 
                                                                 </table>
