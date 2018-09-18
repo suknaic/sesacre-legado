@@ -84,7 +84,7 @@ switch ($_REQUEST['acao']) {
     CASE 'editarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+//            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
            
             $finDocumentoFiscal = new FinDocumentoFiscal();
             $finDocumentoFiscal->setIdPessoa($session->getIdUser());
@@ -98,7 +98,7 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
-            $finDocumentoFiscal->setEntrega($entrega);
+            $finDocumentoFiscal->setEntrega($dados['entregas']);
             echo $finDocumentoFiscal->editaDocumentoFiscal();
             return;
             break;

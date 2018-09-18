@@ -186,7 +186,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdofEdicao(null, true); ?>
+                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdofEdicao(null); ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -371,7 +371,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
 
-<!--                                <div class="form-group">
+                                <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded" type="button">
@@ -379,7 +379,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             </button>
                                         </div>
                                     </div>
-                                </div>-->
+                                </div>
 
                             </div>
                         </form>

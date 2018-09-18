@@ -159,6 +159,48 @@ class FinEntregaDocumento {
 
         return true;
     }
+    
+    public function atualizaEntregaDocumento(PDO $pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoFinEntregaDocumento = new DaoFinEntregaDocumento();
+            $daoFinEntregaDocumento->setIdEntregaDocumento($this->id_entrega_documento);
+            $daoFinEntregaDocumento->setVlEntregaDocumento($this->vl_entrega_documento);
+            $daoFinEntregaDocumento->setVlEntregaSaldo($this->vl_entrega_saldo);
+            
+            $daoFinEntregaDocumento->retorna($pdo);
+            if (!$daoFinEntregaDocumento->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro ao localizar o registro na tabela fin_entrega_documento ";
+                return false;
+            }
+            
+            $reg_antigo = $daoFinEntregaDocumento->getMsgRetorno();
+            
+            $daoFinEntregaDocumento->atualiza($pdo);
+            if ($daoFinEntregaDocumento->sucesso()) {
+                if (!Log::SalvaLogU('fin_entrega_documento', $daoFinEntregaDocumento->getIdEntregaDocumento(), $reg_antigo, $pdo)) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = 'Erro no Log para atualizar Entrega Documento';
+                    return false;
+                }
+                
+                $this->sucesso = true;
+                $this->msgRetorno = "Atualizado com Sucesso";
+                return true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEntregaDocumento->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
     public function removerEntregaDocumento(PDO $pdo = null) {
         try {
@@ -236,6 +278,24 @@ class FinEntregaDocumento {
             $dao = new DaoFinEntregaDocumento();
             $dao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $dao->retornaSaldoEntregas($pdo);
+            $this->sucesso = $dao->sucesso();
+            $this->msgRetorno = $dao->getMsgRetorno();
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaSaldoEntregaAtualizacao(PDO $pdo = null){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dao = new DaoFinEntregaDocumento();
+            $dao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $dao->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $dao->retornaSaldoEntregaAtualizacao($pdo);
             $this->sucesso = $dao->sucesso();
             $this->msgRetorno = $dao->getMsgRetorno();
         } catch (Exception $ex) {

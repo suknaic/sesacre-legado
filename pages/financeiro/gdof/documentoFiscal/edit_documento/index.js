@@ -11,6 +11,20 @@ $(document).ready(function () {
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
     });
+    
+    $('body').find('select').select2({
+        width: '100%'
+    });
+    
+    //Masca para valor
+    $("body").on("focus", ".valorRetEntrega", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
 
         /**
          * retornaDadosOrdem
@@ -147,17 +161,33 @@ $(document).ready(function () {
 
     });
 
-    var infTabEntrega = [];
-    $(".trEntregas").each(function(){
-        infTabEntrega.push($(this).attr('identrega'));       
-    });
+//    var infTabEntrega = [];
+//    $(".trEntregas").each(function(){
+//        infTabEntrega.push($(this).attr('identrega'));       
+//    });
 
-    $("body").on("click", ".addEntrega", function (e) {        
-        if($("#selectEntrega option:selected").val() == 0){
+    $("body").on("click", ".addEntrega", function (e) {   
+        var entrega = $("#selectEntrega option:selected").val();
+        var erro = false;
+        
+        if(!entrega){
             return false;
         }
-        infTabEntrega.push($("#selectEntrega option:selected").val());
-        atualizaTabelaEntrega(infTabEntrega);
+        
+        $(".trEntregas").each(function(){
+            if (entrega == $(this).attr('identrega')) {
+                func.modalAlert("Esta entrega já foi adicionada.");
+                erro = true;
+            } 
+        });
+        
+        if (!erro) {
+            var infTabEntrega = [];
+        
+            infTabEntrega.push(entrega);
+            atualizaTabelaEntrega(infTabEntrega);
+        }
+        
     });
 
 
@@ -172,8 +202,8 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                $("#tabelaEntrega").find("tbody").html(response);
-                $("#valorDocumentoFiscal").val($("body").find(".valorEntregaTotal").attr("valor"));
+                $("#tabelaEntrega").find("tbody").append(response);
+                calculaValorDocumento();
             }
         });
     }
@@ -181,22 +211,8 @@ $(document).ready(function () {
 
     $("body").on("click", ".excluirEntrega", function (e) {
         var $this = $(this);
-        $("#ent" + $this.val()).remove();
-        infTabEntrega = [];
-        var qtdEntrega = 0;
-        $(".trEntregas").each(function () {
-            infTabEntrega.push($(this).attr("identrega"));
-            qtdEntrega++;
-        });
-        
-        if (qtdEntrega > 0) {
-            atualizaTabelaEntrega(infTabEntrega);
-        }else{
-            let valor = "0,0000";
-            $("#tabelaEntrega").find(".valorEntregaTotal").attr("valor", valor);
-            $("#tabelaEntrega").find(".valorEntregaTotal").text(valor);
-            $("#valorDocumentoFiscal").val(valor);
-        }
+        $this.closest('tr').remove();
+        calculaValorDocumento();
     });
 
 
@@ -221,9 +237,29 @@ $(document).ready(function () {
             var entregas = [];
 
             $(".trEntregas").each(function (){
-                entregas.push($(this).attr("identrega"));
-            });
+                
+                var situacao = $(this).data('situacao');
+                
+                if(situacao){
+                    //converte o valor informado para a entrega em formato inglês com 4 casas
+                    var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
+                    valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
 
+                    //converte o valor do saldo para o formato inglês com 4 casas
+                    var valor_saldo_ingles = $(this).data('saldo');
+                    valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
+
+                    var entrega = {
+                        id_entrega_documento: $(this).data("id"),
+                        id_entrega_confirmacao: $(this).attr("identrega"),
+                        vl_entrega_saldo: valor_saldo_ingles,
+                        vl_entrega_documento: valor_entrega_ingles
+                    }
+                    entregas.push(entrega);
+                }
+
+            });
+            
             if (entregas.length <= 0){
                 $this.prop("disabled", false);
                 func.modalAlert("Nenhuma entrega foi adicionada.");
@@ -242,17 +278,18 @@ $(document).ready(function () {
                 "atesto": $("#atesto").val(),
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,
-                "grpNumero": $("#nr_grp").val()
+                "grpNumero": $("#nr_grp").val(),
+                "entregas": entregas
             }
-
+            
             $.ajax({
                 "url": "request.php",
                 "method": "POST",
                 "dataType": "html",
                 "data": {
                     "acao": "editarDocumentoFiscal",
-                    "dados": dados,
-                    "entrega": entregas
+                    "dados": dados
+//                    "entrega": entregas
                 },
                 "success": function (response) {
                     console.log(response);
@@ -300,5 +337,29 @@ $(document).ready(function () {
         }
     });
 
+    //Script para atualizar o valor total do documento a medida que o usuário insere valores das entregas
+    $("body").on("keyup", ".valorRetEntrega", function (e) {
+        calculaValorDocumento();
+    });
+    
+    function calculaValorDocumento() {
+        let valoresRetirados = 0;
+        $("input[name=valorRetEntrega\\[\\]]").each(function () {
+            valoresRetirados = (parseFloat(func.tranformaStringEmValorCalculavel($(this).val())) + valoresRetirados);
+
+            if (valoresRetirados > '999999999.9999') {
+                func.modalAlert("Valor do documento fiscal ultrapassa o valor máximo permitido");
+                $(this).prop("disabled", true);
+                return false;
+            }
+        });
+
+
+
+
+        let valorDocumentoFiscal = func.converteValorBrDecimal(valoresRetirados, 4);
+        $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
+        $(".valorDocumentoTotal").text(valorDocumentoFiscal);
+    }
 
 });

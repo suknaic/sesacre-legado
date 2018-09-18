@@ -461,7 +461,8 @@ where orItens.id_ordem = :ordem";
                     case 
                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
                     when confirmacao.sit_entrega = '2' then 'Entrega Total'
-                    end situacao
+                    end situacao,
+                    confirmacao.sit_entrega
                     from fin_protocolo as protocolo
                     inner join fin_entrega_confirmacao as confirmacao
                     on protocolo.id_protocolo = confirmacao.id_protocolo
