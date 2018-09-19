@@ -1154,7 +1154,8 @@ class FinDocumentoFiscal {
                     $tabela .= '<tr id = "' . $valor["id_ordem"] . '" class= "tabOrdem">
                                     <td class="text-center">' . $valor["ordem"] . '</td>
                                     <td class="text-center">' . $valor["tipo"] . '</td>
-                                    <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>';
+                                    <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>
+                                    <td class="text-center">' . $valor['situacao'] .'</td>';
                     if ($excluir) {
                         $tabela .= ' <td class="text-center">
                                         <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "' . $valor["id_ordem"] . '">
@@ -1189,10 +1190,10 @@ class FinDocumentoFiscal {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
                     $totalEntrega += $campos["vl_entrega_documento"];
                     
-                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
+//                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
                     
                     $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" data-situacao='.$campos['sit_entrega'].' idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
-                                 <td class = "text-center">' . $nr_entrega . '</td>
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
                                  <td class = "text-center">' . $campos["datalimite"] . '</td>

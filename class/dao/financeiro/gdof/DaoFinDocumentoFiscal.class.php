@@ -260,6 +260,12 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when ordem.tp_ordem = '1' then 'Entrega'
                         when ordem.tp_ordem = '2' then 'Serviço/Execução'
                     end tipo,
+                    case
+                        when ordem.sit_ordem = '0' then 'Cancelada'
+                        when ordem.sit_ordem = '1' then 'Cadastrada'
+                        when ordem.sit_ordem = '2' then 'Requisitada'
+                        when ordem.sit_ordem = '3' then 'Finalizada'
+                    end situacao,
                     (select sum(ordemValor.qt_itens_ordem * ordemValor.vl_itens_ordem) from fin_ordem_itens as ordemValor where ordemValor.id_ordem = ordem.id_ordem) as valor
                     from fin_documento_fiscal as documento
                     inner join fin_entrega_documento as entDoc
@@ -271,7 +277,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_ordem_itens as ordemItens
                     on ordemItens.id_ordem = ordem.id_ordem
                     where documento.id_documento_fiscal = :documento
-                    and ordem.sit_ordem <> '0'
                     group by ordem.id_ordem";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
