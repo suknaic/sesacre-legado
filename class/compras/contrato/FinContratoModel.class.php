@@ -1443,6 +1443,7 @@ class FinContratoModel {
 
 //            $daoContrato->retornaContratoCombo($pdo, $filtro);
             $daoContrato->retornaContratoComValores($pdo, $filtro);
+//            var_dump($daoContrato->getMsgRetorno());
             if ($daoContrato->sucesso()) {
                 $result = $daoContrato->getMsgRetorno();
             } else {

@@ -373,7 +373,7 @@ class DaoFinContrato extends FinContratoTb {
                            INNER JOIN
                               ses_pessoa as p 
                               ON p.id_pessoa = itens.id_pessoa 
-                           INNER JOIN
+                           LEFT JOIN
                               pla_tipo_gasto as plaTipoGasto 
                               ON plaTipoGasto.id_tipo_gasto = cont.id_tipo_gasto 
                            INNER JOIN
@@ -386,7 +386,7 @@ class DaoFinContrato extends FinContratoTb {
                               gco_modalidade as modalidade 
                               ON modalidade.id_modalidade = processo.id_modalidade 
                         WHERE
-                           itens.sit_fornecedor = '1' 
+                           itens.sit_fornecedor = '1'
                            and cont.st_ativo = '1' "
                         . $condicao .
                         " group by
