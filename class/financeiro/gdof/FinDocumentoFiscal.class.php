@@ -1154,7 +1154,8 @@ class FinDocumentoFiscal {
                     $tabela .= '<tr id = "' . $valor["id_ordem"] . '" class= "tabOrdem">
                                     <td class="text-center">' . $valor["ordem"] . '</td>
                                     <td class="text-center">' . $valor["tipo"] . '</td>
-                                    <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>';
+                                    <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>
+                                    <td class="text-center">' . $valor['situacao'] .'</td>';
                     if ($excluir) {
                         $tabela .= ' <td class="text-center">
                                         <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "' . $valor["id_ordem"] . '">
