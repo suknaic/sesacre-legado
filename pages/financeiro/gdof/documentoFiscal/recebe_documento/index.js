@@ -22,6 +22,7 @@ function lista() {
             "dados": Dados
         },
         "success": function (response) {
+            console.log(response);
             func.carregaTabelaPadrao('tabela', response, [4], true);
         }
     });
