@@ -128,6 +128,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Nº da Ordem</th>
                                                                             <th class="text-center">Tipo ordem</th>
                                                                             <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Situacao</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>

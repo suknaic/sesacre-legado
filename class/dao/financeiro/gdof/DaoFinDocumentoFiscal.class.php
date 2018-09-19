@@ -260,6 +260,12 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when ordem.tp_ordem = '1' then 'Entrega'
                         when ordem.tp_ordem = '2' then 'Serviço/Execução'
                     end tipo,
+                    case
+                        when ordem.sit_ordem = '0' then 'Cancelada'
+                        when ordem.sit_ordem = '1' then 'Cadastrada'
+                        when ordem.sit_ordem = '2' then 'Requisitada'
+                        when ordem.sit_ordem = '3' then 'Finalizada'
+                    end situacao,
                     (select sum(ordemValor.qt_itens_ordem * ordemValor.vl_itens_ordem) from fin_ordem_itens as ordemValor where ordemValor.id_ordem = ordem.id_ordem) as valor
                     from fin_documento_fiscal as documento
                     inner join fin_entrega_documento as entDoc
@@ -271,7 +277,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_ordem_itens as ordemItens
                     on ordemItens.id_ordem = ordem.id_ordem
                     where documento.id_documento_fiscal = :documento
-                    and ordem.sit_ordem <> '0'
                     group by ordem.id_ordem";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -313,8 +318,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               entrega.sit_entrega = '2' 
                            then
                               'Entrega Total' 
-                           else
-                              'Entrega Cancelada'
                         end
                         situacao, 
                         (
@@ -382,8 +385,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               entrega.sit_entrega = '2' 
                            then
                               'Entrega Total' 
-                           else
-                              'Entrega Cancelada' 
                         end
                         situacao, 
                         entrega.sit_entrega,
@@ -455,15 +456,15 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         )
                         as competencia,
                         doc.vl_documento,
-                        situacao.nm_situacao,
+                        situacao.nm_situacao, p.nm_pessoa,
                         tpTramitacao.nm_tipo_tramitacao,
                         case
-                          when 
-                            pf.nr_cpf is null
-                          then 
-                            pj.nr_cnpj
-                          else 
-                             pf.nr_cpf || '/' || pj.nr_cnpj
+                            when 
+                                pf.nr_cpf is null
+                            then 
+                                substring(pj.nr_cnpj, 1, 2) || '.' || substring(pj.nr_cnpj, 3, 3) || '.' || substring(pj.nr_cnpj, 6, 3) || '/' || substring(pj.nr_cnpj, 9, 4) || '-' || substring(pj.nr_cnpj, 13) || ' - ' || p.nm_pessoa
+                            else 
+                                substring(pf.nr_cpf, 1,3) || '.' || substring(pf.nr_cpf, 4,3) || '.' || substring(pf.nr_cpf, 7,3) || '-' || substring(pf.nr_cpf,10) || ' - ' || p.nm_pessoa
                         end as cpf_cnpj_fornecedor,
                         case
                            when
@@ -616,9 +617,9 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when 
                             pf.nr_cpf is null
                         then 
-                            pj.nr_cnpj
+                            substring(pj.nr_cnpj, 1, 2) || '.' || substring(pj.nr_cnpj, 3, 3) || '.' || substring(pj.nr_cnpj, 6, 3) || '/' || substring(pj.nr_cnpj, 9, 4) || '-' || substring(pj.nr_cnpj, 13) || ' - ' || p.nm_pessoa
                         else 
-                             pf.nr_cpf || '/' || pj.nr_cnpj
+                            substring(pf.nr_cpf, 1,3) || '.' || substring(pf.nr_cpf, 4,3) || '.' || substring(pf.nr_cpf, 7,3) || '-' || substring(pf.nr_cpf,10) || ' - ' || p.nm_pessoa
                     end as cpf_cnpj_fornecedor,
                         
                     case 
@@ -725,7 +726,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao,
-
+                    
+                    case
+                        when 
+                            pf.nr_cpf is null
+                        then 
+                            substring(pj.nr_cnpj, 1, 2) || '.' || substring(pj.nr_cnpj, 3, 3) || '.' || substring(pj.nr_cnpj, 6, 3) || '/' || substring(pj.nr_cnpj, 9, 4) || '-' || substring(pj.nr_cnpj, 13) || ' - ' || p.nm_pessoa
+                        else 
+                            substring(pf.nr_cpf, 1,3) || '.' || substring(pf.nr_cpf, 4,3) || '.' || substring(pf.nr_cpf, 7,3) || '-' || substring(pf.nr_cpf,10) || ' - ' || p.nm_pessoa
+                    end as cpf_cnpj_fornecedor,
+                    
                     case 
                     when lotacaoDestino.nm_lotacao is not null then concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '),lotacaoDestino.nm_lotacao)
                     when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
@@ -739,8 +749,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 			FROM fin_entrega_documento
 		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
 
-                     inner join fin_entrega_confirmacao as entrega 
-                     on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                    inner join fin_entrega_confirmacao as entrega 
+                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
 
                     inner join  fin_ordem as ordem 
                     on ordem.id_ordem = entrega.id_ordem 
@@ -762,7 +772,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     inner join fin_fornecedor as fornecedor 
                     on fornecedor.id_fornecedor = pedido.id_fornecedor 
-
+                    
+                    inner join ses_pessoa as p
+                    on p.id_pessoa = fornecedor.id_pessoa 
+                    
+                    left join ses_pessoa_fisica as pf
+                    on pf.id_pessoa = p.id_pessoa
+                    
+                    left join ses_pessoa_juridica as pj
+                    on pj.id_pessoa = p.id_pessoa
+                    
                     inner join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
 
@@ -771,7 +790,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                                 order by t.id_documento_fiscal
                                 , t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                                 on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
-
 
                     inner join fin_documento_situacao as situacao
                     on situacao.id_documento_situacao =  tramitacao.id_documento_situacao

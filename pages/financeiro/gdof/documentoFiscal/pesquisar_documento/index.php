@@ -32,7 +32,7 @@ require_once "index.load.php";
     <!--TIPS-->
 
     <body>
-        <div id="container" class="effect aside-float aside-bright mainnav-lg">
+        <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
             <?php
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";

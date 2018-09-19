@@ -221,7 +221,8 @@ switch ($_REQUEST['acao']) {
         try {
             $id = $_REQUEST['id'];
             $prog = new Lotacao();
-            echo $prog->retornaOptionLotacao(null, $id);
+
+            echo $prog->retornaOptionLotacao(null, $id == null ? 0:$id);
             return;
             break;
         } catch (Exception $e) {

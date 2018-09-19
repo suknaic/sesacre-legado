@@ -235,7 +235,6 @@ class DocFiscalEncaminhamento {
             if ($daoFinDocumentoFiscal->sucesso()) {
                 //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
                 $finDoc = new FinDocumentoFiscal();
-
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
 
                     $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"

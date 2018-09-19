@@ -8,9 +8,10 @@ function listaLotacaoCombo(id) {
             id: id
         },
         "success": function (response) {
+            console.log(response);
             $("#id_pai_lotacao").append(response);
             $("#id_pai_lotacao").select2({
-                //width: " 100%"
+                width: " 100%"
             });
         }
     });
@@ -124,6 +125,11 @@ function returnLotacaoEditar() {
                         return false;
                     }
                     $("#id_lotacao").val(response[0]['id_lotacao']);
+                    if (response[0]['id_lotacao_categoria'] == 5) {
+                        $('#obgPai').hide();
+                    } else {
+                        $('#obgPai').show();
+                    }
                     listaLotacaoCombo(response[0]['id_pai']);
                     listaCategoriaCombo(response[0]['id_lotacao_categoria']);
                     $("#nm_lotacao").val(response[0]['nm_lotacao']);
@@ -175,6 +181,15 @@ function listaCidadeComboUf(idEstado, uf) {
     });
 }
 //**********************************************************************************************************************
+
+$("body").on("change.select2", "#id_categoria", function (e) {
+    if ($('#id_categoria').val() == 5) {
+        $('#obgPai').hide();
+    } else {
+        $('#obgPai').show();
+    }
+});
+
 $(document).ready(function () {
 
     func = new Funcoes();
@@ -319,17 +334,31 @@ $(document).ready(function () {
             //*******************************************************************
 
             //******************************************************************
-            var DadosObrigatorio = {
-                "Categoria": DadosLotacao.idCategoria,
-                "Nome da Lotacao": DadosLotacao.nomeLotacao,
-                "Empresa Responsável": DadosLotacao.pessoaJuridica,
-                "Pessoa Responsável": DadosLotacao.pessoa,
-                "Lotação Pai": DadosLotacao.idPaiLotacao,
-                //********************************************
-                "Cidade": DadosLotacao.cidade,
-                "Logradouro": DadosLotacao.logradouro,
-                "Bairro": DadosLotacao.bairro
-            };
+            if (DadosLotacao.idCategoria != 5){
+                var DadosObrigatorio = {
+                    "Categoria": DadosLotacao.idCategoria,
+                    "Nome da Lotacao": DadosLotacao.nomeLotacao,
+                    "Empresa Responsável": DadosLotacao.pessoaJuridica,
+                    "Pessoa Responsável": DadosLotacao.pessoa,
+                    "Lotação Pai": DadosLotacao.idPaiLotacao,
+                    //********************************************
+                    "Cidade": DadosLotacao.cidade,
+                    "Logradouro": DadosLotacao.logradouro,
+                    "Bairro": DadosLotacao.bairro
+                };
+            } else {
+                var DadosObrigatorio = {
+                    "Categoria": DadosLotacao.idCategoria,
+                    "Nome da Lotacao": DadosLotacao.nomeLotacao,
+                    "Empresa Responsável": DadosLotacao.pessoaJuridica,
+                    "Pessoa Responsável": DadosLotacao.pessoa,
+                    // "Lotação Pai": DadosLotacao.idPaiLotacao,
+                    //********************************************
+                    "Cidade": DadosLotacao.cidade,
+                    "Logradouro": DadosLotacao.logradouro,
+                    "Bairro": DadosLotacao.bairro
+                };
+            }
             
             $campo = 0;
             $i = 0;

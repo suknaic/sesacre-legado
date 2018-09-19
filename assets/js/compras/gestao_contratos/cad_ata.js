@@ -303,6 +303,12 @@ $(document).ready(function () {
                 return false;
             }
 
+            if ($("#tipoDeGasto").val() == "") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
             var central = [];
             $("select[name=central\\[\\]]").each(function () {
                 central.push($(this).val());
