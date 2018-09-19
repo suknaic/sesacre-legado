@@ -119,7 +119,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    Lotação Pai: <span class="text-danger">*</span>
+                                                    Lotação Pai: <span id="obgPai" class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>

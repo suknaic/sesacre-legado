@@ -227,7 +227,6 @@ class DocFiscalPesquisa {
 //            return;
 
             $daoFinDocumentoFiscal->retornaTrDocumentosFiscais($pdo, $this->montaFiltroSQL());
-
             if ($daoFinDocumentoFiscal->sucesso()) {
 
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
