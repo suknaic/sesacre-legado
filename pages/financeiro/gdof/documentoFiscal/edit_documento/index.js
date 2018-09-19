@@ -354,9 +354,6 @@ $(document).ready(function () {
             }
         });
 
-
-
-
         let valorDocumentoFiscal = func.converteValorBrDecimal(valoresRetirados, 4);
         $("#valorDocumentoFiscal").val(valorDocumentoFiscal);
         $(".valorDocumentoTotal").text(valorDocumentoFiscal);

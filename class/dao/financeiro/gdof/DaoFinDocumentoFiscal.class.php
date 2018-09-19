@@ -318,8 +318,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               entrega.sit_entrega = '2' 
                            then
                               'Entrega Total' 
-                           else
-                              'Entrega Cancelada'
                         end
                         situacao, 
                         (
@@ -387,8 +385,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               entrega.sit_entrega = '2' 
                            then
                               'Entrega Total' 
-                           else
-                              'Entrega Cancelada' 
                         end
                         situacao, 
                         entrega.sit_entrega,

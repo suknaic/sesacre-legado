@@ -802,7 +802,7 @@ class FinDocumentoFiscal {
                             return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
                         }
                         
-                        if (round($linha['vl_entrega_saldo'], 4) < round($linha["vl_entrega_documento"], 4)) {
+                        if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
                         }
@@ -1192,7 +1192,7 @@ class FinDocumentoFiscal {
                     
 //                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
                     
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" data-situacao='.$campos['sit_entrega'].' idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
@@ -1241,10 +1241,10 @@ class FinDocumentoFiscal {
                     
                     $saldo =  $campos["vl_total_entrega"] - $campos["vl_utilizado_entrega"];
                     $saldoParaEdicao = $saldo + $campos["vl_entrega_documento"]; 
-                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
+//                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
                     
                     $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-situacao='.$campos['sit_entrega'].' data-id='.$campos['id_entrega_documento'].' data-saldo='.$saldoParaEdicao.'>
-                                 <td class = "text-center">' . $nr_entrega . '</td>
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
                                  <td class = "text-center">' . $campos["datalimite"] . '</td>
