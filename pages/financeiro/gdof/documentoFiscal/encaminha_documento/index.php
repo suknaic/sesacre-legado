@@ -269,6 +269,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Doc. Fiscal</th>
                                                     <th class="text-center">Nº Pedido</th>
                                                     <th class="text-center">Nº Empenho</th>
+                                                    <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Tipo</th>
                                                     <th class="text-center">Competência</th>
                                                     <th class="text-center">Remetente</th>

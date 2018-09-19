@@ -457,6 +457,14 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         situacao.nm_situacao,
                         tpTramitacao.nm_tipo_tramitacao,
                         case
+                          when 
+                            pf.nr_cpf is null
+                          then 
+                            pj.nr_cnpj
+                          else 
+                             pf.nr_cpf || '/' || pj.nr_cnpj
+                        end as cpf_cnpj_fornecedor,
+                        case
                            when
                               tramitacao.id_tipo_tramitacao = '3' 
                            then
@@ -500,8 +508,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         inner join
                            fin_fornecedor as fornecedor 
                            on fornecedor.id_fornecedor = pedido.id_fornecedor 
-                        inner join
-                           fin_contrato as contrato 
+                        inner join 
+                          ses_pessoa as p
+                           on p.id_pessoa = fornecedor.id_pessoa 
+                        left join 
+                          ses_pessoa_fisica as pf
+                           on pf.id_pessoa = p.id_pessoa
+                        left join 
+                          ses_pessoa_juridica as pj
+                           on pj.id_pessoa = p.id_pessoa
+                        inner join fin_contrato as contrato 
                            on contrato.id_contrato = fornecedor.id_contrato 
                         inner join
                            (
@@ -594,7 +610,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, to_char(doc.vl_documento,'999G999G990D0000') as vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
-
+                    
+                    case
+                        when 
+                            pf.nr_cpf is null
+                        then 
+                            pj.nr_cnpj
+                        else 
+                             pf.nr_cpf || '/' || pj.nr_cnpj
+                    end as cpf_cnpj_fornecedor,
+                        
                     case 
                     when lotacaoDestino.nm_lotacao is not null then concat(concat(docTipoLotacaoDestino.nm_doc_tipo_lotacao, ' / '),lotacaoDestino.nm_lotacao)
                     when lotacaoDestino.nm_lotacao is null then concat(concat(docTipoLotacaoOrigem.nm_doc_tipo_lotacao, ' / '),lotacaoOrigem.nm_lotacao) 
@@ -608,8 +633,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 			FROM fin_entrega_documento
 		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
 
-                     inner join fin_entrega_confirmacao as entrega 
-                     on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                    inner join fin_entrega_confirmacao as entrega 
+                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
 
                     inner join  fin_ordem as ordem 
                     on ordem.id_ordem = entrega.id_ordem 
@@ -631,7 +656,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     inner join fin_fornecedor as fornecedor 
                     on fornecedor.id_fornecedor = pedido.id_fornecedor 
-
+                    
+                    inner join ses_pessoa as p
+                    on p.id_pessoa = fornecedor.id_pessoa 
+                        
+                    left join ses_pessoa_fisica as pf
+                    on pf.id_pessoa = p.id_pessoa
+                        
+                    left join ses_pessoa_juridica as pj
+                    on pj.id_pessoa = p.id_pessoa
+                    
                     inner join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
                  
