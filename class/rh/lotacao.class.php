@@ -303,7 +303,7 @@ class Lotacao {
             //**************************** lotação ********************************************************************
             $lotacao = new DaoSesLotacao();
             $lotacao->setId_lotacao($this->id_lotacao);
-            $lotacao->setId_pai($this->id_pai);
+            $lotacao->setId_pai($this->id_pai == '0' ? null: $this->id_pai);
             $lotacao->setId_lotacao_categoria($this->id_lotacao_categoria);
             $lotacao->setNm_lotacao($this->nm_lotacao);
             $lotacao->setNr_cnpj($this->nr_cnpj);
