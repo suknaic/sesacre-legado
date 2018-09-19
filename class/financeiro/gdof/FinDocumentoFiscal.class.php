@@ -802,7 +802,7 @@ class FinDocumentoFiscal {
                             return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
                         }
                         
-                        if (round($linha['vl_entrega_saldo'], 4) < round($linha["vl_entrega_documento"], 4)) {
+                        if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
                         }
