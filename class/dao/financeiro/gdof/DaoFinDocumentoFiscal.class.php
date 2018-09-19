@@ -271,7 +271,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_ordem_itens as ordemItens
                     on ordemItens.id_ordem = ordem.id_ordem
                     where documento.id_documento_fiscal = :documento
-                    and ordem.sit_ordem <> '0'
                     group by ordem.id_ordem";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
