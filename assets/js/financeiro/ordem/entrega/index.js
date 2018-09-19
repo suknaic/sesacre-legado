@@ -48,7 +48,7 @@ $(document).ready(function () {
                         {title: "Prazo De Entrega", className: "text-center"},
                         {title: "Prazo Limite Para Entrega", className: "text-center"},
                         {title: "Entregue dia", className: "text-center"},
-                        {title: "Situação", className: "text-center"},
+                        {title: "situação", className: "text-center"},
                         {title: "Dias De Atraso", className: "text-center"},
                         {title: "Ação", className: "text-center"}
 

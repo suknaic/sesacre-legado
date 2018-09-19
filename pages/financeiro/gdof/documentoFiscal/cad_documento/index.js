@@ -389,14 +389,14 @@ $(document).ready(function () {
 
             var grp = "";
 
-            if ($('input[name=grp_cod]:checked').val() === 1) {
+            if ($('input[name=grp_cod]:checked').val() == 1) {
                 grp = $("#grp_sim").val();
 
-            } else if ($('input[name=grp_cod]:checked').val() === 0) {
+            } else if ($('input[name=grp_cod]:checked').val() == 0) {
                 grp = $("#grp_nao").val();
 
             }
-
+            
             var dados = {
                 "processoAdm": $("#processoAdm").val(),
                 "nr_documento": $("#nr_documento").val(),

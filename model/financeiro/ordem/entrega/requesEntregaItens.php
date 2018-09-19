@@ -62,7 +62,7 @@ switch ($_REQUEST['acao']) {
             $finEntregaItensModel->setIdEntregaItens($itens["idItem"]);
             $finEntregaItensModel->setIdEntregaConfirmacao($itens["idEntrega"]);
             $finEntregaItensModel->setIdProtocolo($itens["idProtocolo"]);
-            
+
             echo $finEntregaItensModel->removeItemEntrega($itens["idOrdem"]);
             return;
             break;
@@ -78,6 +78,37 @@ switch ($_REQUEST['acao']) {
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
             echo $finEntregaConfirmacaoModel->finalizaEntrega();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
+    CASE 'finalizaEntregaPorSupressao':
+        try {
+            $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
+            echo $finEntregaConfirmacaoModel->finalizaEntregaPorSupressao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
+
+    CASE 'finalizaEntregaPorDescumprimento':
+        try {
+            $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
+            $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
+            echo $finEntregaConfirmacaoModel->finalizaEntregaPorDescumprimento();
             return;
             break;
         } catch (Error $e) {
