@@ -11,7 +11,7 @@ function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
     html = $("." + campoSelect).clone();
     html.find('.select2-selection--single').remove();
     $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-5"><div class="panel-body">' + html.html() +
-            '</div></div><div class="col-sm-3"><div class="panel-body"><a href="#" class="' + classeremove + ' btn btn-danger">X</a></div></div></div>');
+            '</div></div><div class="col-sm-3"><div class="panel-body" title="Remover Central"><a href="#" class="' + classeremove + ' btn btn-danger">X</a></div></div></div>');
     gerarSelect2(select);
 }
 
