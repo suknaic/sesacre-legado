@@ -674,14 +674,15 @@ class FinDocumentoFiscal {
             $arrayInsert = array_diff($arrayAux2, $arrayAux);
             $arrayRemove = array_diff($arrayAux, $arrayAux2);
             $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
-
+//
 //            echo "<pre>";
 //            print_r($arrayInsert);
-//            print_r($arrayRemove);
+//            print_r($arrayUpdate);
+//            print_r($this->entrega);
 //            echo "</pre>";
 //            return;
-            
-            //Registros que terão insert ------INSERT ENTREGAS DO DOCUMENTO------INSERT ENTREGAS DO DOCUMENTO------INSERT ENTREGAS DO DOCUMENTO------
+                        
+            //Registros que terão insert 
             if (!empty($arrayInsert)) {
 
                 //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
@@ -694,107 +695,79 @@ class FinDocumentoFiscal {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
                                     . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
                 }
-
+                
                 $qtdEntregasUsuario = count($arrayInsert);
-                $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());
+                $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());                
                 if ($qtdEntregaAptas != $qtdEntregasUsuario) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
                                     . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
                 }
-
-
-                //percorre os registros que terão insert
-                foreach ($this->entrega as $linha) {
-                    if (in_array($linha['id_entrega_confirmacao'], $arrayInsert)) {
-                        
-                        $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
-                        $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
-                        $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
-                        
-                        $finEntregaDocumento->retornaSaldoEntregaAtualizacao($pdo);
-                        
-                        if (!$finEntregaDocumento->getSucesso()) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
-                        }
-                        
-                        if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
-                        }
-                        
-                        if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
-                        }
-                    }
-                }
-//                foreach ($arrayInsert as $key => $value) {
-//                    $finEntregaDocumento->setIdEntregaConfirmacao($value);
-//                    
-//                    $finEntregaDocumento->retornaSaldoEntregas($pdo);
-//                
-//                    if (!$finEntregaDocumento->getSucesso()) {
-//                        $pdo->rollBack();
-//                        return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
-//                    }
-//
-//                    if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($entrega["vlDocumento"], 4)) {
-//                        $pdo->rollBack();
-//                        return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
-//                    }
-//                    
-//                    if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
-//                        $pdo->rollBack();
-//                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
-//                    }
-//                }
-            }
-            //------FIM INSERT ENTREGAS DO DOCUMENTO------FIM INSERT ENTREGAS DO DOCUMENTO------FIM INSERT ENTREGAS DO DOCUMENTO------FIM INSERT ENTREGAS DO DOCUMENTO--
-            
-            //Registros que terão update ------UPDATE ENTREGAS DO DOCUMENTO------UPDATE ENTREGAS DO DOCUMENTO------UPDATE ENTREGAS DO DOCUMENTO------
-            if (!empty($arrayUpdate)) {
-                //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
-                //Se ela não está vinculado a nenhuma documento fiscal ou se mesmo ela estando, o documento fiscal esteja
-                //cancelado
-                $finEntregaConfirmacao = new FinEntregaConfirmacaoModel();
-                $finEntregaConfirmacao->retornaEntregasAptasParaDocumentoFiscal($pdo, $arrayUpdate, $this->getDocSitCancelado());
-                if (!$finEntregaConfirmacao->sucesso()) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
-                                    . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
-                }
-
                 
-                //percorre os registros que terão update
-                foreach ($this->entrega as $linha) {
-                    if (in_array($linha['id_entrega_confirmacao'], $arrayUpdate)) {
-                        $finEntregaDocumento->setIdEntregaDocumento($linha['id_entrega_documento']);
-                        $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
-                        $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
-                        $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
-                        
-                        $finEntregaDocumento->retornaSaldoEntregas($pdo);
-                        
-                        if (!$finEntregaDocumento->getSucesso()) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
-                        }
-                        
-                        if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
-                        }
-                        
-                        if (!$finEntregaDocumento->atualizaEntregaDocumento($pdo)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax("Erro", "alert", $finEntregaDocumento->getMsgRetorno());
-                        }
+            }
+
+            //PERCORRE AS ENTREGAS DO DOCUMENTO FISCAL
+            foreach ($this->entrega as $linha) {
+                
+                //Validação no backend para não permitir incluir uma entrega sem valor informado
+                if ($linha['vl_entrega_documento'] == 0) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi informado o valor para a entrega, "
+                                    . "o valor lançado para as entregas devem ser maior que 0.");
+                }
+
+                //ENTREGAS QUE SERÃO INSERIDAS
+                if (in_array($linha['id_entrega_confirmacao'], $arrayInsert)) {
+
+                    $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
+                    $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
+                    $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
+
+                    $finEntregaDocumento->retornaSaldoEntregaAtualizacao($pdo);
+
+                    if (!$finEntregaDocumento->getSucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
+                    }
+
+                    if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Saldo da entrega insuficiente para incluir no documento fiscal");
+                    }
+
+                    if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
+                    }
+                }
+
+
+                //ENTREGAS QUE SERÃO ATUALIZADAS
+                if (in_array($linha['id_entrega_confirmacao'], $arrayUpdate)) {
+                    $finEntregaDocumento->setIdEntregaDocumento($linha['id_entrega_documento']);
+                    $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
+                    $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
+                    $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
+
+                    $finEntregaDocumento->retornaSaldoEntregaAtualizacao($pdo);
+
+                    if (!$finEntregaDocumento->getSucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
+                    }
+                    
+
+                    if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round($linha["vl_entrega_documento"], 4)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Saldo da entrega insuficiente para atualizar o documento fiscal");
+                    }
+
+                    if (!$finEntregaDocumento->atualizaEntregaDocumento($pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", $finEntregaDocumento->getMsgRetorno());
                     }
                 }
             }
-            //------FIM UPDATE ENTREGAS DO DOCUMENTO------FIM UPDATE ENTREGAS DO DOCUMENTO------FIM UPDATE ENTREGAS DO DOCUMENTO------FIM UPDATE ENTREGAS DO DOCUMENTO--
             
             //Registros que terão delete
             if (!empty($arrayRemove)) {
@@ -1170,8 +1143,6 @@ class FinDocumentoFiscal {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
                     $totalEntrega += $campos["vl_entrega_documento"];
                     
-//                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
-                    
                     $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '">
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
@@ -1220,10 +1191,9 @@ class FinDocumentoFiscal {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $campos) {
                     
                     $saldo =  $campos["vl_total_entrega"] - $campos["vl_utilizado_entrega"];
-                    $saldoParaEdicao = $saldo + $campos["vl_entrega_documento"]; 
-//                    $nr_entrega = ($campos['sit_entrega'] == 0) ? "0" : $campos["nr_entrega_confirmacao"] ;
+                    $saldo_sem_o_documento = $saldo + $campos["vl_entrega_documento"];
                     
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-situacao='.$campos['sit_entrega'].' data-id='.$campos['id_entrega_documento'].' data-saldo='.$saldoParaEdicao.'>
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-id='.$campos['id_entrega_documento'].' data-saldo='.$saldo_sem_o_documento.'>
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>

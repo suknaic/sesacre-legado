@@ -167,25 +167,27 @@ $(document).ready(function () {
 //    });
 
     $("body").on("click", ".addEntrega", function (e) {   
-        var entrega = $("#selectEntrega option:selected").val();
+        
+        var dados = {
+            entrega: $("#selectEntrega option:selected").val(),
+            documento: $("#idDocumentoFiscal").val(),
+        }
+
         var erro = false;
         
-        if(!entrega){
+        if(!dados.entrega){
             return false;
         }
         
         $(".trEntregas").each(function(){
-            if (entrega == $(this).attr('identrega')) {
+            if (dados.entrega == $(this).attr('identrega')) {
                 func.modalAlert("Esta entrega já foi adicionada.");
                 erro = true;
             } 
         });
         
         if (!erro) {
-            var infTabEntrega = [];
-        
-            infTabEntrega.push(entrega);
-            atualizaTabelaEntrega(infTabEntrega);
+            atualizaTabelaEntrega(dados);
         }
         
     });
@@ -235,12 +237,14 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             var entregas = [];
+            
+            var erro_entrega = false;
 
             $(".trEntregas").each(function (){
                 
-                var situacao = $(this).data('situacao');
-                
-                if(situacao){
+//                var situacao = $(this).data('situacao');
+//                
+//                if(situacao){
                     //converte o valor informado para a entrega em formato inglês com 4 casas
                     var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
                     valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
@@ -248,7 +252,11 @@ $(document).ready(function () {
                     //converte o valor do saldo para o formato inglês com 4 casas
                     var valor_saldo_ingles = $(this).data('saldo');
                     valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
-
+                    
+                    if(valor_entrega_ingles == 0){
+                        erro_entrega = true;
+                    }
+                    
                     var entrega = {
                         id_entrega_documento: $(this).data("id"),
                         id_entrega_confirmacao: $(this).attr("identrega"),
@@ -256,9 +264,15 @@ $(document).ready(function () {
                         vl_entrega_documento: valor_entrega_ingles
                     }
                     entregas.push(entrega);
-                }
+//                }
 
             });
+            
+            if (erro_entrega) {
+                $this.prop("disabled", false);
+                func.modalAlert("O valor informado para a entrega deve ser maior que 0.");
+                return false;
+            }
             
             if (entregas.length <= 0){
                 $this.prop("disabled", false);
@@ -269,7 +283,7 @@ $(document).ready(function () {
             var grp = $('input[name=grp_cod]:checked').val();          
             
             var dados = {
-                "documento_fiscal": $("#idPedido").val(),
+                "documento_fiscal": $("#idDocumentoFiscal").val(),
                 "processoAdm": $("#processoAdm").val(),
                 "nr_documento": $("#nr_documento").val(),
                 "tpDocumento": $("#tpDocumento option:selected").val(),

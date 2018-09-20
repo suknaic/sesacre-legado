@@ -404,10 +404,10 @@ class FinEmpenhoModel {
             $classPedido = new Pedido();
             $classPedido->setIdPedido($this->id_pedido);
             
-            if($classPedido->retornaTipoSolicitacaoPedido($pdo) != FALSE && $classPedido->retornaTipoSolicitacaoPedido($pdo) == 2){
+            if($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2){
                 $classPedido->setStPedido(16);
                 $classPedido->atualizaTramitacaoPedido($pdo);
-            }else if($classPedido->retornaTipoSolicitacaoPedido($pdo) != FALSE && $classPedido->retornaTipoSolicitacaoPedido($pdo) != 2){
+            }else if($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2){
                 $classPedido->setStPedido(21);
                 $classPedido->atualizaTramitacaoPedido($pdo);
             }
