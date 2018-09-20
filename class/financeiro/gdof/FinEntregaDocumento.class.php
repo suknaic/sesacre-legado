@@ -303,5 +303,51 @@ class FinEntregaDocumento {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaTabelaEntregaGdofEdicao(PDO $pdo = null) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $tabela = '';
+            $daoFinEntregaDocumento = new DaoFinEntregaDocumento();
+            $daoFinEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
+            $daoFinEntregaDocumento->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaDocumento->retornaEntregaGdofEdicao($pdo);
+            
+            if ($daoFinEntregaDocumento->sucesso()) {
+                foreach ($daoFinEntregaDocumento->getMsgRetorno() as $key => $campos) {
+                    
+                    $saldo = $campos["saldo"] + $campos['vl_entrega_documento'];
+                    
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-id="'.$campos['id_entrega_documento'].'" data-saldo="'.$saldo.'">
+                                 <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
+                                 <td class = "text-center">' . $campos["ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["dataaviso"] . '</td>
+                                 <td class = "text-center">' . $campos["datalimite"] . '</td>
+                                 <td class = "text-center">' . $campos["nr_prazo_ordem"] . '</td>
+                                 <td class = "text-center">' . $campos["entreguedia"] . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>
+                                 <td class = "text-center">' . Metodos::ConverteValorBr($saldo, 4) . '</td>
+                                 <td class = "text-center" valorRetirado">
+                                    <input class="form-control valorRetEntrega" type="text" name="valorRetEntrega[]" id="valorRetEntrega[]"  value="0,0000"/>
+                                </td>
+                                <td class = "text-center">' . $campos["situacao"] . '</td>
+                                <td class = "text-center">
+                                   <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>';
+                    }
+                }
+
+            return $tabela;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
 }

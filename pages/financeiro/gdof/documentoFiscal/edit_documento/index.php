@@ -55,7 +55,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--===================================================-->
                     <div id="page-content">
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <input type="hidden" class="idPedido" id="idPedido" value="<?php echo $id;?>" />
+                            <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id;?>" />
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações do documento fiscal</h3>
@@ -128,7 +128,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Nº da Ordem</th>
                                                                             <th class="text-center">Tipo ordem</th>
                                                                             <th class="text-center">Valor Total</th>
-                                                                            <th class="text-center">Situacao</th>
+                                                                            <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
@@ -152,7 +152,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Entrega</h4>
+                                                        <h4 class="panel-title">Dados da Entrega ou Execução/Serviço</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">

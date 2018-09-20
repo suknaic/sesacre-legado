@@ -137,7 +137,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Entrega</h4>
+                                                        <h4 class="panel-title">Dados da Entrega ou Execução/Serviço</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">

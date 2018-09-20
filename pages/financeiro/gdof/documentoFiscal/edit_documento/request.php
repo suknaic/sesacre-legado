@@ -71,8 +71,10 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaTabelaEntrega':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
-            echo $finEntregaConfirmacaoModel->retornaTabelaEntregasGdof($dados);
+            $finEntregaDocumento = new FinEntregaDocumento();
+            $finEntregaDocumento->setIdEntregaConfirmacao($dados['entrega']);
+            $finEntregaDocumento->setIdDocumentoFiscal($dados['documento']);
+            echo $finEntregaDocumento->retornaTabelaEntregaGdofEdicao();
             return;
             break;
         } catch (Error $e) {

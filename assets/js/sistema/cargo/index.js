@@ -43,7 +43,7 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
+                    if (response.trim() == "SemPermissao") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
                     }
