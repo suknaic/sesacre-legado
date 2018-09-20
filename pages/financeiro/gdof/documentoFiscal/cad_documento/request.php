@@ -157,9 +157,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            $valoresRetEntregas = filter_input(INPUT_POST, 'valoresRetEntregas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
+            
             $finDocumentoFiscal = new FinDocumentoFiscal();
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
             $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);

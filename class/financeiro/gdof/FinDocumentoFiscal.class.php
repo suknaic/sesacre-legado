@@ -516,7 +516,6 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setFlEncontroContas(0);
             $daoFinDocumentoFiscal->setIdLotacao($this->id_lotacao);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
-//            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1); //Adicionado a Situação do Documento Fiscal no ato do Cadastro. Essa informação estará vinculada diretamente com o GDOF
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
@@ -557,32 +556,6 @@ class FinDocumentoFiscal {
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
                 }
             }
-
-            
-//            for ($i = 0; $i < count($this->entrega); $i++) {
-//                $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
-//                $finEntregaDocumento->setIdEntregaConfirmacao($this->entrega[$i]);
-//                $finEntregaDocumento->setVlEntregaDocumento($this->vlRetEntrega[$i]);
-//
-//                $finEntregaDocumento->retornaSaldoEntregas($pdo);
-//
-//                if (!$finEntregaDocumento->getSucesso()) {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar o saldo da entrega");
-//                }
-//
-//                if (round($finEntregaDocumento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($this->vlRetEntrega[$i]), 4)) {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
-//                }
-//
-//                if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
-//                }
-//            }
-
-
             //codigo abaixo cadastra a tramitacao  "Aguardando Tramitação" e a situacao "Cadastrado" do documento fiscal
             $docTramitacao = new DocTramitacao();
             $docTramitacao->setIdDocumentoFiscal($this->id_documento_fiscal);
