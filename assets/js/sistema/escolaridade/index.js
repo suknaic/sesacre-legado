@@ -213,9 +213,7 @@ $(document).ready(function () {
                                 }
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, 'success');
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.fechaModalReload();
                                 return false;
                             } else {
                                 func.modalAlert(func.msgErroPadrao, 'danger');
@@ -345,6 +343,7 @@ $(document).ready(function () {
                             "escolaridade": Escolaridade
                         },
                         "success": function (response) {
+                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
