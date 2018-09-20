@@ -16,7 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestao_contratos/FinFor
 
 $session = new Session('ajax');
 
-if (!$session->vPContratos()) {
+if (!$session->vPContratosTecnico()) {
     echo "SessaoExpirada";
     return;
 }

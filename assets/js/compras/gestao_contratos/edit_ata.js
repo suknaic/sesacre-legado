@@ -35,10 +35,23 @@ $(document).ready(function () {
     var maxCentrais = 10;
     var contCentrais = $("#contCentral").val();
     $("body").on("click", ".addCentrais", function (e) {
-        e.preventDefault();
-        if (contCentrais < maxCentrais) {
-            contCentrais++;
-            gerarCloneSelect("campoCentrais", "centraisCampos", "selectCentrais", "removeCentrais");
+        $("select[name=central\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
+        });
+        if (clone == true) {
+            e.preventDefault();
+            if (contCentrais < maxCentrais) {
+                contCentrais++;
+                gerarCloneSelect("campoCentrais", "centraisCampos", "selectCentrais", "removeCentrais");
+            }
+        } else {
+            e.preventDefault();
+            $('.selectCentrais').focus();
+            func.modalAlert('Selecione Uma Central.');
         }
     });
 
@@ -293,9 +306,27 @@ $(document).ready(function () {
             }
 
             var central = [];
+            // $("select[name=central\\[\\]]").each(function () {
+            //     central.push($(this).val());
+            // });
             $("select[name=central\\[\\]]").each(function () {
-                central.push($(this).val());
+                if ($(this).val() == 0 || $(this).val() == '') {
+                    salva = false;
+                } else {
+                    salva = true;
+                }
             });
+            if (salva === false) {
+                e.preventDefault();
+                $('.selectCentrais').focus();
+                func.modalAlert('Selecione Uma Central.');
+                $this.prop("disabled", false);
+                return;
+            } else {
+                $("select[name=central\\[\\]]").each(function () {
+                    central.push($(this).val());
+                });
+            }
 
             var contrato = {
                 "idFornecedor": $("#idFornecedor").val(),
