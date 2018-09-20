@@ -283,16 +283,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/ata/cad_ata.load.php";
                                         <div class="col-sm-7"></div>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="col-sm-3">
-                                        <div class="panel-body">
+                                        <div class="panel-body" title="Adicionar Nova Central">
                                             <a href="#" class="addCentrais btn btn-info">+</a>
                                         </div>
                                     </div>
                                     <div class="col-sm-9"></div>
                                 </div>
-
                             </div>
 
                             <div id="doc_botao">
