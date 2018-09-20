@@ -195,27 +195,45 @@ class DaoFinOrdem extends FinOrdemTb {
     public function retornaDadosTrPesquisa(PDO $pdo, string $condicao, int $ano) {
         try {
             if (!empty($pdo)) {
+                
                 $sql = "select ordem.id_ordem, p.id_pedido, concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as pedido,
-                         p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem,
-                        (select sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)) as v
-                        from fin_ordem_itens as itemOrdem
-                        where itemOrdem.id_ordem = ordem.id_ordem
-                        ) as valorOrdem,
+                        p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem,
+                        valorOrdem.valor,
                         case 
-                         when ordem.tp_ordem = '1' THEN 'ENTREGA'
-                         when ordem.tp_ordem = '2' THEN 'EXECUÇÃO/SERVIÇO'
-                         END as tipo, ordem.sit_ordem
-                        
+                                when ordem.tp_ordem = '1' THEN 'ENTREGA'
+                            when ordem.tp_ordem = '2' THEN 'EXECUÇÃO/SERVIÇO'
+                        END as tipo, 
+                        case 
+                            when ordem.sit_ordem = '1' THEN 'Cadastrado'
+                            when ordem.sit_ordem = '2' THEN 'Requisitado'
+                            when ordem.sit_ordem = '3' AND ordem.tp_ordem = '1' THEN 'Finalizado Entrega'
+                            when ordem.sit_ordem = '3' AND ordem.tp_ordem = '2' THEN 'Finalizado Execução/Serviço'
+                            when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
+                            when ordem.sit_ordem = '4' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                        END as situacao
+
                         from fin_pedido as p
+
                         inner join fin_ordem as ordem
                         on ordem.id_pedido = p.id_pedido
+
                         inner join pla_tipo_gasto as tg
                         on tg.id_tipo_gasto = p.id_tipo_gasto
+
                         inner join fin_fonte as f
                         on f.id_fonte = p.id_fonte
+
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
+
+                        inner join (select itemOrdem.id_ordem, round(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),4) as valor
+                                    from fin_ordem_itens as itemOrdem
+                                    group by itemOrdem.id_ordem
+                        ) as valorOrdem
+                        on valorOrdem.id_ordem = ordem.id_ordem
+
                         where ordem.sit_ordem > '0' and ordem.aa_ordem = :ano " . $condicao . " order by ordem.nr_ordem";
+                
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ano", $ano, PDO::PARAM_INT);
                 $stmt->execute();

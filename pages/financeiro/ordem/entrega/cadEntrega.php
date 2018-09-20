@@ -142,7 +142,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                 </div>
 
-                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3') { ?>
+                                <?php if ($situacao["sit_ordem"] > '1' && $situacao["sit_ordem"] < '3') { ?>
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Itens para Entrega</h3>
@@ -217,19 +217,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     </div>
                                     <?php echo $finEntregaConfirmacaoModel->retornaSituacaoEntrega(); ?>
                                 </div>
-                                <?php if ($situacao["sit_ordem"] > '1'&& $situacao["sit_ordem"] < '3' && $classOrdem->retornaSePodeFinalizarAEntrega()) { ?>
-                                    <div class="panel ">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-sm-3">
-                                                    <button class="btn btn-danger btn-rounded btn-finaliza" type="button">
-                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php } ?>
+
                                 <div class="panel">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">Anotações
@@ -248,6 +236,25 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php if ($situacao["sit_ordem"] > '1' && $situacao["sit_ordem"] < '3' && $classOrdem->retornaSePodeFinalizarAEntrega()) { ?>
+                                    <div class="panel ">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <button class="btn btn-danger btn-rounded btn-finaliza-supresao" type="button">
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Supressão do Ordenado
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-rounded btn-finaliza-descumprimento" type="button">
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Descumprimento do Ordenado pelo Fornecedor
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </form>
                     </div>

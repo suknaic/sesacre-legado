@@ -480,9 +480,7 @@ class FinOrdemModel {
     }
 
     public function retornaTrPesquisaOrdem() {
-//        if (empty($this->central)) {
-//            return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
-//        }
+
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $daoFinOrdem = new DaoFinOrdem();
@@ -509,7 +507,8 @@ class FinOrdemModel {
                                 <td class = 'text-center'>" . $linha["nm_tipo_gasto"] . "</td>
                                 <td class = 'text-center'>" . $linha["nr_fonte"] . "</td>
                                 <td class = 'text-center'>" . $linha["cd_despesa_elemento"] . "-" . $linha["ds_despesa_elemento"] . "</td>
-                                <td class = 'text-center'>" . Metodos::ConverteValorBr($linha["valorordem"], 4) . "</td>
+                                <td class = 'text-center'>" . Metodos::ConverteValorBr($linha["valor"], 4) . "</td>
+                                <td class = 'text-center'>" . $linha["situacao"] . "</td>    
                                 <td class = 'text-center'>
                                 <button type = 'button' title = 'Editar' class = 'editar' value = '" . $linha['id_ordem'] . "'>
                                     <i class = 'fa fa-pencil text-primary'></i>
@@ -689,6 +688,67 @@ class FinOrdemModel {
             return false;
         }
     }
+    
+    public function finalizaPorSupressao(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->setSitOrdem('4');
+            
+            //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
+            $daoFinOrdem->retornaEntregasOrdem($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            
+            $daoFinOrdem->atualizaSituacaoOrden($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+    
+     public function finalizaPorDescuprimento(PDO $pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->id_ordem);
+            $daoFinOrdem->setSitOrdem('5');
+            
+            //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
+            $daoFinOrdem->retornaEntregasOrdem($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            
+            $daoFinOrdem->atualizaSituacaoOrden($pdo);
+            if (!$daoFinOrdem->Sucesso()) {
+                return false;
+            }
+            
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+    
+    
+    
     
     public function retornaSePodeFinalizarAEntrega(){
         try {

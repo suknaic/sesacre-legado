@@ -171,7 +171,6 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
             $finDocumentoFiscal->setEntrega($dados["entregas"]); //Agora os IDs ,valores e saldos da entrega estão na variável '$dados["entregas"]'
-//            $finDocumentoFiscal->setEntrega($entrega);
 //            $finDocumentoFiscal->setValorRetEntrega($valoresRetEntregas);
             $finDocumentoFiscal->setIdLotacao($dados["id_lotacao"]);
             $finDocumentoFiscal->setIdDocOrigem($dados["destinatario"]);

@@ -529,26 +529,6 @@ class FinDocumentoFiscal {
                 return false;
             }
 
-//            //Verifica se esse alguma entrega está apta a ser cadastrada no documento fiscal
-//            //Se ela não está vinculado a nenhuma documento fiscal ou se mesmo ela estando, o documento fiscal esteja
-//            //cancelado
-//            $finEntregaConfirmacao = new FinEntregaConfirmacaoModel();
-//            $finEntregaConfirmacao->retornaEntregasAptasParaDocumentoFiscal($pdo, $this->entrega, $this->getDocSitCancelado());
-//            if(!$finEntregaConfirmacao->sucesso()){
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax("Erro", "alert", "Não foi possível verificar se as "
-//                        . "Entregas Estão disponíveis para o Cadastro do Documento Fiscal.");
-//            }
-//            
-//            $qtdEntregasUsuario = count($this->entrega);
-//            $qtdEntregaAptas = count($finEntregaConfirmacao->getMsgRetorno());
-//            if($qtdEntregaAptas != $qtdEntregasUsuario){
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax("Erro", "alert", "Algumas Entregas Não estão mais disponíveis "
-//                        . "para serem vinculadas a um Documento Fiscal, por favor refaça a operação.");
-//            }         
-
-            
             //codigo abaixo cadastra as entregas do documento fiscal
             $finEntregaDocumento = new FinEntregaDocumento();
             

@@ -129,6 +129,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                                     <th class="text-center">Fonte</th>
                                                     <th class="text-center">Elemento de Despesa</th>
                                                     <th class="text-center">Valor Ordem</th>
+                                                    <th class="text-center">Situação</th>
                                                     <th class="text-center">Ação</th>
                                                 </tr>
                                             </thead>
