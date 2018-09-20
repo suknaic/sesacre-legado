@@ -7,7 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/cargo.class.php";
 $session = new Session('ajax');
 
 if(!$session->verificaPermissao(PERFIL_TI)){
-    echo "SessaoExpirada";
+    echo "SemPermissao";
     return;
 }
 

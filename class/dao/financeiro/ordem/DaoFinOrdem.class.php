@@ -206,10 +206,9 @@ class DaoFinOrdem extends FinOrdemTb {
                         case 
                             when ordem.sit_ordem = '1' THEN 'Cadastrado'
                             when ordem.sit_ordem = '2' THEN 'Requisitado'
-                            when ordem.sit_ordem = '3' AND ordem.tp_ordem = '1' THEN 'Finalizado Entrega'
-                            when ordem.sit_ordem = '3' AND ordem.tp_ordem = '2' THEN 'Finalizado Execução/Serviço'
+                            when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
                             when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                            when ordem.sit_ordem = '4' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
                         END as situacao
 
                         from fin_pedido as p
@@ -372,8 +371,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         inner join fin_protocolo as protocolo
                         on protocolo.id_ordem  = ordem.id_ordem
                         where ordem.id_pedido = :pedido
-                        and (ordem.sit_ordem = '3' or ordem.tp_ordem = '2')
-                        and ordem.sit_ordem <> '0' --não listar ORDEM cancelada";
+                        and (ordem.sit_ordem in('3', '4', '5') OR ordem.tp_ordem = '2')";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
