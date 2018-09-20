@@ -183,7 +183,7 @@ class Cargo {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não é Possível Excluir o Registro, pois o Mesmo Está Associado a Outro Registro.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a uma Pessoa.");
             }
             
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);
@@ -324,10 +324,12 @@ class Cargo {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    if ($v['id_cargo'] == $id) {
-                        $retorno .= "<option selected value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
-                    } else {
-                        $retorno .= "<option value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
+                    if ($v['st_ativo'] == '1') {
+                        if ($v['id_cargo'] == $id) {
+                            $retorno .= "<option selected value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
+                        } else {
+                            $retorno .= "<option value = '" . $v['id_cargo'] . "'>" . $v['nm_cargo'] . "</option>";
+                        }
                     }
                 }
             }
