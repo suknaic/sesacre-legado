@@ -55,7 +55,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--===================================================-->
                     <div id="page-content">
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <input type="hidden" class="idPedido" id="idPedido" value="<?php echo $id;?>" />
+                            <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id;?>" />
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações do documento fiscal</h3>

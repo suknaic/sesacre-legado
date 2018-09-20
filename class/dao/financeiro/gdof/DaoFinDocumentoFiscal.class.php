@@ -262,9 +262,11 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     end tipo,
                     case
                         when ordem.sit_ordem = '0' then 'Cancelada'
-                        when ordem.sit_ordem = '1' then 'Cadastrada'
-                        when ordem.sit_ordem = '2' then 'Requisitada'
-                        when ordem.sit_ordem = '3' then 'Finalizada'
+                        when ordem.sit_ordem = '1' THEN 'Cadastrado'
+                        when ordem.sit_ordem = '2' THEN 'Requisitado'
+                        when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
+                        when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
+                        when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
                     end situacao,
                     (select sum(ordemValor.qt_itens_ordem * ordemValor.vl_itens_ordem) from fin_ordem_itens as ordemValor where ordemValor.id_ordem = ordem.id_ordem) as valor
                     from fin_documento_fiscal as documento
@@ -330,7 +332,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         )
                         as vl_total_entrega 	/*VALOR TOTAL DA ENTREGA*/
                      ,
-                        docEnt.vl_entrega_saldo 	/*VALOR UTILIZADO DA ENTREGA*/
+                        coalesce(docEnt.vl_entrega_saldo,0) as vl_entrega_saldo 	/*VALOR UTILIZADO DA ENTREGA*/
                      ,
                         docEnt.vl_entrega_documento 
                      from
