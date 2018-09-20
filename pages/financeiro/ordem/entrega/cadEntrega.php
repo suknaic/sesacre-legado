@@ -241,12 +241,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel ">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div class="col-sm-2">
+                                                <div class="col-md-2">
                                                     <button class="btn btn-danger btn-rounded btn-finaliza-supresao" type="button">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Supressão do Ordenado
                                                     </button>
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-2">
                                                     <button class="btn btn-danger btn-rounded btn-finaliza-descumprimento" type="button">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Descumprimento do Ordenado pelo Fornecedor
                                                     </button>
