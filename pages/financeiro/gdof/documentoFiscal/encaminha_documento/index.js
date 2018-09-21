@@ -86,10 +86,11 @@ $(document).ready(function () {
                 func.modalAlert("Nenhuma Destinatario foi selecionado.");
                 return false;
             }
-
+            
             var dados = {
                 "tipoDestinatario": $("#tipoDestinatario").val(),
                 "destinatario": $("#destinatario").val(),
+                "motivo": $("#encaminhar_motivo").val(),
                 "id": id
             }
             $('#modalEncaminhar').modal('hide');
