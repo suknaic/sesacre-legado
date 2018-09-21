@@ -56,22 +56,35 @@ $(document).ready(function() {
             var $this = $(this);
             var itens = [];
            // $this.prop("disabled", true);
-           $(".itens").each(function () {
-            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0 ) {
+
+        $(".itens").each(function () {
+            if ($('#qtd').val() == '') {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
                 if ($(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
-                    itens.push({'qtd': $(this).find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
-                        'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
+                      itens.push({
+                           'qtd': $(this).find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
+                           'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")
+                      });
                 }
             }
 
-            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1 ) {
+            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
                 if ($(this).find(".vl").val() != '0,00' && $(this).find(".vl").val() != '' &&
                     $(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
-                    itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idItem': $(this).find(".vl").attr("itemId"),
-                        'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
+                        itens.push({
+                            'qtd': $(this).find(".qtd").val(),
+                            'vl': $(this).find(".vl").val(),
+                            'idItem': $(this).find(".vl").attr("itemId"),
+                            'id': $("body").find("#id").val(),
+                            'tp': $(this).find(".qtd").attr("tp")
+                        });
+                    }
                 }
-            }
-        });
+            });
            var enc = JSON.stringify(itens);
 
            $.ajax({

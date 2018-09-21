@@ -85,6 +85,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato_a
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
+                                            <br>
                                             <button class="btn btn-success btn-rounded btn-salvar" type="button">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                             </button>

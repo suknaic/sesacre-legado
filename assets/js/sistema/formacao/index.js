@@ -1,6 +1,7 @@
 func = new Funcoes();
 func.carregaTabelaPadrao('tabela', null, [2]);
-$('.obrigatorio').hide();
+$('.obrigatorio').show();
+$('.btn-cancelar').hide();
 //******************************************************************************************    
 function listaEscolaridadeCombo() {
     $.ajax({
@@ -429,6 +430,21 @@ $(document).ready(function () {
         $('.btn-editar').val(0);
         $('.btn-editar').hide();
         $('.btn-salvar').show();
+        $('.btn-cancelar').show();
+        $("#id_escolaridade").val(0).change();
+        $("#nm_formacao").val("");
+        $("#nm_formacao").focus();
+        $('.obrigatorio').show();
+    });
+
+    $('body').on('click', '.btn-cancelar', function (e) {
+        $('.btn-salvar').hide();
+        $('.btn-salvar').prop("disabled", false);
+        $('.btn-editar').prop("disabled", false);
+        $('.btn-pesquisar').show();
+        $('.btn-editar').val(0);
+        $('.btn-editar').hide();
+        $('.btn-cancelar').hide();
         $("#id_escolaridade").val(0).change();
         $("#nm_formacao").val("");
         $("#nm_formacao").focus();
@@ -446,7 +462,7 @@ $(document).ready(function () {
         $('.btn-editar').show();
         $("#nm_formacao").focus();
         $('.obrigatorio').show();
-
+        $('.btn-cancelar').show();
     });
     $('body').on('click', '.btn-limpar', function (e) {
         $("#id_escolaridade").val(0).change();
