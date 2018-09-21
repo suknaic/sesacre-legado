@@ -281,62 +281,6 @@ class DocFiscalEncaminhamento {
 
     private function montaFiltroSQL() {
         //Verifica os atributos que serão filtrados
-//        $filtroSql = "";
-//        if ($this->getNrDocFiscal()) {
-//            $filtroSql .= " and  doc.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
-//        }
-//
-//        if ($this->getAnoDocFiscal()) {
-//            $filtroSql .= " and doc.aa_competencia = " . $this->getAnoDocFiscal();
-//        }
-//
-//        if ($this->getContratado()) {
-//            $filtroSql .= " and fornecedor.id_pessoa = " . $this->getContratado();
-//        }
-//
-//        if ($this->getNrProtocolo()) {
-//            $filtroSql .= " and  protoc.id_protocolo = " . $this->getNrProtocolo();
-//        }
-//
-//        if ($this->getNrContrato()) {
-//            $filtroSql .= " and contrato.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
-//        }
-//
-//        if ($this->getNrPedido()) {
-//            $filtroSql .= " and pedido.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
-//        }
-//
-//        if ($this->getNrEmpenho()) {
-//            $filtroSql .= " and emp.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
-//        }
-//
-//        if ($this->getTpGasto()) {
-//            $filtroSql .= " and tipoGasto.id_tipo_gasto = " . $this->getTpGasto();
-//        }
-//
-//        if ($this->getSitDocFiscal()) {
-//            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
-//        }
-//
-//        if ($this->getRemetente()) {
-//            $filtroSql .= " and docLotacaoOrigem.id_lotacao = " . $this->getRemetente();
-//        } else {
-//            $docVincEncaminhamento = new DocVincEncaminhamento();
-//            $docVincEncaminhamento->setIdPessoa($this->id_usuario);
-//            $idLotacoesOrigem = [];
-//
-//            if ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento()) {
-//                foreach ($docVincEncaminhamento->retornaIdLotacaoUsuarioEncaminhamento() as $dados) {
-//                    $idLotacoesOrigem[] = $dados["id_lotacao"];
-//                }   
-//            }
-//            
-//            if (!empty($idLotacoesOrigem)) {
-//                $filtroSql .= " and docLotacaoOrigem.id_lotacao in (" . implode(' , ', $idLotacoesOrigem) . ") ";
-//            }
-//            
-//        }
-
 
         $filtroSql = "";
         if ($this->getNrDocFiscal()) {
@@ -376,9 +320,7 @@ class DocFiscalEncaminhamento {
         }
         
         if ($this->getRemetente()) {
-            $encaminhado = "tramitacao.id_tipo_tramitacao = 3"; //Quando tramitação for de 'Encaminhado', deve usar como parametro o ID_DOC_DESTINO
-            $outros      = "tramitacao.id_tipo_tramitacao <> 3"; //Quando for DIFERENTE de 'Encaminhado', deve usar como parametro o ID_DOC_ORIGEM
-            $filtroSql .= " and ((tramitacao.id_doc_destino = " . $this->getRemetente() . " and ".$encaminhado.") or (tramitacao.id_doc_origem = ". $this->getRemetente() ." and ".$outros."))";
+            $filtroSql .= " and lotacaoOrigem.id_lotacao = ". $this->getRemetente() ;
         }
 
         return $filtroSql;
@@ -465,6 +407,7 @@ class DocFiscalEncaminhamento {
         $docTramitacao->setIdDocOrigem($origem);
         $docTramitacao->setIdDocDestino($dados["destinatario"]);
         $docTramitacao->setIdDocumentoSituacao($situacao);
+        $docTramitacao->setDsDocTramitacao($dados["motivo"]);
         $docTramitacao->setIdTipoTramitacao(3);
         $docTramitacao->setIdDocumentoFiscal($dados["id"]);
         $docTramitacao->setFlPesquisa(1);
@@ -479,6 +422,7 @@ class DocFiscalEncaminhamento {
         
         //Ao ser encaminhado, a origem do documento passa a ser o local para onde foi enviado
         $docTramitacao->setIdDocOrigem($dados["destinatario"]);
+        $docTramitacao->setDsDocTramitacao(null);
         $docTramitacao->setIdDocDestino(null);
         if (!$docTramitacao->cadastraTramitacao($pdo)) {
             $pdo->rollBack();
