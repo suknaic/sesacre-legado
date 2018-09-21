@@ -96,8 +96,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                             </div>                                                                                     
                                         </div>
                                         <div class="panel-footer text-right">
-                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-cancelar">
+                                                Cancelar
                                             </button>
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar

@@ -81,6 +81,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/funcao/index.load.php";
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
                                                 Limpar
                                             </button>
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-cancelar">
+                                                Cancelar
+                                            </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>

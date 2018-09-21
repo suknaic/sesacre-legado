@@ -394,6 +394,8 @@ $(document).ready(function () {
         $('.btn-editar').val(id);
         $("#nm_funcao").val($(this).attr('nome'));
         $('.btn-salvar').hide();
+        $('.btn-cancelar').show();
+        $('.btn-limpar').hide();
         $('.btn-editar').show();
         $("#nm_funcao").focus();
 
@@ -406,6 +408,18 @@ $(document).ready(function () {
         $('.btn-editar').hide();
         $("#nm_funcao").val("");
 
+    });
+    $('.btn-cancelar').hide();
+    $('body').on('click', '.btn-cancelar', function (e) {
+        e.preventDefault();
+        $('.btn-salvar').prop("disabled", false);
+        $('.btn-editar').prop("disabled", false);
+        $('.btn-salvar').show();
+        $('.btn-editar').val(0);
+        $('.btn-editar').hide();
+        $('.btn-cancelar').hide();
+        $('.btn-limpar').show();
+        $("#nm_funcao").val("");
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {

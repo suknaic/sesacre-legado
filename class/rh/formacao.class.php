@@ -57,7 +57,7 @@ class Formacao {
             $busca = $formacao->buscaFormacaoPorNome($pdo);
 
             if ($this->id_escolaridade == 2) {
-                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido o Cadastro de Curso com Escolaridade Ensino Médio e Fundamental.");
+                return Metodos::retornoAjax("Erro", "alert", "Não é Permitido o Cadastro de Curso com Escolaridade Ensino Fundamental.");
             }
 
             if (!$busca) {
