@@ -145,81 +145,130 @@ $(document).ready(function () {
         }
     });
 
-    $("body").on("change", "#selectOrdem", function (e) {
-        var idOrdem = $("body").find("#selectOrdem").val();
-        if (idOrdem == 0) {
+//    $("body").on("change", "#selectOrdem", function (e) {
+//        var idOrdem = $("body").find("#selectOrdem").val();
+//        if (idOrdem == 0) {
+//            return false;
+//        }
+//        $.ajax({
+//            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+//            "dataType": 'html',
+//            "data": {
+//                "acao": "retornaTipoValorOrdem",
+//                "dados": idOrdem
+//
+//            },
+//            "success": function (response) {
+//                var infoOrdem = JSON.parse(response);
+//                $("body").find("#tipoOrdem").html(infoOrdem.tipo);
+//                $("body").find("#valorOrdem").html(infoOrdem.valor);
+//            }
+//        });
+//
+//
+//    });
+
+//    var infTabOrdem = {};
+
+    $("body").on("click", ".addOrdens", function (e) {
+
+        var id_ordem = $("#selectOrdem option:selected").val() ;   
+
+        //verifica se a ordem já está incluída
+        $(".linha-ordem").each(function(){
+            var linha = $(this);
+            
+            if (linha.data('id') == id_ordem) {
+                func.modalAlert("Essa ordem já foi adicionada.");
+                id_ordem = 0;
+                return false
+            }
+
+        });
+
+        if (id_ordem == 0) {
             return false;
         }
+        
+
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaTipoValorOrdem",
-                "dados": idOrdem
+                "dados": id_ordem
 
             },
             "success": function (response) {
-                var infoOrdem = JSON.parse(response);
-                $("body").find("#tipoOrdem").html(infoOrdem.tipo);
-                $("body").find("#valorOrdem").html(infoOrdem.valor);
+                var ordem = JSON.parse(response);
+                var trOrdem = `<tr class="linha-ordem" data-id=${ordem.id_ordem}>
+                                    <td class="text-center">${ordem.ordem}</td>
+                                    <td class="text-center">${ordem.tipo}</td>
+                                    <td class="text-center">${ordem.valor}</td>
+                                    <td class="text-center">${ordem.situacao}</td>
+                                    <td class="text-center">
+                                        <button type="button" title="Excluir ordem" class="excluirOrdem text-danger" value = "${ordem.id_ordem}">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                               </tr>`;
+                $("#tabelaOrdem").find("tbody").append(trOrdem);
+                retornaOptionsDaEntrega();
             }
         });
 
+//        array = {
+//            "id_ordem": $("#selectOrdem option:selected").val(),
+//            "nr_ordem": $("#selectOrdem option:selected").text(),
+//            "tipo_ordem": $("#tipoOrdem").text(),
+//            "valorOrdem": $("#valorOrdem").text()
+//        }
 
-    });
-
-    var infTabOrdem = {};
-
-    $("body").on("click", ".addOrdens", function (e) {
-
-        if ($("#selectOrdem option:selected").val() == 0) {
-            return false;
-        }
-
-        array = {
-            "id_ordem": $("#selectOrdem option:selected").val(),
-            "nr_ordem": $("#selectOrdem option:selected").text(),
-            "tipo_ordem": $("#tipoOrdem").text(),
-            "valorOrdem": $("#valorOrdem").text()
-        }
-
-        $.each(infTabOrdem, function (index, value) {
-            if (value.id_ordem == $("#selectOrdem option:selected").val()) {
-                func.modalAlert("Essa ordem já foi adicionada.");
-            }
-        });
-
-        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
-
-        $.ajax({
-            "method": "POST",
-            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaTabelaOrdem",
-                "dados": infTabOrdem
-
-            },
-            "success": function (response) {
-                $("#tabelaOrdem").find("tbody").html(response);
-            }
-        });
-
-        retornaOptionsDaEntrega(infTabOrdem);
+//        $.each(infTabOrdem, function (index, value) {
+//            if (value.id_ordem == $("#selectOrdem option:selected").val()) {
+//                func.modalAlert("Essa ordem já foi adicionada.");
+//            }
+//        });
+//
+//        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
+//
+//        $.ajax({
+//            "method": "POST",
+//            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
+//            "dataType": 'html',
+//            "data": {
+//                "acao": "retornaTabelaOrdem",
+//                "dados": infTabOrdem
+//
+//            },
+//            "success": function (response) {
+//                $("#tabelaOrdem").find("tbody").html(response);
+//            }
+//        });
 
     });
     //retorna options entrega
-    function retornaOptionsDaEntrega(infTabOrdem) {
+    function retornaOptionsDaEntrega() {
+        
+        var ordens = [];
+        //percorre as ordens inseridas
+        $(".linha-ordem").each(function(){
+            ordens.push($(this).data('id'));
+        });
+        
+        console.log(ordens);
+        
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
-                "dados": infTabOrdem
+                "dados": ordens
 
             },
             "success": function (response) {
-                $("#selectEntrega").html(response);
+                $("#selectEntrega").html("");
+                $("#selectEntrega").append(response);
             }
         });
     }
@@ -232,26 +281,29 @@ $(document).ready(function () {
         $(".trEntregas").each(function () {
             if ($this.val() == $(this).attr("ordem")) {
                 erro++;
-
             }
         });
         if (erro > 0) {
             func.modalAlert("Exclua as entregas para exluir a ordem");
             return false;
         }
+        
+        $this.closest('tr').remove();
+        
+        retornaOptionsDaEntrega();
 
-        $("#" + $this.val()).remove();
-        infTabOrdem = {};
-
-        //esse codigo abaixo foi realizado para atualiza o select das entregas
-        infNovaOrdem = {};
-        $(".tabOrdem").each(function () {
-            infNovaOrdem[$(this).attr("id")] = {"id_ordem": $(this).attr("id")}
-
-        });
-        //fim
-
-        retornaOptionsDaEntrega(infNovaOrdem);
+//        $("#" + $this.val()).remove();
+//        infTabOrdem = {};
+//
+//        //esse codigo abaixo foi realizado para atualiza o select das entregas
+//        infNovaOrdem = {};
+//        $(".tabOrdem").each(function () {
+//            infNovaOrdem[$(this).attr("id")] = {"id_ordem": $(this).attr("id")}
+//
+//        });
+//        //fim
+//
+//        retornaOptionsDaEntrega(infNovaOrdem);
 
     });
 

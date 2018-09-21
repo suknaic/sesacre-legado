@@ -961,7 +961,7 @@ class FinDocumentoFiscal {
 
                                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
                                                 <div class="panel-body">
-
+                                                    <input type="hidden" id="id_pedido" value='.$campos['id_pedido'].' />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Descrição:</b></div>
                                                         <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
@@ -1077,7 +1077,7 @@ class FinDocumentoFiscal {
 
             if ($daoFinDocumentoFiscal->sucesso()) {
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $key => $valor) {
-                    $tabela .= '<tr id = "' . $valor["id_ordem"] . '" class= "tabOrdem">
+                    $tabela .= '<tr data-id = "' . $valor["id_ordem"] . '" class= "linha-ordem">
                                     <td class="text-center">' . $valor["ordem"] . '</td>
                                     <td class="text-center">' . $valor["tipo"] . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($valor["valor"], 4) . '</td>

@@ -350,6 +350,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                                                        
                                 </div>
+                                
+                                <?php
+                                //Anotações
+                                require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/anotacao.html";
+                                ?>
+                                
                                 <!--                                Historico tramitacao-->
 
                                 <div class="form-group">
