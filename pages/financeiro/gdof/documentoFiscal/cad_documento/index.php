@@ -259,7 +259,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                         </div>
                                     </div>
                                 </div>
-                     
+
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body ordem">
@@ -418,6 +418,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                         </div>
                                     </div>
                                 </div>
+
+                                <?php
+                                //Modal anotacoes
+                                require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/anotacao.html";
+                                ?>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">
