@@ -161,7 +161,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaIfPedidoPorIdDocumento(PDO $pdo) {
         try {
-            $sql = "select DISTINCT (p.nr_pedido), p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
+            $sql = "select DISTINCT (p.nr_pedido),p.id_pedido, p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
                     p.vl_pedido, desp.cd_despesa, desp.ds_despesa
