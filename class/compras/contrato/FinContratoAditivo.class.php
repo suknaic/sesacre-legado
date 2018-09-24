@@ -689,14 +689,17 @@ class FinContratoAditivo {
             
             $valorExecutado = array();
             
-            $valorExecutado[] = array("id_cont_itens", 16861, "qtd_executado", 150.0000);
+            $valorExecutado[] = array("id_cont_itens", 16861, "qtd_executado", 5000.0000);
             $valorExecutado[] = array("id_cont_itens", 16862, "qtd_executado", 4000.0000);
             
             
-            $valorExecutado[] = array("id_cont_itens", 20674, "qtd_executado", 500.0000);
-            $valorExecutado[] = array("id_cont_itens", 20673, "qtd_executado", 2500.0000);
+            $valorExecutado[] = array("id_cont_itens", 20694, "qtd_executado", 25.0000);
+            $valorExecutado[] = array("id_cont_itens", 20693, "qtd_executado", 50.0000);
                         
-            //$valorExecutado[] = array("id_cont_itens", 18205, "qtd_executado", 100.0000);                        
+            $valorExecutado[] = array("id_cont_itens", 20700, "qtd_executado", 100.0000);                                    
+            
+            $valorExecutado[] = array("id_cont_itens", 20701, "qtd_executado", 500.0000);
+            $valorExecutado[] = array("id_cont_itens", 20702, "qtd_executado", 100.0000);
             
             foreach ($valorExecutado as $key => $value) {
                 $a = array_search($value[1], array_column($todosItens, $value[0]));
@@ -742,6 +745,10 @@ class FinContratoAditivo {
                                         && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
                                         && $v['vl_itens'] > 0){
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    /*
+                                     * Com essa Flag Setada como True, iremos garantir que esse é o último 
+                                     * valor Válido
+                                     */                                    
                                     $flagValor = true;
                                 }
                                 
@@ -790,6 +797,10 @@ class FinContratoAditivo {
                                         && $v['vl_itens'] != "0.0000" && $v['vl_itens'] != "0.00"
                                         && $v['vl_itens'] > 0){                                
                                     $finContItens[$key]->setVlItens($v['vl_itens']);
+                                    /*
+                                     * Com essa Flag Setada como True, iremos garantir que esse é o último 
+                                     * valor Válido
+                                     */   
                                     $flagValor = true;
                                 }
                                                                 
@@ -830,7 +841,7 @@ class FinContratoAditivo {
                     //Se a aplicação não enviou o Id do Item, então esse item terá seu valor zerado
                     if($key === false && $this->idUnidadeCalculo == $this->getUnidadeCalculoQuantidade()){
                         $finContItens[$k]->setQtItens(0);
-                        $finContItens[$k]->setQtItens(0);
+                        $finContItens[$k]->setQtItensAux(0);
                         $finContItens[$k]->setVlItens(0);                     
                         continue;
                     }                    
@@ -914,7 +925,7 @@ class FinContratoAditivo {
                                     
                                 }                                                                                                                   
                             }
-                        }                        
+                        }                                                
                         $finContItens[$k]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                         $finContItens[$k]->setQtItensAux(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                         if($finContItens[$k]->getQtItens() < 0){
@@ -1007,7 +1018,7 @@ class FinContratoAditivo {
                         }           
                         //Se O Valor Não foi informado, então ele deverá ser o ultimo valor valido
                         if($key === false && $this->idUnidadeCalculo == $this->getUnidadeCalculoMoeda()){
-                            foreach ($todosItens as $k1 => $v1){                             
+                            foreach ($todosItens as $k1 => $v1){           
                                 if( ($v1['id_cont_itens_aditivo'] == $value->getIdContItens()
                                         && $v1['tipo'] == "aditivo")
                                     ||
@@ -1017,13 +1028,13 @@ class FinContratoAditivo {
                                         //Seta o Ultimo Valor Unitário Valido
                                         if( $v1['vl_itens'] != "0" && $v1['vl_itens'] != "0.0"
                                             && $v1['vl_itens'] != "0.0000" && $v1['vl_itens'] != "0.00"
-                                            && $v1['vl_itens'] > 0){                                       
+                                            && $v1['vl_itens'] > 0){                           
                                             $finContItens[$k]->setVlItens($v1['vl_itens']);
                                             break;
                                         }
                                     }
                             }                                                                                  
-                        }else{                                                     
+                        }else{                                                   
                             $finContItens[$k]->setVlItens($this->itens[$key]['valor_aditivado']);   
                         }
                         //No Caso de Mudança de Valor Unitário, A Quantidade será alterado de acordo com 
@@ -1036,7 +1047,7 @@ class FinContratoAditivo {
                         //Praticamente Mesma Regra do Serviço Não Continuado
                         $valorTotalDaQuantidade = 0.0000;
                         $valorTotalDaQuantidadeExecutado = 0.0000;
-                        foreach ($todosItens as $k1 => $v1){                                                                    
+                        foreach ($todosItens as $k1 => $v1){                                                                
                             if( ($v1['id_cont_itens_aditivo'] == $value->getIdContItens()
                                     && $v1['tipo'] == "aditivo")
                                 ||
@@ -1060,9 +1071,9 @@ class FinContratoAditivo {
                                     }
                                     
                                     
-                                }                                                                                                                   
+                                }                                                                                                                  
                             }
-                        }                        
+                        }                       
                         $finContItens[$k]->setQtItens(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                         $finContItens[$k]->setQtItensAux(($valorTotalDaQuantidade - $valorTotalDaQuantidadeExecutado));
                         if($finContItens[$k]->getQtItens() < 0){
@@ -1090,7 +1101,7 @@ class FinContratoAditivo {
                         $finContItens[$k]->setQtItensAux($this->itens[$key]['valor_aditivado']);
                         
                         $valorTotalDaQuantidade = $this->itens[$key]['valor_aditivado'];
-                        foreach ($todosItens as $k1 => $v1){                                                              
+                        foreach ($todosItens as $k1 => $v1){                                                             
                             if( ($v1['id_cont_itens_aditivo'] == $value->getIdContItens()
                                     && $v1['tipo'] == "aditivo")
                                 ||
@@ -1161,10 +1172,10 @@ class FinContratoAditivo {
                 }                                
             }
             
-//            echo "<pre>";
-//            print_r($finContItens);
-//            echo "</pre>";
-//            return;
+            echo "<pre>";
+            print_r($finContItens);
+            echo "</pre>";
+            return;
        
             /*
              * Se o tipo de Aquisição for preenchido, então se deve calcular a Porcentagem
@@ -1173,7 +1184,7 @@ class FinContratoAditivo {
             if(!empty($this->idTipoAquisicao)){
                 $this->calculaLimitePorcentagemAquisicao($finContItens, $todosItens, $pdo);
                 if(!$this->sucesso){
-                    //return Metodos::retornoAjax("Erro", "alert", $this->msgRetorno);
+                    return Metodos::retornoAjax("Erro", "alert", $this->msgRetorno);
                 }
 //                echo "<pre>";
 //                print_r($this->msgRetorno);
