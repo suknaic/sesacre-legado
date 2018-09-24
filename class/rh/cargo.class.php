@@ -183,7 +183,7 @@ class Cargo {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a uma Pessoa.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão deste Cargo. Este registro está Vinculado a uma Pessoa.");
             }
             
             return Metodos::retornoAjax("Erro", "console", STR_ERROR);

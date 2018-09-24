@@ -666,7 +666,7 @@ class pessoaFisica {
 //*********************************************************************
             $filter = array();
             if (!empty($nome)) {
-                $filter[] = "P.nm_pessoa ilike '%$nome%'";
+                $filter[] = "unaccent(lower(P.nm_pessoa)) ilike '$nome%'";
             }
             if (count($filter) > 0) {
                 $filtro = " and " . implode(' and ', $filter);
