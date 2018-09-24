@@ -637,7 +637,7 @@ class Pedido {
                                         
                                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
                                                 <div class="panel-body">
-                                                
+                                                    <input type="hidden" id="id_pedido" value=' . $campos['id_pedido'] . ' data-tipo-solicitacao=' . $campos['id_tipo_solicitacao'] . ' />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Descrição:</b></div>
                                                         <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
@@ -661,6 +661,11 @@ class Pedido {
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Valor do Pedido:</b></div>
                                                         <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
                                                     </div>
                                                 </div>
                                             </div>

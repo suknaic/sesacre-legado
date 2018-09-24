@@ -1,9 +1,9 @@
 <?php
 
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/financeiro/gdof/FinDocumentoFiscalAnotacao.class.php";
 
-class DaoFinDocumentoFiscalAnotacao extends FinDocumentoFiscalAnotacao {
+class DaoFinDocumentoFiscalAnotacao extends FinDocumentoFiscalAnotacaoTb {
+
     private $sucesso = false;
     private $msgRetorno = null;
 
@@ -33,4 +33,32 @@ class DaoFinDocumentoFiscalAnotacao extends FinDocumentoFiscalAnotacao {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+
+    public function lista(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+                return false;
+            }
+            $sql = "select pessoa.nm_pessoa, to_char(anotacao.dh_documento_fiscal_anotacao,'dd/mm/yyyy HH24:MI:SS') as dh_documento_fiscal_anotacao, 
+                    anotacao.ds_documento_fiscal_anotacao
+                    from fin_documento_fiscal_anotacao as anotacao
+                    inner join ses_pessoa as pessoa
+                    on pessoa.id_pessoa = anotacao.id_pessoa
+                    where anotacao.id_documento_fiscal = :id_documento_fiscal";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
 }

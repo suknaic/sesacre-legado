@@ -121,7 +121,8 @@ class DaoConLiquidacao extends ConLiquidacao {
                     as competencia,
                     to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,
                     to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto,
-                    to_char(vl_documento,'999G999G999D9999') as vl_documento,
+                    trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento,
+                    vl_documento as vl_doc_sem_mascara,
                     docFis.id_documento_situacao,
                     docSit.nm_situacao 
                  from
@@ -144,8 +145,11 @@ class DaoConLiquidacao extends ConLiquidacao {
                     left join
                        fin_documento_situacao as docSit 
                        on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                    left join
+                       con_liquidacao_doc as liqDoc
+                       on liqDoc.id_documento_fiscal = docFis.id_documento_fiscal
                  where
-                    docFis.id_documento_situacao = 2 	--Somente 'A Liquidar'
+                    (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ or liqDoc.id_liquidacao = :id_liquidacao)
                  and
                     empenho.id_empenho = :id_empenho
                  order by
@@ -154,6 +158,7 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
             $result = $pdo->prepare($sql);            
             $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
@@ -172,16 +177,19 @@ class DaoConLiquidacao extends ConLiquidacao {
         $this->sucesso = false;
         $sql = "select distinct
                     empenho.nr_empenho,
+                    liqDoc.id_liquidacao_doc,
                     docFis.id_documento_fiscal,
                     docFis.nr_documento_fiscal,
                     tpDoc.nm_tipo_documento,
+                    liqDoc.id_liquidacao_doc,
                     (
                        trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
                     )
                     as competencia,
                     to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,
                     to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto,
-                    to_char(vl_documento,'999G999G999D9999') as vl_documento,
+                    trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento,
+                    vl_documento as vl_doc_sem_mascara,
                     docFis.id_documento_situacao,
                     docSit.nm_situacao 
                  from

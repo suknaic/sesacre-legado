@@ -16,18 +16,41 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
     }
 
     function insert($pdo){
-        try {                      
-            $result = $pdo->prepare("INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal)"                    
-                    . " VALUES (:id_liquidacao, :id_documento_fiscal);");                                                            
+        try {
+            $sql = "INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal, vl_liquidacao_doc, vl_liquidacao_doc_saldo)"                    
+                    . " VALUES (:id_liquidacao, :id_documento_fiscal, :vl_liquidacao_doc, :vl_liquidacao_doc_saldo);";
+            $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT); 
+            $result->bindValue(":vl_liquidacao_doc", $this->getVlLiquidacaoDoc(), PDO::PARAM_STR);
+            $result->bindValue(":vl_liquidacao_doc_saldo", $this->getVlLiquidacaoDocSaldo(), PDO::PARAM_STR);
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage();            
         }
-    }            
+    }
+    
+    function update($pdo){
+        try {             
+            $sql = "update
+                        con_liquidacao_doc 
+                     set
+                        vl_liquidacao_doc = :vl_liquidacao_doc, vl_liquidacao_doc_saldo = :vl_liquidacao_doc_saldo 
+                     where
+                        id_liquidacao_doc = :id_liquidacao_doc";
+            $result = $pdo->prepare($sql);                                                            
+            $result->bindValue(":id_liquidacao_doc", $this->getIdLiquidacaoDoc(), PDO::PARAM_INT); 
+            $result->bindValue(":vl_liquidacao_doc", $this->getVlLiquidacaoDoc(), PDO::PARAM_STR);
+            $result->bindValue(":vl_liquidacao_doc_saldo", $this->getVlLiquidacaoDocSaldo(), PDO::PARAM_STR);
+            $result->execute();
+            $this->sucesso = true;            
+        } catch (PDOException $e) {
+            $this->sucesso = false;            
+            $this->msgRetorno = $e->getMessage();            
+        }
+    }
     
     function delete($pdo){
         try {
@@ -65,7 +88,7 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
     
     function retornaPorLiquidacao($pdo){
         $this->sucesso = false;
-        $sql = " SELECT id_liquidacao_doc, id_liquidacao, id_documento_fiscal"                    
+        $sql = " SELECT id_liquidacao_doc, id_liquidacao, id_documento_fiscal, vl_liquidacao_doc, vl_liquidacao_doc_saldo"                    
                 . " FROM con_liquidacao_doc"
                 . " WHERE id_liquidacao = :id_liquidacao";
         try {
@@ -87,7 +110,7 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
     
     function retornaPorDocumentoFiscal($pdo){
         $this->sucesso = false;
-        $sql = " SELECT id_liquidacao_doc, id_liquidacao, id_documento_fiscal"                    
+        $sql = " SELECT id_liquidacao_doc, id_liquidacao, id_documento_fiscal, vl_liquidacao_doc, vl_liquidacao_doc_saldo"                    
                 . " FROM con_liquidacao_doc"
                 . " WHERE id_documento_fiscal = :id_documento_fiscal";
         try {
