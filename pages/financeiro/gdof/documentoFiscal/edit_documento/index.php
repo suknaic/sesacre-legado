@@ -48,14 +48,42 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro de Documento Fiscal</h1> 
                     </div>
-                     <ol class="breadcrumb">
-                         <li><a href="../encaminha_documento/">Voltar</a></li>                        
+                    <ol class="breadcrumb">
+                        <li><a href="../encaminha_documento/">Voltar</a></li>                        
                     </ol>
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+                        <!--Modal addAnotacao-->
+                        <div class=" modal fade modal-footer" id="adAnotacao"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Anotação</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                            <input type="hidden" name="id_pedido_anotacao" id="id_processo_anotacao" value="">
+                                            <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                        <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fim Modal AddAnotacao-->
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id;?>" />
+                            <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id; ?>" />
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações do documento fiscal</h3>
@@ -187,7 +215,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                         <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdofEdicao(null); ?>
+                                                                        <?php echo $finDocumentoFiscal->retornaTabelaEntregaGdofEdicao(null); ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -200,23 +228,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--form processo administratio da despesa publica-->
-<!--                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>-->
+                                <!--                                <div class="form-group">
+                                                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                                                        <div class="panel-body ordem">
+                                                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
+                                                                                    </div>
+                                                                                    <div class="panel-body">
+                                                                                        
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -269,7 +297,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="competencia" id="competencia" 
-                                                                           value="<?php echo (strlen($documento["mm_competencia"]) == 2 ? $documento["mm_competencia"] : "0".$documento["mm_competencia"]) . '/' . $documento["aa_competencia"]; ?>"/>
+                                                                           value="<?php echo (strlen($documento["mm_competencia"]) == 2 ? $documento["mm_competencia"] : "0" . $documento["mm_competencia"]) . '/' . $documento["aa_competencia"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -318,45 +346,50 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 </div>
                                 <!--form lançado no grp-->
                                 <div class="form-group">
-                                    <div class="col-sm-12" style="margin-bottom: -4%;" >
+                                    <div class="col-sm-12" style="margin-bottom: -3%;" >
                                         <div class="panel-body">                                            
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Lançado no GRP</h4>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab">
+                                                    <h4 class="panel-title">Lançado no GRP</h4>
+                                                </div>
+                                                <div class="panel-body">                                                       
+                                                    <div class="col-sm-2">
+                                                        <?php
+                                                        $checkSim = "";
+                                                        $checkNao = "";
+                                                        $inputDisplayNone = "";
+                                                        if ($documento['fl_grp'] == 1) {
+                                                            $checkSim = "checked='checked'";
+                                                        } else {
+                                                            $inputDisplayNone = "display: none;";
+                                                            $checkNao = "checked='checked'";
+                                                        }
+                                                        ?>
+                                                        <label><input type="radio" id="grp_sim" value="1" name="grp_cod" <?php echo $checkSim; ?>>Sim</label>
+                                                        <label><input type="radio" id="grp_nao" value="0" name="grp_cod" <?php echo $checkNao; ?>>Não</label>
                                                     </div>
-                                                    <div class="panel-body">                                                       
-                                                        <div class="col-sm-2">
-                                                            <?php 
-                                                                $checkSim = "";
-                                                                $checkNao = "";
-                                                                $inputDisplayNone = "";
-                                                                if($documento['fl_grp'] == 1){
-                                                                    $checkSim = "checked='checked'";
-                                                                }else{
-                                                                    $inputDisplayNone = "display: none;";
-                                                                    $checkNao = "checked='checked'";
-                                                                }                                                                                                                                        
-                                                            ?>
-                                                            <label><input type="radio" id="grp_sim" value="1" name="grp_cod" <?php echo $checkSim; ?>>Sim</label>
-                                                            <label><input type="radio" id="grp_nao" value="0" name="grp_cod" <?php echo $checkNao; ?>>Não</label>
-                                                        </div>
 
-                                                        <div class="col-sm-3 divNumeroGrp" style="<?php echo $inputDisplayNone; ?>">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px;"></p></span>
-                                                                <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
-                                                                       value="<?php echo $documento["nr_grp_numero"]; ?>"/>
-                                                            </div>
+                                                    <div class="col-sm-3 divNumeroGrp" style="<?php echo $inputDisplayNone; ?>">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px;"></p></span>
+                                                            <input class="form-control" type="text" name="nr_grp" id="nr_grp" 
+                                                                   value="<?php echo $documento["nr_grp_numero"]; ?>"/>
                                                         </div>
-                                                        <div class="col-sm-7"></div>                                                        
                                                     </div>
-                                                </div>                                            
+                                                    <div class="col-sm-7"></div>                                                        
+                                                </div>
+                                            </div>                                            
                                         </div>
                                     </div>
                                 </div>
-                                
+
+                                <?php
+                                //Anotações
+                                require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/anotacao.html";
+                                ?>
+
                                 <div class="form-group">
-                                    <div  class="col-sm-12" >
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
@@ -372,7 +405,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
 
-<!--                                <div class="form-group">
+                                <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded" type="button">
@@ -380,7 +413,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             </button>
                                         </div>
                                     </div>
-                                </div>-->
+                                </div>
 
                             </div>
                         </form>

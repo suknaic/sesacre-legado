@@ -145,39 +145,14 @@ $(document).ready(function () {
         }
     });
 
-//    $("body").on("change", "#selectOrdem", function (e) {
-//        var idOrdem = $("body").find("#selectOrdem").val();
-//        if (idOrdem == 0) {
-//            return false;
-//        }
-//        $.ajax({
-//            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaTipoValorOrdem",
-//                "dados": idOrdem
-//
-//            },
-//            "success": function (response) {
-//                var infoOrdem = JSON.parse(response);
-//                $("body").find("#tipoOrdem").html(infoOrdem.tipo);
-//                $("body").find("#valorOrdem").html(infoOrdem.valor);
-//            }
-//        });
-//
-//
-//    });
-
-//    var infTabOrdem = {};
-
     $("body").on("click", ".addOrdens", function (e) {
 
-        var id_ordem = $("#selectOrdem option:selected").val() ;   
+        var id_ordem = $("#selectOrdem option:selected").val();
 
         //verifica se a ordem já está incluída
-        $(".linha-ordem").each(function(){
+        $(".linha-ordem").each(function () {
             var linha = $(this);
-            
+
             if (linha.data('id') == id_ordem) {
                 func.modalAlert("Essa ordem já foi adicionada.");
                 id_ordem = 0;
@@ -189,7 +164,6 @@ $(document).ready(function () {
         if (id_ordem == 0) {
             return false;
         }
-        
 
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
@@ -217,47 +191,16 @@ $(document).ready(function () {
             }
         });
 
-//        array = {
-//            "id_ordem": $("#selectOrdem option:selected").val(),
-//            "nr_ordem": $("#selectOrdem option:selected").text(),
-//            "tipo_ordem": $("#tipoOrdem").text(),
-//            "valorOrdem": $("#valorOrdem").text()
-//        }
-
-//        $.each(infTabOrdem, function (index, value) {
-//            if (value.id_ordem == $("#selectOrdem option:selected").val()) {
-//                func.modalAlert("Essa ordem já foi adicionada.");
-//            }
-//        });
-//
-//        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
-//
-//        $.ajax({
-//            "method": "POST",
-//            "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaTabelaOrdem",
-//                "dados": infTabOrdem
-//
-//            },
-//            "success": function (response) {
-//                $("#tabelaOrdem").find("tbody").html(response);
-//            }
-//        });
-
     });
     //retorna options entrega
     function retornaOptionsDaEntrega() {
-        
+
         var ordens = [];
         //percorre as ordens inseridas
-        $(".linha-ordem").each(function(){
+        $(".linha-ordem").each(function () {
             ordens.push($(this).data('id'));
         });
-        
-        console.log(ordens);
-        
+
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
@@ -287,23 +230,10 @@ $(document).ready(function () {
             func.modalAlert("Exclua as entregas para exluir a ordem");
             return false;
         }
-        
-        $this.closest('tr').remove();
-        
-        retornaOptionsDaEntrega();
 
-//        $("#" + $this.val()).remove();
-//        infTabOrdem = {};
-//
-//        //esse codigo abaixo foi realizado para atualiza o select das entregas
-//        infNovaOrdem = {};
-//        $(".tabOrdem").each(function () {
-//            infNovaOrdem[$(this).attr("id")] = {"id_ordem": $(this).attr("id")}
-//
-//        });
-//        //fim
-//
-//        retornaOptionsDaEntrega(infNovaOrdem);
+        $this.closest('tr').remove();
+
+        retornaOptionsDaEntrega();
 
     });
 
@@ -326,7 +256,6 @@ $(document).ready(function () {
         }
 
     });
-
 
     function atualizaTabelaEntrega(/*infTabEntrega*/ idEntrega) {
 
@@ -407,17 +336,17 @@ $(document).ready(function () {
             $this.prop("disabled", true);
             var entregas = [];
 //            var valoresRetEntregas = [];
-            
+
             $(".trEntregas").each(function () {
-                
+
                 //converte o valor informado para a entrega em formato inglês com 4 casas
                 var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
                 valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
-                
+
                 //converte o valor do saldo para o formato inglês com 4 casas
                 var valor_saldo_ingles = $(this).data('saldo');
                 valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
-                
+
                 var entrega = {
                     idEntrega: $(this).attr("identrega"),
                     vlSaldo: valor_saldo_ingles,
@@ -448,7 +377,7 @@ $(document).ready(function () {
                 grp = $("#grp_nao").val();
 
             }
-            
+
             var dados = {
                 "processoAdm": $("#processoAdm").val(),
                 "nr_documento": $("#nr_documento").val(),
@@ -461,7 +390,8 @@ $(document).ready(function () {
                 "grpNumero": $("#nr_grp").val(),
                 "id_lotacao": $("#destinatario option:selected").val(),
                 "destinatario": $("#destinatario option:selected").attr("id_doc_lotacao"),
-                "entregas": entregas
+                "entregas": entregas,
+                "anotacoes": $("#anotacoes").val()
             }
 
             $.ajax({
@@ -471,8 +401,7 @@ $(document).ready(function () {
                 "data": {
                     "acao": "cadastrarDocumentoFiscal",
                     "dados": dados,
-//                    "entrega": entregas,
-//                    "valoresRetEntregas": valoresRetEntregas
+
                 },
                 "success": function (response) {
                     console.log(response);
@@ -519,6 +448,5 @@ $(document).ready(function () {
             });
         }
     });
-
 
 });

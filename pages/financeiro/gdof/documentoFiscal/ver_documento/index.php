@@ -60,6 +60,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-content">
                         <form data-toggle="valisenha123
                               dator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
+                            <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id; ?>" />
                             <div class="panel">
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
@@ -171,33 +172,33 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--form processo administratio da despesa publica-->
-<!--                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="processoAdm" id="processoAdm" 
-                                                                           value="" disabled="true"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>-->
+                                <!--                                <div class="form-group">
+                                                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                                                        <div class="panel-body ordem">
+                                                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                                                <div class="panel panel-default">
+                                                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                                                        <h4 class="panel-title">Nº do Processo Administrativo da Despesa Pública</h4>
+                                                                                    </div>
+                                                                                    <div class="panel-body">
+                                                                                        <div class="form-group">
+                                                                                            <div class="col-sm-2"><b>Protocolo Nº:</b></div>
+                                                                                            <div class="col-sm-3">
+                                                                                                <div class="input-group">
+                                                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                                                    <input class="form-control" type="text" name="processoAdm" id="processoAdm" 
+                                                                                                           value="" disabled="true"/>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-sm-7"></div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -348,14 +349,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                             </div>
                                         </div>
                                     </div>
-                                                                       
+
                                 </div>
-                                
+
                                 <?php
                                 //Anotações
                                 require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/anotacao.html";
                                 ?>
-                                
+
                                 <!--                                Historico tramitacao-->
 
                                 <div class="form-group">
@@ -425,6 +426,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <!-- <script src="/pages/financeiro/gdof/unidade/cad_gdof/index.js"></script> -->
+        <script src="/pages/financeiro/gdof/documentoFiscal/ver_documento/index.js"></script> 
     </body>
 </html>
