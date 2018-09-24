@@ -97,12 +97,12 @@ if (isset($_GET['id'])){
                                                 <div class="form-group">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-4">
-                                                        Email: <span class="text-danger" title="Informe seu E-mail Institucional do domínio ac.gov.br">*</span>
+                                                        E-mail: <span class="text-danger" title="Informe seu E-mail Institucional do domínio ac.gov.br">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" placeholder="Informe seu E-mail Institucional do domínio ac.gov.br" required="true">
+                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" placeholder="E-mail Institucional" required="true">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -454,7 +454,7 @@ if (isset($_GET['id'])){
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                            <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-1">

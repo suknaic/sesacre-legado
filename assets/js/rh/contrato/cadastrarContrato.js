@@ -819,7 +819,7 @@ $(document).ready(function () {
             //******************************************************************
             var DadosObrigatorio = {
                 //**************1-12***********************
-                "Email": DadosPessoa.email,
+                "E-mail": DadosPessoa.email,
                 "Nome Civil": DadosPessoaFisica.nomeCivil,
                 "Sexo": DadosPessoaFisica.tpSexo,
                 "Data de Nascimento": DadosPessoaFisica.dtNascimento,
@@ -851,11 +851,11 @@ $(document).ready(function () {
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
                     if ($i <= 12) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>(" + index + ")</strong>");
                     } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>("+ index + ")</strong>");
                     } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>(" + index + ")</strong>");
                     }
                     $campo = 1;
                     return false;

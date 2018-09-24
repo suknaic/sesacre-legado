@@ -68,6 +68,15 @@ switch ($_REQUEST['acao']) {
             $todos = $dados['todos'];
             $dataInicio = $dados['dt_inicio'];
             $dataFim = $dados['dt_fim'];
+            if (strtotime(Metodos::ConverteDataING($dataInicio)) > strtotime(date('Y-m-d')) && strtotime(Metodos::ConverteDataING($dataFim)) > strtotime(date('Y-m-d'))) {
+                echo 'menor';
+                return;
+                break;
+            } else {
+                echo 'invalida';
+                return;
+                break;
+            }
             //**************************************
             $banco = new Contrato();
             echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 1, 0, 0);

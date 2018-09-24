@@ -71,11 +71,11 @@ $(document).ready(function () {
         } else {
             if (dataIni == "" && dataFim == "") {
                 //alert("É necessário informar no mínimo um filtro para imprimir");
-                func.modalAlert(" É necessário informar as Datas de Inicio e Final");
+                func.modalAlert(func.msgPreencherCampos + '<strong>(Data Início)</strong>');
                 return false;
             }
             if (dataIni.length == 10 && dataFim.length == 0) {
-                func.modalAlert(" Ao informar a Data Inicio é preciso também informar a Data Fim");
+                func.modalAlert(func.msgPreencherCampos + '<strong>(Data Fim)</strong>');
                 return false;
             }
             //********data fim tem de ser inferior a data inicio**********************
@@ -88,12 +88,12 @@ $(document).ready(function () {
                     var dataInicial = new Date(x);
                     var dataFinal = new Date(y);
                     if (dataInicial > dataFinal) {
-                        func.modalAlert(" A data de Inicio não pode ser maior que a data Fim");
+                        func.modalAlert("A Data Início Não Pode Ser Maior que a Data Fim.");
                         return false;
                     }
                     title = "Funcionários da SESACRE com Data de Admissão de: " + data1 + " até " + data2;
                 } else {
-                    func.modalAlert(" Ao informar a Data Fim é preciso também informar a Data Inicio");
+                    func.modalAlert("Ao informar a Data Fim é preciso também informar a Data Inicio.");
                     return false;
                 }
             }
@@ -114,18 +114,33 @@ $(document).ready(function () {
                 dados: Dados
             },
             "success": function (response) {
-                //console.log(response);
+                // console.log(response);
                 try {
                     response = JSON.parse(response);
+                    erro = false;
                 } catch (e) {
-                    console.log(response);
-                    return false;
+                    if (response === 'menor') {
+                        erro = true;
+                    } else if (response === 'invalida'){
+                        console.log(response);
+                        func.modalAlert('Data Início ou Data Fim São Inválidas.');
+                        return false;
+                    }else {
+                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    }
                 }
-                //console.log(response);
-                graficoVinculoHig(title, response)
-                $(".panelVinculo").show();
-                $(".panelLotacao").hide();
-                $(".panelFuncionario").hide();
+
+                if (erro == true) {
+                    func.modalAlert('Data Início ou Data Fim São Maior(es) que a Data Atual.');
+                    return false;
+                } else {
+                    graficoVinculoHig(title, response);
+                    $(".panelVinculo").show();
+                    $(".panelLotacao").hide();
+                    $(".panelFuncionario").hide();
+                }
             }
         });
     });
