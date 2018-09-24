@@ -738,11 +738,11 @@ class Lotacao {
                                                 <i class='ion-close-round fa-lg text-danger' aria-hidden='true'></i>                                
                                             </button>";
                     }
-                    $retorno.=          "   <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
-                                                <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>                                
-                                            </button>
-                                        </td>
-                                </tr>";
+//                    $retorno.=          "   <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' nome='" . $v['nm_lotacao'] . "' value='" . $idlotacao . "' >
+//                                                <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+//                                            </button>
+//                                        </td>
+//                                </tr>";
                 }
             }
 
