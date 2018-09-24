@@ -73,7 +73,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-    case 'removerLotacao':
+    case 'desativarLotacao':
         try {
 
             if (!$session->vPRh()) {
@@ -111,6 +111,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnLotacaoEditar':
         try {
             //fazendo

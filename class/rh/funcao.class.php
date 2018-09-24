@@ -183,7 +183,7 @@ class Funcao {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a um Funcionário.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão desta Função. Este registro está Vinculado a um Funcionário.");
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

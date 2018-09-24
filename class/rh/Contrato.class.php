@@ -749,7 +749,7 @@ class Contrato {
 //***************************************************************
             $filter = array();
             if (!empty($nome)) {
-                $filter[] = "P.nm_pessoa ilike '%$nome%'";
+                $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
             }
             if (!empty($cpf)) {
                 $filter[] = "PF.nr_cpf ilike '%$cpf%'";
@@ -794,7 +794,7 @@ class Contrato {
                                         <td style='text-align: center;'>                           
                                             <button type='button' class='btn btn-default btn-registrar btn-xs'                               
                                               title='Registrar' nome='" . $v['nm_pessoa'] . "' value='" . $idContrato . "/" . $idPessoaFisica . "' >
-                                               <i class='fa fa-search fa-lg text-primary' aria-hidden='true'></i>                                
+                                               <i class='fa fa-search-plus fa-lg text-info' aria-hidden='true'></i>                                
                                             </button> 
                                         </td>
                                  </tr>";
@@ -1416,7 +1416,7 @@ class Contrato {
             } else {
                 $tipo = $result[0]['tp_situacao'];
                 $retorno .= "<optgroup label='" . ($result[0]['tp_situacao'] == 'A' ? 'AFASTAMENTOS' : "") . "'>";
-                print_r($id);
+//                print_r($id);
                 foreach ($result as $v) {
                     if ($id == $v['id_contrato_situacao']) {
                         if ($tipo == $v['tp_situacao']) {

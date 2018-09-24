@@ -170,6 +170,7 @@ $(document).ready(function () {
         if ($idPais == 0) {
             return;
         }
+        $("#id_cidade").val('0');
         listaEstadoCombo($idPais,0);
     });
     //******************************************************************************************
@@ -179,6 +180,7 @@ $(document).ready(function () {
         if ($idEstado == 0) {
             return;
         }
+        $("#id_cidade").val('0');
         listaCidadeCombo($idEstado,0);
     });
 //******************************************************************************************
@@ -312,11 +314,7 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    if ($i <= 5) {
-                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "</strong>)");
-                    } else if ($i >= 6 && $i <= 8) {
-                        func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "<strong>)");
-                    }
+                    func.modalAlert(func.msgPreencherCampos + " (<strong>" + index + "</strong>)");
                     $campo = 1;
                     return false;
                 }
