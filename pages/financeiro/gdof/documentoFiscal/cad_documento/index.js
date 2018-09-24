@@ -256,7 +256,6 @@ $(document).ready(function () {
             ordens.push($(this).data('id'));
         });
         
-        console.log(ordens);
         
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",

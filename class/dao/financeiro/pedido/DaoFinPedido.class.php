@@ -422,9 +422,9 @@ class DaoFinPedido extends FinPedidoTb {
     public function retornaPedidoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
+                $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
                         programa.cd_programa_trabalho, programa.ds_programa_trabalho,
-                        despesa.cd_despesa, despesa.ds_despesa,
+                        despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,
                         p.vl_pedido
                         from fin_pedido as p
                         inner join fin_fonte as f
@@ -433,6 +433,8 @@ class DaoFinPedido extends FinPedidoTb {
                         on programa.id_programa_trabalho = p.id_programa_trabalho
                         inner join view_despesa as despesa
                         on despesa.id_despesa = p.id_despesa
+                        left join fin_tipo_solicitacao as tpSol
+                        on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
                         where p.nr_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_INT);

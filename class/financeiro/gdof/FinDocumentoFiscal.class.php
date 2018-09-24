@@ -688,13 +688,14 @@ class FinDocumentoFiscal {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi informado o valor para a entrega, "
                                     . "o valor lançado para as entregas devem ser maior que 0.");
                 }
+                
+                $finEntregaDocumento->setIdEntregaDocumento($linha['id_entrega_documento']);
+                $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
+                $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
+                $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
 
                 //ENTREGAS QUE SERÃO INSERIDAS
                 if (in_array($linha['id_entrega_confirmacao'], $arrayInsert)) {
-
-                    $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
-                    $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
-                    $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
 
                     $finEntregaDocumento->retornaSaldoEntregaAtualizacao($pdo);
 
@@ -714,14 +715,9 @@ class FinDocumentoFiscal {
                     }
                 }
 
-
                 //ENTREGAS QUE SERÃO ATUALIZADAS
                 if (in_array($linha['id_entrega_confirmacao'], $arrayUpdate)) {
-                    $finEntregaDocumento->setIdEntregaDocumento($linha['id_entrega_documento']);
-                    $finEntregaDocumento->setIdEntregaConfirmacao($linha['id_entrega_confirmacao']);
-                    $finEntregaDocumento->setVlEntregaDocumento($linha['vl_entrega_documento']);
-                    $finEntregaDocumento->setVlEntregaSaldo($linha['vl_entrega_saldo']);
-
+                    
                     $finEntregaDocumento->retornaSaldoEntregaAtualizacao($pdo);
 
                     if (!$finEntregaDocumento->getSucesso()) {

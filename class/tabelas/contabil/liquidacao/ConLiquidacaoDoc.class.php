@@ -4,8 +4,28 @@ class ConLiquidacaoDoc {
 
     private $id_liquidacao_doc = null;
     private $id_liquidacao = null;
-    private $id_documento_fiscal = null;    
+    private $id_documento_fiscal = null; 
+    private $vl_liquidacao_doc = null;
+    private $vl_liquidacao_doc_saldo = null;
+    
+    function getVlLiquidacaoDoc() {
+        return $this->vl_liquidacao_doc;
+    }
 
+    function getVlLiquidacaoDocSaldo() {
+        return $this->vl_liquidacao_doc_saldo;
+    }
+
+    function setVlLiquidacaoDoc($vl_liquidacao_doc) {
+        $this->vl_liquidacao_doc = $vl_liquidacao_doc;
+        return $this;
+    }
+
+    function setVlLiquidacaoDocSaldo($vl_liquidacao_doc_saldo) {
+        $this->vl_liquidacao_doc_saldo = $vl_liquidacao_doc_saldo;
+        return $this;
+    }
+    
     /**
      * Get the value of Id Liquidacao Doc
      *

@@ -25,7 +25,9 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-
+    
+    $('.docFis').hide();
+    
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
@@ -101,6 +103,8 @@ $(document).ready(function () {
             "success": function (response) {
                 $(".pedido").html("");
                 $(".pedido").append(response);
+                
+                habilitaDocumentosFiscais();
             }
         });
         /**
@@ -213,9 +217,23 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
-                documentos.push($(this).data("id"));
-            });
+                var linha = $(this).data('objeto');
+                
+                
+                var vl_documento_liquidacao = linha.vl_doc_sem_mascara;
+                
+                var vl_documento_liquidacao_saldo = linha.vl_doc_sem_mascara;
+                
+                var documento = {
+                    id_documento_fiscal: linha.id_documento_fiscal,
+                    vl_liquidacao_doc: vl_documento_liquidacao_saldo,
+                    vl_liquidacao_doc_saldo: vl_documento_liquidacao
+                }
+                documentos.push(documento);
 
+
+            });
+                        
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
@@ -230,6 +248,11 @@ $(document).ready(function () {
             if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
                     || dados.dtLiquidacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
+                return false;
+            }
+            
+            if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
+                func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
                 return false;
             }
 
@@ -309,4 +332,16 @@ function valorComMascara(valor) {
     valorStr = valorStr.split('.');
     valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
     return valorStr.join(',');
+}
+
+function habilitaDocumentosFiscais(){
+    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
+    
+    if (tipo_solicitacao != 2 ) {
+        $('.docFis').hide();
+        $("#vl_liquidacao").prop("disabled",false);
+    } else {
+        $('.docFis').show();
+        $("#vl_liquidacao").prop("disabled",true);
+    }
 }

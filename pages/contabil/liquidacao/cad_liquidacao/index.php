@@ -142,7 +142,7 @@ require_once "index.load.php";
                                 <!--Form das entrega-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body ordem">
+                                        <div class="panel-body docFis">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
