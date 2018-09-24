@@ -258,6 +258,11 @@ class Liquidacao {
             
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho());
+            if ($this->getIdLiquidacao()) {
+                $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
+            } else {
+                $daoConLiquidacao->setIdLiquidacao(0);
+            }
             $daoConLiquidacao->retornaDocumentosPorEmpenho($pdo);
             
             if ($daoConLiquidacao->Sucesso()) {
@@ -279,7 +284,15 @@ class Liquidacao {
                 $daoConLiquidacao = new DaoConLiquidacao();
                 $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
                 
-                $filtroDocumentos = implode(', ', $this->getDocumentos());
+                $arrayAux = array();
+                
+                if ($this->getDocumentos()) {
+                    foreach ($this->getDocumentos() as $documento) {
+                        $arrayAux[] = $documento['id_documento_fiscal'];
+                    }
+                }
+                
+                $filtroDocumentos = implode(', ', $arrayAux);
                 
                 $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);
                 
@@ -373,9 +386,11 @@ class Liquidacao {
                     $liquidacaoDoc = new LiquidacaoDoc();
 
                     $liquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
-
+                    
                     foreach ($this->getDocumentos() as $documento) {
-                        $liquidacaoDoc->setIdDocumentoFiscal($documento);
+                        $liquidacaoDoc->setIdDocumentoFiscal($documento['id_documento_fiscal']);
+                        $liquidacaoDoc->setVlLiquidacaoDoc($documento['vl_liquidacao_doc']);
+                        $liquidacaoDoc->setVlLiquidacaoDocSaldo($documento['vl_liquidacao_doc_saldo']);
                         $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
 
                         if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
@@ -532,38 +547,56 @@ class Liquidacao {
                 
                 $arrayInsert = array();
                 $arrayRemove = array();
+                $arrayUpdate = array();
 
                 $arrayAux = array();
                 foreach ($documentosAntigos as $key => $value) {
                     $arrayAux[$value['id_liquidacao_doc']] = $value['id_documento_fiscal'];
                 }
-               
-
-                $arrayInsert = array_diff($this->getDocumentos(), $arrayAux);
-                $arrayRemove = array_diff($arrayAux, $this->getDocumentos());
                 
-                //DOCUMENTOS NOVOS QUE SERÃO INSERIDOS
-                if ($arrayInsert) {
-                    foreach ($arrayInsert as $indice => $documento) {
-                        
-                        $liquidacaoDoc->setIdDocumentoFiscal($documento);
-                        $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
+                $arrayAux2 = array();
+                foreach ($this->getDocumentos() as $key => $value) {
+                    $arrayAux2[] = $value['id_documento_fiscal'];
+                }
 
-                        if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
-                            $this->sucesso = false;
-                            $this->mensagens = $liquidacaoDoc->getMensagens();
-                            return false;
+                $arrayInsert = array_diff($arrayAux2, $arrayAux);
+                $arrayRemove = array_diff($arrayAux, $arrayAux2);
+                $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
+                
+//                echo '<pre>';
+//                print_r($arrayInsert);
+//                print_r($arrayUpdate);
+//                print_r($arrayRemove);
+//                echo '</pre>';
+//                return;
+                
+                if ($this->getDocumentos()) {
+                    
+                    foreach ($this->getDocumentos() as $documento) {
+                        $liquidacaoDoc->setIdDocumentoFiscal($documento['id_documento_fiscal']);
+                        $liquidacaoDoc->setVlLiquidacaoDoc($documento['vl_liquidacao_doc']);
+                        $liquidacaoDoc->setVlLiquidacaoDocSaldo($documento['vl_liquidacao_doc_saldo']);
+                        
+                        //DOCMENTOS QUE SERÃO INSERIDOS
+                        if (in_array($documento['id_documento_fiscal'], $arrayInsert)) {
+                            $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
+                        }
+                        
+                        //DOCUMENTOS QUE SERÃO ATUALIZADOS
+                        if (in_array($documento['id_documento_fiscal'], $arrayUpdate)) {
+                            $liquidacaoDoc->setIdLiquidacaoDoc($documento['id_liquidacao_doc']);
+                            $liquidacaoDoc->atualizarLiquidacaoDoc($pdo);
                         }
                     }
                 }
-                
+                                
                 //DOCUMENTOS QUE FORAM REMOVIDOS
                 if ($arrayRemove) {
                     foreach ($arrayRemove as $indice => $documento) {
                         $liquidacaoDoc->setIdDocumentoFiscal($documento);
                         $liquidacaoDoc->setIdLiquidacaoDoc($indice);
                         $liquidacaoDoc->removerLiquidacaoDoc($pdo);
-
+                       
                         if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
                             $this->sucesso = false;
                             $this->mensagens = $liquidacaoDoc->getMensagens();

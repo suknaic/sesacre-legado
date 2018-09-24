@@ -51,7 +51,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setNrPedido($dados["nr_pedido"]);
-            echo $pedido->retornaPedidoGdof(null, $dados);
+            echo $pedido->retornaPedidoGdof(null);
             return;
             break;
         } catch (Error $e) {

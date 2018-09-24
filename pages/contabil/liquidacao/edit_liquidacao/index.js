@@ -19,6 +19,10 @@ $(document).ready(function () {
         });
     });
     
+    $('.docFis').hide();
+    
+    habilitaDocumentosFiscais();
+    
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
@@ -62,11 +66,11 @@ $(document).ready(function () {
                              <td class="text-center">${documento.vl_documento}</td>
                              <td class="text-center">${documento.nm_situacao}</td>
                              <td class="text-center">
-                                <button type="button" class="text-primary ver-documento" title="Ver Documento Fiscal" value="${documento.id_documento_fiscal}">
-                                    <i class='fa fa-file-text-o' aria-hidden='true'></i>
+                                <button type="button" class="ver-documento" title="Ver Documento Fiscal" value="${documento.id_documento_fiscal}">
+                                    <i class='fa fa-file-text-o text-info' aria-hidden='true'></i>
                                 </button>
-                                <button type="button" class="text-danger remover-documento" title="Remover Documento Fiscal">
-                                    <i class='fa fa-trash' aria-hidden='true'></i>
+                                <button type="button" class="remover-documento" title="Remover Documento Fiscal">
+                                    <i class='fa fa-trash text-danger' aria-hidden='true'></i>
                                 </button>
                             </td>
                           </tr>`;
@@ -87,8 +91,24 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
-                documentos.push($(this).data("id"));
+                var linha = $(this).data('objeto');
+                
+                
+                var vl_documento_liquidacao = linha.vl_doc_sem_mascara;
+                
+                var vl_documento_liquidacao_saldo = linha.vl_doc_sem_mascara;
+                
+                var documento = {
+                    id_liquidacao_doc: linha.id_liquidacao_doc,
+                    id_documento_fiscal: linha.id_documento_fiscal,
+                    vl_liquidacao_doc: vl_documento_liquidacao_saldo,
+                    vl_liquidacao_doc_saldo: vl_documento_liquidacao
+                }
+                documentos.push(documento);
             });
+            
+//            console.log(documentos);
+//            return false;
 
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
@@ -99,6 +119,15 @@ $(document).ready(function () {
                 "docsLiquidacao": documentos
             }
             
+            if (!(dados.idLiquidacao || dados.nrLiquidacao || dados.vlLiquidacao || dados.dtLiquidacao )) {
+                func.modalAlert("Por favor preencha as informações obrigatórias.");
+                return false;
+            }
+            
+            if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
+                func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
+                return false;
+            }
 
             $.ajax({
                 "url": "request.php",
@@ -178,6 +207,14 @@ function valorComMascara(valor) {
     return valorStr.join(',');
 }
     
-
-
-
+function habilitaDocumentosFiscais(){
+    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
+    
+    if (tipo_solicitacao != 2 ) {
+        $('.docFis').hide();
+        $("#vl_liquidacao").prop("disabled",false);
+    } else {
+        $('.docFis').show();
+        $("#vl_liquidacao").prop("disabled",true);
+    }
+}

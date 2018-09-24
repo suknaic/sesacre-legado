@@ -67,9 +67,9 @@ class DaoSesVinculo extends SesVinculo{
         
         $retorno = FALSE;                    
         
-        $sql = " SELECT id_vinculo, nm_vinculo, st_ativo"                                        
-                . " FROM ses_vinculo"
-                . " ORDER BY nm_vinculo";                
+        $sql = " SELECT id_vinculo, nm_vinculo, st_ativo                                         
+                    FROM ses_vinculo
+                        ORDER BY nm_vinculo";
         try {
             $sth = $pdo->prepare($sql);                                  
             $sth->execute();                      
@@ -122,14 +122,15 @@ class DaoSesVinculo extends SesVinculo{
         $retorno = false;                    
         $semVinculo = "";
         if($vinculo->getIdVinculo() != NULL || $vinculo->getIdVinculo() != ""){
-            $semGrupo = " AND id_vinculo <> :idVinculo";
-        }        
+            $semVinculo = " AND id_vinculo <> :idVinculo";
+        }
+
         $sql = " SELECT "
                 . " id_vinculo, nm_vinculo"
                 . " FROM ses_vinculo"
                 . " WHERE nm_vinculo = :nmVinculo"
                 . $semVinculo
-                . "";       
+                . "";
         try {
             $sth = $pdo->prepare($sql);                      
             $sth->bindValue(":nmVinculo", $vinculo->getNmVinculo(), PDO::PARAM_STR);

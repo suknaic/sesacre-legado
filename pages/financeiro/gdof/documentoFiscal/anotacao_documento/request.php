@@ -1,5 +1,6 @@
 <?php
 
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscalAnotacao.class.php";
 
