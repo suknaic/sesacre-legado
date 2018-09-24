@@ -56,7 +56,7 @@ class DaoSesEscolaridade extends SesEscolaridade {
         try {
             $result = $pdo->prepare("UPDATE ses_escolaridade SET st_ativo = '1' 
                                         WHERE id_escolaridade = :idEscolaridade ");
-            $result->bindValue(":idEscolaridade", $esc->getIdEscolaridade(), PDO::PARAM_INT);
+            $result->bindValue(":idEscolaridade", $this->getIdEscolaridade(), PDO::PARAM_INT);
             $result->execute();
             return TRUE;
         } catch (PDOException $e) {

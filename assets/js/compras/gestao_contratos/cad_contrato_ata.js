@@ -56,22 +56,42 @@ $(document).ready(function() {
             var $this = $(this);
             var itens = [];
            // $this.prop("disabled", true);
-           $(".itens").each(function () {
-            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0 ) {
-                if ($(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
-                    itens.push({'qtd': $(this).find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
-                        'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
+            // ** Verifica se os campos Quantidade && Vlr. Unitário estão vazios **
+            vazio = false;
+            $(".itens").each(function () {
+                if ($(this).find(".qtd").val() === '' || $(this).find(".vl").val() === '') {
+                    vazio = true;
                 }
+            });
+            if (vazio == true) {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
             }
+            // *********************************************************************
+            $(".itens").each(function () {
+                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
+                    if ($(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
+                          itens.push({
+                               'qtd': $(this).find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
+                               'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")
+                          });
+                    }
+                }
 
-            if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1 ) {
-                if ($(this).find(".vl").val() != '0,00' && $(this).find(".vl").val() != '' &&
-                    $(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
-                    itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idItem': $(this).find(".vl").attr("itemId"),
-                        'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
+                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
+                    if ($(this).find(".vl").val() != '0,00' && $(this).find(".vl").val() != '' &&
+                        $(this).find(".qtd").val() != '0,00' && $(this).find(".qtd").val() != '') {
+                            itens.push({
+                                'qtd': $(this).find(".qtd").val(),
+                                'vl': $(this).find(".vl").val(),
+                                'idItem': $(this).find(".vl").attr("itemId"),
+                                'id': $("body").find("#id").val(),
+                                'tp': $(this).find(".qtd").attr("tp")
+                            });
+                    }
                 }
-            }
-        });
+            });
            var enc = JSON.stringify(itens);
 
            $.ajax({
@@ -83,7 +103,6 @@ $(document).ready(function() {
                 "itens": enc
             },
             "success": function (response) {
-                console.log(response);
                 $this.prop("disabled", false);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);

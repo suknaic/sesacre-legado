@@ -375,12 +375,12 @@ where orItens.id_ordem = :ordem";
     }
 
     public function retornaDadosOptionGdof(PDO $pdo, $idOrdens
-    , string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado) {
+    /*, string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado*/) {
         try {
-            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
-            if (!empty($idDocumentoFiscal)) {
-                $sqlDocumentoFiscal = $sqlDocumentoExiste;
-            }
+//            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
+//            if (!empty($idDocumentoFiscal)) {
+//                $sqlDocumentoFiscal = $sqlDocumentoExiste;
+//            }
             
             $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 

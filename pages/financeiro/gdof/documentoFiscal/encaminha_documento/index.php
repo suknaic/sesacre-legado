@@ -77,6 +77,16 @@ require_once "index.load.php";
                                         </select>
                                     </div>
                                 </div>
+                                
+                                <div class="form-group"> 
+                                    <label for="encaminhar_motivo">Motivo:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <p class="fa fa-list inputPFa"></p> 
+                                        </span>
+                                        <textarea id="encaminhar_motivo" class="form-control"></textarea>
+                                    </div>
+                                </div>'
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" id="fecharErro" data-dismiss="modal">Fechar</button>

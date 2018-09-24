@@ -97,7 +97,6 @@ class Vinculo {
             $vinculo->setNmVinculo($this->nmVinculo);
 
             $busca = $vinculo->buscaVinculoPorNome($vinculo, $pdo);
-
             if (!$busca) {
                 //return $retorno;            
             } else {
@@ -138,8 +137,6 @@ class Vinculo {
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -177,7 +174,7 @@ class Vinculo {
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", 'Não é Possível Excluir o Registro, o Mesmo Está Associado a Outro Resgistro.');
+                return Metodos::retornoAjax("Erro", "alert", 'O Vínculo Não Pode ser Removido pois está vinculado a um Funcionário.');
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -311,10 +308,12 @@ class Vinculo {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    if ($v['id_vinculo'] == $id) {
-                        $retorno .= "<option selected value = '" . $v['id_vinculo'] . "'>" . $v['nm_vinculo'] . "</option>";
-                    } else {
-                        $retorno .= "<option value = '" . $v['id_vinculo'] . "'>" . $v['nm_vinculo'] . "</option>";
+                    if ($v['st_ativo'] == '1') {
+                        if ($v['id_vinculo'] == $id) {
+                            $retorno .= "<option selected value = '" . $v['id_vinculo'] . "'>" . $v['nm_vinculo'] . "</option>";
+                        } else {
+                            $retorno .= "<option value = '" . $v['id_vinculo'] . "'>" . $v['nm_vinculo'] . "</option>";
+                        }
                     }
                 }
             }

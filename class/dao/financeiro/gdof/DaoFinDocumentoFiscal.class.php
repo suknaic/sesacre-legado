@@ -161,7 +161,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaIfPedidoPorIdDocumento(PDO $pdo) {
         try {
-            $sql = "select DISTINCT (p.nr_pedido), p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
+            $sql = "select DISTINCT (p.nr_pedido),p.id_pedido, p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
                     p.vl_pedido, desp.cd_despesa, desp.ds_despesa
@@ -705,7 +705,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     left join fin_doc_vinc_encaminhamento as encaminhamento
                     on encaminhamento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
-                    where tramitacao.fl_pesquisa = '0' and encaminhamento.id_pessoa = :pessoa and tpTramitacao.id_tipo_tramitacao = 2  and encaminhamento.id_doc_lotacao is not null  " . $filtroSql;
+                    where tramitacao.fl_pesquisa = '0' and encaminhamento.id_pessoa = :pessoa and tpTramitacao.id_tipo_tramitacao = 2  and encaminhamento.id_doc_lotacao is not null " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
             $stmt->execute();
@@ -822,6 +822,9 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     where tramitacao.fl_pesquisa = '0' and tpTramitacao.id_tipo_tramitacao = 4 and recebimento.id_pessoa = :pessoa and recebimento.id_doc_lotacao is not null  " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+//            echo '<pre>';
+//            print_r($sql);
+//            echo '</pre>';
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -166,7 +166,7 @@ class Escolaridade {
         try {
 
             if (empty($this->idEscolaridade)) {
-                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
             $conexao = new Conexao();
@@ -269,7 +269,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-
             $resultDao = $esc->ativar($pdo);
             if ($resultDao === TRUE) {
                 $pdo->commit();
@@ -278,8 +277,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -362,10 +359,12 @@ class Escolaridade {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    if ($v['id_escolaridade'] == $id) {
-                        $retorno .= "<option selected value = '" . $v['id_escolaridade'] . "'>" . $v['nm_escolaridade'] . "</option>";
-                    } else {
-                        $retorno .= "<option value = '" . $v['id_escolaridade'] . "'>" . $v['nm_escolaridade'] . "</option>";
+                    if ($v['st_ativo'] == '1') {
+                        if ($v['id_escolaridade'] == $id) {
+                            $retorno .= "<option selected value = '" . $v['id_escolaridade'] . "'>" . $v['nm_escolaridade'] . "</option>";
+                        } else {
+                            $retorno .= "<option value = '" . $v['id_escolaridade'] . "'>" . $v['nm_escolaridade'] . "</option>";
+                        }
                     }
                 }
             }

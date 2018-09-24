@@ -9,7 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConf
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinEntregaDocumento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocVincRecebimento.class.php";
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscalAnotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocTramitacao.class.php";
 
 $session = new Session('ajax');
@@ -157,9 +157,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarDocumentoFiscal':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            $entrega = filter_input(INPUT_POST, 'entrega', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            $valoresRetEntregas = filter_input(INPUT_POST, 'valoresRetEntregas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
+            
             $finDocumentoFiscal = new FinDocumentoFiscal();
             $finDocumentoFiscal->setNrProcessoAdministrativo($dados["processoAdm"]);
             $finDocumentoFiscal->setNrDocumentoFiscal($dados["nr_documento"]);
@@ -175,6 +173,7 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setIdLotacao($dados["id_lotacao"]);
             $finDocumentoFiscal->setIdDocOrigem($dados["destinatario"]);
             $finDocumentoFiscal->setIdPessoa($session->getIdUser());
+            $finDocumentoFiscal->setAnotacoes($dados["anotacoes"]);
             echo $finDocumentoFiscal->salvaDocumentoFiscal();
             return;
             break;

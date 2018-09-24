@@ -75,7 +75,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                             <div class="form-group">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-5">
-                                                    Categoria: <span class="text-danger"> * </span><i class="fa fa-question-circle" title="Informar o que a Lotação é."></i>
+                                                    Categoria: <span class="text-danger"> * </span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
@@ -110,7 +110,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    E-mail: <span class="text-danger"></span><i class="fa fa-question-circle" title="Informe o email da Lotação"></i>
+                                                    E-mail: <span class="text-danger"></span><i class="fa fa-question-circle" title=" Informe o E-mail da Lotação."></i>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -275,7 +275,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="id_cidade" class="form-control idCidade">
-                                                            <option value="0">Selecione Cidade</option>                                                                
+                                                            <option value="0" selected>Selecione Cidade</option>
                                                             <?php
                                                             // echo $lotacoes;
                                                             ?>
@@ -299,7 +299,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                     <div class="col-md-2">
                                                         <div class="checkbox checkbox-info checkbox-circle"><br>
                                                             <input id="checkbox8" type="checkbox" class="st_principal">
-                                                            <label for="checkbox8"> É Principal <i class="fa fa-question-circle" title="Selecione caso este seja o Telefone Principal da Lotação"></i></label>
+                                                            <label for="checkbox8"> É Principal <i class="fa fa-question-circle" title="Selecione caso este seja o Telefone Principal da Lotação."></i></label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">

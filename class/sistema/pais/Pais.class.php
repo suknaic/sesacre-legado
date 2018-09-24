@@ -49,7 +49,7 @@ class Pais {
             //echo $aux;
             $pais->setNmPais($this->nmPais);
 
-            if (strlen($this->nmSigla) != 3) {
+            if (strlen($this->nmSigla) != 2) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
                 $pais->setNmsigla(strtoupper($this->nmSigla));
@@ -112,7 +112,7 @@ class Pais {
 
             $pais->setIdPais($this->idPais);
             $pais->setNmPais($this->nmPais);
-            if (strlen($this->nmSigla) != 3) {
+            if (strlen($this->nmSigla) != 2) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
                 $pais->setNmsigla(strtoupper($this->nmSigla));

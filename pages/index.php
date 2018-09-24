@@ -312,19 +312,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                                 </div>                                                                                                                          
                             </div>
                         </div>
-
-                    </div>
+                </div>
                     <!--===================================================-->
                     <!--End page content-->
-                </div>
+            </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
 
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
-            </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->

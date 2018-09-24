@@ -206,7 +206,7 @@ class FinEntregaItensModel {
             $finEntregaConfirmacaoModel->verificaEntregaVinculadaAoGDOF($pdo);
             if ($finEntregaConfirmacaoModel->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", "Esta entrega está vinculada a um documento fiscal ativo. ");
+                return Metodos::retornoAjax("Erro", "alert", "Esta entrega está vinculada a um documento fiscal ativo. ");
             }
             
             $finEntregaConfirmacaoModel->setSitEntrega(1);
