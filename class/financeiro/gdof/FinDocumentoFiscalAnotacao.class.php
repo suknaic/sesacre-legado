@@ -144,8 +144,6 @@ class FinDocumentoFiscalAnotacao {
                 foreach ($daoFinDocumentoFiscalAnotacao->getMsgRetorno() as $linha){
                     $retorno .= $linha['dh_documento_fiscal_anotacao'] ." - ". $linha['nm_pessoa'] .": ".$linha['ds_documento_fiscal_anotacao']. "\n";
                 }
-            }else{
-                $retorno = $daoFinPedidoAnotacao->getMsgRetorno();
             }
 
             return Metodos::retornoAjax("ok", "html", $retorno);
