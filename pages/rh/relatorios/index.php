@@ -104,7 +104,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                             <div class="quebres" style="display:none">
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-5">
                                                         Vínculo:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -118,7 +118,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         Lotação:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -177,7 +177,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
 
                                                     </div>
                                                     <div class="col-md-3">
-                                                        Data de Inicio:
+                                                        Data de Início:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-calendar inputPFa"></p>
