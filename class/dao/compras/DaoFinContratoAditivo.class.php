@@ -217,7 +217,7 @@ class DaoFinContratoAditivo extends FinContratoAditivoTb {
     public function todosItensComExecutado($pdo = null) {
         if ($pdo != null) {
             try {
-                $sql = "SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens, CI.vl_itens AS qt_itens_aux"
+                $sql = "SELECT C.id_contrato, CI.id_cont_itens, CI.qt_itens, CI.vl_itens, CI.qt_itens AS qt_itens_aux"
                         . " , CI.id_cont_itens_aditivo"
                         . " , NULL AS id_contrato_motivo, NULL AS id_contrato_finalidade"
                         . " , NULL AS id_contrato_instrumento, NULL AS id_contrato_base_calculo"
