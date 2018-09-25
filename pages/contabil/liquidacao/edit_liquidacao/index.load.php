@@ -28,9 +28,18 @@ $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 //OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
-$optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
+$tem_documentos = false;
+$optionsDocumentosFiscais = null;
+$tabelaDocumentosFiscais = null;
+$desabilita_campo_valor = "";
 
-$tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();
+if ($dadosLiquidacao['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+    $tem_documentos = true;
+    $desabilita_campo_valor = "disabled";
+    $optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
+    $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();    
+}
+
 
 $historico = $liquidacao->retornaHistorico();
 

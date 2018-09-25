@@ -30,8 +30,14 @@ $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
 $historico = $liquidacao->retornaHistorico();
 
-$edita = false;
-$tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao($edita);
+
+$tabelaDocumentosFiscais = null;
+$tem_documentos = false;
+if ($dadosLiquidacao['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+    $tem_documentos = true;
+    $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao(false);
+}
+
 
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);
