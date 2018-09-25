@@ -302,6 +302,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.nr_liquidacao,
                     liq.id_lotacao,
                     liq.id_doc_tipo_lotacao,
+                    ped.id_tipo_solicitacao,
                     trim(liq.ds_liquidacao) as ds_liquidacao,
                     to_char(liq.dt_liquidacao, 'dd/mm/yyyy') as dt_liquidacao,
                     trim(to_char(liq.vl_liquidacao, '999G999G999D0999')) as vl_liquidacao,

@@ -85,37 +85,39 @@ require_once "index.load.php";
                                     </div>
                                 </div>
 
-                                <!--Form das entrega-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body docFis">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
-                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th class="text-center">Nº Documento Fiscal</th>
-                                                                            <th class="text-center">Tipo Documento Fiscal</th>
-                                                                            <th class="text-center">Competência</th>
-                                                                            <th class="text-center">Data Emissão</th>
-                                                                            <th class="text-center">Data Atesto</th>
-                                                                            <th class="text-center">Valor Total</th>
-                                                                            <th class="text-center">Saldo</th>
-                                                                            <th class="text-center">Situação</th>
-                                                                            <th class="text-center">Ações</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php echo $tabelaDocumentosFiscais; ?>
-                                                                    </tbody>
+                                <?php if($tem_documentos) {?>
+                                    <!--Form das entrega-->
+                                    <div class="form-group">
+                                        <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                            <div class="panel-body docFis">
+                                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingTwo">
+                                                            <h4 class="panel-title">Dados do Documento Fiscal</h4>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="text-center">Nº Documento Fiscal</th>
+                                                                                <th class="text-center">Tipo Documento Fiscal</th>
+                                                                                <th class="text-center">Competência</th>
+                                                                                <th class="text-center">Data Emissão</th>
+                                                                                <th class="text-center">Data Atesto</th>
+                                                                                <th class="text-center">Valor Total</th>
+                                                                                <th class="text-center">Saldo</th>
+                                                                                <th class="text-center">Situação</th>
+                                                                                <th class="text-center">Ações</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <?php echo $tabelaDocumentosFiscais; ?>
+                                                                        </tbody>
 
-                                                                </table>
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +125,7 @@ require_once "index.load.php";
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php } ?>
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
