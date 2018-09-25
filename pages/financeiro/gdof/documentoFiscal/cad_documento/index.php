@@ -106,9 +106,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <div id="page-content">
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
-                                <!--                                <div class="panel-heading">
-                                                                    <h3 class="panel-title">Informações do documento fiscal</h3>
-                                                                </div>-->
+
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
@@ -419,10 +417,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
 
-                                <?php
-                                //Modal anotacoes
-                                require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/anotacao.html";
-                                ?>
+                                <div class="form-group">
+                                    <div  class="col-sm-12" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações
+                                                        </h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="7" id="anotacoes"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">

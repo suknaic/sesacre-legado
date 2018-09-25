@@ -22,6 +22,8 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+  
+    $('[data-toggle="popover"]').popover();
 
     $.ajax({
         "url": "/model/financeiro/ordem/entrega/requesEntregaItens.php",

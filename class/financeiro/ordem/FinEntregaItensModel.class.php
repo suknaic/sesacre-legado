@@ -228,7 +228,6 @@ class FinEntregaItensModel {
                 
                 //Para o Documento fiscal não perder o vinculo com a entrega
                 //não poderã excluir o registro da entrega_confirmacao, apenas mudará a situação da entrega
-//                $finEntregaConfirmacaoModel->excluirEntrega($pdo);
                 $finEntregaConfirmacaoModel->setSitEntrega(0);
                 $finEntregaConfirmacaoModel->atualizaSituacaoEntrega($pdo);
 

@@ -1,6 +1,6 @@
 <?php
 
-class FinDocumentoFiscalAnotacao {
+class FinDocumentoFiscalAnotacaoTb {
     private $id_documento_fiscal_anotacao = null;
     private $id_pessoa = null;
     private $id_documento_fiscal = null;

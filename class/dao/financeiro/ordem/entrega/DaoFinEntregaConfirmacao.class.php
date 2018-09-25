@@ -344,7 +344,7 @@ where orItens.id_ordem = :ordem";
     
     public function verificarUltimaEntrega(PDO $pdo) {
         try {
-            $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo";
+            $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo and sit_entrega > '0'";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
             $stmt->execute();

@@ -241,16 +241,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel ">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div class="col-md-2">
+
+                                                <div class="col-md-3" style="display:inline-block;">
                                                     <button class="btn btn-danger btn-rounded btn-finaliza-supresao" type="button">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Supressão do Ordenado
                                                     </button>
+                                                    <button type="button" class="btn btn-info btn-rounded" id="pop-finaliza-supresao" data-container="body" 
+                                                            data-toggle="popover" data-placement="top" 
+                                                            data-content="Quando o Fornecedor não cumpre toda(s) a(s) requição(ões) que lhe foi(ram) solicitada(s).">
+                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    </button>
+
                                                 </div>
-                                                <div class="col-md-1"></div>
-                                                <div class="col-md-2">
-                                                    <button class="btn btn-danger btn-rounded btn-finaliza-descumprimento" type="button">
+
+
+                                                <div class="col-md-4" style="display:inline-block;">
+                                                    <button class="btn btn-danger btn-rounded" type="button">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Descumprimento do Ordenado pelo Fornecedor
                                                     </button>
+                                                    <button type="button" class="btn btn-info btn-rounded" id="pop-finaliza-supresao" data-container="body" 
+                                                            data-toggle="popover" data-placement="top" 
+                                                            data-content="Quando a Central de Demanda ordena o quantitativo com base no estimado para o mês, 
+                                                            mas a(s) requisição(ões) não ocorre(em) na totalidade da Ordem">
+                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    </button>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
