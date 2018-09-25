@@ -325,14 +325,6 @@ class FinEmpenhoModel {
                 return Metodos::retornoAjax("Erro", "alert", "Empenho já foi cadastrado!");
             }
 
-//            $daoFinEmpenho->updateStPedidoEmpenho($pdo, '16');
-//
-//            if (!$daoFinEmpenho->sucesso()) {
-//                $pdo->rollBack();
-//                $sucesso = false;
-//                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar o status do pedido");
-//            }
-
             $daoFinEmpenho->insertEmpenho($pdo);
             $daoFinEmpenho->setIdEmpenho((is_numeric($pdo->lastInsertId('fin_empenho_id_empenho_seq'))) ? $pdo->lastInsertId('fin_empenho_id_empenho_seq') : null);
             if ($daoFinEmpenho->sucesso()) {
@@ -400,18 +392,18 @@ class FinEmpenhoModel {
                 $sucesso = false;
                 return Metodos::retornoAjax("Erro6", "alert", STR_ERROR);
             }
-            
+
             $classPedido = new Pedido();
             $classPedido->setIdPedido($this->id_pedido);
-            
-            if($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2){
+
+            if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
                 $classPedido->setStPedido(16);
                 $classPedido->atualizaTramitacaoPedido($pdo);
-            }else if($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2){
+            } else if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
                 $classPedido->setStPedido(21);
                 $classPedido->atualizaTramitacaoPedido($pdo);
             }
-            
+
             if ($sucesso) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", "Empenho cadastrado com sucesso");
@@ -452,7 +444,7 @@ class FinEmpenhoModel {
                                         
                                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
                                                 <div class="panel-body">
-                                                    <input id="id_empenho" type="hidden" value="'.$campos['id_empenho'].'" />
+                                                    <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
@@ -511,6 +503,23 @@ class FinEmpenhoModel {
      * Retorna os dados do empenho 
      */
     public function retornaDadosEmpenho($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                return $daoFinEmpenho->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function cancelaEmpenhoPorIdDoPedido() {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
