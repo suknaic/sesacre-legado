@@ -668,6 +668,7 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody class="corpoTabelaLotacao" id="corpoTabelaLotacao">
+                                                                                <input type="hidden" id="cont" value="">
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

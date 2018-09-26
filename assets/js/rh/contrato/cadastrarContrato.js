@@ -593,16 +593,23 @@ $(document).ready(function () {
             var lotacao = $("#id_lotacao option:selected").text();
             var funcao = $("#id_funcao option:selected").text();
             //********************************************************************************
+            var cont = null;
+            if ($("#cont").val() === ''){
+                cont = 0;
+            } else {
+                cont = $("#cont").val();
+            }
             var linha = "";
-            linha = "<tr class='warning lotacaoLinha'>\n\
+            linha = "<tr class='warning lotacaoLinha' id='"+cont+"'>\n\
                     <td class='text-center lotacao' idLotacao='" + lotacaoId + "'>" + lotacao + "</td>\n\
                     <td class='text-center funcao' idFuncao='" + funcaoId + "'>" + funcao + "</td>\n\
                     <td class='text-center cargaLotacao'ch='" + nr_carga_horaria2 + "'>" + nr_carga_horaria2 + "</td>\n\
                     <td class='text-center dataIni' dt_inicio='" + $("#dt_inicio").val() + "'>" + $("#dt_inicio").val() + "</td>\n\
                     <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
-                    <td class='text-center'><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button><button type='button' title='Editar' class='editarLinhaLotacao' value=''><i class='fa fa-edit text-primary'></i></button></td>\n\
+                    <td class='text-center buttons'><button type='button' title='Editar' class='editarLinhaLotacao' value='"+cont+"'><i class='fa fa-edit text-primary'></i></button><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
                  </tr>";
             $(linha).appendTo('.corpoTabelaLotacao');
+            $("#cont").val(++cont);
             $("#nr_carga_horaria2").val("");
             $("#dt_inicio").val("");
             $("#dt_fim").val("");
@@ -620,12 +627,28 @@ $(document).ready(function () {
 
     });
 //******************************************************************************************
+    $("body").on("click", ".editarLinhaLotacao", function (e) {
+        var linha = $(this).closest('td').find('.editarLinhaLotacao').attr("value");
+        $('#'+linha).each(function () {
+            coluna = $(this).attr('id');
+            $('#id_lotacao').val($(this).find('.lotacao').attr("idLotacao"));
+            $('#id_lotacao').select2({width:"100%"});
+            $('#id_funcao').val($(this).find('.funcao').attr("idFuncao"));
+            $('#id_funcao').select2({width:"100%"});
+            $('#nr_carga_horaria2').val($(this).find('.cargaLotacao').attr("ch"));
+            $('#dt_inicio').val($(this).find('.dataIni').attr("dt_inicio"));
+            $('#dt_fim').val($(this).find('.dataFim').attr("dt_fim"));
+            $('#'+ linha).remove();
+            return false;
+        });
+    });
+
     $("body").on("click", ".btn-add", function (e) {
         var pessoaFisica = $("#id_pessoa_fisica").val();
         var competencia = $("#id_competencia").val();
         var escolaridade = $("#id_escolaridade").val();
         if (competencia == 0) {
-            alert("Informe a Competência");
+            func.modalAlert("Informe a Competência");
             $("#id_competencia").focus();
             return;
         }
@@ -781,21 +804,6 @@ $(document).ready(function () {
                 escolaridade: $("#id_escolaridade").val()
             };
 
-            //***************** Data admissao tem de ser inferior a data demissao *************
-            if ($("#dt_demissao").val().length > 3) {
-                var data1 = $("#dt_admissao").val();
-                var data2 = $("#dt_demissao").val();
-                var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
-                var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
-                var dataIni = new Date(x);
-                var dataFim = new Date(y);
-                if (dataIni > dataFim) {
-                    func.modalAlert(" A data de Admissão não pode ser maior que a data de Demissão.");
-                    return;
-                }
-            }
-            //**********************************************************************************
-
             var DadosContrato = {
                 idContrato: idContrato,
                 nrMatricula: $("#nr_matricula").val(),
@@ -806,30 +814,6 @@ $(document).ready(function () {
                 pessoaJuridica: $("#id_pessoa_juridica").val(),
                 idCargo: $("#id_cargo").val()
             };
-
-            //******************************* Verifica se a data de admissão é maior que a data atual ******************************
-            var dataAtual3 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
-            var dataAdmissao = new Date(DadosContrato.dtAdmissao.split("/")[2].toString() + "/" + DadosContrato.dtAdmissao.split("/")[1].toString() + "/" + DadosContrato.dtAdmissao.split("/")[0].toString());
-
-            if (dataAdmissao > dataAtual3) {
-                func.modalAlert("Data de Admissão do Contrato Não Pode ser Maior que a Data Atual.");
-                return;
-            }
-            //***********************************************************************************************************************
-
-            if (DadosContrato.nrMatricula.indexOf('-') < 0) {
-                func.modalAlert('Corrigir o Campo de Matrícula. Está faltando o "<strong>-</strong>".');
-                return;
-            }
-
-            segue = false;
-            if ($("#nr_carga_horaria").val() == 20 || $("#nr_carga_horaria").val() == 24 || $("#nr_carga_horaria").val() == 30 || $("#nr_carga_horaria").val() == 40 || $("#nr_carga_horaria").val() == 44) {
-                segue = true;
-            }
-            if (segue === false) {
-                func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
-                return;
-            }
 
             var DadosContrato_Lotacao = [];
             if (idContrato == 0) {
@@ -905,6 +889,46 @@ $(document).ready(function () {
             if ($campo == 1) {
                 return false;
             }
+
+            //***************** Data admissao tem de ser inferior a data demissao *************
+            if ($("#dt_demissao").val().length > 3) {
+                var data1 = $("#dt_admissao").val();
+                var data2 = $("#dt_demissao").val();
+                var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
+                var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
+                var dataIni = new Date(x);
+                var dataFim = new Date(y);
+                if (dataIni > dataFim) {
+                    func.modalAlert(" A data de Admissão não pode ser maior que a data de Demissão.");
+                    return;
+                }
+            }
+            //**********************************************************************************
+
+            //******************************* Verifica se a data de admissão é maior que a data atual ******************************
+            var dataAtual3 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
+            var dataAdmissao = new Date(DadosContrato.dtAdmissao.val().split("/")[2].toString() + "/" + DadosContrato.dtAdmissao.split("/")[1].toString() + "/" + DadosContrato.dtAdmissao.split("/")[0].toString());
+
+            if (dataAdmissao > dataAtual3) {
+                func.modalAlert("Data de Admissão do Contrato Não Pode ser Maior que a Data Atual.");
+                return;
+            }
+            //***********************************************************************************************************************
+
+            if (DadosContrato.nrMatricula.indexOf('-') < 0) {
+                func.modalAlert('Corrigir o Campo de Matrícula. Está faltando o "<strong>-</strong>".');
+                return;
+            }
+
+            segue = false;
+            if ($("#nr_carga_horaria").val() == 20 || $("#nr_carga_horaria").val() == 24 || $("#nr_carga_horaria").val() == 30 || $("#nr_carga_horaria").val() == 40 || $("#nr_carga_horaria").val() == 44) {
+                segue = true;
+            }
+            if (segue === false) {
+                func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
+                return;
+            }
+
             //*************************************************************************************************
             if (x == 0) {
                 func.modalAlert(" Informar Lotação e Função");
