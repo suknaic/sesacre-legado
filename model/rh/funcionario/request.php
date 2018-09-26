@@ -170,7 +170,7 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica->setId_escolaridade_formacao_competencia($_REQUEST['competencia']);
             $pessoaFisica->setId_pessoa_fisica($_REQUEST['pessoaFisica']);
             echo $pessoaFisica->cadastrarCompetencia($pdo, $_REQUEST['escolaridade']);
-
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
