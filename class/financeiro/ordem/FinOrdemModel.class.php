@@ -673,12 +673,6 @@ class FinOrdemModel {
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->setSitOrdem('3');
             
-            //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
-            $daoFinOrdem->retornaEntregasOrdem($pdo);
-            if (!$daoFinOrdem->Sucesso()) {
-                return false;
-            }
-            
             $daoFinOrdem->atualizaSituacaoOrden($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;

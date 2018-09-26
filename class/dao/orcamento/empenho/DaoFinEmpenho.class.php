@@ -372,4 +372,27 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
 
+    public function deletaEmpenho(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "delete from fin_empenho where id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
 }

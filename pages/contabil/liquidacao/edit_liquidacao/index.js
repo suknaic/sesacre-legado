@@ -19,10 +19,6 @@ $(document).ready(function () {
         });
     });
     
-    $('.docFis').hide();
-    
-    habilitaDocumentosFiscais();
-    
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
@@ -53,8 +49,6 @@ $(document).ready(function () {
         });
         
         if (!erro) {
-            $("#vl_liquidacao").prop("disabled",true);
-            
             
             var linhaTabela = `<tr data-id=${documento.id_documento_fiscal} data-objeto='${JSON.stringify(documento)}' class="documentoFiscal">
                              <td class="text-center">${documento.nr_documento_fiscal}</td>
@@ -192,10 +186,6 @@ function atualizaValorLiquidacao(){
         vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
     });
     
-    if (vl_liquidacao == 0){
-        $("#vl_liquidacao").prop("disabled",false);
-    }
-    
     $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
 }
 
@@ -207,14 +197,3 @@ function valorComMascara(valor) {
     return valorStr.join(',');
 }
     
-function habilitaDocumentosFiscais(){
-    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
-    
-    if (tipo_solicitacao != 2 ) {
-        $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled",false);
-    } else {
-        $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled",true);
-    }
-}
