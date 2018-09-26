@@ -907,7 +907,7 @@ $(document).ready(function () {
 
             //******************************* Verifica se a data de admissão é maior que a data atual ******************************
             var dataAtual3 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
-            var dataAdmissao = new Date(DadosContrato.dtAdmissao.val().split("/")[2].toString() + "/" + DadosContrato.dtAdmissao.split("/")[1].toString() + "/" + DadosContrato.dtAdmissao.split("/")[0].toString());
+            var dataAdmissao = new Date(DadosContrato.dtAdmissao.split("/")[2].toString() + "/" + DadosContrato.dtAdmissao.split("/")[1].toString() + "/" + DadosContrato.dtAdmissao.split("/")[0].toString());
 
             if (dataAdmissao > dataAtual3) {
                 func.modalAlert("Data de Admissão do Contrato Não Pode ser Maior que a Data Atual.");
