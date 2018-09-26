@@ -23,7 +23,8 @@ class Liquidacao {
     
     private $motivoCancelamento = null;
     
-    private $sitLiquidado = 1;
+
+    private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
@@ -37,8 +38,8 @@ class Liquidacao {
         return $this;
     }
 
-    function getSitLiquidado() {
-        return $this->sitLiquidado;
+    function getSitCadastrado() {
+        return $this->sitCadastrado;
     }
 
     function getSitPagoParcial() {
@@ -326,7 +327,7 @@ class Liquidacao {
             
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
-                             ->setIdLiquidacaoSituacao($this->getSitLiquidado())
+                             ->setIdLiquidacaoSituacao($this->getSitCadastrado())
                              ->setIdLotacao($this->getIdLotacao())
                              ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                              ->setNrLiquidacao($this->getNrLiquidacao())
@@ -343,7 +344,7 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar a Liquidação no LOG. Operação Cadastro.");
                 }
                 $this->setIdLiquidacao($idLiquidacao); //Id da Liquidação
-                $this->setIdLiquidacaoSituacao($this->getSitLiquidado()); //Status da Liquidação
+                $this->setIdLiquidacaoSituacao($this->getSitCadastrado()); //Status da Liquidação
                 
                 //Se a edição da liquidação possuir documentos fiscais, 
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'

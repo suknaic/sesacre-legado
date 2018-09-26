@@ -549,7 +549,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on tramitacao.id_documento_fiscal = doc.id_documento_fiscal 
                         inner join
                            fin_documento_situacao as situacao 
-                           on situacao.id_documento_situacao = tramitacao.id_documento_situacao 
+                           on situacao.id_documento_situacao = doc.id_documento_situacao 
                         inner join
                            fin_tipo_tramitacao as tpTramitacao 
                            on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao 
@@ -680,7 +680,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
                                         
                     inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
+                    on situacao.id_documento_situacao =  doc.id_documento_situacao
 
                     inner join fin_tipo_tramitacao as tpTramitacao
                     on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
@@ -794,7 +794,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                                 on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
                     inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
+                    on situacao.id_documento_situacao =  doc.id_documento_situacao
 
                     inner join fin_tipo_tramitacao as tpTramitacao
                     on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
