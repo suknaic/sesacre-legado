@@ -162,8 +162,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                        fin_documento_situacao as docSit 
                        on docSit.id_documento_situacao = docFis.id_documento_situacao 
                     left join
+                       con_liquidacao as liq
+                       on liq.id_empenho = empenho.id_empenho
+                       and liq.id_liquidacao_situacao <> 4 /* DIFERENTE DE CANCELADO */
+                    left join
                        con_liquidacao_doc as liqDoc
                        on liqDoc.id_documento_fiscal = docFis.id_documento_fiscal
+                       and liqDoc.id_liquidacao = liq.id_liquidacao
                  where
                     (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ or liqDoc.id_liquidacao = :id_liquidacao)
                  and

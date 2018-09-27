@@ -328,6 +328,7 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
                              ->setIdLiquidacaoSituacao($this->getSitCadastrado())
+                             ->setIdLiquidacaoStatus(1)
                              ->setIdLotacao($this->getIdLotacao())
                              ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                              ->setNrLiquidacao($this->getNrLiquidacao())
@@ -345,6 +346,12 @@ class Liquidacao {
                 }
                 $this->setIdLiquidacao($idLiquidacao); //Id da Liquidação
                 $this->setIdLiquidacaoSituacao($this->getSitCadastrado()); //Status da Liquidação
+                
+                //Atualiza a situação do empenho
+                if (!$this->atualizaEmpenho($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
+                }
                 
                 //Se a edição da liquidação possuir documentos fiscais, 
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'
@@ -476,8 +483,6 @@ class Liquidacao {
             
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
             
-//            //Guarda a situação da Liquidação para gerar o histórico
-//            $this->setIdLiquidacaoSituacao($daoConLiquidacao->getMsgRetorno()['id_liquidacao_situacao']);
             
             //Atualiza a Liquidação
             $daoConLiquidacao->update($pdo);
@@ -506,11 +511,6 @@ class Liquidacao {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                 }
-                
-//                if (!$this->salvarLiquidacaoHistorico($pdo)) {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
-//                }
               
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
@@ -564,12 +564,6 @@ class Liquidacao {
                 $arrayRemove = array_diff($arrayAux, $arrayAux2);
                 $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
                 
-//                echo '<pre>';
-//                print_r($arrayInsert);
-//                print_r($arrayUpdate);
-//                print_r($arrayRemove);
-//                echo '</pre>';
-//                return;
                 
                 if ($this->getDocumentos()) {
                     
@@ -690,6 +684,14 @@ class Liquidacao {
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };
             
+            //Armazena o ID do empenho no objeto para poder atualizar a situação do Empenho
+            $this->idEmpenho = $dadosLiquidacao['id_empenho'];
+            //Atualiza a situação do empenho
+            if (!$this->atualizaEmpenho($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
+            }
+            
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
             
@@ -700,7 +702,7 @@ class Liquidacao {
     }
     
     public function retornaLiquidacaoParaPagamento($pdo){
-              try {
+        try {
 
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -739,8 +741,65 @@ class Liquidacao {
             return $retorno;
         } catch (Exception $ex) {
             $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
+            $this->mensagens = $ex->getMessage();
             return;
+        }
+    }
+    
+    private function atualizaEmpenho(PDO $pdo = null) {
+        try {
+            //Trecho que irá atualizar a situação do empenho
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdEmpenho($this->getIdEmpenho());
+            $dados_empenho = $empenho->retornaDadosEmpenho($pdo);
+            
+            //Se os dados do empenho estiver vazio, retorna erro
+            if (empty($dados_empenho)) {
+                $this->mensagens = 'Não foi possível localizar os dados do Empenho.';
+                return false;
+            }
+            
+            //Retorna o total liquidado do empenho
+            $total_liquidado = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            //Se os dados do empenho estiver vazio, retorna erro
+            if (empty($total_liquidado)) {
+                $this->mensagens = 'Erro ao verificar o total liquidado para este empenho.';
+                return false;
+            }
+            
+            $valor_empenho = $dados_empenho['vl_empenho'];
+            $valor_liquidado = $total_liquidado['total_liquidado'];
+            
+            switch (true) {
+                case ($valor_liquidado == 0): //Se não houver valores de liquidação para o empenho, altera para a situação 'Cadastrado'
+                    $empenho->setSitEmpenho($empenho->getSitCadastrado());
+                    break;
+
+                case ($valor_liquidado > 0 && $valor_liquidado < $valor_empenho): //Se a soma dos valores da liquidação for inferior ao valor do Empenho, altera para situação 'Liquidado Parcial'
+                    $empenho->setSitEmpenho($empenho->getSitLiquidadoParcial());
+                    break;
+                
+                case ($valor_liquidado == $valor_empenho): //Se a soma dos valores da liquidação for igual ao do Empenho, altera para situação 'Liquidado Total'
+                    $empenho->setSitEmpenho($empenho->getSitLiquidadoTotal());
+                    break;
+                case ($valor_liquidado > $valor_empenho): //Se o total liquidado for superior ao valor do empenho, retorna erro
+                    $this->mensagens = 'O total liquidado deste empenho ultrapassou o valor do empenho.';
+                    return false;
+                    break;
+            }  
+
+            
+            if ($empenho->atualizaSituacaoEmpenho($pdo)) {
+                return true;
+            } else {
+                $this->mensagens = $empenho->getMsgErros();
+                return false;
+            }
+            
+        } catch (Exception $exc) {
+             //Se der algum erro, registra o erro no objeto
+            $this->sucesso = false;
+            $this->mensagens = $exc->getMessage();
         }
     }
     

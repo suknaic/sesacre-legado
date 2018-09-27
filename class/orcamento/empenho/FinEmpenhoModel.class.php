@@ -24,6 +24,10 @@ class FinEmpenhoModel {
     
     private $msg_erros = null;
     
+    function getMsgErros(){
+        return $this->msg_erros;
+    }
+    
     function getSitCadastrado() {
         return $this->sit_cadastrado;
     }
@@ -498,7 +502,7 @@ class FinEmpenhoModel {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo do Empenho:</b></div>
-                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -556,7 +560,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-
+    
     public function cancelaEmpenhoPorIdDoPedido() {
         try {
             if (empty($pdo)) {
@@ -589,23 +593,43 @@ class FinEmpenhoModel {
 
             $busca = $daoFinEmpenho->getMsgRetorno();
 
-            //Atualiza a Situação do Documento Fiscal
+            //Atualiza a Situação do Empenho
             $daoFinEmpenho->atualizaSitEmpenho($pdo);
 
             if (!$daoFinEmpenho->sucesso()) {
-                $this->msgErros = "Erro ao atualizar a situação do Empenho. ";
+                $this->msg_erros = "Erro ao atualizar a situação do Empenho. ";
                 return false;
             }
 
             if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
-                $this->msgErros = "Erro ao registrar a operação de atualização da situação do Empenho no LOG.";
+                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Empenho no LOG.";
                 return false;
             }
 
             return $daoFinEmpenho->sucesso();
         } catch (Exception $exc) {
-            print_r($exc->getMessage());
+            $this->msg_erros = $exc->getMessage();
             return false;
+        }
+    }
+    
+    /**
+     * Retorna os dados do empenho 
+     */
+    public function retornaTotalLiquidadoDoEmpenho($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                return $daoFinEmpenho->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 

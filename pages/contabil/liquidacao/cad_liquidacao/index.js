@@ -243,15 +243,17 @@ $(document).ready(function () {
                 "obsLiquidacao": $("#desc_liquidacao").val(),
                 "docsLiquidacao": documentos
             }
-
-            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
-                    || dados.dtLiquidacao )) {
+            
+            if (!(dados.idEmpenho && dados.idLotacao && dados.idDocTipoLotacao && dados.nrLiquidacao && dados.vlLiquidacao 
+                    && dados.dtLiquidacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
+                $this.prop("disabled", false);
                 return false;
             }
             
             if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
                 func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
+                $this.prop("disabled", false);
                 return false;
             }
 
