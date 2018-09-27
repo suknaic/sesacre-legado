@@ -32,6 +32,11 @@ class FinOrdemModel {
     private $sit_pago_parcial = 8;
     private $sit_pago_total = 9;
     
+    private $msg_erros = null;
+    
+    function getMsgErros() {
+        return $this->msg_erros;
+    }
     
     function getSitCancelado() {
         return $this->sit_cancelado;
@@ -809,6 +814,41 @@ class FinOrdemModel {
             }
             return $daoFinOrdem->getMsgRetorno();
         } catch (Exception $ex) {
+            return false;
+        }
+    }
+    
+    public function atualizaSituacaoOrdem(PDO $pdo) {
+        try {
+
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->setIdOrdem($this->getIdOrdem());
+            $daoFinOrdem->setSitOrdem($this->getSitOrdem());
+
+            $daoFinOrdem->retornaOrdem($pdo);
+            if (!$daoFinOrdem->sucesso()) {
+                $this->msg_erros = "Não foi possível localizar os Dados da Ordem. ";
+                return false;
+            }
+
+            $busca = $daoFinOrdem->getMsgRetorno();
+
+            //Atualiza a Situação da Ordem
+            $daoFinOrdem->atualizaSituacaoOrden($pdo);
+
+            if (!$daoFinOrdem->sucesso()) {
+                $this->msg_erros = "Erro ao atualizar a situação da Ordem. ";
+                return false;
+            }
+
+            if (!Log::SalvaLogU('fin_ordem', $daoFinOrdem->getIdOrdem(), $busca, $pdo)) {
+                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Ordem no LOG.";
+                return false;
+            }
+
+            return $daoFinOrdem->sucesso();
+        } catch (Exception $exc) {
+            $this->msg_erros = $exc->getMessage();
             return false;
         }
     }
