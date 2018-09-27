@@ -19,13 +19,14 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
                       
             $result = $pdo->prepare("INSERT INTO con_liquidacao (nr_liquidacao, id_empenho"
-                    . " , id_liquidacao_situacao, id_doc_tipo_lotacao, id_lotacao, dt_liquidacao, vl_liquidacao"
+                    . " , id_liquidacao_situacao, id_liquidacao_status, id_doc_tipo_lotacao, id_lotacao, dt_liquidacao, vl_liquidacao"
                     . " , ds_liquidacao)"
-                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao, :id_doc_tipo_lotacao"
+                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao, :id_liquidacao_status, :id_doc_tipo_lotacao"
                     . " , :id_lotacao, :dt_liquidacao, :vl_liquidacao, :ds_liquidacao);");                                        
             $result->bindValue(":nr_liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
             $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_liquidacao_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);
             $result->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
             $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $result->bindValue(":dt_liquidacao", $this->getDtLiquidacao(), PDO::PARAM_STR);
@@ -80,6 +81,20 @@ class DaoConLiquidacao extends ConLiquidacao {
             $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);   
             $result->execute();
             $this->sucesso = true; 
+        } catch (PDOException $e) {
+            $this->sucesso = false;           
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
+    function mudaStatus($pdo){
+        try {
+            $result = $pdo->prepare("UPDATE con_liquidacao SET id_liquidacao_status = :id_liquidacao_status"                    
+                    . " WHERE id_liquidacao = :id_liquidacao ");
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);            
+            $result->bindValue(":id_liquidacao_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);   
+            $result->execute();
+            $this->sucesso = true;
         } catch (PDOException $e) {
             $this->sucesso = false;           
             $this->msgRetorno = $e->getMessage(); 
@@ -147,8 +162,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                        fin_documento_situacao as docSit 
                        on docSit.id_documento_situacao = docFis.id_documento_situacao 
                     left join
+                       con_liquidacao as liq
+                       on liq.id_empenho = empenho.id_empenho
+                       and liq.id_liquidacao_situacao <> 4 /* DIFERENTE DE CANCELADO */
+                    left join
                        con_liquidacao_doc as liqDoc
                        on liqDoc.id_documento_fiscal = docFis.id_documento_fiscal
+                       and liqDoc.id_liquidacao = liq.id_liquidacao
                  where
                     (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ or liqDoc.id_liquidacao = :id_liquidacao)
                  and

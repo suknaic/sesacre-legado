@@ -284,12 +284,13 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-
+    
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select emp.nr_empenho, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
-                        tpEmp.nm_tipo_empenho, emp.vl_empenho
+                        tpEmp.nm_tipo_empenho, emp.vl_empenho, (emp.vl_empenho - (select sum(vl_liquidacao) from con_liquidacao liq where liq.id_empenho = emp.id_empenho and liq.id_liquidacao_situacao <> 4)) as saldo
+
                         from fin_empenho as emp
                         inner join fin_tipo_empenho as tpEmp
                         on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
@@ -319,7 +320,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $sql = "SELECT p.id_pedido, p.nr_pedido, emp.id_empenho, emp.nr_empenho,
                         emp.dt_empenho_safira, emp.vl_empenho
                         , TE.nm_tipo_empenho, F.nr_fonte, DE.cd_despesa_elemento
-                        , emp.vl_empenho as saldo
+                        , (emp.vl_empenho - coalesce((select sum(vl_liquidacao) from con_liquidacao liq where liq.id_empenho = emp.id_empenho and liq.id_liquidacao_situacao <> 4),0)) as saldo
                         FROM fin_empenho AS emp
                         INNER JOIN fin_pedido AS p
                             ON p.id_pedido = emp.id_pedido
@@ -366,18 +367,40 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
     }
-
-    public function deletaEmpenho(PDO $pdo) {
+    
+    public function atualizaSitEmpenho(PDO $pdo){
         try {
             if (!empty($pdo)) {
-                $sql = "delete from fin_empenho where id_pedido = :pedido";
+                $sql = "update fin_empenho set sit_empenho = :sit_empenho where id_empenho = :id_empenho";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":pedido", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":sit_empenho", $this->getSitEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaDadosPedidoPeloEmpenho(PDO $pdo){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select pedido.* "
+                        . "from fin_empenho empenho, fin_pedido pedido "
+                        . "where pedido.id_pedido = empenho.id_pedido "
+                        . "and empenho.id_empenho = :id_empenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -389,7 +412,30 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaTotalLiquidadoDoEmpenho(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select coalesce(sum(vl_liquidacao),0) as total_liquidado from con_liquidacao where id_empenho = :idEmpenho and id_liquidacao_situacao <> 4";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
