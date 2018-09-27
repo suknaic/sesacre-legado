@@ -434,7 +434,7 @@ class DaoFinOrdem extends FinOrdemTb {
                             when ordem.sit_ordem = '0' then 'Cancelada'
                             when ordem.sit_ordem = '1' THEN 'Cadastrado'
                             when ordem.sit_ordem = '2' THEN 'Requisitado'
-                            when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
+                            when ordem.sit_ordem = '3' THEN 'Finalizada'
                             when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
                             when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
                         end situacao,

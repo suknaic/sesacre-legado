@@ -83,7 +83,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     <div class="form-group">
                                                         <div class="col-md-4"></div>
                                                         <div class="col-md-4">
-                                                            Email: <span class="text-danger">*</span>
+                                                            E-mail: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
@@ -145,8 +145,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     <div class="form-group">
                                                         <div class="col-md-1"></div>
                                                         <div class="col-md-3">
-                                                            Naturalidade: 
-                                                            País <span class="text-danger">*</span>
+                                                            País: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>

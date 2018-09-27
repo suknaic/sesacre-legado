@@ -486,6 +486,7 @@ $(document).ready(function () {
         }
     });
 
+    $(".bloqueia").prop('disabled', false);
 //******************************************************************************************
     $("body").on("click", ".btn-add-lotacao", function (e) {
         segue = false;
@@ -582,11 +583,17 @@ $(document).ready(function () {
         //******************* Verifica se a data de início é maior que a data atual ********************
         var dataAtual2 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
         var dataInicio = new Date($("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString());
+        var dataAdmissao = new Date($("#dt_admissao").val().split("/")[2].toString() + "/" + $("#dt_admissao").val().split("/")[1].toString() + "/" + $("#dt_admissao").val().split("/")[0].toString());
         // console.log(dataAtual2);
         // console.log(dataInicio);
         if (dataInicio > dataAtual2) {
             func.modalAlert("Data Início da Lotação Não Pode ser Maior que a Data Atual.");
             return;
+        }
+
+        if (dataInicio < dataAdmissao) {
+            func.modalAlert('Data de Início da Lotação Não Pode Ser Maior que a Data de Admissão.');
+            return false;
         }
         //**********************************************************************************************
         if (idContrato == 0) {
@@ -622,7 +629,7 @@ $(document).ready(function () {
             $("#id_funcao").select2({
                 width: " 100%"
             });
-
+            $(".bloqueia").prop('disabled', false);
         }
 
     });
@@ -641,6 +648,7 @@ $(document).ready(function () {
             $('#'+ linha).remove();
             return false;
         });
+        $(".bloqueia").prop('disabled', true);
     });
 
     $("body").on("click", ".btn-add", function (e) {
@@ -924,6 +932,7 @@ $(document).ready(function () {
             if ($("#nr_carga_horaria").val() == 20 || $("#nr_carga_horaria").val() == 24 || $("#nr_carga_horaria").val() == 30 || $("#nr_carga_horaria").val() == 40 || $("#nr_carga_horaria").val() == 44) {
                 segue = true;
             }
+
             if (segue === false) {
                 func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
                 return;
