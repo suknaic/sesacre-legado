@@ -250,7 +250,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when ordem.sit_ordem = '2' THEN 'Requisitado'
                         when ordem.sit_ordem = '3' THEN 'Finalizado'
                         when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                        when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                        when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento da Contratada'
                     end situacao,
                     (select sum(ordemValor.qt_itens_ordem * ordemValor.vl_itens_ordem) from fin_ordem_itens as ordemValor where ordemValor.id_ordem = ordem.id_ordem) as valor
                     from fin_documento_fiscal as documento
