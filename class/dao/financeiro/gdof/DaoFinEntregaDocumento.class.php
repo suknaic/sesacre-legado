@@ -141,7 +141,7 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                         inner join fin_documento_fiscal as documento
                         on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
                         where entDocumento.id_entrega_confirmacao = :confirmacao
-                        and (documento.id_documento_situacao is null OR documento.id_documento_situacao <> '7') ".$documentoFiltro.")
+                        and documento.id_documento_situacao <> '7' ".$documentoFiltro.")
                          as saldo
                         from fin_entrega_itens as item
                         where item.id_entrega_confirmacao = :confirmacao";
@@ -180,11 +180,7 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                                   on documento.id_documento_fiscal = entDocumento.id_documento_fiscal 
                             where
                                entDocumento.id_entrega_confirmacao = :confirmacao 
-                               and 
-                               (
-                                  documento.id_documento_situacao is null 
-                                  OR documento.id_documento_situacao <> '7'
-                               )
+                               and  documento.id_documento_situacao <> '7'
                                and documento.id_documento_fiscal <> :documento ) as saldo 
                             from
                                fin_entrega_itens as item 
@@ -236,11 +232,8 @@ class DaoFinEntregaDocumento extends FinEntregaDocumentoTb {
                                  on documento.id_documento_fiscal = entDocumento.id_documento_fiscal 
                            where
                               entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao 
-                              and 
-                              (
-                                 documento.id_documento_situacao is null 
-                                 OR documento.id_documento_situacao <> '7' 
-                              )
+                              and  documento.id_documento_situacao <> '7' 
+                              
                      ) 
                         )
                         as saldo,

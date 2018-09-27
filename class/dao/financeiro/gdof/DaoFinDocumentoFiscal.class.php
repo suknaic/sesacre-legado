@@ -408,11 +408,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               fin_documento_fiscal as docFis 
                            where
                               entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
-                              and 
-                              (
-                                 docFis.id_documento_situacao <> 7 				/*DIFERENTE DE CANCELADO*/
-                                 or docFis.id_documento_situacao is null 				/*VERIFICAR OS SEM TRAMITAÇÃO, ESTES POSSUEM NULL NO CAMPO 'id_documento_situacao'*/
-                              )
+                              and docFis.id_documento_situacao <> 7 /*DIFERENTE DE CANCELADO*/
                               and entDoc.id_entrega_confirmacao = entrega.id_entrega_confirmacao 
                         )
                         as vl_utilizado_entrega 	/*VALOR UTILIZADO DA ENTREGA*/,
