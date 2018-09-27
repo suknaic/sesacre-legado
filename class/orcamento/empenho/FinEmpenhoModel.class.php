@@ -15,6 +15,12 @@ class FinEmpenhoModel {
     private $ds_empenho = null;
     private $sit_empenho = null;
 
+    private $sit_cadastrado = 1;
+    private $sit_liquidado_parcial = 2;
+    private $sit_liquidado_total = 3;
+    private $sit_pago_parcial = 4;
+    private $sit_pago_total = 5;
+    private $sit_cancelado = 6;
     /**
      * @return mixed
      */
@@ -463,6 +469,11 @@ class FinEmpenhoModel {
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                     
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
                                                 </div>
                                             </div>
                                          </div>

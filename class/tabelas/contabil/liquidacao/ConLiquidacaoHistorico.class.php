@@ -7,10 +7,20 @@ class ConLiquidacaoHistorico {
     private $id_pessoa = null;
     private $id_lotacao = null;
     private $id_liquidacao_situacao = null;
+    private $id_liquidacao_status = null;
     private $dh_liquidacao_historico = null;
     private $ds_liquidacao = null;
     
     private $id_doc_tipo_lotacao = null;
+    
+    function getIdLiquidacaoStatus() {
+        return $this->id_liquidacao_status;
+    }
+
+    function setIdLiquidacaoStatus($id_liquidacao_status) {
+        $this->id_liquidacao_status = $id_liquidacao_status;
+        return $this;
+    }
     
     function getIdLiquidacao() {
         return $this->id_liquidacao;

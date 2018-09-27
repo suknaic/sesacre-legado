@@ -119,6 +119,15 @@ class Contrato {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
+            //************************ Valida Data de Nascimento, se é maior que a Data Atual ***********************
+            $dtNasc = strtotime($dadosContrato['dtNascimento']);
+            $dtAtual = strtotime(date("d-m-Y"));
+            if ($dtNasc > $dtAtual) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de Nascimento Não Pode Ser Maior que a Data Atual.');
+            }
+            //*******************************************************************************************************
+
             //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
             $dtAdm = strtotime($dadosContrato['dtAdmissao']);
             $dtAtual = strtotime(date("d-m-Y"));
