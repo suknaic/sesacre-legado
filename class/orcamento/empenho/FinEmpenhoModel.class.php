@@ -21,6 +21,33 @@ class FinEmpenhoModel {
     private $sit_pago_parcial = 4;
     private $sit_pago_total = 5;
     private $sit_cancelado = 6;
+    
+    private $msg_erros = null;
+    
+    function getSitCadastrado() {
+        return $this->sit_cadastrado;
+    }
+
+    function getSitLiquidadoParcial() {
+        return $this->sit_liquidado_parcial;
+    }
+
+    function getSitLiquidadoTotal() {
+        return $this->sit_liquidado_total;
+    }
+
+    function getSitPagoParcial() {
+        return $this->sit_pago_parcial;
+    }
+
+    function getSitPagoTotal() {
+        return $this->sit_pago_total;
+    }
+
+    function getSitCancelado() {
+        return $this->sit_cancelado;
+    }
+    
     /**
      * @return mixed
      */
@@ -471,7 +498,7 @@ class FinEmpenhoModel {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo do Empenho:</b></div>
-                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -544,6 +571,41 @@ class FinEmpenhoModel {
             }
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+    
+    public function atualizaSituacaoEmpenho(PDO $pdo) {
+        try {
+
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->getIdEmpenho());
+            $daoFinEmpenho->setSitEmpenho($this->getSitEmpenho());
+
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                $this->msg_erros = "Não foi possível localizar os Dados do Empenho. ";
+                return false;
+            }
+
+            $busca = $daoFinEmpenho->getMsgRetorno();
+
+            //Atualiza a Situação do Documento Fiscal
+            $daoFinEmpenho->atualizaSitEmpenho($pdo);
+
+            if (!$daoFinEmpenho->sucesso()) {
+                $this->msgErros = "Erro ao atualizar a situação do Empenho. ";
+                return false;
+            }
+
+            if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
+                $this->msgErros = "Erro ao registrar a operação de atualização da situação do Empenho no LOG.";
+                return false;
+            }
+
+            return $daoFinEmpenho->sucesso();
+        } catch (Exception $exc) {
+            print_r($exc->getMessage());
+            return false;
         }
     }
 

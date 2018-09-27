@@ -284,7 +284,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-
+    
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -390,6 +390,25 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function atualizaSitEmpenho(PDO $pdo){
+        try {
+            if (!empty($pdo)) {
+                $sql = "update fin_empenho set sit_empenho = :sit_empenho where id_empenho = :id_empenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":sit_empenho", $this->getSitEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
