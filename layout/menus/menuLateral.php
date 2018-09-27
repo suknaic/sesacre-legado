@@ -53,6 +53,10 @@
                                         <li>
                                             <a href="/pages/sistema/vinculo/index.php">Vínculo</a>
                                         </li>
+
+<!--                                        <li>-->
+<!--                                            <a href="/pages/sistema/servidores/index.php">Servidores</a>-->
+<!--                                        </li>-->
          
                                     </ul>
                                 </li>

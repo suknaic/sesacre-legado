@@ -588,7 +588,7 @@ class pessoaFisica {
 //*********************************************************************
             $filter = array();
             if (!empty($nome)) {
-                $filter[] = "P.nm_pessoa ilike '%$nome%'";
+                $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
             }
             if (!empty($cpf)) {
                 $filter[] = "PF.nr_cpf = '$cpf'";
@@ -611,18 +611,19 @@ class pessoaFisica {
                     $idPessoaFj = $v['id_pessoa_fisica'];
                     $retorno .= "<tr>";
 //****************************************************************
-                    $icone = "";
-                    $title = "";
-                    if ($v['st_ativo'] == '0') {
-                        $icone = "<i class='fa fa-user-times text-default' aria-hidden='true'></i>";
-                        $title = "title='Ativar Pessoa'";
-                    }
-                    if ($v['st_ativo'] == '1') {
-                        $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
-                        $title = "title='Inativar Pessoa'";
-                    }
+
+                        $icone = "";
+                        $title = "";
+                        if ($v['st_ativo'] == '0') {
+                            $icone = "<i class='fa fa-user-times text-default' aria-hidden='true'></i>";
+                            $title = "title='Ativar Pessoa'";
+                        }
+                        if ($v['st_ativo'] == '1') {
+                            $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
+                            $title = "title='Inativar Pessoa'";
+                        }
 //*************************************************************
-                    $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
+                        $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
                                     <td>" . $cpf2 . "</td>
                                     <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
                                     <td>" . $v['ds_logradouro'] . "</td>   
@@ -646,7 +647,6 @@ class pessoaFisica {
                                         </button>
                                     </td>
                                  </tr>";
-//        $retorno .= "</tr>";
                 }
             }
 
@@ -656,7 +656,7 @@ class pessoaFisica {
         }
     }
 
-    public function listaPessoaFisica($nome) {
+    public function listaPessoaFisica($nome,$cpf = null, $servidor = null) {
         $retorno = "";
         try {
             $conexao = new Conexao();
@@ -667,6 +667,9 @@ class pessoaFisica {
             $filter = array();
             if (!empty($nome)) {
                 $filter[] = "unaccent(lower(P.nm_pessoa)) ilike '$nome%'";
+            }
+            if (!empty($cpf)) {
+                $filter[] = "PF.nr_cpf = '$cpf'";
             }
             if (count($filter) > 0) {
                 $filtro = " and " . implode(' and ', $filter);
@@ -684,15 +687,49 @@ class pessoaFisica {
                     //******************************************************************
                     $idPessoa = $v['id_pessoa'];
                     $idPessoaF = $v['id_pessoa_fisica'];
+                    $icone = "";
+                    $title = "";
+                    if ($v['st_ativo'] == '0') {
+                        $icone = "<i class='fa fa-user-times text-default' aria-hidden='true'></i>";
+                        $title = "title='Ativar Pessoa'";
+                    }
+                    if ($v['st_ativo'] == '1') {
+                        $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
+                        $title = "title='Inativar Pessoa'";
+                    }
                     //******************************************************************
-                    $retorno .= "<tr class='pessoa' idPessoa='$idPessoaF' idPessoa2='$idPessoa' style='cursor:pointer;'>";
-                    $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
-                                    <td>" . $cpf2 . "</td>
-                                 </tr>";
-//        $retorno .= "</tr>";
+                    if ($servidor == null) {
+                        $retorno .= "<tr class='pessoa' idPessoa='$idPessoaF' idPessoa2='$idPessoa' style='cursor:pointer;'>";
+                        $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
+                                        <td>" . $cpf2 . "</td>
+                                     </tr>";
+                    } else {
+                        $retorno .= "    <tr>
+                                            <td>" . $v['nm_pessoa'] . "</td>
+                                            <td>" . $cpf2 . "</td>
+                                            <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
+                                            <td>" . ($v['nr_telefone_residencial'] === NULL ? "" : Metodos::formataTelefone($v['nr_telefone_residencial'])) . "</td>
+                                            <td>" . ($v['nr_telefone_celular'] === NULL ? "" : Metodos::formataCelular($v['nr_telefone_celular'])) . "</td>
+                                            <td>" . $v['nm_email'] . "</td>
+                                            <td style='text-align: center;'>
+                                                <button type='button' class='btn btn-default btn-edit btn-xs'                               
+                                                  title='Editar' nome='" . $v['nm_pessoa'] . "' value='1-" . $idPessoaF . "' >
+                                                   <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                                </button> 
+                                                <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='1-" . $idPessoa . "-" . $idPessoaF . "'>
+                                                    <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+                                                </button>
+                                                <button type='button' class='btn btn-default btn-redefinir btn-xs' title='Redefinir Senha' value='" . $idPessoa . "'>
+                                                    <i class='fa fa-key fa-lg text-warning' aria-hidden='true'></i>
+                                                </button>
+                                                <button type='button' class='btn btn-default btn-inativar btn-xs' $title value='1-" . $idPessoa . "-" . $idPessoaFj . "-" . $v['st_ativo'] . "'>
+                                                    $icone
+                                                </button>
+                                            </td>
+                                         </tr>";
+                    }
                 }
             }
-
             return $retorno;
         } catch (Exception $ex) {
             $retorno = "";
