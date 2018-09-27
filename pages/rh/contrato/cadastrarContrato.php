@@ -160,8 +160,7 @@
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-3">
-                                                        Naturalidade: 
-                                                        País <span class="text-danger">*</span>
+                                                        País: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
@@ -502,7 +501,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_vinculo" class="form-control">
+                                                                <select id="id_vinculo" class="form-control bloqueia">
                                                                     <option value="0">Selecione o Vínculo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -516,7 +515,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_pessoa_juridica" class="form-control">
+                                                                <select id="id_pessoa_juridica" class="form-control bloqueia">
                                                                     <option value="0">Selecione a Empresa</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -530,7 +529,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-calendar inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control data" name="dt_admissao" id="dt_admissao" placeholder="__/__/____" pattern="\d*" maxlength="4" required="true">
+                                                                <input type="text" class="form-control data bloqueia" name="dt_admissao" id="dt_admissao" placeholder="__/__/____" pattern="\d*" maxlength="4" required="true">
                                                             </div>
                                                         </div>
                                                     </div>    
@@ -542,7 +541,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control nr" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
+                                                                <input type="text" class="form-control nr bloqueia" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
@@ -551,7 +550,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control" name="nr_matricula" id="nr_matricula" required="true">
+                                                                <input type="text" class="form-control bloqueia" name="nr_matricula" id="nr_matricula" required="true">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -560,7 +559,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_cargo" class="form-control">
+                                                                <select id="id_cargo" class="form-control bloqueia">
                                                                     <option value="0">Selecione o Cargo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -574,7 +573,7 @@
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-calendar inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control data" name="dt_demissao" id="dt_demissao" placeholder="__/__/____" pattern="\d*" maxlength="4">
+                                                                <input type="text" class="form-control data bloqueia" name="dt_demissao" id="dt_demissao" placeholder="__/__/____" pattern="\d*" maxlength="4">
                                                             </div>
                                                         </div>
                                                     </div>  

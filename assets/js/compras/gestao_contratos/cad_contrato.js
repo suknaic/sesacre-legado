@@ -603,25 +603,25 @@ $(document).ready(function () {
             // $("select[name=gestoresSub\\[\\]]").each(function () {
             //     gestoresSub.push($(this).val());
             // });
-            $("select[name=gestoresSub\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaGestoresSub = false;
-                } else {
-                    salvaGestoresSub = true;
-                }
-
-            });
-            if (salvaGestoresSub === false) {
-                e.preventDefault();
-                $('.selectGestoresSub').focus();
-                func.modalAlert('Selecione Um Gestor Substituto.');
-                $this.prop("disabled", false);
-                return;
-            } else {
+            // $("select[name=gestoresSub\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaGestoresSub = false;
+            //     } else {
+            //         salvaGestoresSub = true;
+            //     }
+            //
+            // });
+            // if (salvaGestoresSub === false) {
+            //     e.preventDefault();
+            //     $('.selectGestoresSub').focus();
+            //     func.modalAlert('Selecione Um Gestor Substituto.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
                 $("select[name=gestoresSub\\[\\]]").each(function () {
                     gestoresSub.push($(this).val());
                 });
-            }
+            // }
 
             var fiscais = [];
             // $("select[name=fiscais\\[\\]]").each(function () {
@@ -651,73 +651,73 @@ $(document).ready(function () {
             // $("select[name=fiscaisSub\\[\\]]").each(function () {
             //     fiscaisSub.push($(this).val());
             // });
-            $("select[name=fiscaisSub\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaFiscaisSub = false;
-                } else {
-                    salvaFiscaisSub = true;
-                }
-
-            });
-            if (salvaFiscaisSub === false) {
-                e.preventDefault();
-                $('.selectFiscaisSub').focus();
-                func.modalAlert('Selecione Um Fiscal Substituto.');
-                $this.prop("disabled", false);
-                return;
-            } else {
+            // $("select[name=fiscaisSub\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaFiscaisSub = false;
+            //     } else {
+            //         salvaFiscaisSub = true;
+            //     }
+            //
+            // });
+            // if (salvaFiscaisSub === false) {
+            //     e.preventDefault();
+            //     $('.selectFiscaisSub').focus();
+            //     func.modalAlert('Selecione Um Fiscal Substituto.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
                 $("select[name=fiscaisSub\\[\\]]").each(function () {
                     fiscaisSub.push($(this).val());
                 });
-            }
+            // }
 
             var subFiscais = [];
             // $("select[name=subFiscais\\[\\]]").each(function () {
             //     subFiscais.push($(this).val());
             // });
-            $("select[name=subFiscais\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaSubFiscais = false;
-                } else {
-                    salvaSubFiscais = true;
-                }
-
-            });
-            if (salvaSubFiscais === false) {
-                e.preventDefault();
-                $('.selectSubFiscais').focus();
-                func.modalAlert('Selecione Um Sub-Fiscal.');
-                $this.prop("disabled", false);
-                return;
-            } else {
+            // $("select[name=subFiscais\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaSubFiscais = false;
+            //     } else {
+            //         salvaSubFiscais = true;
+            //     }
+            //
+            // });
+            // if (salvaSubFiscais === false) {
+            //     e.preventDefault();
+            //     $('.selectSubFiscais').focus();
+            //     func.modalAlert('Selecione Um Sub-Fiscal.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
                 $("select[name=subFiscais\\[\\]]").each(function () {
                     subFiscais.push($(this).val());
                 });
-            }
+            // }
 
             var subFiscaisSub = [];
             // $("select[name=subFiscaisSub\\[\\]]").each(function () {
             //     subFiscaisSub.push($(this).val());
             // });
-            $("select[name=subFiscaisSub\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaSubFiscaisSub = false;
-                } else {
-                    salvaSubFiscaisSub = true;
-                }
-
-            });
-            if (salvaSubFiscaisSub === false) {
-                e.preventDefault();
-                $('.selectSubFiscaisSub').focus();
-                func.modalAlert('Selecione Um Sub-Fiscal Substituto.');
-                $this.prop("disabled", false);
-                return;
-            } else {
+            // $("select[name=subFiscaisSub\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaSubFiscaisSub = false;
+            //     } else {
+            //         salvaSubFiscaisSub = true;
+            //     }
+            //
+            // });
+            // if (salvaSubFiscaisSub === false) {
+            //     e.preventDefault();
+            //     $('.selectSubFiscaisSub').focus();
+            //     func.modalAlert('Selecione Um Sub-Fiscal Substituto.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
                 $("select[name=subFiscaisSub\\[\\]]").each(function () {
                     subFiscaisSub.push($(this).val());
                 });
-            }
+            // }
 
             var contrato = {
                 "num_cont": $("#num_cont").val(),
