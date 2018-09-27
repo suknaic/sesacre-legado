@@ -525,6 +525,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
             $daoFinDocumentoFiscal->setFlEncontroContas(0);
             $daoFinDocumentoFiscal->setIdLotacao($this->id_lotacao);
+            $daoFinDocumentoFiscal->setIdDocumentoSituacao(1);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
