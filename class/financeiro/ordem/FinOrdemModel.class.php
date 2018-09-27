@@ -20,7 +20,36 @@ class FinOrdemModel {
     private $nr_Pedido = null;
     private $central = null;
     private $ano = null;
+    
+    private $sit_cancelado = 0;
+    private $sit_cadastrado = 1;
+    private $sit_requisitado = 2;
+    private $sit_finalizado_supressao_ordenado = 3;
+    private $sit_finalizado_descumprimento_contratada = 4;
+    private $sit_finalizado = 5;
+    private $sit_liquidado_parcial = 6;
+    private $sit_liquidado_total = 7;
+    private $sit_pago_parcial = 8;
+    private $sit_pago_total = 9;
+    
+    
+    function getSitCancelado() {
+        return $this->sit_cancelado;
+    }
 
+    function getSitCadastrado() {
+        return $this->sit_cadastrado;
+    }
+
+    function getSitRequisitado() {
+        return $this->sit_requisitado;
+    }
+
+    function getSitFinalizadoSupressaoOrdenado() {
+        return $this->sit_finalizado_supressao_ordenado;
+    }
+
+    
     /**
      * @return mixed
      */

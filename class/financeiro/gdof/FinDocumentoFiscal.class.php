@@ -1291,8 +1291,8 @@ class FinDocumentoFiscal {
             }
 
             return $daoFinDocumentoFiscal->sucesso();
-        } catch (PDOException $exc) {
-            print_r($exc->getMessage());
+        } catch (Exception $exc) {
+            $this->msgErros = $exc->getMessage();
             return false;
         }
     }
