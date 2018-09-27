@@ -77,7 +77,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                     <h3>Período:</h3>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    Data Inicio: <span class="text-danger">*</span>
+                                                    Data Início: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-calendar inputPFa"></p>
@@ -87,7 +87,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 </div>
 
                                                 <div class="col-md-3">
-                                                    Data Fim:<span class="text-danger">*</span>
+                                                    Data Fim: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-calendar inputPFa"></p>
@@ -163,7 +163,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                                 <th>Nome</th>
                                                                 <th>Cargo</th>
                                                                 <th>Função</th>
-                                                                <th class="text-center">C. H.</th>
+                                                                <th class="text-center">Carga Horária</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

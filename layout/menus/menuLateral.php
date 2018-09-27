@@ -49,15 +49,15 @@
                                         <li>
                                             <a href="/pages/rh/lotacao/index.php">Lotação</a>
                                         </li>
-<!--                                        <li>-->
-<!--                                            <a href="/pages/rh/lotacaoDetalhe/">Lotação Detalhe</a>-->
-<!--                                        </li>-->
+
                                         <li>
                                             <a href="/pages/sistema/vinculo/index.php">Vínculo</a>
                                         </li>
-                                        <!--                                        <li>
-                                                                                    <a href="/pages/rh/controleDeAcesso/">Controle de Acesso</a>
-                                                                                </li>-->
+
+<!--                                        <li>-->
+<!--                                            <a href="/pages/sistema/servidores/index.php">Servidores</a>-->
+<!--                                        </li>-->
+         
                                     </ul>
                                 </li>
                                 <li>
@@ -351,7 +351,7 @@
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
                                 </li>
                                 <li>
-                                    <a href="#">Pagamento</a>
+                                    <a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Pagamento</a>
                                 </li>
                                 <li>
                                     <a href="#">

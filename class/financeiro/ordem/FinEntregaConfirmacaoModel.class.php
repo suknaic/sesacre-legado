@@ -319,7 +319,7 @@ class FinEntregaConfirmacaoModel {
 
             if ($dados[0]->tipoEntrega == 2) {
                 $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
-
+                
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");

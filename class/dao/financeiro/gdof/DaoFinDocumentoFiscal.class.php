@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -38,6 +38,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":nrGrp", $this->getNrGrpNumero(), PDO::PARAM_INT);
             $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+            $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -237,24 +238,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaOrdemVinculadaAoDocumentoFiscal(PDO $pdo) {
         try {
-//            $sql = "select ordem.id_ordem, concat(concat(ordem.nr_ordem, '/'),ordem.aa_ordem) as ordem,
-//                    case 
-//                            when ordem.tp_ordem = '1' then 'Entrega'
-//                            when ordem.tp_ordem = '2' then 'Serviço/Execução'
-//                    end tipo,
-//                    sum(ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) as valor
-//                    from fin_documento_fiscal as documento
-//                    inner join fin_entrega_documento as entDoc
-//                    on entDoc.id_documento_fiscal = documento.id_documento_fiscal
-//                    inner join fin_entrega_confirmacao as entrega
-//                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
-//                    inner join fin_ordem as ordem
-//                    on ordem.id_ordem  = entrega.id_ordem
-//                    inner join fin_ordem_itens as ordemItens
-//                    on ordemItens.id_ordem = ordem.id_ordem
-//                    where documento.id_documento_fiscal = :documento
-//                    and ordem.sit_ordem <> '0'
-//                    group by ordem.id_ordem";
+
             $sql = "select ordem.id_ordem, concat(concat(ordem.nr_ordem, '/'),ordem.aa_ordem) as ordem,
                     case 
                         when ordem.tp_ordem = '1' then 'Entrega'
@@ -264,9 +248,9 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when ordem.sit_ordem = '0' then 'Cancelada'
                         when ordem.sit_ordem = '1' THEN 'Cadastrado'
                         when ordem.sit_ordem = '2' THEN 'Requisitado'
-                        when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
+                        when ordem.sit_ordem = '3' THEN 'Finalizado'
                         when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                        when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                        when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento da Contratada'
                     end situacao,
                     (select sum(ordemValor.qt_itens_ordem * ordemValor.vl_itens_ordem) from fin_ordem_itens as ordemValor where ordemValor.id_ordem = ordem.id_ordem) as valor
                     from fin_documento_fiscal as documento
@@ -408,11 +392,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                               fin_documento_fiscal as docFis 
                            where
                               entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
-                              and 
-                              (
-                                 docFis.id_documento_situacao <> 7 				/*DIFERENTE DE CANCELADO*/
-                                 or docFis.id_documento_situacao is null 				/*VERIFICAR OS SEM TRAMITAÇÃO, ESTES POSSUEM NULL NO CAMPO 'id_documento_situacao'*/
-                              )
+                              and docFis.id_documento_situacao <> 7 /*DIFERENTE DE CANCELADO*/
                               and entDoc.id_entrega_confirmacao = entrega.id_entrega_confirmacao 
                         )
                         as vl_utilizado_entrega 	/*VALOR UTILIZADO DA ENTREGA*/,
@@ -549,7 +529,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on tramitacao.id_documento_fiscal = doc.id_documento_fiscal 
                         inner join
                            fin_documento_situacao as situacao 
-                           on situacao.id_documento_situacao = tramitacao.id_documento_situacao 
+                           on situacao.id_documento_situacao = doc.id_documento_situacao 
                         inner join
                            fin_tipo_tramitacao as tpTramitacao 
                            on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao 
@@ -680,7 +660,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 					on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
                                         
                     inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
+                    on situacao.id_documento_situacao =  doc.id_documento_situacao
 
                     inner join fin_tipo_tramitacao as tpTramitacao
                     on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
@@ -705,7 +685,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     left join fin_doc_vinc_encaminhamento as encaminhamento
                     on encaminhamento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
-                    where tramitacao.fl_pesquisa = '0' and encaminhamento.id_pessoa = :pessoa and tpTramitacao.id_tipo_tramitacao = 2  and encaminhamento.id_doc_lotacao is not null " . $filtroSql;
+                    where tramitacao.fl_pesquisa = '0' and encaminhamento.id_pessoa = :pessoa and tpTramitacao.id_tipo_tramitacao = 2 " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
             $stmt->execute();
@@ -794,7 +774,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                                 on tramitacao.id_documento_fiscal = doc.id_documento_fiscal
 
                     inner join fin_documento_situacao as situacao
-                    on situacao.id_documento_situacao =  tramitacao.id_documento_situacao
+                    on situacao.id_documento_situacao =  doc.id_documento_situacao
 
                     inner join fin_tipo_tramitacao as tpTramitacao
                     on tpTramitacao.id_tipo_tramitacao = tramitacao.id_tipo_tramitacao
@@ -819,7 +799,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
                     left join fin_doc_vinc_recebimento as recebimento
                     on recebimento.id_doc_lotacao = docLotacaoOrigem.id_doc_lotacao 
-                    where tramitacao.fl_pesquisa = '0' and tpTramitacao.id_tipo_tramitacao = 4 and recebimento.id_pessoa = :pessoa and recebimento.id_doc_lotacao is not null  " . $filtroSql;
+                    where tramitacao.fl_pesquisa = '0' and tpTramitacao.id_tipo_tramitacao = 4 and recebimento.id_pessoa = :pessoa " . $filtroSql;
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
 //            echo '<pre>';

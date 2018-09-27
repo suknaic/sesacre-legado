@@ -206,9 +206,9 @@ class DaoFinOrdem extends FinOrdemTb {
                         case 
                             when ordem.sit_ordem = '1' THEN 'Cadastrado'
                             when ordem.sit_ordem = '2' THEN 'Requisitado'
-                            when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
-                            when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                            when ordem.sit_ordem = '3' THEN 'Finalizado'
+                            when ordem.sit_ordem = '4' THEN 'Finalizado por Supressão do Ordenado'
+                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento da Contratada'
                         END as situacao
 
                         from fin_pedido as p
@@ -395,36 +395,7 @@ class DaoFinOrdem extends FinOrdemTb {
     public function retornaTipoValor(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-//                $sql = "select 
-//                        case 
-//                                when ordem.tp_ordem = '1' then 'ENTREGA'
-//                                when ordem.tp_ordem = '2' then 'EXECURÇÃO/SERVIÇO'
-//                        end tipo,
-//                        case
-//                            when ordem.sit_ordem = '0' then 'Cancelada'
-//                            when ordem.sit_ordem = '1' THEN 'Cadastrado'
-//                            when ordem.sit_ordem = '2' THEN 'Requisitado'
-//                            when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
-//                            when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-//                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
-//                        end situacao,
-//
-//                        to_char(sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem),'999G999G990D0999') as valor
-//                        from fin_ordem as ordem
-//
-//                        inner join fin_ordem_itens as itensOrdem
-//                        on itensOrdem.id_ordem = ordem.id_ordem
-//
-//                        inner join fin_pre_ordem as pre
-//                        on pre.id_pre_ordem = itensOrdem.id_pre_ordem
-//
-//                        inner join fin_cont_itens as itens 
-//                        on itens.id_cont_itens = pre.id_cont_itens
-//
-//                        inner join pla_material as mat
-//                        on mat.id_material = itens.id_material
-//                        where ordem.id_ordem = :ordem
-//                        group by ordem.tp_ordem, ordem.sit_ordem, mat.tp_material, fl_valor_variavel";
+
                 $sql = "select ordem.id_ordem, (ordem.nr_ordem || '/' || ordem.aa_ordem) as ordem,
                         case 
                                 when ordem.tp_ordem = '1' then 'ENTREGA'
@@ -434,9 +405,9 @@ class DaoFinOrdem extends FinOrdemTb {
                             when ordem.sit_ordem = '0' then 'Cancelada'
                             when ordem.sit_ordem = '1' THEN 'Cadastrado'
                             when ordem.sit_ordem = '2' THEN 'Requisitado'
-                            when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
+                            when ordem.sit_ordem = '3' THEN 'Finalizado'
                             when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento da Contratada'
                         end situacao,
 
                         trim(to_char(sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem),'999G999G990D0999')) as valor

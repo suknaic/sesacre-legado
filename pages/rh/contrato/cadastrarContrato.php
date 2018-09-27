@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
-if (isset($_GET['id'])){
-    $cpf = explode("=", $_GET['id'])[0];
-    $nro = (int)(explode("=", $_GET['id'])[1])+ 1;
-}
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
+    if (isset($_GET['id'])){
+        $cpf = explode("=", $_GET['id'])[0];
+        $nro = (int)(explode("=", $_GET['id'])[1])+ 1;
+    }
 ?>
 <html lang="pt-br">
     <head>
@@ -44,9 +44,9 @@ if (isset($_GET['id'])){
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
             <?php
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            //Modal Alert
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -75,7 +75,8 @@ if (isset($_GET['id'])){
                         <div class="row">
                             <div class="col-sm-12">
 
-                                <form class="form-horizontal formRhFuncionario">  
+                                <form class="form-horizontal formRhFuncionario">
+                                    <input type="hidden" class="form-control" name="dataAtual" id="dataAtual" value="">
                                     <input type="hidden" class="form-control" name="id_get" id="id_get" value="">
                                     <input type="hidden" class="form-control" name="id_pessoa" id="id_pessoa" value="">
                                     <input type="hidden" class="form-control" name="id_pessoa_fisica" id="id_pessoa_fisica" value="">
@@ -97,12 +98,12 @@ if (isset($_GET['id'])){
                                                 <div class="form-group">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-4">
-                                                        Email: <span class="text-danger" title="Informe seu E-mail Institucional do domínio ac.gov.br">*</span>
+                                                        E-mail: <span class="text-danger" title="Informe seu E-mail Institucional do domínio ac.gov.br">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" placeholder="Informe seu E-mail Institucional do domínio ac.gov.br" required="true">
+                                                            <input type="text" class="form-control" name="nm_email" id="nm_email" placeholder="E-mail Institucional" required="true">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -159,8 +160,7 @@ if (isset($_GET['id'])){
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-3">
-                                                        Naturalidade: 
-                                                        País <span class="text-danger">*</span>
+                                                        País: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
@@ -454,7 +454,7 @@ if (isset($_GET['id'])){
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                            <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-1">
@@ -501,7 +501,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_vinculo" class="form-control">
+                                                                <select id="id_vinculo" class="form-control bloqueia">
                                                                     <option value="0">Selecione o Vínculo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -515,7 +515,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_pessoa_juridica" class="form-control">
+                                                                <select id="id_pessoa_juridica" class="form-control bloqueia">
                                                                     <option value="0">Selecione a Empresa</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -529,7 +529,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-calendar inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control data" name="dt_admissao" id="dt_admissao" placeholder="__/__/____" pattern="\d*" maxlength="4" required="true">
+                                                                <input type="text" class="form-control data bloqueia" name="dt_admissao" id="dt_admissao" placeholder="__/__/____" pattern="\d*" maxlength="4" required="true">
                                                             </div>
                                                         </div>
                                                     </div>    
@@ -541,7 +541,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control nr" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
+                                                                <input type="text" class="form-control nr bloqueia" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
@@ -550,7 +550,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control" name="nr_matricula" id="nr_matricula" required="true">
+                                                                <input type="text" class="form-control bloqueia" name="nr_matricula" id="nr_matricula" required="true">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -559,7 +559,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_cargo" class="form-control">
+                                                                <select id="id_cargo" class="form-control bloqueia">
                                                                     <option value="0">Selecione o Cargo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -573,7 +573,7 @@ if (isset($_GET['id'])){
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-calendar inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control data" name="dt_demissao" id="dt_demissao" placeholder="__/__/____" pattern="\d*" maxlength="4">
+                                                                <input type="text" class="form-control data bloqueia" name="dt_demissao" id="dt_demissao" placeholder="__/__/____" pattern="\d*" maxlength="4">
                                                             </div>
                                                         </div>
                                                     </div>  
@@ -614,7 +614,7 @@ if (isset($_GET['id'])){
                                                         <div class="form-group">    
                                                             <div class="col-md-1"></div>
                                                             <div class="col-md-2">
-                                                                Carga Horária:
+                                                                Carga Horária: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -667,6 +667,7 @@ if (isset($_GET['id'])){
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody class="corpoTabelaLotacao" id="corpoTabelaLotacao">
+                                                                                <input type="hidden" id="cont" value="">
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

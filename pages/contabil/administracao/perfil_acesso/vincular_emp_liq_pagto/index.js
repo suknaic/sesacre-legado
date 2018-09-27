@@ -22,6 +22,10 @@ $(document).ready(function () {
     
     lista();
     
+    $('select').change( function (){
+        $(this).select2();
+    });
+    
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

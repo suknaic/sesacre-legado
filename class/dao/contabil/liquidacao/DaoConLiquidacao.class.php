@@ -19,13 +19,14 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
                       
             $result = $pdo->prepare("INSERT INTO con_liquidacao (nr_liquidacao, id_empenho"
-                    . " , id_liquidacao_situacao, id_doc_tipo_lotacao, id_lotacao, dt_liquidacao, vl_liquidacao"
+                    . " , id_liquidacao_situacao, id_liquidacao_status, id_doc_tipo_lotacao, id_lotacao, dt_liquidacao, vl_liquidacao"
                     . " , ds_liquidacao)"
-                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao, :id_doc_tipo_lotacao"
+                    . " VALUES (:nr_liquidacao, :id_empenho, :id_liquidacao_situacao, :id_liquidacao_status, :id_doc_tipo_lotacao"
                     . " , :id_lotacao, :dt_liquidacao, :vl_liquidacao, :ds_liquidacao);");                                        
             $result->bindValue(":nr_liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);
             $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
             $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_liquidacao_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);
             $result->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
             $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $result->bindValue(":dt_liquidacao", $this->getDtLiquidacao(), PDO::PARAM_STR);
@@ -86,6 +87,20 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
     
+    function mudaStatus($pdo){
+        try {
+            $result = $pdo->prepare("UPDATE con_liquidacao SET id_liquidacao_status = :id_liquidacao_status"                    
+                    . " WHERE id_liquidacao = :id_liquidacao ");
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);            
+            $result->bindValue(":id_liquidacao_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);   
+            $result->execute();
+            $this->sucesso = true;
+        } catch (PDOException $e) {
+            $this->sucesso = false;           
+            $this->msgRetorno = $e->getMessage(); 
+        }
+    }
+    
     function retorna($pdo) {
         $this->sucesso = false;
         $sql = " SELECT *"                    
@@ -115,6 +130,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     docFis.id_documento_fiscal,
                     docFis.nr_documento_fiscal,
                     tpDoc.nm_tipo_documento,
+                    liqDoc.id_liquidacao_doc,
                     (
                        trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
                     )
@@ -146,8 +162,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                        fin_documento_situacao as docSit 
                        on docSit.id_documento_situacao = docFis.id_documento_situacao 
                     left join
+                       con_liquidacao as liq
+                       on liq.id_empenho = empenho.id_empenho
+                       and liq.id_liquidacao_situacao <> 4 /* DIFERENTE DE CANCELADO */
+                    left join
                        con_liquidacao_doc as liqDoc
                        on liqDoc.id_documento_fiscal = docFis.id_documento_fiscal
+                       and liqDoc.id_liquidacao = liq.id_liquidacao
                  where
                     (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ or liqDoc.id_liquidacao = :id_liquidacao)
                  and
@@ -302,6 +323,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.nr_liquidacao,
                     liq.id_lotacao,
                     liq.id_doc_tipo_lotacao,
+                    ped.id_tipo_solicitacao,
                     trim(liq.ds_liquidacao) as ds_liquidacao,
                     to_char(liq.dt_liquidacao, 'dd/mm/yyyy') as dt_liquidacao,
                     trim(to_char(liq.vl_liquidacao, '999G999G999D0999')) as vl_liquidacao,

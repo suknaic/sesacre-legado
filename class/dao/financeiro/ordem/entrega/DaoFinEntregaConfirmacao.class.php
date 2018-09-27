@@ -344,7 +344,7 @@ where orItens.id_ordem = :ordem";
     
     public function verificarUltimaEntrega(PDO $pdo) {
         try {
-            $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo";
+            $sql = "select * from fin_entrega_confirmacao where id_protocolo = :protocolo and sit_entrega > '0'";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
             $stmt->execute();
@@ -400,7 +400,7 @@ where orItens.id_ordem = :ordem";
                           inner join fin_documento_fiscal as documento
                           on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
                           where entDocumento.id_entrega_confirmacao = item.id_entrega_confirmacao
-                          and (documento.id_documento_situacao is null OR documento.id_documento_situacao <> '7')
+                          and documento.id_documento_situacao <> '7'
                        )
                     as saldo, item.id_entrega_confirmacao
                     from  fin_entrega_itens as item
@@ -409,23 +409,6 @@ where orItens.id_ordem = :ordem";
                     WHERE protocolo.id_ordem in(" . $idOrdens . ") and saldoEntregas.saldo > 0
                     order by  confirmacao.nr_entrega_confirmacao, concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem)";
             
-            
-//            $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
-//                    concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
-//                    FROM fin_protocolo as protocolo
-//                    INNER JOIN fin_entrega_confirmacao as confirmacao
-//                    ON protocolo.id_protocolo = confirmacao.id_protocolo
-//                    INNER JOIN fin_ordem as ordem
-//                    ON confirmacao.id_ordem = ordem.id_ordem
-//                    LEFT JOIN ( SELECT DISTINCT ON (id_entrega_confirmacao) *
-//                        FROM fin_entrega_documento
-//                        ORDER BY id_entrega_confirmacao, id_entrega_documento desc 
-//                    ) AS entDoc ON entDoc.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao                    
-//                    LEFT JOIN ( select DISTINCT ON (t.id_documento_fiscal) *
-//                            FROM fin_doc_tramitacao t				
-//                            ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
-//                    ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
-//                    WHERE protocolo.id_ordem in(" . $idOrdens . ")";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
@@ -456,7 +439,7 @@ where orItens.id_ordem = :ordem";
  		     inner join fin_documento_fiscal as documento
  		     on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
  		     where entDocumento.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
- 		     and (documento.id_documento_situacao is null OR documento.id_documento_situacao <> '7')))
+ 		     and documento.id_documento_situacao <> '7'))
 		    as saldo ,
                     case 
                     when confirmacao.sit_entrega = '1' then 'Entrega Parcial'
@@ -509,7 +492,7 @@ where orItens.id_ordem = :ordem";
                         ORDER BY t.id_documento_fiscal, t.dh_doc_tramitacao desc, t.fl_pesquisa asc) AS tramitacao 
                     ON tramitacao.id_documento_fiscal = entDoc.id_documento_fiscal
                     WHERE confirmacao.id_entrega_confirmacao IN (" . $idsEntregas . ") AND
-                    (entDoc.id_documento_fiscal IS NULL OR tramitacao.id_documento_situacao = :idDocumentoSituacao)";
+                    tramitacao.id_documento_situacao = :idDocumentoSituacao";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":idDocumentoSituacao", $idDocSitCancelado, PDO::PARAM_INT);
             $stmt->execute();
@@ -534,7 +517,7 @@ where orItens.id_ordem = :ordem";
                     inner join fin_documento_fiscal as docFis
                     on docFis.id_documento_fiscal = entDoc.id_documento_fiscal
                     where entConf.id_entrega_confirmacao = :id_entrega_confirmacao
-                    and (docFis.id_documento_situacao <> 7 or docFis.id_documento_situacao is null)";
+                    ";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":id_entrega_confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->execute();

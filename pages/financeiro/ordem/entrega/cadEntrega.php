@@ -241,16 +241,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel ">
                                         <div class="panel-body">
                                             <div class="row">
-                                                <div class="col-md-2">
+
+                                                <div class="col-md-3" style="display:inline-block;">
                                                     <button class="btn btn-danger btn-rounded btn-finaliza-supresao" type="button">
-                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Supressão do Ordenado
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizar por Supressão do Ordenado
                                                     </button>
+                                                    <button type="button" class="btn btn-info btn-rounded" id="pop-finaliza-supresao" data-container="body" 
+                                                            data-toggle="popover" data-placement="top" 
+                                                            data-content="Quando o quantitativo requisitado for inferior ao total ordenado para o período, conforme necessidade 
+                                                            e interesse da administração.">
+                                                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    </button>
+
                                                 </div>
-                                                <div class="col-md-1"></div>
-                                                <div class="col-md-2">
+
+
+                                                <div class="col-md-4" style="display:inline-block;">
                                                     <button class="btn btn-danger btn-rounded btn-finaliza-descumprimento" type="button">
-                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizado por Descumprimento do Ordenado pelo Fornecedor
+                                                        <i class="fa fa-ban" aria-hidden="true"></i> Finalizar por Descumprimento da Contratada
                                                     </button>
+                                                    <button type="button" class="btn btn-info btn-rounded" id="pop-finaliza-supresao" data-container="body" 
+                                                            data-toggle="popover" data-placement="top" 
+                                                            data-content="Quando não ocorrer a entrega ou execução/serviço total do objeto ordenado por parte da contratada, conforme necessidade 
+                                                            da administração.">
+                                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                                    </button>
+
                                                 </div>
                                             </div>
                                         </div>

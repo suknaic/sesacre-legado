@@ -2,13 +2,6 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
 
-    //Mascara do sistema
-    $('#competencia').mask("99/9999");
-    $('#emissao').mask("99/99/9999");
-    $('#atesto').mask("99/99/9999");
-
-
-
     function listaAnotacoes() {
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/anotacao_documento/request.php",

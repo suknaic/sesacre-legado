@@ -31,7 +31,7 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido.");
+                echo Metodos::retornoAjax("Erro", "alert", "Informe seu E-mail Institucional do domínio ac.gov.br.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
@@ -65,7 +65,7 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido.");
+                echo Metodos::retornoAjax("Erro", "alert", "Informe seu E-mail Institucional do domínio ac.gov.br.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
@@ -170,7 +170,7 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica->setId_escolaridade_formacao_competencia($_REQUEST['competencia']);
             $pessoaFisica->setId_pessoa_fisica($_REQUEST['pessoaFisica']);
             echo $pessoaFisica->cadastrarCompetencia($pdo, $_REQUEST['escolaridade']);
-
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -436,6 +436,8 @@ switch ($_REQUEST['acao']) {
             $prog = new Estado();
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
+
+            echo "<option value = '0'>Selecione um estado</option>";
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;

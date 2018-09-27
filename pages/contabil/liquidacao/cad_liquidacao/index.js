@@ -73,6 +73,7 @@ $(document).ready(function () {
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
 
+        limpaCampos();
         /**
          * retornaContratosPedido
          */
@@ -177,9 +178,7 @@ $(document).ready(function () {
         });
         
         if (!erro) {
-            $("#vl_liquidacao").prop("disabled",true);
-            
-            
+                        
             var linhaTabela = `<tr data-id=${documento.id_documento_fiscal} data-objeto='${JSON.stringify(documento)}' class="documentoFiscal">
                              <td class="text-center">${documento.nr_documento_fiscal}</td>
                              <td class="text-center">${documento.nm_tipo_documento}</td>
@@ -244,15 +243,17 @@ $(document).ready(function () {
                 "obsLiquidacao": $("#desc_liquidacao").val(),
                 "docsLiquidacao": documentos
             }
-
-            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
-                    || dados.dtLiquidacao )) {
+            
+            if (!(dados.idEmpenho && dados.idLotacao && dados.idDocTipoLotacao && dados.nrLiquidacao && dados.vlLiquidacao 
+                    && dados.dtLiquidacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
+                $this.prop("disabled", false);
                 return false;
             }
             
             if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
                 func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
+                $this.prop("disabled", false);
                 return false;
             }
 
@@ -319,10 +320,6 @@ function atualizaValorLiquidacao(){
         vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
     });
     
-    if (vl_liquidacao == 0){
-        $("#vl_liquidacao").prop("disabled",false);
-    }
-    
     $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
 }
 
@@ -343,5 +340,15 @@ function habilitaDocumentosFiscais(){
     } else {
         $('.docFis').show();
         $("#vl_liquidacao").prop("disabled",true);
+        $("#selectDocumentoFiscal").focus();
     }
+}
+
+//COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
+function limpaCampos(){
+    $("#nr_liquidacao").val("");
+    $("#dt_liquidacao").val("");
+    $("#vl_liquidacao").val("");
+    $("#desc_liquidacao").val("");
+    $("#id_remetente").val("0").trigger('change');
 }

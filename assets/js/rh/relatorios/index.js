@@ -142,7 +142,7 @@ $(document).ready(function () {
         if (cargo == 0 && funcao == 0 && vinculo == 0 && lotacao == 0 && dataIni == "" && dataFim == "" && competencia == 0) {
 //alert("É necessário informar no mínimo um filtro para imprimir");
 //             func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
-            func.modalAlert(func.msgPreencherCampos);
+            func.modalAlert('Selecione um dos Filtros de Pesquisa.');
             return false;
         }
         if (dataIni.length == 10 && dataFim.length == 0) {

@@ -37,7 +37,6 @@ class Perfil{
         
     private function getPerfisFinanceiro(){
         $array = array(
-            PERFIL_FINANCEIRO_AUTORIZACAO => "Perfil Financeiro Autorização", 
             PERFIL_FINANCEIRO_AUTORIZACAO => "Perfil Financeiro Autorização",
             PERFIL_FINANCEIRO_ORDEM => "Perfil Financeiro Ordem",
             PERFIL_FINANCEIRO_GDOF => "Perfil Financeiro GDOF",
