@@ -290,6 +290,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             if (!empty($pdo)) {
                 $sql = "select emp.nr_empenho, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                         tpEmp.nm_tipo_empenho, emp.vl_empenho, (emp.vl_empenho - (select sum(vl_liquidacao) from con_liquidacao liq where liq.id_empenho = emp.id_empenho and liq.id_liquidacao_situacao <> 4)) as saldo
+
                         from fin_empenho as emp
                         inner join fin_tipo_empenho as tpEmp
                         on tpEmp.id_tipo_empenho = emp.id_tipo_empenho

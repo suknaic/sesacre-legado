@@ -257,7 +257,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
 
 
                                                 <div class="col-md-4" style="display:inline-block;">
-                                                    <button class="btn btn-danger btn-rounded" type="button">
+                                                    <button class="btn btn-danger btn-rounded btn-finaliza-descumprimento" type="button">
                                                         <i class="fa fa-ban" aria-hidden="true"></i> Finalizar por Descumprimento da Contratada
                                                     </button>
                                                     <button type="button" class="btn btn-info btn-rounded" id="pop-finaliza-supresao" data-container="body" 

@@ -407,7 +407,7 @@ class DaoFinOrdem extends FinOrdemTb {
                             when ordem.sit_ordem = '2' THEN 'Requisitado'
                             when ordem.sit_ordem = '3' THEN 'Finalizado'
                             when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
-                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
+                            when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento da Contratada'
                         end situacao,
 
                         trim(to_char(sum(itensOrdem.qt_itens_ordem * itensOrdem.vl_itens_ordem),'999G999G990D0999')) as valor
