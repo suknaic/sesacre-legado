@@ -1847,8 +1847,35 @@ class FinContratoModel {
                 $pdo->rollBack();
                 return;
             }
-
-
+            
+            //Ajusta Dados do Saldo
+            
+            $itensComIds = $itemModal->getMsgRetorno();
+            //$itensComIds[0]['']
+            
+            $motivo = "Cadastro de Aditivo";
+            $novoGrupo = false;
+            if($aditivo->getMotivoPorPrazo() == $finContratoAdtivo->getIdContratoMotivo()
+                    || $aditivo->getMotivoPorValorePrazo() == $finContratoAdtivo->getIdContratoMotivo()){
+                $novoGrupo = true;
+            }            
+            
+            $novoGrupo = true;
+            $finContItensSaldo = new FinContItensSaldo();
+            $finContItensSaldo->salvar($itensComIds, $novoGrupo, $motivo, $pdo);
+            
+            echo "<pre>";
+            print_r($finContItensSaldo->getMsgRetorno());
+            echo "</pre>";
+            
+//            echo "<pre>";
+//            print_r($itensComIds);
+//            echo "</pre>";
+            $this->sucesso = false;
+            $this->msgRetorno = "OW YEAH";
+            $pdo->rollBack();
+            return;
+            
             //
             //Adiciona as Centrais do Contrato no Fin Cont Central, Se Existir
             if (!empty($centraisDoContrato)) {

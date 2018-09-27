@@ -950,11 +950,12 @@ class ItemModel {
                     $this->sucesso = false;
                     $this->msgRetorno = "Erro no Log dos itens";
                     return;
-                }                                                
+                }                
+                $itens[$key]->setIdContItens($daoFinItens->getIdContItens());
             }
                                     
             $this->sucesso = true;
-            $this->msgRetorno = "Itens Salvo com Sucesso";
+            $this->msgRetorno = $itens;
             return;
                              
         } catch (Exception $exc) {            
