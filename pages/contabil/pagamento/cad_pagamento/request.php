@@ -19,7 +19,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $liquidacao = new Liquidacao();
             $liquidacao->setNrLiquidacao($dados);
-//            echo $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
+            echo $liquidacao->pesquisaLiquidacaoParaPagamento(null);
             return;
             break;
         } catch (Error $e) {
@@ -28,6 +28,63 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
+    CASE 'retornaContratosPagamento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finContratoModel = new FinContratoModel();
+            echo $finContratoModel->retornaContratoGdof(null, $dados["nr_pedido"]);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 
+    CASE 'retornaPedidoPagemento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $pedido = new Pedido();
+            $pedido->setNrPedido($dados["nr_pedido"]);
+            echo $pedido->retornaPedidoGdof(null);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaEmpenhoPagemento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $pedido = new Pedido();
+            $pedido->setNrPedido($dados);
+            $finEmpenhoModel = new FinEmpenhoModel();
+            $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
+            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaEmpenhoPagemento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $pedido = new Pedido();
+            $pedido->setNrPedido($dados);
+            $finEmpenhoModel = new FinEmpenhoModel();
+            $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
+            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 

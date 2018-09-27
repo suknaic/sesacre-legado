@@ -72,7 +72,7 @@ $(document).ready(function () {
             "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
-
+     
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -81,11 +81,12 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaContratosLiquidacao",
+                "acao": "retornaContratosPagamento",
                 "dados": dados
 
             },
             "success": function (response) {
+                console.log(response)
                 $(".contratos").html("");
                 $(".contratos").append(response);
             }
@@ -97,7 +98,7 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaPedidoLiquidacao",
+                "acao": "retornaPedidoPagemento",
                 "dados": dados
 
             },
@@ -115,7 +116,7 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaEmpenhoLiquidacao",
+                "acao": "retornaEmpenhoPagemento",
                 "dados": dados
 
             },
