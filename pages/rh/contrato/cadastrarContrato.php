@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
-if (isset($_GET['id'])){
-    $cpf = explode("=", $_GET['id'])[0];
-    $nro = (int)(explode("=", $_GET['id'])[1])+ 1;
-}
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
+    if (isset($_GET['id'])){
+        $cpf = explode("=", $_GET['id'])[0];
+        $nro = (int)(explode("=", $_GET['id'])[1])+ 1;
+    }
 ?>
 <html lang="pt-br">
     <head>
@@ -44,9 +44,9 @@ if (isset($_GET['id'])){
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
 
             <?php
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            //Modal Alert
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
 
             <div class="boxed">
@@ -75,7 +75,8 @@ if (isset($_GET['id'])){
                         <div class="row">
                             <div class="col-sm-12">
 
-                                <form class="form-horizontal formRhFuncionario">  
+                                <form class="form-horizontal formRhFuncionario">
+                                    <input type="hidden" class="form-control" name="dataAtual" id="dataAtual" value="">
                                     <input type="hidden" class="form-control" name="id_get" id="id_get" value="">
                                     <input type="hidden" class="form-control" name="id_pessoa" id="id_pessoa" value="">
                                     <input type="hidden" class="form-control" name="id_pessoa_fisica" id="id_pessoa_fisica" value="">
@@ -614,7 +615,7 @@ if (isset($_GET['id'])){
                                                         <div class="form-group">    
                                                             <div class="col-md-1"></div>
                                                             <div class="col-md-2">
-                                                                Carga Horária:
+                                                                Carga Horária: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -667,6 +668,7 @@ if (isset($_GET['id'])){
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody class="corpoTabelaLotacao" id="corpoTabelaLotacao">
+                                                                                <input type="hidden" id="cont" value="">
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

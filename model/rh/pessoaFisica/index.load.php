@@ -6,5 +6,4 @@ $session = new Session();
 if(!$session->vPRh()){
     header("Location: /pages/index.php"); 
 }
-
 ?>

@@ -35,14 +35,12 @@ class Perfil{
         return $this;
     }
         
-    private function getPerfisFinanceiro(){
+    private function getPerfisContabil(){
         $array = array(
-            PERFIL_FINANCEIRO_AUTORIZACAO => "Perfil Financeiro Autorização",
-            PERFIL_FINANCEIRO_ORDEM => "Perfil Financeiro Ordem",
-            PERFIL_FINANCEIRO_GDOF => "Perfil Financeiro GDOF",
-            PERFIL_FINANCEIRO_PAGAMENTO =>  "Perfil Financeiro Pagamento",
-            PERFIL_FINANCEIRO_ADMINISTRACAO =>  "Perfil Financeiro Administração",
-            PERFIL_FINANCEIRO_ZEUS => "Perfil Financeiro Zeus"
+            PERFIL_CONTABIL_LIQUIDACAO => "Perfil Contábil Liquidação",
+            PERFIL_CONTABIL_PAGAMENTO =>  "Perfil Contábil Pagamento",
+            PERFIL_CONTABIL_ADMINISTRACAO =>  "Perfil Contábil Administração",
+            PERFIL_CONTABIL_ZEUS => "Perfil Contábil Zeus"
             );
         return $array;
     }
@@ -120,7 +118,7 @@ class Perfil{
                 $pdo = $conexao->connect();
             }
             
-            $array = $this->getPerfisFinanceiro();    
+            $array = $this->getPerfisContabil();    
            
             foreach ($array as $key => $value) {
                 $retorno .= "<option value=".$key.">".$value."</option>";    
@@ -139,7 +137,7 @@ class Perfil{
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $perfilPessoa = new PerfilPessoa();                 
-            $perfis = implode(",", array_keys($this->getPerfisFinanceiro()));                                    
+            $perfis = implode(",", array_keys($this->getPerfisContabil()));                                    
             $perfilPessoa->retornaPessoasPorINPerfil($perfis, $pdo);
                         
             if($perfilPessoa->Sucesso()){                

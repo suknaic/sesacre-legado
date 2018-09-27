@@ -115,6 +115,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     docFis.id_documento_fiscal,
                     docFis.nr_documento_fiscal,
                     tpDoc.nm_tipo_documento,
+                    liqDoc.id_liquidacao_doc,
                     (
                        trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
                     )

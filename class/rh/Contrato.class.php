@@ -1218,6 +1218,7 @@ class Contrato {
             $contrato->setId_pessoa_fisica($pf['id_pessoa_fisica']);
             $c = $contrato->retornaContrato($pdo);
             $contratos = 0;
+            $dataAtual = date('d/m/Y');
             if (empty($c)) {
                 $matricula = "";
             } else {
@@ -1261,6 +1262,7 @@ class Contrato {
                 "st_ativo" => $pf["st_ativo"],
                 //************************contrato****************************************
                 "nr_matricula" => $matricula,
+                "dataAtual" => $dataAtual,
                 "nr_contratos" => $contratos,
             );
             //}
