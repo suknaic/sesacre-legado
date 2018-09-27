@@ -238,24 +238,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaOrdemVinculadaAoDocumentoFiscal(PDO $pdo) {
         try {
-//            $sql = "select ordem.id_ordem, concat(concat(ordem.nr_ordem, '/'),ordem.aa_ordem) as ordem,
-//                    case 
-//                            when ordem.tp_ordem = '1' then 'Entrega'
-//                            when ordem.tp_ordem = '2' then 'Serviço/Execução'
-//                    end tipo,
-//                    sum(ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) as valor
-//                    from fin_documento_fiscal as documento
-//                    inner join fin_entrega_documento as entDoc
-//                    on entDoc.id_documento_fiscal = documento.id_documento_fiscal
-//                    inner join fin_entrega_confirmacao as entrega
-//                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
-//                    inner join fin_ordem as ordem
-//                    on ordem.id_ordem  = entrega.id_ordem
-//                    inner join fin_ordem_itens as ordemItens
-//                    on ordemItens.id_ordem = ordem.id_ordem
-//                    where documento.id_documento_fiscal = :documento
-//                    and ordem.sit_ordem <> '0'
-//                    group by ordem.id_ordem";
+
             $sql = "select ordem.id_ordem, concat(concat(ordem.nr_ordem, '/'),ordem.aa_ordem) as ordem,
                     case 
                         when ordem.tp_ordem = '1' then 'Entrega'
@@ -265,7 +248,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         when ordem.sit_ordem = '0' then 'Cancelada'
                         when ordem.sit_ordem = '1' THEN 'Cadastrado'
                         when ordem.sit_ordem = '2' THEN 'Requisitado'
-                        when ordem.sit_ordem = '3' THEN 'Requisição Finalizada'
+                        when ordem.sit_ordem = '3' THEN 'Finalizado'
                         when ordem.sit_ordem = '4' THEN 'Finalizado por Supresão do Ordenado'
                         when ordem.sit_ordem = '5' THEN 'Finalizado por Descumprimento do Ordenado pelo Fornecedor'
                     end situacao,
