@@ -81,7 +81,7 @@ require_once "index.load.php";
                                                             <th>Fonte</th>
                                                             <th>Elemento de Despesa</th>                                                            
                                                             <th>Valor Total</th>
-                                                            <th>Saldo</th>
+                                                            <th>Saldo a Liquidar</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -202,7 +202,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da Liquidação:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Liquidação:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -213,7 +213,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
@@ -224,7 +224,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Liquidação:</b></div>
+                                                            <div class="col-sm-2"><b>Data da Liquidação:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -234,13 +234,6 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"></textarea>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -277,6 +270,25 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações</h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" rows="7" id="anotacoes"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">

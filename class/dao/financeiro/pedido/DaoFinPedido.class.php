@@ -822,5 +822,59 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function atualizaSitPedido(PDO $pdo = null){
+        $this->sucesso = false;
+        $sql = "update fin_pedido set id_pedido_situacao = :id_pedido_situacao where id_pedido = :id_pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pedido_situacao", $this->getIdPedidoSituacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaTotalLiquidadoDoPedido(PDO $pdo = null) {
+        $this->sucesso = false;
+        $sql = "select
+                    coalesce(sum(vl_liquidacao), 0) as total_liquidado 
+                 from
+                    fin_empenho emp,
+                    fin_pedido ped,
+                    con_liquidacao liq 
+                 where
+                    emp.id_pedido = ped.id_pedido 
+                    and emp.id_empenho = liq.id_empenho 
+                    and liq.id_liquidacao_situacao <> 4 
+                    and ped.id_pedido = :id_pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
 }

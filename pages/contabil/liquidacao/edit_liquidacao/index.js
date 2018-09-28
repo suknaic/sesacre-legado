@@ -179,6 +179,80 @@ $(document).ready(function () {
         }
     });
     
+    listaAnotacoes();
+
+    $('body').on('click', '.btn-addAnotacao', function (e) {
+        $('#adAnotacao').modal();
+
+    });
+
+    $('#adAnotacao').on('shown.bs.modal', function () {
+        $('#anotacao').focus()
+    })
+
+
+    $('body').on('click', '.btn-enviarAnotacao', function (e) {
+        var Dados = {
+            liquidacao: $("#id_liquidacao").val(),
+            anotacao: $('#anotacao').val()
+        };
+        $.ajax({
+            "url": "/pages/contabil/liquidacao/anotacao_liquidacao/request.php",
+            "method": "POST",
+            "dataType": "html",
+            "data": {
+                "acao": "salvaAnotacao",
+                "dados": Dados
+            },
+
+            "success": function (response) {
+//                console.log(response);
+                if (response.trim() === "SessaoExpirada") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(response.msg, 'success');
+                    $('.modal-alert').on('hidden.bs.modal', function (e) {
+                        listaAnotacoes();
+                    });
+                    return false;
+                } else {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {
+                $("#adAnotacao").modal('hide');
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+
+    });
+    
 });
 
 function atualizaValorLiquidacao(){
@@ -198,4 +272,53 @@ function valorComMascara(valor) {
     valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
     return valorStr.join(',');
 }
-    
+
+
+function listaAnotacoes() {
+    $.ajax({
+        "url": "/pages/contabil/liquidacao/anotacao_liquidacao/request.php",
+        "method": "POST",
+        "dataType": "html",
+        "data": {
+            "acao": "listaAnotacoes",
+            "liquidacao": $("#id_liquidacao").val()
+        },
+
+        "success": function (response) {
+            if (response.trim() === "SessaoExpirada") {
+                func.modalAlert(func.msgSemPermissao);
+                return false;
+            }
+
+            try {
+                response = JSON.parse(response);
+            } catch (e) {
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+
+            if (response.tipoMsg === "Erro") {
+                if (response.tipoExibicao === "console") {
+
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                } else if (response.tipoExibicao === "alert") {
+                    func.modalAlert(response.msg);
+                    return false;
+                }
+            } else if (response.tipoMsg === "ok") {
+
+                $(".anotacoes").html("");
+                $(".anotacoes").html(response.msg);
+                return false;
+            } else {
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        },
+        "error": function (response) {
+            func.modalAlert(func.msgErroPadrao, 'danger');
+            return false;
+        }
+    });
+}
