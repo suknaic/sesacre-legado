@@ -1467,7 +1467,8 @@ class Contrato {
     }
 
     public function retornaOptionPessoaContrato(PDO $pdo = null, int $idPessoa = 0) {
-        $retorno = "<option value='0'>Selecione Uma Pessoa</option>";
+//        $retorno = "<option value='0'>Selecione Uma Pessoa</option>";
+        $retorno = "";
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -1494,7 +1495,8 @@ class Contrato {
     }
 
     public function retornaOptionUsuarioContrato(PDO $pdo = null, int $idUsuario = 0) {
-        $retorno = "<option value='0'>Selecione um Usuário</option>";
+//        $retorno = "<option value='0'>Selecione um Usuário</option>";
+        $retorno = "";
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -1522,6 +1524,7 @@ class Contrato {
 
     public function retornaOptionPessoaChamado(PDO $pdo = null, int $idPessoa = 0) {
 //        $retorno = "<option value='0'>Selecione uma pessoa</option>";
+        $retorno = "";
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -1549,6 +1552,7 @@ class Contrato {
 
     public function retornaOptionAnoSituacao($id = 0) {
 //        $retorno = "<option value='0'>Selecione uma pessoa</option>";
+        $retorno = "";
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();

@@ -3,6 +3,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/centrais/FinCentraisModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/SesPessoaJuridicaModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/gestor/FinGestorModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/fiscais/FinFiscaisModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/sub_fiscal/SubFiscalModel.class.php";
 $session = new Session();
 if (!$session->vPContratosTecnico()) {
 	header("Location: /pages/index.php");
@@ -25,6 +28,30 @@ $array = $finContratoModel->retornaDados();
 
 $finCentraisModel = new FinCentraisModel();
 $campoCentral = $finCentraisModel->campoCentraisOptions(null, $id);
+
+//******* Lista todos os gestores titulares do contrato *******
+$finGestores = new FinGestorModel();
+$gestores = $finGestores->retornarGestor($id, 1);
+
+//****** Lista todos os gestores substitutos do contrato ******
+$gestoreSub = $finGestores->retornarGestor($id, 2);
+//*************************************************************
+
+//******* Lista todos os fiscais titulares do contrato *******
+$finFiscais = new FinFiscaisModel();
+$fiscais = $finFiscais->retornarFiscal($id, 1);
+
+//****** Lista todos os fiscais substitutos do contrato ******
+$fiscaisSub = $finFiscais->retornarFiscal($id, 2);
+//*************************************************************
+
+//******* Lista todos os fiscais titulares do contrato *******
+$finSubFiscais = new SubFiscalModel();
+$subFiscais = $finSubFiscais->retornarSubFiscal($id, 1);
+
+//****** Lista todos os fiscais substitutos do contrato ******
+$subFiscaisSub = $finSubFiscais->retornarSubFiscal($id, 2);
+//*************************************************************
 
 $sesPessoaJuridicaModel = new SesPessoaJuridicaModel();
 //setando id para retorna CNPJ

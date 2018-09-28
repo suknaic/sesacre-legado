@@ -22,9 +22,27 @@ class Pedido {
     private $stPedido = null;
     private $contratado = null;
     private $ano = null;
+    private $idPedidoSituacao = null;
+    
     //atributos para vincular a diaria
     private $idUsuario = null;
     private $idDiaria = null;
+    
+    //atributo para armazenar os erros
+    private $msg_erros = null;
+    
+    function getMsgErros() {
+        return $this->msg_erros;
+    }
+        
+    function getIdPedidoSituacao() {
+        return $this->idPedidoSituacao;
+    }
+
+    function setIdPedidoSituacao($idPedidoSituacao) {
+        $this->idPedidoSituacao = $idPedidoSituacao;
+        return $this;
+    }
 
     function getIdUsuario() {
         return $this->idUsuario;
@@ -995,6 +1013,59 @@ class Pedido {
             return false;
         } catch (Exception $ex) {
             return false;
+        }
+    }
+    
+    public function atualizaSituacaoPedido(PDO $pdo) {
+        $this->msg_erros = null;
+        try {
+
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
+
+            $daoFinPedido->retornaDadosPedido($pdo);
+            if (!$daoFinPedido->sucesso()) {
+                $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
+                return false;
+            }
+
+            $busca = $daoFinPedido->getMsgRetorno();
+
+            //Atualiza a Situação do Pedido
+            $daoFinPedido->atualizaSitPedido($pdo);
+
+            if (!$daoFinPedido->sucesso()) {
+                $this->msg_erros = "Erro ao atualizar a situação do Pedido. ";
+                return false;
+            }
+
+            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
+                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Pedido no LOG.";
+                return false;
+            }
+
+            return $daoFinPedido->sucesso();
+        } catch (Exception $exc) {
+            $this->msg_erros = $exc->getMessage();
+            return false;
+        }
+    }
+    
+    public function retornaTotalLiquidadoDoPedido($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->retornaTotalLiquidadoDoPedido($pdo);
+            if ($daoFinPedido->sucesso()) {
+                return $daoFinPedido->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 

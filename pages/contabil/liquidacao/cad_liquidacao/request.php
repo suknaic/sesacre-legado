@@ -5,11 +5,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoMod
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoDoc.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoAnotacao.class.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
@@ -67,7 +69,7 @@ switch ($_REQUEST['acao']) {
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            echo $finEmpenhoModel->retornaEmpenhoLiquidacao(null);
             return;
             break;
         } catch (Error $e) {
@@ -121,7 +123,7 @@ switch ($_REQUEST['acao']) {
                        ->setNrLiquidacao($dados['nrLiquidacao'])
                        ->setVlLiquidacao($dados['vlLiquidacao'])
                        ->setDtLiquidacao($dados['dtLiquidacao'])
-                       ->setDsLiquidacao($dados['obsLiquidacao'])
+                       ->setAnotacoes($dados['anotacoes'])
                        ->setDocumentos($dados['docsLiquidacao']);
             echo $liquidacao->salvarLiquidacao();
             return;

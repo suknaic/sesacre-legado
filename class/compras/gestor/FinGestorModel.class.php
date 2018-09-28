@@ -1,5 +1,5 @@
 <?php
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinGestor.class.php";
 
 class FinGestorModel {
@@ -216,8 +216,88 @@ class FinGestorModel {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    
+
+    public function retornarGestor($idFornecedor, $tp) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinGestor = new DaoFinGestor();
+            $pf = new pessoaFisica();
+            $pessoaFisica = $pf->retornaTodasPF();
+
+            $daoFinGestor->retornaTodosGestoresPorContrato($idFornecedor, $tp, $pdo);
+            $gestores = $daoFinGestor->getMsgRetorno();
+            $retorno = '';
+
+            if ($tp == 1) {
+                $class = "selectGestores";
+                $classPrincipal = "gestoresCampos";
+                $id = "gestores";
+                $nomeCampo = 'Gestor Titular:<span class="text-danger">*</span>';
+            } else {
+                $class = "selectGestoresSub";
+                $classPrincipal = "gestoresCamposSub";
+                $id = "gestoresSub";
+                $nomeCampo = 'Gestor Substituto:';
+            }
+
+            if ($daoFinGestor->sucesso()) {
+                foreach ($gestores as $gestor) {
+                    $retorno .= ' <div class="form-group">
+                                 <div class="col-sm-5">
+                                    <div class="panel-body">
+                                        '.$nomeCampo.'
+                                        <div class="'.$classPrincipal.'">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
+                                                    <option value="">Selecione uma Pessoa</option>';
+                    foreach ($pessoaFisica as $v) {
+                        if ($v['id_pessoa'] == $gestor['id_pessoa']) {
+                            $retorno .= "<option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                        } else {
+                            $retorno .= "<option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                        }
+                    }
+                    $retorno .= '                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="panel-body">
+                                        <a href="#" class="removeGestores btn btn-danger" idGestor = "' . $gestor['id_gestor'] . '">X</a>
+                                    </div>
+                                </div>
+                            </div>';
+                }
+            } else {
+                $retorno .= ' <div class="form-group">
+                                 <div class="col-sm-5">
+                                    <div class="panel-body">
+                                        '.$nomeCampo.'
+                                        <div class="'.$classPrincipal.'">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
+                                                    <option value="">Selecione uma Pessoa</option>';
+                    foreach ($pessoaFisica as $pessoa) {
+                        $retorno .= '<option value = "' . $pessoa['id_pessoa'] . '">' . $pessoa["nm_pessoa"] . '</option>';
+                    }
+                $retorno .= '                   </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return $exc->getMessage();
+        }
+    }
+
     public function removerAditivoPorContrato(PDO $pdo){
         
         try {
