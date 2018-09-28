@@ -116,7 +116,34 @@ class DaoFinSubFiscal extends FinSubFiscalTb{
             return;
         }
     }
-    
-    
-    
+
+
+    function retornaTodosSubFiscaisPorContrato($fornecedor, $tp, $pdo){
+        $sql = "SELECT SUBFIS.id_sub_fiscal ,SUBFIS.id_contrato, PE.id_pessoa, SUBFIS.tp_sub_fiscal
+                  FROM fin_sub_fiscal SUBFIS 
+                    INNER JOIN fin_contrato CON ON CON.id_contrato = SUBFIS.id_contrato
+                    INNER JOIN fin_fornecedor FORN on FORN.id_contrato = CON.id_contrato
+                    INNER JOIN ses_pessoa PE ON PE.id_pessoa = SUBFIS.id_pessoa 
+                      WHERE FORN.id_fornecedor = :idFornecedor 
+                        AND SUBFIS.tp_sub_fiscal = :tpSubFiscal";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":idFornecedor", $fornecedor, PDO::PARAM_INT);
+            $sth->bindValue(":tpSubFiscal", $tp, PDO::PARAM_STR);
+            $sth->execute();
+            if($sth->rowCount() > 0){
+                $this->sucesso = true;
+                $this->msgRetorno = $sth->fetchAll(PDO::FETCH_ASSOC);
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "";
+                return;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+            return;
+        }
+    }
 }

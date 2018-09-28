@@ -316,6 +316,12 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setDtPublicacao($contrato['data_publicacao']);
             $finContratoModel->setDsObsContrato($contrato['obs_contrato']);
             $finContratoModel->setIdLotacaoCentral($contrato['central']);
+            $finContratoModel->setIdPessoaGestorTitular($contrato['gestores']);
+            $finContratoModel->setIdPessoaGestorSubstituto($contrato['gestoresSub']);
+            $finContratoModel->setIdPessoaFiscalTitular($contrato['fiscais']);
+            $finContratoModel->setIdPessoaFiscalSubstituto($contrato['fiscaisSub']);
+            $finContratoModel->setIdPessoaSubFiscalTitular($contrato['subFiscais']);
+            $finContratoModel->setIdPessoaSubFiscalSubstituto($contrato['subFiscaisSub']);
             $finContratoModel->setIdTipoGasto($contrato['idTipoGasto']);
             echo $finContratoModel->editarContrato();
             return '';

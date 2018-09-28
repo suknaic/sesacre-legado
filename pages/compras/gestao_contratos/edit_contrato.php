@@ -295,7 +295,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <div class="tipoGastoCampos row">
                                         <div class="col-sm-5">
                                             <div class="panel-body">
-                                                Tipo de Gasto:
+                                                Tipo de Gasto: <span class="text-danger">*</span>
                                                 <div class="input-group">
                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                     <select class="form-control select" name="tipoDeGasto" id="tipoDeGasto" required="true">
@@ -323,6 +323,105 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     </div>
                                     <div class="col-sm-9"></div>
                                 </div>
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Gestores Titulares</h3>
+                                </div>
+                                <div class="campoGestores">
+                                    <?php echo $gestores; ?>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addGestores btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Gestores Substitutos</h3>
+                                </div>
+
+                                <div class="campoGestoresSub">
+                                    <?php echo $gestoreSub; ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addGestorSubstituto btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Fiscais Titulares</h3>
+                                </div>
+                                <div class="campoFiscais">
+                                    <?php echo $fiscais; ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addFiscais btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Fiscais Substitutos</h3>
+                                </div>
+                                <div class="campoFiscaisSub">
+                                    <?php echo $fiscaisSub; ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addFiscaisSub btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Sub-Fiscais</h3>
+                                </div>
+                                <div class="campoSubFiscais">
+                                    <?php echo $subFiscais; ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addSubFiscais btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Sub-Fiscais Substitutos</h3>
+                                </div>
+                                <div class="campoSubFiscaisSub">
+                                    <?php echo $subFiscaisSub; ?>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="addSubFiscaisSub btn btn-info">+</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9"></div>
+                                </div>
+                            </div>
 
                                 <div id="doc_botao">
                                     <button class="btn btn-default btn-info btn-rounded btn-editar btn-block" type="button">

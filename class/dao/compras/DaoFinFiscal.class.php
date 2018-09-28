@@ -125,4 +125,33 @@ class DaoFinFiscal extends FinFiscaisModelTb {
         }
     }
 
+    function retornaTodosFiscaisPorContrato($fornecedor, $tp, $pdo){
+        $sql = "SELECT FIS.id_fiscal ,FIS.id_contrato, PE.id_pessoa, FIS.tp_fiscal
+                  FROM fin_fiscal FIS 
+                    INNER JOIN fin_contrato CON ON CON.id_contrato = FIS.id_contrato
+                    INNER JOIN fin_fornecedor FORN on FORN.id_contrato = CON.id_contrato
+                    INNER JOIN ses_pessoa PE ON PE.id_pessoa = FIS.id_pessoa 
+                      WHERE FORN.id_fornecedor = :idFornecedor 
+                        AND FIS.tp_fiscal = :tpFiscal";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":idFornecedor", $fornecedor, PDO::PARAM_INT);
+            $sth->bindValue(":tpFiscal", $tp, PDO::PARAM_INT);
+            $sth->execute();
+            if($sth->rowCount() > 0){
+                $this->sucesso = true;
+                $this->msgRetorno = $sth->fetchAll(PDO::FETCH_ASSOC);
+                return;
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "";
+                return;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+            return;
+        }
+    }
+
 }

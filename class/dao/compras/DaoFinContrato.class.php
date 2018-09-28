@@ -552,7 +552,7 @@ class DaoFinContrato extends FinContratoTb {
                         on modalidade.id_modalidade = processo.id_modalidade
                         inner join gco_objeto as obj
                         on obj.id_objeto = processo.id_objeto
-			inner join ses_pessoa as pessoa
+			            inner join ses_pessoa as pessoa
                         on pessoa.id_pessoa = f.id_pessoa
                         left join gco_processo_tipo_gasto as gptg
                         on gptg.id_tipo_gasto = cont.id_tipo_gasto
