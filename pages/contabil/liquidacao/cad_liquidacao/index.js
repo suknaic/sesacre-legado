@@ -346,9 +346,9 @@ function habilitaDocumentosFiscais(){
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
 function limpaCampos(){
-    $("#nr_liquidacao").val("");
-    $("#dt_liquidacao").val("");
-    $("#vl_liquidacao").val("");
-    $("#desc_liquidacao").val("");
+    $("#nr_pagamento").val("");
+    $("#dt_pagamento").val("");
+    $("#vl_pagamento").val("");
+    $("#desc_pagamento").val("");
     $("#id_remetente").val("0").trigger('change');
 }

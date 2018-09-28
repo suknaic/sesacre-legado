@@ -394,8 +394,8 @@ class DaoConLiquidacao extends ConLiquidacao {
 
     public function retornaLiquidacaoPorNumeroPamento(PDO $pdo) {
         try {
-            $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.nr_liquidacao,
-                    to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao
+            $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
+                    liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao
                     from con_liquidacao as liquidacao
                     inner join fin_empenho as empenho
                     on empenho.id_empenho = liquidacao.id_empenho
@@ -407,7 +407,7 @@ class DaoConLiquidacao extends ConLiquidacao {
             $stmt->execute();
             if ($stmt->rowCount() >= 1) {
                 $this->sucesso = true;
-                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não encontrou Registros";

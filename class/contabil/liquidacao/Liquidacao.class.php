@@ -689,25 +689,21 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
-
             $retorno = '';
 
-
             if ($daoConLiquidacao->Sucesso()) {
-                foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
-
-                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" nrpedido = "' . $linha["nr_pedido"] . '" 
-                                  idEmpenho ="' . $linha["id_empenho"] . '"  
+                $dados = $daoConLiquidacao->getMsgRetorno();
+                $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '" nrpedido = "' . $dados["nr_pedido"] . '" 
+                                  idEmpenho ="' . $dados["id_empenho"] . '" idLiquidacao="'.$dados["id_liquidacao"].'"  
                         style="cursor:pointer;">
-                <td>' . $linha["nr_pedido"] . '</td>
-                <td>' . $linha["nr_liquidacao"] . '</td>
-                <td>' . $linha["dt_liquidacao"] . '</td>    
+                <td>' . $dados["nr_pedido"] . '</td>
+                <td>' . $dados["nr_liquidacao"] . '</td>
+                <td>' . $dados["dt_liquidacao"] . '</td>    
      
                 </tr>';
-                }
             }
             if (empty($retorno)) {
-                return "Nenhum pedido encontrado";
+                return "Nenhum liquidacao encontrada";
             }
             return $retorno;
         } catch (Exception $ex) {
@@ -724,12 +720,14 @@ class Liquidacao {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            
+
             $dadosContrato = '';
-            $daoContrato = new DaoFinContrato();
-            $daoContrato->retornaDadosContratoGdof($pdo, $nr_pedido);
-            if ($daoContrato->sucesso()) {
-                $campos = $daoContrato->getMsgRetorno();
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
+            $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
+          
+            if ($daoConLiquidacao->sucesso()) {
+                $campos = $daoConLiquidacao->getMsgRetorno();
 
                 $dadosContrato .= '<div class="panel-group" id="accordionFor" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
@@ -738,7 +736,7 @@ class Liquidacao {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
                                                         aria-expanded="false" aria-controls="collapseFor" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados da Liquidação: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span> 
+                                                        <b>Dados da Liquidação: </b><span style="color:#758697"> Nº ' . $campos["nr_liquidacao"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
@@ -747,39 +745,20 @@ class Liquidacao {
                                                 <div class="panel-body">
                                                 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Licitação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
+                                                        <div class="col-sm-2"><b>Data da Liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                        <div class="col-sm-2"><b>Valor da Liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Objeto:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
+                                                        <div class="col-sm-2"><b>Saldo da liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
                                                     </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Modalidade:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
-                                                    </div>
-                                                    
-                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
-                                                        <div class="col-sm-10"></div>
-                                                    </div>
+                
                                                 </div>
                                             </div>
                                          </div>
