@@ -240,7 +240,7 @@ $(document).ready(function () {
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
-                "obsLiquidacao": $("#desc_liquidacao").val(),
+                "anotacoes": $("#anotacoes").val(),
                 "docsLiquidacao": documentos
             }
             

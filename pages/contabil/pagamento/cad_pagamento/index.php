@@ -77,17 +77,8 @@ require_once "index.load.php";
                                                     <thead>
                                                         <tr>
                                                             <th>Pedido</th>
-                                                            <th>Descrição</th>
-                                                            <th>Tipo de gasto</th>
-                                                            <th>Fonte</th>
-                                                            <th>Despesa</th>
-                                                            <th>Valor</th>
-                                                            <th>Ata</th>
-                                                            <th>Contrato</th>
-                                                            <th>Modalidade</th>
-                                                            <th>Projeto/Atividade</th>
-                                                            <th>Empenho</th>
-                                                            <th>Situação</th>
+                                                            <th>Nº liquidação</th>
+                                                            <th>Data liquidação</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -117,6 +108,30 @@ require_once "index.load.php";
                                                     <button type="button" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i></button>
                                                 </span>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do contrato-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body contratos">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do pedido de necessidade-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body pedido">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do empenho-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body empenho">
+
                                         </div>
                                     </div>
                                 </div>
@@ -269,6 +284,6 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="index.js"></script>
+        <script src="/pages/contabil/pagamento/cad_pagamento/index.js"></script>
     </body>
 </html>

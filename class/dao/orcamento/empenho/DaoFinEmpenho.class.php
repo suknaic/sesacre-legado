@@ -288,13 +288,83 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select emp.nr_empenho, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
-                        tpEmp.nm_tipo_empenho, emp.vl_empenho, (emp.vl_empenho - (select sum(vl_liquidacao) from con_liquidacao liq where liq.id_empenho = emp.id_empenho and liq.id_liquidacao_situacao <> 4)) as saldo
+                $sql = "select
+                            emp.id_pedido,
+                            emp.nr_empenho,
+                            emp.id_empenho,
+                            to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                            tpEmp.nm_tipo_empenho,
+                            emp.vl_empenho,
+                            (emp.vl_empenho -
+                            coalesce((
+                               select
+                                  sum(vl_documento) 
+                               from
+                                  fin_ordem ordem,
+                                  fin_entrega_confirmacao confirmacao,
+                                  fin_entrega_documento entDoc,
+                                  fin_documento_fiscal docFis 
+                               where
+                                  ordem.id_ordem = confirmacao.id_ordem 
+                                  and confirmacao.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                                  and entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
+                                  and docFis.id_documento_situacao <> 7 
+                                  and ordem.id_pedido = emp.id_pedido
+                            ),0)) as saldo_empenho_gdof 
 
-                        from fin_empenho as emp
-                        inner join fin_tipo_empenho as tpEmp
-                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
-                        where id_pedido = :pedido";
+                         from
+                            fin_empenho as emp 
+                            inner join
+                               fin_tipo_empenho as tpEmp 
+                               on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                         where
+                            id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaEmpenhoLiquidacao(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select
+                            emp.nr_empenho,
+                            emp.id_empenho,
+                            to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                            tpEmp.nm_tipo_empenho,
+                            emp.vl_empenho,
+                            (
+                               emp.vl_empenho - (
+                               select
+                                  coalesce(sum(vl_liquidacao),0) 
+                               from
+                                  con_liquidacao liq 
+                               where
+                                  liq.id_empenho = emp.id_empenho 
+                                  and liq.id_liquidacao_situacao <> 4)
+                            )
+                            as saldo_empenho_liquidacao 
+                         from
+                            fin_empenho as emp 
+                            inner join
+                               fin_tipo_empenho as tpEmp 
+                               on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                         where
+                            id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
