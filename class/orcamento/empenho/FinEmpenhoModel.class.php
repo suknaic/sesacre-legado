@@ -469,11 +469,11 @@ class FinEmpenhoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+            
             $dadosEmpenho = '';
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
-            $daoFinEmpenho->retornaEmpenhoGdof($pdo);
-
+            $daoFinEmpenho->retornaEmpenhoGdof($pdo);            
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
 
