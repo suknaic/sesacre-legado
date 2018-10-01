@@ -297,20 +297,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             emp.vl_empenho,
                             (emp.vl_empenho -
                             coalesce((
-                               select
-                                  sum(vl_documento) 
-                               from
-                                  fin_ordem ordem,
-                                  fin_entrega_confirmacao confirmacao,
-                                  fin_entrega_documento entDoc,
-                                  fin_documento_fiscal docFis 
-                               where
-                                  ordem.id_ordem = confirmacao.id_ordem 
-                                  and confirmacao.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-                                  and entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
-                                  and docFis.id_documento_situacao <> 7 
-                                  and ordem.id_pedido = emp.id_pedido
-                            ),0)) as saldo_empenho_gdof 
+                                select sum(vl_documento) 
+                                from                     
+                                    fin_pedido p
+                                inner join fin_documento_fiscal docFis on docFis.id_pedido = p.id_pedido                              
+                                where
+                                    p.id_pedido = emp.id_pedido
+                                    and docFis.id_documento_situacao <> 7 
+                                    ), 0)
+                            ) as saldo_empenho_gdof 
 
                          from
                             fin_empenho as emp 
@@ -332,7 +327,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }

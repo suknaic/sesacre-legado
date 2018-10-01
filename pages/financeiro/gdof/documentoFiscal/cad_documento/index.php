@@ -298,10 +298,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="tpDocumento" id="tpDocumento">
                                                                         <option value="0" selected="true">Selecione uma tipo de documento</option>
-                                                                        <option value="1">Cupom fiscal</option>
-                                                                        <option value="2">Recibo</option>
-                                                                        <option value="3">Nota fiscal</option>
-                                                                        <option value="4">Fatura</option>
+                                                                        <?php echo FinTipoDocumento::retornaOptionsTipoDocumento(0); ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
