@@ -221,7 +221,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                           	 fin_pedido p
                       	  inner join fin_documento_fiscal docFis on docFis.id_pedido = p.id_pedido                              
                           where
-                             doc.id_documento_fiscal = docFis.id_documento_fiscal 
+                             p.id_pedido = doc.id_pedido 
                              and docFis.id_documento_situacao <> 7 
                              ), 0)
                        )
@@ -1295,6 +1295,40 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
+        }
+    }
+    
+    
+    public function retornaSaldoPedidoNecessidade(PDO $pdo){
+        try {
+            $sqlIgnoraDoc = "";
+            if(!empty($this->getIdDocumentoFiscal())){
+                $sqlIgnoraDoc = " AND DOC.id_documento_fiscal <> :idDocumentoFiscal ";
+            }
+            $sql = "SELECT coalesce(sum(DOC.vl_documento), 0.0000) AS executado, P.vl_pedido"
+                    . " , (P.vl_pedido - coalesce(sum(DOC.vl_documento), 0.0000)) as saldo"
+                    . " FROM fin_pedido P"
+                    . " LEFT JOIN fin_documento_fiscal DOC ON DOC.id_pedido = P.id_pedido"
+                    . " AND DOC.id_documento_situacao <> 7"
+                    . $sqlIgnoraDoc
+                    . " WHERE P.id_pedido = :idPedido"                    
+                    . " GROUP BY P.id_pedido";                                                  
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);            
+            if(!empty($this->getIdDocumentoFiscal())){
+                $stmt->bindValue(":idDocumentoFiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
     
