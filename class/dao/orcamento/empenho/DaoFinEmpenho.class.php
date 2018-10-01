@@ -347,16 +347,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
                             emp.vl_empenho,
-                            (
-                               emp.vl_empenho - (
+                            (emp.vl_empenho - (
                                select
                                   coalesce(sum(vl_liquidacao),0) 
                                from
-                                  con_liquidacao liq 
+                                  con_liquidacao liq
                                where
                                   liq.id_empenho = emp.id_empenho 
-                                  and liq.id_liquidacao_situacao <> 4)
-                            )
+                                  and liq.id_liquidacao_situacao <> 4
+                            ))
                             as saldo_empenho_liquidacao 
                          from
                             fin_empenho as emp 
@@ -383,7 +382,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-
+    
     public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -443,12 +442,13 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
     
-    public function atualizaSitEmpenho(PDO $pdo){
+    public function atualizaSituacaoStatusEmpenho(PDO $pdo){
         try {
             if (!empty($pdo)) {
-                $sql = "update fin_empenho set sit_empenho = :sit_empenho where id_empenho = :id_empenho";
+                $sql = "update fin_empenho set sit_empenho = :sit_empenho, id_empenho_status = :id_empenho_status where id_empenho = :id_empenho";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":sit_empenho", $this->getSitEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":sit_empenho", $this->getSitEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_empenho_status", $this->getIdEmpenhoStatus(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -461,7 +461,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+        
     public function retornaDadosPedidoPeloEmpenho(PDO $pdo){
         try {
             if (!empty($pdo)) {

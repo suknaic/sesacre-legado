@@ -11,6 +11,7 @@ class ConLiquidacao {
     private $id_doc_tipo_lotacao = null;
     private $dt_liquidacao = null;
     private $vl_liquidacao = null;
+    private $vl_liquidacao_saldo = null;
     private $ds_liquidacao = null;
     private $st_ativo = null;
 
@@ -31,7 +32,17 @@ class ConLiquidacao {
         $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
         return $this;
     }
-        
+    
+    function getVlLiquidacaoSaldo() {
+        return $this->vl_liquidacao_saldo;
+    }
+
+    function setVlLiquidacaoSaldo($vl_liquidacao_saldo) {
+        $this->vl_liquidacao_saldo = $vl_liquidacao_saldo;
+        return $this;
+    }
+
+            
     /**
      * Get the value of Id Liquidacao
      *

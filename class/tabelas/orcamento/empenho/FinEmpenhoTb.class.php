@@ -12,6 +12,17 @@ class FinEmpenhoTb {
     private $vl_empenho = null;
     private $ds_empenho = null;
     private $sit_empenho = null;
+    
+    private $id_empenho_status = null;
+    
+    function getIdEmpenhoStatus() {
+        return $this->id_empenho_status;
+    }
+
+    function setIdEmpenhoStatus($id_empenho_status) {
+        $this->id_empenho_status = $id_empenho_status;
+        return $this;
+    }
 
     /**
      * @return mixed

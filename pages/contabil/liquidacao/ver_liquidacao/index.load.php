@@ -2,7 +2,6 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 
@@ -55,6 +54,4 @@ $pedido->setNrPedido($dadosLiquidacao["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
 
 //DADOS DO EMPENHO
-$finEmpenhoModel = new FinEmpenhoModel();
-$finEmpenhoModel->setIdPedido($dadosLiquidacao["id_pedido"]);
-$dadosEmpenho = $finEmpenhoModel->retornaEmpenhoLiquidacao(null);
+$dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacaoVisualizacao(null);

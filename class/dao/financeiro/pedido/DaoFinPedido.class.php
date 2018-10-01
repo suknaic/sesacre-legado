@@ -824,13 +824,14 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
     
-    public function atualizaSitPedido(PDO $pdo = null){
+    public function atualizaSituacaoStatusPedido(PDO $pdo = null){
         $this->sucesso = false;
-        $sql = "update fin_pedido set id_pedido_situacao = :id_pedido_situacao where id_pedido = :id_pedido";
+        $sql = "update fin_pedido set id_pedido_situacao = :id_pedido_situacao, st_pedido = :st_pedido where id_pedido = :id_pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_pedido_situacao", $this->getIdPedidoSituacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":st_pedido", $this->getStPedido(), PDO::PARAM_STR);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -844,19 +845,39 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
     
-    public function retornaTotalLiquidadoDoPedido(PDO $pdo = null) {
+    
+    public function retornaTotaisDoPedido(PDO $pdo = null) {
         $this->sucesso = false;
         $sql = "select
-                    coalesce(sum(vl_liquidacao), 0) as total_liquidado 
+                    pedido.id_pedido,
+                    empenho.id_empenho,
+                    empenho.vl_empenho as valor_empenho,
+                    pedido.vl_pedido as valor_pedido,
+                    tpSol.id_tipo_solicitacao,
+                    sum(itens.qt_itens_ordem * itens.vl_itens_ordem) valor_ordenado,
+                    sum(coalesce(vl_liquidacao,0)) as valor_liquidado
+                    --sum(coalesce(vl_documento,0)) as valor_documento
                  from
-                    fin_empenho emp,
-                    fin_pedido ped,
-                    con_liquidacao liq 
+                    fin_pedido pedido
+                 inner join fin_empenho empenho
+                    on empenho.id_pedido = pedido.id_pedido
+                 inner join fin_tipo_solicitacao tpSol
+                    on tpSol.id_tipo_solicitacao = pedido.id_tipo_solicitacao
+                 left join fin_ordem ordem
+                    on ordem.id_pedido = pedido.id_pedido
+                    and ordem.sit_ordem > '0'
+                 /*left join fin_documento_fiscal documento
+                    on documento.id_pedido = pedido.id_pedido
+                    and documento.id_documento_situacao <> 7*/
+                 left join fin_ordem_itens itens
+                    on itens.id_ordem = ordem.id_ordem
+                 left join con_liquidacao liq
+                    on liq.id_empenho = empenho.id_empenho
+                    and liq.id_liquidacao_situacao <> 4
                  where
-                    emp.id_pedido = ped.id_pedido 
-                    and emp.id_empenho = liq.id_empenho 
-                    and liq.id_liquidacao_situacao <> 4 
-                    and ped.id_pedido = :id_pedido";
+                    pedido.id_pedido = :id_pedido
+                 group by
+                    pedido.id_pedido, empenho.id_empenho, tpSol.id_tipo_solicitacao";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);

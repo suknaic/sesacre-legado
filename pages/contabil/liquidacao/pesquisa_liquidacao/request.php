@@ -38,6 +38,7 @@ switch ($_REQUEST['acao']) {
                        ->setContratado($dados['fornecedor'])
                        ->setNrPedido($dados['pedido'])
                        ->setNrEmpenho($dados['empenho'])
+                       ->setNrContrato($dados['contrato'])
                        ->setNrDocumentoFiscal($dados['nrDoc'])
                        ->setTipoGasto($dados['tpGasto'])
                        ->setSituacao($dados['situacao']);
