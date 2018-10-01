@@ -14,6 +14,7 @@ class FinEmpenhoModel {
     private $vl_empenho = null;
     private $ds_empenho = null;
     private $sit_empenho = null;
+    private $id_empenho_status = null;
 
     private $sit_cadastrado = 1;
     private $sit_liquidado_parcial = 2;
@@ -52,6 +53,15 @@ class FinEmpenhoModel {
         return $this->sit_cancelado;
     }
     
+    function getIdEmpenhoStatus() {
+        return $this->id_empenho_status;
+    }
+
+    function setIdEmpenhoStatus($id_empenho_status) {
+        $this->id_empenho_status = $id_empenho_status;
+        return $this;
+    }
+
     /**
      * @return mixed
      */
@@ -566,6 +576,71 @@ class FinEmpenhoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Empenho a Liquidar:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_liquidacao"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosEmpenho;
+            }
+            return $dadosEmpenho;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+    
+    public function retornaEmpenhoLiquidacaoVisualizacao($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosEmpenho = '';
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->retornaEmpenhoLiquidacaoVisualizacao($pdo);
+
+            if ($daoFinEmpenho->sucesso()) {
+                $campos = $daoFinEmpenho->getMsgRetorno();
+
+                $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
+                                                        aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nm_tipo_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo do Empenho para Liquidação:</b></div>
                                                         <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_liquidacao"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
@@ -643,12 +718,13 @@ class FinEmpenhoModel {
         }
     }
     
-    public function atualizaSituacaoEmpenho(PDO $pdo) {
+    public function atualizaSituacaoStatusEmpenho(PDO $pdo) {
         try {
 
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->getIdEmpenho());
             $daoFinEmpenho->setSitEmpenho($this->getSitEmpenho());
+            $daoFinEmpenho->setIdEmpenhoStatus($this->getIdEmpenhoStatus());
 
             $daoFinEmpenho->retornaDadosEmpenho($pdo);
             if (!$daoFinEmpenho->sucesso()) {
@@ -658,11 +734,10 @@ class FinEmpenhoModel {
 
             $busca = $daoFinEmpenho->getMsgRetorno();
 
-            //Atualiza a Situação do Empenho
-            $daoFinEmpenho->atualizaSitEmpenho($pdo);
-
+            //Atualiza a Situação e Status do Empenho
+            $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
             if (!$daoFinEmpenho->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação do Empenho. ";
+                $this->msg_erros = "Erro ao atualizar a situação e status do Empenho. ";
                 return false;
             }
 
@@ -677,7 +752,7 @@ class FinEmpenhoModel {
             return false;
         }
     }
-    
+        
     public function retornaTotalLiquidadoDoEmpenho($pdo) {
         try {
             if (empty($pdo)) {

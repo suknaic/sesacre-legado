@@ -167,7 +167,7 @@ class LiquidacaoPesquisa {
                                 . "<td class='text-center'>".$linha['nr_pedido']."</td>"
                                 . "<td class='text-center'>".$linha['nr_empenho']."</td>"
                                 . "<td class='text-center'>".$linha['documentos_fiscais']."</td>"
-                                . "<td class='text-center'>".$linha['nr_cnpj']." - ".$linha['nm_fantasia']."</td>"
+                                . "<td class='text-center'>". Metodos::formataCnpj($linha['nr_cnpj'])." - ".$linha['nm_fantasia']."</td>"
                                 . "<td class='text-center'>".$linha['dt_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['vl_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['nm_liquidacao_situacao']."</td>"
@@ -213,6 +213,10 @@ class LiquidacaoPesquisa {
         
         if($this->getSituacao()){
             $filtro .= (empty($filtro)) ? " where liq.id_liquidacao_situacao = ".$this->getSituacao() : " and liq.id_liquidacao_situacao = ".$this->getSituacao(); 
+        }
+        
+        if ($this->getTipoGasto()) {
+            $filtro .= (empty($filtro)) ? " where tpGasto.id_tipo_gasto = ".$this->getTipoGasto() : " and tpGasto.id_tipo_gasto = ".$this->getTipoGasto();
         }
         
 //        if ($this->getNrProtocolo()) {
