@@ -14,20 +14,18 @@ class FinEmpenhoModel {
     private $vl_empenho = null;
     private $ds_empenho = null;
     private $sit_empenho = null;
-
     private $sit_cadastrado = 1;
     private $sit_liquidado_parcial = 2;
     private $sit_liquidado_total = 3;
     private $sit_pago_parcial = 4;
     private $sit_pago_total = 5;
     private $sit_cancelado = 6;
-    
     private $msg_erros = null;
-    
-    function getMsgErros(){
+
+    function getMsgErros() {
         return $this->msg_erros;
     }
-    
+
     function getSitCadastrado() {
         return $this->sit_cadastrado;
     }
@@ -51,7 +49,7 @@ class FinEmpenhoModel {
     function getSitCancelado() {
         return $this->sit_cancelado;
     }
-    
+
     /**
      * @return mixed
      */
@@ -516,7 +514,72 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
+
+    public function retornaEmpenhoPagamento($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosEmpenho = '';
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->retornaEmpenhoGdof($pdo);
+
+            if ($daoFinEmpenho->sucesso()) {
+                $campos = $daoFinEmpenho->getMsgRetorno();
+
+                $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
+                                                        aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nm_tipo_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Empenho para GDOF:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_gdof"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosEmpenho;
+            }
+            return $dadosEmpenho;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public function retornaEmpenhoLiquidacao($pdo) {
         try {
 
@@ -625,7 +688,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
+
     public function cancelaEmpenhoPorIdDoPedido() {
         try {
             if (empty($pdo)) {
@@ -642,7 +705,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
+
     public function atualizaSituacaoEmpenho(PDO $pdo) {
         try {
 
@@ -677,7 +740,7 @@ class FinEmpenhoModel {
             return false;
         }
     }
-    
+
     public function retornaTotalLiquidadoDoEmpenho($pdo) {
         try {
             if (empty($pdo)) {
