@@ -207,20 +207,45 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaIfEmpenhoPorIdDocumento(PDO $pdo) {
         try {
-            $sql = "select DISTINCT (emp.nr_empenho), emp.nr_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
-                    tpEmp.nm_tipo_empenho, emp.vl_empenho
-                    from fin_documento_fiscal as doc
-                    inner join fin_entrega_documento as entDoc
-                    on entDoc.id_documento_fiscal = doc.id_documento_fiscal
-                    inner join fin_entrega_confirmacao as entrega
-                    on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao
-                    inner join fin_ordem as ordem
-                    on ordem.id_ordem = entrega.id_ordem
-                    inner join fin_empenho as emp
-                    on emp.id_pedido =  ordem.id_pedido
-                    inner join fin_tipo_empenho as tpEmp
-                    on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
-                    where doc.id_documento_fiscal = :documento";
+            $sql = "select DISTINCT
+                       (emp.nr_empenho),
+                       emp.nr_empenho,
+                       to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                       tpEmp.nm_tipo_empenho,
+                       emp.vl_empenho,
+                       (
+                          emp.vl_empenho - coalesce(( 
+                          select
+                             sum(vl_documento) 
+                          from
+                             fin_ordem ordem, fin_entrega_confirmacao confirmacao, fin_entrega_documento entDoc, fin_documento_fiscal docFis 
+                          where
+                             ordem.id_ordem = confirmacao.id_ordem 
+                             and confirmacao.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                             and entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
+                             and docFis.id_documento_situacao <> 7 
+                             and ordem.id_pedido = emp.id_pedido ), 0)
+                       )
+                       as saldo_empenho_gdof 
+                    from
+                       fin_documento_fiscal as doc 
+                       inner join
+                          fin_entrega_documento as entDoc 
+                          on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
+                       inner join
+                          fin_entrega_confirmacao as entrega 
+                          on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
+                       inner join
+                          fin_ordem as ordem 
+                          on ordem.id_ordem = entrega.id_ordem 
+                       inner join
+                          fin_empenho as emp 
+                          on emp.id_pedido = ordem.id_pedido 
+                       inner join
+                          fin_tipo_empenho as tpEmp 
+                          on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                    where
+                       doc.id_documento_fiscal = :documento";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();

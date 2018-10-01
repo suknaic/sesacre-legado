@@ -19,6 +19,17 @@ class FinPedidoTb {
     private $dtPedido = null;
     private $stPedido = null;
     
+    private $idPedidoSituacao = null;
+    
+    function getIdPedidoSituacao() {
+        return $this->idPedidoSituacao;
+    }
+
+    function setIdPedidoSituacao($idPedidoSituacao) {
+        $this->idPedidoSituacao = $idPedidoSituacao;
+        return $this;
+    }
+    
     function getIdPedido() {
         return $this->idPedido;
     }

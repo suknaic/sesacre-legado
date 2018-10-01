@@ -242,7 +242,7 @@ function listaEscolaridadeCombo() {
             $("#id_escolaridade").append(response);
             $("#id_escolaridade").select2({
                 width: " 100%"
-            });a
+            });
         }
     });
 }
@@ -407,12 +407,12 @@ $(document).ready(function () {
             return;
         }
 
-        //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
-        admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
-        inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
-        if (inicio > admissao) {
-            func
-        }
+//        //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
+//        admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
+//        inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
+//        if (inicio > admissao) {
+//            func
+//        }
         //*******************************************************************************************************
         var flag = 0;
         if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {

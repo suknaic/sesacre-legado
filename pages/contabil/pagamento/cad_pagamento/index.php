@@ -77,17 +77,8 @@ require_once "index.load.php";
                                                     <thead>
                                                         <tr>
                                                             <th>Pedido</th>
-                                                            <th>Descrição</th>
-                                                            <th>Tipo de gasto</th>
-                                                            <th>Fonte</th>
-                                                            <th>Despesa</th>
-                                                            <th>Valor</th>
-                                                            <th>Ata</th>
-                                                            <th>Contrato</th>
-                                                            <th>Modalidade</th>
-                                                            <th>Projeto/Atividade</th>
-                                                            <th>Empenho</th>
-                                                            <th>Situação</th>
+                                                            <th>Nº liquidação</th>
+                                                            <th>Data liquidação</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -114,8 +105,92 @@ require_once "index.load.php";
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                 <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
                                                 <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
-                                                    <button type="button" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                    <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
                                                 </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do contrato-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body contratos">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do pedido de necessidade-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body pedido">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados do empenho-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body empenho">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form dos dados da liquidacao-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body dadosLiquidacao">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Form das documentos-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body docFis">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
+                                                                        <option value="0" selected="true">Selecione um Documento Fiscal</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">Nº Documento Fiscal</th>
+                                                                            <th class="text-center">Tipo Documento Fiscal</th>
+                                                                            <th class="text-center">Competência</th>
+                                                                            <th class="text-center">Data Emissão</th>
+                                                                            <th class="text-center">Data Atesto</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -269,6 +344,6 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="index.js"></script>
+        <script src="/pages/contabil/pagamento/cad_pagamento/index.js"></script>
     </body>
 </html>

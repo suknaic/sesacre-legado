@@ -875,6 +875,18 @@ class pessoaFisica {
             $retorno = "";
         }
     }
+
+    public function retornaTodasPF() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pf = new DaoSesPessoaFisica();
+            $result = $pf->retornaPFOption($pdo);
+            return $result;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
 }
 
 ?>

@@ -57,6 +57,35 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+                        
+                        <!--Modal addAnotacao-->
+                        <div class=" modal fade modal-footer" id="adAnotacao"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Anotação</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                            <input type="hidden" name="id_pedido_anotacao" id="id_processo_anotacao" value="">
+                                            <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                        <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <form class="form-horizontal" id="form-documento" role="form">
                             <div class="panel">                                
                                 
@@ -151,7 +180,7 @@ require_once "index.load.php";
                                                     <input type="hidden" id="id_liquidacao" value="<?php echo $dadosLiquidacao['id_liquidacao']?>" />
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da Liquidação:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Liquidação:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -162,7 +191,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
@@ -173,7 +202,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Liquidação:</b></div>
+                                                            <div class="col-sm-2"><b>Data da Liquidação:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -183,13 +212,6 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_liquidacao"><?php echo $dadosLiquidacao['ds_liquidacao']; ?></textarea>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -226,6 +248,10 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
+                                <?php
+                                //Anotações
+                                require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/contabil/liquidacao/anotacao_liquidacao/anotacao.html";
+                                ?>
                                 
                                 <div class="form-group">
                                     <div class="col-sm-12" style="margin-bottom: -4%;">
@@ -233,7 +259,7 @@ require_once "index.load.php";
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title text-center">Histórico</h4>
+                                                        <h4 class="panel-title">Histórico</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <textarea class="form-control" rows="10" readonly="true"><?php echo $historico;?></textarea>

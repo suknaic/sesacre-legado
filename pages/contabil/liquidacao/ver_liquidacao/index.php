@@ -149,7 +149,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
@@ -170,13 +170,6 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_liquidacao" disabled><?php echo $dadosLiquidacao['ds_liquidacao']; ?></textarea>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -215,12 +208,30 @@ require_once "index.load.php";
                                 <!-- FIM CAMPO REMETENTE-->
                                 
                                 <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control anotacoes" rows="7" readonly></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
                                     <div class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title text-center">Histórico</h4>
+                                                        <h4 class="panel-title">Histórico</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <textarea class="form-control" rows="10" readonly="true"><?php echo $historico;?></textarea>

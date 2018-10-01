@@ -1,4 +1,5 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinSubFiscal.class.php";
 
 class SubFiscalModel {
@@ -209,8 +210,85 @@ class SubFiscalModel {
         
     }
 
-    
-        
-        
+    public function retornarSubFiscal($idFornecedor, $tp) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinSubFiscal = new DaoFinSubFiscal();
+            $pf = new pessoaFisica();
+            $pessoaFisica = $pf->retornaTodasPF();
+
+            $daoFinSubFiscal->retornaTodosSubFiscaisPorContrato($idFornecedor, $tp, $pdo);
+            $subFiscais = $daoFinSubFiscal->getMsgRetorno();
+            $retorno = '';
+
+            if ($tp == 1) {
+                $class = "selectSubFiscais";
+                $classPrincipal = "SubFiscaisCampos";
+                $id = "subFiscais";
+                $nomeCampo = 'Sub-Fiscal Titular:';
+            } else {
+                $class = "selectSubFiscaisSub";
+                $classPrincipal = "SubFiscaisCamposSub";
+                $id = "subFiscaisSub";
+                $nomeCampo = 'Sub-Fiscal Substituto:';
+            }
+
+            if ($daoFinSubFiscal->sucesso()) {
+                foreach ($subFiscais as $subFiscal) {
+                    $retorno .= ' <div class="form-group">
+                                 <div class="col-sm-5">
+                                    <div class="panel-body">
+                                        '.$nomeCampo.'
+                                        <div class="'.$classPrincipal.'">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
+                                                    <option value="">Selecione uma Pessoa</option>';
+                    foreach ($pessoaFisica as $v) {
+                        if ($v['id_pessoa'] == $subFiscal['id_pessoa']) {
+                            $retorno .= "       <option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                        } else {
+                            $retorno .= "       <option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                        }
+                    }
+                    $retorno .= '                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="panel-body">
+                                        <a href="#" class="removeFiscais btn btn-danger" idSubFiscal = "' . $subFiscal['id_sub_fiscal'] . '">X</a>
+                                    </div>
+                                </div>
+                            </div>';
+                }
+            } else {
+                $retorno .= ' <div class="form-group">
+                                 <div class="col-sm-5">
+                                    <div class="panel-body">
+                                        '.$nomeCampo.'
+                                        <div class="'.$classPrincipal.'">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
+                                                    <option value="">Selecione uma Pessoa</option>';
+                foreach ($pessoaFisica as $pessoa) {
+                    $retorno .= '                <option value = "' . $pessoa['id_pessoa'] . '">' . $pessoa["nm_pessoa"] . '</option>';
+                }
+                $retorno .= '                   </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return $exc->getMessage();
+        }
+    }
         
 }
