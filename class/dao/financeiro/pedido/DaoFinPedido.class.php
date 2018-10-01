@@ -459,9 +459,9 @@ class DaoFinPedido extends FinPedidoTb {
                         tp.nm_tipo_gasto, font.nr_fonte, desp.ds_despesa_elemento, p.vl_pedido, p.st_pedido, p.st_pedido as status,
                         concat(concat(cont.nr_contrato,'/') , to_char(cont.dt_ini_vigencia_contrato, 'yyyy'))  as contrato, cont.tp_contrato,
                         modalidade.nm_modalidade, pt.cd_programa_trabalho, pt.ds_programa_trabalho, emp.nr_empenho,ordemAux.sit_protocolo,
-                        ordemAux.ordens 
+                        ordemAux.ordens, id_tipo_solicitacao 
                         from fin_pedido p 
-                        inner join fin_ordem as ordem
+                        left join fin_ordem as ordem
                         on ordem.id_pedido = p.id_pedido
                         inner join view_despesa_elemento as desp
                         on desp.id_despesa_elemento = p.id_despesa_elemento
@@ -469,9 +469,9 @@ class DaoFinPedido extends FinPedidoTb {
                         on tp.id_tipo_gasto = p.id_tipo_gasto
                         inner join fin_fonte as font
                         on font.id_fonte =  p.id_fonte
-                        inner join fin_fornecedor as f
+                        left join fin_fornecedor as f
                         on f.id_fornecedor = p.id_fornecedor
-                        inner join fin_contrato as cont 
+                        left join fin_contrato as cont 
                         on cont.id_contrato =  f.id_contrato
                         inner join fin_programa_trabalho as pt
                         on pt.id_programa_trabalho  = p.id_programa_trabalho
@@ -497,7 +497,8 @@ class DaoFinPedido extends FinPedidoTb {
                         )
                         as ordemAux 
                         on ordemAux.id_pedido = p.id_pedido
-                        where p.nr_pedido = :numero";
+                        where p.nr_pedido = :numero
+                        and p.id_tipo_solicitacao in (1,2)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrPedido(), PDO::PARAM_INT);
                 $stmt->execute();

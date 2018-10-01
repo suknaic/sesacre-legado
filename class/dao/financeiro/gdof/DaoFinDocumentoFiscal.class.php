@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -39,6 +39,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
+            $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -165,16 +166,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select DISTINCT (p.nr_pedido),p.id_pedido, p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
-                    p.vl_pedido, desp.cd_despesa, desp.ds_despesa
+                    p.vl_pedido, desp.cd_despesa, desp.ds_despesa, p.id_tipo_solicitacao, doc.id_pedido
                     from fin_documento_fiscal as doc
-                    inner join fin_entrega_documento as entDocumento
+                    left join fin_entrega_documento as entDocumento
                     on entDocumento.id_documento_fiscal  = doc.id_documento_fiscal
-                    inner join fin_entrega_confirmacao as confirmacao
+                    left join fin_entrega_confirmacao as confirmacao
                     on confirmacao.id_entrega_confirmacao = entDocumento.id_entrega_confirmacao
-                    inner join fin_ordem as ordem
+                    left join fin_ordem as ordem
                     on ordem.id_ordem = confirmacao.id_ordem
                     inner join fin_pedido as p
-                    on p.id_pedido = ordem.id_pedido
+                    on p.id_pedido = doc.id_pedido
                     inner join fin_fonte as f
                     on f.id_fonte = p.id_fonte
                     inner join view_programa_trabalho as programa

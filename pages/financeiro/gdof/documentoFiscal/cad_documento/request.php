@@ -173,8 +173,9 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setIdLotacao($dados["id_lotacao"]);
             $finDocumentoFiscal->setIdDocOrigem($dados["destinatario"]);
             $finDocumentoFiscal->setIdPessoa($session->getIdUser());
-            $finDocumentoFiscal->setAnotacoes($dados["anotacoes"]);
-            echo $finDocumentoFiscal->salvaDocumentoFiscal();
+            $finDocumentoFiscal->setAnotacoes($dados["anotacoes"]);  
+            $finDocumentoFiscal->setIdPedido((int)$dados['pedido']);
+            echo $finDocumentoFiscal->salvaDocumentoFiscal((int)$dados['tipo_solicitacao']);
             return;
             break;
         } catch (Error $e) {

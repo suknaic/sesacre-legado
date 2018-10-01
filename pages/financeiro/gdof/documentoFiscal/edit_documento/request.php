@@ -101,7 +101,8 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);
             $finDocumentoFiscal->setEntrega($dados['entregas']);
-            echo $finDocumentoFiscal->editaDocumentoFiscal();
+            $finDocumentoFiscal->setIdPedido((int)$dados['pedido']);            
+            echo $finDocumentoFiscal->editaDocumentoFiscal((int)$dados['tipo_solicitacao']);
             return;
             break;
         } catch (Error $e) {

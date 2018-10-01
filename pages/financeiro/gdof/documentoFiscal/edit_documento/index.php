@@ -84,6 +84,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                         <!--Fim Modal AddAnotacao-->
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id; ?>" />
+                            <input type="hidden" value="<?php echo $tipoSolicitacao; ?>" id="tipo_solicitacao" />
+                            <input type="hidden" value="<?php echo $idPedido; ?>" id="pedido" />
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações do documento fiscal</h3>
@@ -114,7 +116,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--Form das ordens-->
-                                <div class="form-group">
+                                <div class="form-group" id="panel-ordem">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body ordem">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -174,7 +176,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                     </div>
                                 </div>
                                 <!--Form das entrega-->
-                                <div class="form-group">
+                                <div class="form-group" id="panel-entrega">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body ordem">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

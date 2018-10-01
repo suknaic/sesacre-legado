@@ -24,6 +24,16 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    //Masca para valor
+    
+    $("#valorDocumentoFiscal").priceFormat({
+        centsLimit: 4,
+        prefix: '',
+        centsSeparator: ',',
+        thousandsSeparator: '.',
+    });
+    
 
     function limpaCampos() {
         $("#tabelaOrdem tbody").html("");
@@ -59,9 +69,12 @@ $(document).ready(function () {
         var $this = $(this);
         var dados = {
             "nr_pedido": $("#codItemPesquisa").val(),
-            "id_pedido": $("body").find(".selecionaItem").attr("pedido")
+            "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
+            "id_tipo_solicitacao": $("body").find(".selecionaItem").attr("tipo_solicitacao")
         }
-
+        $("#tipo_solicitacao").val(dados.id_tipo_solicitacao)
+        $("#pedido").val(dados.id_pedido)
+                                    
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -126,6 +139,17 @@ $(document).ready(function () {
                 $("#selectOrdem").html(response);
             }
         });
+        
+        if(dados.id_tipo_solicitacao == 2){
+            $("#panel-entrega").show();
+            $("#panel-ordem").show();
+            $("#valorDocumentoFiscal").prop("disabled", true);
+        }else if(dados.id_tipo_solicitacao == 1){
+            $("#panel-entrega").hide();
+            $("#panel-ordem").hide();
+            $("#valorDocumentoFiscal").prop("disabled", false);
+        }
+        
         $('#modalItem').modal('hide');
     });
 
@@ -337,29 +361,34 @@ $(document).ready(function () {
             var entregas = [];
 //            var valoresRetEntregas = [];
 
-            $(".trEntregas").each(function () {
+            var tipo_solicitacao = $("#tipo_solicitacao").val()
+            
+            if(tipo_solicitacao == 2){
 
-                //converte o valor informado para a entrega em formato inglês com 4 casas
-                var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
-                valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
+                $(".trEntregas").each(function () {
 
-                //converte o valor do saldo para o formato inglês com 4 casas
-                var valor_saldo_ingles = $(this).data('saldo');
-                valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
+                    //converte o valor informado para a entrega em formato inglês com 4 casas
+                    var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
+                    valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
 
-                var entrega = {
-                    idEntrega: $(this).attr("identrega"),
-                    vlSaldo: valor_saldo_ingles,
-                    vlDocumento: valor_entrega_ingles
+                    //converte o valor do saldo para o formato inglês com 4 casas
+                    var valor_saldo_ingles = $(this).data('saldo');
+                    valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
+
+                    var entrega = {
+                        idEntrega: $(this).attr("identrega"),
+                        vlSaldo: valor_saldo_ingles,
+                        vlDocumento: valor_entrega_ingles
+                    }
+                    entregas.push(entrega);
+
+                });
+
+                if (entregas.length <= 0) {
+                    $this.prop("disabled", false);
+                    func.modalAlert("Nenhuma entrega foi adicionada.");
+                    return false;
                 }
-                entregas.push(entrega);
-
-            });
-
-            if (entregas.length <= 0) {
-                $this.prop("disabled", false);
-                func.modalAlert("Nenhuma entrega foi adicionada.");
-                return false;
             }
 
             if ($("#destinatario option:selected").val() == 0) {
@@ -377,6 +406,10 @@ $(document).ready(function () {
                 grp = $("#grp_nao").val();
 
             }
+            
+            if (entregas.length <= 0) {
+                entregas = null;
+            }
 
             var dados = {
                 "processoAdm": $("#processoAdm").val(),
@@ -391,7 +424,9 @@ $(document).ready(function () {
                 "id_lotacao": $("#destinatario option:selected").val(),
                 "destinatario": $("#destinatario option:selected").attr("id_doc_lotacao"),
                 "entregas": entregas,
-                "anotacoes": $("#anotacoes").val()
+                "anotacoes": $("#anotacoes").val(),
+                "tipo_solicitacao": $("#tipo_solicitacao").val(),
+                "pedido": $("#pedido").val()
             }
 
             $.ajax({

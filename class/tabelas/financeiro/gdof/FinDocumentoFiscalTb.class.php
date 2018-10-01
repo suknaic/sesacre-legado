@@ -20,7 +20,18 @@ class FinDocumentoFiscalTb {
     private $id_tipo_documento = null;
     private $id_doc_tramitacao = null;
     private $id_documento_situacao = null;
+    private $id_pedido = null;
     
+    function getIdPedido() {
+        return $this->id_pedido;
+    }
+
+    function setIdPedido($id_pedido) {
+        $this->id_pedido = $id_pedido;
+        return $this;
+    }
+
+        
     function getIdDocumentoSituacao() {
         return $this->id_documento_situacao;
     }

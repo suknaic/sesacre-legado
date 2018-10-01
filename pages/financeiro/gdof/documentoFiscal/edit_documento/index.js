@@ -25,6 +25,15 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    
+    $("#valorDocumentoFiscal").priceFormat({
+        centsLimit: 4,
+        prefix: '',
+        centsSeparator: ',',
+        thousandsSeparator: '.',
+    });
+    
 
     /**
      * retornaDadosOrdem
@@ -43,66 +52,16 @@ $(document).ready(function () {
             retornaOptionsDaEntrega();
         }
     });
+    
+    if($("#tipo_solicitacao").val() == 1){
+        $("#panel-ordem").hide();
+        $("#panel-entrega").hide();
+        $("#valorDocumentoFiscal").prop("disabled", false)
+    }
 
-//    $("body").on("change", "#selectOrdem", function (e) {
-//        var idOrdem = $("body").find("#selectOrdem").val();     
-//        if(idOrdem == 0){
-//            return false;
-//        }
-//        $.ajax({
-//            "url": "request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaTipoValorOrdem",
-//                "dados": idOrdem
-//
-//            },
-//            "success": function (response) {
-//                var infoOrdem = JSON.parse(response);
-//                $("body").find("#tipoOrdem").html(infoOrdem.tipo);
-//                $("body").find("#valorOrdem").html(infoOrdem.valor);
-//            }
-//        });
-//
-//
-//    });
-//
-//    var infTabOrdem = {};
 
     $("body").on("click", ".addOrdens", function (e) {
-//        if($("#selectOrdem option:selected").val() == 0){
-//            return false;
-//        }
-//        array = {
-//            "id_ordem": $("#selectOrdem option:selected").val(),
-//            "nr_ordem": $("#selectOrdem option:selected").text(),
-//            "tipo_ordem": $("#tipoOrdem").text(),
-//            "valorOrdem": $("#valorOrdem").text()
-//        }
-//
-//        $.each(infTabOrdem, function (index, value) {
-//            if (value.id_ordem == $("#selectOrdem option:selected").val()) {
-//                func.modalAlert("Essa ordem já foi adicionada.");
-//            }
-//        });
-//
-//        infTabOrdem[$("#selectOrdem option:selected").val()] = array;
-//
-//        $.ajax({
-//            "method": "POST",
-//            "url": "request.php",
-//            "dataType": 'html',
-//            "data": {
-//                "acao": "retornaTabelaOrdem",
-//                "dados": infTabOrdem
-//
-//            },
-//            "success": function (response) {
-//                console.log(response);
-//                $("#tabelaOrdem").find("tbody").html(response);
-//            }
-//        });
-//        retornaOptionsDaEntrega(infTabOrdem);
+
         var id_ordem = $("#selectOrdem option:selected").val();
 
         //verifica se a ordem já está incluída
@@ -149,17 +108,7 @@ $(document).ready(function () {
         });
     });
 
-//    $(".tabOrdem").each(function(){
-//        array = {
-//            "id_ordem": $(this).attr('id'),
-//            "nr_ordem": $(this).find("td:eq(0)").text(),
-//            "tipo_ordem": $(this).find("td:eq(1)").text(),
-//            "valorOrdem": $(this).find("td:eq(2)").text(),
-//            "id_documento_fiscal" : $("#idPedido").val()
-//        }
-//        infTabOrdem[$(this).attr('id')] = array;        
-//    });
-//    retornaOptionsDaEntrega(infTabOrdem);        
+     
 
 
     //retorna options entrega
@@ -204,25 +153,8 @@ $(document).ready(function () {
 
         retornaOptionsDaEntrega();
 
-//        $("#" + $this.val()).remove();
-//        infTabOrdem = {};
-//
-//        //esse codigo abaixo foi realizado para atualiza o select das entregas
-//        infNovaOrdem = {};
-//        $(".tabOrdem").each(function () {
-//            infNovaOrdem[$(this).attr("id")] = {"id_ordem": $(this).attr("id")}
-//
-//        });
-//        //fim
-//
-//        retornaOptionsDaEntrega(infNovaOrdem);
-
     });
 
-//    var infTabEntrega = [];
-//    $(".trEntregas").each(function(){
-//        infTabEntrega.push($(this).attr('identrega'));       
-//    });
 
     $("body").on("click", ".addEntrega", function (e) {
 
@@ -297,34 +229,45 @@ $(document).ready(function () {
             var entregas = [];
 
             var erro_entrega = false;
+            var tipo_solicitacao = $("#tipo_solicitacao").val()
+            
+            if(tipo_solicitacao == 2){
 
-            $(".trEntregas").each(function () {
+                $(".trEntregas").each(function () {
 
-//                var situacao = $(this).data('situacao');
-//                
-//                if(situacao){
-                //converte o valor informado para a entrega em formato inglês com 4 casas
-                var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
-                valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
+    //                var situacao = $(this).data('situacao');
+    //                
+    //                if(situacao){
+                    //converte o valor informado para a entrega em formato inglês com 4 casas
+                    var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
+                    valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
 
-                //converte o valor do saldo para o formato inglês com 4 casas
-                var valor_saldo_ingles = $(this).data('saldo');
-                valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
+                    //converte o valor do saldo para o formato inglês com 4 casas
+                    var valor_saldo_ingles = $(this).data('saldo');
+                    valor_saldo_ingles = func.arrendondaValorParaQuatroCasas(valor_saldo_ingles);
 
-                if (valor_entrega_ingles == 0) {
-                    erro_entrega = true;
+                    if (valor_entrega_ingles == 0) {
+                        erro_entrega = true;
+                    }
+
+                    var entrega = {
+                        id_entrega_documento: $(this).data("id"),
+                        id_entrega_confirmacao: $(this).attr("identrega"),
+                        vl_entrega_saldo: valor_saldo_ingles,
+                        vl_entrega_documento: valor_entrega_ingles
+                    }
+                    entregas.push(entrega);
+    //                }
+
+                });
+                
+                if (entregas.length <= 0) {
+                    $this.prop("disabled", false);
+                    func.modalAlert("Nenhuma entrega foi adicionada.");
+                    return false;
                 }
-
-                var entrega = {
-                    id_entrega_documento: $(this).data("id"),
-                    id_entrega_confirmacao: $(this).attr("identrega"),
-                    vl_entrega_saldo: valor_saldo_ingles,
-                    vl_entrega_documento: valor_entrega_ingles
-                }
-                entregas.push(entrega);
-//                }
-
-            });
+                
+            }
 
             if (erro_entrega) {
                 $this.prop("disabled", false);
@@ -333,9 +276,7 @@ $(document).ready(function () {
             }
 
             if (entregas.length <= 0) {
-                $this.prop("disabled", false);
-                func.modalAlert("Nenhuma entrega foi adicionada.");
-                return false;
+                entregas = null;
             }
 
             var grp = $('input[name=grp_cod]:checked').val();
@@ -351,7 +292,9 @@ $(document).ready(function () {
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,
                 "grpNumero": $("#nr_grp").val(),
-                "entregas": entregas
+                "entregas": entregas,
+                "tipo_solicitacao": $("#tipo_solicitacao").val(),
+                "pedido": $("#pedido").val()
             }
 
             $.ajax({
