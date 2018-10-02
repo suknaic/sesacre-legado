@@ -26,7 +26,7 @@ $(document).ready(function () {
         });
     });
     
-    $('.docFis').hide();
+    //$('.docFis').hide();
     
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
@@ -342,14 +342,14 @@ function habilitaDocumentosFiscais(){
     var qtdDocs = $("#selectDocumentoFiscal option").size();
     
     
-    if (tipo_solicitacao > 2) {
-        $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled",false);
-    } else if( (tipo_solicitacao == 1 && qtdDocs > 1) || tipo_solicitacao == 2) {
-        $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled",true);
-        $("#selectDocumentoFiscal").focus();
-    }
+//    if (tipo_solicitacao > 2) {
+//        $('.docFis').hide();
+//        $("#vl_liquidacao").prop("disabled",false);
+//    } else if( (tipo_solicitacao == 1 && qtdDocs > 1) || tipo_solicitacao == 2) {
+//        $('.docFis').show();
+//        $("#vl_liquidacao").prop("disabled",true);
+//        $("#selectDocumentoFiscal").focus();
+//    }
 }
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
