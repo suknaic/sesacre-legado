@@ -49,9 +49,7 @@ $finContratoModel = new FinContratoModel();
 $dadosContrato = $finContratoModel->retornaContratoGdof(null, $dadosLiquidacao["nr_pedido"]);
 
 //DADOS DO PEDIDO DE NECESSIDADE
-$pedido = new Pedido();
-$pedido->setNrPedido($dadosLiquidacao["nr_pedido"]);
-$dadosPedido = $pedido->retornaPedidoGdof(null);
+$dadosPedido = $liquidacao->retornaPedidoLiquidacao(null);
 
 //DADOS DO EMPENHO
-$dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacaoVisualizacao(null);
+$dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacao(null,1);

@@ -358,7 +358,7 @@ class Liquidacao {
                     ->setNrLiquidacao($this->getNrLiquidacao())
                     ->setDtLiquidacao($this->getDtLiquidacao())
                     ->setVlLiquidacao(Metodos::ConverteValorIng($this->getVlLiquidacao()))
-                    ->setVlLiquidacaoSaldo($saldo_empenho);
+                    ->setVlLiquidacaoSaldo(Metodos::ConverteValorIng($saldo_empenho));
 
             $daoConLiquidacao->insert($pdo);
 
@@ -845,9 +845,9 @@ class Liquidacao {
             return;
         }
     }
-
     
-    public function retornaEmpenhoLiquidacaoVisualizacao($pdo) {
+   
+    public function retornaEmpenhoLiquidacao(PDO $pdo = null, int $opcao = 1 /* 1 - Visualização; 2 - Edição */) {
         try {
 
             if (empty($pdo)) {
@@ -857,10 +857,19 @@ class Liquidacao {
             $dadosEmpenho = '';
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->idLiquidacao);
-            $daoConLiquidacao->retornaEmpenhoLiquidacaoVisualizacao($pdo);
+            $daoConLiquidacao->retornaEmpenhoLiquidacao($pdo);
 
             if ($daoConLiquidacao->sucesso()) {
+                
                 $campos = $daoConLiquidacao->getMsgRetorno();
+                
+                $saldo = '';
+                if ($opcao == 1) {
+                    $saldo = $campos['saldo_visualizacao'];
+                } else {
+                    $saldo = $campos['saldo_edicao'];
+                }
+                
 
                 $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
@@ -897,7 +906,7 @@ class Liquidacao {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo do Empenho a Liquidar:</b></div>
-                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_liquidacao"], 4) . '</div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($saldo, 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -909,6 +918,85 @@ class Liquidacao {
             return $dadosEmpenho;
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+    
+    public function retornaPedidoLiquidacao(PDO $pdo = null) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedido = '';
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdLiquidacao($this->idLiquidacao);
+            $daoConLiquidacao->retornaPedidoLiquidacao($pdo);
+
+            if ($daoConLiquidacao->sucesso()) {
+
+                $campos = $daoConLiquidacao->getMsgRetorno();
+
+                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
+                                                        aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input type="hidden" id="id_pedido" value=' . $campos['id_pedido'] . ' data-tipo-solicitacao=' . $campos['id_tipo_solicitacao'] . ' />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>' . STR_FUNCIONAL_PROGRAMATICA . ':</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . '- ' . $campos["ds_despesa"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Pedido de Necessidade a Liquidar:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_visualizacao"], 4) . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosPedido;
+            }
+            return $dadosPedido;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
         }
     }
 
@@ -997,7 +1085,7 @@ class Liquidacao {
 
             //Retorna os totais do pedido
             $totais_pedido = $pedido->retornaTotaisDoPedido($pdo);
-
+            
             $valor_pedido = $totais_pedido['valor_pedido'];
             $valor_liquidado = $totais_pedido['valor_liquidado'];
             $valor_ordenado =  $totais_pedido['valor_ordenado'];
@@ -1007,7 +1095,7 @@ class Liquidacao {
                 //Se não houver valores de liquidação para o pedido, e for um tipo de solicitação DIFERENTE de 'Administrativa por Licitação'
                 case ($valor_liquidado == 0 && $tipo_solicitacao != '2'): 
                     $pedido->setIdPedidoSituacao(3); //Empenhado
-                    $pedido->setStPedido(21); //Aguardando Liquidação
+                    $pedido->setStPedido(16); //Aguardando Ordem
                     break;
                 
                 //Se o valor ordenado for menor que o valor do pedido, irá definir como 'Ordenado Parcial' para  o tipo de solicitação 'Administrativa por Licitação' 
@@ -1037,7 +1125,7 @@ class Liquidacao {
                 
                 //Se o total liquidado for superior ao valor do empenho, retorna erro
                 case ($valor_liquidado > $valor_pedido): 
-                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido.';
+                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: '. $valor_pedido . ' valor liquidado: '.$valor_liquidado;
                     return false;
                     break;
             }

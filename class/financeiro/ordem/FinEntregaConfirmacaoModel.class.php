@@ -788,6 +788,7 @@ class FinEntregaConfirmacaoModel {
 
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->getIdEntregaConfirmacao());
+            echo $this->getIdEntregaConfirmacao();
 
             //verifica se a Entrega está vinculada a algum Documento Fiscal, se possuir vinculo, não permite a remoção do item
             $daoFinEntregaConfirmacao->retornaDocumentosVinculadosAEntrega($pdo);
