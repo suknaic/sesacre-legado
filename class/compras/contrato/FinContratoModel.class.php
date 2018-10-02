@@ -1,5 +1,5 @@
 <?php
-
+//require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/fiscais/FinFiscaisModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/gcon/processo/DaoProcesso.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/compras/DaoFinContrato.class.php";
 
@@ -986,9 +986,8 @@ class FinContratoModel {
      */
     public function editarContrato() {
         try {
-
             if (empty($this->id_contrato) || empty($this->id_pessoaFornecedor) || empty($this->id_pessoa) || empty($this->nr_contrato) || empty($this->ds_objeto) || empty($this->id_processo) || empty($this->dt_ini_vigencia_contrato) ||
-                    empty($this->dt_fim_vigencia_contrato) || empty($this->dt_assinatura) || empty($this->dt_publicacao) || empty($this->tp_contrato)) {
+                empty($this->dt_fim_vigencia_contrato) || empty($this->dt_assinatura) || empty($this->dt_publicacao) || empty($this->tp_contrato)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -1016,6 +1015,7 @@ class FinContratoModel {
             $daoFinContrato->setIdTipoGasto($this->id_tipo_gasto);
             //chamando o metodo para cadastrar a ata
             $daoFinContrato->editarContrato($pdo);
+
             //verificando cadastramento da ata
             if (!$daoFinContrato->sucesso()) {
                 $sucesso = false;
@@ -1047,6 +1047,373 @@ class FinContratoModel {
                     }
                 }
             }
+
+            //****************************** Gestores do Contrato *****************************
+            $finGestor = new FinGestorModel();
+            $finGestor->setIdContrato($this->id_contrato);
+            $gestoresTitulares = $finGestor->retornarGestoresContrato(1);
+//            print_r($gestoresTitulares);
+            //************************ cadastrar gestor titular ************************
+            if (empty($gestoresTitulares)) {
+                if (!empty($this->id_pessoa_gestor_titular)) {
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_titular);
+                    if (!$finGestor->sucesso()) {
+                        $sucesso = false;
+                    }
+
+                    if ($sucesso == false) {
+                        $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($gestoresTitulares as $titular) {
+                    $idPessoa[] = $titular['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_gestor_titular);
+                if (!empty($delete)) {
+                    foreach ($delete as $gestor) {
+                        foreach ($gestoresTitulares as $pessoa) {
+                            if ($gestor == $pessoa['id_pessoa']) {
+                                $finGestor->setIdGestor($pessoa['id_gestor']);
+                                $deleta = $finGestor->deleteGestorContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_gestor_titular, $idPessoa);
+                if (!empty($insert)) {
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $insert, 1);
+                    if (!$finGestor->sucesso()) {
+                        $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            }
+            //***************************************************************************
+            $gestoresSubstitutos = $finGestor->retornarGestoresContrato(2);
+            //************************ cadastrar gestor substituto **********************
+            if (empty($gestoresSubstitutos)) {
+                if (!empty($this->id_pessoa_gestor_substituto)) {
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_substituto, 2);
+                    if (!$finGestor->sucesso()) {
+                        $sucesso = false;
+                    }
+                    if ($sucesso == false) {
+                        $retorno = Metodos::retornoAjax("Erro5", "console", $finGestor->getMsgRetorno());
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($gestoresSubstitutos as $substituto) {
+                    $idPessoa[] = $substituto['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_gestor_substituto);
+                if (!empty($delete)) {
+                    foreach ($delete as $gestor) {
+                        foreach ($gestoresSubstitutos as $pessoa) {
+                            if ($gestor == $pessoa['id_pessoa']) {
+                                $finGestor->setIdGestor($pessoa['id_gestor']);
+                                $deleta = $finGestor->deleteGestorContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_gestor_substituto, $idPessoa);
+                if (!empty($insert)) {
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $insert, 2);
+                    if (!$finGestor->sucesso()) {
+                        $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
+                }
+            }
+            //**********************************************************************************
+
+            //******************************** Fiscais do Contrato *****************************
+            $finFiscais = new FinFiscaisModel();
+            $finFiscais->setIdContrato($this->id_contrato);
+            $fiscaisTitulares = $finFiscais->retornarFiscaisContrato(1);
+            //************************ cadastrar ficais titular ************************
+            if (empty($gestoresSubstitutos)) {
+                if (!empty($this->id_pessoa_fiscal_titular)) {
+                    foreach ($this->id_pessoa_fiscal_titular as $fiscalTitular) {
+                        $finFiscais->setIdContrato($this->id_contrato);
+                        $finFiscais->setIdPessoa($fiscalTitular);
+                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
+                        $finFiscais->setTpFiscal(1);
+                        $finFiscais->cadastraFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($fiscaisTitulares as $fiscais) {
+                    $idPessoa[] = $fiscais['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_fiscal_titular);
+//                print_r($delete);
+                if (!empty($delete)) {
+                    foreach ($delete as $fiscal) {
+                        foreach ($fiscaisTitulares as $pessoa) {
+                            if ($fiscal == $pessoa['id_pessoa']) {
+                                $finFiscais->setIdFiscal($pessoa['id_fiscal']);
+                                $deleta = $finFiscais->deleteFiscalContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_fiscal_titular, $idPessoa);
+                if (!empty($insert)) {
+                    foreach ($insert as $fiscalTitular) {
+                        $finFiscais->setIdContrato($this->id_contrato);
+                        $finFiscais->setIdPessoa($fiscalTitular);
+                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
+                        $finFiscais->setTpFiscal(1);
+                        $finFiscais->cadastraFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            }
+            //***************************************************************************
+            $fiscaisSubstitutos = $finFiscais->retornarFiscaisContrato(2);
+            //************************ cadastrar fiscais substituto **********************
+            if (empty($fiscaisSubstitutos)){
+                if (!empty($this->id_pessoa_fiscal_substituto)) {
+                    foreach ($this->id_pessoa_fiscal_substituto as $ficalSubstituto) {
+                        $finFiscais->setIdContrato($this->id_contrato);
+                        $finFiscais->setIdPessoa($ficalSubstituto);
+                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
+                        $finFiscais->setTpFiscal(2);
+                        $finFiscais->cadastraFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($fiscaisSubstitutos as $fiscais) {
+                    $idPessoa[] = $fiscais['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_fiscal_substituto);
+                if (!empty($delete)) {
+                    foreach ($delete as $fiscal) {
+                        foreach ($fiscaisSubstitutos as $pessoa) {
+                            if ($fiscal == $pessoa['id_pessoa']) {
+                                $finFiscais->setIdFiscal($pessoa['id_fiscal']);
+                                $deleta = $finFiscais->deleteFiscalContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_fiscal_substituto, $idPessoa);
+                if (!empty($insert)) {
+                    foreach ($insert as $fiscalTitular) {
+                        $finFiscais->setIdContrato($this->id_contrato);
+                        $finFiscais->setIdPessoa($fiscalTitular);
+                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
+                        $finFiscais->setTpFiscal(2);
+                        $finFiscais->cadastraFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            }
+            //**********************************************************************************
+
+            //******************************** Sub-Fiscais do Contrato *****************************
+            $finSubFiscais = new SubFiscalModel();
+            $finSubFiscais->setIdContrato($this->id_contrato);
+            $subFiscais = $finSubFiscais->retornarSubFiscaisContrato(1);
+            //************************ cadastrar sub-ficais titular ************************
+            if (empty($subFiscais)) {
+                if (!empty($this->id_pessoa_sub_fiscal_titular)) {
+                    foreach ($this->id_pessoa_sub_fiscal_titular as $SubFiscalTitular) {
+                        $finSubFiscais->setIdContrato($this->id_contrato);
+                        $finSubFiscais->setIdPessoa($SubFiscalTitular);
+                        $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
+                        $finSubFiscais->setTpSubFiscal(1);
+                        $finSubFiscais->cadastraSubFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finSubFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($subFiscais as $sub) {
+                    $idPessoa[] = $sub['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_sub_fiscal_titular);
+                if (!empty($delete)) {
+                    foreach ($delete as $subFiscal) {
+                        foreach ($subFiscais as $pessoa) {
+                            if ($subFiscal == $pessoa['id_pessoa']) {
+                                $finSubFiscais->setIdSubFiscal($pessoa['id_sub_fiscal']);
+                                $deleta = $finSubFiscais->deleteSubFiscalContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_sub_fiscal_titular, $idPessoa);
+                if (!empty($insert)) {
+                    foreach ($insert as $subFiscalTitular) {
+                        $finSubFiscais->setIdContrato($this->id_contrato);
+                        $finSubFiscais->setIdPessoa($subFiscalTitular);
+                        $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
+                        $finSubFiscais->setTpSubFiscal(1);
+                        $finSubFiscais->cadastraSubFiscal($pdo);
+                        if (!$finSubFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finSubFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            }
+            //***************************************************************************
+            $subFiscais = $finSubFiscais->retornarSubFiscaisContrato(2);
+            //************************ cadastrar sub-fiscais substituto **********************
+            if (empty($subFiscais)) {
+                if (!empty($this->id_pessoa_fiscal_substituto)) {
+                    foreach ($this->id_pessoa_fiscal_substituto as $subFicalSubstituto) {
+                        $finFiscais->setIdContrato($this->id_contrato);
+                        $finFiscais->setIdPessoa($subFicalSubstituto);
+                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
+                        $finFiscais->setTpFiscal(2);
+                        $finFiscais->cadastraFiscal($pdo);
+                        if (!$finFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $idPessoa = array();
+                foreach ($subFiscais as $sub) {
+                    $idPessoa[] = $sub['id_pessoa'];
+                }
+                $delete = array_diff($idPessoa, $this->id_pessoa_sub_fiscal_substituto);
+                if (!empty($delete)) {
+                    foreach ($delete as $subFiscal) {
+                        foreach ($subFiscais as $pessoa) {
+                            if ($subFiscal == $pessoa['id_pessoa']) {
+                                $finSubFiscais->setIdSubFiscal($pessoa['id_sub_fiscal']);
+                                $deleta = $finSubFiscais->deleteSubFiscalContrato();
+
+                                if (!$deleta) {
+                                    return Metodos::retornoAjax('Erro', 'console', $deleta);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $insert = array_diff($this->id_pessoa_sub_fiscal_substituto, $idPessoa);
+                if (!empty($insert)) {
+                    foreach ($insert as $subFiscalSubstituto) {
+                        $finSubFiscais->setIdContrato($this->id_contrato);
+                        $finSubFiscais->setIdPessoa($subFiscalSubstituto);
+                        $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
+                        $finSubFiscais->setTpSubFiscal(2);
+                        $finSubFiscais->cadastraSubFiscal($pdo);
+                        if (!$finSubFiscais->sucesso()) {
+                            $sucesso = false;
+                        }
+
+                        if ($sucesso == false) {
+                            $retorno = Metodos::retornoAjax("Erro", "console", $finSubFiscais->getMsgRetorno());
+                            $pdo->rollBack();
+                            return $retorno;
+                            break;
+                        }
+                    }
+                }
+            }
+            //**********************************************************************************
 
             //editar fornecedor
             $fornecedor = new FinFornecedoresModel();

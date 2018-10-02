@@ -301,16 +301,19 @@ class FinFiscaisModel {
                 $class = "selectFiscais";
                 $classPrincipal = "fiscaisCampos";
                 $id = "fiscais";
-                $nomeCampo = 'Fiscal Titular:<span class="text-danger">*</span>';
+                $nomeCampo = 'Fiscal Titular:';
             } else {
                 $class = "selectFiscaisSub";
                 $classPrincipal = "fiscaisSubCampos";
                 $id = "fiscaisSub";
                 $nomeCampo = 'Fiscal Substituto:';
             }
+            $contFiscal = 0;
 
             if ($daoFinFiscal->sucesso()) {
                 foreach ($fiscais as $fiscal) {
+                    $contFiscal++;
+
                     $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -331,7 +334,7 @@ class FinFiscaisModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                                 <div class="col-sm-3">
                                     <div class="panel-body">
                                         <a href="#" class="removeFiscais btn btn-danger" idFiscal = "' . $fiscal['id_fiscal'] . '">X</a>
@@ -340,6 +343,8 @@ class FinFiscaisModel {
                             </div>';
                 }
             } else {
+                $contFiscal = 1;
+
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -359,9 +364,58 @@ class FinFiscaisModel {
                                 </div>
                             </div>';
             }
+            $retorno .= '<input type = "hidden" id="contFiscal" value="' . $contFiscal . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();
+        }
+    }
+
+    public function retornarFiscaisContrato($tipo = null) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinFiscal = new DaoFinFiscal();
+            $daoFinFiscal->setIdContrato($this->idContrato);
+
+            $daoFinFiscal->retornaTodosPorContrato($pdo);
+            $retorno = array();
+            foreach ($daoFinFiscal->getMsgRetorno() as $fiscal) {
+                if ($fiscal['tp_fiscal'] == $tipo) {
+                    $retorno[] = $fiscal;
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public function deleteFiscalContrato() {
+        try {
+            if (empty($this->idFiscal)) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinFiscal = new DaoFinFiscal();
+            $daoFinFiscal->setIdFiscal($this->idFiscal);
+
+            $daoFinFiscal->delete($pdo);
+            if (!$daoFinFiscal->sucesso()) {
+                return Metodos::retornoAjax('Erro', 'alert', $daoFinFiscal->getMsgRetorno());
+            }
+
+            if (!Log::SalvaLogD('fin_fiscal', $this->idFiscal, $pdo)) {
+                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+            }
+
+            return $daoFinFiscal->sucesso();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 }

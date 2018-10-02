@@ -328,7 +328,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <h3 class="panel-title">Gestores Titulares</h3>
                                 </div>
                                 <div class="campoGestores">
-                                    <?php echo $gestores; ?>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-3">
@@ -345,7 +344,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                 </div>
 
                                 <div class="campoGestoresSub">
-                                    <?php echo $gestoreSub; ?>
+
                                 </div>
 
                                 <div class="form-group">
@@ -361,7 +360,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <h3 class="panel-title">Fiscais Titulares</h3>
                                 </div>
                                 <div class="campoFiscais">
-                                    <?php echo $fiscais; ?>
+
                                 </div>
 
                                 <div class="form-group">
@@ -378,7 +377,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <h3 class="panel-title">Fiscais Substitutos</h3>
                                 </div>
                                 <div class="campoFiscaisSub">
-                                    <?php echo $fiscaisSub; ?>
+
                                 </div>
 
                                 <div class="form-group">
@@ -394,7 +393,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <h3 class="panel-title">Sub-Fiscais</h3>
                                 </div>
                                 <div class="campoSubFiscais">
-                                    <?php echo $subFiscais; ?>
+
                                 </div>
 
                                 <div class="form-group">
@@ -410,7 +409,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/edit.load.php"
                                     <h3 class="panel-title">Sub-Fiscais Substitutos</h3>
                                 </div>
                                 <div class="campoSubFiscaisSub">
-                                    <?php echo $subFiscaisSub; ?>
+                                    
                                 </div>
 
                                 <div class="form-group">
