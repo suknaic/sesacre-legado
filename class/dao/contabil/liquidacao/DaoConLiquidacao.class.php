@@ -307,6 +307,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.dt_liquidacao,
                     liq.vl_liquidacao,
                     liqSit.nm_liquidacao_situacao";
+        echo $sql;
         try {
             $result = $pdo->prepare($sql);
             $result->execute();
@@ -382,7 +383,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     (
                        docFis.id_documento_situacao <> 2 		--diferente de 'A Liquidar'
                        and liqDoc.id_documento_fiscal is null 		--e que não esteja vinculada a Liquidação, pois na atualização a situação do gdof já estará 'Liquidado'
-                    )";
+                    )";        
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);

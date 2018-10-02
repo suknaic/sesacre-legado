@@ -330,9 +330,9 @@ class Liquidacao {
                 }
 
                 $filtroDocumentos = implode(', ', $arrayAux);
-
-                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);
-
+                
+                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);               
+               
                 if ($daoConLiquidacao->Sucesso()) {
                     $this->sucesso = true;
                 } else {
@@ -354,11 +354,21 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
-            if ($this->getTipoSolicitacao() <= '2' && (int)$this->getQtdDocumentosDisponiveis() > 1) {
+                                   
+            /*
+             * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
+             * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
+             * Se o tipo de solicitação for administrativo por licitação, é necessário ter documento fiscal
+             */
+            if ( $this->getTipoSolicitacao() == '1' && (int)$this->getQtdDocumentosDisponiveis() > 1
+                    && count($this->getDocumentos()) < 1) {
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            }elseif($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1){
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
             }
-
+                                 
+            
+                
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -373,7 +383,9 @@ class Liquidacao {
             }
             //Retorna o total liquidado do empenho
             $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            
             $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
+            $saldo_empenho = round($saldo_empenho, 4);
             //***********************************************************************************************
 
             $daoConLiquidacao = new DaoConLiquidacao();
@@ -385,10 +397,10 @@ class Liquidacao {
                     ->setNrLiquidacao($this->getNrLiquidacao())
                     ->setDtLiquidacao($this->getDtLiquidacao())
                     ->setVlLiquidacao(Metodos::ConverteValorIng($this->getVlLiquidacao()))
-                    ->setVlLiquidacaoSaldo(Metodos::ConverteValorIng($saldo_empenho));
-
+                    ->setVlLiquidacaoSaldo($saldo_empenho);
+           
             $daoConLiquidacao->insert($pdo);
-
+            
             if ($daoConLiquidacao->Sucesso()) {
                 $idLiquidacao = $pdo->lastInsertId('con_liquidacao_id_liquidacao_seq');
                 if (!Log::SalvaLogI('con_liquidacao', $idLiquidacao, $pdo)) {
@@ -425,8 +437,8 @@ class Liquidacao {
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'
                 if ($this->getDocumentos()) {
                     if ($this->verificaDocumentosDiferenteDeALiquidar($pdo)) {
-                        $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                        //$pdo->rollBack();
+                        //return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
                     }
                 }
 

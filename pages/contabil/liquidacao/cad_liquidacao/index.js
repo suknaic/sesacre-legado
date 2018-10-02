@@ -256,7 +256,7 @@ $(document).ready(function () {
             
             var documentosGerados = $("#selectDocumentoFiscal option").size();
             
-            if (dados.tipoSolicitacao <= 2 && documentos.length <= 0 && documentosGerados > 1) {
+            if (dados.tipoSolicitacao == 1 && documentos.length <= 0 && documentosGerados > 1) {
                 func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
                 $this.prop("disabled", false);
                 return false;
@@ -339,8 +339,15 @@ function valorComMascara(valor) {
 function habilitaDocumentosFiscais(){
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
     
-    var qtdDocs = $("#selectDocumentoFiscal option").size();
-    
+    var qtdDocs = $("#selectDocumentoFiscal option").size();    
+    if(qtdDocs > 1){
+        $('.docFis').show();
+        $("#vl_liquidacao").prop("disabled",true);
+        $("#selectDocumentoFiscal").focus();
+    }else{
+        $('.docFis').hide();
+        $("#vl_liquidacao").prop("disabled",false);
+    }
     
 //    if (tipo_solicitacao > 2) {
 //        $('.docFis').hide();
