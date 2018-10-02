@@ -173,7 +173,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Data Emissão</th>
                                                                             <th class="text-center">Data Atesto</th>
                                                                             <th class="text-center">Valor Total</th>
-                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Saldo a Liquidar</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>

@@ -556,6 +556,26 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setIdDocumentoSituacao(1);
             $daoFinDocumentoFiscal->setIdTipoDocumento($this->id_tipo_documento);
             $daoFinDocumentoFiscal->setIdPedido($this->id_pedido);
+            
+            //Verifica se o valor do documento fiscal irá deixar o saldo do empenho negativo
+            $daoFinDocumentoFiscal->retornaSaldoPedidoNecessidade($pdo);            
+            if(!$daoFinDocumentoFiscal->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Saldo do Pedido.");
+            }
+                
+            //Verifica se o Saldo - Valor Novo Informado pelo usuário, irá deixar o saldo negativo
+            if(
+                (round($daoFinDocumentoFiscal->getMsgRetorno()['saldo'], 4) 
+                -
+                round($daoFinDocumentoFiscal->getVlDocumento(), 4))
+                < 0                     
+                ){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Saldo do Empenho insuficiente");
+            }
+                                               
+            
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
@@ -689,6 +709,28 @@ class FinDocumentoFiscal {
             }
 
             $busca = $daoFinDocumentoFiscal->getMsgRetorno();
+            
+            
+            $daoFinDocumentoFiscal->setIdPedido($busca['id_pedido']);            
+            //Verifica se o valor do documento fiscal irá deixar o saldo do empenho negativo
+            $daoFinDocumentoFiscal->retornaSaldoPedidoNecessidade($pdo);     
+                       
+            
+            if(!$daoFinDocumentoFiscal->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Saldo do Pedido.");
+            }
+                
+            //Verifica se o Saldo - Valor Novo Informado pelo usuário, irá deixar o saldo negativo
+            if(
+                (round($daoFinDocumentoFiscal->getMsgRetorno()['saldo'], 4) 
+                -
+                round(Metodos::ConverteValorIng($this->vl_documento), 4))
+                < 0                     
+                ){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Saldo do Empenho insuficiente");
+            }
 
 
             if($tipoSolicitacao == 2){
@@ -1117,7 +1159,7 @@ class FinDocumentoFiscal {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo do Empenho:</b></div>
                                                         <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_gdof"], 4) . '</div>
                                                         <div class="col-sm-7"></div>
                                                     </div>
