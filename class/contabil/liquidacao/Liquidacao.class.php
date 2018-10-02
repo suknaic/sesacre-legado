@@ -311,6 +311,8 @@ class Liquidacao {
             return $ex->getMessage();
         }
     }
+    
+    
 
     function verificaDocumentosDiferenteDeALiquidar(PDO $pdo = null) {
         $this->sucesso = false;

@@ -62,7 +62,7 @@ switch ($_REQUEST['acao']) {
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            echo $finEmpenhoModel->retornaEmpenhoPagamento(null);
             return;
             break;
         } catch (Error $e) {
