@@ -278,7 +278,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     inner join
                        fin_pedido as ped 
                        on ped.id_pedido = emp.id_pedido 
-                    inner join
+                    left join
                        pla_tipo_gasto tpGasto
                        on tpGasto.id_tipo_gasto = ped.id_tipo_gasto
                     left join

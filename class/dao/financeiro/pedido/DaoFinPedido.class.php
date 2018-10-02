@@ -853,7 +853,7 @@ class DaoFinPedido extends FinPedidoTb {
                     ped.id_tipo_solicitacao,
                     coalesce(sum(vl_liquidacao), 0) as valor_liquidado,
                     coalesce(sum(vl_empenho), 0) as valor_empenho,
-                    (
+                    coalesce((
                        select
                           sum(coalesce(qt_itens_ordem * vl_itens_ordem, 0)) 
                        from
@@ -863,7 +863,7 @@ class DaoFinPedido extends FinPedidoTb {
                           ordem.id_ordem = itens.id_ordem 
                           and ordem.sit_ordem > '0' 
                           and ordem.id_pedido = ped.id_pedido
-                    )
+                    ),0)
                     as valor_ordenado,
                     vl_pedido as valor_pedido 
                  from

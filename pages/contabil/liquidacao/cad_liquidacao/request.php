@@ -124,6 +124,8 @@ switch ($_REQUEST['acao']) {
                        ->setVlLiquidacao($dados['vlLiquidacao'])
                        ->setDtLiquidacao($dados['dtLiquidacao'])
                        ->setAnotacoes($dados['anotacoes'])
+                       ->setTipoSolicitacao($dados['tipoSolicitacao'])
+                       ->setQtdDocumentosDisponiveis($dados['qtdDocumentos'])
                        ->setDocumentos($dados['docsLiquidacao']);
             echo $liquidacao->salvarLiquidacao();
             return;

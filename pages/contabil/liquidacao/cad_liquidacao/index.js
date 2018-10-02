@@ -105,7 +105,6 @@ $(document).ready(function () {
                 $(".pedido").html("");
                 $(".pedido").append(response);
                 
-                habilitaDocumentosFiscais();
             }
         });
         /**
@@ -140,6 +139,8 @@ $(document).ready(function () {
             "success": function (response){
                 $("#selectDocumentoFiscal").html("");
                 $("#selectDocumentoFiscal").append(response);
+                
+                habilitaDocumentosFiscais();
             }
         });
         
@@ -237,6 +238,8 @@ $(document).ready(function () {
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
+                "tipoSolicitacao": $("#id_pedido").data('tipo-solicitacao'),
+                "qtdDocumentos": $("#selectDocumentoFiscal option").size(),
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
@@ -251,7 +254,9 @@ $(document).ready(function () {
                 return false;
             }
             
-            if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
+            var documentosGerados = $("#selectDocumentoFiscal option").size();
+            
+            if (dados.tipoSolicitacao <= 2 && documentos.length <= 0 && documentosGerados > 1) {
                 func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
                 $this.prop("disabled", false);
                 return false;
@@ -334,10 +339,13 @@ function valorComMascara(valor) {
 function habilitaDocumentosFiscais(){
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
     
-    if (tipo_solicitacao != 2 ) {
+    var qtdDocs = $("#selectDocumentoFiscal option").size();
+    
+    
+    if (tipo_solicitacao > 2) {
         $('.docFis').hide();
         $("#vl_liquidacao").prop("disabled",false);
-    } else {
+    } else if( (tipo_solicitacao == 1 && qtdDocs > 1) || tipo_solicitacao == 2) {
         $('.docFis').show();
         $("#vl_liquidacao").prop("disabled",true);
         $("#selectDocumentoFiscal").focus();
