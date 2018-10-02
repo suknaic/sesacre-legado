@@ -284,7 +284,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -332,7 +332,44 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
+    public function retornaEmpenhoPagamento(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select emp.id_pedido, emp.nr_empenho,emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                        tpEmp.nm_tipo_empenho, emp.vl_empenho,
+                        (emp.vl_empenho -
+                         coalesce((
+                                           select sum(vl_pagamento) 
+                                   from con_pagamento as pagamento 
+                                   inner join con_liquidacao as liquidacao
+                                   on liquidacao.id_liquidacao = pagamento.id_liquidacao
+                                   where liquidacao.id_empenho = emp.id_empenho
+                                   ),0)) as saldo_empenho_gdof 
+
+                        from fin_empenho as emp 
+                        inner join fin_tipo_empenho as tpEmp 
+                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                            id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
     public function retornaEmpenhoLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -377,7 +414,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
     public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -436,8 +473,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    public function atualizaSituacaoStatusEmpenho(PDO $pdo){
+
+    public function atualizaSituacaoStatusEmpenho(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "update fin_empenho set sit_empenho = :sit_empenho, id_empenho_status = :id_empenho_status where id_empenho = :id_empenho";
@@ -456,8 +493,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-        
-    public function retornaDadosPedidoPeloEmpenho(PDO $pdo){
+
+    public function retornaDadosPedidoPeloEmpenho(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select pedido.* "
@@ -482,7 +519,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
     public function retornaTotalLiquidadoDoEmpenho(PDO $pdo) {
         try {
             if (!empty($pdo)) {
