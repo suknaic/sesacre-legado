@@ -177,7 +177,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarPedido':
         try {
 
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setAno($dados['ano']);
             $pedido->setIdTipoSolicitacao($dados['tipoSolicitacao']);
@@ -205,7 +205,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarPedidoSemFornecedor':
         try {
 
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setAno($dados['ano']);
             $pedido->setIdTipoSolicitacao($dados['tipoSolicitacao']);
