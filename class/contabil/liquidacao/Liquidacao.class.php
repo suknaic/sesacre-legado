@@ -22,10 +22,31 @@ class Liquidacao {
     private $motivoCancelamento = null;
     private $anotacoes = null;
     
+    private $tipoSolicitacao = null;
+    private $qtdDocumentosDisponiveis = null;
+    
     private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
+    
+    function getTipoSolicitacao() {
+        return $this->tipoSolicitacao;
+    }
+
+    function getQtdDocumentosDisponiveis() {
+        return $this->qtdDocumentosDisponiveis;
+    }
+
+    function setTipoSolicitacao($tipoSolicitacao) {
+        $this->tipoSolicitacao = $tipoSolicitacao;
+        return $this;
+    }
+
+    function setQtdDocumentosDisponiveis($qtdDocumentosDisponiveis) {
+        $this->qtdDocumentosDisponiveis = $qtdDocumentosDisponiveis;
+        return $this;
+    }
 
     function getVlLiquidacaoSaldo() {
         return $this->vlLiquidacaoSaldo;
@@ -333,6 +354,10 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+            
+            if ($this->getTipoSolicitacao() <= '2' && (int)$this->getQtdDocumentosDisponiveis() > 1) {
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            }
 
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -506,7 +531,6 @@ class Liquidacao {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
-
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
                     ->setNrLiquidacao($this->getNrLiquidacao())
@@ -521,7 +545,21 @@ class Liquidacao {
             }
 
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
-
+            
+            //Retorna saldo do empenho disponivel no momento da operação
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdEmpenho($reg_antigo['id_empenho']);
+            $dados_empenho = $empenho->retornaDadosEmpenho($pdo);
+            //Se os dados do empenho estiver vazio, retorna erro
+            if (empty($dados_empenho)) {
+                return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
+            }
+            //Retorna o total liquidado do empenho
+            $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
+            
+            //seta saldo da atualização
+            $daoConLiquidacao->setVlLiquidacaoSaldo(Metodos::ConverteValorIng($saldo_empenho));
 
             //Atualiza a Liquidação
             $daoConLiquidacao->update($pdo);
@@ -1092,6 +1130,7 @@ class Liquidacao {
             $valor_liquidado = $totais_pedido['valor_liquidado'];
             $valor_ordenado =  $totais_pedido['valor_ordenado'];
             $tipo_solicitacao = $totais_pedido['id_tipo_solicitacao'];
+            
 
             switch (true) {
                 //Se não houver valores de liquidação para o pedido, e for um tipo de solicitação DIFERENTE de 'Administrativa por Licitação'
@@ -1114,13 +1153,13 @@ class Liquidacao {
                     break;
                 
                 //Se a soma dos valores da liquidação for inferior ao valor do Pedido, altera para situação 'Liquidado Parcial'
-                case ($valor_liquidado > 0 && $tipo_solicitacao == '2' && $valor_liquidado < $valor_pedido): 
+                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido): 
                     $pedido->setIdPedidoSituacao(6); //Liquidado Parcial
                     $pedido->setStPedido(25); //Aguardando Finalizar Liquidação
                     break;
 
                 //Se a soma dos valores da liquidação for igual ao do Pedido, altera para situação 'Liquidado Total'
-                case ($valor_liquidado == $valor_pedido && $tipo_solicitacao == '2'):
+                case ($valor_liquidado == $valor_pedido):
                     $pedido->setIdPedidoSituacao(7); //Liquidado Total
                     $pedido->setStPedido(22); //Aguardando Pagamento
                     break;
@@ -1131,7 +1170,6 @@ class Liquidacao {
                     return false;
                     break;
             }
-
 
             if ($pedido->atualizaSituacaoStatusPedido($pdo)) {
                 return true;

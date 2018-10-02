@@ -574,7 +574,8 @@ class FinDocumentoFiscal {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Saldo do Empenho insuficiente");
             }
-                                               
+            //Salva o Saldo do Pedido No Momento que houve o cadastro do docuemnto Fiscal
+            $daoFinDocumentoFiscal->setVlDocumentoSaldo(round($daoFinDocumentoFiscal->getMsgRetorno()['saldo'], 4));            
             
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
@@ -731,6 +732,9 @@ class FinDocumentoFiscal {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Saldo do Empenho insuficiente");
             }
+            
+            //Salva o Saldo do Pedido No Momento que houve o cadastro do docuemnto Fiscal
+            $daoFinDocumentoFiscal->setVlDocumentoSaldo(round($daoFinDocumentoFiscal->getMsgRetorno()['saldo'], 4));            
 
 
             if($tipoSolicitacao == 2){
@@ -887,20 +891,6 @@ class FinDocumentoFiscal {
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
 
-//            //codigo abaixo cadastra as entregas do documento fiscal
-//            $finEntregaDocumento = new FinEntregaDocumento();
-//            foreach ($this->entrega as $dados) {
-//                $finEntregaDocumento->setIdDocumentoFiscal($this->id_documento_fiscal);
-//                $finEntregaDocumento->setIdEntregaConfirmacao($dados);
-//
-//                if (!$finEntregaDocumento->cadastrarEntregaDocumento($pdo)) {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a(s) entrega(s) do documento fiscal.");
-//                }
-//            }
-//
-//            $pdo->commit();
-//            return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
@@ -1039,7 +1029,7 @@ class FinDocumentoFiscal {
         }
     }
 
-    public function retornaDadosPedidoNecessidade($pdo) {
+    public function retornaDadosPedidoNecessidade($pdo){
         try {
 
             if (empty($pdo)) {
@@ -1111,7 +1101,7 @@ class FinDocumentoFiscal {
         }
     }
 
-    public function retornaDadosEmpenho($pdo) {
+    public function retornaDadosEmpenho($pdo, $mostraSaldoDocFiscal) {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -1120,10 +1110,14 @@ class FinDocumentoFiscal {
             $dadosEmpenho = '';
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
-            $daoFinDocumentoFiscal->retornaIfEmpenhoPorIdDocumento($pdo);
+            $daoFinDocumentoFiscal->retornaIfEmpenhoPorIdDocumento($pdo, $mostraSaldoDocFiscal);
 
             if ($daoFinDocumentoFiscal->sucesso()) {
                 $campos = $daoFinDocumentoFiscal->getMsgRetorno();
+                
+                if($mostraSaldoDocFiscal){
+                    $campos['saldo_empenho_gdof'] = $campos['vl_documento_saldo'];
+                }
 
                 $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">

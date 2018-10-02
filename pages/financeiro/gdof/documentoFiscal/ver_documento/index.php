@@ -84,7 +84,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-                                            <?php echo $finDocumentoFiscal->retornaDadosEmpenho(null); ?>
+                                            <?php echo $finDocumentoFiscal->retornaDadosEmpenho(null, true); ?>
                                         </div>
                                     </div>
                                 </div>

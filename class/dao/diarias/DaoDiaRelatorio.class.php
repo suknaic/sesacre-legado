@@ -116,7 +116,7 @@ class DaoDiaRelatorio extends DiaRelatorio {
                                   ses_contrato c
                              WHERE p.id_pessoa = pf.id_pessoa
                                AND pf.id_pessoa_fisica = c.id_pessoa_fisica
-                               AND p.id_pessoa = dia.id_pessoa_proposto) as mt_proposto,
+                               AND p.id_pessoa = dia.id_pessoa_proposto order by c.id_contrato desc LIMIT 1 ) as mt_proposto,
                             rel.ds_servico_executado,
                             rel.ds_locais_executado,
                             dia.nr_protocolo

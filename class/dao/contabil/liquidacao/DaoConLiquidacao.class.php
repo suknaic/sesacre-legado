@@ -145,18 +145,18 @@ class DaoConLiquidacao extends ConLiquidacao {
                     docSit.nm_situacao 
                  from
                     fin_empenho as empenho 
-                    inner join
+                    left join
                        fin_ordem as ordem 
                        on ordem.id_pedido = empenho.id_pedido 
-                    inner join
+                    left join
                        fin_entrega_confirmacao as entConfirm 
                        on entConfirm.id_ordem = ordem.id_ordem 
-                    inner join
+                    left join
                        fin_entrega_documento as entDoc 
                        on entDoc.id_entrega_confirmacao = entConfirm.id_entrega_confirmacao 
                     inner join
                        fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = entDoc.id_documento_fiscal 
+                       on docFis.id_pedido = empenho.id_pedido 
                     inner join
                        fin_tipo_documento as tpDoc 
                        on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
@@ -278,7 +278,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     inner join
                        fin_pedido as ped 
                        on ped.id_pedido = emp.id_pedido 
-                    inner join
+                    left join
                        pla_tipo_gasto tpGasto
                        on tpGasto.id_tipo_gasto = ped.id_tipo_gasto
                     left join

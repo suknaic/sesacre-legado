@@ -681,14 +681,15 @@ class Pedido {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
                                                     </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                                                                        
                                                 </div>
                                             </div>
                                          </div>
@@ -1028,7 +1029,7 @@ class Pedido {
             $daoFinPedido->setIdPedido($this->getIdPedido());
             $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
             $daoFinPedido->setStPedido($this->getStPedido());
-
+            
             $daoFinPedido->retornaDadosPedido($pdo);
             if (!$daoFinPedido->sucesso()) {
                 $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
