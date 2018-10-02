@@ -187,6 +187,9 @@ $(document).ready(function () {
                              <td class="text-center">${documento.dt_atesto}</td>
                              <td class="text-center">${documento.vl_documento}</td>
                              <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">
+                            <input class="form-control valorRetPagamento" type="text" name="valorRetPagamento[]" id="valorRetPagamento[]" value="0,0000">
+                            </td>
                              <td class="text-center">${documento.nm_situacao}</td>
                              <td class="text-center">
                                 <button type="button" class="text-primary ver-documento" title="Ver Documento Fiscal" value="${documento.id_documento_fiscal}">

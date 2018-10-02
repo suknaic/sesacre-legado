@@ -333,7 +333,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         situacao, 
                         (
                            select
-                              sum(itens.qt_itens_entrega * itens.vl_itens_entrega) 
+                             sum(round((itens.qt_itens_entrega * itens.vl_itens_entrega),2)) 
                            from
                               fin_entrega_itens as itens 
                            where
