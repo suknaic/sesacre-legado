@@ -58,7 +58,7 @@ require_once "index.load.php";
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Busca de Pedido</h4>
+                                    <h4 class="modal-title">Busca de Liquidação</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="input-group mar-btm">

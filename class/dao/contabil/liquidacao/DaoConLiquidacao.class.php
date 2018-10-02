@@ -278,19 +278,19 @@ class DaoConLiquidacao extends ConLiquidacao {
                     inner join
                        fin_pedido as ped 
                        on ped.id_pedido = emp.id_pedido 
-                    inner join
+                    left join
                        pla_tipo_gasto tpGasto
                        on tpGasto.id_tipo_gasto = ped.id_tipo_gasto
                     left join
                        con_liquidacao_doc as liqDoc 
                        on liqDoc.id_liquidacao = liq.id_liquidacao 
-                    inner join
+                    left join
                        fin_fornecedor as fornec 
                        on fornec.id_fornecedor = ped.id_fornecedor 
-                    inner join
+                    left join
                        fin_contrato as contrato
                        on contrato.id_contrato = fornec.id_contrato
-                    inner join
+                    left join
                        ses_pessoa_juridica as pj 
                        on pj.id_pessoa = fornec.id_pessoa 
                     left join
@@ -426,7 +426,7 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
     
-    public function retornaEmpenhoLiquidacaoVisualizacao(PDO $pdo) {
+    public function retornaEmpenhoLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select
@@ -435,7 +435,19 @@ class DaoConLiquidacao extends ConLiquidacao {
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
                             emp.vl_empenho,
-                            liq.vl_liquidacao_saldo as saldo_empenho_liquidacao 
+                            liq.vl_liquidacao_saldo as saldo_visualizacao,
+                            (
+                               emp.vl_empenho - (
+                               select
+                                  coalesce(sum(vl_liquidacao), 0) 
+                               from
+                                  con_liquidacao oLiq 
+                               where
+                                  oLiq.id_liquidacao_situacao <> 4
+                                  and oLiq.id_empenho = liq.id_empenho
+                                  and oLiq.id_liquidacao <> liq.id_liquidacao)
+                            )
+                            as saldo_edicao 
                          from
                             fin_empenho emp 
                             inner join
@@ -464,5 +476,46 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    public function retornaPedidoLiquidacao(PDO $pdo){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
+                        programa.cd_programa_trabalho, programa.ds_programa_trabalho,
+                        despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,
+                        p.vl_pedido, liq.vl_liquidacao_saldo as saldo_visualizacao
+                        from con_liquidacao as liq
+                        inner join fin_empenho as emp
+                        on emp.id_empenho = liq.id_empenho
+                        inner join fin_pedido as p
+                        on p.id_pedido = emp.id_pedido
+                        inner join fin_fonte as f
+                        on f.id_fonte = p.id_fonte
+                        inner join view_programa_trabalho as programa
+                        on programa.id_programa_trabalho = p.id_programa_trabalho
+                        inner join view_despesa as despesa
+                        on despesa.id_despesa = p.id_despesa
+                        left join fin_tipo_solicitacao as tpSol
+                        on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
+                        where liq.id_liquidacao = :id_liquidacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
 
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
 }

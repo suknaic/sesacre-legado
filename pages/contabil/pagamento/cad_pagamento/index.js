@@ -45,18 +45,6 @@ $(document).ready(function () {
         });
     });
 
-//    $.ajax({
-//        "url": url,
-//        "dataType": 'html',
-//        "data": {
-//            "acao": "retornaTipoRemetenteERemetente"
-//        },
-//        "success": function (response) {
-//            $("#id_remetente").html("");
-//            $("#id_remetente").append(response);
-//        }
-//    });
-
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
         var dados = {

@@ -162,12 +162,13 @@ class LiquidacaoPesquisa {
             
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
+                    $cnpj_razao = empty($linha['nr_cnpj']) ? "" : Metodos::formataCnpj($linha['nr_cnpj'])." - ".$linha['nm_fantasia'];
                     $retorno .= "<tr data-id=".$linha['id_liquidacao']." data-objeto='". json_encode($linha)."'>"
                                 . "<td class='text-center'>".$linha['nr_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['nr_pedido']."</td>"
                                 . "<td class='text-center'>".$linha['nr_empenho']."</td>"
                                 . "<td class='text-center'>".$linha['documentos_fiscais']."</td>"
-                                . "<td class='text-center'>". Metodos::formataCnpj($linha['nr_cnpj'])." - ".$linha['nm_fantasia']."</td>"
+                                . "<td class='text-center'>".$cnpj_razao ."</td>"
                                 . "<td class='text-center'>".$linha['dt_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['vl_liquidacao']."</td>"
                                 . "<td class='text-center'>".$linha['nm_liquidacao_situacao']."</td>"

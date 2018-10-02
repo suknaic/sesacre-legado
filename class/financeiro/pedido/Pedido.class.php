@@ -1028,7 +1028,7 @@ class Pedido {
             $daoFinPedido->setIdPedido($this->getIdPedido());
             $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
             $daoFinPedido->setStPedido($this->getStPedido());
-
+            
             $daoFinPedido->retornaDadosPedido($pdo);
             if (!$daoFinPedido->sucesso()) {
                 $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
