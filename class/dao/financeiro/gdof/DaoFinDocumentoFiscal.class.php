@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido, vl_documento_saldo) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido, :vlDocumentoSaldo)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -40,6 +40,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
+            $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR);            
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -57,6 +58,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         . " , dt_atesto = :dtAtesto, vl_documento = :vlDocumento"
                         . " , fl_grp = :flGrp, nr_grp_numero = :nrGrpNumero"
                         . " , id_tipo_documento = :idTipoDocumento"
+                        . " , vl_documento_saldo = :vlDocumentoSaldo"
                         . " WHERE id_documento_fiscal = :idDocumentoFiscal";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':idDocumentoFiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -70,6 +72,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $stmt->bindValue(":flGrp", $this->getFlGrp(), PDO::PARAM_INT);
                 $stmt->bindValue(":nrGrpNumero", $this->getNrGrpNumero(), PDO::PARAM_STR);                
                 $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+                $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR); 
                                 
                 $stmt->execute();
                 $this->sucesso = true;
@@ -205,13 +208,20 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      * retorna informacoes do empenho por id do documento fiscal
      * @param PDO $pdo
      */
-    public function retornaIfEmpenhoPorIdDocumento(PDO $pdo) {
+    public function retornaIfEmpenhoPorIdDocumento(PDO $pdo, $ignorarDoc) {
         try {
+            
+            $sqlIgnoraDoc = "";
+            if(!$ignorarDoc){
+                $sqlIgnoraDoc = " AND docFis.id_documento_fiscal <> :documento ";
+            }
+            
             $sql = "select DISTINCT
                        (emp.nr_empenho),
                        emp.nr_empenho,
                        to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                        tpEmp.nm_tipo_empenho,
+                       doc.vl_documento_saldo,
                        emp.vl_empenho,
                        (
                           emp.vl_empenho - coalesce(( 
@@ -222,6 +232,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                       	  inner join fin_documento_fiscal docFis on docFis.id_pedido = p.id_pedido                              
                           where
                              p.id_pedido = doc.id_pedido 
+                             ".$sqlIgnoraDoc."
                              and docFis.id_documento_situacao <> 7 
                              ), 0)
                        )

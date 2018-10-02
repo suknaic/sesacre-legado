@@ -10,6 +10,7 @@ class FinDocumentoFiscalTb {
     private $dt_emissao = null;
     private $dt_atesto = null;
     private $vl_documento = null;
+    private $vl_documento_saldo = null;
     private $fl_encontro_contas = null;
     private $nr_encontro_dae = null;
     private $fl_grp = null;
@@ -22,6 +23,16 @@ class FinDocumentoFiscalTb {
     private $id_documento_situacao = null;
     private $id_pedido = null;
     
+    function getVlDocumentoSaldo() {
+        return $this->vl_documento_saldo;
+    }
+
+    function setVlDocumentoSaldo($vl_documento_saldo) {
+        $this->vl_documento_saldo = $vl_documento_saldo;
+        return $this;
+    }
+
+        
     function getIdPedido() {
         return $this->id_pedido;
     }
