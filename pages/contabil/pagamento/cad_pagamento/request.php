@@ -62,7 +62,7 @@ switch ($_REQUEST['acao']) {
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            echo $finEmpenhoModel->retornaEmpenhoPagamento(null);
             return;
             break;
         } catch (Error $e) {
@@ -71,14 +71,28 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaEmpenhoPagemento':
+    CASE 'retornaLiquidacaoPagemento':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            $pedido = new Pedido();
-            $pedido->setNrPedido($dados);
-            $finEmpenhoModel = new FinEmpenhoModel();
-            $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoGdof(null);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setNrLiquidacao($dados["nr_liquidacao"]);
+            echo $liquidacao->retornaLiquidacaoParaPagamento(null);
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+
+    CASE 'retornaDocFiscaisPagemento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdLiquidacao($dados['id_liquidacao']);
+            $liquidacao->setIdEmpenho($dados['id_empenho']);
+            echo $liquidacao->retornaOptionsDocsEmpenho();
             return;
             break;
         } catch (Error $e) {

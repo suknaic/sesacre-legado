@@ -52,5 +52,10 @@ $(document).ready(function () {
     }
     //lista as anotacoes 
     listaAnotacoes();
+    
+    if($("#tipo_solicitacao").val() == 1){
+        $("#panel-ordem").hide();
+        $("#panel-entrega").hide();        
+    }
 
 });

@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido, vl_documento_saldo) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido, :vlDocumentoSaldo)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -39,6 +39,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
+            $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
+            $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR);            
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -56,6 +58,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         . " , dt_atesto = :dtAtesto, vl_documento = :vlDocumento"
                         . " , fl_grp = :flGrp, nr_grp_numero = :nrGrpNumero"
                         . " , id_tipo_documento = :idTipoDocumento"
+                        . " , vl_documento_saldo = :vlDocumentoSaldo"
                         . " WHERE id_documento_fiscal = :idDocumentoFiscal";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':idDocumentoFiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -69,6 +72,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $stmt->bindValue(":flGrp", $this->getFlGrp(), PDO::PARAM_INT);
                 $stmt->bindValue(":nrGrpNumero", $this->getNrGrpNumero(), PDO::PARAM_STR);                
                 $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
+                $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR); 
                                 
                 $stmt->execute();
                 $this->sucesso = true;
@@ -165,16 +169,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $sql = "select DISTINCT (p.nr_pedido),p.id_pedido, p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
-                    p.vl_pedido, desp.cd_despesa, desp.ds_despesa
+                    p.vl_pedido, desp.cd_despesa, desp.ds_despesa, p.id_tipo_solicitacao, doc.id_pedido
                     from fin_documento_fiscal as doc
-                    inner join fin_entrega_documento as entDocumento
+                    left join fin_entrega_documento as entDocumento
                     on entDocumento.id_documento_fiscal  = doc.id_documento_fiscal
-                    inner join fin_entrega_confirmacao as confirmacao
+                    left join fin_entrega_confirmacao as confirmacao
                     on confirmacao.id_entrega_confirmacao = entDocumento.id_entrega_confirmacao
-                    inner join fin_ordem as ordem
+                    left join fin_ordem as ordem
                     on ordem.id_ordem = confirmacao.id_ordem
                     inner join fin_pedido as p
-                    on p.id_pedido = ordem.id_pedido
+                    on p.id_pedido = doc.id_pedido
                     inner join fin_fonte as f
                     on f.id_fonte = p.id_fonte
                     inner join view_programa_trabalho as programa
@@ -204,42 +208,49 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      * retorna informacoes do empenho por id do documento fiscal
      * @param PDO $pdo
      */
-    public function retornaIfEmpenhoPorIdDocumento(PDO $pdo) {
+    public function retornaIfEmpenhoPorIdDocumento(PDO $pdo, $ignorarDoc) {
         try {
+            
+            $sqlIgnoraDoc = "";
+            if(!$ignorarDoc){
+                $sqlIgnoraDoc = " AND docFis.id_documento_fiscal <> :documento ";
+            }
+            
             $sql = "select DISTINCT
                        (emp.nr_empenho),
                        emp.nr_empenho,
                        to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                        tpEmp.nm_tipo_empenho,
+                       doc.vl_documento_saldo,
                        emp.vl_empenho,
                        (
                           emp.vl_empenho - coalesce(( 
                           select
                              sum(vl_documento) 
-                          from
-                             fin_ordem ordem, fin_entrega_confirmacao confirmacao, fin_entrega_documento entDoc, fin_documento_fiscal docFis 
+                          from                     
+                          	 fin_pedido p
+                      	  inner join fin_documento_fiscal docFis on docFis.id_pedido = p.id_pedido                              
                           where
-                             ordem.id_ordem = confirmacao.id_ordem 
-                             and confirmacao.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-                             and entDoc.id_documento_fiscal = docFis.id_documento_fiscal 
+                             p.id_pedido = doc.id_pedido 
+                             ".$sqlIgnoraDoc."
                              and docFis.id_documento_situacao <> 7 
-                             and ordem.id_pedido = emp.id_pedido ), 0)
+                             ), 0)
                        )
                        as saldo_empenho_gdof 
                     from
                        fin_documento_fiscal as doc 
-                       inner join
+                       left join
                           fin_entrega_documento as entDoc 
                           on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
-                       inner join
+                       left join
                           fin_entrega_confirmacao as entrega 
                           on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-                       inner join
+                       left join
                           fin_ordem as ordem 
                           on ordem.id_ordem = entrega.id_ordem 
                        inner join
                           fin_empenho as emp 
-                          on emp.id_pedido = ordem.id_pedido 
+                          on emp.id_pedido = doc.id_pedido 
                        inner join
                           fin_tipo_empenho as tpEmp 
                           on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
@@ -333,7 +344,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         situacao, 
                         (
                            select
-                              sum(itens.qt_itens_entrega * itens.vl_itens_entrega) 
+                             sum(round((itens.qt_itens_entrega * itens.vl_itens_entrega),2)) 
                            from
                               fin_entrega_itens as itens 
                            where
@@ -462,7 +473,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
                         )
                         as competencia,
-                        doc.vl_documento,
+                        (to_char(doc.vl_documento, '999G999G990D9999')) as vl_documento,
                         situacao.nm_situacao, p.nm_pessoa,
                         tpTramitacao.nm_tipo_tramitacao,
                         case
@@ -487,7 +498,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         inner join
                            fin_tipo_documento as tpDoc 
                            on tpDoc.id_tipo_documento = doc.id_tipo_documento 
-                        inner join
+                        left join
                            (
                               SELECT DISTINCT
                                  ON (id_documento_fiscal) * 
@@ -496,28 +507,28 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            )
                            AS entDoc 
                            on entDoc.id_documento_fiscal = doc.id_documento_fiscal 
-                        inner join
+                        left join
                            fin_entrega_confirmacao as entrega 
                            on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
-                        inner join
+                        left join
                            fin_ordem as ordem 
                            on ordem.id_ordem = entrega.id_ordem 
                         inner join
                            fin_empenho as emp 
-                           on emp.id_pedido = ordem.id_pedido 
+                           on emp.id_pedido = doc.id_pedido 
                         inner join
                            fin_pedido as pedido 
-                           on ordem.id_pedido = pedido.id_pedido 
+                           on doc.id_pedido = pedido.id_pedido 
                         inner join
                            pla_tipo_gasto as tipoGasto 
                            on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
                         inner join
                            fin_tipo_empenho as tpEmp 
                            on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
-                        inner join
+                        left join
                            fin_fornecedor as fornecedor 
                            on fornecedor.id_fornecedor = pedido.id_fornecedor 
-                        inner join 
+                        left join 
                           ses_pessoa as p
                            on p.id_pessoa = fornecedor.id_pessoa 
                         left join 
@@ -526,7 +537,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         left join 
                           ses_pessoa_juridica as pj
                            on pj.id_pessoa = p.id_pessoa
-                        inner join fin_contrato as contrato 
+                        left join fin_contrato as contrato 
                            on contrato.id_contrato = fornecedor.id_contrato 
                         inner join
                            (
@@ -638,24 +649,24 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_tipo_documento as tpDoc 
                     on tpDoc.id_tipo_documento = doc.id_tipo_documento 
 
-                    inner join (SELECT DISTINCT ON (id_documento_fiscal) *
+                    left join (SELECT DISTINCT ON (id_documento_fiscal) *
 			FROM fin_entrega_documento
 		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
 
-                    inner join fin_entrega_confirmacao as entrega 
+                    left join fin_entrega_confirmacao as entrega 
                     on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
 
-                    inner join  fin_ordem as ordem 
+                    left join  fin_ordem as ordem 
                     on ordem.id_ordem = entrega.id_ordem 
 
                     inner join fin_empenho as emp 
-                    on emp.id_pedido = ordem.id_pedido 
+                    on emp.id_pedido = doc.id_pedido 
 
-                    inner join fin_protocolo as protoc 
+                    left join fin_protocolo as protoc 
                     on protoc.id_ordem = ordem.id_ordem 
 
                     inner join fin_pedido as pedido 
-                    on ordem.id_pedido = pedido.id_pedido 
+                    on doc.id_pedido = pedido.id_pedido 
 
                     inner join pla_tipo_gasto as tipoGasto 
                     on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
@@ -663,10 +674,10 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_tipo_empenho as tpEmp 
                     on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
 
-                    inner join fin_fornecedor as fornecedor 
+                    left join fin_fornecedor as fornecedor 
                     on fornecedor.id_fornecedor = pedido.id_fornecedor 
                     
-                    inner join ses_pessoa as p
+                    left join ses_pessoa as p
                     on p.id_pessoa = fornecedor.id_pessoa 
                         
                     left join ses_pessoa_fisica as pf
@@ -675,9 +686,9 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     left join ses_pessoa_juridica as pj
                     on pj.id_pessoa = p.id_pessoa
                     
-                    inner join fin_contrato as contrato 
+                    left join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
-                 
+                    
                     inner join (select DISTINCT ON (t.id_documento_fiscal) *
                                 from fin_doc_tramitacao t				
                                 order by t.id_documento_fiscal
@@ -731,7 +742,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
     public function retornaDocumentoFiscaisRecebe(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
         try {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
-                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, doc.vl_documento, 
+                    (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, to_char(doc.vl_documento,'999G999G990D0000') as vl_documento, 
                     situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao,
                     
                     case
@@ -752,24 +763,24 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_tipo_documento as tpDoc 
                     on tpDoc.id_tipo_documento = doc.id_tipo_documento 
 
-                    inner join (SELECT DISTINCT ON (id_documento_fiscal) *
+                    left join (SELECT DISTINCT ON (id_documento_fiscal) *
 			FROM fin_entrega_documento
 		    ) AS entDoc on entDoc.id_documento_fiscal = doc.id_documento_fiscal
 
-                    inner join fin_entrega_confirmacao as entrega 
+                    left join fin_entrega_confirmacao as entrega 
                     on entrega.id_entrega_confirmacao = entDoc.id_entrega_confirmacao 
 
-                    inner join  fin_ordem as ordem 
+                    left join  fin_ordem as ordem 
                     on ordem.id_ordem = entrega.id_ordem 
 
                     inner join fin_empenho as emp 
-                    on emp.id_pedido = ordem.id_pedido 
+                    on emp.id_pedido = doc.id_pedido 
 
-                    inner join fin_protocolo as protoc 
+                    left join fin_protocolo as protoc 
                     on protoc.id_ordem = ordem.id_ordem 
 
                     inner join fin_pedido as pedido 
-                    on ordem.id_pedido = pedido.id_pedido 
+                    on doc.id_pedido = pedido.id_pedido 
 
                     inner join pla_tipo_gasto as tipoGasto 
                     on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto 
@@ -777,10 +788,10 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     inner join fin_tipo_empenho as tpEmp 
                     on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
 
-                    inner join fin_fornecedor as fornecedor 
+                    left join fin_fornecedor as fornecedor 
                     on fornecedor.id_fornecedor = pedido.id_fornecedor 
                     
-                    inner join ses_pessoa as p
+                    left join ses_pessoa as p
                     on p.id_pessoa = fornecedor.id_pessoa 
                     
                     left join ses_pessoa_fisica as pf
@@ -789,7 +800,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     left join ses_pessoa_juridica as pj
                     on pj.id_pessoa = p.id_pessoa
                     
-                    inner join fin_contrato as contrato 
+                    left join fin_contrato as contrato 
                     on contrato.id_contrato = fornecedor.id_contrato 
 
                     inner join (select DISTINCT ON (t.id_documento_fiscal) *
@@ -1295,6 +1306,40 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
+        }
+    }
+    
+    
+    public function retornaSaldoPedidoNecessidade(PDO $pdo){
+        try {
+            $sqlIgnoraDoc = "";
+            if(!empty($this->getIdDocumentoFiscal())){
+                $sqlIgnoraDoc = " AND DOC.id_documento_fiscal <> :idDocumentoFiscal ";
+            }
+            $sql = "SELECT coalesce(sum(DOC.vl_documento), 0.0000) AS executado, P.vl_pedido"
+                    . " , (P.vl_pedido - coalesce(sum(DOC.vl_documento), 0.0000)) as saldo"
+                    . " FROM fin_pedido P"
+                    . " LEFT JOIN fin_documento_fiscal DOC ON DOC.id_pedido = P.id_pedido"
+                    . " AND DOC.id_documento_situacao <> 7"
+                    . $sqlIgnoraDoc
+                    . " WHERE P.id_pedido = :idPedido"                    
+                    . " GROUP BY P.id_pedido";                                                  
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);            
+            if(!empty($this->getIdDocumentoFiscal())){
+                $stmt->bindValue(":idDocumentoFiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
     

@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFis
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinTipoDocumento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinTipoDocumento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocLotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 
 $session = new Session();
 
@@ -18,6 +19,12 @@ $finDocumentoFiscal = new FinDocumentoFiscal();
 $finDocumentoFiscal->setIdDocumentoFiscal($id);
 
 $documento = ($finDocumentoFiscal->retornaDadosDocumento(null));
+$idPedido = $documento['id_pedido'];
+$pedido = new Pedido();
+$pedido->setIdPedido($idPedido);
+$resultado = $pedido->retornaDadosPedido();
+$tipoSolicitacao = $resultado['id_tipo_solicitacao'];
+
 
 $historico = $finDocumentoFiscal->retornaHistoricoTramitacao();
 

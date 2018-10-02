@@ -107,7 +107,7 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Data Emissão</th>
                                                                                 <th class="text-center">Data Atesto</th>
                                                                                 <th class="text-center">Valor Total</th>
-                                                                                <th class="text-center">Saldo</th>
+                                                                                <th class="text-center">Saldo a Liquidar</th>
                                                                                 <th class="text-center">Situação</th>
                                                                                 <th class="text-center">Ações</th>
                                                                             </tr>
@@ -234,7 +234,7 @@ require_once "index.load.php";
                                                         <h4 class="panel-title">Histórico</h4>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <textarea class="form-control" rows="10" readonly="true"><?php echo $historico;?></textarea>
+                                                        <textarea class="form-control" rows="7" readonly="true"><?php echo $historico;?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

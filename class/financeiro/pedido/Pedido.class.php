@@ -221,6 +221,8 @@ class Pedido {
             '21' => 'Aguardando Liquidação',
             '22' => 'Aguardando Pagamento',
             '23' => 'Tramitação Finalizada',
+            '24' => 'Aguardando Finalizar Ordenado',
+            '25' => 'Aguardando Finalizar Liquidação',
         );
         return $arr_status;
     }
@@ -504,7 +506,7 @@ class Pedido {
             if ($daoFinPedido->Sucesso()) {
 
                 foreach ($daoFinPedido->getMsgRetorno() as $dados) {
-                    $statusPedido = $this->retornaStatusPedido($dados, $opcoesStatus);
+                    $statusPedido =  $opcoesStatus[$dados['status']];
                     $tabela .= '<tr><td class = "text-center">' . $dados["id_lotacao"] . '-' . $dados["nr_pedido"] . '/' . $dados["ano"] . '</td>
                                 <td class = "text-center">' . $dados["nm_tipo_solicitacao"] . '</td>
                                 <td class = "text-center">' . $dados["cd_programa_trabalho"] . '-' . $dados["ds_programa_trabalho"] . '</td>        
@@ -598,16 +600,18 @@ class Pedido {
 
             if ($daoFinPedido->Sucesso()) {
                 foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $linha["contrato"] = ($linha["contrato"] == "/") ? "" : $linha['contrato'];
                     $statusPedido = $this->retornaStatusPedido($linha, $opcoesStatus);
-                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" tipoCont="' . $linha["tp_contrato"] . '" style="cursor:pointer;">
+                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" 
+                        tipo_solicitacao="'.$linha["id_tipo_solicitacao"].'" style="cursor:pointer;">
                 <td>' . $linha["pedido"] . '</td>
                 <td>' . $linha["ds_pedido"] . '</td>
-                <td>' . $linha["nm_tipo_gasto"] . '</td>    
+                <td>' . $linha["nm_tipo_gasto"] . '</td>
                 <td>' . $linha["nr_fonte"] . '</td>
                 <td>' . $linha["ds_despesa_elemento"] . '</td>
                 <td>' . Metodos::ConverteValorBr($linha["vl_pedido"], 4) . '</td>
                 <td>' . $linha["tp_contrato"] . '</td>
-                <td>' . $linha["contrato"] . '</td>    
+                <td>' . $linha["contrato"]. '</td>
                 <td>' . $linha["nm_modalidade"] . '</td>
                 <td>' . $linha["cd_programa_trabalho"] . "-" . $linha["ds_programa_trabalho"] . '</td>
                 <td>' . $linha["nr_empenho"] . '</td>
@@ -677,14 +681,15 @@ class Pedido {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
                                                     </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                                                                        
                                                 </div>
                                             </div>
                                          </div>
@@ -1016,14 +1021,15 @@ class Pedido {
         }
     }
     
-    public function atualizaSituacaoPedido(PDO $pdo) {
+    public function atualizaSituacaoStatusPedido(PDO $pdo) {
         $this->msg_erros = null;
         try {
 
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->getIdPedido());
             $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
-
+            $daoFinPedido->setStPedido($this->getStPedido());
+            
             $daoFinPedido->retornaDadosPedido($pdo);
             if (!$daoFinPedido->sucesso()) {
                 $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
@@ -1033,15 +1039,15 @@ class Pedido {
             $busca = $daoFinPedido->getMsgRetorno();
 
             //Atualiza a Situação do Pedido
-            $daoFinPedido->atualizaSitPedido($pdo);
+            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
 
             if (!$daoFinPedido->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação do Pedido. ";
+                $this->msg_erros = "Erro ao atualizar a situação e status do Pedido. ";
                 return false;
             }
 
             if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
-                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Pedido no LOG.";
+                $this->msg_erros = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
                 return false;
             }
 
@@ -1052,7 +1058,8 @@ class Pedido {
         }
     }
     
-    public function retornaTotalLiquidadoDoPedido($pdo) {
+    
+    public function retornaTotaisDoPedido($pdo) {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -1060,7 +1067,7 @@ class Pedido {
             }
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
-            $daoFinPedido->retornaTotalLiquidadoDoPedido($pdo);
+            $daoFinPedido->retornaTotaisDoPedido($pdo);
             if ($daoFinPedido->sucesso()) {
                 return $daoFinPedido->getMsgRetorno();
             }

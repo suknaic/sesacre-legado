@@ -581,6 +581,8 @@ $(document).ready(function () {
         //********************************************************************************
 
         //******************* Verifica se a data de início é maior que a data atual ********************
+        console.log(dataAtual.split("/"));
+        console.log(dataAtual.split("/")[2].toString());
         var dataAtual2 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
         var dataInicio = new Date($("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString());
         var dataAdmissao = new Date($("#dt_admissao").val().split("/")[2].toString() + "/" + $("#dt_admissao").val().split("/")[1].toString() + "/" + $("#dt_admissao").val().split("/")[0].toString());

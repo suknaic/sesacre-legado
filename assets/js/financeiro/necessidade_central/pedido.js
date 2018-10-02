@@ -422,7 +422,6 @@ $(document).ready(function () {
                 $this.prop("disabled", false);
                 return false;
             }
-
             var dados = {
                 "tipoSolicitacao": $("#tipoSolicitacao").val(),
                 "contratado": $("input[name='contratado']:checked").val(),
@@ -443,6 +442,7 @@ $(document).ready(function () {
             if ($("#tipoSolicitacao").val() == 1 || $("#tipoSolicitacao").val() == 3 || $("#tipoSolicitacao").val() == 4) {
                 $.ajax({
                     "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                    "method": "POST",
                     "dataType": "html",
                     "data": {
                         "acao": "cadastrarPedidoSemFornecedor",
@@ -501,6 +501,7 @@ $(document).ready(function () {
 
                 $.ajax({
                     "url": "/model/financeiro/necessidade_central/requestPedido.php",
+                    "method": "POST",
                     "dataType": "html",
                     "data": {
                         "acao": "cadastrarPedido",

@@ -12,6 +12,7 @@ class Liquidacao {
     private $idDocTipoLotacao = null;
     private $dtLiquidacao = null;
     private $vlLiquidacao = null;
+    private $vlLiquidacaoSaldo = null;
     private $dsLiquidacao = null;
     private $stAtivo = null;
     private $documentos = null;
@@ -21,11 +22,41 @@ class Liquidacao {
     private $motivoCancelamento = null;
     private $anotacoes = null;
     
+    private $tipoSolicitacao = null;
+    private $qtdDocumentosDisponiveis = null;
+    
     private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
+    
+    function getTipoSolicitacao() {
+        return $this->tipoSolicitacao;
+    }
 
+    function getQtdDocumentosDisponiveis() {
+        return $this->qtdDocumentosDisponiveis;
+    }
+
+    function setTipoSolicitacao($tipoSolicitacao) {
+        $this->tipoSolicitacao = $tipoSolicitacao;
+        return $this;
+    }
+
+    function setQtdDocumentosDisponiveis($qtdDocumentosDisponiveis) {
+        $this->qtdDocumentosDisponiveis = $qtdDocumentosDisponiveis;
+        return $this;
+    }
+
+    function getVlLiquidacaoSaldo() {
+        return $this->vlLiquidacaoSaldo;
+    }
+
+    function setVlLiquidacaoSaldo($vlLiquidacaoSaldo) {
+        $this->vlLiquidacaoSaldo = $vlLiquidacaoSaldo;
+        return $this;
+    }
+    
     function getMotivoCancelamento() {
         return $this->motivoCancelamento;
     }
@@ -280,6 +311,8 @@ class Liquidacao {
             return $ex->getMessage();
         }
     }
+    
+    
 
     function verificaDocumentosDiferenteDeALiquidar(PDO $pdo = null) {
         $this->sucesso = false;
@@ -297,9 +330,9 @@ class Liquidacao {
                 }
 
                 $filtroDocumentos = implode(', ', $arrayAux);
-
-                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);
-
+                
+                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);               
+               
                 if ($daoConLiquidacao->Sucesso()) {
                     $this->sucesso = true;
                 } else {
@@ -321,10 +354,39 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-
+                                   
+            /*
+             * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
+             * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
+             * Se o tipo de solicitação for administrativo por licitação, é necessário ter documento fiscal
+             */
+            if ( $this->getTipoSolicitacao() == '1' && (int)$this->getQtdDocumentosDisponiveis() > 1
+                    && count($this->getDocumentos()) < 1) {
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            }elseif($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1){
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            }
+                                 
+            
+                
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+            
+            //Retorna saldo do empenho disponivel no momento da operação
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdEmpenho($this->getIdEmpenho());
+            $dados_empenho = $empenho->retornaDadosEmpenho($pdo);
+            //Se os dados do empenho estiver vazio, retorna erro
+            if (empty($dados_empenho)) {
+                return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
+            }
+            //Retorna o total liquidado do empenho
+            $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            
+            $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
+            $saldo_empenho = round($saldo_empenho, 4);
+            //***********************************************************************************************
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
@@ -334,10 +396,11 @@ class Liquidacao {
                     ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                     ->setNrLiquidacao($this->getNrLiquidacao())
                     ->setDtLiquidacao($this->getDtLiquidacao())
-                    ->setVlLiquidacao(Metodos::ConverteValorIng($this->getVlLiquidacao()));
-
+                    ->setVlLiquidacao(Metodos::ConverteValorIng($this->getVlLiquidacao()))
+                    ->setVlLiquidacaoSaldo($saldo_empenho);
+           
             $daoConLiquidacao->insert($pdo);
-
+            
             if ($daoConLiquidacao->Sucesso()) {
                 $idLiquidacao = $pdo->lastInsertId('con_liquidacao_id_liquidacao_seq');
                 if (!Log::SalvaLogI('con_liquidacao', $idLiquidacao, $pdo)) {
@@ -349,13 +412,13 @@ class Liquidacao {
                 //Atualiza a situação do empenho
                 if (!$this->atualizaEmpenho($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
+                    return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
                 
                 //Atualiza a situação do pedido
                 if (!$this->atualizaPedido($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Pedido: " . $this->mensagens);
+                    return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
                 
                 if($this->getAnotacoes()){
@@ -374,8 +437,8 @@ class Liquidacao {
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'
                 if ($this->getDocumentos()) {
                     if ($this->verificaDocumentosDiferenteDeALiquidar($pdo)) {
-                        $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                        //$pdo->rollBack();
+                        //return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
                     }
                 }
 
@@ -480,7 +543,6 @@ class Liquidacao {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
-
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
                     ->setNrLiquidacao($this->getNrLiquidacao())
@@ -495,7 +557,21 @@ class Liquidacao {
             }
 
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
-
+            
+            //Retorna saldo do empenho disponivel no momento da operação
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdEmpenho($reg_antigo['id_empenho']);
+            $dados_empenho = $empenho->retornaDadosEmpenho($pdo);
+            //Se os dados do empenho estiver vazio, retorna erro
+            if (empty($dados_empenho)) {
+                return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
+            }
+            //Retorna o total liquidado do empenho
+            $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
+            $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
+            
+            //seta saldo da atualização
+            $daoConLiquidacao->setVlLiquidacaoSaldo(Metodos::ConverteValorIng($saldo_empenho));
 
             //Atualiza a Liquidação
             $daoConLiquidacao->update($pdo);
@@ -513,13 +589,13 @@ class Liquidacao {
                 //Atualiza a situação do empenho
                 if (!$this->atualizaEmpenho($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
+                    return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
                 
                 //Atualiza a situação do pedido
                 if (!$this->atualizaPedido($pdo)) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Pedido: " . $this->mensagens);
+                    return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
 
                 //Se a edição da liquidação possuir documentos fiscais, 
@@ -726,6 +802,7 @@ class Liquidacao {
         }
     }
 
+
     public function pesquisaLiquidacaoParaPagamento($pdo) {
         try {
 
@@ -736,30 +813,241 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
-
             $retorno = '';
 
-
             if ($daoConLiquidacao->Sucesso()) {
-                foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
-
-                    $retorno .= '<tr class="selecionaItem" pedido="' . $linha["id_pedido"] . '" nrpedido = "' . $linha["nr_pedido"] . '" 
-                                  idEmpenho ="' . $linha["id_empenho"] . '"  
+                $dados = $daoConLiquidacao->getMsgRetorno();
+                $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '" nrpedido = "' . $dados["nr_pedido"] . '" 
+                                  idEmpenho ="' . $dados["id_empenho"] . '" idLiquidacao="'.$dados["id_liquidacao"].'"  
                         style="cursor:pointer;">
-                <td>' . $linha["nr_pedido"] . '</td>
-                <td>' . $linha["nr_liquidacao"] . '</td>
-                <td>' . $linha["dt_liquidacao"] . '</td>    
+                <td>' . $dados["nr_pedido"] . '</td>
+                <td>' . $dados["nr_liquidacao"] . '</td>
+                <td>' . $dados["dt_liquidacao"] . '</td>    
      
                 </tr>';
-                }
             }
             if (empty($retorno)) {
-                return "Nenhum pedido encontrado";
+                return "Nenhum liquidacao encontrada";
             }
             return $retorno;
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->mensagens = $ex->getMessage();
+            return;
+        }
+    }
+
+
+    public function retornaLiquidacaoParaPagamento($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $dadosContrato = '';
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
+            $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
+          
+            if ($daoConLiquidacao->sucesso()) {
+                $campos = $daoConLiquidacao->getMsgRetorno();
+
+                $dadosContrato .= '<div class="panel-group" id="accordionFor" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingFor">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
+                                                        aria-expanded="false" aria-controls="collapseFor" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados da Liquidação: </b><span style="color:#758697"> Nº ' . $campos["nr_liquidacao"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFor" aria-expanded="false">
+                                                <div class="panel-body">
+                                                
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data da Liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor da Liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo da liquidação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
+                                                    </div>
+                
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosContrato;
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+    
+   
+    public function retornaEmpenhoLiquidacao(PDO $pdo = null, int $opcao = 1 /* 1 - Visualização; 2 - Edição */) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosEmpenho = '';
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdLiquidacao($this->idLiquidacao);
+            $daoConLiquidacao->retornaEmpenhoLiquidacao($pdo);
+
+            if ($daoConLiquidacao->sucesso()) {
+                
+                $campos = $daoConLiquidacao->getMsgRetorno();
+                
+                $saldo = '';
+                if ($opcao == 1) {
+                    $saldo = $campos['saldo_visualizacao'];
+                } else {
+                    $saldo = $campos['saldo_edicao'];
+                }
+                
+
+                $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
+                                                        aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nm_tipo_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["vl_empenho"], 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Empenho a Liquidar:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($saldo, 4) . '</div>
+                                                        <div class="col-sm-7"></div>    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosEmpenho;
+            }
+            return $dadosEmpenho;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+    
+    public function retornaPedidoLiquidacao(PDO $pdo = null) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedido = '';
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdLiquidacao($this->idLiquidacao);
+            $daoConLiquidacao->retornaPedidoLiquidacao($pdo);
+
+            if ($daoConLiquidacao->sucesso()) {
+
+                $campos = $daoConLiquidacao->getMsgRetorno();
+
+                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
+                                                        aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input type="hidden" id="id_pedido" value=' . $campos['id_pedido'] . ' data-tipo-solicitacao=' . $campos['id_tipo_solicitacao'] . ' />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>' . STR_FUNCIONAL_PROGRAMATICA . ':</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . '- ' . $campos["ds_despesa"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo do Pedido de Necessidade a Liquidar:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_visualizacao"], 4) . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosPedido;
+            }
+            return $dadosPedido;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
             return;
         }
     }
@@ -791,14 +1079,17 @@ class Liquidacao {
             switch (true) {
                 case ($valor_liquidado == 0): //Se não houver valores de liquidação para o empenho, altera para a situação 'Cadastrado'
                     $empenho->setSitEmpenho($empenho->getSitCadastrado());
+                    $empenho->setIdEmpenhoStatus(1); //Muda status do empenho para 'Aguardando Liquidação'
                     break;
 
                 case ($valor_liquidado > 0 && $valor_liquidado < $valor_empenho): //Se a soma dos valores da liquidação for inferior ao valor do Empenho, altera para situação 'Liquidado Parcial'
                     $empenho->setSitEmpenho($empenho->getSitLiquidadoParcial());
+                    $empenho->setIdEmpenhoStatus(2); //Muda status do empenho para 'Aguardando Finalizar Liquidação'
                     break;
 
                 case ($valor_liquidado == $valor_empenho): //Se a soma dos valores da liquidação for igual ao do Empenho, altera para situação 'Liquidado Total'
                     $empenho->setSitEmpenho($empenho->getSitLiquidadoTotal());
+                    $empenho->setIdEmpenhoStatus(3);
                     break;
                 case ($valor_liquidado > $valor_empenho): //Se o total liquidado for superior ao valor do empenho, retorna erro
                     $this->mensagens = 'O total liquidado deste empenho ultrapassou o valor do empenho.';
@@ -807,7 +1098,7 @@ class Liquidacao {
             }
 
 
-            if ($empenho->atualizaSituacaoEmpenho($pdo)) {
+            if ($empenho->atualizaSituacaoStatusEmpenho($pdo)) {
                 return true;
             } else {
                 $this->mensagens = $empenho->getMsgErros();
@@ -844,37 +1135,55 @@ class Liquidacao {
                 return false;
             }
 
-            //Retorna o total liquidado do empenho
-            $total_liquidado = $pedido->retornaTotalLiquidadoDoPedido($pdo);
-            //Se os dados do empenho estiver vazio, retorna erro
-            if (empty($total_liquidado)) {
-                $this->mensagens = 'Erro ao verificar o total liquidado do pedido.';
-                return false;
-            }
-
-            $valor_pedido = $dados_pedido['vl_pedido'];
-            $valor_liquidado = $total_liquidado['total_liquidado'];
+            //Retorna os totais do pedido
+            $totais_pedido = $pedido->retornaTotaisDoPedido($pdo);
+            
+            $valor_pedido = $totais_pedido['valor_pedido'];
+            $valor_liquidado = $totais_pedido['valor_liquidado'];
+            $valor_ordenado =  $totais_pedido['valor_ordenado'];
+            $tipo_solicitacao = $totais_pedido['id_tipo_solicitacao'];
+            
 
             switch (true) {
-                case ($valor_liquidado == 0): //Se não houver valores de liquidação para o pedido, altera para a situação 'Cadastrado'
-                    $pedido->setIdPedidoSituacao(1);
+                //Se não houver valores de liquidação para o pedido, e for um tipo de solicitação DIFERENTE de 'Administrativa por Licitação'
+                case ($valor_liquidado == 0 && $tipo_solicitacao != '2'): 
+                    $pedido->setIdPedidoSituacao(3); //Empenhado
+                    $pedido->setStPedido(16); //Aguardando Ordem
+                    break;
+                
+                //Se o valor ordenado for menor que o valor do pedido, irá definir como 'Ordenado Parcial' para  o tipo de solicitação 'Administrativa por Licitação' 
+                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado < $valor_pedido): 
+                    $pedido->setIdPedidoSituacao(4); //Ordenado Parcial
+                    $pedido->setStPedido(24); //Aguardando Finalizar Ordenado
+                    break;
+                
+                //Se o valor ordenado for igual ao valor do pedido, irá definir como 'Ordenado Total' para  o tipo de solicitação 'Administrativa por Licitação' 
+                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado == $valor_pedido):
+                    $pedido->setIdPedidoSituacao(5); //Ordenado Total
+                    $pedido->setStPedido(21); //Aguardando Liquidação
+                    
+                    break;
+                
+                //Se a soma dos valores da liquidação for inferior ao valor do Pedido, altera para situação 'Liquidado Parcial'
+                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido): 
+                    $pedido->setIdPedidoSituacao(6); //Liquidado Parcial
+                    $pedido->setStPedido(25); //Aguardando Finalizar Liquidação
                     break;
 
-                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido): //Se a soma dos valores da liquidação for inferior ao valor do Pedido, altera para situação 'Liquidado Parcial'
-                    $pedido->setIdPedidoSituacao(6);
+                //Se a soma dos valores da liquidação for igual ao do Pedido, altera para situação 'Liquidado Total'
+                case ($valor_liquidado == $valor_pedido):
+                    $pedido->setIdPedidoSituacao(7); //Liquidado Total
+                    $pedido->setStPedido(22); //Aguardando Pagamento
                     break;
-
-                case ($valor_liquidado == $valor_pedido): //Se a soma dos valores da liquidação for igual ao do Pedido, altera para situação 'Liquidado Total'
-                    $pedido->setIdPedidoSituacao(7);
-                    break;
-                case ($valor_liquidado > $valor_pedido): //Se o total liquidado for superior ao valor do empenho, retorna erro
-                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido.';
+                
+                //Se o total liquidado for superior ao valor do empenho, retorna erro
+                case ($valor_liquidado > $valor_pedido): 
+                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: '. $valor_pedido . ' valor liquidado: '.$valor_liquidado;
                     return false;
                     break;
             }
 
-
-            if ($pedido->atualizaSituacaoPedido($pdo)) {
+            if ($pedido->atualizaSituacaoStatusPedido($pdo)) {
                 return true;
             } else {
                 $this->mensagens = $pedido->getMsgErros();

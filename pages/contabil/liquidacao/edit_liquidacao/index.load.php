@@ -58,7 +58,6 @@ $pedido = new Pedido();
 $pedido->setNrPedido($dadosLiquidacao["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
 
+
 //DADOS DO EMPENHO
-$finEmpenhoModel = new FinEmpenhoModel();
-$finEmpenhoModel->setIdPedido($dadosLiquidacao["id_pedido"]);
-$dadosEmpenho = $finEmpenhoModel->retornaEmpenhoLiquidacao(null);
+$dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacao(null,2);

@@ -1,23 +1,23 @@
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
-    
+
     var url = "request.php";
-    
+
     //select2
     $('body').find('select').select2({
         width: '100%'
     });
-    
-    $('#dt_liquidacao').mask("99/99/9999");
+
+    $('#dt_pagamento').mask("99/99/9999");
 
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
         $('#codItemPesquisa').focus();
     });
-    
+
     //Masca para valor
-    $("body").on("focus", "#vl_liquidacao", function () {
+    $("body").on("focus", "#vl_pagamento", function () {
         $(this).priceFormat({
             centsLimit: 4,
             prefix: '',
@@ -25,9 +25,9 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-    
+
     $('.docFis').hide();
-    
+
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
@@ -44,26 +44,6 @@ $(document).ready(function () {
             }
         });
     });
-    
-    $('body').on('keypress', '#codItemPesquisa', function (e) {
-        let key = e.which;
-        if (key == 13){
-            $("#btn-pesquisa").trigger('click');
-            return false;
-        }
-    });
-    
-    $.ajax({
-        "url": url,
-        "dataType": 'html',
-        "data": {
-            "acao": "retornaTipoRemetenteERemetente"
-        },
-        "success": function(response){
-            $("#id_remetente").html("");
-            $("#id_remetente").append(response);
-        }
-    });
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
@@ -71,8 +51,10 @@ $(document).ready(function () {
             "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
             "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
+            "id_liquidacao": $("body").find(".selecionaItem").attr("idLiquidacao"),
+            "nr_liquidacao": $("#codItemPesquisa").val()
         }
-     
+
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -86,7 +68,6 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response)
                 $(".contratos").html("");
                 $(".contratos").append(response);
             }
@@ -105,7 +86,7 @@ $(document).ready(function () {
             "success": function (response) {
                 $(".pedido").html("");
                 $(".pedido").append(response);
-                
+
                 habilitaDocumentosFiscais();
             }
         });
@@ -125,61 +106,79 @@ $(document).ready(function () {
                 $(".empenho").append(response);
             }
         });
-        
+
+        /**
+         * retornaDadosLiquidacao
+         */
+        $.ajax({
+            "url": url,
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaLiquidacaoPagemento",
+                "dados": dados
+
+            },
+            "success": function (response) {
+                console.log(response);
+                $(".dadosLiquidacao").html("");
+                $(".dadosLiquidacao").append(response);
+            }
+        });
+
         /**
          * retornaDocumentosEmpenho
          */
-        
+
 
         $.ajax({
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaDocFiscaisLiquidacao",
+                "acao": "retornaDocFiscaisPagemento",
                 "dados": dados
             },
-            "success": function (response){
+            "success": function (response) {
                 $("#selectDocumentoFiscal").html("");
                 $("#selectDocumentoFiscal").append(response);
             }
         });
-        
+
         $('#modalItem').modal('hide');
     });
-    
+
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
     });
-    
-    
+
+
     $('body').on('click', '.remover-documento', function (e) {
         $(this).closest("tr").remove();
         atualizaValorLiquidacao();
     });
-    
-    
-    $('body').on('click','.addDocumento', function(e){
-        
+
+
+    $('body').on('click', '.addDocumento', function (e) {
+
         var documento = $("#selectDocumentoFiscal option:selected").data('objeto');
-        
+
         //Se não selecionou nenhum documento fiscal, retornar
         if (documento == undefined) {
             return false;
         }
-        
+
         var erro = false;
-        
+
         //percorre os documentos fiscais já inseridos ,caso já tenha sido inserido retorna erro e não continua
-        $("tr.documentoFiscal").each(function() {
+        $("tr.documentoFiscal").each(function () {
             if (documento.id_documento_fiscal == $(this).data('id')) {
                 func.modalAlert("Documento fiscal já adicionado");
                 erro = true;
             }
         });
-        
+
         if (!erro) {
-                        
+
             var linhaTabela = `<tr data-id=${documento.id_documento_fiscal} data-objeto='${JSON.stringify(documento)}' class="documentoFiscal">
                              <td class="text-center">${documento.nr_documento_fiscal}</td>
                              <td class="text-center">${documento.nm_tipo_documento}</td>
@@ -188,6 +187,9 @@ $(document).ready(function () {
                              <td class="text-center">${documento.dt_atesto}</td>
                              <td class="text-center">${documento.vl_documento}</td>
                              <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">
+                            <input class="form-control valorRetPagamento" type="text" name="valorRetPagamento[]" id="valorRetPagamento[]" value="0,0000">
+                            </td>
                              <td class="text-center">${documento.nm_situacao}</td>
                              <td class="text-center">
                                 <button type="button" class="text-primary ver-documento" title="Ver Documento Fiscal" value="${documento.id_documento_fiscal}">
@@ -202,10 +204,10 @@ $(document).ready(function () {
             $('#tabelaDocumentos tbody').append(linhaTabela);
             atualizaValorLiquidacao();
         }
-        
+
     });
-    
-    
+
+
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -213,17 +215,17 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
             $this.prop("disabled", true);
-            
+
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
                 var linha = $(this).data('objeto');
-                
-                
+
+
                 var vl_documento_liquidacao = linha.vl_doc_sem_mascara;
-                
+
                 var vl_documento_liquidacao_saldo = linha.vl_doc_sem_mascara;
-                
+
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
                     vl_liquidacao_doc: vl_documento_liquidacao_saldo,
@@ -233,7 +235,7 @@ $(document).ready(function () {
 
 
             });
-                        
+
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
@@ -245,12 +247,12 @@ $(document).ready(function () {
                 "docsLiquidacao": documentos
             }
 
-            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao 
-                    || dados.dtLiquidacao )) {
+            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao
+                    || dados.dtLiquidacao)) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 return false;
             }
-            
+
             if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
                 func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
                 return false;
@@ -265,7 +267,6 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -312,17 +313,17 @@ $(document).ready(function () {
 
 });
 
-function atualizaValorLiquidacao(){
+function atualizaValorLiquidacao() {
     var vl_liquidacao = 0;
-    $("tr.documentoFiscal").each(function() {
-        let documento = $(this).data('objeto'); 
+    $("tr.documentoFiscal").each(function () {
+        let documento = $(this).data('objeto');
         vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
     });
-    
+
     $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
 }
 
-function valorComMascara(valor) { 
+function valorComMascara(valor) {
     var valor = Number(valor).toFixed(4);
     var valorStr = valor.toString();
     valorStr = valorStr.split('.');
@@ -330,21 +331,21 @@ function valorComMascara(valor) {
     return valorStr.join(',');
 }
 
-function habilitaDocumentosFiscais(){
+function habilitaDocumentosFiscais() {
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
-    
-    if (tipo_solicitacao != 2 ) {
+
+    if (tipo_solicitacao != 2) {
         $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled",false);
+        $("#vl_liquidacao").prop("disabled", false);
     } else {
         $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled",true);
+        $("#vl_liquidacao").prop("disabled", true);
         $("#selectDocumentoFiscal").focus();
     }
 }
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
-function limpaCampos(){
+function limpaCampos() {
     $("#nr_liquidacao").val("");
     $("#dt_liquidacao").val("");
     $("#vl_liquidacao").val("");
