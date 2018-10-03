@@ -260,7 +260,7 @@ class DocFiscalEncaminhamento {
                                     </button>";  
                                      
                     if($linha['doc_situacao'] == $finDoc->getDocSitALiquidar()){
-                        $retorno .= "<button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
+                        $retorno .= " <button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
                                         <i class='fa fa-calculator fa-lg text-purple' aria-hidden='true'></i>
                                     </button>";
                     }

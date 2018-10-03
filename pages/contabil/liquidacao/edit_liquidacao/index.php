@@ -274,7 +274,7 @@ require_once "index.load.php";
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
                                         </div>
                                     </div>
