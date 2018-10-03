@@ -504,6 +504,17 @@ class Pedido {
             $opcoesStatus = $this->getPedidoNecessidadeStatus();
 
             if ($daoFinPedido->Sucesso()) {
+                
+                
+                $vincularTramitacao = new VincularTramitacao();
+                $vincularTramitacao->setIdPessoa($this->idUsuario);
+                $vincularTramitacao->retornaLiquidacaoPorUsuario($pdo);
+                $possuiPermissaoLiquidacao = false;
+                //Usuário possui permissão de liquidação
+                if($vincularTramitacao->Sucesso()){
+                    $possuiPermissaoLiquidacao = true;
+                }                
+                
 
                 foreach ($daoFinPedido->getMsgRetorno() as $dados) {
                     $statusPedido =  $opcoesStatus[$dados['status']];
@@ -522,7 +533,8 @@ class Pedido {
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
                                     </a >';
                     if(!empty($dados['nr_empenho']) && $dados['id_tipo_solicitacao'] != '2'
-                            && empty($dados['id_documento_fiscal'])){
+                            && empty($dados['id_documento_fiscal'])
+                            && $possuiPermissaoLiquidacao){
                         $tabela .= '    <a type = "button" target="_blank" '
                                         . 'title = "Cadastrar Liquidação" '
                                         . 'href="/pages/contabil/liquidacao/cad_liquidacao/index.php?token=' . $dados['nr_empenho'] . '"
