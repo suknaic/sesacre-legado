@@ -17,6 +17,15 @@ $(document).ready(function () {
     });
 
     //Masca para valor
+    $("body").on("focus", ".valorRetPagamento", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+
     $("body").on("focus", "#vl_pagamento", function () {
         $(this).priceFormat({
             centsLimit: 4,
@@ -43,6 +52,19 @@ $(document).ready(function () {
                 func.carregaTabelaPadrao('tabelaItens', response, [], true);
             }
         });
+    });
+
+
+    $.ajax({
+        "url": url,
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function (response) {
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
     });
 
     $('body').on('click', '.selecionaItem', function (e) {
@@ -119,7 +141,6 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
-                console.log(response);
                 $(".dadosLiquidacao").html("");
                 $(".dadosLiquidacao").append(response);
             }
@@ -222,33 +243,35 @@ $(document).ready(function () {
                 var linha = $(this).data('objeto');
 
 
-                var vl_documento_liquidacao = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento = linha.vl_doc_sem_mascara;
 
-                var vl_documento_liquidacao_saldo = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento_saldo = linha.vl_doc_sem_mascara;
 
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
-                    vl_liquidacao_doc: vl_documento_liquidacao_saldo,
-                    vl_liquidacao_doc_saldo: vl_documento_liquidacao
+                    vl_liquidacao_doc: vl_documento_pagamento,
+                    vl_liquidacao_doc_saldo: vl_documento_pagamento_saldo
                 }
                 documentos.push(documento);
 
 
             });
-
+            
+            
             var dados = {
+                "idPedido": $("#id_pedido").val(),
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
-                "nrLiquidacao": $("#nr_liquidacao").val(),
-                "vlLiquidacao": $("#vl_liquidacao").val(),
-                "dtLiquidacao": $("#dt_liquidacao").val(),
-                "obsLiquidacao": $("#desc_liquidacao").val(),
-                "docsLiquidacao": documentos
+                "nrPagamento": $("#nr_pagamento").val(),
+                "vlPagamento": $("#vl_pagamento").val(),
+                "dtPagamento": $("#dt_pagamento").val(),
+                "obsPagamento": $("#desc_pagamento").val(),
+                "docsPagamento": documentos
             }
 
-            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrLiquidacao || dados.vlLiquidacao
-                    || dados.dtLiquidacao)) {
+            if (!(dados.idEmpenho || dados.idLotacao || dados.idDocTipoLotacao || dados.nrPagamento || dados.vlPagamento
+                    || dados.dtPagamento)) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 return false;
             }
@@ -263,10 +286,11 @@ $(document).ready(function () {
                 "method": "POST",
                 "dataType": "html",
                 "data": {
-                    "acao": "cadastrarLiquidacao",
+                    "acao": "cadastrarPagamento",
                     "dados": dados
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
