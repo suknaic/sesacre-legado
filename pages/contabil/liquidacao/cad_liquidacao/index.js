@@ -146,7 +146,6 @@ $(document).ready(function () {
             "success": function (response){
                 $("#selectDocumentoFiscal").html("");
                 $("#selectDocumentoFiscal").append(response);
-                
                 habilitaDocumentosFiscais();
             }
         });

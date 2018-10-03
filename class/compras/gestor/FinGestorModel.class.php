@@ -168,15 +168,17 @@ class FinGestorModel {
                 $daoFinGestor->setTpGestor($tipo);
                 $daoFinGestor->setDtIniGestor(date('Y-m-d'));
                 $daoFinGestor->insertGestor($pdo);
-                //verificar ser deu certo o insert caso sim sucesso passa a ser true
+
+                //*********** verificar ser deu certo o insert caso sim sucesso passa a ser true ***********
                 if ($daoFinGestor->sucesso()) {
                     $daoFinGestor->setIdGestor(is_numeric($pdo->lastInsertId('fin_gestor_id_gestor_seq')) ? $pdo->lastInsertId('fin_gestor_id_gestor_seq') : NULL);
                     $this->sucesso = true;
                 }
-                
+                //******************************************************************************************
+
                 if (!Log::SalvaLogI('fin_gestor', $daoFinGestor->getIdGestor(), $pdo)) {
                     $this->sucesso = false;
-                    $this->msgRetorno = 'erro log';
+                    $this->msgRetorno = 'Erro log';
                 }
             }
         } catch (Exception $exc) {
@@ -234,45 +236,47 @@ class FinGestorModel {
                 $class = "selectGestores";
                 $classPrincipal = "gestoresCampos";
                 $id = "gestores";
-                $nomeCampo = 'Gestor Titular:<span class="text-danger">*</span>';
+                $nomeCampo = 'Gestor Titular:';
             } else {
                 $class = "selectGestoresSub";
                 $classPrincipal = "gestoresCamposSub";
                 $id = "gestoresSub";
                 $nomeCampo = 'Gestor Substituto:';
             }
-
+            $contGestor = 0;
             if ($daoFinGestor->sucesso()) {
                 foreach ($gestores as $gestor) {
-                    $retorno .= ' <div class="form-group">
-                                 <div class="col-sm-5">
-                                    <div class="panel-body">
-                                        '.$nomeCampo.'
-                                        <div class="'.$classPrincipal.'">
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
-                                                    <option value="">Selecione uma Pessoa</option>';
+                    $contGestor++;
+                    $retorno .= '<div class="form-group">
+                                     <div class="col-sm-5">
+                                        <div class="panel-body">
+                                            '.$nomeCampo.'
+                                            <div class="'.$classPrincipal.'">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                    <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
+                                                        <option value="">Selecione uma Pessoa</option>';
                     foreach ($pessoaFisica as $v) {
                         if ($v['id_pessoa'] == $gestor['id_pessoa']) {
-                            $retorno .= "<option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                            $retorno .= "               <option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
                         } else {
-                            $retorno .= "<option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                            $retorno .= "               <option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
                         }
                     }
-                    $retorno .= '                </select>
+                    $retorno .= '                    </select>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div><br>
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="removeGestores btn btn-danger" idGestor= "' . $gestor['id_gestor'] . '">X</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="panel-body">
-                                        <a href="#" class="removeGestores btn btn-danger" idGestor = "' . $gestor['id_gestor'] . '">X</a>
-                                    </div>
-                                </div>
-                            </div>';
+                                </div>';
                 }
             } else {
+                $contGestor = 1;
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -292,6 +296,7 @@ class FinGestorModel {
                                 </div>
                             </div>';
             }
+            $retorno .= '<input type = "hidden" id="contGestor" value="' . $contGestor . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();
@@ -361,4 +366,51 @@ class FinGestorModel {
         
     }
 
+    public function retornarGestoresContrato($tipo = null) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinGestor = new DaoFinGestor();
+            $daoFinGestor->setIdContrato($this->idContrato);
+
+            $daoFinGestor->retornaTodosPorContrato($pdo);
+            $retorno = array();
+            foreach ($daoFinGestor->getMsgRetorno() as $gestor) {
+                if ($gestor['tp_gestor'] == $tipo) {
+                    $retorno[] = $gestor;
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public function deleteGestorContrato() {
+        try {
+            if (empty($this->idGestor)) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinGestor = new DaoFinGestor();
+            $daoFinGestor->setIdGestor($this->idGestor);
+
+            $daoFinGestor->delete($pdo);
+            if (!$daoFinGestor->sucesso()) {
+                return Metodos::retornoAjax('Erro', 'alert', $daoFinGestor->getMsgRetorno());
+            }
+
+            if (!Log::SalvaLogD('fin_gestor', $this->idGestor, $pdo)) {
+                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+            }
+
+            return $daoFinGestor->sucesso();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }

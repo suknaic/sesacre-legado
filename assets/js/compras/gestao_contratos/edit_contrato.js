@@ -83,8 +83,12 @@ $(document).ready(function () {
     $("body").on('click', '.removeGestores', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contGestores--;
+        if (contGestores > 1) {
+            $this.closest(".form-group").remove();
+            contGestores--;
+        } else {
+            func.modalAlert("Esse Gestor Titular não pode ser removido.");
+        }
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
@@ -115,8 +119,12 @@ $(document).ready(function () {
     $("body").on('click', '.removeGestoresSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contGestoresSub--;
+        if (contGestoresSub > 1) {
+            $this.closest(".form-group").remove();
+            contGestoresSub--;
+        } else {
+            func.modalAlert("Esse Gestor Substituto não pode ser removido.");
+        }
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
@@ -147,8 +155,12 @@ $(document).ready(function () {
     $("body").on('click', '.removeFiscais', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contFiscais--;
+        if (contFiscais > 1) {
+            $this.closest(".form-group").remove();
+            contFiscais--;
+        } else {
+            func.modalAlert("Esse Fiscal Titular não pode ser removido.");
+        }
     });
 
     //Efeito de adicionar mais de um Fical Substituto
@@ -175,15 +187,19 @@ $(document).ready(function () {
         }
     });
 
-    //Efeito para remover um select de um Gestores Substitutos
+    //Efeito para remover um select de um Fiscal Substitutos
     $("body").on('click', '.removeFiscaisSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contFiscaisSub--;
+        if (contFiscaisSub > 1) {
+            $this.closest(".form-group").remove();
+            contFiscaisSub--;
+        } else {
+            func.modalAlert("Esse Fiscal Substituto não pode ser removido.");
+        }
     });
 
-    //Efeito de adicionar mais de um Gestor Substituto
+    //Efeito de adicionar mais de um Sub-Fiscal
     var maxSubFiscais = 10;
     var contSubFiscais = 1;
     $("body").on("click", ".addSubFiscais", function (e) {
@@ -207,15 +223,19 @@ $(document).ready(function () {
         }
     });
 
-    //Efeito para remover um select de um Gestores Substitutos
+    //Efeito para remover um select de um Sub-Fiscal
     $("body").on('click', '.removeSubFiscais', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contSubFiscais--;
+        if (contSubFiscais > 1) {
+            $this.closest(".form-group").remove();
+            contSubFiscais--;
+        } else {
+            func.modalAlert("Esse Sub-Fiscal não pode ser removido.");
+        }
     });
 
-    //Efeito de adicionar mais de um Gestor Substituto
+    //Efeito de adicionar mais de um Sub-Fiscal Substituto
     var maxSubFiscaisSub = 10;
     var contSubFiscaisSub = 1;
     $("body").on("click", ".addSubFiscaisSub", function (e) {
@@ -239,12 +259,17 @@ $(document).ready(function () {
         }
     });
 
-    //Efeito para remover um select de um Gestores Substitutos
+    //Efeito para remover um select de um Sub-Fiscal Substitutos
     $("body").on('click', '.removeSubFiscaisSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".form-group").remove();
-        contSubFiscaisSub--;
+        if (contSubFiscaisSub > 1) {
+            $this.closest(".form-group").remove();
+            contSubFiscaisSub--;
+        } else {
+            func.modalAlert("Esse Sub-Fiscal Substituto não pode ser removido.");
+        }
+
     });
 
     //Efeito para remover um select de Centrais
@@ -302,6 +327,102 @@ $(document).ready(function () {
         },
         "success": function (response) {
             $("body").find("#tipoDeGasto").html(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando gestores titulares
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaGestoresTitulares",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoGestores").append(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando gestores substitutos
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaGestoresSubstitutos",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoGestoresSub").append(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando ficais titulares
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaFiscaisTitulares",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoFiscais").append(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando ficais substitutos
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaFiscaisSubstitutos",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoFiscaisSub").append(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando sub-ficais titulares
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaSubFiscaisTitulares",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoSubFiscais").append(response);
+            $(".select").select2({});
+        }
+    });
+    //fim
+
+    //Listando sub-ficais substitutos
+    $.ajax({
+        "method": "POST",
+        "url": "/model/compras/contrato/request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaSubFiscaisSubstitutos",
+            "id": $("#idFornecedor").val()
+        },
+        "success": function (response) {
+            $(".campoSubFiscaisSub").append(response);
             $(".select").select2({});
         }
     });
@@ -496,9 +617,6 @@ $(document).ready(function () {
             }
 
             var central = [];
-            // $("select[name=central\\[\\]]").each(function () {
-            //     central.push($(this).val());
-            // });
             $("select[name=central\\[\\]]").each(function () {
                 if ($(this).val() == 0 || $(this).val() == '') {
                     salva = false;
@@ -519,149 +637,53 @@ $(document).ready(function () {
             }
 
             var gestores = [];
-            // $("select[name=gestores\\[\\]]").each(function () {
-            //     gestores.push($(this).val());
-            // });
             $("select[name=gestores\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaGestores = false;
-                } else {
-                    salvaGestores = true;
-                }
-
+                gestores.push($(this).val());
             });
-            if (salvaGestores === false) {
-                e.preventDefault();
-                $('.selectGestores').focus();
-                func.modalAlert('Selecione Um Gestor Títular.');
-                $this.prop("disabled", false);
-                return;
-            } else {
-                $("select[name=gestores\\[\\]]").each(function () {
-                    gestores.push($(this).val());
-                });
+            if (gestores[0] === '') {
+                gestores.splice(0);
             }
-
+            // console.log(gestores);
             var gestoresSub = [];
-            // $("select[name=gestoresSub\\[\\]]").each(function () {
-            //     gestoresSub.push($(this).val());
-            // });
-            // $("select[name=gestoresSub\\[\\]]").each(function () {
-            //     if ($(this).val() == 0 || $(this).val() == '') {
-            //         salvaGestoresSub = false;
-            //     } else {
-            //         salvaGestoresSub = true;
-            //     }
-            //
-            // });
-            // if (salvaGestoresSub === false) {
-            //     e.preventDefault();
-            //     $('.selectGestoresSub').focus();
-            //     func.modalAlert('Selecione Um Gestor Substituto.');
-            //     $this.prop("disabled", false);
-            //     return;
-            // } else {
             $("select[name=gestoresSub\\[\\]]").each(function () {
                 gestoresSub.push($(this).val());
             });
-            // }
-
-            var fiscais = [];
-            // $("select[name=fiscais\\[\\]]").each(function () {
-            //     fiscais.push($(this).val());
-            // });
-            $("select[name=fiscais\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaFiscais = false;
-                } else {
-                    salvaFiscais = true;
-                }
-
-            });
-            if (salvaFiscais === false) {
-                e.preventDefault();
-                $('.selectFiscais').focus();
-                func.modalAlert('Selecione Um Fiscal Titular.');
-                $this.prop("disabled", false);
-                return;
-            } else {
-                $("select[name=fiscais\\[\\]]").each(function () {
-                    fiscais.push($(this).val());
-                });
+            if (gestoresSub[0] === '') {
+                gestoresSub.splice(0);
             }
-
+            // console.log(gestoresSub);
+            var fiscais = [];
+            $("select[name=fiscais\\[\\]]").each(function () {
+                fiscais.push($(this).val());
+            });
+            if (fiscais[0] === '') {
+                fiscais.splice(0);
+            }
+            // console.log(fiscais);
             var fiscaisSub = [];
-            // $("select[name=fiscaisSub\\[\\]]").each(function () {
-            //     fiscaisSub.push($(this).val());
-            // });
-            // $("select[name=fiscaisSub\\[\\]]").each(function () {
-            //     if ($(this).val() == 0 || $(this).val() == '') {
-            //         salvaFiscaisSub = false;
-            //     } else {
-            //         salvaFiscaisSub = true;
-            //     }
-            //
-            // });
-            // if (salvaFiscaisSub === false) {
-            //     e.preventDefault();
-            //     $('.selectFiscaisSub').focus();
-            //     func.modalAlert('Selecione Um Fiscal Substituto.');
-            //     $this.prop("disabled", false);
-            //     return;
-            // } else {
             $("select[name=fiscaisSub\\[\\]]").each(function () {
                 fiscaisSub.push($(this).val());
             });
-            // }
-
+            if (fiscaisSub[0] === '') {
+                fiscaisSub.splice(0);
+            }
+            // console.log(fiscaisSub);
             var subFiscais = [];
-            // $("select[name=subFiscais\\[\\]]").each(function () {
-            //     subFiscais.push($(this).val());
-            // });
-            // $("select[name=subFiscais\\[\\]]").each(function () {
-            //     if ($(this).val() == 0 || $(this).val() == '') {
-            //         salvaSubFiscais = false;
-            //     } else {
-            //         salvaSubFiscais = true;
-            //     }
-            //
-            // });
-            // if (salvaSubFiscais === false) {
-            //     e.preventDefault();
-            //     $('.selectSubFiscais').focus();
-            //     func.modalAlert('Selecione Um Sub-Fiscal.');
-            //     $this.prop("disabled", false);
-            //     return;
-            // } else {
             $("select[name=subFiscais\\[\\]]").each(function () {
                 subFiscais.push($(this).val());
             });
-            // }
-
+            if (subFiscais[0] === '') {
+                subFiscais.splice(0);
+            }
+            // console.log(subFiscais);
             var subFiscaisSub = [];
-            // $("select[name=subFiscaisSub\\[\\]]").each(function () {
-            //     subFiscaisSub.push($(this).val());
-            // });
-            // $("select[name=subFiscaisSub\\[\\]]").each(function () {
-            //     if ($(this).val() == 0 || $(this).val() == '') {
-            //         salvaSubFiscaisSub = false;
-            //     } else {
-            //         salvaSubFiscaisSub = true;
-            //     }
-            //
-            // });
-            // if (salvaSubFiscaisSub === false) {
-            //     e.preventDefault();
-            //     $('.selectSubFiscaisSub').focus();
-            //     func.modalAlert('Selecione Um Sub-Fiscal Substituto.');
-            //     $this.prop("disabled", false);
-            //     return;
-            // } else {
             $("select[name=subFiscaisSub\\[\\]]").each(function () {
                 subFiscaisSub.push($(this).val());
             });
-            // }
-
+            if (subFiscaisSub[0] === '') {
+                subFiscaisSub.splice(0);
+            }
+            // console.log(subFiscaisSub[0]);
             var contrato = {
                 "idFornecedor": $("#idFornecedor").val(),
                 "id_contrato": $("#idContrato").val(),
@@ -694,8 +716,7 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                   console.log(response);
-                   return false;
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
