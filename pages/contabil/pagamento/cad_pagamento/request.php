@@ -100,5 +100,49 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
+
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioPagamento();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'cadastrarPagamento':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            var_dump($dados);
+            return false;
+            if (empty($dados['docsLiquidacao'])) {
+                $dados['docsLiquidacao'] = array();
+            }
+
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdEmpenho($dados['idEmpenho'])
+                    ->setUsuario($session->getIdUser())
+                    ->setIdLotacao($dados['idLotacao'])
+                    ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
+                    ->setNrLiquidacao($dados['nrLiquidacao'])
+                    ->setVlLiquidacao($dados['vlLiquidacao'])
+                    ->setDtLiquidacao($dados['dtLiquidacao'])
+                    ->setAnotacoes($dados['anotacoes'])
+                    ->setTipoSolicitacao($dados['tipoSolicitacao'])
+                    ->setQtdDocumentosDisponiveis($dados['qtdDocumentos'])
+                    ->setDocumentos($dados['docsLiquidacao']);
+            echo $liquidacao->salvarLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 

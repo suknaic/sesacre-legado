@@ -221,7 +221,9 @@ class QddSupRed {
                     return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"
                             . " de Reduzido o Saldo de R$ ". Metodos::ConverteValorBr($qddValor->getVlSaldo(), 2)." irá ficar Negativo.");
                 }
-                
+                var_dump(round($qddValor->getVlAtual(),4));
+                var_dump(round($this->vlQddSupRedTrans - $qddValor->getVlLiberado(),4));
+                return false;
                 
                 if((round($qddValor->getVlAtual(),4) - round($this->vlQddSupRedTrans - $qddValor->getVlLiberado(),4)) < 0 ){
                     return Metodos::retornoAjax("Erro", "alert", "Ação não realizada, pois ao fazer essa operação"

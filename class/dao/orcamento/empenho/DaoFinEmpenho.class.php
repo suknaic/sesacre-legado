@@ -339,18 +339,17 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $sql = "select emp.id_pedido, emp.nr_empenho,emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                         tpEmp.nm_tipo_empenho, emp.vl_empenho,
                         (emp.vl_empenho -
-                         coalesce((
-                                           select sum(vl_pagamento) 
+                         coalesce((select sum(vl_pagamento) 
                                    from con_pagamento as pagamento 
                                    inner join con_liquidacao as liquidacao
                                    on liquidacao.id_liquidacao = pagamento.id_liquidacao
                                    where liquidacao.id_empenho = emp.id_empenho
-                                   ),0)) as saldo_empenho_gdof 
+                                   ),0)) as saldo_empenho_pagamento
 
                         from fin_empenho as emp 
                         inner join fin_tipo_empenho as tpEmp 
                         on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
-                            id_pedido = :pedido";
+                        where emp.id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();

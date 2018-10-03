@@ -50,7 +50,7 @@ require_once "index.load.php";
                         <h1 class="page-header text-overflow">Cadastro do pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
-                        <li><a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Voltar</a></li>                        
+                        <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--Modal itens content-->
@@ -168,7 +168,7 @@ require_once "index.load.php";
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="col-sm-12">
-                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered tabelaDocumentos" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
                                                                             <th class="text-center">Nº Documento Fiscal</th>
@@ -229,7 +229,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Liquidação:</b></div>
+                                                            <div class="col-sm-2"><b>Data da Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
