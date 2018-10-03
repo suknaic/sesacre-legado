@@ -679,6 +679,21 @@ class FinEmpenhoModel {
         }
         return $retorno;
     }
+    
+    public function buscaEmpenhoParaLiquidacao() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinEmpenho = new DaoFinEmpenho();
+        $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        
+        if ($daoFinEmpenho->sucesso()) {
+            foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
+                return Metodos::retornoAjax("ok", "ok", $dados);
+            }            
+        }
+        return Metodos::retornoAjax("no", "no", array());        
+    }
 
     /**
      * Retorna os dados do empenho 

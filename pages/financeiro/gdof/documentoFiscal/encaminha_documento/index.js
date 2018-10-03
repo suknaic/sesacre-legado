@@ -42,6 +42,17 @@ $(document).ready(function () {
         window.open("/pages/financeiro/gdof/documentoFiscal/ver_documento/index.php?&id=" + id);
     });
     
+    
+    $('body').on('click', '.enviarLiquidacao', function (e){
+        e.stopPropagation();
+        if (e.isDefaultPrevented()){
+        } else {
+            e.preventDefault();                   
+            var $this = $(this);
+            window.open("/pages/contabil/liquidacao/cad_liquidacao/index.php?token=" + $(this).val());      
+        }
+    });
+    
     $('body').on('click', '.editar', function (e) {
         var id = $(this).val();
         window.location.href = "/pages/financeiro/gdof/documentoFiscal/edit_documento/index.php?&id=" + id;

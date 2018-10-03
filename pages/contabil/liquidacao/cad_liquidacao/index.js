@@ -72,7 +72,14 @@ $(document).ready(function () {
             "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
-
+        
+        carregaDadosParaEmpenho(dados)
+        
+        $('#modalItem').modal('hide');
+    });
+    
+    function carregaDadosParaEmpenho(dados){
+        
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -142,9 +149,39 @@ $(document).ready(function () {
                 habilitaDocumentosFiscais();
             }
         });
+    }
+    
+    
+    if($("#empenho_get").val() != 0){
+        carregaLiquidacaoPesquisa();
+    }
+    
+    //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
+    function carregaLiquidacaoPesquisa(){
+        if($("#empenho_get").val() == 0){
+            return false;
+        }
         
-        $('#modalItem').modal('hide');
-    });
+        $.ajax({
+            "url": url,
+            "dataType": 'json',
+            "method": "get",
+            "data": {
+                "acao": "buscaEmpenho",
+                "empenho": $("#empenho_get").val()
+            },
+            "success": function (response){         
+                console.log(response)
+                
+                var dados = {
+                    "nr_pedido": response.msg.nr_pedido,
+                    "id_pedido": response.msg.id_pedido,
+                    "id_empenho": response.msg.id_empenho,
+                }
+                carregaDadosParaEmpenho(dados)                                        
+            }
+        });                
+    }
     
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
