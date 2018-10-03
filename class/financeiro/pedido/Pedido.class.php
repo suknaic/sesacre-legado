@@ -527,7 +527,7 @@ class Pedido {
                                         . 'title = "Cadastrar Liquidação" '
                                         . 'href="/pages/contabil/liquidacao/cad_liquidacao/index.php?token=' . $dados['nr_empenho'] . '"
                                             class = "enviarLiquidacao" >
-                                            <i class="fa fa-hand-o-right fa-lg text-warning" aria-hidden="true"></i>
+                                            <i class="fa fa-calculator fa-lg text-purple" aria-hidden="true"></i>
                                         </a >';
                     }
                     $tabela .= '</td>
