@@ -520,8 +520,17 @@ class Pedido {
                                 <td class = "text-center">
                                     <a type = "button" title = "Visualiza pedido" href="/pages/financeiro/necessidade_central/ver_pedido.php?id=' . $dados['id_pedido'] . '" class = "verPedido" >
                                     <i class="fa fa-search-plus fa-lg text-info" aria-hidden="true"></i>
-                                    </a >
-                                </td>
+                                    </a >';
+                    if(!empty($dados['nr_empenho']) && $dados['id_tipo_solicitacao'] != '2'
+                            && empty($dados['id_documento_fiscal'])){
+                        $tabela .= '    <a type = "button" target="_blank" '
+                                        . 'title = "Cadastrar Liquidação" '
+                                        . 'href="/pages/contabil/liquidacao/cad_liquidacao/index.php?token=' . $dados['nr_empenho'] . '"
+                                            class = "enviarLiquidacao" >
+                                            <i class="fa fa-hand-o-right fa-lg text-warning" aria-hidden="true"></i>
+                                        </a >';
+                    }
+                    $tabela .= '</td>
                                 </tr>';
                 }
             }
