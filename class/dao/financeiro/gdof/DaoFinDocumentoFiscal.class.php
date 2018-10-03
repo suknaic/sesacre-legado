@@ -629,7 +629,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         try {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, to_char(doc.vl_documento,'999G999G990D0000') as vl_documento, 
-                    situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
+                    situacao.nm_situacao, doc.id_documento_situacao as doc_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
                     
                     case
                         when 
