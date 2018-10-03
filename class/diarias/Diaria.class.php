@@ -883,7 +883,7 @@ class Diaria {
                     //Pega a data atual e a data final do último itinerario ,para verificação posterior do cadastro do relatório de viagem
                     $data_fim_itinerario = date_create_from_format('d/m/Y H:i', $linha['dh_fim']);
                     
-                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                    $retorno .= "<tr data-diaria='". json_encode($linha,JSON_HEX_APOS) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
                                 . "<td>" . $linha['nr_protocolo'] . "</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"
@@ -892,44 +892,44 @@ class Diaria {
                                 . "<td>" . $linha['central_demanda'] . "</td>"
                                 . "<td>" . $linha['destino'] . "</td>"
                                 . "<td class='text-center'>" . $this->retornaSituacaoDiaria($estagio, $pedido,$ano_pedido). "</td>"
-                                . "<td class = 'text-center'>";
+                                . "<td class = 'text-center' >";
                     
 
                         if (($estagio == '3' or $estagio == '1') and $altera) { //Indeferida e Criada permite a exclusão
-                            $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
-                                        . '<button title="Editar" type="button">'
-                                            . '<i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>'
-                                        . '</button>'
-                                      . '</a>';
+                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>"
+                                        . "<button title='Editar' type='button'>"
+                                            . "<i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>"
+                                        . "</button>"
+                                      . "</a>";
 
-                            $retorno .= '<button title="Excluir" type="button" class="text-danger excluirDiaria">'
-                                        . '<i class="fa fa-trash fa-lg" aria-hidden="true"></i>'
-                                      . '</button>';
-                            $retorno .= '<button title="Enviar p/ Deferimento" type="button" class="enviarDiaria" data-toggle="modal" data-target="#acao">'
-                                        . '<i class="fa fa-share-square fa-lg text-warning" aria-hidden="true"></i>'
-                                    . '</button>';
+                            $retorno .= "<button title='Excluir' type='button' class='text-danger excluirDiaria'>"
+                                        . "<i class='fa fa-trash fa-lg' aria-hidden='true'></i>"
+                                      . "</button>";
+                            $retorno .= "<button title='Enviar p/ Deferimento' type='button' class='enviarDiaria' data-toggle='modal' data-target='#acao'>"
+                                        . "<i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>"
+                                    . "</button>";
                         }
                                 
 
                         if ($estagio == '2' or $estagio == '4' or $estagio == '5' or $estagio == '6' or  !$altera ) { //Deferida só permite visualização
-                            $retorno .= '<a href="./diaria/index.php?id=' . $linha['id_diaria'] .'">'
-                                        . '<button type="button" title="Visualizar">'
-                                            . '<i class="fa fa-search fa-lg text-primary" aria-hidden="true"></i>'
-                                        . '</button>'
-                                      . '</a>';
+                            $retorno .= "<a href='./diaria/index.php?id=" . $linha['id_diaria'] ."'>"
+                                        . "<button type='button' title='Visualizar'>"
+                                            . "<i class='fa fa-search fa-lg text-primary' aria-hidden='true'></i>"
+                                        . "</button>"
+                                      . "</a>";
                         }
                         if ($estagio == '5' and $data_hoje > $data_fim_itinerario) { //Só permitir editar o relatório de viagem quando a diária estiver vinculada a um pedido e deferida
-                            $retorno .= '<a href="./relatorio/index.php?id=' . $linha['id_diaria'] . '">'
-                                        . '<button title="Relatório de Viagem" type="button">'
-                                             . '<i class="fa fa-book fa-lg text-info" aria-hidden="true"></i>'
-                                        . '</button>'
-                                      . '</a>';
+                            $retorno .= "<a href='./relatorio/index.php?id=" . $linha['id_diaria'] . "'>"
+                                        . "<button title='Relatório de Viagem' type='button'>"
+                                             . "<i class='fa fa-book fa-lg text-info' aria-hidden='true'></i>"
+                                        . "</button>"
+                                      . "</a>";
                         }
-                        $retorno .= '<a href="./diaria/imprimir.php?id=' . $linha['id_diaria'] . '" target="_blank">'
-                                        . '<button title="Imprimir proposta e concessão da Diária" type="button" >'
-                                            . '<i class="fa fa-print fa-lg" aria-hidden="true"></i>'
-                                        . '</button>'
-                                    . '</a>';
+                        $retorno .= "<a href='./diaria/imprimir.php?id=" . $linha['id_diaria'] . "' target='_blank'>"
+                                        . "<button title='Imprimir proposta e concessão da Diária' type='button' >"
+                                            . "<i class='fa fa-print fa-lg' aria-hidden='true'></i>"
+                                        . "</button>"
+                                    . "</a>";
                     $retorno .=   "</td>"
                              . "</tr>";                    
                 }

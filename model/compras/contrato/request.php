@@ -188,58 +188,6 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaOptionsFiscais':
-        try {
-            $contratoModel = new Contrato();
-            echo '<option value="">Selecione um Fiscal</option>';
-            echo $contratoModel->retornaOptionPessoaContrato(null);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-
-    CASE 'retornaOptionsFiscaisSub':
-        try {
-            $contratoModel = new Contrato();
-            echo '<option value="">Selecione um Fiscal substituto</option>';
-            echo $contratoModel->retornaOptionPessoaContrato(null);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-
-    CASE 'retornaOptionsSubFiscais':
-        try {
-            $contratoModel = new Contrato();
-            echo '<option value="">Selecione um Sub-Fiscal</option>';
-            echo $contratoModel->retornaOptionPessoaContrato(null);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-
-    CASE 'retornaOptionsSubFiscaisSub':
-        try {
-            $contratoModel = new Contrato();
-            echo '<option value="">Selecione um Sub-Fiscal substituto</option>';
-            echo $contratoModel->retornaOptionPessoaContrato(null);
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
-
     CASE 'retornaOptionsFonte':
         try {
             $fonte = new Fonte();
@@ -300,7 +248,23 @@ switch ($_REQUEST['acao']) {
     CASE 'editarContrato':
         try {
             $contrato = filter_input(INPUT_POST, 'contrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
+//            print_r($contrato['gestores']);
+//            print_r($contrato['gestoresSub']);
+//            print_r($contrato['fiscais']);
+//            print_r($contrato['fiscaisSub']);
+//            print_r($contrato['subFiscais']);
+//            unset($contrato[0]['central']);
+//            print_r($contrato[0]['subFiscaisSub']);
+//            if ($contrato[0]['central'] == '' && $contrato[0]['gestores'] == '' && $contrato[0]['gestoresSub'] == '' && $contrato[0]['fiscais'] == '' && $contrato[0]['fiscaisSub'] == '' && $contrato[0]['subFiscais'] == '' && $contrato[0]['subFiscaisSub'] == '') {
+//                unset($contrato[0]['central']);
+//                unset($contrato[0]['gestores']);
+//                unset($contrato[0]['gestoresSub']);
+//                unset($contrato[0]['fiscais']);
+//                unset($contrato[0]['fiscaisSub']);
+//                unset($contrato[0]['subFiscais']);
+//                unset($contrato[0]['subFiscaisSub']);
+//            }
+//            return;
             $finContratoModel = new FinContratoModel();
             $finContratoModel->setIdFornecedor($contrato['idFornecedor']);
             $finContratoModel->setIdContrato($contrato['id_contrato']);
@@ -324,7 +288,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setIdPessoaSubFiscalSubstituto($contrato['subFiscaisSub']);
             $finContratoModel->setIdTipoGasto($contrato['idTipoGasto']);
             echo $finContratoModel->editarContrato();
-            return '';
+            return;
             break;
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
@@ -353,6 +317,84 @@ switch ($_REQUEST['acao']) {
             $idProcesso = filter_input(INPUT_GET, 'idProcesso', FILTER_DEFAULT);
             $tipoDeGasto = new FinContratoModel();
             echo $tipoDeGasto->retornaTipoDeGastoLicitacao($idProcesso);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaGestoresTitulares':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $gestores = new FinGestorModel();
+            echo $gestores->retornarGestor($id, 1);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaGestoresSubstitutos':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $gestores = new FinGestorModel();
+            echo $gestores->retornarGestor($id, 2);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaFiscaisTitulares':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $fiscais = new FinFiscaisModel();
+            echo $fiscais->retornarFiscal($id, 1);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaFiscaisSubstitutos':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $fiscais = new FinFiscaisModel();
+            echo $fiscais->retornarFiscal($id, 2);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaSubFiscaisTitulares':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $subFiscais = new SubFiscalModel();
+            echo $subFiscais->retornarSubFiscal($id, 1);
+            return;
+            break;
+        } catch (Exception $ex) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaSubFiscaisSubstitutos':
+        try {
+            $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+            $subFiscais = new SubFiscalModel();
+            echo $subFiscais->retornarSubFiscal($id, 2);
             return;
             break;
         } catch (Exception $ex) {

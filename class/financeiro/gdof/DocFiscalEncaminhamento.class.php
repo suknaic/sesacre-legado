@@ -258,6 +258,13 @@ class DocFiscalEncaminhamento {
                                     <button title='Encaminha documento fiscal' type='button' class='enviarDoCumento'  data-toggle='modal' data-target='#acao' value='" . $linha['id_documento_fiscal'] . "'>
                                     <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
                                     </button>";  
+                                     
+                    if($linha['id_documento_situacao'] == $finDoc->getDocSitALiquidar()){
+                        $retorno .= "<button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
+                                        <i class='fa fa-hand-o-right fa-lg text-warning' aria-hidden='true'></i>
+                                    </button>";
+                    }
+                    
                     if($linha['id_documento_situacao'] == $finDoc->getDocSitCadastrado()){
                     $retorno .= "  <button type='button' title='editar' class='editar' value='" . $linha['id_documento_fiscal'] . "'>
                                      <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>

@@ -29,30 +29,6 @@ $array = $finContratoModel->retornaDados();
 $finCentraisModel = new FinCentraisModel();
 $campoCentral = $finCentraisModel->campoCentraisOptions(null, $id);
 
-//******* Lista todos os gestores titulares do contrato *******
-$finGestores = new FinGestorModel();
-$gestores = $finGestores->retornarGestor($id, 1);
-
-//****** Lista todos os gestores substitutos do contrato ******
-$gestoreSub = $finGestores->retornarGestor($id, 2);
-//*************************************************************
-
-//******* Lista todos os fiscais titulares do contrato *******
-$finFiscais = new FinFiscaisModel();
-$fiscais = $finFiscais->retornarFiscal($id, 1);
-
-//****** Lista todos os fiscais substitutos do contrato ******
-$fiscaisSub = $finFiscais->retornarFiscal($id, 2);
-//*************************************************************
-
-//******* Lista todos os fiscais titulares do contrato *******
-$finSubFiscais = new SubFiscalModel();
-$subFiscais = $finSubFiscais->retornarSubFiscal($id, 1);
-
-//****** Lista todos os fiscais substitutos do contrato ******
-$subFiscaisSub = $finSubFiscais->retornarSubFiscal($id, 2);
-//*************************************************************
-
 $sesPessoaJuridicaModel = new SesPessoaJuridicaModel();
 //setando id para retorna CNPJ
 $sesPessoaJuridicaModel->setId_pessoa_juridica($array[0]["id_pessoa"]);

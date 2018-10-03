@@ -257,7 +257,7 @@ class SubFiscalModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                                 <div class="col-sm-3">
                                     <div class="panel-body">
                                         <a href="#" class="removeFiscais btn btn-danger" idSubFiscal = "' . $subFiscal['id_sub_fiscal'] . '">X</a>
@@ -290,5 +290,52 @@ class SubFiscalModel {
             return $exc->getMessage();
         }
     }
-        
+
+    public function retornarSubFiscaisContrato($tipo = null) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinSubFiscal = new DaoFinSubFiscal();
+            $daoFinSubFiscal->setIdContrato($this->idContrato);
+
+            $daoFinSubFiscal->retornaTodosPorContrato($pdo);
+            $retorno = array();
+            foreach ($daoFinSubFiscal->getMsgRetorno() as $subFiscal) {
+                if ($subFiscal['tp_sub_fiscal'] == $tipo) {
+                    $retorno[] = $subFiscal;
+                }
+            }
+            return $retorno;
+        } catch (Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public function deleteSubFiscalContrato() {
+        try {
+            if (!empty($this->idFiscal)) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoFinSubFiscal = new DaoFinSubFiscal();
+            $daoFinSubFiscal->setIdSubFiscal($this->idSubFiscal);
+
+            $daoFinSubFiscal->delete($pdo);
+            if (!$daoFinSubFiscal->sucesso()) {
+                return Metodos::retornoAjax('Erro', 'alert', $daoFinSubFiscal->getMsgRetorno());
+            }
+
+            if (!Log::SalvaLogD('fin_sub_fiscal', $this->idSubFiscal, $pdo)) {
+                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+            }
+
+            return $daoFinSubFiscal->sucesso();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }
