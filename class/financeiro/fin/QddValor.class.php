@@ -669,7 +669,9 @@ class QddValor {
                 $valorBloqueado += $v['vl_bloqueado'];
                 $valorSaldo += $v['vl_saldo'];
 
-                if ($v['vl_empenhado'] > $v['vl_liberado'] || $v['vl_liberado'] > ($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado'])) {
+
+                if (round($v['vl_empenhado'],4) > round($v['vl_liberado'],4) || round($v['vl_liberado'],4) > round(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']),4)) {
+                
                     $retorno .= '<tr class="" style="color:red">'
                             . '<td> <span class="col-sm-2">' . $v['cd_despesa_elemento'] . '</span> <span class="col-sm-10">' . $v['ds_despesa_elemento'] . '<span></td>'
                             . '<td class="text-center">' . $v['nr_fonte'] . '</td>'
