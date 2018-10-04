@@ -165,6 +165,7 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setCompetencia($dados["competencia"]);
             $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
             $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
+            $finDocumentoFiscal->setDtVencimento($dados["vencimento"]);
             $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
             $finDocumentoFiscal->setNrGrpNumero($dados["grpNumero"]);

@@ -9,6 +9,7 @@ class FinDocumentoFiscal {
     private $nr_documento_fiscal = null;
     private $competencia = null;
     private $dt_emissao = null;
+    private $dt_vencimento = null;
     private $dt_atesto = null;
     private $vl_documento = null;
     private $fl_encontro_contas = null;
@@ -134,6 +135,15 @@ class FinDocumentoFiscal {
     public function setDtEmissao($dt_emissao) {
         $this->dt_emissao = $dt_emissao;
 
+        return $this;
+    }
+    
+    function getDtVencimento() {
+        return $this->dt_vencimento;
+    }
+
+    function setDtVencimento($dt_vencimento) {
+        $this->dt_vencimento = $dt_vencimento;
         return $this;
     }
 
@@ -548,6 +558,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setAaCompetencia(explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
+            $daoFinDocumentoFiscal->setDtVencimento(Metodos::ConverteDataING($this->dt_vencimento));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
             $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
@@ -872,6 +883,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setMmCompetencia((int) explode("/", $this->competencia)[0]);
             $daoFinDocumentoFiscal->setAaCompetencia((int) explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
+            $daoFinDocumentoFiscal->setDtVencimento(Metodos::ConverteDataING($this->dt_vencimento));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);

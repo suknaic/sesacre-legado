@@ -3,6 +3,7 @@ $(document).ready(function () {
     func = new Funcoes();
 
     //Mascara do sistema
+    $('#vencimento').mask("99/99/9999");
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
 
@@ -287,6 +288,7 @@ $(document).ready(function () {
                 "nr_documento": $("#nr_documento").val(),
                 "tpDocumento": $("#tpDocumento option:selected").val(),
                 "competencia": $("#competencia").val(),
+                "vencimento": $("#vencimento").val(),
                 "emissao": $("#emissao").val(),
                 "atesto": $("#atesto").val(),
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),

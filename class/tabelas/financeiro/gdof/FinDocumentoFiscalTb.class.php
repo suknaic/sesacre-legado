@@ -22,7 +22,18 @@ class FinDocumentoFiscalTb {
     private $id_doc_tramitacao = null;
     private $id_documento_situacao = null;
     private $id_pedido = null;
+    private $dt_vencimento = null;
     
+    function getDtVencimento() {
+        return $this->dt_vencimento;
+    }
+
+    function setDtVencimento($dt_vencimento) {
+        $this->dt_vencimento = $dt_vencimento;
+        return $this;
+    }
+
+        
     function getVlDocumentoSaldo() {
         return $this->vl_documento_saldo;
     }

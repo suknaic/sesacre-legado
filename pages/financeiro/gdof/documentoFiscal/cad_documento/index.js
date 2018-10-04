@@ -4,6 +4,7 @@ $(document).ready(function () {
 
     //Mascara do sistema
     $('#emissao').mask("99/99/9999");
+    $('#vencimento').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
     $('#competencia').mask("99/9999");
     //busca pedido
@@ -43,6 +44,7 @@ $(document).ready(function () {
         $("#competencia").val("");
         $("#emissao").val("");
         $("#atesto").val("");
+        $("#vencimento").val("");
         $("#valorDocumentoFiscal").val("");
         $("#tpDocumento").val("0").select2();
         $("#destinatario").val("0").select2();
@@ -417,6 +419,7 @@ $(document).ready(function () {
                 "tpDocumento": $("#tpDocumento option:selected").val(),
                 "competencia": $("#competencia").val(),
                 "emissao": $("#emissao").val(),
+                "vencimento": $("#vencimento").val(),
                 "atesto": $("#atesto").val(),
                 "valorDocumentoFiscal": $("#valorDocumentoFiscal").val(),
                 "grp": grp,

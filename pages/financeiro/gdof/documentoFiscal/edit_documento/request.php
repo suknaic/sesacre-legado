@@ -96,6 +96,7 @@ switch ($_REQUEST['acao']) {
             $finDocumentoFiscal->setIdTipoDocumento((int)$dados["tpDocumento"]);
             $finDocumentoFiscal->setCompetencia($dados["competencia"]);
             $finDocumentoFiscal->setDtAtesto($dados["atesto"]);
+            $finDocumentoFiscal->setDtVencimento($dados["vencimento"]);
             $finDocumentoFiscal->setDtEmissao($dados["emissao"]);
             $finDocumentoFiscal->setVlDocumento($dados["valorDocumentoFiscal"]);
             $finDocumentoFiscal->setFlGrp($dados["grp"]);
