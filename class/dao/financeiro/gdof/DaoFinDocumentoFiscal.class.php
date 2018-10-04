@@ -23,8 +23,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             }
 
             $sql = "insert into fin_documento_fiscal (nr_processo_administrativo, nr_documento_fiscal, mm_competencia, aa_competencia, dt_emissao, dt_atesto, 
-                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido, vl_documento_saldo) values(:processo, :nrDocumento, 
-                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido, :vlDocumentoSaldo)";
+                    vl_documento, fl_encontro_contas, fl_grp, nr_grp_numero, id_lotacao, id_tipo_documento, id_documento_situacao, id_pedido, vl_documento_saldo, dt_vencimento) values(:processo, :nrDocumento, 
+                    :mmCompetencia, :aaCompetencia, :dtEmissao, :dtAtesto, :vlDocumento, :flContas, :flGrp, :nrGrp, :idLotacao, :idTipoDocumento, :idDocumentoSituacao, :idPedido, :vlDocumentoSaldo, :dtVencimento)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":processo", $this->getNrProcessoAdministrativo(), PDO::PARAM_STR);
             $stmt->bindValue(":nrDocumento", $this->getNrDocumentoFiscal(), PDO::PARAM_STR);
@@ -40,7 +40,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
             $stmt->bindValue(":idDocumentoSituacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
             $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
-            $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR);            
+            $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR);
+            $stmt->bindValue(":dtVencimento", $this->getDtVencimento(), PDO::PARAM_STR);
             $stmt->execute();
             $this->sucesso = true;
         } catch (PDOException $ex) {
@@ -59,6 +60,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         . " , fl_grp = :flGrp, nr_grp_numero = :nrGrpNumero"
                         . " , id_tipo_documento = :idTipoDocumento"
                         . " , vl_documento_saldo = :vlDocumentoSaldo"
+                        . " , dt_vencimento = :dtVencimento"
                         . " WHERE id_documento_fiscal = :idDocumentoFiscal";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(':idDocumentoFiscal', $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -73,7 +75,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $stmt->bindValue(":nrGrpNumero", $this->getNrGrpNumero(), PDO::PARAM_STR);                
                 $stmt->bindValue(":idTipoDocumento", $this->getIdTipoDocumento(), PDO::PARAM_INT);
                 $stmt->bindValue(":vlDocumentoSaldo", $this->getVlDocumentoSaldo(), PDO::PARAM_STR); 
-                                
+                $stmt->bindValue(":dtVencimento", $this->getDtVencimento(), PDO::PARAM_STR);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -629,7 +631,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         try {
             $sql = "select doc.id_documento_fiscal, doc.nr_documento_fiscal,to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, pedido.nr_pedido, contrato.nr_contrato, emp.nr_empenho, protoc.id_protocolo, tpDoc.nm_tipo_documento,
                     (trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))) as competencia, to_char(doc.vl_documento,'999G999G990D0000') as vl_documento, 
-                    situacao.nm_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
+                    situacao.nm_situacao, doc.id_documento_situacao as doc_situacao, tpTramitacao.nm_tipo_tramitacao, tramitacao.id_documento_situacao,
                     
                     case
                         when 

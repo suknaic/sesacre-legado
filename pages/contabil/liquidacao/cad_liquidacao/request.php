@@ -135,6 +135,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'buscaEmpenho':
+        try {
+            $dados = filter_input(INPUT_GET, 'empenho', FILTER_DEFAULT);
+            $finEmpenhoModel = new FinEmpenhoModel();
+            $finEmpenhoModel->setNrEmpenho($dados);
+            echo $finEmpenhoModel->buscaEmpenhoParaLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 
 
 }

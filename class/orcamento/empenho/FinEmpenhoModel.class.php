@@ -536,7 +536,7 @@ class FinEmpenhoModel {
             $dadosEmpenho = '';
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
-            $daoFinEmpenho->retornaEmpenhoGdof($pdo);
+            $daoFinEmpenho->retornaEmpenhoPagamento($pdo);
 
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
@@ -575,8 +575,8 @@ class FinEmpenhoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo do Empenho para GDOF:</b></div>
-                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_gdof"], 4) . '</div>
+                                                        <div class="col-sm-2"><b>Saldo do Empenho para Pagamento:</b></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_pagamento"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -678,6 +678,21 @@ class FinEmpenhoModel {
             }
         }
         return $retorno;
+    }
+    
+    public function buscaEmpenhoParaLiquidacao() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinEmpenho = new DaoFinEmpenho();
+        $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        
+        if ($daoFinEmpenho->sucesso()) {
+            foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
+                return Metodos::retornoAjax("ok", "ok", $dados);
+            }            
+        }
+        return Metodos::retornoAjax("no", "no", array());        
     }
 
     /**

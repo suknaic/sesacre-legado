@@ -668,18 +668,37 @@ class QddValor {
                 $valorLiberado += $v['vl_liberado'];
                 $valorBloqueado += $v['vl_bloqueado'];
                 $valorSaldo += $v['vl_saldo'];
-                $retorno .= '<tr>'
-                        . '<td> <span class="col-sm-2">' . $v['cd_despesa_elemento'] . '</span> <span class="col-sm-10">' . $v['ds_despesa_elemento'] . '<span></td>'
-                        . '<td class="text-center">' . $v['nr_fonte'] . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_inicial'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_suplementado'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_reduzido'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']), 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_liberado'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_empenhado'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_bloqueado'], 2) . '</td>'
-                        . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_saldo'], 2) . '</td>'
-                        . '</tr>';
+
+
+                if (round($v['vl_empenhado'],4) > round($v['vl_liberado'],4) || round($v['vl_liberado'],4) > round(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']),4)) {
+                
+                    $retorno .= '<tr class="" style="color:red">'
+                            . '<td> <span class="col-sm-2">' . $v['cd_despesa_elemento'] . '</span> <span class="col-sm-10">' . $v['ds_despesa_elemento'] . '<span></td>'
+                            . '<td class="text-center">' . $v['nr_fonte'] . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_inicial'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_suplementado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_reduzido'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']), 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_liberado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_empenhado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_bloqueado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_saldo'], 2) . '</td>'
+                            . '</tr>';
+                } else {
+
+                    $retorno .= '<tr>'
+                            . '<td> <span class="col-sm-2">' . $v['cd_despesa_elemento'] . '</span> <span class="col-sm-10">' . $v['ds_despesa_elemento'] . '<span></td>'
+                            . '<td class="text-center">' . $v['nr_fonte'] . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_inicial'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_suplementado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_qdd_reduzido'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr(($v['vl_qdd_inicial'] + $v['vl_qdd_suplementado'] - $v['vl_qdd_reduzido'] - $v['vl_bloqueado']), 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_liberado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_empenhado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_bloqueado'], 2) . '</td>'
+                            . '<td class="text-right">' . Metodos::ConverteValorBr($v['vl_saldo'], 2) . '</td>'
+                            . '</tr>';
+                }
             }
             if ($primeiro == 1) {
                 $retorno .= '<tr class="warning">'
@@ -882,9 +901,9 @@ class QddValor {
             $daoFinQddValor->setIdQddValor($this->idQddValor);
             $daoFinQddValor->retorna($pdo);
             $this->sucesso = true;
-            if($daoFinQddValor->Sucesso()){
+            if ($daoFinQddValor->Sucesso()) {
                 return $daoFinQddValor->getMsgRetorno();
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception $ex) {
@@ -892,4 +911,5 @@ class QddValor {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+
 }

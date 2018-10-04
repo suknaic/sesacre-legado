@@ -382,7 +382,6 @@ class DaoConLiquidacao extends ConLiquidacao {
                     and 
                     (
                        docFis.id_documento_situacao <> 2 		--diferente de 'A Liquidar'
-                       and liqDoc.id_documento_fiscal is null 		--e que não esteja vinculada a Liquidação, pois na atualização a situação do gdof já estará 'Liquidado'
                     )";        
         try {
             $result = $pdo->prepare($sql);
@@ -509,6 +508,51 @@ class DaoConLiquidacao extends ConLiquidacao {
                     $this->sucesso = false;
                 }
 
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaSaldoEmpenhoEdicaoLiquidacao(PDO $pdo){
+        try {
+            if (!empty($pdo)) {
+                $sql = "select
+                            liq.id_liquidacao,
+                            emp.id_empenho,
+                            emp.vl_empenho,
+                            emp.id_tipo_empenho,
+                            coalesce((
+                            select
+                               sum(vl_liquidacao) 
+                            from
+                               con_liquidacao oLiq 
+                            where
+                               oLiq.id_empenho = liq.id_empenho 
+                               and oLiq.id_liquidacao <> liq.id_liquidacao 
+                               and oLiq.id_liquidacao_situacao <> 4), 0) as vl_utilizado,
+                               liq.vl_liquidacao,
+                               liq.id_liquidacao_situacao 
+                            from
+                               con_liquidacao liq,
+                               fin_empenho emp 
+                            where
+                               liq.id_empenho = emp.id_empenho 
+                               and liq.id_liquidacao = :id_liquidacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                    $this->sucesso = false;
+                }
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';

@@ -316,6 +316,9 @@
                                             </a>
                                             <ul class="collapse">
                                                 <li>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_documento/">Tipo de Documento</a>
+                                                </li>
+                                                <li>
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>

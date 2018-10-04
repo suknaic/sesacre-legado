@@ -9,6 +9,16 @@ class VincularTramitacao {
     private $idPessoa = null;
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
+    private $sucesso = false;
+    private $msgRetorno = null;
+   
+    function Sucesso() {
+        return $this->sucesso;
+    }
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
     
     function getIdVincularTramitacao() {
         return $this->idVincularTramitacao;
@@ -184,6 +194,29 @@ class VincularTramitacao {
         }
     }
     
+    
+        function listaLotacaoTipoPorUsuarioPagamento(){
+        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
+            
+            $daoSesVincularTramitacao->retornaLotacaoTipoPagamentoPorUsuario($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                }
+            }
+            return $opcoes;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
     function listaLotacaoTipoPorLotacaoETipo(){
        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
@@ -207,6 +240,31 @@ class VincularTramitacao {
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         } 
+    }
+    
+    public function retornaLiquidacaoPorUsuario(PDO $pdo){
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);                                     
+            
+            $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorUsuario($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoSesVincularTramitacao->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui registro";
+            }                                               
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }  
     }
    
 }

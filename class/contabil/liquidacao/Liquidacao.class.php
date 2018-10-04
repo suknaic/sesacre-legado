@@ -367,8 +367,6 @@ class Liquidacao {
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
             }
                                  
-            
-                
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -381,6 +379,12 @@ class Liquidacao {
             if (empty($dados_empenho)) {
                 return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
             }
+            
+            //Se for Empenho do tipo 'Ordinário' deverá ser liquidado em sua totalidade
+            if ($dados_empenho['id_tipo_empenho'] == 3 && $dados_empenho['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
+                return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
+            }
+            
             //Retorna o total liquidado do empenho
             $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
             
@@ -433,12 +437,12 @@ class Liquidacao {
                     }
                 }
 
-                //Se a edição da liquidação possuir documentos fiscais, 
+                //Se cadastro da liquidação possuir documentos fiscais, 
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'
                 if ($this->getDocumentos()) {
                     if ($this->verificaDocumentosDiferenteDeALiquidar($pdo)) {
-                        //$pdo->rollBack();
-                        //return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
                     }
                 }
 
@@ -558,20 +562,22 @@ class Liquidacao {
 
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
             
-            //Retorna saldo do empenho disponivel no momento da operação
-            $empenho = new FinEmpenhoModel();
-            $empenho->setIdEmpenho($reg_antigo['id_empenho']);
-            $dados_empenho = $empenho->retornaDadosEmpenho($pdo);
-            //Se os dados do empenho estiver vazio, retorna erro
-            if (empty($dados_empenho)) {
-                return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
+            $daoConLiquidacao->retornaSaldoEmpenhoEdicaoLiquidacao($pdo);
+            if (!$daoConLiquidacao->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "console", $daoConLiquidacao->getMsgRetorno());
             }
-            //Retorna o total liquidado do empenho
-            $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
-            $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
+            $totais = $daoConLiquidacao->getMsgRetorno();
+            
+            $saldo_empenho = $totais['vl_empenho'] - $totais['vl_utilizado'];
+            $saldo_empenho = round($saldo_empenho, 4);
+            
+            //Se o tipo de empenho for 'Ordinário' o valor da liquidação deve ser igual ao valor do empenho
+             if ($totais['id_tipo_empenho'] == 3 && $totais['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
+                return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
+            }
             
             //seta saldo da atualização
-            $daoConLiquidacao->setVlLiquidacaoSaldo(Metodos::ConverteValorIng($saldo_empenho));
+            $daoConLiquidacao->setVlLiquidacaoSaldo($saldo_empenho);
 
             //Atualiza a Liquidação
             $daoConLiquidacao->update($pdo);
@@ -598,19 +604,12 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
 
-                //Se a edição da liquidação possuir documentos fiscais, 
-                //verifica se os mesmos encontram-se na situação de 'A Liquidar'
                 if ($this->getDocumentos()) {
-                    if ($this->verificaDocumentosDiferenteDeALiquidar($pdo)) {
+                    //Atualiza os Documentos Fiscais na Liquidação
+                    if (!$this->atualizaDocumentosLiquidacao($pdo)) {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
+                        return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                     }
-                }
-
-                //Atualiza os Documentos Fiscais na Liquidação
-                if (!$this->atualizaDocumentosLiquidacao($pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                 }
 
                 $pdo->commit();
