@@ -55,8 +55,6 @@ $(document).ready(function () {
     });
 
     //Efeito de adicionar mais de um Gestor
-    var maxGestores = 10;
-    var contGestores = 1;
     $("body").on("click", ".addGestores", function (e) {
         $("select[name=gestores\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
@@ -67,10 +65,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contGestores < maxGestores) {
-                contGestores++;
-                gerarCloneSelect("campoGestores", "gestoresCampos", "selectGestores", "removeGestores");
-            }
+            gerarCloneSelect("campoGestores", "gestoresCampos", "selectGestores", "removeGestores");
         } else {
             e.preventDefault();
             $('.selectGestores').focus();
@@ -83,17 +78,10 @@ $(document).ready(function () {
     $("body").on('click', '.removeGestores', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contGestores > 1) {
-            $this.closest(".form-group").remove();
-            contGestores--;
-        } else {
-            func.modalAlert("Esse Gestor Titular não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
-    var maxGestoresSub = 10;
-    var contGestoresSub = 1;
     $("body").on("click", ".addGestorSubstituto", function (e) {
         $("select[name=gestoresSub\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
@@ -104,10 +92,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contGestoresSub < maxGestoresSub) {
-                contGestoresSub++;
-                gerarCloneSelect("campoGestoresSub", "gestoresCamposSub", "selectGestoresSub", "removeGestoresSub");
-            }
+            gerarCloneSelect("campoGestoresSub", "gestoresCamposSub", "selectGestoresSub", "removeGestoresSub");
         } else {
             e.preventDefault();
             $('.selectGestoresSub').focus();
@@ -119,17 +104,10 @@ $(document).ready(function () {
     $("body").on('click', '.removeGestoresSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contGestoresSub > 1) {
-            $this.closest(".form-group").remove();
-            contGestoresSub--;
-        } else {
-            func.modalAlert("Esse Gestor Substituto não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
-    var maxFiscais = 10;
-    var contFiscais = 1;
     $("body").on("click", ".addFiscais", function (e) {
         $("select[name=fiscais\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
@@ -140,10 +118,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contFiscais < maxFiscais) {
-                contFiscais++;
-                gerarCloneSelect("campoFiscais", "fiscaisCampos", "selectFiscais", "removeFiscais");
-            }
+            gerarCloneSelect("campoFiscais", "fiscaisCampos", "selectFiscais", "removeFiscais");
         } else {
             e.preventDefault();
             $('.selectFiscais').focus();
@@ -155,17 +130,10 @@ $(document).ready(function () {
     $("body").on('click', '.removeFiscais', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contFiscais > 1) {
-            $this.closest(".form-group").remove();
-            contFiscais--;
-        } else {
-            func.modalAlert("Esse Fiscal Titular não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
     });
 
     //Efeito de adicionar mais de um Fical Substituto
-    var maxFiscaisSub = 10;
-    var contFiscaisSub = 1;
     $("body").on("click", ".addFiscaisSub", function (e) {
         $("select[name=fiscaisSub\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
@@ -176,10 +144,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contFiscaisSub < maxFiscaisSub) {
-                contFiscaisSub++;
-                gerarCloneSelect("campoFiscaisSub", "fiscaisSubCampos", "selectFiscaisSub", "removeFiscaisSub");
-            }
+            gerarCloneSelect("campoFiscaisSub", "fiscaisSubCampos", "selectFiscaisSub", "removeFiscaisSub");
         } else {
             e.preventDefault();
             $('.selectFiscaisSub').focus();
@@ -191,12 +156,7 @@ $(document).ready(function () {
     $("body").on('click', '.removeFiscaisSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contFiscaisSub > 1) {
-            $this.closest(".form-group").remove();
-            contFiscaisSub--;
-        } else {
-            func.modalAlert("Esse Fiscal Substituto não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal
@@ -212,10 +172,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contSubFiscais < maxSubFiscais) {
-                contSubFiscais++;
-                gerarCloneSelect("campoSubFiscais", "SubFiscaisCampos", "selectSubFiscais", "removeSubFiscais");
-            }
+            gerarCloneSelect("campoSubFiscais", "SubFiscaisCampos", "selectSubFiscais", "removeSubFiscais");
         } else {
             e.preventDefault();
             $('.selectSubFiscais').focus();
@@ -227,12 +184,7 @@ $(document).ready(function () {
     $("body").on('click', '.removeSubFiscais', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contSubFiscais > 1) {
-            $this.closest(".form-group").remove();
-            contSubFiscais--;
-        } else {
-            func.modalAlert("Esse Sub-Fiscal não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal Substituto
@@ -248,10 +200,7 @@ $(document).ready(function () {
         });
         if (clone == true) {
             e.preventDefault();
-            if (contSubFiscaisSub < maxSubFiscaisSub) {
-                contSubFiscaisSub++;
-                gerarCloneSelect("campoSubFiscaisSub", "SubFiscaisCamposSub", "selectSubFiscaisSub", "removeSubFiscaisSub");
-            }
+            gerarCloneSelect("campoSubFiscaisSub", "SubFiscaisCamposSub", "selectSubFiscaisSub", "removeSubFiscaisSub");
         } else {
             e.preventDefault();
             $('.selectSubFiscaisSub').focus();
@@ -263,12 +212,7 @@ $(document).ready(function () {
     $("body").on('click', '.removeSubFiscaisSub', function (e) {
         e.preventDefault();
         var $this = $(this);
-        if (contSubFiscaisSub > 1) {
-            $this.closest(".form-group").remove();
-            contSubFiscaisSub--;
-        } else {
-            func.modalAlert("Esse Sub-Fiscal Substituto não pode ser removido.");
-        }
+        $this.closest(".form-group").remove();
 
     });
 

@@ -308,10 +308,11 @@ class FinFiscaisModel {
                 $id = "fiscaisSub";
                 $nomeCampo = 'Fiscal Substituto:';
             }
+            $contFiscal = 0;
 
             if ($daoFinFiscal->sucesso()) {
                 foreach ($fiscais as $fiscal) {
-
+                    $contFiscal++;
                     $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -332,16 +333,17 @@ class FinFiscaisModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div><br>
-                                <div class="col-sm-3">
-                                    <div class="panel-body">
-                                        <a href="#" class="removeFiscais btn btn-danger" idFiscal = "' . $fiscal['id_fiscal'] . '">X</a>
-                                    </div>
-                                </div>
-                            </div>';
+                                </div><br>';
+                    if ($contFiscal > 1) {
+                        $retorno .= ' <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="removeFiscais btn btn-danger" idFiscal = "' . $fiscal['id_fiscal'] . '">X</a>
+                                        </div>
+                                      </div>';
+                    }
+                     $retorno .='  </div>';
                 }
             } else {
-
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
