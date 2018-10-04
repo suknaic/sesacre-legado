@@ -75,4 +75,22 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'ativarTipoDocumento':
+        try {
+            $filtro = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);                        
+            
+            $prog = new FinTipoDocumento();
+            
+            $prog->setIdTipoDocumento($filtro);
+            
+            
+            echo $prog->ativar();
+            return;
+            break;
+        } catch (Exception $exc) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }

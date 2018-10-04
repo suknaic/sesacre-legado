@@ -119,7 +119,7 @@ require_once "index.load.php";
                                                     <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Tipo de Documento/th>
+                                                                <th>Tipo de Documento</th>
                                                                 <th class="text-center">Ações</th> 
                                                             </tr>
                                                         </thead>

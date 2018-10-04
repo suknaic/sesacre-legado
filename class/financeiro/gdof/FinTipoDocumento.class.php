@@ -173,7 +173,7 @@ class FinTipoDocumento {
             
             $daoFinTipoDocumento->update($pdo);
 
-            if ($daoFinTipoDocumento->getSucesso()) {
+            if ($daoFinTipoDocumento->sucesso()) {
 
                 //Registra no log
                 if (!Log::SalvaLogU('fin_tipo_documento', $daoFinTipoDocumento->getIdTipoDocumento(), $reg_antigo, $pdo)) {
@@ -231,6 +231,46 @@ class FinTipoDocumento {
             return $retorno;
 
         } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+        }
+    }
+    
+    function ativar(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinTipoDocumento = new DaoFinTipoDocumento();
+            $daoFinTipoDocumento->setIdTipoDocumento($this->getIdTipoDocumento());
+            
+            $daoFinTipoDocumento->retorna($pdo);
+            if(!$daoFinTipoDocumento->sucesso()){
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }                        
+            
+            $busca = $daoFinTipoDocumento->getMsgRetorno();
+                                    
+            if($daoFinTipoDocumento->sucesso()){
+                                                                
+                $daoFinTipoDocumento->ativa($pdo);
+                if(!$daoFinTipoDocumento->sucesso()){                
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinTipoDocumento->getMsgRetorno());
+                }
+
+                if (!Log::SalvaLogU('fin_tipo_documento', $daoFinTipoDocumento->getIdTipoDocumento(), $busca, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $daoFinTipoDocumento->getMsgRetorno());                                                            
+                }      
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Registro Ativado Com Sucesso.");                            
+            }
+                                                            
+            $pdo->rollBack();
+            $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            return $retorno;                                                                                   
+        } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
         }
     }

@@ -275,6 +275,87 @@ $(document).ready(function () {
         });
 
     });
+    
+    $('body').on('click', '.btn-ativar', function (e) {
+
+        var $this = $(this);        
+        var item = $this.closest('tr').data('objeto');
+        var id = item.id_tipo_documento;
+        var texto = item.nm_tipo_documento;
+        
+
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja Ativar o Item <span class="text-danger">' + texto + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                   
+                    if (id == "") {
+                        func.modalAlert(func.msgPreencherCampos);
+                        $this.prop("disabled", false);
+                        return false;
+                    }
+
+                    $.ajax({
+                        "url": "request.php",
+                        "dataType": "html",
+                        "data": {
+                            "acao": "ativarTipoDocumento",
+                            "dados": id
+                        },
+                        "success": function (response) {      
+                            console.log(response);
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao);                                
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {                                    
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                    location.reload();
+                                });
+                                return false;
+                            } else {                                
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        },
+                        "error": function (response) {                            
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+
+    });
 });
 
 
