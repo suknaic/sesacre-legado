@@ -267,16 +267,17 @@ class FinGestorModel {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><br>
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            <a href="#" class="removeGestores btn btn-danger" idGestor= "' . $gestor['id_gestor'] . '">X</a>
-                                        </div>
-                                    </div>
-                                </div>';
+                                    </div><br>';
+                        if ($contGestor > 1) {
+                            $retorno .= '<div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="removeGestores btn btn-danger" idGestor= "' . $gestor['id_gestor'] . '">X</a>
+                                            </div>
+                                        </div>';
+                        }
+                    $retorno .= ' </div>';
                 }
             } else {
-                $contGestor = 1;
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -296,7 +297,6 @@ class FinGestorModel {
                                 </div>
                             </div>';
             }
-            $retorno .= '<input type = "hidden" id="contGestor" value="' . $contGestor . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();

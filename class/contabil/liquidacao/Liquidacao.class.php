@@ -379,6 +379,12 @@ class Liquidacao {
             if (empty($dados_empenho)) {
                 return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
             }
+            
+            //Se for Empenho do tipo 'Ordinário' deverá ser liquidado em sua totalidade
+            if ($dados_empenho['id_tipo_empenho'] == 3 && $dados_empenho['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
+                return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
+            }
+            
             //Retorna o total liquidado do empenho
             $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
             
@@ -564,6 +570,11 @@ class Liquidacao {
             
             $saldo_empenho = $totais['vl_empenho'] - $totais['vl_utilizado'];
             $saldo_empenho = round($saldo_empenho, 4);
+            
+            //Se o tipo de empenho for 'Ordinário' o valor da liquidação deve ser igual ao valor do empenho
+             if ($totais['id_tipo_empenho'] == 3 && $totais['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
+                return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
+            }
             
             //seta saldo da atualização
             $daoConLiquidacao->setVlLiquidacaoSaldo($saldo_empenho);

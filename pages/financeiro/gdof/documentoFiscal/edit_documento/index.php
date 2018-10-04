@@ -306,7 +306,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de emissão:</b> <span class="text-danger">*</span></div>
+                                                            <div class="col-sm-2"><b>Data de Emissão:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -316,9 +316,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
+                                                        
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Data de Vencimento:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
+                                                                    <input class="form-control" type="text" name="vencimento" id="vencimento" 
+                                                                           value="<?php echo isset($documento["dt_vencimento"]) ? Metodos::ConverteDataBR($documento["dt_vencimento"]) : "";  ?>"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de atesto:</b> <span class="text-danger">*</span></div>
+                                                            <div class="col-sm-2"><b>Data de Atesto:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -330,18 +342,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data de vencimento:</b> <span class="text-danger">*</span></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dataVencimento" id="dataVencimento" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b> <span class="text-danger">*</span></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>

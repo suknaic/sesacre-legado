@@ -248,23 +248,7 @@ switch ($_REQUEST['acao']) {
     CASE 'editarContrato':
         try {
             $contrato = filter_input(INPUT_POST, 'contrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//            print_r($contrato['gestores']);
-//            print_r($contrato['gestoresSub']);
-//            print_r($contrato['fiscais']);
-//            print_r($contrato['fiscaisSub']);
-//            print_r($contrato['subFiscais']);
-//            unset($contrato[0]['central']);
-//            print_r($contrato[0]['subFiscaisSub']);
-//            if ($contrato[0]['central'] == '' && $contrato[0]['gestores'] == '' && $contrato[0]['gestoresSub'] == '' && $contrato[0]['fiscais'] == '' && $contrato[0]['fiscaisSub'] == '' && $contrato[0]['subFiscais'] == '' && $contrato[0]['subFiscaisSub'] == '') {
-//                unset($contrato[0]['central']);
-//                unset($contrato[0]['gestores']);
-//                unset($contrato[0]['gestoresSub']);
-//                unset($contrato[0]['fiscais']);
-//                unset($contrato[0]['fiscaisSub']);
-//                unset($contrato[0]['subFiscais']);
-//                unset($contrato[0]['subFiscaisSub']);
-//            }
-//            return;
+
             $finContratoModel = new FinContratoModel();
             $finContratoModel->setIdFornecedor($contrato['idFornecedor']);
             $finContratoModel->setIdContrato($contrato['id_contrato']);
@@ -288,7 +272,7 @@ switch ($_REQUEST['acao']) {
             $finContratoModel->setIdPessoaSubFiscalSubstituto($contrato['subFiscaisSub']);
             $finContratoModel->setIdTipoGasto($contrato['idTipoGasto']);
             echo $finContratoModel->editarContrato();
-            return;
+            return '';
             break;
         } catch (Error $e) {
             echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
