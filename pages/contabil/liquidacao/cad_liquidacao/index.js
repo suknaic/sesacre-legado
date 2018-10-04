@@ -334,7 +334,8 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                            window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
+                            //location.reload();
                         });
                         return false;
                     } else {

@@ -315,7 +315,7 @@ class DaoFinPedido extends FinPedidoTb {
     public function retornaPedidoPesquisaComOrdens(PDO $pdo, $filter) {
         try {
             if (!empty($pdo)) {
-                $sql = "select
+                $sql = "select distinct on (p.id_pedido)
                             p.id_pedido,
                             l.id_lotacao,
                             p.nr_pedido,
@@ -389,6 +389,7 @@ class DaoFinPedido extends FinPedidoTb {
                             p.st_pedido > '0' " . $filter . "
                           order by
                             p.id_pedido desc";
+                
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {

@@ -9,6 +9,16 @@ class VincularTramitacao {
     private $idPessoa = null;
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
+    private $sucesso = false;
+    private $msgRetorno = null;
+   
+    function Sucesso() {
+        return $this->sucesso;
+    }
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
     
     function getIdVincularTramitacao() {
         return $this->idVincularTramitacao;
@@ -230,6 +240,31 @@ class VincularTramitacao {
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         } 
+    }
+    
+    public function retornaLiquidacaoPorUsuario(PDO $pdo){
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);                                     
+            
+            $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorUsuario($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = $daoSesVincularTramitacao->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui registro";
+            }                                               
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }  
     }
    
 }

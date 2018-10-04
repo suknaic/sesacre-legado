@@ -259,8 +259,8 @@ class DocFiscalEncaminhamento {
                                     <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
                                     </button>";  
                                      
-                    if($linha['id_documento_situacao'] == $finDoc->getDocSitALiquidar()){
-                        $retorno .= "<button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
+                    if($linha['doc_situacao'] == $finDoc->getDocSitALiquidar()){
+                        $retorno .= " <button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
                                         <i class='fa fa-calculator fa-lg text-purple' aria-hidden='true'></i>
                                     </button>";
                     }
