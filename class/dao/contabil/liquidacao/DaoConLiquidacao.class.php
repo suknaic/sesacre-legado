@@ -525,6 +525,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                             liq.id_liquidacao,
                             emp.id_empenho,
                             emp.vl_empenho,
+                            emp.id_tipo_empenho,
                             coalesce((
                             select
                                sum(vl_liquidacao) 
