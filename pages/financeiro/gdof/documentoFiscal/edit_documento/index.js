@@ -5,7 +5,7 @@ $(document).ready(function () {
     //Mascara do sistema
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
-
+    $('#dataVencimento').mask("99/99/9999");
     $('#competencia').mask("99/9999");
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
@@ -25,15 +25,15 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-    
-    
+
+
     $("#valorDocumentoFiscal").priceFormat({
         centsLimit: 4,
         prefix: '',
         centsSeparator: ',',
         thousandsSeparator: '.',
     });
-    
+
 
     /**
      * retornaDadosOrdem
@@ -52,8 +52,8 @@ $(document).ready(function () {
             retornaOptionsDaEntrega();
         }
     });
-    
-    if($("#tipo_solicitacao").val() == 1){
+
+    if ($("#tipo_solicitacao").val() == 1) {
         $("#panel-ordem").hide();
         $("#panel-entrega").hide();
         $("#valorDocumentoFiscal").prop("disabled", false)
@@ -108,7 +108,7 @@ $(document).ready(function () {
         });
     });
 
-     
+
 
 
     //retorna options entrega
@@ -230,14 +230,14 @@ $(document).ready(function () {
 
             var erro_entrega = false;
             var tipo_solicitacao = $("#tipo_solicitacao").val()
-            
-            if(tipo_solicitacao == 2){
+
+            if (tipo_solicitacao == 2) {
 
                 $(".trEntregas").each(function () {
 
-    //                var situacao = $(this).data('situacao');
-    //                
-    //                if(situacao){
+                    //                var situacao = $(this).data('situacao');
+                    //                
+                    //                if(situacao){
                     //converte o valor informado para a entrega em formato inglês com 4 casas
                     var valor_entrega_ingles = func.converteValorIngFloat($(this).find("input[name=valorRetEntrega\\[\\]]").val());
                     valor_entrega_ingles = func.arrendondaValorParaQuatroCasas(valor_entrega_ingles);
@@ -257,16 +257,16 @@ $(document).ready(function () {
                         vl_entrega_documento: valor_entrega_ingles
                     }
                     entregas.push(entrega);
-    //                }
+                    //                }
 
                 });
-                
+
                 if (entregas.length <= 0) {
                     $this.prop("disabled", false);
                     func.modalAlert("Nenhuma entrega foi adicionada.");
                     return false;
                 }
-                
+
             }
 
             if (erro_entrega) {

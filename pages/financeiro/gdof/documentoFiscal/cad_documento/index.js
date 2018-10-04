@@ -5,6 +5,7 @@ $(document).ready(function () {
     //Mascara do sistema
     $('#emissao').mask("99/99/9999");
     $('#atesto').mask("99/99/9999");
+    $('#dataVencimento').mask("99/99/9999");
     $('#competencia').mask("99/9999");
     //busca pedido
     $('#modalItem').on('shown.bs.modal', function () {
@@ -24,16 +25,16 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-    
+
     //Masca para valor
-    
+
     $("#valorDocumentoFiscal").priceFormat({
         centsLimit: 4,
         prefix: '',
         centsSeparator: ',',
         thousandsSeparator: '.',
     });
-    
+
 
     function limpaCampos() {
         $("#tabelaOrdem tbody").html("");
@@ -74,7 +75,7 @@ $(document).ready(function () {
         }
         $("#tipo_solicitacao").val(dados.id_tipo_solicitacao)
         $("#pedido").val(dados.id_pedido)
-                                    
+
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -139,17 +140,17 @@ $(document).ready(function () {
                 $("#selectOrdem").html(response);
             }
         });
-        
-        if(dados.id_tipo_solicitacao == 2){
+
+        if (dados.id_tipo_solicitacao == 2) {
             $("#panel-entrega").show();
             $("#panel-ordem").show();
             $("#valorDocumentoFiscal").prop("disabled", true);
-        }else if(dados.id_tipo_solicitacao == 1){
+        } else if (dados.id_tipo_solicitacao == 1) {
             $("#panel-entrega").hide();
             $("#panel-ordem").hide();
             $("#valorDocumentoFiscal").prop("disabled", false);
         }
-        
+
         $('#modalItem').modal('hide');
     });
 
@@ -362,8 +363,8 @@ $(document).ready(function () {
 //            var valoresRetEntregas = [];
 
             var tipo_solicitacao = $("#tipo_solicitacao").val()
-            
-            if(tipo_solicitacao == 2){
+
+            if (tipo_solicitacao == 2) {
 
                 $(".trEntregas").each(function () {
 
@@ -406,7 +407,7 @@ $(document).ready(function () {
                 grp = $("#grp_nao").val();
 
             }
-            
+
             if (entregas.length <= 0) {
                 entregas = null;
             }
