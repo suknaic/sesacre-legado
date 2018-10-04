@@ -11,6 +11,7 @@ function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
     html = $("." + campoSelect).clone();
     html.find('.select2-selection--single').remove();
     html.find('.selectCentrais option:selected').removeAttr('selected');
+    html.find('.select option:selected').removeAttr('selected');
     $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-5"><div class="panel-body">' + html.html() +
             '</div></div><div class="col-sm-3"><div class="panel-body"><a href="#" class="' + classeremove + ' btn btn-danger">X</a></div></div></div>');
     gerarSelect2(select);
@@ -160,8 +161,6 @@ $(document).ready(function () {
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal
-    var maxSubFiscais = 10;
-    var contSubFiscais = 1;
     $("body").on("click", ".addSubFiscais", function (e) {
         $("select[name=subFiscais\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
@@ -188,8 +187,6 @@ $(document).ready(function () {
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal Substituto
-    var maxSubFiscaisSub = 10;
-    var contSubFiscaisSub = 1;
     $("body").on("click", ".addSubFiscaisSub", function (e) {
         $("select[name=subFiscaisSub\\[\\]]").each(function () {
             if ($(this).val() == 0 || $(this).val() == '') {
