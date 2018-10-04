@@ -638,52 +638,51 @@ $(document).ready(function () {
 
             var gestores = [];
             $("select[name=gestores\\[\\]]").each(function () {
-                gestores.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    gestores.push($(this).val());
+                }
             });
-            if (gestores[0] === '') {
-                gestores.splice(0);
-            }
+
             // console.log(gestores);
             var gestoresSub = [];
             $("select[name=gestoresSub\\[\\]]").each(function () {
-                gestoresSub.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    gestoresSub.push($(this).val());
+                }
             });
-            if (gestoresSub[0] === '') {
-                gestoresSub.splice(0);
-            }
+
             // console.log(gestoresSub);
             var fiscais = [];
             $("select[name=fiscais\\[\\]]").each(function () {
-                fiscais.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    fiscais.push($(this).val());
+                }
             });
-            if (fiscais[0] === '') {
-                fiscais.splice(0);
-            }
-            // console.log(fiscais);
+
             var fiscaisSub = [];
             $("select[name=fiscaisSub\\[\\]]").each(function () {
-                fiscaisSub.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    fiscaisSub.push($(this).val());
+                }
             });
-            if (fiscaisSub[0] === '') {
-                fiscaisSub.splice(0);
-            }
+
             // console.log(fiscaisSub);
             var subFiscais = [];
             $("select[name=subFiscais\\[\\]]").each(function () {
-                subFiscais.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    subFiscais.push($(this).val());
+                }
             });
-            if (subFiscais[0] === '') {
-                subFiscais.splice(0);
-            }
+
             // console.log(subFiscais);
             var subFiscaisSub = [];
             $("select[name=subFiscaisSub\\[\\]]").each(function () {
-                subFiscaisSub.push($(this).val());
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    subFiscaisSub.push($(this).val());
+                }
             });
-            if (subFiscaisSub[0] === '') {
-                subFiscaisSub.splice(0);
-            }
-            // console.log(subFiscaisSub[0]);
+
+            // console.log(subFiscaisSub);
             var contrato = {
                 "idFornecedor": $("#idFornecedor").val(),
                 "id_contrato": $("#idContrato").val(),
@@ -716,7 +715,7 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    console.log(response);
+                    // console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

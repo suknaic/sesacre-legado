@@ -243,10 +243,8 @@ class FinGestorModel {
                 $id = "gestoresSub";
                 $nomeCampo = 'Gestor Substituto:';
             }
-            $contGestor = 0;
             if ($daoFinGestor->sucesso()) {
                 foreach ($gestores as $gestor) {
-                    $contGestor++;
                     $retorno .= '<div class="form-group">
                                      <div class="col-sm-5">
                                         <div class="panel-body">
@@ -276,7 +274,6 @@ class FinGestorModel {
                                 </div>';
                 }
             } else {
-                $contGestor = 1;
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -296,7 +293,6 @@ class FinGestorModel {
                                 </div>
                             </div>';
             }
-            $retorno .= '<input type = "hidden" id="contGestor" value="' . $contGestor . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();

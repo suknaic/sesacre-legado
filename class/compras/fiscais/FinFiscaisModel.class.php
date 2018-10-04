@@ -308,11 +308,9 @@ class FinFiscaisModel {
                 $id = "fiscaisSub";
                 $nomeCampo = 'Fiscal Substituto:';
             }
-            $contFiscal = 0;
 
             if ($daoFinFiscal->sucesso()) {
                 foreach ($fiscais as $fiscal) {
-                    $contFiscal++;
 
                     $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
@@ -343,7 +341,6 @@ class FinFiscaisModel {
                             </div>';
                 }
             } else {
-                $contFiscal = 1;
 
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
@@ -364,7 +361,6 @@ class FinFiscaisModel {
                                 </div>
                             </div>';
             }
-            $retorno .= '<input type = "hidden" id="contFiscal" value="' . $contFiscal . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();
