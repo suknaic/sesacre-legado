@@ -558,7 +558,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setAaCompetencia(explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
-            $daoFinDocumentoFiscal->setDtVencimento(Metodos::ConverteDataING($this->dt_vencimento));
+            $daoFinDocumentoFiscal->setDtVencimento((!empty($this->dt_vencimento) ? Metodos::ConverteDataING($this->dt_vencimento) : null));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
             $daoFinDocumentoFiscal->setNrGrpNumero($this->nr_grp_numero);
@@ -591,7 +591,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o documento fiscal");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salvar o documento fiscal");
             }
 
             $this->id_documento_fiscal = ($pdo->lastInsertId('fin_documento_fiscal_id_documento_fiscal_seq'));
@@ -883,7 +883,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->setMmCompetencia((int) explode("/", $this->competencia)[0]);
             $daoFinDocumentoFiscal->setAaCompetencia((int) explode("/", $this->competencia)[1]);
             $daoFinDocumentoFiscal->setDtAtesto(Metodos::ConverteDataING($this->dt_atesto));
-            $daoFinDocumentoFiscal->setDtVencimento(Metodos::ConverteDataING($this->dt_vencimento));
+            $daoFinDocumentoFiscal->setDtVencimento((!empty($this->dt_vencimento) ? Metodos::ConverteDataING($this->dt_vencimento) : null));
             $daoFinDocumentoFiscal->setDtEmissao(Metodos::ConverteDataING($this->dt_emissao));
             $daoFinDocumentoFiscal->setVlDocumento(Metodos::ConverteValorIng($this->vl_documento));
             $daoFinDocumentoFiscal->setFlGrp($this->fl_grp);
