@@ -44,7 +44,7 @@ class DaoFinEntregaConfirmacao extends FinEntregaConfirmacaoTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -134,7 +134,7 @@ where orItens.id_ordem = :ordem";
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -150,7 +150,7 @@ where orItens.id_ordem = :ordem";
                 $stmt->execute();
                 $this->sucesso = true;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -171,7 +171,7 @@ where orItens.id_ordem = :ordem";
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -190,7 +190,7 @@ where orItens.id_ordem = :ordem";
                     $this->sucesso = false;
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -212,7 +212,7 @@ where orItens.id_ordem = :ordem";
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -300,7 +300,7 @@ where orItens.id_ordem = :ordem";
                         when (mat.tp_material  = 'C' or mat.tp_material  = 'P') and itens.fl_valor_variavel = '0'
                                 then entregaItens.qt_itens_entrega
                         when  mat.tp_material  = 'S' or itens.fl_valor_variavel = '1' then (entregaItens.qt_itens_entrega * entregaItens.vl_itens_entrega)
-                        end entregue
+                        end entregue , despesa.cd_despesa
                         
                         from fin_entrega_confirmacao as confirmacao
                         inner join fin_entrega_itens as entregaItens
@@ -323,9 +323,150 @@ where orItens.id_ordem = :ordem";
                 $this->sucesso = true;
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
+        }
+    }
+    
+    public function retornaItensEntregaConfirmacao(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "select
+                    entregaItens.id_entrega_itens,
+                    confirmacao.nr_entrega_confirmacao,
+                    itens.nr_item,
+                    mat.cd_desc_material,
+                    mat.nm_material,
+                    to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') as dt_entrega,
+                    to_char(confirmacao.dh_cadastramento, 'DD/MM/YYYY HH:MI:SS') as dh_cadastramento,
+                    mat.tp_material,
+                    itens.nr_lote,
+                    entregaItens.qt_itens_entrega,
+                    entregaItens.vl_itens_entrega,
+                    confirmacao.id_entrega_confirmacao,
+                    case
+                       when
+                          confirmacao.sit_entrega = 1 
+                       then
+                          'Parcial' 
+                       when
+                          confirmacao.sit_entrega = 2 
+                       then
+                          'Total' 
+                    end
+                    situacao, 
+                    case
+                       when
+                          itens.ds_itens != '' 
+                       then
+                          itens.ds_itens 
+                       else
+                          mat.nm_desc_material 
+                    end
+                    descricao, 
+                    case
+                       when
+                          (
+                             mat.tp_material = 'C' 
+                             or mat.tp_material = 'P'
+                          )
+                          and itens.fl_valor_variavel = '0' 
+                       then
+                          entregaItens.qt_itens_entrega 
+                       when
+                          mat.tp_material = 'S' 
+                          or itens.fl_valor_variavel = '1' 
+                       then
+                 (entregaItens.qt_itens_entrega * entregaItens.vl_itens_entrega) 
+                    end
+                    entregue,
+                    despesa.cd_despesa
+                 from
+                    fin_entrega_confirmacao as confirmacao 
+                    inner join
+                       fin_entrega_itens as entregaItens 
+                       on entregaItens.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao 
+                    inner join
+                       fin_ordem_itens as ordemItens 
+                       on ordemItens.id_ordem_itens = entregaItens.id_ordem_itens 
+                    inner join
+                       fin_pre_ordem as preOrdem 
+                       on preOrdem.id_pre_ordem = ordemItens.id_pre_ordem 
+                    inner join
+                       fin_cont_itens as itens 
+                       on itens.id_cont_itens = preOrdem.id_cont_itens 
+                    inner join
+                       pla_material as mat 
+                       on mat.id_material = itens.id_material 
+                    inner join
+                       view_despesa as despesa 
+                       on despesa.id_despesa = mat.id_despesa 
+                 where
+                    confirmacao.id_entrega_confirmacao = :id_entrega_confirmacao 
+                 order by
+                    itens.nr_item";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_entrega_confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaDadosPedidoOrdemEmpenho(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "select
+                    pedido.nr_pedido,
+                    pedido.ds_pedido,
+                    contrato.nr_contrato,
+                    empenho.nr_empenho,
+                    ordem.nr_ordem 
+                 from
+                    fin_entrega_confirmacao entConf 
+                    inner join
+                       fin_ordem ordem 
+                       on ordem.id_ordem = entConf.id_ordem 
+                    inner join
+                       fin_pedido pedido 
+                       on pedido.id_pedido = ordem.id_pedido 
+                    inner join
+                       fin_empenho empenho 
+                       on empenho.id_pedido = pedido.id_pedido 
+                    left join
+                       fin_fornecedor fornecedor 
+                       on fornecedor.id_fornecedor = pedido.id_fornecedor 
+                    left join
+                       fin_contrato contrato 
+                       on contrato.id_contrato = fornecedor.id_contrato 
+                 where
+                    entConf.id_entrega_confirmacao = :id_entrega_confirmacao";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_entrega_confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -354,7 +495,7 @@ where orItens.id_ordem = :ordem";
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -368,7 +509,7 @@ where orItens.id_ordem = :ordem";
             $stmt->bindValue(":entrega", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
             $stmt->execute();
             $this->sucesso = true;
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -417,7 +558,7 @@ where orItens.id_ordem = :ordem";
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -465,7 +606,7 @@ where orItens.id_ordem = :ordem";
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }

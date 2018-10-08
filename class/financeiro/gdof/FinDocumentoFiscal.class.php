@@ -1308,6 +1308,9 @@ class FinDocumentoFiscal {
                                    <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
                                        <i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>
+                                    <button type="button" title="Ver Itens da Entrega" class="ver-entrega" value='.$campos['id_entrega_confirmacao'].'>
+                                        <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
+                                    </button>
                                 </td>
                             </tr>';
                 }
