@@ -4,6 +4,7 @@ class FinTipoDocumentoTb {
 
     private $id_tipo_documento = null;
     private $nm_tipo_documento = null;
+    private $st_ativo = null;
 
     /**
      * @return mixed
@@ -40,5 +41,16 @@ class FinTipoDocumentoTb {
 
         return $this;
     }
+    
+    function getStAtivo() {
+        return $this->st_ativo;
+    }
+
+    function setStAtivo($st_ativo) {
+        $this->st_ativo = $st_ativo;
+        return $this;
+    }
+
+
 
 }

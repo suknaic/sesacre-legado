@@ -313,7 +313,6 @@ class FinFiscaisModel {
             if ($daoFinFiscal->sucesso()) {
                 foreach ($fiscais as $fiscal) {
                     $contFiscal++;
-
                     $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -334,17 +333,17 @@ class FinFiscaisModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div><br>
-                                <div class="col-sm-3">
-                                    <div class="panel-body">
-                                        <a href="#" class="removeFiscais btn btn-danger" idFiscal = "' . $fiscal['id_fiscal'] . '">X</a>
-                                    </div>
-                                </div>
-                            </div>';
+                                </div><br>';
+                    if ($contFiscal > 1) {
+                        $retorno .= ' <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="removeFiscais btn btn-danger" idFiscal = "' . $fiscal['id_fiscal'] . '">X</a>
+                                        </div>
+                                      </div>';
+                    }
+                     $retorno .='  </div>';
                 }
             } else {
-                $contFiscal = 1;
-
                 $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -364,7 +363,6 @@ class FinFiscaisModel {
                                 </div>
                             </div>';
             }
-            $retorno .= '<input type = "hidden" id="contFiscal" value="' . $contFiscal . '"/>';
             return $retorno;
         } catch (Exception $exc) {
             return $exc->getMessage();

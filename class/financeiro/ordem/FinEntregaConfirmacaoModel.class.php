@@ -457,6 +457,7 @@ class FinEntregaConfirmacaoModel {
                         "id_entrega_itens" => $valor["id_entrega_itens"],
                         "id_entrega_confirmacao" => $valor["id_entrega_confirmacao"],
                         "nr_item" => $valor["nr_item"],
+                        "cd_despesa" => $valor["cd_despesa"],
                         "cd_desc_material" => $valor["cd_desc_material"],
                         "nm_material" => $valor["nm_material"],
                         "dt_entrega" => $valor["dt_entrega"],
@@ -510,7 +511,7 @@ class FinEntregaConfirmacaoModel {
                                     <td class="text-center">' . $c["nr_item"] . '</td>
                                     <td class="text-center">' . $c["cd_desc_material"] . ' - .' . $c["nm_material"] . '</td>
                                     <td class="text-center">' . $c["descricao"] . '</td>
-                                    <td class="text-center">' . $c["nr_item"] . '</td>
+                                    <td class="text-center">' . $c["cd_despesa"] . '</td>
                                     <td class="text-center">' . $c["tp_material"] . '</td>
                                     <td class="text-center">' . $c["nr_lote"] . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($c["qt_itens_entrega"], 4) . '</td>
@@ -670,6 +671,9 @@ class FinEntregaConfirmacaoModel {
                                  <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
+                                <button type="button" title="Ver Itens da Entrega" class="ver-entrega" value='.$campos['id_entrega_confirmacao'].'>
+                                    <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
+                                </button>
                                 </td>
                                 </tr>';
                 }
@@ -678,6 +682,53 @@ class FinEntregaConfirmacaoModel {
             return $tabela;
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaItensDaEntrega(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $tabela = '';
+            
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->getIdEntregaConfirmacao());
+            $daoFinEntregaConfirmacao->retornaItensEntregaConfirmacao($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $linha) {
+                    $tabela .= '<tr>'
+                                . '<td class="text-center">'.$linha['nr_item'].'</td>'
+                                . '<td class="text-center">'.$linha["cd_desc_material"] . ' - ' . $linha["nm_material"].'</td>'
+                                . '<td class="text-center">'.$linha['descricao'].'</td>'
+                                . '<td class="text-center">'.$linha['cd_despesa'].'</td>'
+                                . '<td class="text-center">'.$linha['tp_material'].'</td>'
+                                . '<td class="text-center">'.$linha['nr_lote'].'</td>'
+                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["qt_itens_entrega"], 4).'</td>'
+                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["vl_itens_entrega"], 4).'</td>'
+                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["entregue"], 4).'</td>'
+                            . '</tr>';
+                }
+            } else {
+                 return Metodos::retornoAjax("Erro", "console", $daoFinEntregaConfirmacao->getMsgRetorno());
+            }
+            return $tabela;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaDadosEntregaConfirmacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaDadosPedidoOrdemEmpenho($pdo);
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                return $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 

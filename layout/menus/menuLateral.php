@@ -316,6 +316,9 @@
                                             </a>
                                             <ul class="collapse">
                                                 <li>
+                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_documento/">Tipo de Documento</a>
+                                                </li>
+                                                <li>
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>
@@ -350,9 +353,11 @@
                                 <li>
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
                                 </li>
+                                
                                 <li>
                                     <a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Pagamento</a>
                                 </li>
+                                
                                 <li>
                                     <a href="#">
                                         <span class="menu-title">Administração</span>
