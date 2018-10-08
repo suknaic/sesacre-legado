@@ -1052,22 +1052,31 @@ class FinContratoModel {
             $finGestor = new FinGestorModel();
             $finGestor->setIdContrato($this->id_contrato);
             $gestoresTitulares = $finGestor->retornarGestoresContrato(1);
-//            print_r($gestoresTitulares);
             //************************ cadastrar gestor titular ************************
-            if (empty($gestoresTitulares)) {
-                if (!empty($this->id_pessoa_gestor_titular)) {
-                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_titular);
-                    if (!$finGestor->sucesso()) {
-                        $sucesso = false;
-                    }
+            if (empty($gestoresTitulares) && !empty($this->id_pessoa_gestor_titular)) {
+                $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_titular);
+                if (!$finGestor->sucesso()) {
+                    $sucesso = false;
+                }
 
-                    if ($sucesso == false) {
-                        $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
-                        $pdo->rollBack();
-                        return $retorno;
+                if ($sucesso == false) {
+                    $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
+                    $pdo->rollBack();
+                    return $retorno;
+                }
+            }
+
+            if (!empty($gestoresTitulares) && empty($this->id_pessoa_gestor_titular)) {
+                foreach ($gestoresTitulares as $pessoa){
+                    $finGestor->setIdGestor($pessoa['id_gestor']);
+                    $deleta = $finGestor->deleteGestorContrato();
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
                     }
                 }
-            } else {
+            }
+
+            if (!empty($gestoresTitulares) && !empty($this->id_pessoa_gestor_titular)) {
                 $idPessoa = array();
                 foreach ($gestoresTitulares as $titular) {
                     $idPessoa[] = $titular['id_pessoa'];
@@ -1101,7 +1110,7 @@ class FinContratoModel {
             //***************************************************************************
             $gestoresSubstitutos = $finGestor->retornarGestoresContrato(2);
             //************************ cadastrar gestor substituto **********************
-            if (empty($gestoresSubstitutos)) {
+            if (empty($gestoresSubstitutos) && !empty($this->id_pessoa_gestor_substituto)) {
                 if (!empty($this->id_pessoa_gestor_substituto)) {
                     $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_substituto, 2);
                     if (!$finGestor->sucesso()) {
@@ -1113,7 +1122,19 @@ class FinContratoModel {
                         return $retorno;
                     }
                 }
-            } else {
+            }
+
+            if (!empty($gestoresSubstitutos) && empty($this->id_pessoa_gestor_substituto)) {
+                foreach ($gestoresSubstitutos as $pessoa){
+                    $finGestor->setIdGestor($pessoa['id_gestor']);
+                    $deleta = $finGestor->deleteGestorContrato();
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
+                    }
+                }
+            }
+
+            if (!empty($gestoresSubstitutos) && !empty($this->id_pessoa_gestor_substituto)) {
                 $idPessoa = array();
                 foreach ($gestoresSubstitutos as $substituto) {
                     $idPessoa[] = $substituto['id_pessoa'];
@@ -1151,7 +1172,7 @@ class FinContratoModel {
             $finFiscais->setIdContrato($this->id_contrato);
             $fiscaisTitulares = $finFiscais->retornarFiscaisContrato(1);
             //************************ cadastrar ficais titular ************************
-            if (empty($gestoresSubstitutos)) {
+            if (empty($fiscaisTitulares) && !empty($this->id_pessoa_fiscal_titular)) {
                 if (!empty($this->id_pessoa_fiscal_titular)) {
                     foreach ($this->id_pessoa_fiscal_titular as $fiscalTitular) {
                         $finFiscais->setIdContrato($this->id_contrato);
@@ -1171,13 +1192,25 @@ class FinContratoModel {
                         }
                     }
                 }
-            } else {
+            }
+
+            if (!empty($fiscaisTitulares) && empty($this->id_pessoa_fiscal_titular)) {
+                foreach ($fiscaisTitulares as $idFiscal) {
+                    $finFiscais->setIdFiscal($idFiscal['id_fiscal']);
+                    $deleta = $finFiscais->deleteFiscalContrato();
+
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
+                    }
+                }
+            }
+
+            if (!empty($fiscaisTitulares) && !empty($this->id_pessoa_fiscal_titular)){
                 $idPessoa = array();
                 foreach ($fiscaisTitulares as $fiscais) {
                     $idPessoa[] = $fiscais['id_pessoa'];
                 }
                 $delete = array_diff($idPessoa, $this->id_pessoa_fiscal_titular);
-//                print_r($delete);
                 if (!empty($delete)) {
                     foreach ($delete as $fiscal) {
                         foreach ($fiscaisTitulares as $pessoa) {
@@ -1217,7 +1250,7 @@ class FinContratoModel {
             //***************************************************************************
             $fiscaisSubstitutos = $finFiscais->retornarFiscaisContrato(2);
             //************************ cadastrar fiscais substituto **********************
-            if (empty($fiscaisSubstitutos)){
+            if (empty($fiscaisSubstitutos) && !empty($this->id_pessoa_fiscal_substituto)){
                 if (!empty($this->id_pessoa_fiscal_substituto)) {
                     foreach ($this->id_pessoa_fiscal_substituto as $ficalSubstituto) {
                         $finFiscais->setIdContrato($this->id_contrato);
@@ -1237,7 +1270,20 @@ class FinContratoModel {
                         }
                     }
                 }
-            } else {
+            }
+
+            if (!empty($fiscaisSubstitutos) && empty($this->id_pessoa_fiscal_substituto)) {
+                foreach ($fiscaisSubstitutos as $idFiscal) {
+                    $finFiscais->setIdFiscal($idFiscal['id_fiscal']);
+                    $deleta = $finFiscais->deleteFiscalContrato();
+
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
+                    }
+                }
+            }
+
+            if (!empty($fiscaisSubstitutos) && !empty($this->id_pessoa_fiscal_substituto)) {
                 $idPessoa = array();
                 foreach ($fiscaisSubstitutos as $fiscais) {
                     $idPessoa[] = $fiscais['id_pessoa'];
@@ -1260,9 +1306,9 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_fiscal_substituto, $idPessoa);
                 if (!empty($insert)) {
-                    foreach ($insert as $fiscalTitular) {
+                    foreach ($insert as $fiscalSubstituto) {
                         $finFiscais->setIdContrato($this->id_contrato);
-                        $finFiscais->setIdPessoa($fiscalTitular);
+                        $finFiscais->setIdPessoa($fiscalSubstituto);
                         $finFiscais->setDtIniFiscal(date('Y-m-d'));
                         $finFiscais->setTpFiscal(2);
                         $finFiscais->cadastraFiscal($pdo);
@@ -1286,7 +1332,7 @@ class FinContratoModel {
             $finSubFiscais->setIdContrato($this->id_contrato);
             $subFiscais = $finSubFiscais->retornarSubFiscaisContrato(1);
             //************************ cadastrar sub-ficais titular ************************
-            if (empty($subFiscais)) {
+            if (empty($subFiscais) && !empty($this->id_pessoa_sub_fiscal_titular)) {
                 if (!empty($this->id_pessoa_sub_fiscal_titular)) {
                     foreach ($this->id_pessoa_sub_fiscal_titular as $SubFiscalTitular) {
                         $finSubFiscais->setIdContrato($this->id_contrato);
@@ -1294,7 +1340,7 @@ class FinContratoModel {
                         $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
                         $finSubFiscais->setTpSubFiscal(1);
                         $finSubFiscais->cadastraSubFiscal($pdo);
-                        if (!$finFiscais->sucesso()) {
+                        if (!$finSubFiscais->sucesso()) {
                             $sucesso = false;
                         }
 
@@ -1306,7 +1352,20 @@ class FinContratoModel {
                         }
                     }
                 }
-            } else {
+            }
+
+            if (!empty($subFiscais) && empty($this->id_pessoa_sub_fiscal_titular)) {
+                foreach ($subFiscais as $idSubFiscal) {
+                    $finSubFiscais->setIdSubFiscal($idSubFiscal['id_sub_fiscal']);
+                    $deleta = $finSubFiscais->deleteSubFiscalContrato();
+
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
+                    }
+                }
+            }
+
+            if (!empty($subFiscais) && !empty($this->id_pessoa_sub_fiscal_titular)) {
                 $idPessoa = array();
                 foreach ($subFiscais as $sub) {
                     $idPessoa[] = $sub['id_pessoa'];
@@ -1349,17 +1408,17 @@ class FinContratoModel {
                 }
             }
             //***************************************************************************
-            $subFiscais = $finSubFiscais->retornarSubFiscaisContrato(2);
+            $subFiscaisSub = $finSubFiscais->retornarSubFiscaisContrato(2);
             //************************ cadastrar sub-fiscais substituto **********************
-            if (empty($subFiscais)) {
-                if (!empty($this->id_pessoa_fiscal_substituto)) {
-                    foreach ($this->id_pessoa_fiscal_substituto as $subFicalSubstituto) {
-                        $finFiscais->setIdContrato($this->id_contrato);
-                        $finFiscais->setIdPessoa($subFicalSubstituto);
-                        $finFiscais->setDtIniFiscal(date('Y-m-d'));
-                        $finFiscais->setTpFiscal(2);
-                        $finFiscais->cadastraFiscal($pdo);
-                        if (!$finFiscais->sucesso()) {
+            if (empty($subFiscaisSub) && !empty($this->id_pessoa_sub_fiscal_substituto)) {
+                if (!empty($this->id_pessoa_sub_fiscal_substituto)) {
+                    foreach ($this->id_pessoa_sub_fiscal_substituto as $subFicalSubstituto) {
+                        $finSubFiscais->setIdContrato($this->id_contrato);
+                        $finSubFiscais->setIdPessoa($subFicalSubstituto);
+                        $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
+                        $finSubFiscais->setTpSubFiscal(2);
+                        $finSubFiscais->cadastraSubFiscal($pdo);
+                        if (!$finSubFiscais->sucesso()) {
                             $sucesso = false;
                         }
 
@@ -1371,15 +1430,28 @@ class FinContratoModel {
                         }
                     }
                 }
-            } else {
+            }
+
+            if (!empty($subFiscaisSub) && empty($this->id_pessoa_sub_fiscal_substituto)) {
+                foreach ($subFiscaisSub as $idSubFiscais) {
+                    $finSubFiscais->setIdSubFiscal($idSubFiscais['id_sub_fiscal']);
+                    $deleta = $finSubFiscais->deleteSubFiscalContrato();
+
+                    if (!$deleta) {
+                        return Metodos::retornoAjax('Erro', 'console', $deleta);
+                    }
+                }
+            }
+
+            if (!empty($subFiscaisSub) && !empty($this->id_pessoa_sub_fiscal_substituto)) {
                 $idPessoa = array();
-                foreach ($subFiscais as $sub) {
+                foreach ($subFiscaisSub as $sub) {
                     $idPessoa[] = $sub['id_pessoa'];
                 }
                 $delete = array_diff($idPessoa, $this->id_pessoa_sub_fiscal_substituto);
                 if (!empty($delete)) {
                     foreach ($delete as $subFiscal) {
-                        foreach ($subFiscais as $pessoa) {
+                        foreach ($subFiscaisSub as $pessoa) {
                             if ($subFiscal == $pessoa['id_pessoa']) {
                                 $finSubFiscais->setIdSubFiscal($pessoa['id_sub_fiscal']);
                                 $deleta = $finSubFiscais->deleteSubFiscalContrato();

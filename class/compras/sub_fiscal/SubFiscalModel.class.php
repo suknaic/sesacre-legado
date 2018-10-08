@@ -234,9 +234,11 @@ class SubFiscalModel {
                 $id = "subFiscaisSub";
                 $nomeCampo = 'Sub-Fiscal Substituto:';
             }
+            $contSubFiscal = 0;
 
             if ($daoFinSubFiscal->sucesso()) {
                 foreach ($subFiscais as $subFiscal) {
+                    $contSubFiscal++;
                     $retorno .= ' <div class="form-group">
                                  <div class="col-sm-5">
                                     <div class="panel-body">
@@ -257,13 +259,15 @@ class SubFiscalModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div><br>
-                                <div class="col-sm-3">
-                                    <div class="panel-body">
-                                        <a href="#" class="removeFiscais btn btn-danger" idSubFiscal = "' . $subFiscal['id_sub_fiscal'] . '">X</a>
-                                    </div>
-                                </div>
-                            </div>';
+                                </div><br>';
+                    if ($contSubFiscal > 1) {
+                        $retorno.=' <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="removeFiscais btn btn-danger" idSubFiscal = "' . $subFiscal['id_sub_fiscal'] . '">X</a>
+                                        </div>
+                                    </div>';
+                    }
+                    $retorno .= '</div>';
                 }
             } else {
                 $retorno .= ' <div class="form-group">

@@ -118,8 +118,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarPagamento':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            var_dump($dados);
-            return false;
+       
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
