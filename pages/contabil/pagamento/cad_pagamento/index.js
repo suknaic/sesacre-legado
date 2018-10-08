@@ -259,7 +259,7 @@ $(document).ready(function () {
             
             
             var dados = {
-                "idPedido": $("#id_pedido").val(),
+                "idLiquidacao": $("#id_liquidacao").val(),
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
@@ -291,6 +291,7 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
+                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
