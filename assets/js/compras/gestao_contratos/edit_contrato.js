@@ -23,9 +23,6 @@ $(document).ready(function () {
     //Mascara do sistema
     $('.data').mask("99/99/9999");
     //fim
-    $(".select").select2({
-        width: " 100%"
-    });
 
     $(".selectCentrais").select2({
         width: " 100%"
@@ -80,6 +77,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
+        $("#gestores option:selected").removeAttr('selected', false);
+        $('#gestores').val('').trigger('change.select2');
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
@@ -106,6 +105,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
+        $("#gestoresSub option:selected").removeAttr('selected', false);
+        $('#gestoresSub').val('').trigger('change.select2');
     });
 
     //Efeito de adicionar mais de um Gestor Substituto
@@ -132,6 +133,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
+        $("#fiscais option:selected").removeAttr('selected', false);
+        $('#fiscais').val('').trigger('change.select2');
     });
 
     //Efeito de adicionar mais de um Fical Substituto
@@ -158,6 +161,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
+        $("#fiscaisSub option:selected").removeAttr('selected', false);
+        $('#fiscaisSub').val('').trigger('change.select2');
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal
@@ -184,6 +189,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
+        $("#subFiscais option:selected").removeAttr('selected', false);
+        $('#subFiscais').val('').trigger('change.select2');
     });
 
     //Efeito de adicionar mais de um Sub-Fiscal Substituto
@@ -210,7 +217,8 @@ $(document).ready(function () {
         e.preventDefault();
         var $this = $(this);
         $this.closest(".form-group").remove();
-
+        $("#subFiscaisSub option:selected").removeAttr('selected', false);
+        $('#subFiscaisSub').val('').trigger('change.select2');
     });
 
     //Efeito para remover um select de Centrais

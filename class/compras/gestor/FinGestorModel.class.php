@@ -258,7 +258,7 @@ class FinGestorModel {
                                                         <option value="">Selecione uma Pessoa</option>';
                     foreach ($pessoaFisica as $v) {
                         if ($v['id_pessoa'] == $gestor['id_pessoa']) {
-                            $retorno .= "               <option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                            $retorno .= "               <option value = '" . $v['id_pessoa'] . "' selected='selected'>" . $v['nm_pessoa'] . "</option>";
                         } else {
                             $retorno .= "               <option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
                         }

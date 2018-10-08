@@ -553,56 +553,56 @@ $(document).ready(function () {
             }
 
             var central = [];
-            // $("select[name=central\\[\\]]").each(function () {
-            //     central.push($(this).val());
-            // });
             $("select[name=central\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salva = false;
-                } else {
-                    salva = true;
-                }
+                central.push($(this).val());
             });
-            if (salva === false) {
-                e.preventDefault();
-                $('.selectCentrais').focus();
-                func.modalAlert('Selecione Uma Central.');
-                $this.prop("disabled", false);
-                return;
-            } else {
-                $("select[name=central\\[\\]]").each(function () {
-                    central.push($(this).val());
-                });
-            }
+            // $("select[name=central\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salva = false;
+            //     } else {
+            //         salva = true;
+            //     }
+            // });
+            // if (salva === false) {
+            //     e.preventDefault();
+            //     $('.selectCentrais').focus();
+            //     func.modalAlert('Selecione Uma Central.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
+            //     $("select[name=central\\[\\]]").each(function () {
+            //         central.push($(this).val());
+            //     });
+            // }
 
             var gestores = [];
-            // $("select[name=gestores\\[\\]]").each(function () {
-            //     gestores.push($(this).val());
-            // });
             $("select[name=gestores\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaGestores = false;
-                } else {
-                    salvaGestores = true;
-                }
-
+                gestores.push($(this).val());
             });
-            if (salvaGestores === false) {
-                e.preventDefault();
-                $('.selectGestores').focus();
-                func.modalAlert('Selecione Um Gestor Títular.');
-                $this.prop("disabled", false);
-                return;
-            } else {
-                $("select[name=gestores\\[\\]]").each(function () {
-                    gestores.push($(this).val());
-                });
-            }
+            // $("select[name=gestores\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaGestores = false;
+            //     } else {
+            //         salvaGestores = true;
+            //     }
+            //
+            // });
+            // if (salvaGestores === false) {
+            //     e.preventDefault();
+            //     $('.selectGestores').focus();
+            //     func.modalAlert('Selecione Um Gestor Títular.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
+            //     $("select[name=gestores\\[\\]]").each(function () {
+            //         gestores.push($(this).val());
+            //     });
+            // }
 
             var gestoresSub = [];
-            // $("select[name=gestoresSub\\[\\]]").each(function () {
-            //     gestoresSub.push($(this).val());
-            // });
+            $("select[name=gestoresSub\\[\\]]").each(function () {
+                gestoresSub.push($(this).val());
+            });
             // $("select[name=gestoresSub\\[\\]]").each(function () {
             //     if ($(this).val() == 0 || $(this).val() == '') {
             //         salvaGestoresSub = false;
@@ -618,39 +618,39 @@ $(document).ready(function () {
             //     $this.prop("disabled", false);
             //     return;
             // } else {
-                $("select[name=gestoresSub\\[\\]]").each(function () {
-                    gestoresSub.push($(this).val());
-                });
+            //     $("select[name=gestoresSub\\[\\]]").each(function () {
+            //         gestoresSub.push($(this).val());
+            //     });
             // }
 
             var fiscais = [];
-            // $("select[name=fiscais\\[\\]]").each(function () {
-            //     fiscais.push($(this).val());
-            // });
             $("select[name=fiscais\\[\\]]").each(function () {
-                if ($(this).val() == 0 || $(this).val() == '') {
-                    salvaFiscais = false;
-                } else {
-                    salvaFiscais = true;
-                }
-
+                fiscais.push($(this).val());
             });
-            if (salvaFiscais === false) {
-                e.preventDefault();
-                $('.selectFiscais').focus();
-                func.modalAlert('Selecione Um Fiscal Titular.');
-                $this.prop("disabled", false);
-                return;
-            } else {
-                $("select[name=fiscais\\[\\]]").each(function () {
-                    fiscais.push($(this).val());
-                });
-            }
+            // $("select[name=fiscais\\[\\]]").each(function () {
+            //     if ($(this).val() == 0 || $(this).val() == '') {
+            //         salvaFiscais = false;
+            //     } else {
+            //         salvaFiscais = true;
+            //     }
+            //
+            // });
+            // if (salvaFiscais === false) {
+            //     e.preventDefault();
+            //     $('.selectFiscais').focus();
+            //     func.modalAlert('Selecione Um Fiscal Titular.');
+            //     $this.prop("disabled", false);
+            //     return;
+            // } else {
+            //     $("select[name=fiscais\\[\\]]").each(function () {
+            //         fiscais.push($(this).val());
+            //     });
+            // }
 
             var fiscaisSub = [];
-            // $("select[name=fiscaisSub\\[\\]]").each(function () {
-            //     fiscaisSub.push($(this).val());
-            // });
+            $("select[name=fiscaisSub\\[\\]]").each(function () {
+                fiscaisSub.push($(this).val());
+            });
             // $("select[name=fiscaisSub\\[\\]]").each(function () {
             //     if ($(this).val() == 0 || $(this).val() == '') {
             //         salvaFiscaisSub = false;
@@ -666,15 +666,15 @@ $(document).ready(function () {
             //     $this.prop("disabled", false);
             //     return;
             // } else {
-                $("select[name=fiscaisSub\\[\\]]").each(function () {
-                    fiscaisSub.push($(this).val());
-                });
+            //     $("select[name=fiscaisSub\\[\\]]").each(function () {
+            //         fiscaisSub.push($(this).val());
+            //     });
             // }
 
             var subFiscais = [];
-            // $("select[name=subFiscais\\[\\]]").each(function () {
-            //     subFiscais.push($(this).val());
-            // });
+            $("select[name=subFiscais\\[\\]]").each(function () {
+                subFiscais.push($(this).val());
+            });
             // $("select[name=subFiscais\\[\\]]").each(function () {
             //     if ($(this).val() == 0 || $(this).val() == '') {
             //         salvaSubFiscais = false;
@@ -690,15 +690,15 @@ $(document).ready(function () {
             //     $this.prop("disabled", false);
             //     return;
             // } else {
-                $("select[name=subFiscais\\[\\]]").each(function () {
-                    subFiscais.push($(this).val());
-                });
+            //     $("select[name=subFiscais\\[\\]]").each(function () {
+            //         subFiscais.push($(this).val());
+            //     });
             // }
 
             var subFiscaisSub = [];
-            // $("select[name=subFiscaisSub\\[\\]]").each(function () {
-            //     subFiscaisSub.push($(this).val());
-            // });
+            $("select[name=subFiscaisSub\\[\\]]").each(function () {
+                subFiscaisSub.push($(this).val());
+            });
             // $("select[name=subFiscaisSub\\[\\]]").each(function () {
             //     if ($(this).val() == 0 || $(this).val() == '') {
             //         salvaSubFiscaisSub = false;
@@ -714,9 +714,9 @@ $(document).ready(function () {
             //     $this.prop("disabled", false);
             //     return;
             // } else {
-                $("select[name=subFiscaisSub\\[\\]]").each(function () {
-                    subFiscaisSub.push($(this).val());
-                });
+            //     $("select[name=subFiscaisSub\\[\\]]").each(function () {
+            //         subFiscaisSub.push($(this).val());
+            //     });
             // }
 
             var contrato = {
