@@ -344,7 +344,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                     <div class="form-group">
                                         <div class="col-sm-5">
                                             <div class="panel-body">
-                                                Gestores Titulares:<span class="text-danger">*</span>
+                                                Gestores Titulares:
                                                 <div class="gestoresCampos">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -407,7 +407,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                     <div class="form-group">
                                         <div class="col-sm-5">
                                             <div class="panel-body">
-                                                Fiscais:<span class="text-danger">*</span>
+                                                Fiscais:
                                                 <div class="fiscaisCampos">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
