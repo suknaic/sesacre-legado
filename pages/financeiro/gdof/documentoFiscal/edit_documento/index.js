@@ -497,5 +497,10 @@ $(document).ready(function () {
         });
 
     });
+    
+    $('body').on('click', '.ver-entrega', function (e) {
+        var id = $(this).val();
+        window.open("/pages/financeiro/ordem/entrega/ver_entrega/index.php?&id=" + id);
+    });
 
 });

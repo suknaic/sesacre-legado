@@ -1791,7 +1791,7 @@ class Diaria {
                     $ano_pedido = is_null($linha['ano_pedido']) ? 0 : $linha['ano_pedido'];
                     
                     
-                    $retorno .= "<tr data-diaria='". json_encode($linha) ."'>"
+                    $retorno .= "<tr data-diaria='". json_encode($linha, JSON_HEX_APOS) ."'>"
                                 . "<td>" . $linha['id_diaria'] . "</td>"
                                 . "<td>". $linha['nr_protocolo']."</td>"
                                 . "<td>" . $linha['nm_proponente'] . "</td>"

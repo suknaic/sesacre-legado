@@ -1,7 +1,9 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/pagamento/DaoConPagamento.class.php";
 
-class ConPagamento{
+class ConPagamento {
+
     private $id_pagamento = null;
     private $id_pagamento_situacao = null;
     private $id_pagamento_status = null;
@@ -13,7 +15,7 @@ class ConPagamento{
     private $vl_pagamento = null;
     private $ds_pagamento = null;
     private $st_ativo = null;
-    
+
     function getId_pagamento() {
         return $this->id_pagamento;
     }
@@ -102,27 +104,37 @@ class ConPagamento{
         $this->st_ativo = $st_ativo;
     }
 
-    
-    
-    public function salvaPagamento(){
-        try{
-            if(empty($this->id_pagamento_situacao) || empty($this->id_pagamento_status) || empty($this->id_liquidacao) || empty($this->id_lotacao) 
-              || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) 
-              || empty($this->vl_pagamento) || empty($this->ds_pagamento) || empty($this->st_ativo)){
+    public function salvaPagamento() {
+        try {
+
+            if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) || empty($this->vl_pagamento) || empty($this->ds_pagamento)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
             $daoConPagamento = new DaoConPagamento();
-            $daoConPagamento->setId_pagamento_situacao($this->id_pagamento_situacao);
-            $daoConPagamento->setId_pagamento_status($this->id_pagamento_status);
+            $daoConPagamento->setId_pagamento_situacao(1);
+            $daoConPagamento->setId_pagamento_status(1);
             $daoConPagamento->setId_liquidacao($this->id_liquidacao);
             $daoConPagamento->setId_lotacao($this->id_lotacao);
             $daoConPagamento->setId_doc_tipo_lotacao($this->id_doc_tipo_lotacao);
             $daoConPagamento->setNr_pagamento($this->nr_pagamento);
+            $daoConPagamento->setDt_pagamento(Metodos::ConverteDataING($this->dt_pagamento));
+            $daoConPagamento->setVl_pagamento(Metodos::ConverteValorIng($this->vl_pagamento));
+            $daoConPagamento->setDs_pagamento($this->ds_pagamento);
+            $daoConPagamento->salvaPagamento($pdo);
             
+            if ($daoConPagamento->Sucesso()) {
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", "Pagamento cadastrado com sucesso.");
+            }
+            
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar o pagamento");
         } catch (Exception $ex) {
-
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados desta Liquidação");
         }
     }
-    
+
 }

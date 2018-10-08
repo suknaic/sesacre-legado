@@ -21,15 +21,13 @@ class Liquidacao {
     private $sucesso = null;
     private $motivoCancelamento = null;
     private $anotacoes = null;
-    
     private $tipoSolicitacao = null;
     private $qtdDocumentosDisponiveis = null;
-    
     private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
-    
+
     function getTipoSolicitacao() {
         return $this->tipoSolicitacao;
     }
@@ -56,7 +54,7 @@ class Liquidacao {
         $this->vlLiquidacaoSaldo = $vlLiquidacaoSaldo;
         return $this;
     }
-    
+
     function getMotivoCancelamento() {
         return $this->motivoCancelamento;
     }
@@ -89,7 +87,7 @@ class Liquidacao {
     function getSucesso() {
         return $this->sucesso;
     }
-    
+
     function getAnotacoes() {
         return $this->anotacoes;
     }
@@ -99,7 +97,6 @@ class Liquidacao {
         return $this;
     }
 
-    
     function getUsuario() {
         return $this->usuario;
     }
@@ -311,8 +308,6 @@ class Liquidacao {
             return $ex->getMessage();
         }
     }
-    
-    
 
     function verificaDocumentosDiferenteDeALiquidar(PDO $pdo = null) {
         $this->sucesso = false;
@@ -330,9 +325,9 @@ class Liquidacao {
                 }
 
                 $filtroDocumentos = implode(', ', $arrayAux);
-                
-                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);               
-               
+
+                $daoConLiquidacao->retornaDocumentosFiscaisDiferentesDeALiquidar($pdo, $filtroDocumentos);
+
                 if ($daoConLiquidacao->Sucesso()) {
                     $this->sucesso = true;
                 } else {
@@ -354,23 +349,22 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-                                   
+
             /*
              * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
              * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
              * Se o tipo de solicitação for administrativo por licitação, é necessário ter documento fiscal
              */
-            if ( $this->getTipoSolicitacao() == '1' && (int)$this->getQtdDocumentosDisponiveis() > 1
-                    && count($this->getDocumentos()) < 1) {
+            if ($this->getTipoSolicitacao() == '1' && (int) $this->getQtdDocumentosDisponiveis() > 1 && count($this->getDocumentos()) < 1) {
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
-            }elseif($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1){
+            } elseif ($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1) {
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
             }
-                                 
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             //Retorna saldo do empenho disponivel no momento da operação
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($this->getIdEmpenho());
@@ -379,15 +373,15 @@ class Liquidacao {
             if (empty($dados_empenho)) {
                 return Metodos::retornoAjax("Erro", "alert", 'Erro ao consultar os dados do Empenho.');
             }
-            
+
             //Se for Empenho do tipo 'Ordinário' deverá ser liquidado em sua totalidade
             if ($dados_empenho['id_tipo_empenho'] == 3 && $dados_empenho['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
             }
-            
+
             //Retorna o total liquidado do empenho
             $empenho_total = $empenho->retornaTotalLiquidadoDoEmpenho($pdo);
-            
+
             $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
             $saldo_empenho = round($saldo_empenho, 4);
             //***********************************************************************************************
@@ -402,9 +396,9 @@ class Liquidacao {
                     ->setDtLiquidacao($this->getDtLiquidacao())
                     ->setVlLiquidacao(Metodos::ConverteValorIng($this->getVlLiquidacao()))
                     ->setVlLiquidacaoSaldo($saldo_empenho);
-           
+
             $daoConLiquidacao->insert($pdo);
-            
+
             if ($daoConLiquidacao->Sucesso()) {
                 $idLiquidacao = $pdo->lastInsertId('con_liquidacao_id_liquidacao_seq');
                 if (!Log::SalvaLogI('con_liquidacao', $idLiquidacao, $pdo)) {
@@ -418,14 +412,14 @@ class Liquidacao {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
-                
+
                 //Atualiza a situação do pedido
                 if (!$this->atualizaPedido($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
-                
-                if($this->getAnotacoes()){
+
+                if ($this->getAnotacoes()) {
                     //codigo abaixo salva as anotaçoes 
                     $liquidacaoAnotacao = new LiquidacaoAnotacao();
                     $liquidacaoAnotacao->setIdPessoa($this->usuario);
@@ -561,21 +555,21 @@ class Liquidacao {
             }
 
             $reg_antigo = $daoConLiquidacao->getMsgRetorno();
-            
+
             $daoConLiquidacao->retornaSaldoEmpenhoEdicaoLiquidacao($pdo);
             if (!$daoConLiquidacao->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "console", $daoConLiquidacao->getMsgRetorno());
             }
             $totais = $daoConLiquidacao->getMsgRetorno();
-            
+
             $saldo_empenho = $totais['vl_empenho'] - $totais['vl_utilizado'];
             $saldo_empenho = round($saldo_empenho, 4);
-            
+
             //Se o tipo de empenho for 'Ordinário' o valor da liquidação deve ser igual ao valor do empenho
-             if ($totais['id_tipo_empenho'] == 3 && $totais['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
+            if ($totais['id_tipo_empenho'] == 3 && $totais['vl_empenho'] > Metodos::ConverteValorIng($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", 'Este tipo de empenho deve ser liquidado em sua totalidade.');
             }
-            
+
             //seta saldo da atualização
             $daoConLiquidacao->setVlLiquidacaoSaldo($saldo_empenho);
 
@@ -590,14 +584,14 @@ class Liquidacao {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
-                
+
                 $this->setIdEmpenho($reg_antigo['id_empenho']); //Id do Empenho
                 //Atualiza a situação do empenho
                 if (!$this->atualizaEmpenho($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
-                
+
                 //Atualiza a situação do pedido
                 if (!$this->atualizaPedido($pdo)) {
                     $pdo->rollBack();
@@ -786,13 +780,13 @@ class Liquidacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
             }
-            
+
             //Atualiza a situação do pedido
             if (!$this->atualizaPedido($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Pedido: " . $this->mensagens);
             }
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
         } catch (Exception $exc) {
@@ -800,7 +794,6 @@ class Liquidacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-
 
     public function pesquisaLiquidacaoParaPagamento($pdo) {
         try {
@@ -817,7 +810,7 @@ class Liquidacao {
             if ($daoConLiquidacao->Sucesso()) {
                 $dados = $daoConLiquidacao->getMsgRetorno();
                 $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '" nrpedido = "' . $dados["nr_pedido"] . '" 
-                                  idEmpenho ="' . $dados["id_empenho"] . '" idLiquidacao="'.$dados["id_liquidacao"].'"  
+                                  idEmpenho ="' . $dados["id_empenho"] . '" idLiquidacao="' . $dados["id_liquidacao"] . '"  
                         style="cursor:pointer;">
                 <td>' . $dados["nr_pedido"] . '</td>
                 <td>' . $dados["nr_liquidacao"] . '</td>
@@ -836,7 +829,6 @@ class Liquidacao {
         }
     }
 
-
     public function retornaLiquidacaoParaPagamento($pdo) {
         try {
 
@@ -849,7 +841,7 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
-          
+
             if ($daoConLiquidacao->sucesso()) {
                 $campos = $daoConLiquidacao->getMsgRetorno();
 
@@ -867,7 +859,7 @@ class Liquidacao {
                                         
                                             <div id="collapseFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFor" aria-expanded="false">
                                                 <div class="panel-body">
-                                                
+                                                <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data da Liquidação:</b></div>
                                                         <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
@@ -896,8 +888,7 @@ class Liquidacao {
             return;
         }
     }
-    
-   
+
     public function retornaEmpenhoLiquidacao(PDO $pdo = null, int $opcao = 1 /* 1 - Visualização; 2 - Edição */) {
         try {
 
@@ -911,16 +902,16 @@ class Liquidacao {
             $daoConLiquidacao->retornaEmpenhoLiquidacao($pdo);
 
             if ($daoConLiquidacao->sucesso()) {
-                
+
                 $campos = $daoConLiquidacao->getMsgRetorno();
-                
+
                 $saldo = '';
                 if ($opcao == 1) {
                     $saldo = $campos['saldo_visualizacao'];
                 } else {
                     $saldo = $campos['saldo_edicao'];
                 }
-                
+
 
                 $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
@@ -971,7 +962,7 @@ class Liquidacao {
             return $ex->getMessage();
         }
     }
-    
+
     public function retornaPedidoLiquidacao(PDO $pdo = null) {
         try {
 
@@ -1109,9 +1100,9 @@ class Liquidacao {
             $this->mensagens = $exc->getMessage();
         }
     }
-    
-    private function atualizaPedido(PDO $pdo = null){
-        try{
+
+    private function atualizaPedido(PDO $pdo = null) {
+        try {
             //Trecho que irá atualizar a situação do empenho
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($this->getIdEmpenho());
@@ -1122,12 +1113,12 @@ class Liquidacao {
                 $this->mensagens = 'Não foi possível localizar os dados do Empenho.';
                 return false;
             }
-            
+
             //informações do pedido para possíveis alterações no mesmo
             $pedido = new Pedido();
             $pedido->setIdPedido($dados_empenho['id_pedido']);
             $dados_pedido = $pedido->retornaDadosPedido();
-            
+
             //Se os dados do pedido estiver vazio, retorna erro
             if (empty($dados_pedido)) {
                 $this->mensagens = 'Não foi possível localizar os dados do Pedido.';
@@ -1136,35 +1127,35 @@ class Liquidacao {
 
             //Retorna os totais do pedido
             $totais_pedido = $pedido->retornaTotaisDoPedido($pdo);
-            
+
             $valor_pedido = $totais_pedido['valor_pedido'];
             $valor_liquidado = $totais_pedido['valor_liquidado'];
-            $valor_ordenado =  $totais_pedido['valor_ordenado'];
+            $valor_ordenado = $totais_pedido['valor_ordenado'];
             $tipo_solicitacao = $totais_pedido['id_tipo_solicitacao'];
-            
+
 
             switch (true) {
                 //Se não houver valores de liquidação para o pedido, e for um tipo de solicitação DIFERENTE de 'Administrativa por Licitação'
-                case ($valor_liquidado == 0 && $tipo_solicitacao != '2'): 
+                case ($valor_liquidado == 0 && $tipo_solicitacao != '2'):
                     $pedido->setIdPedidoSituacao(3); //Empenhado
                     $pedido->setStPedido(16); //Aguardando Ordem
                     break;
-                
+
                 //Se o valor ordenado for menor que o valor do pedido, irá definir como 'Ordenado Parcial' para  o tipo de solicitação 'Administrativa por Licitação' 
-                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado < $valor_pedido): 
+                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado < $valor_pedido):
                     $pedido->setIdPedidoSituacao(4); //Ordenado Parcial
                     $pedido->setStPedido(24); //Aguardando Finalizar Ordenado
                     break;
-                
+
                 //Se o valor ordenado for igual ao valor do pedido, irá definir como 'Ordenado Total' para  o tipo de solicitação 'Administrativa por Licitação' 
                 case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado == $valor_pedido):
                     $pedido->setIdPedidoSituacao(5); //Ordenado Total
                     $pedido->setStPedido(21); //Aguardando Liquidação
-                    
+
                     break;
-                
+
                 //Se a soma dos valores da liquidação for inferior ao valor do Pedido, altera para situação 'Liquidado Parcial'
-                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido): 
+                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido):
                     $pedido->setIdPedidoSituacao(6); //Liquidado Parcial
                     $pedido->setStPedido(25); //Aguardando Finalizar Liquidação
                     break;
@@ -1174,10 +1165,10 @@ class Liquidacao {
                     $pedido->setIdPedidoSituacao(7); //Liquidado Total
                     $pedido->setStPedido(22); //Aguardando Pagamento
                     break;
-                
+
                 //Se o total liquidado for superior ao valor do empenho, retorna erro
-                case ($valor_liquidado > $valor_pedido): 
-                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: '. $valor_pedido . ' valor liquidado: '.$valor_liquidado;
+                case ($valor_liquidado > $valor_pedido):
+                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: ' . $valor_pedido . ' valor liquidado: ' . $valor_liquidado;
                     return false;
                     break;
             }
