@@ -14,7 +14,7 @@ $(document).ready(function () {
         },
 
         "success": function (response) {
-            $('#idEstado').append(response);
+            $('#idEstado').html(response);
         }
     });
     //********************************************************
@@ -57,7 +57,7 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         console.log("Parse JSON");
                         console.log(response);
                         return false;
@@ -67,17 +67,15 @@ $(document).ready(function () {
                         if (response.tipoExibicao === "console") {
                             console.log('Console Mensagem');
                             console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.modalAlert(response.msg, 'success');
+                        func.fechaModalReload();
                         return false;
                     } else {
                         console.log('Ultimo else');
@@ -275,6 +273,10 @@ $(document).ready(function () {
         $('#idRegionalGeografica').val('').trigger('change.select2');
         $('#idRegionalSaude').val('').trigger('change.select2');
         $('#idEstado').val('').trigger('change.select2');
+    });
+
+    $('body').on('click', '.btn-voltar', function (e) {
+        top.location.href='/pages/sistema/cidade/index.php';
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {

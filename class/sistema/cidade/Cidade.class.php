@@ -74,47 +74,31 @@ class Cidade {
             //Seta os Campos
             $cidade = new DaoSesCidade();
 
-            $cidade->setId_estado($this->id_estado);
-            $cidade->setId_regional_saude($this->id_regional_saude);
-            $cidade->setId_regional_geo($this->id_regional_geo);
+            $cidade->setId_estado($this->id_estado === 0 ? NULL : $this->id_estado);
+            $cidade->setId_regional_saude($this->id_regional_saude === 0 ? NULL : $this->id_regional_saude);
+            $cidade->setId_regional_geo($this->id_regional_geo === 0 ? NULL : $this->id_regional_saude);
             $cidade->setNm_cidade($this->nm_cidade);
 
-            $busca = $cidade->buscaCidadePorNome($pdo);
-            var_dump($busca);
-            return;
+            $busca = $cidade->buscaCidadePorNomeAndEstado($pdo);
             if ($busca) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
             }
 
-            $result = $cidade->insert($cidade, $pdo);
-
-            if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
+            $inseri = $cidade->insert($cidade, $pdo);
+            if (!$inseri) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $inseri);
             }
 
-            $cidade->setIdCidade($pdo->lastInsertId('ses_cidade_id_cidade_seq'));
-
+            $cidade->setId_cidade($pdo->lastInsertId('ses_cidade_id_cidade_seq'));
             if (Log::SalvaLogI('ses_cidade', $cidade->getId_cidade(), $pdo)) {
-                $sucesso = true;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
-                $pdo->rollBack();
-                return $retorno;
-            }
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro de Cidade Realizado com Sucesso.");
                 $pdo->commit();
-                return $retorno;
+                return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

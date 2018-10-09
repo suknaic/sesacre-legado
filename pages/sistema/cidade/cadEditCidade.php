@@ -95,8 +95,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                             </div>
                                         </div>
                                         <div class="panel-footer text-center">
+                                            <button type="button" class="btn btn-primary btn-default btn-rounded btn-voltar">
+                                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Voltar
+                                            </button>
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
@@ -108,7 +111,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
-
                                 </div>
                             </div>
                         </div>
@@ -151,7 +153,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/sistema/cidade/cadCidade.js"></script>
+        <script src="/pages/sistema/cidade/cadEditCidade.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>

@@ -10,8 +10,6 @@ if(!$session->verificaPermissao(PERFIL_TI)){
     return;
 }
 
-
-
 switch ($_REQUEST['acao']) {
                
     case 'cadCidade':
@@ -22,14 +20,14 @@ switch ($_REQUEST['acao']) {
             }
 
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            
+
             $cidade = new Cidade();
 
             $cidade->setNm_cidade(trim($dados['nome']));
-            $cidade->setId_estado((int)($dados['estado']));
-            $cidade->setId_regional_geo((int)($dados['regionalGeo']));
-            $cidade->setId_regional_saude((int)($dados['regionalSaude']));
-            
+            $cidade->setId_estado(($dados['estado']));
+            $cidade->setId_regional_geo(($dados['regionalGeo']));
+            $cidade->setId_regional_saude(($dados['regionalSaude']));
+
             echo $cidade->cadastrarCidade();
             return;
             break;
@@ -113,20 +111,20 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    case 'SelectRegionalSaudeOption':
-        try {
-
-//            $estado = new R;
-            echo "<option value = '0'>Selecione um Estado</option>";
-//            echo $estado->retornaOptionEstado();
-            return;
-
-            break;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-            break;
-        }
+//    case 'SelectRegionalSaudeOption':
+//        try {
+//
+////            $estado = new R;
+//            echo "<option value = '0'>Selecione um Estado</option>";
+////            echo $estado->retornaOptionEstado();
+//            return;
+//
+//            break;
+//        } catch (Exception $e) {
+//            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+//            return;
+//            break;
+//        }
 }
 
 

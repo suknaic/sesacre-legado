@@ -91,13 +91,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                         </div>
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
-                                            </button>
-                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Pesquisar
+                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
                                             </button>
                                         </div>
                                     </form>

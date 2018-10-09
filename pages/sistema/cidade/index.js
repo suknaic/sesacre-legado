@@ -267,7 +267,12 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-newCidade', function (e) {
-        top.location.href='/pages/sistema/cidade/cadCidade.php';
+        top.location.href='cadEditCidade.php';
+    });
+
+    $('body').on('click', '.btn-edit', function (e) {
+        var id = $(this).val();
+        top.location.href='cadEditCidade.php?idCidade='+id;
     });
 
     $('body').on('keypress', '.formCidade', function (e) {
