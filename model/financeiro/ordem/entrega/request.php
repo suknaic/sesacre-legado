@@ -26,6 +26,26 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'atualizaProtocolo':
+        try {
+            $protocolo = filter_input(INPUT_POST, 'protocolo', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $finProtocoloModel = new FinProtocoloModel();
+            $finProtocoloModel->setIdProtocolo($protocolo['idProtocolo']);
+            $finProtocoloModel->setNmRepresentante($protocolo['nomeRepresentante']);
+            $finProtocoloModel->setNrRgCpf($protocolo["rgCpf"]);
+            $finProtocoloModel->setNmEmailRepresentante($protocolo["email"]);
+            $finProtocoloModel->setDhRecebimentoSistema($protocolo["dataRecebimento"]);
+            $finProtocoloModel->setDsProtocolo($protocolo["obsProtocolo"]);
+            echo $finProtocoloModel->alteraProtocolo();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 
     CASE 'listaEntregas':
         try {
@@ -41,4 +61,19 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'retornaDadosProtocolo':
+        try {
+            $filtro = filter_input(INPUT_GET, 'protocolo', FILTER_DEFAULT);
+            $finProtocoloModel = new FinProtocoloModel();
+            $finProtocoloModel->setIdProtocolo((int)$filtro);
+            echo json_encode($finProtocoloModel->retornaDadosProtocolo());
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 }

@@ -175,7 +175,7 @@ $(document).ready(function () {
 
     $('body').on('click', '.remover-documento', function (e) {
         $(this).closest("tr").remove();
-        atualizaValorLiquidacao();
+        calculaValorPagamento();
     });
 
 
@@ -223,7 +223,6 @@ $(document).ready(function () {
                           </tr>`;
 
             $('#tabelaDocumentos tbody').append(linhaTabela);
-            atualizaValorLiquidacao();
         }
 
     });
@@ -249,15 +248,15 @@ $(document).ready(function () {
 
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
-                    vl_liquidacao_doc: vl_documento_pagamento,
-                    vl_liquidacao_doc_saldo: vl_documento_pagamento_saldo
+                    vl_pagamento_doc: vl_documento_pagamento,
+                    vl_pagamento_doc_saldo: vl_documento_pagamento_saldo
                 }
                 documentos.push(documento);
 
 
             });
-            
-            
+
+
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
                 "idEmpenho": $("#id_empenho").val(),
@@ -277,7 +276,7 @@ $(document).ready(function () {
             }
 
             if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
-                func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
+                func.modalAlert("Por favor adicione algum documento fiscal para pagar.");
                 return false;
             }
 
@@ -290,8 +289,6 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
-                    return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -338,14 +335,34 @@ $(document).ready(function () {
 
 });
 
-function atualizaValorLiquidacao() {
-    var vl_liquidacao = 0;
-    $("tr.documentoFiscal").each(function () {
-        let documento = $(this).data('objeto');
-        vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
+function calculaValorPagamento() {
+    let valoresRetirados = 0;
+    $("input[name=valorRetPagamento\\[\\]]").each(function () {
+        valoresRetirados = (parseFloat(func.tranformaStringEmValorCalculavel($(this).val())) + valoresRetirados);
+
+        if (valoresRetirados > '999999999.9999') {
+            func.modalAlert("Valor do pagamento ultrapassa o valor máximo permitido");
+            $(this).prop("disabled", true);
+            return false;
+        }
     });
 
-    $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
+    let valorPagamento = func.converteValorBrDecimal(valoresRetirados, 4);
+    $("#vl_pagamento").val(valorPagamento);
+}
+
+$("body").on("keyup", ".valorRetPagamento", function (e) {
+    calculaValorPagamento();
+});
+
+function atualizaValorPagamento() {
+    var vl_pagamento = 0;
+    $("tr.documentoFiscal").each(function () {
+        let documento = $(this).data('objeto');
+        vl_pagamento = func.converteValorIngFloat(documento.vl_documento) + vl_pagamento;
+    });
+
+    $("#vl_pagamento").val(valorComMascara(vl_pagamento));
 }
 
 function valorComMascara(valor) {
@@ -361,19 +378,19 @@ function habilitaDocumentosFiscais() {
 
     if (tipo_solicitacao != 2) {
         $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled", false);
+        $("#vl_pagamento").prop("disabled", false);
     } else {
         $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled", true);
+        $("#vl_pagamento").prop("disabled", true);
         $("#selectDocumentoFiscal").focus();
     }
 }
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
 function limpaCampos() {
-    $("#nr_liquidacao").val("");
-    $("#dt_liquidacao").val("");
-    $("#vl_liquidacao").val("");
-    $("#desc_liquidacao").val("");
+    $("#nr_pagamento").val("");
+    $("#dt_pagamento").val("");
+    $("#vl_pagamento").val("");
+    $("#desc_pagamento").val("");
     $("#id_remetente").val("0").trigger('change');
 }
