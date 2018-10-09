@@ -302,11 +302,13 @@ class FinFiscaisModel {
                 $classPrincipal = "fiscaisCampos";
                 $id = "fiscais";
                 $nomeCampo = 'Fiscal Titular:';
+                $zera = 'zeraFiscais';
             } else {
                 $class = "selectFiscaisSub";
                 $classPrincipal = "fiscaisSubCampos";
                 $id = "fiscaisSub";
                 $nomeCampo = 'Fiscal Substituto:';
+                $zera = 'zeraFiscaisSubs';
             }
             $contFiscal = 0;
 
@@ -333,7 +335,12 @@ class FinFiscaisModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div><br>';
+                                </div><br>
+                                <div class="col-sm-3">
+                                     <div class="panel-body">
+                                         <a href="#" class="'. $zera .' btn btn-danger">X</a>
+                                     </div>
+                                </div>';
                     if ($contFiscal > 1) {
                         $retorno .= ' <div class="col-sm-3">
                                         <div class="panel-body">
@@ -360,6 +367,11 @@ class FinFiscaisModel {
                                             </div>
                                         </div>
                                     </div>
+                                </div><br>
+                                <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="'. $zera .' btn btn-danger">X</a>
+                                        </div>
                                 </div>
                             </div>';
             }

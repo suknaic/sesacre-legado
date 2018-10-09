@@ -228,11 +228,13 @@ class SubFiscalModel {
                 $classPrincipal = "SubFiscaisCampos";
                 $id = "subFiscais";
                 $nomeCampo = 'Sub-Fiscal Titular:';
+                $zera = "zeraSubFiscais";
             } else {
                 $class = "selectSubFiscaisSub";
                 $classPrincipal = "SubFiscaisCamposSub";
                 $id = "subFiscaisSub";
                 $nomeCampo = 'Sub-Fiscal Substituto:';
+                $zera = "zeraSubFiscaisSub";
             }
             $contSubFiscal = 0;
 
@@ -259,7 +261,12 @@ class SubFiscalModel {
                                             </div>
                                         </div>
                                     </div>
-                                </div><br>';
+                                </div><br>
+                                <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="'. $zera .' btn btn-danger">X</a>
+                                        </div>
+                                </div>';
                     if ($contSubFiscal > 1) {
                         $retorno.=' <div class="col-sm-3">
                                         <div class="panel-body">
@@ -286,6 +293,11 @@ class SubFiscalModel {
                                             </div>
                                         </div>
                                     </div>
+                                </div><br>
+                                <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="'. $zera .' btn btn-danger">X</a>
+                                        </div>
                                 </div>
                             </div>';
             }
