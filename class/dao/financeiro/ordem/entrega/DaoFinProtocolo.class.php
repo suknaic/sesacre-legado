@@ -35,8 +35,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                         emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
                         cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pt.cd_programa_trabalho, p.ds_pedido,
                         pt.ds_programa_trabalho, desp.cd_despesa, desp.ds_despesa_elemento, p.vl_pedido, ordem.sit_ordem,
-                        prot.id_protocolo, prot.nm_representante, prot.ds_protocolo, prot.nm_email_representante, to_char(prot.dh_recebimento,'DD/MM/YYYY') as dh_recebimento,
-                        prot.nr_rg_cpf
+                        prot.id_protocolo
                         from fin_ordem as ordem
                         inner join fin_pedido as p
                         on p.id_pedido = ordem.id_pedido
@@ -82,7 +81,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -112,9 +111,40 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
+        }
+    }
+    
+    public function atualizaProtocolo(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "update fin_protocolo "
+                . "set "
+                    . "nm_representante = :nm_representante,"
+                    . "nr_rg_cpf = :nr_rg_cpf,"
+                    . "dh_recebimento_sistema = :dh_recebimento_sistema,"
+                    . "nm_email_representante = :nm_email_representante,"
+                    . "ds_protocolo = :ds_protocolo,"
+                    . "dt_entrega = :dt_entrega "
+                . "where id_protocolo = :id_protocolo";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":nm_representante", $this->getNmRepresentante(), PDO::PARAM_STR);
+                $stmt->bindValue(":nr_rg_cpf", $this->getNrRgCpf(), PDO::PARAM_STR);
+                $stmt->bindValue(":dh_recebimento_sistema", $this->getDhRecebimentoSistema(), PDO::PARAM_STR);
+                $stmt->bindValue(":nm_email_representante", $this->getNmEmailRepresentante(), PDO::PARAM_STR);
+                $stmt->bindValue(":ds_protocolo", $this->getDsProtocolo(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_entrega", $this->getDtEntrega(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -135,7 +165,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -153,7 +183,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -191,7 +221,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -214,7 +244,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -233,7 +263,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -256,7 +286,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -275,7 +305,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -297,7 +327,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -320,7 +350,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
                 $this->msgRetorno = "Sem conexao";
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
         }
@@ -342,6 +372,50 @@ class DaoFinProtocolo extends FinProtocoloTb {
         } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
             $this->sucesso = false;
+        }
+    }
+    
+    public function retorna(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "select * from fin_protocolo where id_protocolo = :id_protocolo";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                   $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaInfoProtocolo(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "select nm_representante,nm_email_representante, nr_rg_cpf, to_char(dh_recebimento_sistema,'DD/MM/YYYY') as dh_recebimento_sistema, ds_protocolo from fin_protocolo where id_protocolo = :id_protocolo";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_protocolo", $this->getIdProtocolo(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                   $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->msgRetorno = "Sem conexao";
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 

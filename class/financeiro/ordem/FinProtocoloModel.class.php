@@ -310,7 +310,7 @@ class FinProtocoloModel {
 
     public function salvaProtocolo() {
         try {
-            if (empty($this->nm_representante) || empty($this->nm_representante) || empty($this->nr_rg_cpf)) {
+            if (empty($this->nm_representante) || empty($this->dh_recebimento_sistema) || empty($this->nr_rg_cpf)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             $conexao = new Conexao();
@@ -367,6 +367,79 @@ class FinProtocoloModel {
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
+    
+    public function alteraProtocolo(){
+        try {
+            if (empty($this->nm_representante) || empty($this->dh_recebimento_sistema) || empty($this->nr_rg_cpf)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $prazo = 0;
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->id_protocolo);
+            $daoFinProtocolo->setNmRepresentante($this->nm_representante);
+            $daoFinProtocolo->setNrRgCpf($this->nr_rg_cpf);
+            $daoFinProtocolo->setNmEmailRepresentante($this->nm_email_representante);
+            $daoFinProtocolo->setDhRecebimentoSistema(Metodos::ConverteDataING($this->dh_recebimento_sistema));
+            $daoFinProtocolo->setDsProtocolo($this->ds_protocolo);
+            $daoFinProtocolo->retorna($pdo);
+            
+            if (!$daoFinProtocolo->sucesso()) {
+                return Metodos::retornoAjax("Erro", "console", $daoFinProtocolo->getMsgRetorno());
+            }
+            
+            $busca = $daoFinProtocolo->getMsgRetorno();
+            
+            //retorna prazo de entrega
+            $daoFinProtocolo->setIdOrdem($busca['id_ordem']);
+            $daoFinProtocolo->retornaPrazoDeentrega($pdo);
+            if (!$daoFinProtocolo->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", $daoFinProtocolo->getMsgRetorno());
+            }
+            $prazo = $daoFinProtocolo->getMsgRetorno();
+            $data = date('d/m/Y', strtotime('+' . $prazo["nr_prazo_ordem"] . 'days', strtotime(Metodos::ConverteDataING($this->dh_recebimento_sistema))));
+            $data = Metodos::ConverteDataING($data);
+            $daoFinProtocolo->setDtEntrega($data);
+            
+            $daoFinProtocolo->atualizaProtocolo($pdo);
+            
+            if ($daoFinProtocolo->sucesso()) {
+                if (!Log::SalvaLogU('fin_protocolo', $daoFinProtocolo->getIdProtocolo(), $busca, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoFinProtocolo->getMsgRetorno());
+            }
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaDadosProtocolo(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinProtocolo = new DaoFinProtocolo();
+            $daoFinProtocolo->setIdProtocolo($this->getIdProtFocolo());
+            $daoFinProtocolo->retornaInfoProtocolo($pdo);
+            if ($daoFinProtocolo->sucesso()) {
+                return $daoFinProtocolo->getMsgRetorno();
+            } else {
+                return false;
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 
