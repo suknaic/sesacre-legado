@@ -930,7 +930,6 @@ class DaoFinPedido extends FinPedidoTb {
                         WHEN (
                                         PAG.id_pedido IS NULL
                                         AND L.id_pedido IS NULL
-                                        AND DF.id_pedido IS NULL			
                                         AND O.id_pedido IS NULL
                                         AND E.id_pedido IS NOT NULL	
                                         AND P.id_tipo_solicitacao = 2
@@ -942,7 +941,6 @@ class DaoFinPedido extends FinPedidoTb {
                         WHEN (
                                         PAG.id_pedido IS NULL
                                         AND L.id_pedido IS NULL
-                                        AND DF.id_pedido IS NULL			
                                         AND O.id_pedido IS NULL
                                         AND E.id_pedido IS NOT NULL	
                                         AND P.id_tipo_solicitacao = 1			
