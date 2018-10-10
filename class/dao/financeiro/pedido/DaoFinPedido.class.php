@@ -901,14 +901,243 @@ class DaoFinPedido extends FinPedidoTb {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
-                    $this->sucesso = false;
+                    $this->msgRetorno = 'Nenhum registro encontrado';
                 }
             } else {
-                $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {
-            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaStatusPedido(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "SELECT 
+                P.id_pedido, P.nr_pedido, P.id_tipo_solicitacao
+                , P.id_fornecedor, P.dt_pedido, P.st_pedido, P.id_pedido_situacao
+                , E.id_empenho as id_pedido_empenho
+                , O.id_pedido AS id_pedido_ordem
+                , DF.id_pedido AS id_pedido_doc
+                , L.id_pedido AS id_pedido_liquidacao
+                , SALLIQUIDACAO.id_pedido AS id_pedido_saldo_liquidacao
+
+                , CASE
+                        /*
+                        * Pedido Possui Empenho, não possui Ordem e Tipo Administrativo Por Licitação
+                        * Deve ser Aguardando Ordem
+                        */
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL
+                                        AND DF.id_pedido IS NULL			
+                                        AND O.id_pedido IS NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 2
+                                ) THEN 16
+                        /*
+                        * Pedido Possui Empenho, não possui Ordem e Tipo Administrativo
+                        * Deve ser Aguardando Liquidação
+                        */
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL
+                                        AND DF.id_pedido IS NULL			
+                                        AND O.id_pedido IS NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 1			
+                                ) THEN 21	
+                        /*
+                        * Pedido Possui Empenho, possui Ordem e Tipo Administrativo Por Licitação	 
+                        * Precisa Verificar os Valores das Ordens
+                        * Pode ser Aguardando Finalizar Ordenado Ou Aguardando Liquidação
+                        * O Pedido não tem mais Saldo de Acordo com as Ordens então ele é Aguardando Liquidação
+                        */
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL			
+                                        AND O.id_pedido IS NOT NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 2
+                                        AND SAL.id_pedido IS NULL
+                                ) THEN 21	
+                        /*
+                        * O Pedido possui Saldo de Acordo com as Ordens então ele é Aguardando Finaliza Ordenado 
+                        */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL				
+                                        AND O.id_pedido IS NOT NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 2	
+                                        AND SAL.id_pedido IS NOT NULL			
+                                ) THEN 24
+
+                        /*
+                        * Pedido Possui Liquidação e Não possui Pagamento
+                        * Precisa Verificar os Valores da Liquidação desse Pedido 
+                        * Pode ser Aguardando Finalizar Liquidação ou Aguardando Pagamento
+                        * O Pedido não tem mais Saldo de Acordo com as Liquidações então ele é Aguardando Pagamento
+                        */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND SALLIQUIDACAO.id_pedido IS NULL
+                                ) THEN 22
+                        /*
+                        * O Pedido possui Saldo de Acordo com as Liquidações então ele é Aguardando Finalizar Liquidação 
+                        */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL			
+                                        AND SALLIQUIDACAO.id_pedido IS NOT NULL
+                                ) THEN 25
+
+                        ELSE null
+                END AS status_oficial	
+
+                FROM fin_pedido P
+                LEFT JOIN fin_empenho E ON E.id_pedido = P.id_pedido
+
+                LEFT JOIN (
+                                        SELECT distinct on(id_pedido) id_pedido
+                                        FROM fin_ordem
+                                        WHERE sit_ordem <> '0'
+                                        ) AS O ON O.id_pedido = P.id_pedido
+
+                LEFT JOIN (
+                                        SELECT distinct on (id_pedido) id_pedido
+                                        FROM fin_documento_fiscal
+                                        WHERE id_documento_situacao <> 7
+                                        ) AS DF ON DF.id_pedido = P.id_pedido
+
+                LEFT JOIN (
+                                        SELECT distinct on (P.id_pedido) P.id_pedido
+                                        FROM fin_pedido P
+                                        INNER JOIN fin_empenho E ON E.id_pedido = P.id_pedido
+                                        INNER JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4
+                                        ) AS L ON L.id_pedido = P.id_pedido
+
+                LEFT JOIN (
+                                        SELECT distinct on (P.id_pedido) P.id_pedido
+                                        FROM fin_pedido P
+                                        INNER JOIN fin_empenho E ON E.id_pedido = P.id_pedido
+                                        INNER JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4
+                                        INNER JOIN con_pagamento PAG ON PAG.id_liquidacao = L.id_liquidacao AND PAG.id_pagamento_situacao <> 2
+                                        ) AS PAG ON PAG.id_pedido = P.id_pedido
+
+                LEFT JOIN (SELECT distinct on (id_pedido) id_pedido 
+
+                                        FROM (select pre.id_cont_itens, pre.id_pedido,
+                                        CASE WHEN mat.tp_material = 'C'
+                                            THEN coalesce(pre.qt_itens_pre,0.0000)
+                                            ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
+                                            END as total,
+                                        coalesce((select 
+                                                CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
+                                                THEN  coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
+                                                ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
+                                                from fin_ordem as ordem
+                                                inner join fin_ordem_itens as itemOrdem
+                                                on ordem.id_ordem =  itemOrdem.id_ordem 
+                                                inner join fin_pre_ordem as preSub
+                                                on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
+                                                inner join fin_cont_itens as contItensSub
+                                                on contItensSub.id_cont_itens = pre.id_cont_itens
+                                                inner join pla_material as matSub
+                                                on matSub.id_material = contItensSub.id_material
+                                                where ordem.sit_ordem > '0' 
+                                                and itemOrdem.id_pre_ordem = pre.id_pre_ordem
+                                                group by itemOrdem.id_pre_ordem, matSub.tp_material
+                                                ),0.0000) as utilizado,
+
+                                        (CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
+                                        THEN  coalesce(pre.qt_itens_pre,0.0000)
+                                        ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
+                                        END
+                                        -
+                                        coalesce((select 
+                                             CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
+                                             THEN coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
+                                             ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
+                                             from fin_ordem as ordem
+                                             inner join fin_ordem_itens as itemOrdem
+                                             on ordem.id_ordem =  itemOrdem.id_ordem 
+                                             inner join fin_pre_ordem as preSub
+                                             on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
+                                             inner join fin_cont_itens as contItensSub
+                                             on contItensSub.id_cont_itens = pre.id_cont_itens
+                                             inner join pla_material as matSub
+                                             on matSub.id_material = contItensSub.id_material
+                                             where ordem.sit_ordem > '0'
+                                             and itemOrdem.id_pre_ordem = pre.id_pre_ordem
+                                             group by itemOrdem.id_pre_ordem, matSub.tp_material
+                                             ),0.0000) 
+                                        ) as saldo
+
+                                        from fin_pre_ordem as pre
+                                        inner join fin_pedido as p
+                                        on p.id_pedido = pre.id_pedido
+                                        inner join pla_tipo_gasto as tp
+                                        on tp.id_tipo_gasto = p.id_tipo_gasto
+                                        inner join fin_cont_itens as contItens
+                                        on contItens.id_cont_itens = pre.id_cont_itens
+                                        inner join pla_material as mat
+                                        on mat.id_material = contItens.id_material
+                                        inner join pla_unidade_medida as unid
+                                        on unid.id_unidade_medida = contItens.id_unidade_medida
+                                        inner join view_despesa_elemento as desp
+                                        on desp.id_despesa_elemento = p.id_despesa_elemento
+                                        ) t
+                                        where t.saldo > 0
+                                        ) AS SAL ON SAL.id_pedido = P.id_pedido
+
+                LEFT JOIN (SELECT * 
+                                        FROM (
+                                        select
+                                            ped.id_pedido,                    
+                                            coalesce(sum(vl_liquidacao), 0) as valor_liquidado,                                       
+                                            vl_pedido as valor_pedido     
+                                            , (vl_pedido - coalesce(sum(vl_liquidacao), 0)) AS saldo 
+                                        from
+                                            fin_pedido ped                     
+                                            inner join
+                                               fin_empenho emp 
+                                               on ped.id_pedido = emp.id_pedido 
+                                            left join
+                                               con_liquidacao liq 
+                                               on emp.id_empenho = liq.id_empenho 
+                                               and liq.id_liquidacao_situacao <> 4 
+                                        group by ped.id_pedido ) t2  
+                                        where t2.saldo > 0
+                                        ) AS SALLIQUIDACAO ON SALLIQUIDACAO.id_pedido = P.id_pedido
+
+
+                WHERE P.st_pedido != '0'
+                AND P.st_pedido != '9'
+                AND P.st_pedido != '10'
+                AND P.st_pedido != '11'
+                AND P.st_pedido != '12'
+                AND P.st_pedido != '13'
+                AND P.st_pedido != '14'
+                and P.id_pedido = :id_pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
         }
     }
