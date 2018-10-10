@@ -325,6 +325,7 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaGestoresSubstitutos':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+
             $gestores = new FinGestorModel();
             echo $gestores->retornarGestor($id, 2);
             return;
@@ -338,6 +339,7 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaFiscaisTitulares':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+
             $fiscais = new FinFiscaisModel();
             echo $fiscais->retornarFiscal($id, 1);
             return;

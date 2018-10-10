@@ -349,13 +349,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                         <select class="form-control select selectGestores" name="gestores[]" id="gestores" required="true">
-                                                            <option value="">Selecione um gestor</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraGestor btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -366,7 +370,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                     </div>
                                     <div class="col-sm-9"></div>
                                 </div>
-
 
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Gestores Substitutos</h3>
@@ -381,13 +384,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                         <select class="form-control select selectGestoresSub" name="gestoresSub[]" id="gestoresSub" required="true">
-                                                            <option value="">Selecione um gestor</option>
+
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraGestoreSub btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
 
@@ -417,8 +424,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraFiscais btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
 
@@ -449,8 +460,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraFiscaisSub btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
 
@@ -480,8 +495,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraSubFiscais btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
 
@@ -511,8 +530,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div><br>
+                                        <div class="col-sm-3">
+                                            <div class="panel-body">
+                                                <a href="#" class="zeraSubFiscaisSub btn btn-danger">X</a>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-7"></div>
                                     </div>
                                 </div>
 
