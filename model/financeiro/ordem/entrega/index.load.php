@@ -20,3 +20,10 @@ $finProtocoloModel->setIdOrdem($id);
 $dados = [];
 $dados = $finProtocoloModel->inforLoadProtocolo();
 
+$protocolo = [];
+
+if (!empty($dados['id_protocolo'])) {
+    $finProtocoloModel->setIdProtocolo($dados['id_protocolo']);
+    $protocolo = $finProtocoloModel->retornaDadosProtocolo();
+}
+

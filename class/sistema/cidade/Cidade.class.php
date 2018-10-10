@@ -64,7 +64,7 @@ class Cidade {
     public function cadastrarCidade() {
         try {
 
-            if ($this->nm_cidade == "" || $this->id_estado == "" || $this->id_regional_saude == "" || $this->id_regional_geo == "") {
+            if (empty($this->nm_cidade && $this->id_estado)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -73,51 +73,32 @@ class Cidade {
             $pdo->beginTransaction();
             //Seta os Campos
             $cidade = new DaoSesCidade();
-//            $aux=;
-            //echo $aux;
-            $cidade->setId_estado($this->id_estado);
-            $cidade->setId_regional_saude($this->id_regional_saude);
-            $cidade->setId_regional_geo($this->id_regional_geo);
+
+            $cidade->setId_estado($this->id_estado === 0 ? NULL : $this->id_estado);
+            $cidade->setId_regional_saude($this->id_regional_saude === 0 ? NULL : $this->id_regional_saude);
+            $cidade->setId_regional_geo($this->id_regional_geo === 0 ? NULL : $this->id_regional_saude);
             $cidade->setNm_cidade($this->nm_cidade);
 
-            $busca = $cidade->buscaCidadePorNome($cidade, $pdo);
-
-            if (!$busca) {
-                //return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe uma Cidade com esse nome.");
+            $busca = $cidade->buscaCidadePorNomeAndEstado($pdo);
+            if ($busca) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
             }
 
-            $result = $cidade->insert($cidade, $pdo);
-            //echo ($this->idPais);
-            if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
+            $inseri = $cidade->insert($cidade, $pdo);
+            if (!$inseri) {
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $inseri);
             }
 
-            $cidade->setIdCidade($pdo->lastInsertId('ses_cidade_id_cidade_seq'));
-
+            $cidade->setId_cidade($pdo->lastInsertId('ses_cidade_id_cidade_seq'));
             if (Log::SalvaLogI('ses_cidade', $cidade->getId_cidade(), $pdo)) {
-                $sucesso = true;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
-                $pdo->rollBack();
-                return $retorno;
-            }
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro de Cidade Realizado com Sucesso.");
                 $pdo->commit();
-                return $retorno;
+                return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -245,40 +226,56 @@ class Cidade {
     }
 
     public function retornaTrCidades() {
-        $retorno = "";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $cidade = new DaoSesCidade();
 
-            $result = $cidade->retornaCidades($pdo);
+            $cidade->setNm_cidade($this->nm_cidade);
+            $cidade->setId_estado($this->id_estado);
 
-            if (!$result) {
-                return $retorno;
+            $filtro = array();
+            if (!empty($this->nm_cidade)) {
+                $filtro[] ="unaccent(lower(CID.nm_cidade)) ilike '".$this->nm_cidade."%'";
+            };
+            if (!empty($this->id_estado)) {
+                $filtro[] = "EST.id_estado = ".$this->id_estado;
+            };
+            if (count($filtro) > 0) {
+                $filtro = " AND " . implode(' AND ', $filtro);
+            }
+            if ($filtro == "") {
+                return false;
+            }
+
+            $busca = $cidade->buscarCidade($pdo, $filtro);
+            if (!is_array($busca)) {
+                return Metodos::retornoAjax('Erro', 'console', $busca);
             } else {
-                foreach ($result as $v) {
-                    $idCidade = $v['id_cidade'];
-                    $retorno .= "<tr>";
-                    $retorno .= "<td>" . $v['nm_cidade'] . "</td>" .
-                            "<td>" . $v['nm_estado'] . "</td>" .
-                            "<td>" . $v['nm_pais'] . "</td>"
-                            . '<td style="text-align: center;">'
-                            . '<button type="button" class="btn btn-default btn-edit btn-xs"'
-                            . ' title="Editar" value=' . $idCidade . '  nome="' . $v['nm_cidade'] . '" estado="' . $v['nm_estado'] . '" pais="' . $v['nm_pais'] . '" >
-                                <i class="fa fa-pencil-square-o fa-lg text-primary" aria-hidden="true"></i>
-                              </button> '
-                            . '<button type="button" class="btn btn-default btn-remover btn-xs" title="Remover" value="' . $idCidade . '" >
-                                <i class="fa fa-trash fa-lg text-danger" aria-hidden="true"></i>
-                              </button>'
-                            . '</td>'
-                            . "</tr>";
-                    $retorno .= "</tr>";
+                $retorno = "";
+                foreach ($busca as $cidade) {
+                    $idCidade = $cidade['id_cidade'];
+                    $retorno .= "<tr>
+                                    <td class='text-left'>" . $cidade['nm_cidade'] . "</td>
+                                    <td class='text-left'>" . $cidade['estado'] . "</td>    
+                                    <td class='text-left'>" . $cidade['pais'] . "</td>
+                                    <td class='text-left'>" . $cidade['geo'] . "</td>
+                                    <td class='text-left'>" . $cidade['sau'] . "</td>
+                                    <td class='text-center'>
+                                        <button type='button' class='btn btn-default btn-edit btn-xs' title='Editar' value='" . $idCidade . "'  nome='" . $cidade['nm_cidade'] . "'>
+                                            <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>
+                                        </button>
+                                        <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='" . $idCidade . "'>
+                                            <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+                                        </button>
+                                    </td>
+                                 </tr>";
                 }
             }
 
             return $retorno;
         } catch (Exception $ex) {
-            $retorno = "";
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
         }
     }
 
@@ -405,6 +402,24 @@ class Cidade {
             return $retorno;
         } catch (Exception $ex) {
             return $retorno;
+        }
+    }
+
+    public function carregaDadosCidade() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $cidade = new DaoSesCidade();
+            $cidade->setId_cidade($this->id_cidade);
+
+            $busca = $cidade->retornaCidade($pdo);
+            if (!$busca) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            } else {
+                return $busca;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
         }
     }
 

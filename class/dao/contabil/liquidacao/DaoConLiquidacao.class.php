@@ -198,44 +198,31 @@ class DaoConLiquidacao extends ConLiquidacao {
 
     function retornaDocumentosPorLiquidacao($pdo) {
         $this->sucesso = false;
-        $sql = "select distinct
-                    empenho.nr_empenho,
-                    liqDoc.id_liquidacao_doc,
-                    docFis.id_documento_fiscal,
-                    docFis.nr_documento_fiscal,
-                    tpDoc.nm_tipo_documento,
-                    liqDoc.id_liquidacao_doc,
-                    (
-                       trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
-                    )
-                    as competencia,
-                    to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,
-                    to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto,
-                    trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento,
-                    vl_documento as vl_doc_sem_mascara,
-                    docFis.id_documento_situacao,
-                    docSit.nm_situacao 
-                 from
-                    con_liquidacao as liq 
-                    inner join
-                       fin_empenho as empenho
-                       on empenho.id_empenho = liq.id_empenho
-                    inner join 
-                       con_liquidacao_doc as liqDoc
-                       on liqDoc.id_liquidacao = liq.id_liquidacao
-                    inner join
-                       fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
-                    inner join
-                       fin_tipo_documento as tpDoc 
-                       on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
-                    left join
-                       fin_documento_situacao as docSit 
-                       on docSit.id_documento_situacao = docFis.id_documento_situacao 
-                 where
-                    liq.id_liquidacao = :id_liquidacao
-                 order by
-                    docFis.nr_documento_fiscal";
+        $sql = "select distinct empenho.nr_empenho, liqDoc.id_liquidacao_doc, docFis.id_documento_fiscal,
+                docFis.nr_documento_fiscal, tpDoc.nm_tipo_documento, liqDoc.id_liquidacao_doc,
+                (trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
+                )as competencia, to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,    
+                to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto, 
+                trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
+                coalesce(pagamento.valorPagamento,'0.0000') as pagamento,
+                (vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')) as saldo,
+                docFis.id_documento_situacao, docSit.nm_situacao 
+
+                from con_liquidacao as liq 
+                inner join fin_empenho as empenho
+                on empenho.id_empenho = liq.id_empenho
+                inner join con_liquidacao_doc as liqDoc
+                on liqDoc.id_liquidacao = liq.id_liquidacao
+                inner join fin_documento_fiscal as docFis 
+                on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
+                inner join fin_tipo_documento as tpDoc 
+                on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
+                left join fin_documento_situacao as docSit 
+                on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                left join (select sum(vl_pagamento) as valorPagamento, id_liquidacao  from con_pagamento group by id_liquidacao) as pagamento
+                on pagamento.id_liquidacao = liq.id_liquidacao
+                where liq.id_liquidacao = :id_liquidacao
+                order by  docFis.nr_documento_fiscal";
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
@@ -307,7 +294,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.dt_liquidacao,
                     liq.vl_liquidacao,
                     liqSit.nm_liquidacao_situacao";
-        echo $sql;
+
         try {
             $result = $pdo->prepare($sql);
             $result->execute();
@@ -403,12 +390,15 @@ class DaoConLiquidacao extends ConLiquidacao {
     public function retornaLiquidacaoPorNumeroPamento(PDO $pdo) {
         try {
             $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
-                    liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao
+                    liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
+                    liquidacao.vl_liquidacao, (liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')) as saldo
                     from con_liquidacao as liquidacao
                     inner join fin_empenho as empenho
                     on empenho.id_empenho = liquidacao.id_empenho
                     inner join fin_pedido as pedido
                     on pedido.id_pedido = empenho.id_pedido
+                    left join (select sum(vl_pagamento) as vl_pagamento, id_liquidacao from con_pagamento group by id_liquidacao) as pagamento
+                    on pagamento.id_liquidacao = liquidacao.id_liquidacao
                     where liquidacao.nr_liquidacao = :numero";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":numero", $this->getNrLiquidacao(), PDO::PARAM_INT);

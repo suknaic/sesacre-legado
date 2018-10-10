@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -22,6 +22,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
     </head>
@@ -29,20 +31,25 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
     <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
+
             <?php
             //Cabeçalho do Sistema
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
             //Modal Alert
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+
             ?>
+
             <div class="boxed">
+
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
+
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">País</h1>
+                        <h1 class="page-header text-overflow">Cidade</h1>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -52,49 +59,56 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                     <div id="page-content">
                         <!-- Inicio do Formulario -->
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
+                                <div class="panel-footer text-left">
+                                    <button class="btn btn-primary btn-rounded btn-newCidade" type="button">
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Nova Cidade
+                                    </button>
+                                </div>
                                 <div class="panel">
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
                                     </div>
+
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal formVinculo">
+                                    <form class="form-horizontal formCidade">
                                         <div class="panel-body">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label" for="nmPais">Nome do Páis: <span class="text-danger">*</span></label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" placeholder="Nome do Pais" id="nmPais" class="form-control" required autofocus>
+                                                <div class="col-sm-3"></div>
+                                                <div class="col-sm-3">
+                                                    Nome da Cidade: <span class="text-danger">*</span>
+                                                    <input type="text" placeholder="Nome da Cidade" id="nmCidade" class="form-control" required autofocus>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label" for="nmSigla">Nome da Sigla: <span class="text-danger">*</span></label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" placeholder="Nome da Sigla" id="nmSigla" class="form-control" maxlength="3" >
+                                                <div class="col-sm-3">
+                                                    Estado Referente: <span class="text-danger">*</span></label>
+                                                    <select id= "idEstado" class="form-control select">
+                                                        <option value="">Selecione o Estado Referente</option>
+
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="panel-footer text-right">
+                                        <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
-                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
-                                            </button>
-                                            <button class="btn btn-success btn-rounded btn-salvar" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
+                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
                                             </button>
                                         </div>
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
+
                                 </div>
                             </div>
                         </div>
                         <!-- Fim do Formulario -->
+
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Países</h3>
+                                <h3 class="panel-title">Cidades</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -103,8 +117,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>País</th>
-                                                        <th>Sigla</th>
+                                                        <th>Cidade</th>
+                                                        <th>Estado</th>
+                                                        <th>Pais</th>
+                                                        <th>Regional Geográfica</th>
+                                                        <th>Regional Saúde</th>
                                                         <th class="text-center">Ações</th>
                                                     </tr>
                                                 </thead>
@@ -118,12 +135,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
+
+
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
+
+
+
+
+
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
@@ -132,15 +159,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
+
+
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
+
+
+
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
+        <!--MD5 [ REQUIRED ]-->
+        <script src="md5.min.js"></script>
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -152,11 +186,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>
+        <!--Select2-->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/sistema/pais/index.js"></script>
+        <script src="/pages/sistema/cidade/index.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!-- END JAVASCRIPT -->
+
     </body>
 </html>

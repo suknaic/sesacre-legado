@@ -1,6 +1,6 @@
 <!--MAIN NAVIGATION-->
 <!--===================================================-->
-<nav id="mainnav-container">
+<nav id="mainnav-container" xmlns="http://www.w3.org/1999/html">
     <div id="mainnav">
         <!--Menu-->
         <!--================================-->
@@ -59,7 +59,27 @@
 <!--                                        </li>-->
          
                                     </ul>
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="#">
+                                                Origem
+                                                <i class="arrow"></i>
+                                            </a>
+                                            <ul>
+                                                <li>
+                                                    <a href="/pages/sistema/pais/index.php">País</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/sistema/estado/index.php">Estado</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pages/sistema/cidade/index.php">Cidade</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                 </li>
+
                                 <li>
                                     <a href="/pages/rh/contrato/index.php">Contrato</a>
                                 </li>
@@ -348,7 +368,7 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="#">Empenho</a>
+                                    <a href="/pages/contabil/empenho/pesquisa_empenho/">Empenho</a>
                                 </li>
                                 <li>
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>

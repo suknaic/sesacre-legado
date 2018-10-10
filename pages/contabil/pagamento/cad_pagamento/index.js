@@ -175,7 +175,7 @@ $(document).ready(function () {
 
     $('body').on('click', '.remover-documento', function (e) {
         $(this).closest("tr").remove();
-        atualizaValorLiquidacao();
+        calculaValorPagamento();
     });
 
 
@@ -207,7 +207,7 @@ $(document).ready(function () {
                              <td class="text-center">${documento.dt_emissao}</td>
                              <td class="text-center">${documento.dt_atesto}</td>
                              <td class="text-center">${documento.vl_documento}</td>
-                             <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">${documento.saldo}</td>
                              <td class="text-center">
                             <input class="form-control valorRetPagamento" type="text" name="valorRetPagamento[]" id="valorRetPagamento[]" value="0,0000">
                             </td>
@@ -223,7 +223,6 @@ $(document).ready(function () {
                           </tr>`;
 
             $('#tabelaDocumentos tbody').append(linhaTabela);
-            atualizaValorLiquidacao();
         }
 
     });
@@ -240,26 +239,27 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
+                
                 var linha = $(this).data('objeto');
 
 
-                var vl_documento_pagamento = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento =  $("input[name=valorRetPagamento\\[\\]]").val();
 
-                var vl_documento_pagamento_saldo = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento_saldo = linha.saldo;
 
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
-                    vl_liquidacao_doc: vl_documento_pagamento,
-                    vl_liquidacao_doc_saldo: vl_documento_pagamento_saldo
+                    vl_pagamento_doc: vl_documento_pagamento,
+                    vl_pagamento_doc_saldo: vl_documento_pagamento_saldo
                 }
                 documentos.push(documento);
 
 
             });
-            
-            
+
+
             var dados = {
-                "idPedido": $("#id_pedido").val(),
+                "idLiquidacao": $("#id_liquidacao").val(),
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
@@ -267,6 +267,7 @@ $(document).ready(function () {
                 "vlPagamento": $("#vl_pagamento").val(),
                 "dtPagamento": $("#dt_pagamento").val(),
                 "obsPagamento": $("#desc_pagamento").val(),
+                "saldoLiquidacao": $("#saldoLiquidacao").val(),
                 "docsPagamento": documentos
             }
 
@@ -277,7 +278,7 @@ $(document).ready(function () {
             }
 
             if ($("#id_pedido").data('tipo-solicitacao') == 2 && documentos.length <= 0) {
-                func.modalAlert("Por favor adicione algum documento fiscal para liquidar.");
+                func.modalAlert("Por favor adicione algum documento fiscal para pagar.");
                 return false;
             }
 
@@ -337,14 +338,34 @@ $(document).ready(function () {
 
 });
 
-function atualizaValorLiquidacao() {
-    var vl_liquidacao = 0;
-    $("tr.documentoFiscal").each(function () {
-        let documento = $(this).data('objeto');
-        vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
+function calculaValorPagamento() {
+    let valoresRetirados = 0;
+    $("input[name=valorRetPagamento\\[\\]]").each(function () {
+        valoresRetirados = (parseFloat(func.tranformaStringEmValorCalculavel($(this).val())) + valoresRetirados);
+
+        if (valoresRetirados > '999999999.9999') {
+            func.modalAlert("Valor do pagamento ultrapassa o valor máximo permitido");
+            $(this).prop("disabled", true);
+            return false;
+        }
     });
 
-    $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
+    let valorPagamento = func.converteValorBrDecimal(valoresRetirados, 4);
+    $("#vl_pagamento").val(valorPagamento);
+}
+
+$("body").on("keyup", ".valorRetPagamento", function (e) {
+    calculaValorPagamento();
+});
+
+function atualizaValorPagamento() {
+    var vl_pagamento = 0;
+    $("tr.documentoFiscal").each(function () {
+        let documento = $(this).data('objeto');
+        vl_pagamento = func.converteValorIngFloat(documento.vl_documento) + vl_pagamento;
+    });
+
+    $("#vl_pagamento").val(valorComMascara(vl_pagamento));
 }
 
 function valorComMascara(valor) {
@@ -360,19 +381,19 @@ function habilitaDocumentosFiscais() {
 
     if (tipo_solicitacao != 2) {
         $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled", false);
+        $("#vl_pagamento").prop("disabled", false);
     } else {
         $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled", true);
+        $("#vl_pagamento").prop("disabled", true);
         $("#selectDocumentoFiscal").focus();
     }
 }
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
 function limpaCampos() {
-    $("#nr_liquidacao").val("");
-    $("#dt_liquidacao").val("");
-    $("#vl_liquidacao").val("");
-    $("#desc_liquidacao").val("");
+    $("#nr_pagamento").val("");
+    $("#dt_pagamento").val("");
+    $("#vl_pagamento").val("");
+    $("#desc_pagamento").val("");
     $("#id_remetente").val("0").trigger('change');
 }

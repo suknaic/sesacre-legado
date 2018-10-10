@@ -1080,7 +1080,6 @@ class Pedido {
         }
     }
     
-    
     public function retornaTotaisDoPedido($pdo) {
         try {
             if (empty($pdo)) {
@@ -1094,7 +1093,27 @@ class Pedido {
                 return $daoFinPedido->getMsgRetorno();
             }
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            $this->msg_erros = $ex->getMessage();
+            return false;
+        }
+    }
+    
+    public function retornaStatusOficialPedido(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->retornaStatusPedido($pdo);
+            if ($daoFinPedido->sucesso()) {
+                return $daoFinPedido->getMsgRetorno()['status_oficial'];
+            }
+            return null;
+        } catch (Exception $exc) {
+            $this->msg_erros = $ex->getMessage();
+            return null;
         }
     }
 

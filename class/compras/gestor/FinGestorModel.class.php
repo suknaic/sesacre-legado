@@ -237,11 +237,13 @@ class FinGestorModel {
                 $classPrincipal = "gestoresCampos";
                 $id = "gestores";
                 $nomeCampo = 'Gestor Titular:';
+                $zera = "zeraGestor";
             } else {
                 $class = "selectGestoresSub";
                 $classPrincipal = "gestoresCamposSub";
                 $id = "gestoresSub";
                 $nomeCampo = 'Gestor Substituto:';
+                $zera = "zeraGestorSubs";
             }
             $contGestor = 0;
             if ($daoFinGestor->sucesso()) {
@@ -258,7 +260,7 @@ class FinGestorModel {
                                                         <option value="">Selecione uma Pessoa</option>';
                     foreach ($pessoaFisica as $v) {
                         if ($v['id_pessoa'] == $gestor['id_pessoa']) {
-                            $retorno .= "               <option selected value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
+                            $retorno .= "               <option value = '" . $v['id_pessoa'] . "' selected='selected'>" . $v['nm_pessoa'] . "</option>";
                         } else {
                             $retorno .= "               <option value = '" . $v['id_pessoa'] . "'>" . $v['nm_pessoa'] . "</option>";
                         }
@@ -267,7 +269,12 @@ class FinGestorModel {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><br>';
+                                    </div><br>
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <a href="#" class="'. $zera .' btn btn-danger">X</a>
+                                        </div>
+                                    </div>';
                         if ($contGestor > 1) {
                             $retorno .= '<div class="col-sm-3">
                                             <div class="panel-body">
@@ -288,13 +295,14 @@ class FinGestorModel {
                                                 <select class="form-control select '. $class.'" name="'.$id.'[]" id="'.$id.'" required="true">
                                                     <option value="">Selecione uma Pessoa</option>';
                     foreach ($pessoaFisica as $pessoa) {
-                        $retorno .= '<option value = "' . $pessoa['id_pessoa'] . '">' . $pessoa["nm_pessoa"] . '</option>';
+                        $retorno .= '               <option value = "' . $pessoa['id_pessoa'] . '">' . $pessoa["nm_pessoa"] . '</option>';
                     }
                 $retorno .= '                   </select>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
+                                <div class="col-sm-3"><div class="panel-body"><a href="#" class="'. $zera .' btn btn-danger">X</a></div></div>
                             </div>';
             }
             return $retorno;
