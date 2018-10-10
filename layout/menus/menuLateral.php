@@ -368,7 +368,7 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="#">Empenho</a>
+                                    <a href="/pages/contabil/empenho/pesquisa_empenho/">Empenho</a>
                                 </li>
                                 <li>
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>

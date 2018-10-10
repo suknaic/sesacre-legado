@@ -455,7 +455,7 @@ class FinEmpenhoModel {
                 return Metodos::retornoAjax("ok", "html", "Empenho cadastrado com sucesso");
             }
             $pdo->rollBack();
-            return Metodos::retornoAjax("Erro7", "alert", STR_ERROR . '1');
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR );
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
