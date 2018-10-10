@@ -542,4 +542,64 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
 
+    public function retornaEmpenhos(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "select
+                    emp.nr_empenho,
+                    ped.nr_pedido,
+                    coalesce(pf.nr_cpf, pj.nr_cnpj, '') as cpf_cnpj,
+                    coalesce(upper(pf.nm_civil), upper(pj.nm_fantasia),'') as nome_razao,
+                    tpEmp.nm_tipo_empenho,
+                    extract(year from dt_empenho_safira) as competencia,
+                    to_char(dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
+                    trim(to_char(vl_empenho,'999G999G999G990D9999')) as vl_empenho,
+                    case sit_empenho 
+                         when '1' then 'Cadastrado'
+                         when '2' then 'Liquidado Parcial'
+                         when '3' then 'Liquidado Total'
+                         when '4' then 'Pago Parcial'
+                         when '5' then 'Pago Total'
+                         when '6' then 'Cancelado'
+                    end as situacao
+                 from
+                    fin_empenho emp 
+                    inner join
+                       fin_tipo_empenho tpEmp 
+                       on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                    inner join
+                       fin_pedido ped 
+                       on ped.id_pedido = emp.id_pedido 
+                    left join
+                       fin_fornecedor fornec 
+                       on fornec.id_fornecedor = ped.id_fornecedor 
+                    left join
+                       fin_contrato cnt 
+                       on cnt.id_contrato = fornec.id_contrato 
+                    left join
+                       pla_tipo_gasto tpGasto 
+                       on tpGasto.id_tipo_gasto = ped.id_tipo_gasto 
+                    left join
+                       ses_pessoa_fisica pf 
+                       on pf.id_pessoa = fornec.id_pessoa 
+                    left join
+                       ses_pessoa_juridica pj 
+                       on pj.id_pessoa = fornec.id_pessoa
+                 order by dt_empenho_safira desc,nr_empenho, nr_pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado.';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 }

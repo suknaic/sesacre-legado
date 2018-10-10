@@ -151,7 +151,7 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
-                                                        <?php echo $selectSitDoc; ?>
+                                                        <?php echo $finEmpenhoPesquisa->optionsSituacao(); ?>
                                                     </select>
                                                 </div>
                                             </div>
