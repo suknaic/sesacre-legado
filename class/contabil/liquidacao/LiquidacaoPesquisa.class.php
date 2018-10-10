@@ -7,14 +7,12 @@ class LiquidacaoPesquisa {
     private $nrLiquidacao = null;
     private $anoLiquidacao = null;
     private $contratado = null;
-//    private $nrProtocolo = null;
     private $nrContrato = null;
     private $nrPedido = null;
     private $nrEmpenho = null;
     private $nrDocumentoFiscal = null;
     private $tipoGasto = null;
     private $situacao = null;
-    
     private $sitLiquidado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
@@ -48,10 +46,6 @@ class LiquidacaoPesquisa {
     function getContratado() {
         return $this->contratado;
     }
-
-//    function getNrProtocolo() {
-//        return $this->nrProtocolo;
-//    }
 
     function getNrContrato() {
         return $this->nrContrato;
@@ -91,11 +85,6 @@ class LiquidacaoPesquisa {
         $this->contratado = $contratado;
         return $this;
     }
-
-//    function setNrProtocolo($nrProtocolo) {
-//        $this->nrProtocolo = $nrProtocolo;
-//        return $this;
-//    }
 
     function setNrContrato($nrContrato) {
         $this->nrContrato = $nrContrato;
@@ -154,10 +143,7 @@ class LiquidacaoPesquisa {
             $pdo = $conexao->connect();
             
             $daoConLiquidacao = new DaoConLiquidacao();
-//            echo '<pre>';
-//            print_r($this->montaFiltroSql());
-//            echo '</pre>';
-//            return;
+
             $daoConLiquidacao->retornaLiquidacoes($pdo, $this->montaFiltroSql());
             
             if ($daoConLiquidacao->Sucesso()) {
@@ -220,9 +206,7 @@ class LiquidacaoPesquisa {
             $filtro .= (empty($filtro)) ? " where tpGasto.id_tipo_gasto = ".$this->getTipoGasto() : " and tpGasto.id_tipo_gasto = ".$this->getTipoGasto();
         }
         
-//        if ($this->getNrProtocolo()) {
-//        }
-        
+
         if ($this->getNrContrato()) {
             $filtro .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " : " and contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " ; 
         }

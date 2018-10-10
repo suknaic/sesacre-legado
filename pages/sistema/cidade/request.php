@@ -98,7 +98,11 @@ switch ($_REQUEST['acao']) {
 
     case 'SelectEstadoOption':
         try {
-        
+
+            if(!$session->verificaPermissao(PERFIL_TI)){
+                header("Location: /pages/index.php");
+            }
+
             $estado = new Estado();
             echo "<option value = '0'>Selecione um Estado</option>";
             echo $estado->retornaOptionEstado();
@@ -111,20 +115,26 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-//    case 'SelectRegionalSaudeOption':
-//        try {
-//
-////            $estado = new R;
-//            echo "<option value = '0'>Selecione um Estado</option>";
-////            echo $estado->retornaOptionEstado();
-//            return;
-//
-//            break;
-//        } catch (Exception $e) {
-//            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-//            return;
-//            break;
-//        }
+    case 'carregaDadosCidade':
+        try {
+
+            if(!$session->verificaPermissao(PERFIL_TI)){
+                header("Location: /pages/index.php");
+            }
+
+            $dados = filter_input(INPUT_GET, 'idCidade', FILTER_DEFAULT);
+
+            $cidade = new Cidade();
+            $cidade->setId_cidade($dados['idCidade']);
+
+            echo $cidade->carregaDadosCidade();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }
 
 

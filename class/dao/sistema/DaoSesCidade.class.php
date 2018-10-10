@@ -74,7 +74,7 @@ class DaoSesCidade extends SesCidade {
                 left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
                 left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
                 left join ses_pais p on e.id_pais=p.id_pais
-                where id_cidade = :idCidade
+                where c.id_cidade = :idCidade
                 order by rg.nm_regional_geo, e.nm_estado, c.nm_cidade";
         try {
             $sth = $pdo->prepare($sql);

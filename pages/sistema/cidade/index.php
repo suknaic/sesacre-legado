@@ -173,7 +173,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
+        <!--MD5 [ REQUIRED ]-->
+        <script src="md5.min.js"></script>
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->

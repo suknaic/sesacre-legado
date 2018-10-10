@@ -239,10 +239,11 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
+                
                 var linha = $(this).data('objeto');
 
 
-                var vl_documento_pagamento = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento =  $("input[name=valorRetPagamento\\[\\]]").val();
 
                 var vl_documento_pagamento_saldo = linha.saldo;
 
