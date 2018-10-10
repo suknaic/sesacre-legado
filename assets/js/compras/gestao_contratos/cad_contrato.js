@@ -553,9 +553,9 @@ $(document).ready(function () {
             }
 
             var central = [];
-            $("select[name=central\\[\\]]").each(function () {
-                central.push($(this).val());
-            });
+            // $("select[name=central\\[\\]]").each(function () {
+            //     central.push($(this).val());
+            // });
             $("select[name=central\\[\\]]").each(function () {
                 if ($(this).val() == 0 || $(this).val() == '') {
                     salva = false;
@@ -753,7 +753,7 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    //console.log(response);
+                    // console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

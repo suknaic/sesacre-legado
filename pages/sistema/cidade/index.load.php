@@ -9,7 +9,7 @@ $vinc = new Estado();
 if(!$session->verificaPermissao(PERFIL_TI)){
     header("Location: /pages/index.php"); 
 } else {
-    $idCidade = $_REQUEST['key'] == Null ? Null: base64_decode($_REQUEST['key']);
+    $idCidade = $_REQUEST['key'] == Null ? Null: ord($_REQUEST['key']);
 }
 
 ?>

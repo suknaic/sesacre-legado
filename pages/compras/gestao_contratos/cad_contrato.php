@@ -183,7 +183,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                             Prazo de entrega:<span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="prazo_entrega" id="prazo_entrega" required="true" >
+                                                <input class="form-control" type="number" min="0" name="prazo_entrega" id="prazo_entrega" required="true" >
                                             </div>
                                         </div>
                                     </div>

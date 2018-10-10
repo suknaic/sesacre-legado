@@ -106,21 +106,21 @@ class DaoFinContrato extends FinContratoTb {
             try {
                 $sql = "INSERT INTO fin_contrato (nr_contrato,nr_prazo_entrega,id_processo,id_pessoa, "
                         . "ds_objeto,fl_servico_continuado,dt_ini_vigencia_contrato,dt_fim_vigencia_contrato,dt_assinatura, "
-                        . "dt_publicacao,ds_obs_contrato, tp_contrato, id_contrato_alt, id_tipo_gasto) VALUES (:numero,:prazo,:processo,:idPessoa,:ds_objeto,:servico, "
-                        . ":dt_ini,:dt_fim,:dt_assinatura,:dt_publicacao,:obs,:tp_contrato, :idContratoAlt, :tipoDeGasto)";
+                        . "dt_publicacao,ds_obs_contrato, tp_contrato, id_contrato_alt, id_tipo_gasto) VALUES (:numero,:prazo,:processo,:idPessoa,:ds_obj,:servico, "
+                        . ":dt_ini,:dt_fim,:dt_ass,:dt_pub,:obs,:tp_cont, :idContratoAlt, :tipoDeGasto)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":prazo", $this->getNrPrazoEntrega(), PDO::PARAM_INT);
                 $stmt->bindValue(":processo", $this->getIdProcesso(), PDO::PARAM_INT);
                 $stmt->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
-                $stmt->bindValue(":ds_objeto", $this->getDsObjeto(), PDO::PARAM_STR);
+                $stmt->bindValue(":ds_obj", $this->getDsObjeto(), PDO::PARAM_STR);
                 $stmt->bindValue(":servico", $this->getFlServicoContinuado(), PDO::PARAM_INT);
                 $stmt->bindValue(":dt_ini", $this->getDtIniVigenciaContrato(), PDO::PARAM_STR);
                 $stmt->bindValue(":dt_fim", $this->getDtFimVigenciaContrato(), PDO::PARAM_STR);
-                $stmt->bindValue(":dt_assinatura", $this->getDtAssinatura(), PDO::PARAM_STR);
-                $stmt->bindValue(":dt_publicacao", $this->getDtPublicacao(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_ass", $this->getDtAssinatura(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_pub", $this->getDtPublicacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":obs", $this->getDsObsContrato(), PDO::PARAM_STR);
-                $stmt->bindValue(":tp_contrato", $this->getTpContrato(), PDO::PARAM_INT);
+                $stmt->bindValue(":tp_cont", $this->getTpContrato(), PDO::PARAM_INT);
                 $stmt->bindValue(":idContratoAlt", $this->getIdContratoAlt(), PDO::PARAM_INT);
                 $stmt->bindValue(":tipoDeGasto", $this->getIdTipoGasto(), PDO::PARAM_INT);
                 $stmt->execute();
