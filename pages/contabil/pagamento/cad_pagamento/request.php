@@ -7,9 +7,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/Liquidacao.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoDoc.class.php";
 
 $session = new Session('ajax');
 
@@ -93,7 +94,7 @@ switch ($_REQUEST['acao']) {
             $liquidacao = new Liquidacao();
             $liquidacao->setIdLiquidacao($dados['id_liquidacao']);
             $liquidacao->setIdEmpenho($dados['id_empenho']);
-            echo $liquidacao->retornaOptionsDocsEmpenho();
+            echo $liquidacao->retornaOptionsDocsPagamento();
             return;
             break;
         } catch (Error $e) {
@@ -119,19 +120,21 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarPagamento':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-       
+         
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
             
             $pagamento = new ConPagamento();
-            $pagamento->setId_liquidacao($dados["idLiquidacao"]);
-            $pagamento->setId_lotacao($dados["idLotacao"]);
-            $pagamento->setId_doc_tipo_lotacao($dados["idDocTipoLotacao"]);
-            $pagamento->setNr_pagamento($dados["nrPagamento"]);
-            $pagamento->setDt_pagamento($dados["dtPagamento"]);
-            $pagamento->setVl_pagamento($dados["vlPagamento"]);
-            $pagamento->setDs_pagamento($dados["obsPagamento"]);
+            $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
+            $pagamento->setIdLotacao($dados["idLotacao"]);
+            $pagamento->setIdDocTipoLotacao($dados["idDocTipoLotacao"]);
+            $pagamento->setNrPagamento($dados["nrPagamento"]);
+            $pagamento->setDtPagamento($dados["dtPagamento"]);
+            $pagamento->setVlPagamento($dados["vlPagamento"]);
+            $pagamento->setVlPagamentoSaldo($dados["saldoLiquidacao"]);
+            $pagamento->setDsPagamento($dados["obsPagamento"]);
+            $pagamento->setDocsPagamento($dados["docsPagamento"]);
             echo $pagamento->salvaPagamento();
             return;
             break;

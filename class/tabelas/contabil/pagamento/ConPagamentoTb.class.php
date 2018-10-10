@@ -11,95 +11,133 @@ class ConPagamentoTb {
     private $nr_pagamento = null;
     private $dt_pagamento = null;
     private $vl_pagamento = null;
+    private $vl_pagamento_saldo = null;
     private $ds_pagamento = null;
     private $st_ativo = null;
+    private $docs_pagamento = null;
 
-    function getId_pagamento() {
+    public function getIdPagamento() {
         return $this->id_pagamento;
     }
 
-    function getId_pagamento_situacao() {
+    public function setIdPagamento($id_pagamento) {
+        $this->id_pagamento = $id_pagamento;
+
+        return $this;
+    }
+
+    public function getIdPagamentoSituacao() {
         return $this->id_pagamento_situacao;
     }
 
-    function getId_pagamento_status() {
+    public function setIdPagamentoSituacao($id_pagamento_situacao) {
+        $this->id_pagamento_situacao = $id_pagamento_situacao;
+
+        return $this;
+    }
+
+    public function getIdPagamentoStatus() {
         return $this->id_pagamento_status;
     }
 
-    function getId_liquidacao() {
+    public function setIdPagamentoStatus($id_pagamento_status) {
+        $this->id_pagamento_status = $id_pagamento_status;
+
+        return $this;
+    }
+
+    public function getIdLiquidacao() {
         return $this->id_liquidacao;
     }
 
-    function getId_lotacao() {
+    public function setIdLiquidacao($id_liquidacao) {
+        $this->id_liquidacao = $id_liquidacao;
+
+        return $this;
+    }
+
+    public function getIdLotacao() {
         return $this->id_lotacao;
     }
 
-    function getId_doc_tipo_lotacao() {
+    public function setIdLotacao($id_lotacao) {
+        $this->id_lotacao = $id_lotacao;
+
+        return $this;
+    }
+
+    public function getIdDocTipoLotacao() {
         return $this->id_doc_tipo_lotacao;
     }
 
-    function getNr_pagamento() {
+    public function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+
+        return $this;
+    }
+
+    public function getNrPagamento() {
         return $this->nr_pagamento;
     }
 
-    function getDt_pagamento() {
+    public function setNrPagamento($nr_pagamento) {
+        $this->nr_pagamento = $nr_pagamento;
+
+        return $this;
+    }
+
+    public function getDtPagamento() {
         return $this->dt_pagamento;
     }
 
-    function getVl_pagamento() {
+    public function setDtPagamento($dt_pagamento) {
+        $this->dt_pagamento = $dt_pagamento;
+
+        return $this;
+    }
+
+    public function getVlPagamento() {
         return $this->vl_pagamento;
     }
 
-    function getDs_pagamento() {
+    public function setVlPagamento($vl_pagamento) {
+        $this->vl_pagamento = $vl_pagamento;
+
+        return $this;
+    }
+
+    public function getVlPagamentoSaldo() {
+        return $this->vl_pagamento_saldo;
+    }
+
+    public function setVlPagamentoSaldo($vl_pagamento_saldo) {
+        $this->vl_pagamento_saldo = $vl_pagamento_saldo;
+
+        return $this;
+    }
+
+    public function getDsPagamento() {
         return $this->ds_pagamento;
     }
 
-    function getSt_ativo() {
+    public function setDsPagamento($ds_pagamento) {
+        $this->ds_pagamento = $ds_pagamento;
+
+        return $this;
+    }
+
+    public function getStAtivo() {
         return $this->st_ativo;
     }
 
-    function setId_pagamento($id_pagamento) {
-        $this->id_pagamento = $id_pagamento;
-    }
-
-    function setId_pagamento_situacao($id_pagamento_situacao) {
-        $this->id_pagamento_situacao = $id_pagamento_situacao;
-    }
-
-    function setId_pagamento_status($id_pagamento_status) {
-        $this->id_pagamento_status = $id_pagamento_status;
-    }
-
-    function setId_liquidacao($id_liquidacao) {
-        $this->id_liquidacao = $id_liquidacao;
-    }
-
-    function setId_lotacao($id_lotacao) {
-        $this->id_lotacao = $id_lotacao;
-    }
-
-    function setId_doc_tipo_lotacao($id_doc_tipo_lotacao) {
-        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
-    }
-
-    function setNr_pagamento($nr_pagamento) {
-        $this->nr_pagamento = $nr_pagamento;
-    }
-
-    function setDt_pagamento($dt_pagamento) {
-        $this->dt_pagamento = $dt_pagamento;
-    }
-
-    function setVl_pagamento($vl_pagamento) {
-        $this->vl_pagamento = $vl_pagamento;
-    }
-
-    function setDs_pagamento($ds_pagamento) {
-        $this->ds_pagamento = $ds_pagamento;
-    }
-
-    function setSt_ativo($st_ativo) {
+    public function setStAtivo($st_ativo) {
         $this->st_ativo = $st_ativo;
+
+        return $this;
+    }
+
+    public function getDocsPagamento() {
+        return $this->docs_pagamento;
     }
 
 }
