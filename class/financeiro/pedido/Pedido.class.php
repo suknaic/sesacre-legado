@@ -220,7 +220,7 @@ class Pedido {
             '20' => 'Aguardando Finalizar Entrega',
             '21' => 'Aguardando Liquidação',
             '22' => 'Aguardando Pagamento',
-            '23' => 'Tramitação Finalizada',
+            '23' => 'Finalizado',
             '24' => 'Aguardando Finalizar Ordenado',
             '25' => 'Aguardando Finalizar Liquidação',
             '26' => 'Aguardando Finalizar Pagamento',
