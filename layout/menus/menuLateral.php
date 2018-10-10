@@ -73,7 +73,7 @@
                                                     <a href="/pages/sistema/estado/index.php">Estado</a>
                                                 </li>
                                                 <li>
-                                                    <a href="">Cidade</a>
+                                                    <a href="/pages/sistema/cidade/index.php">Cidade</a>
                                                 </li>
                                             </ul>
                                         </li>

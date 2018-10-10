@@ -140,12 +140,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                         </div>
 
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
-                            <div class="panel">
+                            <div class="panel" id="dados_protocolo">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Detalhe do protocolo</h3>
+                                    <h3 class="panel-title">Detalhes do protocolo</h3>
                                 </div>
 
                                 <div class="panel-body">
+                                    <input type="hidden" id="id_protocolo" value="<?php echo $dados['id_protocolo']?>" data-objeto='<?php echo json_encode($protocolo,JSON_HEX_APOS) ?? ""; ?>' />
                                     <div class="row">
                                         <div class="col-md-3">
 
@@ -155,7 +156,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-file-text-o inputPFa"></p>
                                                 </span>
-                                                <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" required="true"  value="<?php echo $dados['nm_representante']; ?>"/>
+                                                <input class="form-control" type="text" name="nomeRepresentante" id="nomeRepresentante" value='<?php echo $protocolo['nm_representante'] ?? ""; ?>' required="true" />
                                             </div>
 
                                         </div>
@@ -166,7 +167,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                 </span>
-                                                <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" value="<?php echo $dados['nr_rg_cpf']; ?>" />
+                                                <input class="form-control" type="text" name="rgCpf" id="rgCpf" required="true" value='<?php echo $protocolo['nr_rg_cpf'] ?? ""; ?>' />
                                             </div>
 
                                         </div>
@@ -175,7 +176,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                             Recebida em (Data) : <span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" value="<?php echo $dados['dh_recebimento']; ?>" />
+                                                <input class="form-control" type="text" name="dataRecebimento" id="dataRecebimento" required="true" value='<?php echo $protocolo['dh_recebimento_sistema'] ?? ""; ?>'  />
                                             </div>
 
                                         </div>
@@ -184,7 +185,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                             Email :
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-envelope-o" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control data" type="text" name="email" id="email" value="<?php echo $dados['nm_email_representante']; ?>" />
+                                                <input class="form-control data" type="text" name="email" id="email" value='<?php echo $protocolo['nm_email_representante'] ?? ""; ?>' />
                                             </div>
 
                                         </div>
@@ -193,25 +194,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/index.
                                     <div class="row">
                                         <div class="col-sm-12">
                                             Anotações:
-                                            <textarea class="form-control" rows="4" id="obsProtocolo"><?php echo $dados['ds_protocolo']; ?></textarea>
+                                            <textarea class="form-control" rows="4" id="obsProtocolo"><?php echo $protocolo['ds_protocolo'] ?? ""; ?></textarea>
                                         </div>
                                     </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-sm-5"></div>
-                                        <div class="col-sm-2">
-                                            <?php if (empty($dados['id_protocolo'])) { ?>
-                                                <button class="btn btn-success btn-salvar btn-rounded btn-block" type="button">
-                                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar
-                                                </button>
-                                            <?php } else { ?>
-                                                <!--                                                    <button class="btn btn-info btn-alterar btn-rounded btn-block" type="button">
-                                                                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i>Salvar Edição
-                                                                                                    </button>-->
-                                            <?php } ?>
-                                        </div>
-                                        <div class="col-sm-5"></div>
-                                    </div>
+                                </div>
+                                <div class="panel-footer text-center">
+                                    <?php if (empty($dados['id_protocolo'])) { ?>
+                                        <button class="btn btn-success btn-salvar btn-rounded" type="button">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                        </button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-default btn-primary btn-rounded btn-alterar" style="display: none;">
+                                            <i class="fa fa-edit" aria-hidden="true"></i> Editar
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-success btn-rounded btn-editar" style="display: none;">
+                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-secondary btn-rounded btn-cancelar" style="display: none;">
+                                            <i class="fa fa-ban" aria-hidden="true"></i> Cancelar Edição
+                                        </button>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </form>

@@ -294,6 +294,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.dt_liquidacao,
                     liq.vl_liquidacao,
                     liqSit.nm_liquidacao_situacao";
+
         try {
             $result = $pdo->prepare($sql);
             $result->execute();

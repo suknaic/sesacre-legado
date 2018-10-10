@@ -307,9 +307,9 @@ class Estado {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    if (empty($est->getIdPais())) {
+                    if (!empty($est->getIdPais())) {
                         if ($idEstado == $v['id_estado']) {
-                            $retorno .= "<option selected value = '" . $v['id_estado'] . "'>" . $v['nm_estado'] . " - " . $v['nm_pais'] . "</option>";
+                            $retorno .= "<option value = '" . $v['id_estado'] . "' selected>" . $v['nm_estado'] . " - " . $v['nm_pais'] . "</option>";
                         } else {
                             $retorno .= "<option value = '" . $v['id_estado'] . "'>" . $v['nm_estado'] . " - " . $v['nm_pais'] . "</option>";
                         }

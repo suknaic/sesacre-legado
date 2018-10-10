@@ -145,4 +145,132 @@ $(document).ready(function () {
             });
         }
     });
+    
+    $("body").on("click", ".btn-editar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            //validação de campos js
+            if ($("#nomeRepresentante").val() == "") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            if ($("#rgCpf").val() == "") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            if ($("#dataRecebida").val() == "") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            var protocolo = {
+                "idProtocolo": $("#id_protocolo").val(),
+                "nomeRepresentante": $("#nomeRepresentante").val(),
+                "rgCpf": $("#rgCpf").val(),
+                "dataRecebimento": $("#dataRecebimento").val(),
+                "email": $("#email").val(),
+                "obsProtocolo": $("#obsProtocolo").val()
+            }
+            $.ajax({
+                "method": "POST",
+                "url": "/model/financeiro/ordem/entrega/request.php",
+                "dataType": 'html',
+                "data": {
+                    "acao": "atualizaProtocolo",
+                    "protocolo": protocolo
+                },
+                "success": function (response) {
+                    console.log(response);
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            location.reload();
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+        }
+    });
+    
+    habilitaEdicaoProtocolo();
+    
+    function habilitaEdicaoProtocolo(){
+        var id_protocolo = $("#id_protocolo").val();
+        
+        if (id_protocolo > 0) {        
+            $("#dados_protocolo input").prop("disabled", true);
+            $("textarea").prop("disabled", true);
+            $(".btn-alterar").show();
+        } else {
+            $("#dados_protocolo input").prop("disabled", false);
+            $("textarea").prop("disabled", false);
+        }
+    }
+    
+    $('body').on('click','.btn-alterar', function(e){
+        $("input").prop("disabled", false);
+        $("textarea").prop("disabled", false);
+        $(".btn-editar").show();
+        $(".btn-cancelar").show();
+        $(".btn-alterar").hide();
+    });
+    
+    $('body').on('click','.btn-cancelar', function(e){
+        
+        var protocolo_original = $("#id_protocolo").data('objeto');
+        
+        //retorna o estado anterior do protocolo
+        $("#nomeRepresentante").val(protocolo_original.nm_representante);
+        $("#rgCpf").val(protocolo_original.nr_rg_cpf);
+        $("#dataRecebimento").val(protocolo_original.dh_recebimento_sistema);
+        $("#email").val(protocolo_original.nm_email_representante);
+        $("#obsProtocolo").val(protocolo_original.ds_protocolo);
+
+        $(".btn-editar").hide();
+        $(".btn-cancelar").hide();
+        
+        habilitaEdicaoProtocolo();
+        
+    });
 });
