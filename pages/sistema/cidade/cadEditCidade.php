@@ -63,7 +63,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formCidade">
-                                        <input type="hidden" id="idCidade" value="<?php echo $idCidade; ?>">
+                                        <input type="hidden" id="id_cidade" value="<?php echo $idCidade ?>">
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
@@ -94,6 +94,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                             </div>
                                         </div>
                                         <div class="panel-footer text-center">
+                                            <button type="button" class="btn btn-primary btn-default btn-rounded btn-cancelar">
+                                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Cancelar
+                                            </button>
                                             <button type="button" class="btn btn-primary btn-default btn-rounded btn-voltar">
                                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Voltar
                                             </button>
@@ -101,7 +104,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                                 <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Editar
                                             </button>
                                             <button class="btn btn-success btn-rounded btn-salvar" type="button">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar

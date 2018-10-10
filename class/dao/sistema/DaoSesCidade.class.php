@@ -85,7 +85,6 @@ class DaoSesCidade extends SesCidade {
             } else {
                 return $retorno;
             }
-            return $retorno;
         } catch (PDOException $e) {
             echo $e->getMessage();
             return $retorno;
@@ -226,6 +225,56 @@ class DaoSesCidade extends SesCidade {
                                                         LEFT JOIN ses_regional_saude SAU ON SAU.id_regional_saude = CID.id_regional_saude
                                                         INNER JOIN ses_pais PAI ON PAI.id_pais = EST.id_pais 
                                                             WHERE CID.st_ativo = '1'".$filtro);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function carregaDadosCidade($pdo) {
+        try {
+            $sql = $pdo->prepare("SELECT CID.id_cidade, CID.nm_cidade as NOME, EST.id_estado as ESTADO, GEO.id_regional_geo as GEOGRAFICO, SAU.id_regional_saude as SAUDE
+                                        FROM ses_cidade CID
+                                               INNER JOIN ses_estado EST ON EST.id_estado = CID.id_estado
+                                               LEFT JOIN ses_regional_geo GEO ON GEO.id_regional_geo = CID.id_regional_geo
+                                               LEFT JOIN ses_regional_saude SAU ON SAU.id_regional_saude = CID.id_regional_saude
+                                               INNER JOIN ses_pais PAI ON PAI.id_pais = EST.id_pais
+                                                    WHERE CID.st_ativo = '1'
+                                                          AND CID.id_cidade = :idCidade");
+            $sql->bindValue(':idCidade', $this->getId_cidade(), PDO::PARAM_INT);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function buscaRegiosnaiSaude($pdo) {
+        try {
+            $sql = $pdo->prepare("SELECT id_regional_saude, nm_regional_saude 
+                                        FROM ses_regional_saude 
+                                              WHERE st_ativo = :stAtivo");
+            $sql->bindValue(':stAtivo', '1', PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function buscaRegiosnaisGeo($pdo) {
+        try {
+            $sql = $pdo->prepare("SELECT id_regional_geo, nm_regional_geo 
+                                        FROM ses_regional_geo 
+                                              WHERE st_ativo = :stAtivo");
+            $sql->bindValue(':stAtivo', '1', PDO::PARAM_STR);
             $sql->execute();
             if ($sql->rowCount() > 0) {
                 return $sql->fetchAll(PDO::FETCH_ASSOC);
