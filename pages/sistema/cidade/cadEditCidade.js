@@ -19,6 +19,22 @@ $(document).ready(function () {
     });
     //********************************************************
 
+    //*********** Carregas dados da cidade ***********
+    console.log($('idCidade').val());
+    // $.ajax({
+    //     "url": "/pages/sistema/cidade/request.php",
+    //     "dataType": 'html',
+    //     "data": {
+    //         acao: "carregaDadosCidade",
+    //         "dados": $('idCidade').val()
+    //     },
+    //
+    //     "success": function (response) {
+    //         console.log(response);
+    //     }
+    // });
+    // ****************************************************************
+
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -95,7 +111,6 @@ $(document).ready(function () {
             $this.prop("disabled", false);
         }
     });
-
 
     $('body').on('click', '.btn-editar', function (e) {
         e.stopPropagation();

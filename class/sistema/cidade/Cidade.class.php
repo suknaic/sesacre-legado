@@ -405,6 +405,24 @@ class Cidade {
         }
     }
 
+    public function carregaDadosCidade() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $cidade = new DaoSesCidade();
+            $cidade->setId_cidade($this->id_cidade);
+
+            $busca = $cidade->retornaCidade($pdo);
+            if (!$busca) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            } else {
+                return $busca;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
+        }
+    }
+
 }
 
 ?>

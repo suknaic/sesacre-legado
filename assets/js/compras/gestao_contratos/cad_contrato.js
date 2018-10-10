@@ -556,24 +556,24 @@ $(document).ready(function () {
             $("select[name=central\\[\\]]").each(function () {
                 central.push($(this).val());
             });
-            // $("select[name=central\\[\\]]").each(function () {
-            //     if ($(this).val() == 0 || $(this).val() == '') {
-            //         salva = false;
-            //     } else {
-            //         salva = true;
-            //     }
-            // });
-            // if (salva === false) {
-            //     e.preventDefault();
-            //     $('.selectCentrais').focus();
-            //     func.modalAlert('Selecione Uma Central.');
-            //     $this.prop("disabled", false);
-            //     return;
-            // } else {
-            //     $("select[name=central\\[\\]]").each(function () {
-            //         central.push($(this).val());
-            //     });
-            // }
+            $("select[name=central\\[\\]]").each(function () {
+                if ($(this).val() == 0 || $(this).val() == '') {
+                    salva = false;
+                } else {
+                    salva = true;
+                }
+            });
+            if (salva === false) {
+                e.preventDefault();
+                $('.selectCentrais').focus();
+                func.modalAlert('Selecione Uma Central.');
+                $this.prop("disabled", false);
+                return;
+            } else {
+                $("select[name=central\\[\\]]").each(function () {
+                    central.push($(this).val());
+                });
+            }
 
             var gestores = [];
             $("select[name=gestores\\[\\]]").each(function () {

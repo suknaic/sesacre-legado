@@ -38,11 +38,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
             ?>
 
             <div class="boxed">
-
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
@@ -65,6 +63,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formCidade">
+                                        <input type="hidden" id="idCidade" value="<?php echo $idCidade; ?>">
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <div class="col-sm-3">
@@ -141,7 +140,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
