@@ -309,6 +309,36 @@ class Liquidacao {
         }
     }
 
+    public function retornaOptionsDocsPagamento() {
+        try {
+            $opcoes = "<option value=0>Selecione um Documento Fiscal</option>";
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoConLiquidacao = new DaoConLiquidacao();
+            $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho());
+            
+            if ($this->getIdLiquidacao()) {
+                $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
+            } else {
+                $daoConLiquidacao->setIdLiquidacao(0);
+            }
+            
+            $daoConLiquidacao->retornaDocumentosPorLiquidacao($pdo);
+
+            if ($daoConLiquidacao->Sucesso()) {
+                foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option data-objeto='" . json_encode($linha) . "' value=" . $linha['id_documento_fiscal'] . ">" . $linha['nr_documento_fiscal'] . ' - ' . $linha['competencia'] . "</option>";
+                }
+            }
+            
+            return $opcoes;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     function verificaDocumentosDiferenteDeALiquidar(PDO $pdo = null) {
         $this->sucesso = false;
         try {
@@ -860,6 +890,7 @@ class Liquidacao {
                                             <div id="collapseFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFor" aria-expanded="false">
                                                 <div class="panel-body">
                                                 <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
+                                                <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" />    
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data da Liquidação:</b></div>
                                                         <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
@@ -867,12 +898,12 @@ class Liquidacao {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Valor da Liquidação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
+                                                        <div class="col-sm-10">' . $campos["vl_liquidacao"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo da liquidação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
+                                                        <div class="col-sm-10">' . $campos["saldo"] . '</div>
                                                     </div>
                 
                                                 </div>

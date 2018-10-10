@@ -207,7 +207,7 @@ $(document).ready(function () {
                              <td class="text-center">${documento.dt_emissao}</td>
                              <td class="text-center">${documento.dt_atesto}</td>
                              <td class="text-center">${documento.vl_documento}</td>
-                             <td class="text-center">${documento.vl_documento}</td>
+                             <td class="text-center">${documento.saldo}</td>
                              <td class="text-center">
                             <input class="form-control valorRetPagamento" type="text" name="valorRetPagamento[]" id="valorRetPagamento[]" value="0,0000">
                             </td>
@@ -244,7 +244,7 @@ $(document).ready(function () {
 
                 var vl_documento_pagamento = linha.vl_doc_sem_mascara;
 
-                var vl_documento_pagamento_saldo = linha.vl_doc_sem_mascara;
+                var vl_documento_pagamento_saldo = linha.saldo;
 
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
@@ -266,6 +266,7 @@ $(document).ready(function () {
                 "vlPagamento": $("#vl_pagamento").val(),
                 "dtPagamento": $("#dt_pagamento").val(),
                 "obsPagamento": $("#desc_pagamento").val(),
+                "saldoLiquidacao": $("#saldoLiquidacao").val(),
                 "docsPagamento": documentos
             }
 
@@ -289,6 +290,7 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
