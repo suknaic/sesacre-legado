@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/pagamento/DaoConPagamento.class.php";
 
 class PagamentoPesquisa {
@@ -93,7 +94,7 @@ class PagamentoPesquisa {
 
             $daoConPagamento = new DaoConPagamento();
 
-            $daoConPagamento->retornaLiquidacoes($pdo, $this->montaFiltroSql());
+            $daoConPagamento->retornaPagamento($pdo, $this->montaFiltroSql());
 
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
@@ -127,6 +128,59 @@ class PagamentoPesquisa {
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
+    }
+
+    private function montaFiltroSql() {
+        $filtro = "";
+
+
+        if ($this->getNumero_pagamento()) {
+
+            $filtro .= (empty($filtro)) ? " where pagamento.nr_pagamento ilike '%" . $this->getNumero_pagamento() . "%' " 
+                    : " and pagamento.nr_pagamento '%" . $this->getNumero_pagamento() . "%' ";
+        }
+
+        if ($this->getExecio_pagamento()) {
+            $filtro .= (empty($filtro)) ? " where extract(year from pagamento.dt_pagamento) = " . $this->getExecio_pagamento() 
+                    : "and extract(year from pagamento.dt_pagamento) = " . $this->getExecio_pagamento();
+        }
+
+        if ($this->getFornecedor()) {
+            $filtro .= (empty($filtro)) ? " where pj.id_pessoa = " . $this->getFornecedor() 
+                    : " and pj.id_pessoa = " . $this->getFornecedor();
+        }
+
+        if ($this->getSituacao()) {
+            $filtro .= (empty($filtro)) ? " where pagamento.id_pagamento_situacao = " . $this->getSituacao() 
+                    : " and pagamento.id_pagamento_situacao = " . $this->getSituacao();
+        }
+
+        if ($this->getTipo_gato()) {
+            $filtro .= (empty($filtro)) ? " where tpGasto.id_tipo_gasto = " . $this->getTipoGasto() 
+                    : " and tpGasto.id_tipo_gasto = " . $this->getTipoGasto();
+        }
+
+        if ($this->getNumero_contrato()) {
+            $filtro .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%" . $this->getNumero_contrato() . "%' " 
+                    : " and contrato.nr_contrato ilike '%" . $this->getNumero_contrato() . "%' ";
+        }
+
+        if ($this->getNumero_pedido()) {
+            $filtro .= (empty($filtro)) ? " where pedido.nr_pedido ilike '%" . $this->getNumero_pedido() . "%' " 
+                    : " and pedido.nr_pedido ilike '%" . $this->getNumero_pedido() . "%' ";
+        }
+
+        if ($this->getNumero_empenho()) {
+            $filtro .= (empty($filtro)) ? " where empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' " 
+                    : " and empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' ";
+        }
+
+        if ($this->getNumero_documento_fiscal()) {
+            $filtro .= (empty($filtro)) ? " where documento.nr_documento_fiscal ilike '%" . $this->getNumero_documento_fiscal() . "%' " 
+                    : " and documento.nr_documento_fiscal ilike '%" . $this->getNumero_documento_fiscal() . "%' ";
+        }
+
+        return $filtro;
     }
 
 }

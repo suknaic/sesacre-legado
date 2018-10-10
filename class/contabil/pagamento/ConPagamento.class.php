@@ -150,11 +150,17 @@ class ConPagamento {
 
     public function salvaPagamento() {
         try {
-            
+
 
             if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) || empty($this->vl_pagamento_saldo) || empty($this->ds_pagamento)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+
+
+            if (round($this->vl_pagamento_saldo, 4) < round(Metodos::ConverteValorIng($this->vl_pagamento), 4)) {
+                return Metodos::retornoAjax("Erro", "alert", "Valor do pagamento e maior que o saldo da liquidação.");
+            }
+
 
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -174,16 +180,40 @@ class ConPagamento {
             $daoConPagamento->setDsPagamento($this->ds_pagamento);
             $daoConPagamento->salvaPagamento($pdo);
 
+            $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
+
+            if (!empty($this->docs_pagamento)) {
+                foreach ($this->docs_pagamento as $dados) {
+
+                    if (round($dados["vl_pagamento_doc_saldo"], 4) < round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Verifique os valore(s) do(s) documento(s) fiscais.");
+                    }
+
+                    $conPagamentoDoc = new ConPagamentoDoc();
+                    $conPagamentoDoc->setIdPagamento($this->id_pagamento);
+                    $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
+                    $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
+                    $conPagamentoDoc->setVlPagamentoDocSaldo($dados["vl_pagamento_doc_saldo"]);
+                    $conPagamentoDoc->salvaDocPagamento($pdo);
+
+                    if (!$conPagamentoDoc->Sucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o(s) documento(s) fiscais.");
+                    }
+                }
+            }
+
             if ($daoConPagamento->Sucesso()) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", "Pagamento cadastrado com sucesso.");
             }
-
+            $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar o pagamento");
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados desta Liquidação");
+            return $ex->getMessage();
+            return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados deste Pagamento");
         }
     }
 
-  
 }
