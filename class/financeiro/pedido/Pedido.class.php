@@ -31,6 +31,17 @@ class Pedido {
     //atributo para armazenar os erros
     private $msg_erros = null;
     
+    private $sucesso = false;
+    private $msgRetorno = null;
+    
+    public function sucesso() {
+        return $this->sucesso;
+    }
+    
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+    
     function getMsgErros() {
         return $this->msg_erros;
     }
@@ -1114,6 +1125,40 @@ class Pedido {
         } catch (Exception $exc) {
             $this->msg_erros = $ex->getMessage();
             return null;
+        }
+    }
+    
+    public function atualizaStatusSituacaoOficialPedido(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não existe transação ativa";
+                return;
+            }
+            
+            $retorno = $this->retornaStatusOficialPedido($pdo);
+            if(empty($retorno)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Pedido";
+                return;
+            }                        
+            
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->setStPedido($retorno);
+            $daoFinPedido->atualizaStatusPedido($pdo);
+            if(!$daoFinPedido->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar o Status do Pedido";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualizado";                        
+            
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;            
         }
     }
 
