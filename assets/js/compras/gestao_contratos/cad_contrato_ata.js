@@ -58,16 +58,25 @@ $(document).ready(function() {
            // $this.prop("disabled", true);
             // ** Verifica se os campos Quantidade && Vlr. Unitário estão vazios **
             vazio = false;
+            total = null;
             $(".itens").each(function () {
                 if ($(this).find(".qtd").val() === '' || $(this).find(".vl").val() === '') {
                     vazio = true;
                 }
+                total = total + parseInt($(this).find(".qtd").val()) + parseInt($(this).find(".qtd").val());
             });
             if (vazio == true) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
             }
+
+            if (total == 0) {
+                func.modalAlert('Todos os Valores Estão Zerados.');
+                $this.prop("disabled", false);
+                return false;
+            }
+            
             // *********************************************************************
             $(".itens").each(function () {
                 if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {

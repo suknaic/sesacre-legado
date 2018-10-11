@@ -557,10 +557,12 @@ $(document).ready(function () {
                 return false;
             }
 
-            if ($("#ata").val() == "" || $("#ata").val() == 0) {
-                func.modalAlert(func.msgPreencherCampos+' <strong>(ATA)</strong>');
-                $this.prop("disabled", false);
-                return false;
+            if ($( "#ata" ).is( ":visible" ) == true) {
+                if ($("#ata").val() == "" || $("#ata").val() == 0) {
+                    func.modalAlert(func.msgPreencherCampos+' <strong>(ATA)</strong>');
+                    $this.prop("disabled", false);
+                    return false;
+                }
             }
 
             if ($("#tipoDeGasto").val() == "" || $("#tipoDeGasto").val() == 0) {
