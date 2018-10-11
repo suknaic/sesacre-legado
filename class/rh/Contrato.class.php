@@ -136,11 +136,11 @@ class Contrato {
                 return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
             }
 
-            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
-            if ($email != 'ac.gov.br') {
-                $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
-            }
+//            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
+//            if ($email != 'ac.gov.br') {
+//                $pdo->rollBack();
+//                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
+//            }
             //********************************************************************************************************
 
             //**************************** Pessoa ********************************************************************
