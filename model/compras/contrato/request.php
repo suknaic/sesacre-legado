@@ -55,6 +55,7 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarContrato':
         try {
             $contrato = filter_input(INPUT_POST, 'contrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
             $finContratoModel = new FinContratoModel();
             $finContratoModel->setNrContrato($contrato['num_cont']);
             $finContratoModel->setIdProcesso($contrato['id_processo']);

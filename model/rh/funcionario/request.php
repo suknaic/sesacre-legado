@@ -31,7 +31,7 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "Informe seu E-mail Institucional do domínio ac.gov.br.");
+                echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
@@ -65,7 +65,7 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //***************************************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
-                echo Metodos::retornoAjax("Erro", "alert", "Informe seu E-mail Institucional do domínio ac.gov.br.");
+                echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
             }
             $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
