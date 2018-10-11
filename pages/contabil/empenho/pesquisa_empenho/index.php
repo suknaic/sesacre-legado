@@ -70,18 +70,18 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="id_doc_fis" class="form-control" value=""/>
+                                                    <input type="text" id="nr_empenho" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="ano_doc_fis">Exercício do Documento Fiscal:</label>
+                                                <label for="ano_exercicio">Exercício do Empenho:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="ano_doc_fis" class="form-control">
+                                                    <select id="ano_exercicio" class="form-control">
                                                         <?php echo Metodos::retornaAnosSelect(); ?>
                                                     </select>
                                                 </div>
@@ -89,12 +89,12 @@ require_once "index.load.php";
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="id_contratado">CPF/CNPJ do Fornecedor:</label>
+                                                <label for="fornecedor">CPF/CNPJ do Fornecedor:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="id_contratado" class="form-control">
+                                                    <select id="fornecedor" class="form-control">
                                                         <option value="0">Selecione o CPF/CNPJ do Fornecedor</option>
                                                         <?php echo $pessoaJuridicaOptions; ?>
                                                     </select>
@@ -145,6 +145,19 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
+                                                <label for="central">Central de Demanda:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <p class="fa fa-list inputPFa"></p>
+                                                    </span>
+                                                    <select id="central" class="form-control">
+                                                        <?php echo $centrais->retornaOptionsCentrais(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
                                                 <label for="situacao">Situação:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
@@ -182,9 +195,10 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Nº Pedido</th>
                                                     <th class="text-center">CPF/CNPJ do Fornecedor</th>
-                                                    <th class="text-center">Tipo</th>
-                                                    <th class="text-center">Competência</th>
+                                                    <th class="text-center">Tipo do Empenho</th>
                                                     <th class="text-center">Data do Empenho</th>
+                                                    <th class="text-center">Tipo de Gasto</th>
+                                                    <th class="text-center">Central de Demanda</th>
                                                     <th class="text-center">Valor</th>
                                                     <th class="text-center">Situação</th>
                                                     <th class="text-center">Ações</th> 

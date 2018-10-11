@@ -272,7 +272,7 @@ $(document).ready(function () {
 
     $('body').on('click', '.btn-edit', function (e) {
         var id = parseInt($(this).val());
-        top.location.href='cadEditCidade.php?key='+md5(id);
+        top.location.href='cadEditCidade.php?key='+btoa(id);
     });
 
     $('body').on('keypress', '.formCidade', function (e) {
