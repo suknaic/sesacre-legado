@@ -355,6 +355,60 @@ class Cidade {
         }
     }
 
+    public function retornaOptionRegionalSaude($idRegional = null) {
+        $retorno = "<option value = ''>Selecione uma Regional</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $cidade = new DaoSesCidade();
+            $busca = $cidade->buscaRegiosnaiSaude($pdo);
+
+            if (!$busca) {
+                return $retorno;
+            } else {
+                foreach ($busca as $v) {
+                    if ($idRegional == $v['id_regional_saude']) {
+                        $retorno .= "<option value = '" . $v['id_regional_saude'] . "' selected>" . $v['nm_regional_saude'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_regional_saude'] . "'>" . $v['nm_regional_saude'] . "</option>";
+                    }
+                }
+            }
+
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
+
+    public function retornaOptionRegionalGeo($idRegional = null) {
+        $retorno = "<option value = ''>Selecione uma Regional</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $cidade = new DaoSesCidade();
+            $busca = $cidade->buscaRegiosnaisGeo($pdo);
+
+            if (!$busca) {
+                return $retorno;
+            } else {
+                foreach ($busca as $v) {
+                    if ($idRegional == $v['id_regional_geo']) {
+                        $retorno .= "<option value = '" . $v['id_regional_geo'] . "' selected>" . $v['nm_regional_geo'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_regional_geo'] . "'>" . $v['nm_regional_geo'] . "</option>";
+                    }
+                }
+            }
+
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
+
     public function retornaOptionTodasCidades($idCidade = 0) {
         $retorno = "<option value = '0'>Selecione uma Cidade</option>";
         try {
@@ -402,6 +456,24 @@ class Cidade {
             return $retorno;
         } catch (Exception $ex) {
             return $retorno;
+        }
+    }
+
+    public function carregaDadosCidade() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $cidade = new DaoSesCidade();
+            $cidade->setId_cidade($this->id_cidade);
+
+            $busca = $cidade->carregaDadosCidade($pdo);
+            if (!$busca) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            } else {
+                return json_encode($busca);
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
         }
     }
 

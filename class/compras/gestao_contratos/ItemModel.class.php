@@ -443,7 +443,7 @@ class ItemModel {
             }
             //caso não de certo retorna uma mensagen de erro
             $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "console", $daoFinAtaItens->getMsgRetorno());
+            return Metodos::retornoAjax("Erro", "console", $daoFinItens->getMsgRetorno());
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -504,6 +504,7 @@ class ItemModel {
 
     public function cadastraItemAtaContrato($array = null) {
         try {
+
             //conexao com banco dedados
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -530,7 +531,6 @@ class ItemModel {
                 $erro = false;
 
                 for ($i = 0; $i < $cont; $i++) {
-
                     //seto o fornecedor
                     $finFornecedoresModel->setIdFornecedor($array[$i]->id);
                     //pego os dados desse fornecedor
@@ -544,14 +544,15 @@ class ItemModel {
                         //pega o fonecedor da ata verificar o saldo dela
                         $finFornecedoresModel->retornaFornecedorAta($pdo);
                         $fornecedor = 0;
-                        $fornecedor = $finFornecedoresModel->getMsgRetorno();
+                        $fornecedor = $finFornecedoresModel->getMsgRetorno() == null ? $fornecedor: $finFornecedoresModel->getMsgRetorno()['id_fornecedor'];
+
                     }
                     $this->qtItens = 0;
                     $this->vlItens = 0;
                     if ($array[$i]->tp == 'C' || $array[$i]->tp == 'P') {
                         $this->qtItens = $array[$i]->qtd;
                         //funcção responsavel por verificar saldo => verificaSaldoAtaContrato($tipo=null ,$qtd = null, $valor = null, $condicao)
-                        if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor['id_fornecedor'] . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
+                        if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
                             $daoFinItens->setNrItem($result[$i]["nr_item"]);
                             $daoFinItens->setNrLote($result[$i]["nr_lote"]);
                             $daoFinItens->setDescItem($result[$i]["ds_itens"]);
@@ -565,13 +566,13 @@ class ItemModel {
                             $daoFinItens->setIdContItensAlt((is_numeric($array[$i]->idItem)) ? $array[$i]->idItem : null);
                             $daoFinItens->setIdUnidadeMedida($result[$i]["id_unidade_medida"]);
                         } else {
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
                             $erro = true;
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
                         }
                     } else {
                         $this->qtItens = $array[$i]->qtd;
                         $this->vlItens = $array[$i]->vl;
-                        if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor['id_fornecedor'] . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
+                        if ($this->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor . " and item.id_cont_itens =   " . $array[$i]->idItem, "", $pdo)) {
                             $daoFinItens->setNrItem($result[$i]["nr_item"]);
                             $daoFinItens->setNrLote($result[$i]["nr_lote"]);
                             $daoFinItens->setDescItem($result[$i]["ds_itens"]);
@@ -585,17 +586,19 @@ class ItemModel {
                             $daoFinItens->setIdContItensAlt((is_numeric($array[$i]->idItem)) ? $array[$i]->idItem : null);
                             $daoFinItens->setIdUnidadeMedida($result[$i]["id_unidade_medida"]);
                         } else {
-
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
                             $erro = true;
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
                         }
                     }
                     $daoFinItens->cadastrarItem($pdo);
-
-
+//                    $pdo->rollBack();
+//                    var_dump($pdo);
+//                    return;
                     if (!$daoFinItens->Sucesso()) {
                         //log
+                        echo $daoFinItens->getMsgRetorno();
                         $daoFinItens->setIdContItens($pdo->lastInsertId('fin_cont_itens_id_cont_itens_seq'));
+                        var_dump($daoFinItens->getIdContItens());
                         if (!Log::SalvaLogI('fin_cont_itens', $daoFinItens->getIdContItens(), $pdo)) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
@@ -604,6 +607,7 @@ class ItemModel {
                         //fim log
                         $erro = true;
                     }
+
                 }
 
                 if (!$erro) {
@@ -744,7 +748,6 @@ class ItemModel {
                     return false;
                 }
             }
-
             return true;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -832,7 +835,7 @@ class ItemModel {
         }
     }
 
-    public function retornaTrItensParaAditamento(int $idContrato){
+    public function retornaTrItensParaAditamento($idContrato){
         //conexao com banco dedados
         $conexao = new Conexao();
         $pdo = $conexao->connect();             
@@ -911,7 +914,7 @@ class ItemModel {
     }
     
     
-    public function cadastraItensContratoAditivo($itens = null, int $idFornecedor, PDO $pdo){
+    public function cadastraItensContratoAditivo($itens = null,$idFornecedor, PDO $pdo){
         try {           
             //criando objeto do Dao dos itens da ata
             $daoFinItens = new DaoFinItens();            
@@ -1225,7 +1228,7 @@ class ItemModel {
             }
             return $retorno;                                                            
         } catch (Exception $e) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $e->getMessage());
         }
     }
     

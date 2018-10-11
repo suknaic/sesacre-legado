@@ -259,7 +259,7 @@ $(document).ready(function () {
         $('#nmCidade').prop("disabled", false);
         $('#idEstado').prop("disabled", false);
         $("#nmCidade").val("");
-        $('#idEstado').val('').trigger('change.select2');
+        $('#idEstado').val('0').trigger('change.select2');
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {
@@ -271,8 +271,8 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-edit', function (e) {
-        var id = $(this).val();
-        top.location.href='cadEditCidade.php?idCidade='+id;
+        var id = parseInt($(this).val());
+        top.location.href='cadEditCidade.php?key='+btoa(id);
     });
 
     $('body').on('keypress', '.formCidade', function (e) {

@@ -33,11 +33,23 @@ class DaoFinItens extends FinItensTb {
     public function cadastrarItem($pdo = null) {
         if (!empty($pdo)) {
             try {
-                $sql = "INSERT INTO fin_cont_itens (nr_item, nr_lote, nm_marca, nm_modelo, ds_itens, qt_itens, pc_desconto, vl_itens, id_material, id_fornecedor, id_cont_itens_alt, id_unidade_medida)
-                VALUES (:nrItem, :lote, :marca, :modelo, :dsItem, :qtd, :desconto, :vl, :material, :fornecedor, :fornecedor_alt, :unidadeMedida)";
+                $sql = "INSERT INTO fin_cont_itens (nr_item, 
+                                                    nr_lote, 
+                                                    nm_marca, 
+                                                    nm_modelo, 
+                                                    ds_itens, 
+                                                    qt_itens, 
+                                                    pc_desconto, 
+                                                    vl_itens, 
+                                                    id_material, 
+                                                    id_fornecedor, 
+                                                    id_cont_itens_alt, 
+                                                    id_unidade_medida
+                                                    )
+                          VALUES (:nrItem, :lote, :marca, :modelo, :dsItem, :qtd, :desconto, :vl, :material, :fornecedor, :fornecedor_alt, :unidadeMedida)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nrItem", $this->getNrItem(), PDO::PARAM_INT);
-                $stmt->bindValue(":lote", $this->getNrLote(), PDO::PARAM_STR);
+                $stmt->bindValue(":lote", $this->getNrLote(), PDO::PARAM_INT);
                 $stmt->bindValue(":marca", $this->getNmMarca(), PDO::PARAM_STR);
                 $stmt->bindValue(":modelo", $this->getNmModelo(), PDO::PARAM_STR);
                 $stmt->bindValue(":dsItem", $this->getDescItem(), PDO::PARAM_STR);
@@ -632,7 +644,7 @@ class DaoFinItens extends FinItensTb {
 						from fin_cont_itens as it
 						inner join pla_material as m
 						ON m.id_material = it.id_material
-						where it.id_cont_itens_alt =  item.id_cont_itens
+						where it.id_cont_itens_alt =  item.id_cont_itens 
 						" . $subCondicao . "
 						group by m.tp_material)
 						,0.0000)
@@ -665,7 +677,7 @@ class DaoFinItens extends FinItensTb {
 						from fin_cont_itens as it
 						INNER JOIN pla_material as m
 						ON m.id_material = it.id_material
-						where it.id_cont_itens_alt =  item.id_cont_itens
+						where it.id_cont_itens_alt =  item.id_cont_itens 
 						" . $subCondicao . "
 						group by m.tp_material),
 						0.0000)

@@ -6,18 +6,98 @@ $(document).ready(function () {
     //********************************************************
 
     //********** Carrega todos os Estados no select **********
-    $.ajax({
-        "url": "/pages/sistema/cidade/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "SelectEstadoOption"
-        },
+    function carregaEstados(idCidade = null) {
+        $.ajax({
+            "url": "/pages/sistema/cidade/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "SelectEstadoOption",
+                id_cidade: idCidade
+            },
 
-        "success": function (response) {
-            $('#idEstado').html(response);
-        }
-    });
+            "success": function (response) {
+                $('#idEstado').html(response);
+            }
+        });
+    }
+    carregaEstados();
+
+    function carregaRegiopnaisSaude(idRegional = null) {
+        $.ajax({
+            "url": "/pages/sistema/cidade/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "SelectRegionalSaudeOption",
+                id_regional: idRegional
+            },
+
+            "success": function (response) {
+                $('#idRegionalSaude').html(response);
+            }
+        });
+    }
+    carregaRegiopnaisSaude();
+
+    function carregaRegionaisGeo(idRegional = null) {
+        $.ajax({
+            "url": "/pages/sistema/cidade/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "SelectRegionalGeoOption",
+                id_regional: idRegional
+            },
+
+            "success": function (response) {
+                $('#idRegionalGeografica').html(response);
+            }
+        });
+    }
+    carregaRegionaisGeo();
     //********************************************************
+
+    //*********** Carregas dados da cidade ***********
+    function carregaDadosCidade(){
+        $.ajax({
+            "url": "/pages/sistema/cidade/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "carregaDadosCidade",
+                "id_cidade": atob($('#id_cidade').val())
+            },
+
+            "success": function (response) {
+                var dados = JSON.parse(response);
+                if (dados.tipoMsg === "Erro") {
+                    if (dados.tipoExibicao === "console") {
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (dados.tipoExibicao === "alert") {
+                        func.modalAlert(dados.msg, 'danger');
+                        return false;
+                    }
+                } else if (dados.tipoMsg === "ok") {
+                    func.modalAlert(dados.msg, 'success');
+                    func.fechaModalReload();
+                    return false;
+                } else {
+                    $.each(dados, function () {
+                        $('#nmCidade').val(this.nome);
+                        carregaEstados(this.estado);
+                        carregaRegionaisGeo(this.geografico);
+                        carregaRegiopnaisSaude(this.saude)
+                    });
+                    $('.btn-salvar').hide();
+                    $('.btn-voltar').hide();
+                    $('.btn-editar').show();
+                    $('.btn-cancelar').show();
+                }
+            }
+        });
+    }
+    if ($('#id_cidade').val() != '') {
+        carregaDadosCidade();
+    }
+    // ****************************************************************
 
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -47,7 +127,6 @@ $(document).ready(function () {
                     "dados": Cidade
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -96,7 +175,6 @@ $(document).ready(function () {
         }
     });
 
-
     $('body').on('click', '.btn-editar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -104,29 +182,28 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
             $this.prop("disabled", true);
-            var Estado = {
-                nome: $("#nmEstado").val(),
-                sigla: $("#nmSigla").val(),
-                id: $this.val(),
-                idp: $("#idPais").val()
-
-
+            var Cidade = {
+                nome: $("#nmCidade").val(),
+                regionalSaude: $("#idRegionalSaude").val(),
+                regionalGeo: $("#idRegionalGeografica").val(),
+                estado: $("#idEstado").val()
             };
 
-            if ($("#nmEstado").val() == "" || $this.val() == "") {
+            if (Cidade.nome == '' && (Cidade.estado == '' || Cidade.estado == 0)) {
                 func.modalAlert(func.msgPreencherCampos);
                 $this.prop("disabled", false);
                 return false;
             }
 
             $.ajax({
-                "url": "/model/sistema/estado/request.php",
+                "url": "/pages/sistema/cidade/request.php",
                 "dataType": "html",
                 "data": {
-                    "acao": "edtEstado",
-                    "estado": Estado
+                    "acao": "edtCidade",
+                    "dados": Cidade
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -268,6 +345,8 @@ $(document).ready(function () {
 
     });
 
+    $('.btn-cancelar').hide();
+
     $('body').on('click', '.btn-limpar', function (e) {
         $("#nmCidade").val("");
         $('#idRegionalGeografica').val('').trigger('change.select2');
@@ -276,6 +355,10 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-voltar', function (e) {
+        top.location.href='/pages/sistema/cidade/index.php';
+    });
+
+    $('body').on('click', '.btn-cancelar', function (e) {
         top.location.href='/pages/sistema/cidade/index.php';
     });
 
