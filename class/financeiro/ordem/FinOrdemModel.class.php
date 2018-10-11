@@ -438,10 +438,10 @@ class FinOrdemModel {
             }
 
             $pedido = new Pedido();
-            $pedido->setIdPedido($ordem[0]->idPedido);
-            //verificar ser a ordem e de exuçao/serviço ou entrega
+            $pedido->setIdPedido($ordem[0]->idPedido);            
             $pedido->atualizaStatusSituacaoOficialPedido($pdo);
             if(!$pedido->sucesso()){
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido."); 
             }
 //            if ($ordem[0]->tipoOrdem == '1') {
