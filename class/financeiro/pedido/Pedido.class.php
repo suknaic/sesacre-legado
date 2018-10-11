@@ -1081,8 +1081,9 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
             $daoFinPedido->retornaStatusPedido($pdo);
-            if ($daoFinPedido->sucesso()) {
-                return $daoFinPedido->getMsgRetorno()['status_oficial'];
+            if ($daoFinPedido->sucesso()) {                
+                return array("status" => $daoFinPedido->getMsgRetorno()['status_oficial']
+                        , "situacao" => $daoFinPedido->getMsgRetorno()['situacao_oficial']);                                
             }
             return null;
         } catch (Exception $exc) {
@@ -1123,10 +1124,10 @@ class Pedido {
                 $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
                 return false;
             }
-                                                            
-                                    
-            $daoFinPedido->setStPedido($retorno);
-            $daoFinPedido->atualizaStatusPedido($pdo);
+                                                                                                
+            $daoFinPedido->setStPedido($retorno['status']);
+            $daoFinPedido->setIdPedidoSituacao($retorno['situacao']);
+            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
             if(!$daoFinPedido->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível atualizar o Status do Pedido";

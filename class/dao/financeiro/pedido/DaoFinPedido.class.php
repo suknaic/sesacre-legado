@@ -854,27 +854,7 @@ class DaoFinPedido extends FinPedidoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    public function atualizaStatusPedido(PDO $pdo = null){
-        $this->sucesso = false;
-        $sql = "update fin_pedido set st_pedido = :st_pedido where id_pedido = :id_pedido";
-        try {
-            if (!empty($pdo)) {
-                $stmt = $pdo->prepare($sql);                
-                $stmt->bindValue(":st_pedido", $this->getStPedido(), PDO::PARAM_STR);
-                $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
-                $stmt->execute();
-                $this->sucesso = true;
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = 'Sem conexão com o banco de dados';
-            }
-        } catch (PDOException $exc) {
-            $this->sucesso = false;
-            $this->msgRetorno = $exc->getMessage();
-        }
-    }
-    
+           
     
     public function retornaTotaisDoPedido(PDO $pdo = null) {
         $this->sucesso = false;
