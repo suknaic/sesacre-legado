@@ -6,6 +6,10 @@ $(document).ready(function () {
         width: '100%'
     });
     
+    $('select').change( function (){
+        $(this).select2();
+    });
+    
     $('body').on('click','.btn-pesquisar', function(){
         var dados = {
             'nr_empenho': $("#nr_empenho").val(),

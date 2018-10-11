@@ -1054,43 +1054,6 @@ class Pedido {
         }
     }
     
-    public function atualizaSituacaoStatusPedido(PDO $pdo) {
-        $this->msg_erros = null;
-        try {
-
-            $daoFinPedido = new DaoFinPedido();
-            $daoFinPedido->setIdPedido($this->getIdPedido());
-            $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
-            $daoFinPedido->setStPedido($this->getStPedido());
-            
-            $daoFinPedido->retornaDadosPedido($pdo);
-            if (!$daoFinPedido->sucesso()) {
-                $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
-                return false;
-            }
-
-            $busca = $daoFinPedido->getMsgRetorno();
-
-            //Atualiza a Situação do Pedido
-            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
-
-            if (!$daoFinPedido->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação e status do Pedido. ";
-                return false;
-            }
-
-            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
-                $this->msg_erros = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
-                return false;
-            }
-
-            return $daoFinPedido->sucesso();
-        } catch (Exception $exc) {
-            $this->msg_erros = $exc->getMessage();
-            return false;
-        }
-    }
-    
     public function retornaTotaisDoPedido($pdo) {
         try {
             if (empty($pdo)) {

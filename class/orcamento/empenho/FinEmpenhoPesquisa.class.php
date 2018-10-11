@@ -114,10 +114,11 @@ class FinEmpenhoPesquisa {
             $daoFinEmpenho->retornaEmpenhos($pdo, $this->filtroSql());
             if ($daoFinEmpenho->sucesso()) {
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
+                    $cpf_cnpj_mascarado = !empty($linha['cpf_cnpj']) ? Metodos::formataCnpj($linha['cpf_cnpj']) : "";
                     $tabela .= '<tr>'
                                 . '<td class="text-center">'.$linha['nr_empenho'].'</td>'
                                 . '<td class="text-center">'.$linha['nr_pedido'].'</td>'
-                                . '<td class="text-center">'.$linha['cpf_cnpj'] . ' - '. $linha['nome_razao'].'</td>'
+                                . '<td class="text-center">'.$cpf_cnpj_mascarado . ' - '. $linha['nome_razao'].'</td>'
                                 . '<td class="text-center">'.$linha['nm_tipo_empenho'].'</td>'
                                 . '<td class="text-center">'.$linha['dt_empenho_safira'].'</td>'
                                 . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'
