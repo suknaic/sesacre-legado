@@ -1145,6 +1145,23 @@ class Pedido {
             
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
+            
+            $daoFinPedido->retornaDadosPedido($pdo);
+            if (!$daoFinPedido->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Pedido";
+                return;
+            }
+
+            $busca = $daoFinPedido->getMsgRetorno();          
+
+            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
+                return false;
+            }
+                                                            
+                                    
             $daoFinPedido->setStPedido($retorno);
             $daoFinPedido->atualizaStatusPedido($pdo);
             if(!$daoFinPedido->Sucesso()){

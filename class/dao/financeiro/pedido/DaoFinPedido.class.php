@@ -1045,6 +1045,101 @@ class DaoFinPedido extends FinPedidoTb {
 
                         ELSE null
                 END AS status_oficial	
+                
+                /*
+                * Situação do Pedido
+                */
+                , CASE
+                        /*
+                         * Pedido Não possui Empenho
+                         * Deve ser Autorizado
+                         */
+                        WHEN (			
+                                        E.id_pedido IS NULL				
+                                ) THEN 2
+                        /*
+                         * Pedido Possui Empenho, não possui Ordem nem Liquidação
+                         * Deve ser Empenhado
+                         */
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL			
+                                        AND O.id_pedido IS NULL
+                                        AND E.id_pedido IS NOT NULL				
+                                ) THEN 3	
+                        /*
+                         * Pedido Possui Empenho, possui Ordem e Tipo Administrativo Por Licitação	 
+                         * Precisa Verificar os Valores das Ordens
+                         * Pode ser Ordenado Parcial Ou Ordenado Total
+                         * O Pedido não tem mais Saldo de Acordo com as Ordens então ele é Ordenado Total
+                         */
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL			
+                                        AND O.id_pedido IS NOT NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 2
+                                        AND SAL.id_pedido IS NULL
+                                ) THEN 5	
+                        /*
+                         * O Pedido possui Saldo de Acordo com as Ordens então ele é Ordenado Parcial
+                         */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NULL				
+                                        AND O.id_pedido IS NOT NULL
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND P.id_tipo_solicitacao = 2	
+                                        AND SAL.id_pedido IS NOT NULL			
+                                ) THEN 4
+
+                        /*
+                         * Pedido Possui Liquidação e Não possui Pagamento
+                         * Precisa Verificar os Valores da Liquidação desse Pedido 
+                         * Pode ser Liquidado Parcial ou Liquidado Total
+                         * O Pedido não tem mais Saldo de Acordo com as Liquidações então ele é Liquidado Total
+                         */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND SALLIQUIDACAO.id_pedido IS NULL
+                                ) THEN 7
+                        /*
+                         * O Pedido possui Saldo de Acordo com as Liquidações então ele é Liquidado Parcial
+                         */		
+                        WHEN (
+                                        PAG.id_pedido IS NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL			
+                                        AND SALLIQUIDACAO.id_pedido IS NOT NULL
+                                ) THEN 6
+
+                        /*
+                         * Pedido Possui Pagamento 
+                         * Precisa Verificar os Valores da Pagamento desse Pedido 
+                         * Pode ser Pago Parcial ou Pago Total
+                         * O Pedido não tem mais Saldo de Acordo com os Pagamentos então ele é Pago Total
+                         */		
+                        WHEN (
+                                        PAG.id_pedido IS NOT NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL	
+                                        AND SALPAG.id_pedido IS NULL
+                                ) THEN 9
+                        /*
+                         * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Pago Parcial
+                         */		
+                        WHEN (
+                                        PAG.id_pedido IS NOT NULL
+                                        AND L.id_pedido IS NOT NULL							
+                                        AND E.id_pedido IS NOT NULL			
+                                        AND SALPAG.id_pedido IS NOT NULL
+                                ) THEN 8
+
+                        ELSE null
+                END AS situacao_oficial
+
 
                 FROM fin_pedido P
                 LEFT JOIN fin_empenho E ON E.id_pedido = P.id_pedido
