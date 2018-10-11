@@ -921,8 +921,17 @@ class DaoFinPedido extends FinPedidoTb {
                 , DF.id_pedido AS id_pedido_doc
                 , L.id_pedido AS id_pedido_liquidacao
                 , SALLIQUIDACAO.id_pedido AS id_pedido_saldo_liquidacao
+                , PAG.id_pedido AS id_pedido_pagamento
+                , SALPAG.id_pedido AS id_pedido_saldo_pagamento
 
                 , CASE
+                        /*
+                        * Pedido Não possui Empenho
+                        * Deve ser Aguardando Empenho
+                        */
+                       WHEN (			
+                                       E.id_pedido IS NULL				
+                               ) THEN 15
                         /*
                         * Pedido Possui Empenho, não possui Ordem e Tipo Administrativo Por Licitação
                         * Deve ser Aguardando Ordem
@@ -943,7 +952,7 @@ class DaoFinPedido extends FinPedidoTb {
                                         AND L.id_pedido IS NULL
                                         AND O.id_pedido IS NULL
                                         AND E.id_pedido IS NOT NULL	
-                                        AND P.id_tipo_solicitacao = 1			
+                                        AND (P.id_tipo_solicitacao = 1 OR P.id_tipo_solicitacao = 3 OR P.id_tipo_solicitacao = 4)			
                                 ) THEN 21	
                         /*
                         * Pedido Possui Empenho, possui Ordem e Tipo Administrativo Por Licitação	 
@@ -992,6 +1001,27 @@ class DaoFinPedido extends FinPedidoTb {
                                         AND E.id_pedido IS NOT NULL			
                                         AND SALLIQUIDACAO.id_pedido IS NOT NULL
                                 ) THEN 25
+                        /*
+                        * Pedido Possui Pagamento 
+                        * Precisa Verificar os Valores da Pagamento desse Pedido 
+                        * Pode ser Aguardando Finalizar Pagamento ou Finalizado
+                        * O Pedido não tem mais Saldo de Acordo com os Pagamentos então ele é Finalizado
+                        */		
+                       WHEN (
+                                       PAG.id_pedido IS NOT NULL
+                                       AND L.id_pedido IS NOT NULL							
+                                       AND E.id_pedido IS NOT NULL	
+                                       AND SALPAG.id_pedido IS NULL
+                               ) THEN 23
+                       /*
+                        * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Aguardando Finalizar Pagamento
+                        */		
+                       WHEN (
+                                       PAG.id_pedido IS NOT NULL
+                                       AND L.id_pedido IS NOT NULL							
+                                       AND E.id_pedido IS NOT NULL			
+                                       AND SALPAG.id_pedido IS NOT NULL
+                               ) THEN 26
 
                         ELSE null
                 END AS status_oficial	
@@ -1111,6 +1141,29 @@ class DaoFinPedido extends FinPedidoTb {
                                         group by ped.id_pedido ) t2  
                                         where t2.saldo > 0
                                         ) AS SALLIQUIDACAO ON SALLIQUIDACAO.id_pedido = P.id_pedido
+                LEFT JOIN (SELECT *
+                                    FROM (
+                                    select
+                                        ped.id_pedido,                    
+                                        coalesce(sum(vl_pagamento), 0) as valor_pago,                                       
+                                        vl_pedido as valor_pedido     
+                                        , (vl_pedido - coalesce(sum(vl_pagamento), 0)) AS saldo 
+                                     from
+                                        fin_pedido ped                     
+                                        inner join
+                                           fin_empenho emp 
+                                           on ped.id_pedido = emp.id_pedido 
+                                        left join
+                                           con_liquidacao liq 
+                                           on emp.id_empenho = liq.id_empenho 
+                                           and liq.id_liquidacao_situacao <> 4
+                                         left join
+                                           con_pagamento pag 
+                                           on pag.id_liquidacao = liq.id_liquidacao 
+                                           and pag.id_pagamento_situacao <> 2
+                                     group by ped.id_pedido ) t2  
+                                     where t2.saldo > 0
+                                    ) AS SALPAG ON SALPAG.id_pedido = P.id_pedido
 
 
                 WHERE P.st_pedido != '0'

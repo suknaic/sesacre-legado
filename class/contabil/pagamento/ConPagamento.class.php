@@ -216,4 +216,28 @@ class ConPagamento {
         }
     }
 
+    public function retornaDadosPagamento() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->setIdPagamento($this->id_pagamento);
+            $daoConPagamento->retornaDadosParaVisualizacaoPagamento($pdo);
+            return $daoConPagamento->getMsgRetorno();
+        } catch (Exception $ex) {
+            
+        }
+    }
+
+    public function tabelaDocumentoPagamentoVisualiza() {
+        try {
+            $conPagamentoDoc = new ConPagamentoDoc();
+            $conPagamentoDoc->setIdPagamento($this->id_pagamento);
+            return $conPagamentoDoc->montaTabelaDocumentosPagamento(false);
+            
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
 }

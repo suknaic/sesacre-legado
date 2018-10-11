@@ -1600,14 +1600,14 @@ class FinContratoModel {
                     $finGestor->cadastraGestor($pdo);
                     if (!$finGestor->sucesso()) {
                         $sucesso = false;
-                        break;
                     }
-                }
 
-                if ($sucesso == false) {
-                    $retorno = Metodos::retornoAjax("Erro4", "console", $finGestor->getMsgRetorno());
-                    $pdo->rollBack();
-                    return $retorno;
+
+                    if ($sucesso == false) {
+                        $retorno = Metodos::retornoAjax("Erro4", "console", $finGestor->getMsgRetorno());
+                        $pdo->rollBack();
+                        return $retorno;
+                    }
                 }
             }
 
@@ -1761,7 +1761,6 @@ class FinContratoModel {
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro13", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro14", "console", $exc->getMessage());
         }
