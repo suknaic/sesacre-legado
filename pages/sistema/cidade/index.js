@@ -259,7 +259,7 @@ $(document).ready(function () {
         $('#nmCidade').prop("disabled", false);
         $('#idEstado').prop("disabled", false);
         $("#nmCidade").val("");
-        $('#idEstado').val('0').trigger('change.select2');
+        $('#idEstado').val('').trigger('change.select2');
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {

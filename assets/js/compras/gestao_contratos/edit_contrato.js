@@ -546,45 +546,62 @@ $(document).ready(function () {
             var $this = $(this);
             $this.prop("disabled", true);
             //validação de campos js
-            if ($("#num_ata").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
-                $this.prop("disabled", false);
-                return false;
-            }
-
-            if ($("#empresa option:selected").val() == 0) {
-                func.modalAlert(func.msgPreencherCampos);
+            if ($("#num_cont").val() == "") {
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Nº do contrato)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
 
             if ($("#data_assinatura").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Data de assinatura)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
 
             if ($("#data_publicacao").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
+                func.modalAlert(func.msgPreencherCampos+ ' <strong>(Data de publicação)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
 
             if ($("#vig_inicial").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Vigência inicial)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
 
             if ($("#vig_final").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Vigência final)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
 
+            if ($("#desc_objeto").val() == "") {
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Descrição do objeto)</strong>');
+                $this.prop("disabled", false);
+                return false;
+            }
 
-            if ($("#desc_ata").val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
+            if ($("#prazo_entrega").val() == "" || $("#prazo_entrega").val() == 0) {
+                func.modalAlert(func.msgPreencherCampos+ ' <strong>(Prazo de entrega)</strong>');
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            if ($("#obs_contrato").val() == "") {
+                func.modalAlert(func.msgPreencherCampos+ ' <strong>(Observações do contrato)</strong>');
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            if ($("#empresa").val() == "" || $("#empresa").val() == 0) {
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Nome do contratado)</strong>');
+                $this.prop("disabled", false);
+                return false;
+            }
+
+            if ($("#tipoDeGasto").val() == "" || $("#tipoDeGasto").val() == 0) {
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Tipo de Gasto)</strong>>');
                 $this.prop("disabled", false);
                 return false;
             }
