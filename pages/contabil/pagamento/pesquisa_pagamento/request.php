@@ -26,16 +26,16 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaPagamentos':
         $dados = filter_input(INPUT_GET,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         try {
-            $liquidacao = new LiquidacaoPesquisa();
-            $liquidacao->setNrLiquidacao($dados['nrLiq'])
-                       ->setAnoLiquidacao($dados['exercicio'])
-                       ->setContratado($dados['fornecedor'])
-                       ->setNrPedido($dados['pedido'])
-                       ->setNrEmpenho($dados['empenho'])
-                       ->setNrDocumentoFiscal($dados['nrDoc'])
-                       ->setTipoGasto($dados['tpGasto'])
-                       ->setSituacao($dados['situacao']);
-            echo $liquidacao->retornaLiquidacoes();
+            $pagamento =  new PagamentoPesquisa();
+            $pagamento->setNumero_pagamento($dados["nrPagamento"]);
+            $pagamento->setExecio_pagamento($dados['exercicio']);
+            $pagamento->setNumero_contrato($dados['fornecedor']);
+            $pagamento->setNumero_pedido($dados["pedido"]);
+            $pagamento->setNumero_empenho($dados["empenho"]);
+            $pagamento->setNumero_documento_fiscal($dados["nrDoc"]);
+            $pagamento->setTipo_gato($dados["tpGasto"]);
+//            $pagamento->setSituacao($dados["situacao"]);
+            echo $pagamento->retornaPagamento();
             return;
             break;
         } catch (Error $e) {
