@@ -120,7 +120,7 @@ require_once "index.load.php";
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        <?php echo $tabelaDocumentosFiscais;?>
                                                                     </tbody>
 
                                                                 </table>
@@ -270,6 +270,6 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-<!--        <script src="/pages/contabil/pagamento/cad_pagamento/index.js"></script>-->
+        <script src="/pages/contabil/pagamento/ver_pagamento/index.js"></script>
     </body>
 </html>

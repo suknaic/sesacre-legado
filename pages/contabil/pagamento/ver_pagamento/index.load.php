@@ -49,12 +49,12 @@ $dadosLiquidacao = $liquidacao->retornaLiquidacaoParaPagamento(null);
 //DADOS DO DOCUMENTOS FISCAIS
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
-//if ($dadosPedido['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
-//    $tem_documentos = true;
-////    $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao(false);
-//}
-//var_dump($tem_documentos);
-//return false;
+if ($dadosPagamento['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+    $tem_documentos = true;
+    $tabelaDocumentosFiscais = $pagamento->tabelaDocumentoPagamentoVisualiza(false);
+}
+
+return false;
 
 //OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 //$historico = $liquidacao->retornaHistorico();

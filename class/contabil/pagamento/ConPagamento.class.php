@@ -229,12 +229,11 @@ class ConPagamento {
         }
     }
 
-    public function montarTabelaDocumentoPagamento() {
+    public function tabelaDocumentoPagamentoVisualiza() {
         try {
-            $tabela = '';
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
             $conPagamentoDoc = new ConPagamentoDoc();
+            $conPagamentoDoc->setIdPagamento($this->id_pagamento);
+            return $conPagamentoDoc->montaTabelaDocumentosPagamento(false);
             
         } catch (Exception $ex) {
             return $ex->getMessage();

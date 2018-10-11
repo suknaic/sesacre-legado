@@ -1,5 +1,7 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/pagamento/DaoConPagamentoDoc.class.php";
+
 class ConPagamentoDoc {
 
     private $id_pagamento_doc = null;
@@ -72,27 +74,65 @@ class ConPagamentoDoc {
         try {
 
             if (!empty($this->id_documento_fiscal) && !empty($this->id_pagamento) && !empty($this->vl_documento_fiscal) && !empty($this->vl_pagamento_doc_saldo)) {
-                
+
                 $daoConPagamentoDoc = new DaoConPagamentoDoc();
                 $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
                 $daoConPagamentoDoc->setIdDocumentoFiscal($this->id_documento_fiscal);
                 $daoConPagamentoDoc->setVlDocumentoFiscal(Metodos::ConverteValorIng($this->vl_documento_fiscal));
                 $daoConPagamentoDoc->setVlPagamentoDocSaldo($this->vl_pagamento_doc_saldo);
                 $daoConPagamentoDoc->salvaDocPagamento($pdo);
-                if($daoConPagamentoDoc->Sucesso()){
+                if ($daoConPagamentoDoc->Sucesso()) {
                     $this->sucesso = true;
-                   
-                }else{
+                } else {
                     $this->sucesso = false;
                     $this->msgRetorno = $daoConPagamentoDoc->getMsgRetorno();
                 }
-                
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = STR_PREENCHER_CAMPOS;
             }
-        } catch (Exception $ex) { 
+        } catch (Exception $ex) {
             
+        }
+    }
+
+    public function montaTabelaDocumentosPagamento(bool $edita = true) {
+        try {
+            $tabela = '';
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoConPagamentoDoc = new DaoConPagamentoDoc();
+            $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
+            $daoConPagamentoDoc->documentosFiscaisPagamento($pdo);
+            if ($daoConPagamentoDoc->Sucesso()) {
+                foreach ($daoConPagamentoDoc->getMsgRetorno() as $linha) {
+                    $tabela .= "<tr data-id=" . $linha['id_documento_fiscal'] . " data-objeto='" . json_encode($linha) . "' class='documentoFiscal'>"
+                            . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
+                            . "<td class='text-center'>" . $linha['mm_competencia'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
+                            . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'],4) . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'],4) . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc'],4) . "</td>"
+                            . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
+                            . "<td class='text-center'>"
+                            . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=" . $linha['id_documento_fiscal'] . ">"
+                            . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
+                            . "</button>";
+                    if ($edita) {
+                        $tabela .= "<button type='button' title='Remover Documento Fiscal' class='remover-documento'>"
+                                . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                                . "</button>";
+                    }
+
+                    $tabela .= "</td></tr>";
+                }
+            }
+            return $tabela;
+        } catch (Exception $exc) {
+            return $ex->getMessage();
         }
     }
 
