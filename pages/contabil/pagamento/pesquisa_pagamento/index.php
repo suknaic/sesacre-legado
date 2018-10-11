@@ -77,7 +77,7 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="nr_liquidacao" class="form-control" value=""/>
+                                                    <input type="text" id="nr_pagamento" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>
@@ -88,7 +88,7 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="ano_liquidacao" class="form-control">
+                                                    <select id="ano_pagamento" class="form-control">
                                                         <?php echo Metodos::retornaAnosSelect(); ?>
                                                     </select>
                                                 </div>

@@ -440,17 +440,20 @@ class FinOrdemModel {
             $pedido = new Pedido();
             $pedido->setIdPedido($ordem[0]->idPedido);
             //verificar ser a ordem e de exuçao/serviço ou entrega
-
-            if ($ordem[0]->tipoOrdem == '1') {
-                $pedido->setStPedido("17");
-            } else if ($ordem[0]->tipoOrdem == '2') {
-                $pedido->setStPedido("19");
+            $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+            if(!$pedido->sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido."); 
             }
-
-
-            if (!$pedido->VerificarMaiorTramitacao($pdo)) {
-                $pedido->atualizaTramitacaoPedido($pdo);
-            }
+//            if ($ordem[0]->tipoOrdem == '1') {
+//                $pedido->setStPedido("17");
+//            } else if ($ordem[0]->tipoOrdem == '2') {
+//                $pedido->setStPedido("19");
+//            }
+//
+//
+//            if (!$pedido->VerificarMaiorTramitacao($pdo)) {
+//                $pedido->atualizaTramitacaoPedido($pdo);
+//            }
 
 
             if (!$erro) {
@@ -629,6 +632,14 @@ class FinOrdemModel {
             if (!Log::SalvaLogU('fin_ordem', $this->id_ordem, $busca, $pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+            
+            $pedido = new Pedido();
+            $pedido->setIdPedido($busca['id_pedido']);            
+            $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+            if(!$pedido->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido."); 
             }
 
             $pdo->commit();

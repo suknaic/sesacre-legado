@@ -55,8 +55,8 @@ class DaoConPagamento extends ConPagamentoTb {
 
                 $sql = "select pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, empenho.nr_empenho,
                         string_agg(documento.nr_documento_fiscal, ', ') as documentos_fiscais, pj.nr_cnpj,  
-                        pj.nm_fantasia, to_char(pagamento.dt_pagamento,'dd/mm/yyyy'), pagamento.vl_pagamento, 
-                        pagSit.nm_pagamento_situacao
+                        pj.nm_fantasia, to_char(pagamento.dt_pagamento,'dd/mm/yyyy') as data_pagamento, 
+                        pagamento.vl_pagamento, pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao
 
                         from con_pagamento as pagamento
 
@@ -89,15 +89,15 @@ class DaoConPagamento extends ConPagamentoTb {
 
                         left join ses_pessoa_juridica as pj 
                         on pj.id_pessoa = fornec.id_pessoa 
-                        ". $filtros ."
+                        " . $filtros . "
                         group by pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, 
                         empenho.nr_empenho, pj.nr_cnpj,  pj.nm_fantasia, pagamento.dt_pagamento, 
-                        pagamento.vl_pagamento, pagSit.nm_pagamento_situacao ";
+                        pagamento.vl_pagamento, pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-                if ($result->rowCount() >= 1) {
+                if ($stmt->rowCount() >= 1) {
                     $this->sucesso = true;
-                    $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 } else {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não encontrou Registros";
@@ -105,6 +105,41 @@ class DaoConPagamento extends ConPagamentoTb {
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Erro PDO";
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaDadosParaVisualizacaoPagamento(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select pagamento.id_pagamento, pagamento.nr_pagamento, pagamento.id_lotacao,
+                        pagamento.id_doc_tipo_lotacao, pedido.id_tipo_solicitacao, 
+                        to_char(pagamento.dt_pagamento, 'dd/mm/yyyy') as dt_pagamento, 
+                        trim(to_char(pagamento.vl_pagamento, '999G999G999D0999')) as vl_pagamento,
+                        pedido.id_pedido, pedido.nr_pedido, empenho.id_empenho, liquidacao.id_liquidacao,
+                        liquidacao.nr_liquidacao
+                        from con_pagamento as pagamento
+                        inner join con_liquidacao as liquidacao
+                        on liquidacao.id_liquidacao = pagamento.id_liquidacao
+                        inner join fin_empenho as empenho
+                        on empenho.id_empenho = liquidacao.id_empenho
+                        inner join fin_pedido as pedido
+                        on pedido.id_pedido = empenho.id_pedido
+                        where pagamento.id_pagamento = :pagamento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
             }
         } catch (Exception $ex) {
             $this->sucesso = false;

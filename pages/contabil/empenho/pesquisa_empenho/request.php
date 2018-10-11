@@ -9,15 +9,16 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaEmpenhos':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
             $empenhoPesquisa = new FinEmpenhoPesquisa();
-//            $empenhoPesquisa->setAnoExercicio($ano_exercicio)
-//                            ->setNrEmpenho($nr_empenho)
-//                            ->setFornecedor($fornecedor)
-//                            ->setNrContrato($nr_contrato)
-//                            ->setNrPedido($nr_pedido)
-//                            ->setTipoGasto($tipo_gasto)
-//                            ->setSituacao($situacao);
+            $empenhoPesquisa->setAnoExercicio($dados['ano_exercicio'])
+                            ->setNrEmpenho($dados['nr_empenho'])
+                            ->setFornecedor($dados['fornecedor'])
+                            ->setNrContrato($dados['nr_contrato'])
+                            ->setNrPedido($dados['nr_pedido'])
+                            ->setTipoGasto($dados['tipo_gasto'])
+                            ->setSituacao($dados['situacao'])
+                            ->setCentral($dados['central']);
             echo $empenhoPesquisa->retornaEmpenhos();
             return;
             break;
