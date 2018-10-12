@@ -11,6 +11,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFis
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoDoc.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoHistorico.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoAnotacoes.class.php";
 
 $session = new Session('ajax');
 
@@ -120,11 +122,11 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarPagamento':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-         
+
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
-            
+
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
             $pagamento->setIdLotacao($dados["idLotacao"]);
@@ -133,8 +135,9 @@ switch ($_REQUEST['acao']) {
             $pagamento->setDtPagamento($dados["dtPagamento"]);
             $pagamento->setVlPagamento($dados["vlPagamento"]);
             $pagamento->setVlPagamentoSaldo($dados["saldoLiquidacao"]);
-            $pagamento->setDsPagamento($dados["obsPagamento"]);
             $pagamento->setDocsPagamento($dados["docsPagamento"]);
+            $pagamento->setDsAnotacao($dados["anotacoes"]);
+            $pagamento->setIdPessoa($session->getIdUser());
             echo $pagamento->salvaPagamento();
             return;
             break;

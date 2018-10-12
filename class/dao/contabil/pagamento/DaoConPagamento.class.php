@@ -21,8 +21,8 @@ class DaoConPagamento extends ConPagamentoTb {
             if (!empty($pdo)) {
 
                 $sql = "INSERT INTO con_pagamento (id_pagamento_situacao, id_pagamento_status, id_liquidacao, id_lotacao, id_doc_tipo_lotacao, "
-                        . " nr_pagamento, dt_pagamento, vl_pagamento, vl_pagamento_saldo, ds_pagamento) values (:situacao, :status, :liquidacao, :lotacao, :tipoLotacao,"
-                        . " :nr_pagamento, :dt_pagamento, :vl_pagamento, :saldo, :ds_pagamento)";
+                        . " nr_pagamento, dt_pagamento, vl_pagamento, vl_pagamento_saldo) values (:situacao, :status, :liquidacao, :lotacao, :tipoLotacao,"
+                        . " :nr_pagamento, :dt_pagamento, :vl_pagamento, :saldo)";
                 $stmt = $pdo->prepare($sql);
 
                 $stmt->bindValue(":situacao", $this->getIdPagamentoSituacao(), PDO::PARAM_INT);
@@ -34,7 +34,6 @@ class DaoConPagamento extends ConPagamentoTb {
                 $stmt->bindValue(":dt_pagamento", $this->getDtPagamento(), PDO::PARAM_STR);
                 $stmt->bindValue(":vl_pagamento", $this->getVlPagamento(), PDO::PARAM_STR);
                 $stmt->bindValue(":saldo", $this->getVlPagamentoSaldo(), PDO::PARAM_STR);
-                $stmt->bindValue(":ds_pagamento", $this->getDsPagamento(), PDO::PARAM_STR);
                 $stmt->execute();
 
                 $this->sucesso = true;
@@ -144,6 +143,53 @@ class DaoConPagamento extends ConPagamentoTb {
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaDadosLogPagamaneto(PDO $pdo) {
+        try {
+            $sql = "select * from con_pagamento where id_pagamento = :id_pagamento;";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function mudaSituacaoPagamento(PDO $pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE con_pagamento SET id_pagamento_situacao = :id_pagamento_situacao"
+                    . " WHERE id_pagamento = :id_pagamento ");
+            $result->bindValue(":id_pagamento", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_pagamento_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true;
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function mudaStatusPagamento($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE con_pagamento SET id_pagamento_status = :id_pagamento_status"
+                    . " WHERE id_pagamento = :id_pagamento ");
+            $result->bindValue(":id_pagamento", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_pagamento_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true;
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
         }
     }
 

@@ -266,7 +266,7 @@ $(document).ready(function () {
                 "nrPagamento": $("#nr_pagamento").val(),
                 "vlPagamento": $("#vl_pagamento").val(),
                 "dtPagamento": $("#dt_pagamento").val(),
-                "obsPagamento": $("#desc_pagamento").val(),
+                "anotacoes": $("#anotacoes").val(),
                 "saldoLiquidacao": $("#saldoLiquidacao").val(),
                 "docsPagamento": documentos
             }

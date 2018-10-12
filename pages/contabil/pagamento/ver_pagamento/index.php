@@ -58,6 +58,7 @@ require_once "index.load.php";
                     <!--===================================================-->
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
+                            <input type="hidden" name="id_pagamento" id="id_pagamento" value="<?php echo $id; ?>"/>
                             <div class="panel">                                
 
                                 <!--Form dos dados do contrato-->
@@ -80,7 +81,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-                                            <?php echo $dadosEmpenho;?>
+                                            <?php echo $dadosEmpenho; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +89,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body dadosLiquidacao">
-                                            <?php echo $dadosLiquidacao;?>
+                                            <?php echo $dadosLiquidacao; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +121,7 @@ require_once "index.load.php";
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        <?php echo $tabelaDocumentosFiscais;?>
+                                                                        <?php echo $tabelaDocumentosFiscais; ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -175,13 +176,6 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_pagamento" disabled="true"></textarea>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -218,6 +212,25 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações</h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" rows="7" id="anotacoes" disabled="true"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

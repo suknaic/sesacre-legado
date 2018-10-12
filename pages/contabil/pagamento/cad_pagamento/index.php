@@ -238,14 +238,6 @@ require_once "index.load.php";
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <textarea class="form-control" rows="4" id="desc_pagamento"></textarea>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -282,6 +274,25 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações</h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" rows="7" id="anotacoes"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div  class="col-sm-12">
