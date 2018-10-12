@@ -246,7 +246,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.id_liquidacao,
                     liq.nr_liquidacao,
                     ped.nr_pedido,
-                    emp.nr_empenho,
+                    (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
                     pj.nr_cnpj,
                     pj.nm_fantasia,
                     to_char(liq.dt_liquidacao,'dd/mm/yyyy') as dt_liquidacao,

@@ -542,16 +542,25 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
 
-    public function retornaEmpenhos(PDO $pdo){
+    public function retornaEmpenhos(PDO $pdo, array $filtroSql = []){
+        $str_filtro = '';
+        if (!empty($filtroSql)) {
+            foreach ($filtroSql as $filtro) {
+                $str_filtro .= $filtro['sql'];
+            }
+        }
+        
         $this->sucesso = false;
         $sql = "select
-                    emp.nr_empenho,
+                    emp.id_empenho,
+                    (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
                     ped.nr_pedido,
                     coalesce(pf.nr_cpf, pj.nr_cnpj, '') as cpf_cnpj,
                     coalesce(upper(pf.nm_civil), upper(pj.nm_fantasia),'') as nome_razao,
                     tpEmp.nm_tipo_empenho,
-                    extract(year from dt_empenho_safira) as competencia,
                     to_char(dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
+                    tpGasto.nm_tipo_gasto,
+                    central.nm_lotacao as central_demanda,
                     trim(to_char(vl_empenho,'999G999G999G990D9999')) as vl_empenho,
                     case sit_empenho 
                          when '1' then 'Cadastrado'
@@ -568,7 +577,10 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
                     inner join
                        fin_pedido ped 
-                       on ped.id_pedido = emp.id_pedido 
+                       on ped.id_pedido = emp.id_pedido
+                    inner join
+                        ses_lotacao central
+                        on central.id_lotacao = ped.id_lotacao
                     left join
                        fin_fornecedor fornec 
                        on fornec.id_fornecedor = ped.id_fornecedor 
@@ -583,11 +595,18 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                        on pf.id_pessoa = fornec.id_pessoa 
                     left join
                        ses_pessoa_juridica pj 
-                       on pj.id_pessoa = fornec.id_pessoa
+                       on pj.id_pessoa = fornec.id_pessoa ". $str_filtro ."
                  order by dt_empenho_safira desc,nr_empenho, nr_pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
+                
+                if (!empty($filtroSql)) {
+                    foreach ($filtroSql as $filtro) {
+                        $stmt->bindValue($filtro['bind'], $filtro['valor'], $filtro['pdo_param']);
+                    }
+                }
+                
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);

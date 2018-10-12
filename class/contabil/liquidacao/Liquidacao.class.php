@@ -1156,55 +1156,20 @@ class Liquidacao {
                 return false;
             }
             
-            // ------------ Retorna o Status Oficial do Pedido -------------------------
-            $status = $pedido->retornaStatusOficialPedido($pdo);
-            if (empty($status)) {
-                $this->mensagens = 'Status para o Pedido de Necessidade não definido.';
-                return false;
-            }
-            $pedido->setStPedido($status);
-            // --------------------------------------------------------------------------
-
             //Retorna os totais do pedido
             $totais_pedido = $pedido->retornaTotaisDoPedido($pdo);
             $valor_pedido = $totais_pedido['valor_pedido'];
             $valor_liquidado = $totais_pedido['valor_liquidado'];
-            $valor_ordenado = $totais_pedido['valor_ordenado'];
-            $tipo_solicitacao = $totais_pedido['id_tipo_solicitacao'];
-            switch (true) {
-                //Se não houver valores de liquidação para o pedido, e for um tipo de solicitação DIFERENTE de 'Administrativa por Licitação'
-                case ($valor_liquidado == 0 && $tipo_solicitacao != '2'):
-                    $pedido->setIdPedidoSituacao(3); //Empenhado
-                    break;
+            
+            //Se o total liquidado for superior ao valor do empenho, retorna erro
+            if ($valor_liquidado > $valor_pedido){
+                $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: ' . $valor_pedido . ' valor liquidado: ' . $valor_liquidado;
+                return false;
 
-                //Se o valor ordenado for menor que o valor do pedido, irá definir como 'Ordenado Parcial' para  o tipo de solicitação 'Administrativa por Licitação' 
-                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado < $valor_pedido):
-                    $pedido->setIdPedidoSituacao(4); //Ordenado Parcial
-                    break;
-
-                //Se o valor ordenado for igual ao valor do pedido, irá definir como 'Ordenado Total' para  o tipo de solicitação 'Administrativa por Licitação' 
-                case ($valor_liquidado == 0 && $tipo_solicitacao == '2' && $valor_ordenado == $valor_pedido):
-                    $pedido->setIdPedidoSituacao(5); //Ordenado Total
-                    break;
-
-                //Se a soma dos valores da liquidação for inferior ao valor do Pedido, altera para situação 'Liquidado Parcial'
-                case ($valor_liquidado > 0 && $valor_liquidado < $valor_pedido):
-                    $pedido->setIdPedidoSituacao(6); //Liquidado Parcial
-                    break;
-
-                //Se a soma dos valores da liquidação for igual ao do Pedido, altera para situação 'Liquidado Total'
-                case ($valor_liquidado == $valor_pedido):
-                    $pedido->setIdPedidoSituacao(7); //Liquidado Total
-                    break;
-
-                //Se o total liquidado for superior ao valor do empenho, retorna erro
-                case ($valor_liquidado > $valor_pedido):
-                    $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: ' . $valor_pedido . ' valor liquidado: ' . $valor_liquidado;
-                    return false;
-                    break;
             }
 
-            if ($pedido->atualizaSituacaoStatusPedido($pdo)) {
+            $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+            if ($pedido->sucesso()) {
                 return true;
             } else {
                 $this->mensagens = $pedido->getMsgErros();

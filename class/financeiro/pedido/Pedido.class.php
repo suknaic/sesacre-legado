@@ -31,6 +31,17 @@ class Pedido {
     //atributo para armazenar os erros
     private $msg_erros = null;
     
+    private $sucesso = false;
+    private $msgRetorno = null;
+    
+    public function sucesso() {
+        return $this->sucesso;
+    }
+    
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+    
     function getMsgErros() {
         return $this->msg_erros;
     }
@@ -1043,43 +1054,6 @@ class Pedido {
         }
     }
     
-    public function atualizaSituacaoStatusPedido(PDO $pdo) {
-        $this->msg_erros = null;
-        try {
-
-            $daoFinPedido = new DaoFinPedido();
-            $daoFinPedido->setIdPedido($this->getIdPedido());
-            $daoFinPedido->setIdPedidoSituacao($this->getIdPedidoSituacao());
-            $daoFinPedido->setStPedido($this->getStPedido());
-            
-            $daoFinPedido->retornaDadosPedido($pdo);
-            if (!$daoFinPedido->sucesso()) {
-                $this->msg_erros = "Não foi possível localizar os Dados do Pedido. ";
-                return false;
-            }
-
-            $busca = $daoFinPedido->getMsgRetorno();
-
-            //Atualiza a Situação do Pedido
-            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
-
-            if (!$daoFinPedido->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação e status do Pedido. ";
-                return false;
-            }
-
-            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
-                $this->msg_erros = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
-                return false;
-            }
-
-            return $daoFinPedido->sucesso();
-        } catch (Exception $exc) {
-            $this->msg_erros = $exc->getMessage();
-            return false;
-        }
-    }
-    
     public function retornaTotaisDoPedido($pdo) {
         try {
             if (empty($pdo)) {
@@ -1107,13 +1081,65 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
             $daoFinPedido->retornaStatusPedido($pdo);
-            if ($daoFinPedido->sucesso()) {
-                return $daoFinPedido->getMsgRetorno()['status_oficial'];
+            if ($daoFinPedido->sucesso()) {                
+                return array("status" => $daoFinPedido->getMsgRetorno()['status_oficial']
+                        , "situacao" => $daoFinPedido->getMsgRetorno()['situacao_oficial']);                                
             }
             return null;
         } catch (Exception $exc) {
             $this->msg_erros = $ex->getMessage();
             return null;
+        }
+    }
+    
+    public function atualizaStatusSituacaoOficialPedido(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não existe transação ativa";
+                return;
+            }
+            
+            $retorno = $this->retornaStatusOficialPedido($pdo);
+            if(empty($retorno)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Pedido";
+                return;
+            }                        
+            
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            
+            $daoFinPedido->retornaDadosPedido($pdo);
+            if (!$daoFinPedido->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Pedido";
+                return;
+            }
+
+            $busca = $daoFinPedido->getMsgRetorno();          
+
+            if (!Log::SalvaLogU('fin_pedido', $daoFinPedido->getIdPedido(), $busca, $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Pedido no LOG.";
+                return false;
+            }
+                                                                                                
+            $daoFinPedido->setStPedido($retorno['status']);
+            $daoFinPedido->setIdPedidoSituacao($retorno['situacao']);
+            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
+            if(!$daoFinPedido->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar o Status do Pedido";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualizado";                        
+            
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;            
         }
     }
 
