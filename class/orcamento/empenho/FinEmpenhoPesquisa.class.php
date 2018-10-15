@@ -128,9 +128,16 @@ class FinEmpenhoPesquisa {
                                 . '<td class="text-center">'
                                     . '<button type="button" title="Ver Empenho" class="ver-empenho" value='.$linha['id_empenho'].'>'
                                         . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
-                                    . '</button>'
-                                . '</td>'
+                                    . '</button>';
+                    //Situação Cadastrado Pode Cancelar
+                    if($linha['sit_empenho'] == '1'){
+                        $tabela .= ' <button type="button" title="Cancelar Empenho Total" class="cancelar-empenho" value='.$linha['id_empenho'].'>'
+                                    . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
+                                    . '</button>';
+                    }
+                    $tabela .= '</td>'
                             . '</tr>';
+                    return $tabela;
                 }
             } 
             return $tabela;

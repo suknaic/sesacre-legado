@@ -571,6 +571,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                          when '5' then 'Pago Total'
                          when '6' then 'Cancelado'
                     end as situacao
+                    , sit_empenho
                  from
                     fin_empenho emp 
                     inner join
@@ -620,6 +621,35 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             }
         } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    
+    public function verificaExisteOrdemDocumentoLiquidacao(PDO $pdo = null) {
+        try {
+            $sql = "SELECT distinct on (E.id_empenho) E.id_empenho, O.id_ordem, DF.id_documento_fiscal, L.id_liquidacao"
+                    . " FROM fin_empenho E"
+                    . " LEFT JOIN fin_ordem O ON O.id_pedido = E.id_pedido AND O.sit_ordem <> '0'"
+                    . " LEFT JOIN fin_documento_fiscal DF ON DF.id_pedido = E.id_pedido AND DF.id_documento_situacao <> 7"
+                    . " LEFT JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4"
+                    . " WHERE E.id_empenho = :idEmpenho"
+                    . " AND ("
+                    . " O.id_ordem IS NOT NULL "
+                    . " OR DF.id_documento_fiscal IS NOT NULL"
+                    . " OR L.id_liquidacao IS NOT NULL"
+                    . " )";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_STR);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = true;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 }

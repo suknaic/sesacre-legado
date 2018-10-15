@@ -7,6 +7,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoPes
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
 
 $session = new Session();
+if(!$session->vPFinanceiro()){
+    header("Location: /pages/index.php"); 
+}
 $tipoGasto = new TipoGasto();
 $pessoaJuridicaOptions = SesPessoaJuridicaModel::optionPessoaJuridica();
 
