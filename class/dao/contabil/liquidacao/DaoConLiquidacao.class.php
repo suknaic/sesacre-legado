@@ -219,7 +219,10 @@ class DaoConLiquidacao extends ConLiquidacao {
                 on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
                 left join fin_documento_situacao as docSit 
                 on docSit.id_documento_situacao = docFis.id_documento_situacao 
-                left join (select sum(vl_pagamento) as valorPagamento, id_liquidacao  from con_pagamento group by id_liquidacao) as pagamento
+                left join (select sum(vl_pagamento) as valorPagamento, id_liquidacao  
+                           from con_pagamento 
+                           where id_pagamento_situacao = '2' 
+                           group by id_liquidacao) as pagamento
                 on pagamento.id_liquidacao = liq.id_liquidacao
                 where liq.id_liquidacao = :id_liquidacao
                 order by  docFis.nr_documento_fiscal";
@@ -244,7 +247,7 @@ class DaoConLiquidacao extends ConLiquidacao {
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
-                    liq.nr_liquidacao,
+                    (substr(replace(liq.nr_liquidacao,'/',''),1,10) || '/' || (substr(replace(liq.nr_liquidacao,'/',''),11,4))) as nr_liquidacao,
                     ped.nr_pedido,
                     (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
                     pj.nr_cnpj,

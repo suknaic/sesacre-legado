@@ -138,7 +138,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th class="text-center">Nº da Entrega</th>
+                                                                            <th class="text-center">Nº da Entrega ou Execução/Serviço</th>
                                                                             <th class="text-center">Nº da Ordem</th>
                                                                             <th class="text-center">Data do Aviso</th>
                                                                             <th class="text-center">Data Limite para Entrega</th>

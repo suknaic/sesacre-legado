@@ -19,22 +19,22 @@ $(document).ready(function () {
         window.open("/pages/contabil/pagamento/ver_pagamento/index.php?&id=" + id);
     });
     
-    $('body').on('click', '.editar-liquidacao', function (e) {
+    $('body').on('click', '.editar-pagamento', function (e) {
         var id = $(this).val();
-        window.open("/pages/contabil/liquidacao/edit_liquidacao/index.php?&id=" + id);
+        window.open("/pages/contabil/pagamento/edit_pagamento/index.php?&id=" + id);
     });
 
 
-    $('body').on('click', '.excluir-liquidacao', function (e) {
+    $('body').on('click', '.excluir-pagamento', function (e) {
        
         var $this = $(this);        
         var item = $this.closest('tr').data('objeto');
-        var id = item.id_liquidacao;     
+        var id = item.id_pagamento;     
 
         bootbox.confirm({
             title: 'Cancelamento do Pagamento',
             message: 'Você tem Certeza que deseja continuar com o \n\
-                Cancelamento do Pagamento <span class="text-danger">' + item.nr_liquidacao + '</span>?\n\
+                Cancelamento do Pagamento <span class="text-danger">' + item.nr_pagamento + '</span>?\n\
                 <br> \n\
                 <div class="form-group"> \n\
                     <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label> \n\
@@ -78,10 +78,11 @@ $(document).ready(function () {
                         "dataType": "html",
                         "method": "post",
                         "data": {
-                            "acao": "cancelarLiquidacao",
+                            "acao": "cancelarPagamento",
                             "dados": dados
                         },
-                        "success": function (response) {    
+                        "success": function (response) {   
+                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return true;

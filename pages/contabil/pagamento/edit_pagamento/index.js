@@ -11,11 +11,6 @@ $(document).ready(function () {
 
     $('#dt_pagamento').mask("99/99/9999");
 
-    //busca pedido
-    $('#modalItem').on('shown.bs.modal', function () {
-        $('#codItemPesquisa').focus();
-    });
-
     //Masca para valor
     $("body").on("focus", ".valorRetPagamento", function () {
         $(this).priceFormat({
@@ -35,137 +30,73 @@ $(document).ready(function () {
         });
     });
 
-    $('.docFis').hide();
 
-    //função para pesquisa licitacao do gcon
-    $('body').on('click', '#btn-pesquisa', function (e) {
-        var dados = $("#codItemPesquisa").val();
+    function listaAnotacoes() {
         $.ajax({
-            "url": url,
-            "dataType": 'html',
+            "url": "/pages/contabil/pagamento/ver_pagamento/request.php",
+            "method": "GET",
+            "dataType": "html",
             "data": {
-                "acao": "retornaLiquidacao",
-                "dados": dados
-
+                "acao": "listaAnotacoes",
+                "pagamento": $("#id_pagamento").val()
             },
+
             "success": function (response) {
-                func.carregaTabelaPadrao('tabelaItens', response, [], true);
+
+                if (response.trim() === "SessaoExpirada") {
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+
+                    $("#anotacoes").html("");
+                    $("#anotacoes").html(response.msg);
+                    return false;
+                } else {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
             }
         });
-    });
+    }
+
+    listaAnotacoes();
 
 
     $.ajax({
         "url": url,
         "dataType": 'html',
         "data": {
-            "acao": "retornaTipoRemetenteERemetente"
+            "acao": "retornaDocFiscaisPagemento",
+            "dados": dados
         },
         "success": function (response) {
-            $("#id_remetente").html("");
-            $("#id_remetente").append(response);
+            $("#selectDocumentoFiscal").html("");
+            $("#selectDocumentoFiscal").append(response);
         }
     });
 
-    $('body').on('click', '.selecionaItem', function (e) {
-        var $this = $(this);
-        var dados = {
-            "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
-            "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
-            "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
-            "id_liquidacao": $("body").find(".selecionaItem").attr("idLiquidacao"),
-            "nr_liquidacao": $("#codItemPesquisa").val()
-        }
-
-        limpaCampos();
-        /**
-         * retornaContratosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaContratosPagamento",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".contratos").html("");
-                $(".contratos").append(response);
-            }
-        });
-        /**
-         * retornaDadosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaPedidoPagemento",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".pedido").html("");
-                $(".pedido").append(response);
-
-                habilitaDocumentosFiscais();
-            }
-        });
-        /**
-         * retornaDadosEmpenho
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaEmpenhoPagemento",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".empenho").html("");
-                $(".empenho").append(response);
-            }
-        });
-
-        /**
-         * retornaDadosLiquidacao
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaLiquidacaoPagemento",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $(".dadosLiquidacao").html("");
-                $(".dadosLiquidacao").append(response);
-            }
-        });
-
-        /**
-         * retornaDocumentosEmpenho
-         */
-
-
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaDocFiscaisPagemento",
-                "dados": dados
-            },
-            "success": function (response) {
-                $("#selectDocumentoFiscal").html("");
-                $("#selectDocumentoFiscal").append(response);
-            }
-        });
-
-        $('#modalItem').modal('hide');
-    });
 
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
@@ -239,11 +170,11 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
-                
+
                 var linha = $(this).data('objeto');
 
 
-                var vl_documento_pagamento =  $("input[name=valorRetPagamento\\[\\]]").val();
+                var vl_documento_pagamento = $("input[name=valorRetPagamento\\[\\]]").val();
 
                 var vl_documento_pagamento_saldo = linha.saldo;
 

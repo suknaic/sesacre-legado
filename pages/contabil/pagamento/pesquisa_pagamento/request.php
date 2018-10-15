@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/PagamentoPesquisa.class.php";
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
 
 
 $session = new Session('ajax');
@@ -44,15 +44,15 @@ switch ($_REQUEST['acao']) {
             break;
         }
         
-    CASE 'cancelarLiquidacao':
+    CASE 'cancelarPagamento':
         $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         
         try {
-            $liquidacao = new Liquidacao();
-            $liquidacao->setIdLiquidacao($dados['id'])
-                       ->setUsuario($session->getIdUser())
-                       ->setMotivoCancelamento($dados['justificativa']);
-            echo $liquidacao->cancelarLiquidacao();
+            $pagamento = new ConPagamento();
+            $pagamento->setIdPagamento($dados['id']);
+            $pagamento->setIdPessoa($session->getIdUser());
+            $pagamento->setDsAnotacao($dados['justificativa']);
+            echo $pagamento->cancelarPagamento();
             return;
             break;
             

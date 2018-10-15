@@ -216,7 +216,7 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Nº Doc. Fiscal</th>
                                                     <th class="text-center">CPF/CNPJ Fornecedor</th>
-                                                    <th class="text-center">Data Liquidação</th>
+                                                    <th class="text-center">Data Pagamento</th>
                                                     <th class="text-center">Valor</th>
                                                     <th class="text-center">Situação</th>
                                                     <th class="text-center">Ação</th> 

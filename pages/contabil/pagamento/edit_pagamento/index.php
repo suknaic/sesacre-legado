@@ -53,69 +53,19 @@ require_once "index.load.php";
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--Modal itens content-->
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Busca de Liquidação</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número do pedido" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button" id="btn-pesquisa">
-                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Pedido</th>
-                                                            <th>Nº liquidação</th>
-                                                            <th>Data liquidação</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
+                            <input type="hidden" name="id_pagamento" id="id_pagamento" value="<?php echo $id; ?>"/>
+                            <input type="hidden" name="id_liquidacao" id="id_liquidacao" value="<?php echo $id; ?>"/>
                             <div class="panel">                                
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Pesquisa Liquidação:<span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
-                                                <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
-                                                    <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-
+                                            <?php echo $dadosContrato; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -123,7 +73,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-
+                                            <?php echo $dadosPedido; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +81,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-
+                                            <?php echo $dadosEmpenho; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -139,7 +89,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body dadosLiquidacao">
-
+                                            <?php echo $dadosLiquidacao; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -184,7 +134,7 @@ require_once "index.load.php";
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
+                                                                        <?php echo $tabelaDocumentosFiscais; ?>
                                                                     </tbody>
 
                                                                 </table>
@@ -211,7 +161,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_pagamento" id="nr_pagamento" />
+                                                                    <input class="form-control" type="text" name="nr_pagamento" id="nr_pagamento" value="<?php echo $dadosPagamento["nr_pagamento"]; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -222,7 +172,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" />
+                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -233,7 +183,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_pagamento" id="dt_pagamento" />
+                                                                    <input class="form-control" type="text" name="dt_pagamento" id="dt_pagamento" value="<?php echo $dadosPagamento["dt_pagamento"]; ?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -261,7 +211,7 @@ require_once "index.load.php";
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="id_remetente" id="id_remetente">
-                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                        <?php echo $selectRemetente; ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -356,6 +306,6 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/contabil/pagamento/cad_pagamento/index.js"></script>
+        <script src="/pages/contabil/pagamento/edit_pagamento/index.js"></script>
     </body>
 </html>

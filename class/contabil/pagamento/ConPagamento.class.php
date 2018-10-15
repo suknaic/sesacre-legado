@@ -14,9 +14,12 @@ class ConPagamento {
     private $dt_pagamento = null;
     private $vl_pagamento = null;
     private $vl_pagamento_saldo = null;
-    private $ds_pagamento = null;
+    private $ds_anotacao = null;
     private $st_ativo = null;
     private $docs_pagamento = null;
+    private $id_pessoa = null;
+    private $sitCadastrado = 1;
+    private $sitCancelado = 2;
 
     public function getIdPagamento() {
         return $this->id_pagamento;
@@ -118,12 +121,12 @@ class ConPagamento {
         return $this;
     }
 
-    public function getDsPagamento() {
-        return $this->ds_pagamento;
+    public function getDsAnotacao() {
+        return $this->ds_anotacao;
     }
 
-    public function setDsPagamento($ds_pagamento) {
-        $this->ds_pagamento = $ds_pagamento;
+    public function setDsAnotacao($ds_anotacao) {
+        $this->ds_anotacao = $ds_anotacao;
 
         return $this;
     }
@@ -148,26 +151,41 @@ class ConPagamento {
         return $this;
     }
 
+    public function getIdPessoa() {
+        return $this->id_pessoa;
+    }
+
+    public function setIdPessoa($id_pessoa) {
+        $this->id_pessoa = $id_pessoa;
+
+        return $this;
+    }
+
+    public function getSitCadastrado() {
+        return $this->sitCadastrado;
+    }
+
+    public function getSitCancelado() {
+        return $this->sitCancelado;
+    }
+
     public function salvaPagamento() {
         try {
 
-
-            if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) || empty($this->vl_pagamento_saldo) || empty($this->ds_pagamento)) {
+            if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) || empty($this->vl_pagamento_saldo)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-
 
             if (round($this->vl_pagamento_saldo, 4) < round(Metodos::ConverteValorIng($this->vl_pagamento), 4)) {
                 return Metodos::retornoAjax("Erro", "alert", "Valor do pagamento e maior que o saldo da liquidação.");
             }
-
 
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
             $daoConPagamento = new DaoConPagamento();
-            $daoConPagamento->setIdPagamentoSituacao(1);
+            $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
             $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
             $daoConPagamento->setIdLotacao($this->id_lotacao);
@@ -177,11 +195,9 @@ class ConPagamento {
             $daoConPagamento->setDtPagamento(Metodos::ConverteDataING($this->dt_pagamento));
             $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
             $daoConPagamento->setVlPagamentoSaldo($this->vl_pagamento_saldo);
-            $daoConPagamento->setDsPagamento($this->ds_pagamento);
             $daoConPagamento->salvaPagamento($pdo);
-
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
-
+            
             if (!empty($this->docs_pagamento)) {
                 foreach ($this->docs_pagamento as $dados) {
 
@@ -203,11 +219,39 @@ class ConPagamento {
                     }
                 }
             }
+            
+            $conPagamentoHistorico = new ConPagamentoHistorico();
+            $conPagamentoHistorico->setIdPagamento($this->id_pagamento);
+            $conPagamentoHistorico->setIdPessoa($this->id_pessoa);
+            $conPagamentoHistorico->setIdLotacao($this->id_lotacao);
+            $conPagamentoHistorico->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
+            $conPagamentoHistorico->setIdPagamentoSituacao($this->sitCadastrado);
+            $conPagamentoHistorico->setIdPagamentoStatus(1);
+            $conPagamentoHistorico->setDsPagamentoHistorico($this->ds_anotacao);
+
+            $conPagamentoHistorico->salvaHistoricoPagamento($pdo);
+            
+            if (!$conPagamentoHistorico->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o historico pagamento");
+            }
+
+            $conPagamentoAnotacoes = new ConPagamentoAnotacoes();
+            $conPagamentoAnotacoes->setIdPagamento($this->id_pagamento);
+            $conPagamentoAnotacoes->setIdPessoa($this->id_pessoa);
+            $conPagamentoAnotacoes->setDsPagamentoAnotacao($this->ds_anotacao);
+            $conPagamentoAnotacoes->salvaAnotacaoPagamento($pdo);
+
+            if (!$conPagamentoAnotacoes->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a Anotação");
+            }
 
             if ($daoConPagamento->Sucesso()) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", "Pagamento cadastrado com sucesso.");
             }
+
             $pdo->rollBack();
             return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar o pagamento");
         } catch (Exception $ex) {
@@ -229,14 +273,56 @@ class ConPagamento {
         }
     }
 
-    public function tabelaDocumentoPagamentoVisualiza() {
+    public function tabelaDocumentoPagamentoVisualiza(bool $condicao = false) {
         try {
             $conPagamentoDoc = new ConPagamentoDoc();
             $conPagamentoDoc->setIdPagamento($this->id_pagamento);
-            return $conPagamentoDoc->montaTabelaDocumentosPagamento(false);
-            
+            return $conPagamentoDoc->montaTabelaDocumentosPagamento($condicao);
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public function cancelarPagamento() {
+        try {
+            if (empty($this->id_pagamento) || empty($this->ds_anotacao)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->setIdPagamento($this->id_pagamento);
+            $daoConPagamento->setIdPagamentoSituacao($this->getSitCancelado());
+
+            $daoConPagamento->retornaDadosLogPagamaneto($pdo);
+
+            if (!$daoConPagamento->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados deste Pagamento");
+            }
+
+            $dadosPagamento = $daoConPagamento->getMsgRetorno();
+
+            $daoConPagamento->mudaSituacaoPagamento($pdo);
+
+            if (!$daoConPagamento->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoConPagamento->getMsgRetorno());
+            }
+
+            if (!Log::SalvaLogU('con_pagamento', $this->id_pagamento, $dadosPagamento, $pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+            }
+     
+     
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
+        } catch (Exception $exc) {
+            //Se der algum erro, registra o erro no objeto
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 
