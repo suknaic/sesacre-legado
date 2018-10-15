@@ -52,7 +52,7 @@ switch ($_REQUEST['acao']) {
             $pagamento->setIdPagamento($dados['id']);
             $pagamento->setIdPessoa($session->getIdUser());
             $pagamento->setDsAnotacao($dados['justificativa']);
-            
+            echo $pagamento->cancelarPagamento();
             return;
             break;
             

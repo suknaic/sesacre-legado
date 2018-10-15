@@ -185,7 +185,7 @@ class ConPagamento {
             $pdo->beginTransaction();
 
             $daoConPagamento = new DaoConPagamento();
-            $daoConPagamento->setIdPagamentoSituacao($this->getIdPagamentoSituacao());
+            $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
             $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
             $daoConPagamento->setIdLotacao($this->id_lotacao);
@@ -197,7 +197,7 @@ class ConPagamento {
             $daoConPagamento->setVlPagamentoSaldo($this->vl_pagamento_saldo);
             $daoConPagamento->salvaPagamento($pdo);
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
-
+            
             if (!empty($this->docs_pagamento)) {
                 foreach ($this->docs_pagamento as $dados) {
 
@@ -219,18 +219,18 @@ class ConPagamento {
                     }
                 }
             }
-
+            
             $conPagamentoHistorico = new ConPagamentoHistorico();
             $conPagamentoHistorico->setIdPagamento($this->id_pagamento);
             $conPagamentoHistorico->setIdPessoa($this->id_pessoa);
             $conPagamentoHistorico->setIdLotacao($this->id_lotacao);
             $conPagamentoHistorico->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
-            $conPagamentoHistorico->setIdPagamentoSituacao($this->getIdPagamentoSituacao());
+            $conPagamentoHistorico->setIdPagamentoSituacao($this->sitCadastrado);
             $conPagamentoHistorico->setIdPagamentoStatus(1);
             $conPagamentoHistorico->setDsPagamentoHistorico($this->ds_anotacao);
 
             $conPagamentoHistorico->salvaHistoricoPagamento($pdo);
-
+            
             if (!$conPagamentoHistorico->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o historico pagamento");
@@ -283,7 +283,7 @@ class ConPagamento {
         }
     }
 
-    function cancelarPagamento() {
+    public function cancelarPagamento() {
         try {
             if (empty($this->id_pagamento) || empty($this->ds_anotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
@@ -298,74 +298,26 @@ class ConPagamento {
             $daoConPagamento->setIdPagamentoSituacao($this->getSitCancelado());
 
             $daoConPagamento->retornaDadosLogPagamaneto($pdo);
-            
+
             if (!$daoConPagamento->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os dados deste Pagamento");
             }
 
             $dadosPagamento = $daoConPagamento->getMsgRetorno();
 
-            if (!Log::SalvaLogU('con_pagamento', $this->id_pagamento, $dadosPagamento, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-            }
-            
             $daoConPagamento->mudaSituacaoPagamento($pdo);
-            
+
             if (!$daoConPagamento->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $daoConPagamento->getMsgRetorno());
             }
 
-            //Seta as informações complementares para salvar no histórico
-            $this->setIdLiquidacaoSituacao($this->getSitCancelado())
-                    ->setIdLotacao($dadosLiquidacao['id_lotacao'])
-                    ->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);
-
-            //Busca os Documentos Fiscais associado a Liquidacao para voltar o status de 'A Liquidar'
-            $liquidacaoDoc = new LiquidacaoDoc();
-            $liquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao());
-
-            $liquidacaoDoc->retornaDocumentosPorLiquidacao($pdo);
-
-            if (!$liquidacaoDoc->getSucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
-            }
-
-            $documentos = $liquidacaoDoc->getMensagens(); //Retorna o resultado da consulta
-
-            if ($documentos) {
-                $gdof = new FinDocumentoFiscal();
-                foreach ($documentos as $doc) {
-                    $gdof->setIdDocumentoFiscal($doc['id_documento_fiscal'])
-                            ->setIdDocumentoSituacao($gdof->getDocSitALiquidar());
-                    if (!$gdof->atualizaSituacaoDocumentoGDOF($pdo)) {
-                        $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", $gdof->getMsgErros());
-                    }
-                }
-            }
-
-            //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo)) {
+            if (!Log::SalvaLogU('con_pagamento', $this->id_pagamento, $dadosPagamento, $pdo)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
-            };
-
-            //Armazena o ID do empenho no objeto para poder atualizar a situação do Empenho
-            $this->idEmpenho = $dadosLiquidacao['id_empenho'];
-            //Atualiza a situação do empenho
-            if (!$this->atualizaEmpenho($pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Empenho: " . $this->mensagens);
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-
-            //Atualiza a situação do pedido
-            if (!$this->atualizaPedido($pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Pedido: " . $this->mensagens);
-            }
-
+     
+     
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
         } catch (Exception $exc) {

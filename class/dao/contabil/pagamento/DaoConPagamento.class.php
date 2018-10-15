@@ -169,8 +169,8 @@ class DaoConPagamento extends ConPagamentoTb {
         try {
             $result = $pdo->prepare("UPDATE con_pagamento SET id_pagamento_situacao = :id_pagamento_situacao"
                     . " WHERE id_pagamento = :id_pagamento ");
-            $result->bindValue(":id_pagamento", $this->getIdLiquidacao(), PDO::PARAM_INT);
-            $result->bindValue(":id_pagamento_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+            $result->bindValue(":id_pagamento_situacao", $this->getIdPagamentoSituacao(), PDO::PARAM_INT);
             $result->execute();
             $this->sucesso = true;
         } catch (PDOException $e) {
