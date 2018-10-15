@@ -273,11 +273,11 @@ class ConPagamento {
         }
     }
 
-    public function tabelaDocumentoPagamentoVisualiza() {
+    public function tabelaDocumentoPagamentoVisualiza(bool $condicao = false) {
         try {
             $conPagamentoDoc = new ConPagamentoDoc();
             $conPagamentoDoc->setIdPagamento($this->id_pagamento);
-            return $conPagamentoDoc->montaTabelaDocumentosPagamento(false);
+            return $conPagamentoDoc->montaTabelaDocumentosPagamento($condicao);
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
