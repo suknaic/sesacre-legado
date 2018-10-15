@@ -685,7 +685,7 @@ class Pedido {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
                                                         aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '</span> 
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"].'/'.$campos['ano']. '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
