@@ -244,7 +244,7 @@ class DaoConLiquidacao extends ConLiquidacao {
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
-                    liq.nr_liquidacao,
+                    (substr(replace(liq.nr_liquidacao,'/',''),1,10) || '/' || (substr(replace(liq.nr_liquidacao,'/',''),11,4))) as nr_liquidacao,
                     ped.nr_pedido,
                     (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
                     pj.nr_cnpj,
