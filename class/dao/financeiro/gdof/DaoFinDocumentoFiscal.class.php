@@ -168,7 +168,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaIfPedidoPorIdDocumento(PDO $pdo) {
         try {
-            $sql = "select DISTINCT (p.nr_pedido), to_char(p.dt_pedido,'YYYY') as ano_pedido,p.id_pedido, p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
+            $sql = "select DISTINCT (p.nr_pedido), to_char(p.dt_pedido,'YYYY') as ano_pedido,p.id_pedido, (p.nr_pedido || '/' || to_char(p.dt_pedido,'YYYY')) as nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte,
                     programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                     despesa.cd_despesa_elemento, despesa.ds_despesa_elemento,
                     p.vl_pedido, desp.cd_despesa, desp.ds_despesa, p.id_tipo_solicitacao, doc.id_pedido
@@ -470,7 +470,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         to_char(doc.dt_emissao,'dd/mm/yyyy') as dt_emissao, 
                         (pedido.nr_pedido || '/' || to_char(pedido.dt_pedido,'YYYY') ) as nr_pedido,
                         contrato.nr_contrato,
-                        emp.nr_empenho,
+                        --emp.nr_empenho,
+                        concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
                         tpDoc.nm_tipo_documento,
                         (
                            trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
@@ -982,42 +983,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-//    public function retornaTipoLotacaoParaRecebimento(PDO $pdo, int $idPessoa = 0){
-//        try {
-//            $sql = "select tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao
-//                    from fin_doc_vinc_recebimento as recebimento
-//
-//                    inner join fin_doc_lotacao as lotacaoTipo
-//                    on lotacaoTipo.id_doc_lotacao = recebimento.id_doc_lotacao
-//
-//                    inner join fin_doc_tipo_lotacao as tipoLotacao
-//                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
-//
-//                    inner join fin_doc_parm_tramitacao as parametro
-//                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
-//
-//                    inner join fin_doc_tipo_lotacao as tipoLotacaoRemetente
-//                    on tipoLotacaoRemetente.id_doc_tipo_lotacao = parametro.id_doc_tipo_remetente
-//
-//                    where recebimento.id_pessoa = :pessoa
-//                    group by tipoLotacaoRemetente.id_doc_tipo_lotacao, tipoLotacaoRemetente.nm_doc_tipo_lotacao";
-//            $stmt = $pdo->prepare($sql);
-//            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
-//            $stmt->execute();
-//            if ($stmt->rowCount() > 0) {
-//                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//                $this->sucesso = true;
-//            } else {
-//                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
-//                $this->sucesso = false;
-//            }
-//        } catch (PDOException $ex) {
-//            $this->sucesso = false;
-//            $this->msgRetorno = $ex->getMessage();
-//        }
-//    }
-    
-
     public function retornaDestinatarioPorTipo(PDO $pdo, $tipo) {
         try {
             $sql = "select lotacao.id_lotacao, lotacao.nm_lotacao, docLotacao.id_doc_lotacao 

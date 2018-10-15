@@ -120,13 +120,19 @@ $(document).ready(function () {
         $(".linha-ordem").each(function () {
             ordens.push($(this).data('id'));
         });
+        
+        var dados = {
+            ordens: ordens,
+            documento: $("#id_documento_fiscal").val()
+        }
+        
 
         $.ajax({
             "url": "request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
-                "dados": ordens
+                "dados": dados
 
             },
             "success": function (response) {
