@@ -220,7 +220,8 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
             
             $sql = "select DISTINCT
                        (emp.nr_empenho),
-                       emp.nr_empenho,
+                       --emp.nr_empenho,
+                       concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
                        to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                        tpEmp.nm_tipo_empenho,
                        doc.vl_documento_saldo,

@@ -435,7 +435,7 @@ class DaoFinPedido extends FinPedidoTb {
                 $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
                         programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                         despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,
-                        p.vl_pedido
+                        p.vl_pedido, to_char(p.dt_pedido, 'yyyy') AS ano
                         from fin_pedido as p
                         inner join fin_fonte as f
                         on f.id_fonte = p.id_fonte
