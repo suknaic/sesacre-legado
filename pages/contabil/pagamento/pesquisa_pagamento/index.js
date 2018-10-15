@@ -19,9 +19,9 @@ $(document).ready(function () {
         window.open("/pages/contabil/pagamento/ver_pagamento/index.php?&id=" + id);
     });
     
-    $('body').on('click', '.editar-liquidacao', function (e) {
+    $('body').on('click', '.editar-pagamento', function (e) {
         var id = $(this).val();
-        window.open("/pages/contabil/liquidacao/edit_liquidacao/index.php?&id=" + id);
+        window.open("/pages/contabil/pagamento/edit_pagamento/index.php?&id=" + id);
     });
 
 

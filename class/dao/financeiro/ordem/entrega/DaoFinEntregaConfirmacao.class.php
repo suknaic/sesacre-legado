@@ -515,13 +515,13 @@ where orItens.id_ordem = :ordem";
         }
     }
 
-    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens
+    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, $idDocumentoFiscal
     /*, string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado*/) {
         try {
 //            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
-//            if (!empty($idDocumentoFiscal)) {
-//                $sqlDocumentoFiscal = $sqlDocumentoExiste;
-//            }
+            if (!empty($idDocumentoFiscal)) {;
+                $sqlDocumentoFiscal = " AND documento.id_documento_fiscal <> " . $idDocumentoFiscal;
+            }
             
             $sql = "SELECT confirmacao.id_entrega_confirmacao, confirmacao.nr_entrega_confirmacao,
                     concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem) as ordem 
@@ -541,7 +541,8 @@ where orItens.id_ordem = :ordem";
                           inner join fin_documento_fiscal as documento
                           on documento.id_documento_fiscal = entDocumento.id_documento_fiscal
                           where entDocumento.id_entrega_confirmacao = item.id_entrega_confirmacao
-                          and documento.id_documento_situacao <> '7'
+                          and documento.id_documento_situacao <> '7' 
+                          " . $sqlDocumentoFiscal ."
                        )
                     as saldo, item.id_entrega_confirmacao
                     from  fin_entrega_itens as item

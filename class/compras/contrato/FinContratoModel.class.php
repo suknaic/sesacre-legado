@@ -1028,7 +1028,7 @@ class FinContratoModel {
             if (!empty($this->id_lotacaoCentral)) {
                 $finCentraisModel = new FinCentraisModel();
 
-                foreach ($this->id_lotacaoCentral as $valor) {
+                foreach (array_unique($this->id_lotacaoCentral) as $valor) {
                     $finCentraisModel->setIdContrato($this->id_contrato);
                     $finCentraisModel->setIdLotacao($valor);
                     if (!$finCentraisModel->verificaCentralCadastro($pdo)) {
@@ -1054,7 +1054,7 @@ class FinContratoModel {
             $gestoresTitulares = $finGestor->retornarGestoresContrato(1);
             //************************ cadastrar gestor titular ************************
             if (empty($gestoresTitulares) && !empty($this->id_pessoa_gestor_titular)) {
-                $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_titular);
+                $finGestor->cadastraGestor($pdo, $this->id_contrato, array_unique($this->id_pessoa_gestor_titular));
                 if (!$finGestor->sucesso()) {
                     $sucesso = false;
                 }
@@ -1099,7 +1099,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_gestor_titular, $idPessoa);
                 if (!empty($insert)) {
-                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $insert, 1);
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, array_unique($insert), 1);
                     if (!$finGestor->sucesso()) {
                         $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
                         $pdo->rollBack();
@@ -1112,7 +1112,7 @@ class FinContratoModel {
             //************************ cadastrar gestor substituto **********************
             if (empty($gestoresSubstitutos) && !empty($this->id_pessoa_gestor_substituto)) {
                 if (!empty($this->id_pessoa_gestor_substituto)) {
-                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $this->id_pessoa_gestor_substituto, 2);
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, array_unique($this->id_pessoa_gestor_substituto), 2);
                     if (!$finGestor->sucesso()) {
                         $sucesso = false;
                     }
@@ -1157,7 +1157,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_gestor_substituto, $idPessoa);
                 if (!empty($insert)) {
-                    $finGestor->cadastraGestor($pdo, $this->id_contrato, $insert, 2);
+                    $finGestor->cadastraGestor($pdo, $this->id_contrato, array_unique($insert), 2);
                     if (!$finGestor->sucesso()) {
                         $retorno = Metodos::retornoAjax("Erro", "console", $finGestor->getMsgRetorno());
                         $pdo->rollBack();
@@ -1174,7 +1174,7 @@ class FinContratoModel {
             //************************ cadastrar ficais titular ************************
             if (empty($fiscaisTitulares) && !empty($this->id_pessoa_fiscal_titular)) {
                 if (!empty($this->id_pessoa_fiscal_titular)) {
-                    foreach ($this->id_pessoa_fiscal_titular as $fiscalTitular) {
+                    foreach (array_unique($this->id_pessoa_fiscal_titular) as $fiscalTitular) {
                         $finFiscais->setIdContrato($this->id_contrato);
                         $finFiscais->setIdPessoa($fiscalTitular);
                         $finFiscais->setDtIniFiscal(date('Y-m-d'));
@@ -1228,7 +1228,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_fiscal_titular, $idPessoa);
                 if (!empty($insert)) {
-                    foreach ($insert as $fiscalTitular) {
+                    foreach (array_unique($insert) as $fiscalTitular) {
                         $finFiscais->setIdContrato($this->id_contrato);
                         $finFiscais->setIdPessoa($fiscalTitular);
                         $finFiscais->setDtIniFiscal(date('Y-m-d'));
@@ -1252,7 +1252,7 @@ class FinContratoModel {
             //************************ cadastrar fiscais substituto **********************
             if (empty($fiscaisSubstitutos) && !empty($this->id_pessoa_fiscal_substituto)){
                 if (!empty($this->id_pessoa_fiscal_substituto)) {
-                    foreach ($this->id_pessoa_fiscal_substituto as $ficalSubstituto) {
+                    foreach (array_unique($this->id_pessoa_fiscal_substituto) as $ficalSubstituto) {
                         $finFiscais->setIdContrato($this->id_contrato);
                         $finFiscais->setIdPessoa($ficalSubstituto);
                         $finFiscais->setDtIniFiscal(date('Y-m-d'));
@@ -1306,7 +1306,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_fiscal_substituto, $idPessoa);
                 if (!empty($insert)) {
-                    foreach ($insert as $fiscalSubstituto) {
+                    foreach (array_unique($insert) as $fiscalSubstituto) {
                         $finFiscais->setIdContrato($this->id_contrato);
                         $finFiscais->setIdPessoa($fiscalSubstituto);
                         $finFiscais->setDtIniFiscal(date('Y-m-d'));
@@ -1334,7 +1334,7 @@ class FinContratoModel {
             //************************ cadastrar sub-ficais titular ************************
             if (empty($subFiscais) && !empty($this->id_pessoa_sub_fiscal_titular)) {
                 if (!empty($this->id_pessoa_sub_fiscal_titular)) {
-                    foreach ($this->id_pessoa_sub_fiscal_titular as $SubFiscalTitular) {
+                    foreach (array_unique($this->id_pessoa_sub_fiscal_titular) as $SubFiscalTitular) {
                         $finSubFiscais->setIdContrato($this->id_contrato);
                         $finSubFiscais->setIdPessoa($SubFiscalTitular);
                         $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
@@ -1388,7 +1388,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_sub_fiscal_titular, $idPessoa);
                 if (!empty($insert)) {
-                    foreach ($insert as $subFiscalTitular) {
+                    foreach (array_unique($insert) as $subFiscalTitular) {
                         $finSubFiscais->setIdContrato($this->id_contrato);
                         $finSubFiscais->setIdPessoa($subFiscalTitular);
                         $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
@@ -1466,7 +1466,7 @@ class FinContratoModel {
 
                 $insert = array_diff($this->id_pessoa_sub_fiscal_substituto, $idPessoa);
                 if (!empty($insert)) {
-                    foreach ($insert as $subFiscalSubstituto) {
+                    foreach (array_unique($insert) as $subFiscalSubstituto) {
                         $finSubFiscais->setIdContrato($this->id_contrato);
                         $finSubFiscais->setIdPessoa($subFiscalSubstituto);
                         $finSubFiscais->setDtIniSubFiscal(date('Y-m-d'));
@@ -1571,7 +1571,7 @@ class FinContratoModel {
             if (!empty($this->id_lotacaoCentral)) {
                 $finCentraisModel = new FinCentraisModel();
 
-                foreach ($this->id_lotacaoCentral as $valor) {
+                foreach (array_unique($this->id_lotacaoCentral) as $valor) {
                     $finCentraisModel->setIdContrato($daoContrato->getIdContrato());
                     $finCentraisModel->setIdLotacao($valor);
                     $finCentraisModel->cadastrarCentralContrato($pdo);
@@ -1593,7 +1593,7 @@ class FinContratoModel {
             //cadastrar gestor titular
             if (!empty($this->id_pessoa_gestor_titular)) {
                 $finGestor = new FinGestorModel();
-                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), $this->id_pessoa_gestor_titular, 1);
+                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), array_unique($this->id_pessoa_gestor_titular), 1);
                 if (!$finGestor->sucesso()) {
                     $sucesso = false;
                 }
@@ -1608,7 +1608,7 @@ class FinContratoModel {
             //cadastrar gestor substituto
             if (!empty($this->id_pessoa_gestor_substituto)) {
                 $finGestor = new FinGestorModel();
-                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), $this->id_pessoa_gestor_substituto, 2);
+                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), array_unique($this->id_pessoa_gestor_substituto), 2);
 
                 if (!$finGestor->sucesso()) {
                     $sucesso = false;
@@ -1624,7 +1624,7 @@ class FinContratoModel {
             //cadastrar fiscal
             if (!empty($this->id_pessoa_fiscal_titular)) {
                 $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->id_pessoa_fiscal_titular as $valor) {
+                foreach (array_unique($this->id_pessoa_fiscal_titular) as $valor) {
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                     $finFiscaisModel->setTpFiscal(1);
@@ -1646,7 +1646,7 @@ class FinContratoModel {
             //cadastrar fiscal substituto
             if (!empty($this->id_pessoa_fiscal_substituto)) {
                 $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->id_pessoa_fiscal_substituto as $valor) {
+                foreach (array_unique($this->id_pessoa_fiscal_substituto) as $valor) {
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                     $finFiscaisModel->setTpFiscal(2);
@@ -1668,7 +1668,7 @@ class FinContratoModel {
             //cadastrar Subfiscal
             if (!empty($this->id_pessoa_sub_fiscal_titular)) {
                 $subFiscalModel = new SubFiscalModel();
-                foreach ($this->id_pessoa_sub_fiscal_titular as $valor) {
+                foreach (array_unique($this->id_pessoa_sub_fiscal_titular) as $valor) {
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                     $subFiscalModel->setTpSubFiscal(1);
@@ -1690,7 +1690,7 @@ class FinContratoModel {
             //cadastrar Subfiscal substituto
             if (!empty($this->id_pessoa_sub_fiscal_substituto)) {
                 $subFiscalModel = new SubFiscalModel();
-                foreach ($this->id_pessoa_sub_fiscal_substituto as $valor) {
+                foreach (array_unique($this->id_pessoa_sub_fiscal_substituto) as $valor) {
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                     $subFiscalModel->setTpSubFiscal(2);
@@ -1749,8 +1749,8 @@ class FinContratoModel {
                 return $retorno;
             }
 
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro14", "console", $exc->getMessage());
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro14", "console", $ex->getMessage());
         }
     }
 
@@ -1778,7 +1778,7 @@ class FinContratoModel {
             }
             return $retorno;
         } catch (Exception $e) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $e->getMessage());
         }
     }
 

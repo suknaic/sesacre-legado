@@ -611,13 +611,14 @@ class FinEntregaConfirmacaoModel {
             $pdo = $conexao->connect();
             $arrayIdOrdens = array();
 
-            $finDocumentoFiscal = new FinDocumentoFiscal();
+//            $finDocumentoFiscal = new FinDocumentoFiscal();
 
-            $idOrdens = implode(' , ', $dados);
+            $idDocumentoFiscal = $dados['documento'] ?? ""; 
+            $idOrdens = implode(' , ', $dados['ordens']);
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
-            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens/*
+            $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens, $idDocumentoFiscal /*
                     , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado()*/);
-            $options = '<option value = "0" selected = "true">Selecione uma Entrega</option>';
+            $options = '<option value = "0" selected = "true">Selecione uma Entrega ou Execução/Serviço</option>';
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campo) {

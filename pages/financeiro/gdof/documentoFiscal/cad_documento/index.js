@@ -227,13 +227,18 @@ $(document).ready(function () {
         $(".linha-ordem").each(function () {
             ordens.push($(this).data('id'));
         });
+        
+        var dados = {
+            ordens: ordens,
+            documento: ""
+        }
 
         $.ajax({
             "url": "/pages/financeiro/gdof/documentoFiscal/cad_documento/request.php",
             "dataType": 'html',
             "data": {
                 "acao": "retornaOptionsDaEntrega",
-                "dados": ordens
+                "dados": dados
 
             },
             "success": function (response) {

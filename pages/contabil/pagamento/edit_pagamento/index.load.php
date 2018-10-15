@@ -1,5 +1,4 @@
 <?php
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
@@ -22,11 +21,6 @@ $pagamento->setIdPagamento($id);
 
 //DADOS DA PAGAMENTO
 $dadosPagamento = $pagamento->retornaDadosPagamento();
-//DADOS TRAMITACAO
-$vincTramitacao = new VincularTramitacao();
-$vincTramitacao->setIdDocTipoLotacao($dadosPagamento['id_doc_tipo_lotacao']);
-$vincTramitacao->setIdLotacao($dadosPagamento['id_lotacao']);
-$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo();
 //DADOS DO CONTRATO
 $finContratoModel = new FinContratoModel();
 $dadosContrato = $finContratoModel->retornaContratoGdof(null, $dadosPagamento["nr_pedido"]);
@@ -47,7 +41,10 @@ $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
 if ($dadosPagamento['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
     $tem_documentos = true;
-    $tabelaDocumentosFiscais = $pagamento->tabelaDocumentoPagamentoVisualiza(false);
+    $tabelaDocumentosFiscais = $pagamento->tabelaDocumentoPagamentoVisualiza(true);
 }
-
-
+//DADOS TRAMITACAO
+$vincTramitacao = new VincularTramitacao();
+$vincTramitacao->setIdDocTipoLotacao($dadosPagamento['id_doc_tipo_lotacao']);
+$vincTramitacao->setIdLotacao($dadosPagamento['id_lotacao']);
+$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo(); $liquidacao->retornaLiquidacaoParaPagamento(null);

@@ -186,12 +186,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da entrega:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Entrega ou Execução/Serviço:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="selectEntrega" id="selectEntrega">
-                                                                        <option value="0" selected="true">Selecione uma entrega</option>
+                                                                        <option value="0" selected="true">Selecione uma Entrega ou Execução/Serviço</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -203,7 +203,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                 <table id="tabelaEntrega" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th class="text-center">Nº da Entrega</th>
+                                                                            <th class="text-center">Nº da Entrega ou Execução/Serviço</th>
                                                                             <th class="text-center">Nº da Ordem</th>
                                                                             <th class="text-center">Data do Aviso</th>
                                                                             <th class="text-center">Data Limite para Entrega</th>
@@ -257,6 +257,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                         <h4 class="panel-title">Dados do Documento Fiscal</h4>
                                                     </div>
                                                     <div class="panel-body">
+                                                        <input type="hidden" id="id_documento_fiscal" value="<?php echo $documento['id_documento_fiscal']?>" />
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Protocolo Nº:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
