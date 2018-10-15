@@ -180,8 +180,10 @@ $(document).ready(function () {
                 clone = false;
             } else {
                 clone = true;
+                // $(".selectGestores option[value="+$(this).val()+"]").prop('disabled', true);
             }
         });
+
         if (clone == true) {
             e.preventDefault();
             if (contGestores < maxGestores) {
@@ -199,8 +201,10 @@ $(document).ready(function () {
     //Efeito para remover um select de um Gestor
     $("body").on('click', '.removeGestores', function (e) {
         e.preventDefault();
-        var $this = $(this);
-        $this.closest(".form-group").remove();
+        $(this).closest(".form-group").remove();
+        $("select[id=gestores]").each(function () {
+            $(".selectGestores option[value="+$(this).val()+"]").prop('disabled', false);
+        });
         contGestores--;
     });
 
@@ -208,13 +212,6 @@ $(document).ready(function () {
     var maxGestoresSub = 10;
     var contGestoresSub = 1;
     $("body").on("click", ".addGestorSubstituto", function (e) {
-        $("select[name=gestoresSub\\[\\]]").each(function () {
-            if ($(this).val() == 0 || $(this).val() == '') {
-                clone = false;
-            } else {
-                clone = true;
-            }
-        });
         if (clone == true) {
             e.preventDefault();
             if (contGestoresSub < maxGestoresSub) {
@@ -566,7 +563,7 @@ $(document).ready(function () {
             }
 
             if ($("#tipoDeGasto").val() == "" || $("#tipoDeGasto").val() == 0) {
-                func.modalAlert(func.msgPreencherCampos+' <strong>(Tipo de Gasto)</strong>>');
+                func.modalAlert(func.msgPreencherCampos+' <strong>(Tipo de Gasto)</strong>');
                 $this.prop("disabled", false);
                 return false;
             }
@@ -656,7 +653,6 @@ $(document).ready(function () {
                 "subFiscaisSub": subFiscaisSub,
                 "tipoDeGasto": $("#tipoDeGasto").val()
             };
-            console.log(contrato);
 
             $.ajax({
                 "method": "POST",
@@ -667,7 +663,6 @@ $(document).ready(function () {
                     "contrato": contrato
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

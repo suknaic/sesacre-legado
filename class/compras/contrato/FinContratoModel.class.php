@@ -1571,7 +1571,7 @@ class FinContratoModel {
             if (!empty($this->id_lotacaoCentral)) {
                 $finCentraisModel = new FinCentraisModel();
 
-                foreach ($this->id_lotacaoCentral as $valor) {
+                foreach (array_unique($this->id_lotacaoCentral) as $valor) {
                     $finCentraisModel->setIdContrato($daoContrato->getIdContrato());
                     $finCentraisModel->setIdLotacao($valor);
                     $finCentraisModel->cadastrarCentralContrato($pdo);
@@ -1593,7 +1593,7 @@ class FinContratoModel {
             //cadastrar gestor titular
             if (!empty($this->id_pessoa_gestor_titular)) {
                 $finGestor = new FinGestorModel();
-                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), $this->id_pessoa_gestor_titular, 1);
+                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), array_unique($this->id_pessoa_gestor_titular), 1);
                 if (!$finGestor->sucesso()) {
                     $sucesso = false;
                 }
@@ -1608,7 +1608,7 @@ class FinContratoModel {
             //cadastrar gestor substituto
             if (!empty($this->id_pessoa_gestor_substituto)) {
                 $finGestor = new FinGestorModel();
-                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), $this->id_pessoa_gestor_substituto, 2);
+                $finGestor->cadastraGestor($pdo, $daoContrato->getIdContrato(), array_unique($this->id_pessoa_gestor_substituto), 2);
 
                 if (!$finGestor->sucesso()) {
                     $sucesso = false;
@@ -1624,7 +1624,7 @@ class FinContratoModel {
             //cadastrar fiscal
             if (!empty($this->id_pessoa_fiscal_titular)) {
                 $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->id_pessoa_fiscal_titular as $valor) {
+                foreach (array_unique($this->id_pessoa_fiscal_titular) as $valor) {
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                     $finFiscaisModel->setTpFiscal(1);
@@ -1646,7 +1646,7 @@ class FinContratoModel {
             //cadastrar fiscal substituto
             if (!empty($this->id_pessoa_fiscal_substituto)) {
                 $finFiscaisModel = new FinFiscaisModel();
-                foreach ($this->id_pessoa_fiscal_substituto as $valor) {
+                foreach (array_unique($this->id_pessoa_fiscal_substituto) as $valor) {
                     $finFiscaisModel->setIdPessoa($valor);
                     $finFiscaisModel->setIdContrato($daoContrato->getIdContrato());
                     $finFiscaisModel->setTpFiscal(2);
@@ -1668,7 +1668,7 @@ class FinContratoModel {
             //cadastrar Subfiscal
             if (!empty($this->id_pessoa_sub_fiscal_titular)) {
                 $subFiscalModel = new SubFiscalModel();
-                foreach ($this->id_pessoa_sub_fiscal_titular as $valor) {
+                foreach (array_unique($this->id_pessoa_sub_fiscal_titular) as $valor) {
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                     $subFiscalModel->setTpSubFiscal(1);
@@ -1690,7 +1690,7 @@ class FinContratoModel {
             //cadastrar Subfiscal substituto
             if (!empty($this->id_pessoa_sub_fiscal_substituto)) {
                 $subFiscalModel = new SubFiscalModel();
-                foreach ($this->id_pessoa_sub_fiscal_substituto as $valor) {
+                foreach (array_unique($this->id_pessoa_sub_fiscal_substituto) as $valor) {
                     $subFiscalModel->setIdPessoa($valor);
                     $subFiscalModel->setIdContrato($daoContrato->getIdContrato());
                     $subFiscalModel->setTpSubFiscal(2);
@@ -1749,8 +1749,8 @@ class FinContratoModel {
                 return $retorno;
             }
 
-        } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro14", "console", $exc->getMessage());
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro14", "console", $ex->getMessage());
         }
     }
 
@@ -1778,7 +1778,7 @@ class FinContratoModel {
             }
             return $retorno;
         } catch (Exception $e) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $e->getMessage());
         }
     }
 
