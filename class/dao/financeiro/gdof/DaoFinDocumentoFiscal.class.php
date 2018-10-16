@@ -472,6 +472,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         contrato.nr_contrato,
                         --emp.nr_empenho,
                         concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
+                        nr_empenho as empenho_sm,
                         tpDoc.nm_tipo_documento,
                         (
                            trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999'))
@@ -638,6 +639,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                         (pedido.nr_pedido || '/' || to_char(pedido.dt_pedido,'YYYY') ) as nr_pedido,
                         contrato.nr_contrato,
                         concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho) - 4))), '/', substring(nr_empenho FROM '....$')) as nr_empenho,
+                        nr_empenho as empenho_sm,
                         protoc.id_protocolo,
                         tpDoc.nm_tipo_documento,
                         (
@@ -789,6 +791,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                        (pedido.nr_pedido || '/' || to_char(pedido.dt_pedido,'YYYY') ) as nr_pedido,
                        contrato.nr_contrato,
                        concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho) - 4))), '/', substring(nr_empenho FROM '....$')) as nr_empenho,
+                       nr_empenho as empenho_sm,
                        protoc.id_protocolo,
                        tpDoc.nm_tipo_documento,
                        (
@@ -935,23 +938,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
      */
     public function retornaTipoLotacaoParaEncaminhamento(PDO $pdo, int $idPessoa = 0) {
         try {
-//            $sql = "select tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao
-//                    from fin_doc_vinc_encaminhamento as encaminhamento
-//
-//                    inner join fin_doc_lotacao as lotacaoTipo
-//                    on lotacaoTipo.id_doc_lotacao = encaminhamento.id_doc_lotacao
-//
-//                    inner join fin_doc_tipo_lotacao as tipoLotacao
-//                    on tipoLotacao.id_doc_tipo_lotacao = lotacaoTipo.id_doc_tipo_lotacao
-//
-//                    inner join fin_doc_parm_tramitacao as parametro
-//                    on parametro.id_doc_tipo_remetente  =  tipoLotacao.id_doc_tipo_lotacao
-//
-//                    inner join fin_doc_tipo_lotacao as tipoLotacaoDestinario
-//                    on tipoLotacaoDestinario.id_doc_tipo_lotacao = parametro.id_doc_tipo_destinatario
-//
-//                    where encaminhamento.id_pessoa = :pessoa
-//                    group by tipoLotacaoDestinario.id_doc_tipo_lotacao, tipoLotacaoDestinario.nm_doc_tipo_lotacao";
             $sql = "select distinct docTpDest.id_doc_tipo_lotacao, docTpDest.nm_doc_tipo_lotacao
                     from fin_doc_vinc_encaminhamento as enc
                     inner join fin_doc_lotacao as docLot
@@ -1136,16 +1122,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     where id_documento_fiscal = :documento
                     order by id_doc_tramitacao desc 
                     limit 1";
-//            $sql = "select id_doc_origem,tipoLotOrigem.id_doc_tipo_lotacao as tipo_remetente,id_doc_destino, tipoLotDestino.id_doc_tipo_lotacao as tipo_destinatario
-//                    from fin_doc_tramitacao as tramitacao
-//                    left join fin_doc_lotacao as tipoLotOrigem
-//                    on tipoLotOrigem.id_doc_lotacao = tramitacao.id_doc_origem
-//                    left join fin_doc_lotacao as tipoLotDestino
-//                    on tipoLotDestino.id_doc_lotacao = tramitacao.id_doc_destino
-//                    where id_documento_fiscal = :documento
-//                    and tramitacao.id_doc_destino is not null
-//                    order by id_doc_tramitacao desc 
-//                    limit 1";
+
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();

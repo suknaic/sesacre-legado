@@ -83,97 +83,14 @@ $(document).ready(function () {
         }
     });
 
-
-    $('body').on('click', '.btn-editar', function (e) {
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-        } else {
-            e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-            var Estado = {
-                nome: $("#nmEstado").val(),
-                sigla: $("#nmSigla").val(),
-                id: $this.val(),
-                idp: $("#idPais").val()
-
-
-            };
-
-            if ($("#nmEstado").val() == "" || $this.val() == "") {
-                func.modalAlert(func.msgPreencherCampos);
-                $this.prop("disabled", false);
-                return false;
-            }
-
-            $.ajax({
-                "url": "/model/sistema/estado/request.php",
-                "dataType": "html",
-                "data": {
-                    "acao": "edtEstado",
-                    "estado": Estado
-                },
-                "success": function (response) {
-                    $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
-                        return false;
-                    }
-
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
-                        return false;
-                    } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
-                    return false;
-                }
-            });
-
-            $this.prop("disabled", false);
-        }
-    });
-
-
     $('body').on('click', '.btn-remover', function (e) {
-
         var $this = $(this);
         var id = $this.val();
         var item = $this.closest('td').find('.btn-edit').attr("nome");
 
         bootbox.confirm({
             title: 'Caixa de Confirmação',
-            message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
+            message: 'Você tem certeza que deseja continuar com a exclusão da cidade <span class="text-danger">' + item + '</span>?',
             buttons: {
                 'cancel': {
                     label: 'Não',
@@ -186,22 +103,22 @@ $(document).ready(function () {
             },
             callback: function (result) {
                 if (result) {
-                    var Estado = {
+                    var Cidade = {
                         id: id
-                    }
+                    };
 
-                    if (id == "") {
+                    if (Cidade.id == "" || Cidade.id == 0) {
                         func.modalAlert(func.msgPreencherCampos);
                         $this.prop("disabled", false);
                         return false;
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/estado/request.php",
+                        "url": "/pages/sistema/cidade/request.php",
                         "dataType": "html",
                         "data": {
-                            "acao": "remEstado",
-                            "estado": Estado
+                            "acao": "remCidade",
+                            "dados": Cidade
                         },
                         "success": function (response) {
                             if (response.trim() == "SessaoExpirada") {
@@ -212,47 +129,35 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg);
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
                                 return false;
                             } else {
-                                console.log('Ultimo else');
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
 
     $('body').on('click', '.btn-limpar', function (e) {
@@ -271,8 +176,8 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-edit', function (e) {
-        var id = parseInt($(this).val());
-        top.location.href='cadEditCidade.php?key='+btoa(id);
+        var id = $(this).val();
+        top.location.href='cadEditCidade.php?key='+id;
     });
 
     $('body').on('keypress', '.formCidade', function (e) {

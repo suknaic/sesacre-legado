@@ -41,14 +41,15 @@ switch ($_REQUEST['acao']) {
         try {
             
             $dados = filter_input(INPUT_GET, 'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            print_r($dados);
-            return;
+
             $cidade = new Cidade();
+            $cidade->setId_cidade($dados['id']);
             $cidade->setNm_cidade(trim($dados['nome']));
             $cidade->setId_estado(($dados['estado']));
             $cidade->setId_regional_geo(($dados['regionalGeo']));
             $cidade->setId_regional_saude(($dados['regionalSaude']));
-            echo $cidade->editarEstado();
+
+            echo $cidade->editarCidade();
             return;
             break;
         } catch (Exception $e) {
@@ -58,14 +59,15 @@ switch ($_REQUEST['acao']) {
         }  
         
     
-    case 'remEstado':
+    case 'remCidade':
         try {
                         
-            $est = filter_input(INPUT_GET, 'estado', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);            
-            
-            $vinc = new Estado();
-            $vinc->setIdEstado((int)$est['id']);
-            echo $vinc->removerEstado();                      
+            $id = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $cidade = new Cidade();
+            $cidade->setId_cidade($id['id']);
+
+            echo $cidade->removerCidade();
             return;
             break;
         } catch (Exception $e) {
@@ -107,7 +109,8 @@ switch ($_REQUEST['acao']) {
             $id = filter_input(INPUT_GET, 'id_cidade', FILTER_DEFAULT);
 
             $estado = new Estado();
-            echo "<option value = ''>Selecione um Estado</option>";
+            echo "<option value = ''>Selecione um Estado</option>
+                  <option value = 'Todos'>Todas as Cidades</option>";
             echo $estado->retornaOptionEstado(null, $id);
             return;
             
@@ -164,8 +167,9 @@ switch ($_REQUEST['acao']) {
             }
 
             $id = filter_input(INPUT_GET, 'id_cidade', FILTER_DEFAULT);
+
             $cidade = new Cidade();
-            $cidade->setId_cidade($id);
+            $cidade->setId_cidade(base64_decode($id));
 
             echo $cidade->carregaDadosCidade();
             return;

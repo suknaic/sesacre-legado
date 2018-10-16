@@ -294,7 +294,6 @@ class Estado {
     }
 
     public function retornaOptionEstado($idPais = null, $idEstado = null) {
-//        $retorno = "<option value = '0'>Selecione um estado</option>";
         $retorno = "";
         try {
             $conexao = new Conexao();
