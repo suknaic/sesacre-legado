@@ -416,46 +416,4 @@ class DocFiscalRecebimento {
         return Metodos::retornoAjax("ok", "html", "Documento recebido com sucesso");
     }
     
-//    public function optionsLotacaoEncaminhamentoPorUsuarioETipo(int $idLotacao = 0) {
-//        try {
-//            $conexao = new Conexao();
-//            $pdo = $conexao->connect();
-//            $options = '';
-//
-//            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
-//            $daoFinDocVincEncaminhamento->setIdPessoa($this->idPessoa);
-//            $daoFinDocVincEncaminhamento->retornaLotacaoTipoEncaminhamentoPorUsuario($pdo);
-//            if ($daoFinDocVincEncaminhamento->getSucesso()) {
-//                foreach ($daoFinDocVincEncaminhamento->getMsgRetorno() as $linha) {
-//
-//                    if ($linha["id_doc_lotacao"] == $idLotacao) {
-//                        $options .= '<option value="' . $linha["id_lotacao"] . '" selected="true" id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
-//                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
-//                    } else {
-//                        $options .= '<option value="' . $linha["id_lotacao"] . '"  id_doc_lotacao ="' . $linha["id_doc_lotacao"] . '" >'
-//                                . $linha["nm_doc_tipo_lotacao"] . ' / ' . $linha["nm_lotacao"] . '</option>';
-//                    }
-//                }
-//            }
-//            return $options;
-//        } catch (Exception $ex) {
-//            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-//        }
-//    }
-//    
-//    
-//    public function retornaIdLotacaoUsuarioEncaminhamento() {
-//        try {
-//            $conexao = new Conexao();
-//            $pdo = $conexao->connect();
-//
-//            $daoFinDocVincEncaminhamento = new DaoFinDocVincEncaminhamento();
-//            $daoFinDocVincEncaminhamento->setIdPessoa($this->idPessoa);
-//            $daoFinDocVincEncaminhamento->retornaLotacaoTipoEncaminhamentoPorUsuario($pdo);
-//            return $daoFinDocVincEncaminhamento->getMsgRetorno();
-//        } catch (Exception $ex) {
-//            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-//        }
-//    }
-
 }

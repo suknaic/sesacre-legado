@@ -252,7 +252,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <th class="text-center">Total</th>
                                                                 <th class="text-center">Utilizado</th>
                                                                 <th class="text-center">Saldo</th>
-                                                                <th class="text-center">Ação</th>
+                                                                <th class="text-center"></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>

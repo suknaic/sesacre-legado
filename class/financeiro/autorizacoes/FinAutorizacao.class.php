@@ -10,7 +10,16 @@ class FinAutorizacao {
     private $dt_autorizacao = null;
     private $ds_autorizacao = null;
     private $id_pessoa = null;
-
+    private $sucesso = null;
+    private $msgRetorno = null;    
+    
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }   
+ 
+    public function Sucesso(){
+        return $this->sucesso;
+    }        
     /**
      * @return mixed
      */
@@ -249,4 +258,46 @@ class FinAutorizacao {
         }
         return $table;
     }
+    
+    public function salvaAutorizacaoPedidoSemUpdate(PDO $pdo = null) {
+        
+        try{
+            if(empty($pdo)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui Conexão ativa.";
+                return;
+            }
+            
+            $daoAutorizacaoPedido = new DaoAutorizacaoPedido;
+            $daoAutorizacaoPedido->setIdPessoa($this->id_pessoa);
+            $daoAutorizacaoPedido->setIdPedido($this->id_pedido);
+            $daoAutorizacaoPedido->setStNivel($this->st_nivel);
+            $daoAutorizacaoPedido->setDsAutorizacao($this->ds_autorizacao);
+            $daoAutorizacaoPedido->insert($pdo);
+
+            if (!$daoAutorizacaoPedido->sucesso()) {
+                $pdo->rollBack();
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível cadastrar a Autorização do Pedido";
+                return;
+            }
+            $this->id_autorizacao = (is_numeric($pdo->lastInsertId('fin_autorizacao_id_autorizacao_seq'))) ? $pdo->lastInsertId('fin_autorizacao_id_autorizacao_seq') : null;
+            //log do insert da autorizacao
+
+            if (!Log::SalvaLogI('fin_autorizacao', $this->id_autorizacao, $pdo)) {
+                $pdo->rollBack();
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro Log Autorização";
+                return;
+            }
+                        
+            $this->sucesso = true;
+            $this->msgRetorno = "Autorização do Pedido Feita com Sucesso";
+                        
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 }

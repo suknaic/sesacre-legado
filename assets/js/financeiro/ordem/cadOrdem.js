@@ -149,7 +149,14 @@ $(document).ready(function () {
                 $this.prop("disabled", false);
                 return false;
             }
-            var $this = $(this);
+            
+            if ($("#id_lotacao").val() == "" || $("#id_lotacao").val() == "0") {
+                func.modalAlert(func.msgPreencherCampos);
+                $this.prop("disabled", false);
+                return false;
+            }
+            
+//            var $this = $(this);
             var itens = [];
             // $this.prop("disabled", true);
             $(".itens").each(function () {
@@ -175,7 +182,7 @@ $(document).ready(function () {
             });
 
             var enc = JSON.stringify(itens);
-
+            
             $.ajax({
                 "type": "POST",
                 "url": "/model/financeiro/ordem/request.php",

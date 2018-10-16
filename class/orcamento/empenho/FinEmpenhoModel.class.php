@@ -21,7 +21,33 @@ class FinEmpenhoModel {
     private $sit_pago_parcial = 4;
     private $sit_pago_total = 5;
     private $sit_cancelado = 6;
+    private $statusAguardandoLiquidacao = 1;
+    private $statusAguardandoFinalizarLiquidacao = 2;
+    private $statusAguardandoPagamento = 3;
+    private $statusAguardandoFinalizarPagamento = 4;
+    private $statusFinalizado = 5;    
+    
     private $msg_erros = null;
+    
+    public function getStatusAguardandoLiquidacao() {
+        return $this->statusAguardandoLiquidacao;
+    }
+
+    public function getStatusAguardandoFinalizarLiquidacao() {
+        return $this->statusAguardandoFinalizarLiquidacao;
+    }
+
+    public function getStatusAguardandoPagamento() {
+        return $this->statusAguardandoPagamento;
+    }
+
+    public function getStatusAguardandoFinalizarPagamento() {
+        return $this->statusAguardandoFinalizarPagamento;
+    }
+
+    public function getStatusFinalizado() {
+        return $this->statusFinalizado;
+    }        
 
     function getMsgErros() {
         return $this->msg_erros;
@@ -58,6 +84,18 @@ class FinEmpenhoModel {
     function setIdEmpenhoStatus($id_empenho_status) {
         $this->id_empenho_status = $id_empenho_status;
         return $this;
+    }
+    
+    private function getSituacoes() : array {
+        $situacoes = array(
+            '1' => 'Cadastrado',
+            '2' => 'Liquidado Parcial',
+            '3' => 'Liquidado Total',
+            '4' => 'Pago Parcial',
+            '5' => 'Pago Total',
+            '6' => 'Cancelado'
+        );
+        return $situacoes;
     }
 
 
@@ -441,14 +479,20 @@ class FinEmpenhoModel {
 
             $classPedido = new Pedido();
             $classPedido->setIdPedido($this->id_pedido);
-
-            if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
-                $classPedido->setStPedido(16);
-                $classPedido->atualizaTramitacaoPedido($pdo);
-            } else if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
-                $classPedido->setStPedido(21);
-                $classPedido->atualizaTramitacaoPedido($pdo);
+            
+            $classPedido->atualizaStatusSituacaoOficialPedido($pdo);
+            if(!$classPedido->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("ok", "html", "Não foi possível Atualizar o Status/Situação do Pedido.");
             }
+
+//            if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
+//                $classPedido->setStPedido(16);
+//                $classPedido->atualizaTramitacaoPedido($pdo);
+//            } else {
+//                $classPedido->setStPedido(21);
+//                $classPedido->atualizaTramitacaoPedido($pdo);
+//            }
 
             if ($sucesso) {
                 $pdo->commit();
@@ -715,20 +759,113 @@ class FinEmpenhoModel {
         }
     }
 
-    public function cancelaEmpenhoPorIdDoPedido() {
+    /*
+     * Cancelar o Empenho Global
+     * Os Ajustes que são feitos:
+     * Mudar o status do Empenho
+     * Mudar o status do Pedido
+     * Atualiza a Anotação do Pedido
+     * Atualizar o QDD pelo Empenho
+     * Não pode ter Ordem ou Documento Fiscal ou Liquidação     
+     */
+    public function cancelarEmpenho(string $justificativa) {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
             $daoFinEmpenho = new DaoFinEmpenho();
-            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
-            if ($daoFinEmpenho->sucesso()) {
-                return $daoFinEmpenho->getMsgRetorno();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);            
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);            
+          
+            if (!$daoFinEmpenho->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");                
+            }            
+            $dadosEmpenho = $daoFinEmpenho->getMsgRetorno();
+            
+            //Busca dados do Pedido
+            $pedido = new Pedido();
+            $pedido->setIdPedido($this->id_empenho);
+            $dadosPedido = $pedido->retornaDadosPedido();
+            if(empty($dadosPedido)){
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Pedido.");
+            }                       
+            
+            //Verifica se o Empenho já está cancelado
+            if($dadosEmpenho['sit_empenho'] == $this->sit_cancelado){
+                return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
+                                                
+            //Verifica se o Empenho possui Ordem ou Documento Fiscal ou Liquidação
+            $daoFinEmpenho->verificaExisteOrdemDocumentoLiquidacao($pdo);
+            if($daoFinEmpenho->sucesso()){
+                $msg = "";
+                $msgArray = array();
+                if(!empty($daoFinEmpenho->getMsgRetorno()['id_liquidacao'])){
+                    $msgArray[] = " Liquidação";
+                }
+                if(!empty($daoFinEmpenho->getMsgRetorno()['id_documento_fiscal'])){
+                    $msgArray[] = " Documento Fiscal";
+                }
+                if(!empty($daoFinEmpenho->getMsgRetorno()['id_ordem'])){
+                    $msgArray[] = " Ordem ";
+                }                
+                $msg = implode(",", $msgArray);                
+                return Metodos::retornoAjax("Erro", "alert", "O Empenho Não pode ser Cancelado, pois possui as Seguintes Restrições: ".$msg);
+            }
+                        
+            //Muda Status e Situação do Empenho            
+            $daoFinEmpenho->setSitEmpenho($this->sit_cancelado);
+            $daoFinEmpenho->setIdEmpenhoStatus($this->statusFinalizado);
+            $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
+            if(!$daoFinEmpenho->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar o Status do Empenho.");
+            }
+                        
+            //Muda Status e Situação do Pedido
+            $pedido->setStPedido(0);
+            $pedido->setIdPedidoSituacao(10);
+            $pedido->atualizaTramitacaoPedidoSituacao($pdo);
+            if(!$pedido->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar o Status e a Situação do Pedido.");
+            }
+            
+            //Atualiza o Fin Autorização do Pedido
+            $finAutoriza = new FinAutorizacao();
+            $finAutoriza->setIdPedido($dadosPedido['id_pedido']);
+            $finAutoriza->setIdPessoa($this->id_pessoa);
+            $finAutoriza->setStNivel(0);   
+            $finAutoriza->setDsAutorizacao($justificativa);
+            $finAutoriza->salvaAutorizacaoPedidoSemUpdate($pdo);
+            if(!$finAutoriza->Sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar a Autorização do Pedido.");
+            }        
+            
+            
+            //Se o Pedido Possui Diaria, então deve atualizar os Dados da Diária
+            
+            
+            
+            
+            //Atualiza a Anotação do Pedido
+            $finPedidoAnotacao = new FinPedidoAnotacao();
+            $finPedidoAnotacao->setIdPedido($dadosPedido['id_pedido']);
+            $finPedidoAnotacao->setIdPessoa($this->id_pessoa);
+            $finPedidoAnotacao->setDsPedidoAnotacao("Cancelado: ".$justificativa);
+            $finPedidoAnotacao->salvaAnotacao($pdo);
+            
+            
+            //Atualiza o QDD pelo Empenho
+            
+            
+           
+                                    
+            
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 

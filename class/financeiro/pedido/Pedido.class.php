@@ -1142,5 +1142,30 @@ class Pedido {
             $this->sucesso = false;            
         }
     }
+    
+    public function atualizaTramitacaoPedidoSituacao(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui conexão ativa.";
+                return;
+            }
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->idPedido);
+            $daoFinPedido->setStPedido($this->stPedido);
+            $daoFinPedido->setIdPedidoSituacao($this->idPedidoSituacao);
+            $daoFinPedido->atualizaSituacaoStatusPedido($pdo);
+            if($daoFinPedido->Sucesso()){
+                $this->sucesso = true;
+                $this->msgRetorno = "Atualização da Situação e Status do Pedido Realizado com Sucesso.";
+            }else{
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Atualizar o Status e a Situação do Pedido.";
+            }            
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();                             
+        }
+    }
 
 }
