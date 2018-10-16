@@ -217,6 +217,7 @@ class Pedido {
 
     private function getPedidoNecessidadeStatus(): array {
         $arr_status = array(
+            '0' => 'Cancelado',
             '9' => 'Aguardando Finaliza a Pre-Ordem',
             '10' => 'Aguardando Autorização do Responsável Imediato',
             '11' => 'Aguardando Autorização do Responsável da Central',

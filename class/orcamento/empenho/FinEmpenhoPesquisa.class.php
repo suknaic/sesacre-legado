@@ -136,8 +136,7 @@ class FinEmpenhoPesquisa {
                                     . '</button>';
                     }
                     $tabela .= '</td>'
-                            . '</tr>';
-                    return $tabela;
+                            . '</tr>';                    
                 }
             } 
             return $tabela;
