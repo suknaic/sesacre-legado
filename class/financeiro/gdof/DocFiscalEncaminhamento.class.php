@@ -237,7 +237,7 @@ class DocFiscalEncaminhamento {
                 $finDoc = new FinDocumentoFiscal();
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
 
-                    $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"
+                    $retorno .= "<tr data-objeto='" . json_encode($linha,JSON_HEX_APOS) . "'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
@@ -260,7 +260,7 @@ class DocFiscalEncaminhamento {
                                     </button>";  
                                      
                     if($linha['doc_situacao'] == $finDoc->getDocSitALiquidar()){
-                        $retorno .= " <button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['nr_empenho'] . "'>
+                        $retorno .= " <button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['empenho_sm'] . "'>
                                         <i class='fa fa-calculator fa-lg text-purple' aria-hidden='true'></i>
                                     </button>";
                     }

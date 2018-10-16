@@ -197,7 +197,7 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
                 
                 $sql = "select ordem.id_ordem, p.id_pedido, concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as pedido,
-                        p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem,
+                        p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem, ordem.sit_ordem,
                         valorOrdem.valor,
                         case 
                                 when ordem.tp_ordem = '1' THEN 'ENTREGA'
@@ -529,5 +529,29 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    public function ordemProtocolo(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_protocolo where id_ordem = :id_ordem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_ordem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
 
 }
