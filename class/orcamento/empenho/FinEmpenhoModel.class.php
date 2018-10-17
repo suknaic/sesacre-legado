@@ -793,7 +793,7 @@ class FinEmpenhoModel {
             if(empty($dadosPedido)){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Pedido.");
             }                       
-            
+            $this->id_pedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
             if($dadosEmpenho['sit_empenho'] == $this->sit_cancelado){
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
@@ -857,7 +857,6 @@ class FinEmpenhoModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $diaria->getMsgRetorno());
             }
-            
             
             //Atualiza a Anotação do Pedido
             $finPedidoAnotacao = new PedidoAnotacao();
