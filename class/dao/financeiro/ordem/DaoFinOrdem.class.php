@@ -54,7 +54,7 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
                 $sql = "select pre.id_pre_ordem, p.id_pedido, p.nr_pedido, p.ds_pedido, tp.nm_tipo_gasto, mat.cd_material, mat.nm_material, mat.nm_grupo,
                         mat.nm_sub_grupo, desp.ds_despesa_elemento, mat.tp_material, contItens.nr_lote, mat.nm_desc_material,
-                        pre.qt_itens_pre, pre.vl_itens_pre, contItens.nr_item, unid.nm_unidade_medida,
+                        pre.qt_itens_pre, pre.vl_itens_pre, contItens.nr_item, unid.nm_unidade_medida, contItens.fl_valor_variavel,
                         CASE WHEN mat.tp_material = 'C'
                         THEN coalesce(pre.qt_itens_pre,0.0000)
                         ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)

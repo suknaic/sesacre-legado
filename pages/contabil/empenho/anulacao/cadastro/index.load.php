@@ -1,8 +1,5 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
+$session = new Session();
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+$empenho = (int)filter_input(INPUT_GET, 'token', FILTER_DEFAULT);

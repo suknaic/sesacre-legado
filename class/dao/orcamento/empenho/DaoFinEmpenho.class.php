@@ -224,7 +224,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function verificarEmpenhoPeloNumero(PDO $pdo = null) {
         try {
             $sql = "select emp.id_empenho from fin_empenho as emp
-                    where emp.nr_empenho = :numero";
+                    where emp.nr_empenho = :numero and emp.sit_empenho <> '6'";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":numero", $this->getNrEmpenho(), PDO::PARAM_STR);
             $stmt->execute();
