@@ -79,34 +79,34 @@ class DaoSesCidade extends SesCidade {
             return $e->getMessage();
         }
     }
-//    function listaCidade($pdo) {
-//
-//        $retorno = FALSE;
-//        $idEstado = $this->getId_estado();
-//
-//        $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude,
-//                       rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo
-//                from ses_cidade c
-//                inner join ses_estado e on c.id_estado=e.id_estado
-//                left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
-//                left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
-//                left join ses_pais p on e.id_pais=p.id_pais
-//                where e.id_estado = $idEstado
-//                order by c.nm_cidade, rg.nm_regional_geo, e.nm_estado ";
-//        try {
-//            $sth = $pdo->prepare($sql);
-//            $sth->execute();
-//            if ($sth->rowCount() >= 1) {
-//                return $sth->fetchAll(PDO::FETCH_ASSOC);
-//            } else {
-//                return $retorno;
-//            }
-//            return $retorno;
-//        } catch (PDOException $e) {
-//            echo $e->getMessage();
-//            return $retorno;
-//        }
-//    }
+    function listaCidade($pdo) {
+
+        $retorno = FALSE;
+        $idEstado = $this->getId_estado();
+
+        $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude,
+                       rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo
+                from ses_cidade c
+                inner join ses_estado e on c.id_estado=e.id_estado
+                left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
+                left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
+                left join ses_pais p on e.id_pais=p.id_pais
+                where e.id_estado = $idEstado
+                order by c.nm_cidade, rg.nm_regional_geo, e.nm_estado ";
+        try {
+            $sth = $pdo->prepare($sql);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return $retorno;
+            }
+            return $retorno;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return $retorno;
+        }
+    }
     //***************************************
      
     function buscaCidadeUf($pdo) {
