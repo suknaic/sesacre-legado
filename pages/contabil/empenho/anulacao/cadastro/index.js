@@ -295,8 +295,9 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
+                    //$this.prop("disabled", false);
+                    //return false;
                     $this.prop("disabled", false);
-                    return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -322,8 +323,8 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
-                            //location.reload();
+                            //window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
+                            location.reload();
                         });
                         return false;
                     } else {

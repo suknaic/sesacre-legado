@@ -553,5 +553,96 @@ class DaoFinOrdem extends FinOrdemTb {
         }
     }
     
+    
+    /**
+     * 
+     * @param type $itens
+     * @param PDO $pdo
+     */
+    public function listaItensPreOrdemPorPreOrdem($itens, PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select pre.id_pre_ordem, p.id_pedido, p.nr_pedido, p.ds_pedido, tp.nm_tipo_gasto, mat.cd_material, mat.nm_material, mat.nm_grupo,
+                        mat.nm_sub_grupo, desp.ds_despesa_elemento, mat.tp_material, contItens.nr_lote, mat.nm_desc_material,
+                        pre.qt_itens_pre, pre.vl_itens_pre, contItens.nr_item, unid.nm_unidade_medida, contItens.fl_valor_variavel,
+                        CASE WHEN mat.tp_material = 'C'
+                        THEN coalesce(pre.qt_itens_pre,0.0000)
+                        ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
+                        END as total,
+
+                        coalesce((select 
+                                     CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
+                                     THEN  coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
+                                     ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
+                                     from fin_ordem as ordem
+                                     inner join fin_ordem_itens as itemOrdem
+                                     on ordem.id_ordem =  itemOrdem.id_ordem 
+                                     inner join fin_pre_ordem as preSub
+                                     on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
+                                     inner join fin_cont_itens as contItensSub
+                                     on contItensSub.id_cont_itens = pre.id_cont_itens
+                                     inner join pla_material as matSub
+                                     on matSub.id_material = contItensSub.id_material
+                                     where ordem.sit_ordem > '0' 
+                                     and itemOrdem.id_pre_ordem = pre.id_pre_ordem
+                                     group by itemOrdem.id_pre_ordem, matSub.tp_material
+                                     ),0.0000) as utilizado,
+
+                        (CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
+                        THEN  coalesce(pre.qt_itens_pre,0.0000)
+                        ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
+                        END
+                        -
+                        coalesce((select 
+                                     CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
+                                     THEN coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
+                                     ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
+                                     from fin_ordem as ordem
+                                     inner join fin_ordem_itens as itemOrdem
+                                     on ordem.id_ordem =  itemOrdem.id_ordem 
+                                     inner join fin_pre_ordem as preSub
+                                     on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
+                                     inner join fin_cont_itens as contItensSub
+                                     on contItensSub.id_cont_itens = pre.id_cont_itens
+                                     inner join pla_material as matSub
+                                     on matSub.id_material = contItensSub.id_material
+                                     where ordem.sit_ordem > '0'
+                                     and itemOrdem.id_pre_ordem = pre.id_pre_ordem
+                                     group by itemOrdem.id_pre_ordem, matSub.tp_material
+                                     ),0.0000) 
+                        ) as saldo
+
+                        from fin_pre_ordem as pre
+                        inner join fin_pedido as p
+                        on p.id_pedido = pre.id_pedido
+                        inner join pla_tipo_gasto as tp
+                        on tp.id_tipo_gasto = p.id_tipo_gasto
+                        inner join fin_cont_itens as contItens
+                        on contItens.id_cont_itens = pre.id_cont_itens
+                        inner join pla_material as mat
+                        on mat.id_material = contItens.id_material
+                        inner join pla_unidade_medida as unid
+                        on unid.id_unidade_medida = contItens.id_unidade_medida
+                        inner join view_despesa_elemento as desp
+                        on desp.id_despesa_elemento = p.id_despesa_elemento
+                        where pre.id_pre_ordem in ( ".$itens." )";
+                $stmt = $pdo->prepare($sql);                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
 
 }
