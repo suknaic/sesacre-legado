@@ -56,7 +56,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 $stmt->execute();
                 if ($stmt->rowCount() >= 1) {
                     $this->sucesso = true;
-                    $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 } else {
                     $this->msgRetorno = "Não encontrou Registros";
                 }
