@@ -317,8 +317,7 @@ class Liquidacao {
             $pdo = $conexao->connect();
 
             $daoConLiquidacao = new DaoConLiquidacao();
-            $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho());
-            
+                        
             if ($this->getIdLiquidacao()) {
                 $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
             } else {

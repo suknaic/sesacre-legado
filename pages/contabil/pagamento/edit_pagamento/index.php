@@ -58,7 +58,7 @@ require_once "index.load.php";
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
                             <input type="hidden" name="id_pagamento" id="id_pagamento" value="<?php echo $id; ?>"/>
-                            <input type="hidden" name="id_liquidacao" id="id_liquidacao" value="<?php echo $id; ?>"/>
+                            <input type="hidden" name="id_liquidacao" id="id_liquidacao" value="<?php echo $dadosPagamento["id_liquidacao"]; ?>"/>
                             <div class="panel">                                
 
                                 <!--Form dos dados do contrato-->
