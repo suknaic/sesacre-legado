@@ -54,7 +54,7 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
                 $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
                         unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
-                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel
+                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel,
                         case 
                                 when mat.tp_material = 'C' or mat.tp_material = 'P' and itens.fl_valor_variavel = '0' 
                                 then pre.qt_itens_pre
