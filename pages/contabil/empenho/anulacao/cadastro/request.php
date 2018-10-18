@@ -104,22 +104,22 @@ switch ($_REQUEST['acao']) {
             
             if (empty($dados['itens'])) {
                 $dados['itens'] = array();
+            }                      
+            
+            $perfilTI = false;
+            if($session->vPGeralAcao()){
+                $perfilTI = true;
             }
-                       
             
             $empenho = new EmpenhoAnulacao();
-            $liquidacao->setIdEmpenho($dados['idEmpenho'])
-                       ->setUsuario($session->getIdUser())
-                       ->setIdLotacao($dados['idLotacao'])
-                       ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
-                       ->setNrLiquidacao($dados['nrLiquidacao'])
-                       ->setVlLiquidacao($dados['vlLiquidacao'])
-                       ->setDtLiquidacao($dados['dtLiquidacao'])
-                       ->setAnotacoes($dados['anotacoes'])
-                       ->setTipoSolicitacao($dados['tipoSolicitacao'])
-                       ->setQtdDocumentosDisponiveis($dados['qtdDocumentos'])
-                       ->setDocumentos($dados['docsLiquidacao']);
-            echo $liquidacao->salvarLiquidacao();
+            $empenho->setIdEmpenho((int)$dados['idEmpenho'])
+                       ->setIdPessoa($session->getIdUser())
+                       ->setDtAnulacao($dados['dtAnulacao'])
+                       ->setVlAnulacao($dados['vlAnulacao'])
+                       ->setNrAnulacao($dados['nrAnulacao'])
+                       ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
+                       ->setItens($dados['itens']);                       
+            echo $empenho->salvarAnulacao($perfilTI);
             return;
             break;
         } catch (Error $e) {

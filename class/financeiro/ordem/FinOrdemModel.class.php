@@ -839,11 +839,7 @@ class FinOrdemModel {
                         $retorno .= '<tr>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
-                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>
-                                        <td class="text-center">' . $linha["nm_grupo"] . '</td>
-                                        <td class="text-center">' . $linha["nm_sub_grupo"] . '</td>
-                                        <td class="text-center">' . $linha["nm_unidade_medida"] . '</td>    
-                                        <td class="text-center">' . wordwrap($linha["ds_despesa_elemento"], 20, "<br />\n") . '</td>
+                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
                                         <td class="text-center">' . $linha["tp_material"] . '</td>
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
@@ -871,6 +867,26 @@ class FinOrdemModel {
                 return $retorno;
             }
         }
+    }
+    
+    public function retornaItensParaAnulacaoEmpenhoPorItens(array $itens, PDO $pdo = null){
+        if (!empty($itens)){
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();            
+            }
+                        
+            $itens = implode(",", $itens);
+            
+            $daoFinOrdem = new DaoFinOrdem();            
+            $daoFinOrdem->listaItensPreOrdemPorPreOrdem($itens, $pdo);            
+            if ($daoFinOrdem->Sucesso()) {
+                return $daoFinOrdem->getMsgRetorno();                
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
     
 }

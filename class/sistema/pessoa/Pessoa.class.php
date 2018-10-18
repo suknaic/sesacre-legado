@@ -368,7 +368,7 @@ class Pessoa {
             $pessoa->setIdPessoa($this->id_pessoa);
 
             $buscaPessoa = $pessoa->retornaPessoa($pdo);
-            if ($buscaPessoa = FALSE) {
+            if ($buscaPessoa != FALSE) {
                 if (!Log::SalvaLogD('ses_pessoa', $pessoa->getId_pessoa(), $pdo)) {
                     $pdo->rollBack();
                     $this->setMsg("alert", "Erro ao Cadastrar Log de Pessoa");

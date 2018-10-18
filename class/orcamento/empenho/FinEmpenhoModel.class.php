@@ -754,6 +754,7 @@ class FinEmpenhoModel {
             if ($daoFinEmpenho->sucesso()) {
                 return $daoFinEmpenho->getMsgRetorno();
             }
+            return "";
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

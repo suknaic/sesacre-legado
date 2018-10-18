@@ -130,7 +130,7 @@ class DaoConEmpenhoAnulacaoSituacao extends ConEmpenhoAnulacaoSituacao {
                 $stmt->execute();
                 if ($stmt->rowCount() >= 1){
                     $this->sucesso = true; 
-                    $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 } else {             
                     $this->msgRetorno = "Não encontrou Registros";                
                 }  

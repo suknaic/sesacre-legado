@@ -21,11 +21,11 @@ class DaoConEmpenhoAnulacaoAnotacao extends ConEmpenhoAnulacaoAnotacao {
         $sql = "INSERT INTO con_empenho_anulacao_anotacao (id_pessoa, id_empenho_anulacao, ds_empenho_anulacao_anotacao)"                    
                     . " VALUES (:id_pessoa, :id_empenho_anulacao, :ds_empenho_anulacao_anotacao);";
         try {
-            if (!empty($pdo)) {
+            if (!empty($pdo)) {                    
                 $stmt = $pdo->prepare($sql);                                        
                 $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);            
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);            
-                $stmt->bindValue(":ds_liquidacao_anotacao", $this->getDsEmpenhoAnulacaoAnotacao(), PDO::PARAM_STR);            
+                $stmt->bindValue(":ds_empenho_anulacao_anotacao", $this->getDsEmpenhoAnulacaoAnotacao(), PDO::PARAM_STR);            
                 $stmt->execute();
                 $this->sucesso = true; 
             } else {

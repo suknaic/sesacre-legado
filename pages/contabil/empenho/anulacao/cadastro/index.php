@@ -157,11 +157,7 @@ require_once "index.load.php";
                                                                         <tr>
                                                                             <th class="text-center">Nº</th>
                                                                             <th class="text-center">Item</th>
-                                                                            <th class="text-center">Descrição</th>
-                                                                            <th class="text-center">Grupo</th>
-                                                                            <th class="text-center">Sub Grupo</th>
-                                                                            <th class="text-center">Unid</th>
-                                                                            <th class="text-center">Despesa</th>
+                                                                            <th class="text-center">Descrição</th>                                                                                                                                                        
                                                                             <th class="text-center">Tipo</th>
                                                                             <th class="text-center">Lote</th>
                                                                             <th class="text-center">QTD</th>

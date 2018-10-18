@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/Contrato.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/DocLotacao.class.php";
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/tramitacao/Tramitacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/administracao/tipo_tramitacao/Tramitacao.class.php";
 
 $session = new Session();
 

@@ -291,7 +291,9 @@ $(document).ready(function () {
 
     });
 
-
+    //******** Carrega o select2 em todos os select's ********
+    $('#idPais').select2({ width:"100%" });
+    //********************************************************
 
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();
