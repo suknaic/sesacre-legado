@@ -258,9 +258,9 @@ class EmpenhoAnulacao{
             }
                 
             
-            echo "<pre>";
-            print_r($this->itens);
-            echo "</pre>";
+//            echo "<pre>";
+//            print_r($this->itens);
+//            echo "</pre>";
            
             /*
              * Verifica os Itens da Pre Ordem que o usuário deseja anular
@@ -278,9 +278,9 @@ class EmpenhoAnulacao{
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Pedido de Necessidade.");
             }
-            echo "<pre>";
-            print_r($ItensPreOrdem);
-            echo "</pre>";
+//            echo "<pre>";
+//            print_r($ItensPreOrdem);
+//            echo "</pre>";
             
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -303,9 +303,9 @@ class EmpenhoAnulacao{
                     $valorInformado = $value['vl_itens_pre'];
                 }
                 
-                echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
                 
-                if($value['saldo'] < $valorTotalParaAnular){
+                if(round($value['saldo'], 4) < $valorTotalParaAnular){
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
                             . "de Número ".$value['nr_item']." Pois o Valor Informado Para Anulação "
@@ -317,7 +317,7 @@ class EmpenhoAnulacao{
                 $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
                 $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
                 $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
-                $daoEmpenhoAnulacaoItens->setVlSaldo($value['saldo']);
+                $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
                 $daoEmpenhoAnulacaoItens->insert($pdo);
                 if(!$daoEmpenhoAnulacaoItens->getSucesso()){
                     $pdo->rollBack();
@@ -333,9 +333,9 @@ class EmpenhoAnulacao{
             }
             
             
-            echo " \n E";
-            $pdo->rollBack();
-                    return;
+//            echo " \n E";
+//            $pdo->rollBack();
+//                    return;
             
             //Salva o Histórico da Anulação
             $daoEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
