@@ -379,6 +379,14 @@
                                 </li>
                                 
                                 <li>
+                                    <a href="/pages/contabil/empenho/anulacao/pesquisa/">Anulação do Empenho</a>
+                                </li>
+                                
+                                <li>
+                                    <a href="/pages/contabil/empenho/anulacao/autorizacao/">Autorização da Anulação do Empenho</a>
+                                </li>
+                                
+                                <li>
                                     <a href="#">
                                         <span class="menu-title">Administração</span>
                                         <i class="arrow"></i>
@@ -496,6 +504,9 @@
                                 </li>
                                 <li>
                                     <a href="/pages/administracao/tipo_administracao/">Tipos de Administração/Gestores</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/administracao/tipo_tramitacao/">Tipos de Tramitações</a>
                                 </li>
                                 <li>
                                     <a href="/pages/administracao/administracao_solicitacao/">Vincular Administração/Solicitação</a>
