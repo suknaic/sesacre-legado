@@ -197,7 +197,7 @@ class ConPagamento {
             $daoConPagamento->setVlPagamentoSaldo($this->vl_pagamento_saldo);
             $daoConPagamento->salvaPagamento($pdo);
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
-            
+
             if (!empty($this->docs_pagamento)) {
                 foreach ($this->docs_pagamento as $dados) {
 
@@ -219,7 +219,7 @@ class ConPagamento {
                     }
                 }
             }
-            
+
             $conPagamentoHistorico = new ConPagamentoHistorico();
             $conPagamentoHistorico->setIdPagamento($this->id_pagamento);
             $conPagamentoHistorico->setIdPessoa($this->id_pessoa);
@@ -230,7 +230,7 @@ class ConPagamento {
             $conPagamentoHistorico->setDsPagamentoHistorico($this->ds_anotacao);
 
             $conPagamentoHistorico->salvaHistoricoPagamento($pdo);
-            
+
             if (!$conPagamentoHistorico->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o historico pagamento");
@@ -316,11 +316,33 @@ class ConPagamento {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-     
-     
+
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Liquidação cancelada com sucesso.");
         } catch (Exception $exc) {
+            //Se der algum erro, registra o erro no objeto
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    public function editarPagamento() {
+        try {
+            
+            if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) || empty($this->dt_pagamento) || empty($this->vl_pagamento) || empty($this->vl_pagamento_saldo)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+
+            if (round($this->vl_pagamento_saldo, 4) < round(Metodos::ConverteValorIng($this->vl_pagamento), 4)) {
+                return Metodos::retornoAjax("Erro", "alert", "Valor do pagamento e maior que o saldo da liquidação.");
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            
+        } catch (Exception $ex) {
             //Se der algum erro, registra o erro no objeto
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

@@ -498,7 +498,7 @@ class pessoaFisica {
                     if ($buscaCompetencia != FALSE) {
                         if (!Log::SalvaLogD('ses_competencia', $pessoaFisica->getId_competencia(), $pdo)) {
                             $pdo->rollBack();
-                            return retornoAjax("Erro", "alert", "Erro ao Cadastrar Log de Competência");
+                            return Metodos::retornoAjax("Erro", "alert", "Erro ao Cadastrar Log de Competência");
                         }
                     }
                 }
@@ -509,19 +509,19 @@ class pessoaFisica {
             if ($buscaPessoaFisica != FALSE) {
                 if (!Log::SalvaLogD('ses_pessoa_fisica', $pessoaFisica->getId_pessoa_fisica(), $pdo)) {
                     $pdo->rollBack();
-                    return retornoAjax("Erro", "alert", "Erro ao Cadastrar Log de Pessoa Fisica");
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao Cadastrar Log de Pessoa Fisica");
                 }
             }
             //***************************************************************************************
             $rs = $pessoaFisica->deletePessoaFisica($pdo);
             if ($rs != "Sucesso") {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $rs);
+                return Metodos::retornoAjax("Erro", "alert", 'Registro está vinculado a outro registro.');
             }
             //***************remove pessoa*********************************************************
             $pessoa = new Pessoa();
             $pessoa->setId_pessoa($this->id_pessoa);
-            $rs1 = $pessoa->removerPessoa($pdo);
+            $pessoa->removerPessoa($pdo);
             if ($pessoa->getSuccess()) {
                 $pdo->commit();
                 $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
@@ -547,9 +547,11 @@ class pessoaFisica {
             $st_ativo = '';
             if ($this->st_ativo == '0') {
                 $st_ativo = '1';
+                $retorno = Metodos::retornoAjax("ok", "html", STR_ATIVADO_SUCESSO);
             }
             if ($this->st_ativo == '1') {
                 $st_ativo = '0';
+                $retorno = Metodos::retornoAjax("ok", "html", STR_DESATIVADO_SUCESSO);
             }
             $pessoaFisica->setId_pessoa_fisica($this->id_pessoa_fisica);
             $pessoaFisica->setSt_ativo($st_ativo);
@@ -566,12 +568,12 @@ class pessoaFisica {
             $rs1 = $pessoa->mudarStatusPessoa($pdo);
             if ($pessoa->getSuccess()) {
                 $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", "Realizado Com Sucesso");
+                return $retorno;
+
             } else {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
+                return $retorno;
             }
-
-            return $retorno;
 //***********************************************************************************
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -579,6 +581,8 @@ class pessoaFisica {
     }
 
     public function retornaTrPessoaFisica($nome, $cpf) {
+//        print_r(Metodos::formataCpf($cpf));
+//        return;
         $retorno = "";
         try {
             $conexao = new Conexao();
@@ -591,7 +595,7 @@ class pessoaFisica {
                 $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
             }
             if (!empty($cpf)) {
-                $filter[] = "PF.nr_cpf = '$cpf'";
+                $filter[] = "PF.nr_cpf = '".Metodos::formataCpf($cpf)."'";
             }
             if (count($filter) > 0) {
                 $filtro = " and " . implode(' and ', $filter);
@@ -611,42 +615,38 @@ class pessoaFisica {
                     $idPessoaFj = $v['id_pessoa_fisica'];
                     $retorno .= "<tr>";
 //****************************************************************
-
                         $icone = "";
                         $title = "";
                         if ($v['st_ativo'] == '0') {
-                            $icone = "<i class='fa fa-user-times text-default' aria-hidden='true'></i>";
+                            $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
                             $title = "title='Ativar Pessoa'";
                         }
                         if ($v['st_ativo'] == '1') {
-                            $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
-                            $title = "title='Inativar Pessoa'";
+                            $icone = "<i class='fa fa-user-times text-danger' aria-hidden='true'></i>";
+                            $title = "title='Desativar Pessoa'";
                         }
 //*************************************************************
                         $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
-                                    <td>" . $cpf2 . "</td>
-                                    <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
-                                    <td>" . $v['ds_logradouro'] . "</td>   
-                                    <td>" . $v['ds_bairro'] . "</td>
-                                    <td>" . ($v['nr_telefone_residencial'] === NULL ? "" : Metodos::formataTelefone($v['nr_telefone_residencial'])) . "</td>
-                                    <td>" . ($v['nr_telefone_celular'] === NULL ? "" : Metodos::formataCelular($v['nr_telefone_celular'])) . "</td>
-                                    <td>" . $v['nm_email'] . "</td>
-                                    <td style='text-align: center;'>                           
-                                        <button type='button' class='btn btn-default btn-edit btn-xs'                               
-                                              title='Editar' nome='" . $v['nm_pessoa'] . "' value='1-" . $idPessoaFj . "' >
-                                               <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
-                                        </button> 
-                                        <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='1-" . $idPessoa . "-" . $idPessoaFj . "'>
-                                            <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
-                                        </button>
-                                        <button type='button' class='btn btn-default btn-redefinir btn-xs' title='Redefinir Senha' value='" . $idPessoa . "'>
-                                            <i class='fa fa-key fa-lg text-warning' aria-hidden='true'></i>
-                                        </button>
-                                        <button type='button' class='btn btn-default btn-inativar btn-xs' $title value='1-" . $idPessoa . "-" . $idPessoaFj . "-" . $v['st_ativo'] . "'>
-                                            $icone
-                                        </button>
-                                    </td>
-                                 </tr>";
+                                        <td>" . $cpf2 . "</td>
+                                        <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
+                                        <td>" . $v['ds_logradouro'] . "</td>   
+                                        <td>" . $v['ds_bairro'] . "</td>
+                                        <td>" . ($v['nr_telefone_residencial'] === NULL ? "" : Metodos::formataTelefone($v['nr_telefone_residencial'])) . "</td>
+                                        <td>" . ($v['nr_telefone_celular'] === NULL ? "" : Metodos::formataCelular($v['nr_telefone_celular'])) . "</td>
+                                        <td>" . $v['nm_email'] . "</td>
+                                        <td style='text-align: center;'>                           
+                                            <button type='button' class='btn btn-default btn-edit btn-xs'                               
+                                                  title='Editar' nome='" . $v['nm_pessoa'] . "' value='1-" . $idPessoaFj . "' >
+                                                   <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                            </button> 
+                                            <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='1-" . $idPessoa . "-" . $idPessoaFj . "'>
+                                                <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
+                                            </button>
+                                            <button type='button' class='btn btn-default btn-desativar btn-xs' $title value='1-" . $idPessoa . "-" . $idPessoaFj . "-" . $v['st_ativo'] . "'>
+                                                $icone
+                                            </button>
+                                        </td>
+                                     </tr>";
                 }
             }
 
@@ -722,7 +722,7 @@ class pessoaFisica {
                                                 <button type='button' class='btn btn-default btn-redefinir btn-xs' title='Redefinir Senha' value='" . $idPessoa . "'>
                                                     <i class='fa fa-key fa-lg text-warning' aria-hidden='true'></i>
                                                 </button>
-                                                <button type='button' class='btn btn-default btn-inativar btn-xs' $title value='1-" . $idPessoa . "-" . $idPessoaFj . "-" . $v['st_ativo'] . "'>
+                                                <button type='button' class='btn btn-default btn-inativar btn-xs' $title value='1-" . $idPessoa . "-" . $idPessoaF . "-" . $v['st_ativo'] . "'>
                                                     $icone
                                                 </button>
                                             </td>
