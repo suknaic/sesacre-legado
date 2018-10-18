@@ -267,49 +267,72 @@ class EmpenhoAnulacao{
              * Irá retornar os Valores de Cada Item e o Saldo do Pedido
              * O Valor anulado não pode ser Maior que o Saldo de Cada Item
              */
-//            $itensArray = array();
-//            foreach ($this->itens as $key => $value) {
-//                $itensArray[] = $value['id'];
-//            }                                   
-//            
-//            $finOrdemModel = new FinOrdemModel();
-//            $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
-//            if(!$ItensPreOrdem){
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Pedido de Necessidade.");
-//            }
+            $itensArray = array();
+            foreach ($this->itens as $key => $value) {
+                $itensArray[] = $value['id'];
+            }                                   
+            
+            $finOrdemModel = new FinOrdemModel();
+            $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
+            if(!$ItensPreOrdem){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Pedido de Necessidade.");
+            }
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
-//            foreach ($ItensPreOrdem as $key => $value) {
-//                $kI = array_search($value['id_pre_ordem'], array_column($this->itens, "id"));                
-//                if($kI === false){
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item de Número ".$value['nr_item']." ".STR_ERROR." ");
-//                }
-//                                                
-//                $valorInformado = round($this->itens[$kI]['valor'], 4);
-//                $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
-//                                
-//                $valorTotalParaAnular = $quantidadeInformado;
-//                
-//                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
-//                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
-//                }
-//                
-//                echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-//                
-//                if($value['saldo'] < $valorTotalParaAnular){
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item de Número ".$value['nr_item']." Pois o Valor Informado Para Anulação ficará menor que o Saldo Disponível para Anualação.");
-//                }
-//                
-//                //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
-//                
-//                
-//            }
-//            
-//            
+            
+            $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
+            $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            
+            foreach ($ItensPreOrdem as $key => $value) {
+                $kI = array_search($value['id_pre_ordem'], array_column($this->itens, "id"));                
+                if($kI === false){
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item de Número ".$value['nr_item']." ".STR_ERROR." ");
+                }
+                                                
+                $valorInformado = round($this->itens[$kI]['valor'], 4);
+                $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
+                                
+                $valorTotalParaAnular = $quantidadeInformado;
+                
+                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
+                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
+                }else{
+                    $valorInformado = $value['vl_itens_pre'];
+                }
+                
+                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+                
+                if(round($value['saldo'], 4) < $valorTotalParaAnular){
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
+                            . "de Número ".$value['nr_item']." Pois o Valor Informado Para Anulação "
+                            . "ficará menor que o Saldo Disponível para Anualação.");
+                }
+                
+                $daoEmpenhoAnulacaoItens->setIdPreOrdem($value['id_pre_ordem']);
+                $daoEmpenhoAnulacaoItens->setQtItem($value['qt_itens_pre']);
+                $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
+                $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
+                $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
+                $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
+                $daoEmpenhoAnulacaoItens->insert($pdo);
+                if(!$daoEmpenhoAnulacaoItens->getSucesso()){
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
+                            . "de Número ".$value['nr_item']."".STR_ERROR);
+                }
+                
+                
+                
+                //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
+                
+                
+            }
+            
+            
 //            echo " \n E";
 //            $pdo->rollBack();
 //                    return;
