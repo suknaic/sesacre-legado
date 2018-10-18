@@ -26,7 +26,7 @@ switch ($_REQUEST['acao']) {
     CASE 'retornaPagamentos':
         $dados = filter_input(INPUT_GET,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         try {
-            $pagamento =  new PagamentoPesquisa();
+            $pagamento =  new ConPagamentoPesquisa();
             $pagamento->setNumero_pagamento($dados["nrPagamento"]);
             $pagamento->setExecio_pagamento($dados['exercicio']);
             $pagamento->setNumero_contrato($dados['fornecedor']);
