@@ -8,7 +8,7 @@ class DaoSesCidade extends SesCidade {
         try {
             $result = $pdo->prepare("INSERT INTO ses_cidade (id_estado, id_regional_saude, id_regional_geo, nm_cidade) 
                                                      VALUES (:id_estado, :id_regional_saude, :id_regional_geo, :nm_cidade)");
-            $result->bindValue(":id_estado", $cid->getId_estado() === '' ? NULL : $cid->getId_estado(), PDO::PARAM_INT);
+            $result->bindValue(":id_estado", $cid->getId_estado(), PDO::PARAM_INT);
             $result->bindValue(":id_regional_saude", $cid->getId_regional_saude() === '' ? NULL : $cid->getId_regional_saude(), PDO::PARAM_INT);
             $result->bindValue(":id_regional_geo", $cid->getId_regional_geo() === '' ? NULL : $cid->getId_regional_geo(), PDO::PARAM_INT);
             $result->bindValue(":nm_cidade", $cid->getNm_cidade() === '' ? NULL : $cid->getNm_cidade(), PDO::PARAM_STR);
@@ -19,33 +19,33 @@ class DaoSesCidade extends SesCidade {
         }
     }
 
-    function update(SesCidade $cid, $pdo) {
+    function update($pdo) {
         try {
             $result = $pdo->prepare("UPDATE ses_cidade 
-                                            SET id_estado = :id_estado,
-                                                id_regional_saude = :id_regional_saude, 
-                                                id_regional_geo = :id_regional_geo,
-                                                nm_cidade = :nm_cidade
+                                            SET id_estado = :idEstado,
+                                                id_regional_saude = :idRegionalSaude, 
+                                                id_regional_geo = :idRegionalGeo,
+                                                nm_cidade = :nmCidade
                                      WHERE id_cidade = :idCidade ");
-            $result->bindValue(":id_estado", $cid->getId_estado(), PDO::PARAM_INT);
-            $result->bindValue(":id_regional_saude", $cid->getId_regional_saude(), PDO::PARAM_INT);
-            $result->bindValue(":id_regional_geo", $cid->getId_regional_geo(), PDO::PARAM_INT);
-            $result->bindValue(":nm_cidade", $cid->getNm_cidade(), PDO::PARAM_STR);
-            $result->bindValue(":id_cidade", $cid->getId_cidade(), PDO::PARAM_INT);
+            $result->bindValue(":idEstado", $this->getId_estado(), PDO::PARAM_INT);
+            $result->bindValue(":idRegionalSaude", $this->getId_regional_saude(), PDO::PARAM_INT);
+            $result->bindValue(":idRegionalGeo", $this->getId_regional_geo(), PDO::PARAM_INT);
+            $result->bindValue(":nmCidade", $this->getNm_cidade(), PDO::PARAM_STR);
+            $result->bindValue(":idCidade", $this->getId_cidade(), PDO::PARAM_INT);
             $result->execute();
-            return "Sucesso";
+            return True;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
     }
 
-    function delete(SesCidade $cid, $pdo) {
+    function delete($pdo) {
         try {
             $result = $pdo->prepare("DELETE FROM ses_cidade WHERE id_cidade = :idCidade");
-            $result->bindValue(":idCidade", $cid->getIdCidade(), PDO::PARAM_INT);
+            $result->bindValue(":idCidade", $this->getId_cidade(), PDO::PARAM_INT);
             $result->execute();
 
-            return "Sucesso";
+            return True;
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -64,63 +64,49 @@ class DaoSesCidade extends SesCidade {
     }
 
     function retornaCidade($pdo) {
-
-        $retorno = FALSE;
-
-        $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude, 
-                       rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo 
-                from ses_cidade c
-                inner join ses_estado e on c.id_estado=e.id_estado
-                left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
-                left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
-                left join ses_pais p on e.id_pais=p.id_pais
-                where c.id_cidade = :idCidade
-                order by rg.nm_regional_geo, e.nm_estado, c.nm_cidade";
         try {
-            $sth = $pdo->prepare($sql);
-            $sth->bindValue(":idCidade", $this->getIdCidade(), PDO::PARAM_INT);
+            $sth = $pdo->prepare("select *
+                                    from ses_cidade c
+                                        where c.id_cidade = :idCidade");
+            $sth->bindValue(":idCidade", $this->getId_cidade(), PDO::PARAM_INT);
             $sth->execute();
             if ($sth->rowCount() >= 1) {
                 return $sth->fetch(PDO::FETCH_ASSOC);
             } else {
-                return $retorno;
+                return False;
             }
         } catch (PDOException $e) {
-            echo $e->getMessage();
-            return $retorno;
+            return $e->getMessage();
         }
     }
-    function listaCidade($pdo) {
-
-        $retorno = FALSE;
-        $idEstado = $this->getId_estado();
-//         $sql = "select *
-//                from ses_cidade 
-//                where id_estado = $idEstado
-//                order by nm_cidade";
-        $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude, 
-                       rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo 
-                from ses_cidade c
-                inner join ses_estado e on c.id_estado=e.id_estado
-                left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
-                left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
-                left join ses_pais p on e.id_pais=p.id_pais
-                where e.id_estado = $idEstado
-                order by c.nm_cidade, rg.nm_regional_geo, e.nm_estado ";
-        try {
-            $sth = $pdo->prepare($sql);
-            $sth->execute();
-            if ($sth->rowCount() >= 1) {
-                return $sth->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                return $retorno;
-            }
-            return $retorno;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return $retorno;
-        }
-    }
+//    function listaCidade($pdo) {
+//
+//        $retorno = FALSE;
+//        $idEstado = $this->getId_estado();
+//
+//        $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude,
+//                       rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo
+//                from ses_cidade c
+//                inner join ses_estado e on c.id_estado=e.id_estado
+//                left join ses_regional_geo rg on c.id_regional_geo=rg.id_regional_geo
+//                left join ses_regional_saude rs on c.id_regional_saude=rs.id_regional_saude
+//                left join ses_pais p on e.id_pais=p.id_pais
+//                where e.id_estado = $idEstado
+//                order by c.nm_cidade, rg.nm_regional_geo, e.nm_estado ";
+//        try {
+//            $sth = $pdo->prepare($sql);
+//            $sth->execute();
+//            if ($sth->rowCount() >= 1) {
+//                return $sth->fetchAll(PDO::FETCH_ASSOC);
+//            } else {
+//                return $retorno;
+//            }
+//            return $retorno;
+//        } catch (PDOException $e) {
+//            echo $e->getMessage();
+//            return $retorno;
+//        }
+//    }
     //***************************************
      
     function buscaCidadeUf($pdo) {
@@ -145,7 +131,7 @@ class DaoSesCidade extends SesCidade {
     //********************************
     function listaTodasCidades($pdo) {
         $retorno = false;
-        
+
         $sql = "select cid.id_cidade,cid.nm_cidade,est.nm_sigla "
                 . "from ses_cidade cid, ses_estado est"
                 . "where cid.id_estado = est.id_estado" ;
@@ -236,7 +222,7 @@ class DaoSesCidade extends SesCidade {
 
     function carregaDadosCidade($pdo) {
         try {
-            $sql = $pdo->prepare("SELECT CID.id_cidade, CID.nm_cidade as NOME, EST.id_estado as ESTADO, GEO.id_regional_geo as GEOGRAFICO, SAU.id_regional_saude as SAUDE
+            $sql = $pdo->prepare("SELECT CID.id_cidade, CID.nm_cidade, CID.id_regional_geo, CID.id_regional_saude, CID.id_estado
                                         FROM ses_cidade CID
                                                INNER JOIN ses_estado EST ON EST.id_estado = CID.id_estado
                                                LEFT JOIN ses_regional_geo GEO ON GEO.id_regional_geo = CID.id_regional_geo

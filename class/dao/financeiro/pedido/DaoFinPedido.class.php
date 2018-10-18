@@ -386,7 +386,7 @@ class DaoFinPedido extends FinPedidoTb {
                             left join fin_documento_fiscal doc
                                 on doc.id_pedido = p.id_pedido
                          where
-                            p.st_pedido > '0' " . $filter . "
+                            p.id_pedido is not null " . $filter . "
                           order by
                             p.id_pedido desc";
                 

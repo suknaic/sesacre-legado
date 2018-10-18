@@ -32,29 +32,6 @@ class FinOrdemModel {
     private $sit_pago_parcial = 8;
     private $sit_pago_total = 9;
     
-    private $msg_erros = null;
-    
-    function getMsgErros() {
-        return $this->msg_erros;
-    }
-    
-    function getSitCancelado() {
-        return $this->sit_cancelado;
-    }
-
-    function getSitCadastrado() {
-        return $this->sit_cadastrado;
-    }
-
-    function getSitRequisitado() {
-        return $this->sit_requisitado;
-    }
-
-    function getSitFinalizadoSupressaoOrdenado() {
-        return $this->sit_finalizado_supressao_ordenado;
-    }
-
-    
     /**
      * @return mixed
      */
@@ -332,13 +309,22 @@ class FinOrdemModel {
         );
         return $arr_tipo;
     }
-
+    
     public function cadastrarOrdem($ordem) {
         try {
-            if (empty($ordem)) {
+            if (empty($ordem) || empty($ordem[0]->tipoOrdem) || empty($ordem[0]->local)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-
+            
+            //validação se os tipos dos itens correspodem ao tipo da ordem
+            $tp_ordem = $ordem[0]->tipoOrdem;
+            foreach ($ordem as $item) {       
+                if (($tp_ordem == 2 && $item->tp != 'S') || ($tp_ordem != 2 && $item->tp == 'S')) { //Execução ou Serviço e item diferente do tipo 'S' ou Vice-versa
+                    return Metodos::retornoAjax("Erro", "alert", "Tipo da ordem não corresponde aos itens selecionados");
+                    break;
+                }
+            }
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -557,13 +543,15 @@ class FinOrdemModel {
 
                                 <button type = 'button' title = 'entrega' class = 'entrega' value = '" . $linha['id_ordem'] . "'>
                                 <i class='fa fa-truck text-success' aria-hidden='true'></i></i>
-                                </button >
+                                </button >";
                                 
-                                <button type='button' title='Excluir ordem' class='excluir text-danger' value='" . $linha['id_ordem'] . "' >
+                if ($linha['sit_ordem'] == '1') { //A situação '1' indica que ainda não há protocolo de aviso ao fornecedor, apenas as ordens nesta situação(1 - Cadastrado) poderão ser canceladas
+                    $tabela .= " <button type='button' title='Excluir ordem' class='excluir text-danger' value='" . $linha['id_ordem'] . "' >
                                 <i class='fa fa-trash' aria-hidden='true'></i>
-                                </button>
+                                </button>";
+                }
                                 
-                               </td>
+                $tabela .=      "</td>
                             </tr>";
             }
             return Metodos::retornoAjax("ok", "html", $tabela);
@@ -612,6 +600,12 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $pdo->beginTransaction();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
+            
+            //verifica se a Ordem já possui protocolo de aviso ao fornecedor, se possuir, aborta a operação
+            $daoFinOrdem->ordemProtocolo($pdo);
+            if ($daoFinOrdem->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser cancelada, pois existe um protocolo de aviso ao fornecedor para a mesma.");
+            }
             
             //verifica se a Ordem já possui entrega, se possuir, aborta a operação
             $daoFinOrdem->retornaEntregasOrdem($pdo);
@@ -829,39 +823,54 @@ class FinOrdemModel {
         }
     }
     
-    public function atualizaSituacaoOrdem(PDO $pdo) {
-        try {
+    public function retornaItensParaAnulacaoEmpenho() {
+        if (!empty($this->id_pedido)) {
+            if (!empty($this->id_pedido) && !empty($this->id_ordem)) {
+                //verificao a cima e para a ediçao da ordem
+            } else if (!empty($this->id_pedido)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $daoFinOrdem = new DaoFinOrdem();
+                $daoFinOrdem->setIdPedido($this->id_pedido);
+                $daoFinOrdem->listaItensPreOrdem($pdo);
+                $retorno = '';
+                if ($daoFinOrdem->Sucesso()) {
+                    foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
+                        $retorno .= '<tr>
+                                        <td class="text-center">' . $linha["nr_item"] . '</td>
+                                        <td class="text-center">' . $linha["nm_material"] . '</td>
+                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>
+                                        <td class="text-center">' . $linha["nm_grupo"] . '</td>
+                                        <td class="text-center">' . $linha["nm_sub_grupo"] . '</td>
+                                        <td class="text-center">' . $linha["nm_unidade_medida"] . '</td>    
+                                        <td class="text-center">' . wordwrap($linha["ds_despesa_elemento"], 20, "<br />\n") . '</td>
+                                        <td class="text-center">' . $linha["tp_material"] . '</td>
+                                        <td class="text-center">' . $linha["nr_lote"] . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>
+                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                                            idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
+                                            quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
+                                            quantidade="' . $linha["saldo"] . '"
+                                            class="form-control input-sm qtd_anulacao" >';
 
-            $daoFinOrdem = new DaoFinOrdem();
-            $daoFinOrdem->setIdOrdem($this->getIdOrdem());
-            $daoFinOrdem->setSitOrdem($this->getSitOrdem());
-
-            $daoFinOrdem->retornaOrdem($pdo);
-            if (!$daoFinOrdem->sucesso()) {
-                $this->msg_erros = "Não foi possível localizar os Dados da Ordem. ";
-                return false;
+                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
+					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
+                        }
+                        $retorno .= '</td>'
+                                . '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td></tr>';
+                    }
+                }
+                if (empty($retorno)) {
+                    return "Nenhum pedido encontrado";
+                }
+                return $retorno;
             }
-
-            $busca = $daoFinOrdem->getMsgRetorno();
-
-            //Atualiza a Situação da Ordem
-            $daoFinOrdem->atualizaSituacaoOrden($pdo);
-
-            if (!$daoFinOrdem->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação da Ordem. ";
-                return false;
-            }
-
-            if (!Log::SalvaLogU('fin_ordem', $daoFinOrdem->getIdOrdem(), $busca, $pdo)) {
-                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Ordem no LOG.";
-                return false;
-            }
-
-            return $daoFinOrdem->sucesso();
-        } catch (Exception $exc) {
-            $this->msg_erros = $exc->getMessage();
-            return false;
         }
     }
-
+    
 }

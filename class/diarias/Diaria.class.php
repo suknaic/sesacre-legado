@@ -61,6 +61,17 @@ class Diaria {
     
     private $usuarioSessao = null;
     
+    private $sucesso = false;
+    private $msgRetorno = null;
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+    
+    function sucesso() {
+        return $this->sucesso;
+    }
+    
     function getUsuarioPedido() {
         return $this->usuarioPedido;
     }
@@ -1956,6 +1967,76 @@ class Diaria {
             
         } catch (Exception $exc) {
             return $exc->getMessage();
+        }
+    }
+    
+    
+    
+    public function desvinculaPedidoDiariaSeExistir(PDO $pdo = null){
+        try {
+            if(empty($pdo)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não existe conexão ativa.";
+                return;
+            }            
+            
+            $daoDiaDiaria = new DaoDiaDiaria();
+            $daoDiaDiaria->setIdPedido($this->idPedido);
+            $daoDiaDiaria->selectDiariaPedido($pdo);
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                $this->sucesso = true;
+                $this->msgRetorno = "Não Existe Diária para esse Pedido.";
+                return;                               
+            }
+            
+            $diaria = $daoDiaDiaria->getMsgRetorno();
+            
+            $this->idDiaria = $diaria['id_diaria'];                                                
+                       
+            $daoDiaDiaria->setIdDiaria($this->idDiaria);                        
+                        
+            //Busca o número do pedido de necessidade para registrar no histórico
+            $daoDiaDiaria->selectNrPedido($pdo);
+            
+            if (!$daoDiaDiaria->getSucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível achar o número do Pedido da Diária.";
+                return;
+            }
+            
+            $observacao = 'Cancelado pedido de necessidade nº '. $daoDiaDiaria->getMsgRetorno()['nr_pedido']. ' vinculado a esta diária.';
+            
+            //Atualiza a diária com o nº do pedido
+            $daoDiaDiaria->desvinculaDiariaPedido($pdo);
+            
+            //insere o evento no historico da diaria
+            $this->setHistorico(array('ds_diaria_historico' => $observacao, 'id_pessoa' => $this->getUsuarioPedido()));
+            
+            if ($daoDiaDiaria->getSucesso()) {
+                if ($this->insereHistorico($pdo)) {
+                    if (!Log::SalvaLogU('dia_diaria', $daoDiaDiaria->getIdDiaria(), $diaria, $pdo)) {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "Não foi possível salvar o Log da Diária.";
+                        return;                        
+                    }
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível salvar o Histórico da Diária.";
+                    return; 
+                }                
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Desvincular o Pedido da Diária.";
+                return;
+            }
+            $this->sucesso = true;
+            $this->msgRetorno = "Desvinculação do Pedido da Diária Realizado com Sucesso";
+            return;                                                                                    
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+            return;
         }
     }
 

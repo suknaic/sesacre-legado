@@ -63,7 +63,7 @@ $(document).ready(function() {
                 if ($(this).find(".qtd").val() === '' || $(this).find(".vl").val() === '') {
                     vazio = true;
                 }
-                total = total + parseInt($(this).find(".qtd").val()) + parseInt($(this).find(".qtd").val());
+                total = total + parseFloat($(this).find(".qtd").val()).toFixed(4) + parseFloat($(this).find(".qtd").val()).toFixed(4);
             });
             if (vazio == true) {
                 func.modalAlert(func.msgPreencherCampos);

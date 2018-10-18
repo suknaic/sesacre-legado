@@ -765,6 +765,8 @@ class FinEmpenhoModel {
      * Mudar o status do Empenho
      * Mudar o status do Pedido
      * Atualiza a Anotação do Pedido
+     * Atualiza o Autorização do Pedido
+     * Se tiver Diária, deve ser desvinculada
      * Atualizar o QDD pelo Empenho
      * Não pode ter Ordem ou Documento Fiscal ou Liquidação     
      */
@@ -773,6 +775,7 @@ class FinEmpenhoModel {
             if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
+                $pdo->beginTransaction();
             }
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);            
@@ -785,12 +788,12 @@ class FinEmpenhoModel {
             
             //Busca dados do Pedido
             $pedido = new Pedido();
-            $pedido->setIdPedido($this->id_empenho);
+            $pedido->setIdPedido($dadosEmpenho['id_pedido']);
             $dadosPedido = $pedido->retornaDadosPedido();
             if(empty($dadosPedido)){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Pedido.");
             }                       
-            
+            $this->id_pedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
             if($dadosEmpenho['sit_empenho'] == $this->sit_cancelado){
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
@@ -846,24 +849,76 @@ class FinEmpenhoModel {
             
             
             //Se o Pedido Possui Diaria, então deve atualizar os Dados da Diária
-            
-            
-            
+            $diaria = new Diaria();
+            $diaria->setIdPedido($this->id_pedido);
+            $diaria->setUsuarioPedido($this->id_pessoa);
+            $diaria->desvinculaPedidoDiariaSeExistir($pdo);
+            if(!$diaria->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $diaria->getMsgRetorno());
+            }
             
             //Atualiza a Anotação do Pedido
-            $finPedidoAnotacao = new FinPedidoAnotacao();
+            $finPedidoAnotacao = new PedidoAnotacao();
             $finPedidoAnotacao->setIdPedido($dadosPedido['id_pedido']);
             $finPedidoAnotacao->setIdPessoa($this->id_pessoa);
             $finPedidoAnotacao->setDsPedidoAnotacao("Cancelado: ".$justificativa);
             $finPedidoAnotacao->salvaAnotacao($pdo);
-            
-            
+            if(!$finPedidoAnotacao->sucesso()){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $finPedidoAnotacao->getMsgRetorno());
+            }            
+                     
             //Atualiza o QDD pelo Empenho
+            $qdd = new Qdd();
+            $data = new DateTime($dadosEmpenho['dt_empenho_safira']);
+            //seto o ano do empenho para pega o id do qdd
+            $qdd->setAaQdd($data->format('Y'));
+            $qdd->verificaExisteCarregaDados($pdo);                                    
+            if (!empty($qdd->getIdQdd())) {
+                //instancio a classe do qddValor
+                $qddValor = new QddValor();
+                $qddValor->setIdQdd($qdd->getIdQdd());
+                $qddValor->setIdFonte($dadosPedido['id_fonte']);
+                $qddValor->setIdProgramaTrabalho($dadosPedido['id_programa_trabalho']);
+                $qddValor->setIdDespesaElemento($dadosPedido['id_despesa_elemento']);
+                $qddValor->carregaDadosQddFonteProgDespesa($pdo);                                                                              
+                if (!empty($qddValor->getIdQddValor())) {
+                    //Verifica se o valor Empenho irá ficar menor que 0
+                    $valorEmpenho = $qddValor->getVlEmpenhado() - $dadosEmpenho['vl_empenho'];
+                    $valorEmpenho = round($valorEmpenho, 4);
+                    if($valorEmpenho >= 0){                                              
+                        //seta o resultado da soma para atualiza o qdd
+                        $qddValor->setVlEmpenhado($valorEmpenho);
+                        $qddValor->atualizaValoresEmpenhado($pdo);
+                        //esse array foi criado para atualiza os valores do qdd valor pois a classe espera um array
+                        $array = array();
+                        $array[] = $qddValor->getIdQddValor();
+                        $qddValor->atualizaValoresPorArray($array, $pdo);
+                        if (!$qddValor->Sucesso()) {
+                            $pdo->rollBack();                                                        
+                            return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar os Valores do QDD.");
+                        }
+                    } else {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "O Valor Empenhado irá ficar Negativa se o Empenho for cancelado. ".STR_ERROR);
+                    }
+                } else {
+                    $pdo->rollBack();                    
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o QDD ao qual irá ajustar o valor");
+                }
+            } else {
+                $pdo->rollBack();                
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o QDD");
+            }
             
-            
-           
                                     
+            //$pdo->rollBack();
+            //echo "fechou;";
             
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Cancelamento do Empenho/Pedido de Necessidade Cancelado com Sucesso.");
+                                                           
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
