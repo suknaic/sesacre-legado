@@ -158,7 +158,7 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="id_central" class="form-control">
-                                                        <option value="0">Selecione uma Central</option>
+                                                        <?php echo $centrais->retornaOptionsCentrais(); ?>
                                                     </select>
                                                 </div>
                                             </div>

@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/pagamento/DaoConPagamento.class.php";
 
-class PagamentoPesquisa {
+class ConPagamentoPesquisa {
 
     private $numero_pagamento = null;
     private $numero_contrato = null;
