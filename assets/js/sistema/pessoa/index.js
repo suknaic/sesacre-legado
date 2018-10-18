@@ -36,7 +36,7 @@ $(document).ready(function () {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
-            top.location.href = "/pages/sistema/pessoa/cadastraPessoaFisica.php";
+            top.location.href = "../../../../pages/sistema/pessoa/fisica/cadPessoaFisica/cadastraPessoaFisica.php";
         }
     });
     //*************************************************************************
@@ -44,7 +44,7 @@ $(document).ready(function () {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
-            top.location.href = "/pages/sistema/pessoa/cadastraPessoaJuridica.php";
+            top.location.href = "../../../../pages/sistema/pessoa/juridica/cadPessoaJuridica/cadastraPessoaJuridica.php";
         }
     });
     //************************************************************************

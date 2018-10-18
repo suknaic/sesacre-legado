@@ -89,7 +89,7 @@ $(document).ready(function () {
         "dataType": 'html',
         "data": {
             "acao": "retornaDocFiscaisPagemento",
-            "dados": dados
+            "dados": $("#id_liquidacao").val()
         },
         "success": function (response) {
             $("#selectDocumentoFiscal").html("");
@@ -170,24 +170,16 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
-
                 var linha = $(this).data('objeto');
-
-
                 var vl_documento_pagamento = $("input[name=valorRetPagamento\\[\\]]").val();
-
                 var vl_documento_pagamento_saldo = linha.saldo;
-
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
                     vl_pagamento_doc: vl_documento_pagamento,
                     vl_pagamento_doc_saldo: vl_documento_pagamento_saldo
                 }
                 documentos.push(documento);
-
-
             });
-
 
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
@@ -218,11 +210,10 @@ $(document).ready(function () {
                 "method": "POST",
                 "dataType": "html",
                 "data": {
-                    "acao": "cadastrarPagamento",
+                    "acao": "editarEmpenho",
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

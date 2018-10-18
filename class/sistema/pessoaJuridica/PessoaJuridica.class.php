@@ -313,12 +313,16 @@ class pessoaJuridica {
             $rs = $pessoaJuridica->deletePessoaJuridica($pdo);
             if ($rs != "Sucesso") {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $rs);
+                if ($rs->getCode() == 23503) {
+                    return Metodos::retornoAjax("Erro", "alert", "Registro está vinculado a outro registro.");
+                } else {
+                    return Metodos::retornoAjax("Erro", "console", $rs);
+                }
             }
             //***************remove pessoa*********************************************************
             $pessoa = new Pessoa();
             $pessoa->setId_pessoa($this->id_pessoa);
-            $rs1 = $pessoa->removerPessoa($pdo);
+            $pessoa->removerPessoa($pdo);
             if ($pessoa->getSuccess()) {
                 $pdo->commit();
                 $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
@@ -344,10 +348,10 @@ class pessoaJuridica {
 //*********************************************************************
             $filter = array();
             if (!empty($nome)) {
-                $filter[] = "P.nm_pessoa ilike '%$nome%'";
+                $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
             }
             if (!empty($cnpj)) {
-                $filter[] = "PJ.nr_cnpj = '$cnpj'";
+                $filter[] = "PJ.nr_cnpj = '".Metodos::formataCnpj($cnpj)."'";
             }
             if (count($filter) > 0) {
                 $filtro = " where " . implode(' and ', $filter);
@@ -367,18 +371,22 @@ class pessoaJuridica {
                     $icone = "";
                     $title = "";
                     if ($v['st_ativo'] == '0') {
-                        $icone = "<i class='fa fa-user-times text-default' aria-hidden='true'></i>";
+                        $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
                         $title = "title='Ativar Pessoa'";
                     }
                     if ($v['st_ativo'] == '1') {
-                        $icone = "<i class='fa fa-user text-success' aria-hidden='true'></i>";
-                        $title = "title='Inativar Pessoa'";
+                        $icone = "<i class='fa fa-user-times text-danger' aria-hidden='true'></i>";
+                        $title = "title='Desativar Pessoa'";
                     }
                     $retorno .= "<tr>";
                     $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
-                                    <td>" . $cnpj . "</td>
-                                    <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
-                                    <td>" . $v['ds_logradouro'] . "</td>   
+                                    <td>" . $cnpj . "</td>";
+                    if ($v['nm_cidade'] != '') {
+                        $retorno .= "   <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>";
+                    } else {
+                        $retorno .= "   <td></td>";
+                    }
+                    $retorno .= "   <td>" . $v['ds_logradouro'] . "</td>   
                                     <td>" . $v['ds_bairro'] . "</td>
                                     <td>" . ($v['nr_telefone_residencial'] === NULL ? "" : Metodos::formataTelefone($v['nr_telefone_residencial'])) . "</td>
                                     <td>" . ($v['nr_telefone_celular'] === NULL ? "" : Metodos::formataCelular($v['nr_telefone_celular'])) . "</td>
@@ -391,10 +399,7 @@ class pessoaJuridica {
                                         <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='2-" . $idPessoa . "-" . $idPessoaJuridica . "'>
                                             <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
                                         </button>
-                                        <button type='button' class='btn btn-default btn-redefinir btn-xs' title='Redefinir Senha' value='" . $idPessoa . "'>
-                                            <i class='fa fa-key fa-lg text-warning' aria-hidden='true'></i>
-                                        </button>
-                                        <button type='button' class='btn btn-default btn-inativar btn-xs' $title value='2-" . $idPessoa . "-" . $idPessoaJuridica . "-" . $v['st_ativo'] . "'>
+                                        <button type='button' class='btn btn-default btn-desativar btn-xs' $title value='2-" . $idPessoa . "-" . $idPessoaJuridica . "-" . $v['st_ativo'] . "'>
                                             $icone
                                         </button>
                                     </td>

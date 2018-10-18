@@ -32,7 +32,7 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'cadastrarPagamento':
+    CASE 'editarEmpenho':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -62,10 +62,9 @@ switch ($_REQUEST['acao']) {
 
     CASE 'retornaDocFiscaisPagemento':
         try {
-            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $liquidacao = new Liquidacao();
-            $liquidacao->setIdLiquidacao($dados['id_liquidacao']);
-            $liquidacao->setIdEmpenho($dados['id_empenho']);
+            $liquidacao->setIdLiquidacao($dados);
             echo $liquidacao->retornaOptionsDocsPagamento();
             return;
             break;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
+require_once "index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -16,67 +16,93 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <!-- Font Awesome [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css">
         <!-- themify icons [ REQUIRED ] -->
-        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">
+        <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">  
         <!-- ion icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
-    <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
+
     <body>
-        <div id="container" class="effect aside-float aside-bright mainnav-lg">
-            <?php
-            //Cabeçalho do Sistema
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            //Modal Alert
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+        <div id="container" class="effect aside-float aside-bright mainnav-sm">
+
+            <?php 
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php"; 
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
+
             <div class="boxed">
+
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
+
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">País</h1>
+                        <h1 class="page-header text-overflow">Manutenção dos Tipos de Tramitações</h1>                       
                     </div>
+                    <ol class="breadcrumb">
+                        <li><a href="../">Voltar</a></li>                        
+                    </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
 
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <!-- Inicio do Formulario -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                        
+                        <!-- Inicio Form -->
+<!--                        <div class="row">-->
+<!--                            <div class="col-sm-12">-->
                                 <div class="panel">
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
                                     </div>
+
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal formVinculo">
+                                    <form class="form" id="formulario">
                                         <div class="panel-body">
-                                            <div class="form-group">
-                                                <div class="col-sm-3"></div>
-                                                <div class="col-sm-3">
-                                                    <label class="control-label" for="nmPais">Nome do Páis: <span class="text-danger">*</span></label>
-                                                    <input type="text" placeholder="Nome do Pais" id="nmPais" class="form-control" required autofocus>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <label class="control-label" for="nmSigla">Nome da Sigla: <span class="text-danger">*</span></label>
-                                                    <input type="text" placeholder="Nome da Sigla" id="nmSigla" class="form-control" maxlength="3" >
+                                            <div class="row">
+                                                <input class="hidden" id="id_tramitacao" value=""/>
+                                                <div class="form-group">
+<!--                                                    <div class="panel-body">-->
+                                                    <label for="tipo_tramitacao">
+                                                        Tipo da Administração: <span class="text-danger">*</span>
+                                                    </label>                                                        
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                        </span>
+                                                        <input id="tipo_tramitacao" class="form-control"/>
+<!--                                                                <option value="0">Selecione um Responsável</option>                                                                -->
+
+<!--                                                        </div>-->
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <!-- End <div class="form-group"> -->
+                                           
+                                        
                                         </div>
-                                        <div class="panel-footer text-center">
+                                        <!-- <div class="panel-body"> -->
+
+
+                                        <!-- Footer Form -->
+                                        <div class="panel-footer text-right">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
-                                            </button>
+                                                Limpar
+                                            </button>                                  
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
@@ -84,16 +110,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                             </button>
                                         </div>
+                                        <!-- End Form -->
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
+
                                 </div>
-                            </div>
-                        </div>
-                        <!-- Fim do Formulario -->
-                        <div class="panel">
+<!--                            </div>-->
+<!--                        </div>-->
+                        <!-- Fim Form -->
+                        
+                        
+                        
+                        
+                        
+                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Países</h3>
+                                <h3 class="panel-title">Tipos de Tramitações</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -102,27 +135,36 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th>País</th>
-                                                        <th>Sigla</th>
-                                                        <th class="text-center">Ações</th>
+                                                        <th>Id</th>
+                                                        <th>Tramitação</th>
+                                                        <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
+                                                                                                                                                                                                                                                    
                                                 </tbody>
-                                            </table>
+                                            </table>            
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
+
+
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
+
+
+
+
+
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
@@ -131,15 +173,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
+
+
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
+
+
+
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
+
+       
+
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -149,13 +199,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/sistema/pais/index.js"></script>
-        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
+        <script src="index.js"></script>
+        <!-- select2 -->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+           
         <!-- END JAVASCRIPT -->
+
     </body>
 </html>
+
+
+
+

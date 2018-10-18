@@ -19,6 +19,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">
         <!-- ion icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
@@ -35,15 +37,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
             //Modal Alert
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
-
             ?>
-
             <div class="boxed">
-
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
@@ -57,31 +55,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                     <div id="page-content">
                         <!-- Inicio do Formulario -->
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="panel">
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
                                     </div>
-
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formVinculo">
                                         <div class="panel-body">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label" for="nmEstado">Nome do Estado: <span class="text-danger">*</span></label>
-                                                <div class="col-sm-9">
+                                                <div class="col-lg-2"></div>
+                                                <div class="col-sm-3">
+                                                    <label class="control-label" for="nmEstado">Nome do Estado: <span class="text-danger">*</span></label>
                                                     <input type="text" placeholder="Nome do Estado" id="nmEstado" class="form-control" required autofocus>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label" for="nmSigla">Nome da Sigla: <span class="text-danger">*</span></label>
-                                                <div class="col-sm-9">
+                                                <div class="col-sm-2">
+                                                    <label class="control-label" for="nmSigla">Nome da Sigla: <span class="text-danger">*</span></label>
                                                     <input type="text" placeholder="Nome da Sigla" id="nmSigla" class="form-control" maxlength="2" >
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label" for="idPais">Pais Referente: <span class="text-danger">*</span></label>
-                                                <div class="col-sm-9">
+
+                                                <div class="col-sm-3">
+                                                    <label class="control-label" for="idPais">Pais Referente: <span class="text-danger">*</span></label>
                                                     <select id= "idPais" class="form-control">
                                                         <option value="">Selecione o País Referente</option>
                                                         <?php
@@ -91,9 +86,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="panel-footer text-right">
+                                        <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
@@ -105,7 +100,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
-
                                 </div>
                             </div>
                         </div>
@@ -134,13 +128,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                                             </table>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
@@ -183,6 +173,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
+        <!--Select2-->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>

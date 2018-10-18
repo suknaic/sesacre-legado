@@ -162,13 +162,11 @@ class DaoSesPessoaJuridica extends SesPessoaJuridica {
     function retornaTrPessoaJuridica($pdo, $filtro) {
 
         $retorno = FALSE;
-        $sql = "select PJ.nr_cnpj, PJ.id_natureza,  PJ.id_pessoa_juridica, PJ.nm_fantasia, PJ.nr_cnae, PJ.dt_fundacao,
-	n.ds_natureza,
-	P.id_pessoa, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.ds_logradouro, P.ds_bairro, P.id_cidade, P.st_ativo,
-        ci.nm_cidade, e.nm_sigla
+        $sql = "select PJ.nr_cnpj, P.id_pessoa, PJ.id_pessoa_juridica,
+                P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.ds_logradouro, P.ds_bairro,  P.st_ativo,
+                p.id_cidade, ci.nm_cidade, e.nm_sigla
                 from ses_pessoa P
                 inner join ses_pessoa_juridica PJ on P.id_pessoa = PJ.id_pessoa
-                inner join ses_natureza n on PJ.id_natureza = n.id_natureza
                 left join ses_cidade ci on p.id_cidade = ci.id_cidade
                 left join ses_estado e on ci.id_estado = e.id_estado
                 $filtro
@@ -191,10 +189,8 @@ class DaoSesPessoaJuridica extends SesPessoaJuridica {
     function retornaTrPessoaJuridicaAtivos($pdo, $filtro) {
 
         $retorno = FALSE;
-        $sql = "select PJ.nr_cnpj, PJ.id_natureza,  PJ.id_pessoa_juridica, PJ.nm_fantasia, PJ.nr_cnae, PJ.dt_fundacao,
-	n.ds_natureza,
-	P.id_pessoa, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.ds_logradouro, P.ds_bairro, P.id_cidade, P.st_ativo,
-        ci.nm_cidade, e.nm_sigla
+        $sql = "select PJ.nr_cnpj, PJ.id_natureza,  PJ.id_pessoa_juridica, PJ.nm_fantasia, PJ.nr_cnae, PJ.dt_fundacao,n.ds_natureza,P.id_pessoa, P.nm_pessoa, 
+                  P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.ds_logradouro, P.ds_bairro, P.id_cidade, P.st_ativo, ci.nm_cidade, e.nm_sigla
                 from ses_pessoa P
                 inner join ses_pessoa_juridica PJ on P.id_pessoa = PJ.id_pessoa
                 inner join ses_natureza n on PJ.id_natureza = n.id_natureza
@@ -283,7 +279,7 @@ class DaoSesPessoaJuridica extends SesPessoaJuridica {
             $result->execute();
             return "Sucesso";
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return $e;
             //return false;
         }
     }
