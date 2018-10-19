@@ -11,6 +11,16 @@ class PreOrdem {
     private $qtItensPre = null;
     private $vlItensPre = null;
     private $tipoMaterial = null;
+    private $sucesso = false;
+    private $msgRetorno = null;
+    
+    public function Sucesso() {
+        return $this->sucesso;
+    }
+
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
 
     function getIdPreOrdem() {
         return $this->idPreOrdem;
@@ -487,6 +497,87 @@ class PreOrdem {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         } catch (Exception $ex) {
             
+        }
+    }
+    
+    
+    public function editarPreOrdemAnulacaoEmpenho(PDO $pdo = null) {
+        try {
+            
+            if(empty($pdo)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não Possui conexão ativa.";
+                return;
+            }
+           
+            $daoFinPreOrdem = new DaoFinPreOrdem();
+            $daoFinPreOrdem->setIdPreOrdem($this->idPreOrdem);
+            $daoFinPreOrdem->retorna($pdo);
+            if(!$daoFinPreOrdem->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não Possui conexão ativa.";
+                return;                
+            }
+            
+            $busca = $daoFinPreOrdem->getMsgRetorno();
+            
+            $daoFinPreOrdem->setQtItensPre($this->qtItensPre);
+            $daoFinPreOrdem->editarQuantidadePreOrdem($pdo);
+            if(!$daoFinPreOrdem->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar a Pre Ordem";
+                return;
+            }
+            
+            if (!Log::SalvaLogU('fin_pre_ordem', $this->idPreOrdem, $busca, $pdo)) {                
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar a Pre Ordem. LOG";
+                return;                                
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualização da Pre Ordem Salva com Sucesso";
+            return;
+
+
+//            //veriicar saldo liberado
+//            $daoPedido = new DaoFinPedido();
+//            $daoPedido->setIdPedido($this->idPedido);
+//            //retorna dados do pedido 
+//            $daoPedido->retornaDadosPedido($pdo);
+//            if ($daoPedido->Sucesso()) {
+//                //pega data do pedido
+//                $date = new DateTime($daoPedido->getMsgRetorno()["dt_pedido"]);
+//                //array com as informaçoes do pedido
+//                $arrayPedido = array(
+//                    "ano" => $date->format('Y'),
+//                    "fonte" => $daoPedido->getMsgRetorno()["id_fonte"],
+//                    "projeto" => $daoPedido->getMsgRetorno()["id_programa_trabalho"],
+//                    "despesa" => $daoPedido->getMsgRetorno()["id_despesa_elemento"],
+//                    "tipoDeGasto" => $daoPedido->getMsgRetorno()["id_tipo_gasto"],
+//                    "central" => $daoPedido->getMsgRetorno()["id_lotacao"],
+//                    "idPedido" => $this->idPedido,
+//                );
+//
+//                $finCentralLiberacaoModel = new FinCentralLiberacaoModel();
+//                $saldo = $finCentralLiberacaoModel->retornaSaldoValorLiberado($arrayPedido);
+//                $saldo = (float) $saldo;
+//               
+//                if ($saldo < $valorPedido) {
+//                    $erro = true;
+//                    $pdo->rollBack();
+//                    return Metodos::retornoAjax("Erro", "alert", "Não foi liberado recurso suficiente para essa ação");
+//                }
+//            } else {
+//                $erro = true;
+//            }
+            
+
+           
+
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 

@@ -90,6 +90,26 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
             $this->msgRetorno = 'Sem conexão com o banco de dados';
         }
     }
+    
+    public function retorna($pdo = null) {
+        if (!empty($pdo)) {
+            try {
+                $sql = "select * from fin_pre_ordem where id_pre_ordem = :id_pre_ordem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pre_ordem", $this->getIdPreOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } catch (PDOException $e) {
+                $this->sucesso = false;
+                $this->msgRetorno = $e->getMessage();
+            }
+        }
+    }
 
     public function retornaItemPreOrdem($pdo = null, $condicao = '') {
         if (!empty($pdo) && !empty($condicao)) {
@@ -156,6 +176,26 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                 } else {
                     $this->msgRetorno = $e->getMessage();
                 }
+            }
+        } else {
+            $this->sucesso = false;
+        }
+    }
+    
+    public function editarQuantidadePreOrdem($pdo = null) {
+        if (!empty($pdo)) {
+            try {
+                $sql = "update fin_pre_ordem SET qt_itens_pre = :qtd where id_pre_ordem = :ordem";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":qtd", $this->getQtItensPre(), PDO::PARAM_STR);                
+                $stmt->bindValue(":ordem", $this->getIdPreOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+                $this->msgRetorno = '';
+            } catch (PDOException $e) {
+                $this->sucesso = false;
+                $this->msgRetorno = $e->getMessage();
+               
             }
         } else {
             $this->sucesso = false;

@@ -273,6 +273,11 @@ class EmpenhoAnulacao {
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
 
+            
+//            $pdo->rollBack();
+//            return;
+            
+
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
 
@@ -283,20 +288,26 @@ class EmpenhoAnulacao {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR . " ");
                 }
 
+
                 $valorInformado = round($this->itens[$kI]['valor'], 4);
+
+                                                
+                $valorInformado = $value['vl_itens_pre'];
+
                 $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
 
                 $valorTotalParaAnular = $quantidadeInformado;
+         
+                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
+                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
 
-                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
-                } else {
-                    $valorInformado = $value['vl_itens_pre'];
                 }
 
                 //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
 
-                if (round($value['saldo'], 4) < $valorTotalParaAnular) {
+                 
+                
+                if(round($value['saldo'], 4) < $valorTotalParaAnular){
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
                                     . "de Número " . $value['nr_item'] . " Pois o Valor Informado Para Anulação "
@@ -315,9 +326,6 @@ class EmpenhoAnulacao {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
                                     . "de Número " . $value['nr_item'] . "" . STR_ERROR);
                 }
-
-
-
                 //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
             }
 
@@ -372,8 +380,8 @@ class EmpenhoAnulacao {
             return Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
         }
     }
-
-    public function atualizaValoresFinPreOrdem(PDO $pdo) {
+    
+    public function atualizaValoresFinPreOrdem(PDO $pdo = null) {
         try {
             if (empty($pdo)) {
                 $this->sucesso = false;
@@ -408,11 +416,11 @@ class EmpenhoAnulacao {
             }
 
             $itensAnulacao = $daoEmpenhoAnulacaoItem->getMsgRetorno();
-
-            echo "<pre>";
-            print_r($itensAnulacao);
-            echo "</pre>";
-
+            
+//            echo "<pre>";
+//            print_r($itensAnulacao);
+//            echo "</pre>";
+                                
             $itensArray = array();
 
             foreach ($itensAnulacao as $key => $value) {
@@ -427,9 +435,10 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";
                 return;
             }
-            echo "<pre>";
-            print_r($ItensPreOrdem);
-            echo "</pre>";
+//            echo "<pre>";
+//            print_r($ItensPreOrdem);
+//            echo "</pre>";
+                                    
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -441,185 +450,142 @@ class EmpenhoAnulacao {
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR;
                     return;
                 }
-
-                $valorInformado = round($itensAnulacao[$kI]['vl_anulado'], 4);
+                                                
+                $valorInformado = $value['vl_itens_pre'];
                 $quantidadeInformado = round($itensAnulacao[$kI]['qt_anulado'], 4);
 
                 $valorTotalParaAnular = $quantidadeInformado;
-
-                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
-                } else {
-                    $valorInformado = $value['vl_itens_pre'];
+                
+                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
+                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
                 }
-
-                echo " \n " . $valorInformado . " - " . $quantidadeInformado . " - " . $valorTotalParaAnular . " \n";
-
-                if (round($value['saldo'], 4) < $valorTotalParaAnular) {
+                
+                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+                
+                if(round($value['saldo'], 4) < $valorTotalParaAnular){
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
                             . "de Número " . $value['nr_item'] . " Pois o Valor Informado Para Anulação "
                             . "ficará menor que o Saldo Disponível para Anualação.";
                     return;
                 }
-
-                $daoEmpenhoAnulacaoItens->setIdPreOrdem($value['id_pre_ordem']);
-                $daoEmpenhoAnulacaoItens->setQtItem($value['qt_itens_pre']);
-                $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
-                $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
-                $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
-                $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
-                $daoEmpenhoAnulacaoItens->insert($pdo);
-                if (!$daoEmpenhoAnulacaoItens->getSucesso()) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
-                                    . "de Número " . $value['nr_item'] . "" . STR_ERROR);
+          
+                if($value['qt_itens_pre'] < $quantidadeInformado){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
+                            . "de Número ".$value['nr_item']." Pois a Quantidade Informado Para Anulação "
+                            . "ficará zerado";       
+                    return; 
                 }
-
-                //Consumo ou Permanente irá somente subtrair o qt_anulado do qt_itens_pre
-                //Serviço ou Gasolina irá subtrair o qtanulado e o vl_anulado
-                //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
+                
+                $quantidadeNovo = round(($value['qt_itens_pre'] - $quantidadeInformado), 4);
+                if($quantidadeNovo <= 0){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
+                            . "de Número ".$value['nr_item']." Pois a Quantidade Informado Para Anulação "
+                            . "ficará zerado";       
+                    return; 
+                }
+                
+                $preOrdem = new PreOrdem();
+                $preOrdem->setIdPreOrdem($value['id_pre_ordem']);
+                //$preOrdem->setVlItensPre($valorInformado);
+                $preOrdem->setQtItensPre($quantidadeNovo);
+                $preOrdem->editarPreOrdemAnulacaoEmpenho($pdo);
+                if(!$preOrdem->Sucesso()){
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
+                            . "de Número ".$value['nr_item']." Pois não foi possível Atualizar os Itens da Pre Ordem.";
+                    return; 
+                }                                        
             }
-
-
-
-            $pdo->rollBack();
-            return;
-
-            $finEmpenho = new FinEmpenhoModel();
-            $finEmpenho->setIdEmpenho($this->idEmpenho);
-            $dadosEmpenho = $finEmpenho->retornaDadosEmpenho($pdo);
-
-            if (empty($dadosEmpenho)) {
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
-            }
-
-
-            //Busca dados do Pedido
+            
             $pedido = new Pedido();
-            $pedido->setIdPedido($dadosEmpenho['id_pedido']);
-            $dadosPedido = $pedido->retornaDadosPedido();
-            if (empty($dadosPedido)) {
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Pedido.");
+            $pedido->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
+            $dadosPedido = $pedido->retornaDadosPedido($pdo);
+            if(!is_array($dadosPedido)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Localizar o Pedido.";       
+                return; 
             }
-            $this->idPedido = $dadosEmpenho['id_pedido'];
-            //Verifica se o Empenho já está cancelado
-            if ($dadosEmpenho['sit_empenho'] == $finEmpenho->getSitCancelado()) {
-                return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
-            }
-
-
-            if (!$perfilTI) {
-                $CentralResponsavel = new CentralResponsavel();
-                $CentralResponsavel->setIdPessoa($this->idPessoa);
-                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
-                $CentralResponsavel->verificaPermissao($pdo);
-                if (!$CentralResponsavel->Sucesso()) {
-                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
-                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
-                }
-            }
-
-
-
-            $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
-            $daoEmpenhoAnulacao->setIdPedido($this->idPedido);
-            $daoEmpenhoAnulacao->setNrEmpenhoAnulacao($this->nrAnulacao);
-            $daoEmpenhoAnulacao->setDtEmpenhoAnulacao($this->dtAnulacao->format("Y-m-d"));
-            $daoEmpenhoAnulacao->setVlEmpenhoAnulacao($this->vlAnulacao);
-            $daoEmpenhoAnulacao->setVlEmpenhoAntigo($dadosEmpenho['vl_empenho']);
-            $daoEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
-            $daoEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
-            $daoEmpenhoAnulacao->setIdPessoa($this->idPessoa);
-            $daoEmpenhoAnulacao->insert($pdo);
-            if (!$daoEmpenhoAnulacao->getSucesso()) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar a Anulação do Empenho.");
-            }
-
-            $this->idEmpenhoAnulacao = $pdo->lastInsertId('con_empenho_anulacao_id_empenho_anulacao_seq');
-            if (!Log::SalvaLogI('con_empenho_anulacao', $this->idEmpenhoAnulacao, $pdo)) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar a Anulação no LOG. Operação Cadastro.");
-            }
-
-
+            
+            $valorPedidoEmpenhoAntigo = $dadosPedido['vl_pedido'];
+            
 //            echo "<pre>";
-//            print_r($this->itens);
+//            print_r($dadosPedido);
 //            echo "</pre>";
-
-            /*
-             * Verifica os Itens da Pre Ordem que o usuário deseja anular
-             * Irá retornar os Valores de Cada Item e o Saldo do Pedido
-             * O Valor anulado não pode ser Maior que o Saldo de Cada Item
-             */
-            $itensArray = array();
-            foreach ($this->itens as $key => $value) {
-                $itensArray[] = $value['id'];
+            
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdPedido($dadosPedido['id_pedido']);
+            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
+            if(!is_array($dadosEmpenho)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
+                return; 
             }
-
+            
+//            echo "<pre>";
+//            print_r($dadosEmpenho);
+//            echo "</pre>";
+            
+            
+            $preOrdem = new PreOrdem();
+            $preOrdem->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
+            if (!$preOrdem->atualizaValorPedido($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Atualizar o Valor do Pedido.";
+                return;                
+            }
+                                                            
+            $pedidoAux = new Pedido();
+            $pedidoAux->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
+            $dadosPedido = $pedidoAux->retornaDadosPedido($pdo);
+            
+//            echo "<pre>";
+//            print_r($dadosPedido);
+//            echo "</pre>";
+            
+            $empenho->setVlEmpenho($dadosPedido['vl_pedido']);
+            $empenho->setIdEmpenho($dadosEmpenho['id_empenho']);
+            
+            $empenho->atualizaValorEmpenhoAtualizaQDD($valorPedidoEmpenhoAntigo, $pdo);
+            if(!$empenho->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar o Valor do Empenho e nem o QDD.";       
+                return; 
+            }
+            
+            
+            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
+            if(!is_array($dadosEmpenho)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
+                return; 
+            }
+            
+//            echo "<pre>";
+//            print_r($dadosEmpenho);
+//            echo "</pre>";
+            
             $finOrdemModel = new FinOrdemModel();
             $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
-            if (!$ItensPreOrdem) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Pedido de Necessidade.");
+            if(!$ItensPreOrdem){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";       
+                return;
+
             }
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
+//            echo " \n E";
+//            $pdo->commit();
+//            return;
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualização do Empenho/QDD Realizado com Sucesso";
+          
 
-            $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
-            $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
-
-            foreach ($ItensPreOrdem as $key => $value) {
-                $kI = array_search($value['id_pre_ordem'], array_column($this->itens, "id"));
-                if ($kI === false) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR . " ");
-                }
-
-                $valorInformado = round($this->itens[$kI]['valor'], 4);
-                $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
-
-                $valorTotalParaAnular = $quantidadeInformado;
-
-                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
-                } else {
-                    $valorInformado = $value['vl_itens_pre'];
-                }
-
-                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-
-                if (round($value['saldo'], 4) < $valorTotalParaAnular) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
-                                    . "de Número " . $value['nr_item'] . " Pois o Valor Informado Para Anulação "
-                                    . "ficará menor que o Saldo Disponível para Anualação.");
-                }
-
-                $daoEmpenhoAnulacaoItens->setIdPreOrdem($value['id_pre_ordem']);
-                $daoEmpenhoAnulacaoItens->setQtItem($value['qt_itens_pre']);
-                $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
-                $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
-                $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
-                $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
-                $daoEmpenhoAnulacaoItens->insert($pdo);
-                if (!$daoEmpenhoAnulacaoItens->getSucesso()) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
-                                    . "de Número " . $value['nr_item'] . "" . STR_ERROR);
-                }
-
-
-
-                //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
-            }
-
-
-            echo " \n E";
-            $pdo->rollBack();
-            return;
         } catch (Exception $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();

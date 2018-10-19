@@ -18,6 +18,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/Vin
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/empenho/EmpenhoAnulacao.class.php";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/preOrdem/PreOrdem.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
+
+
 
 
 $session = new Session('ajax');
