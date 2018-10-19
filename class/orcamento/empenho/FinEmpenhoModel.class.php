@@ -29,6 +29,18 @@ class FinEmpenhoModel {
     
     private $msg_erros = null;
     
+    private $sucesso = null;
+    private $msgRetorno = null;   
+    
+    public function sucesso() {
+        return $this->sucesso;
+    }
+
+    public function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+
+        
     public function getStatusAguardandoLiquidacao() {
         return $this->statusAguardandoLiquidacao;
     }
@@ -759,6 +771,26 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
+    
+    public function retornaDadosEmpenhoPorPedido($pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->retornaDadosEmpenhoPorPedido($pdo);
+            if ($daoFinEmpenho->sucesso()) {                
+                return $daoFinEmpenho->getMsgRetorno();
+            }
+            return "";
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+    
+    
 
     /*
      * Cancelar o Empenho Global
@@ -977,6 +1009,111 @@ class FinEmpenhoModel {
             }
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+    
+    
+    public function atualizaValorEmpenhoAtualizaQDD($valorPedidoEmpenhoAntigo, PDO $pdo = null) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Conexão não possui nada.";
+                return;
+            }
+            
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->setVlEmpenho($this->vl_empenho);
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);            
+          
+            if (!$daoFinEmpenho->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o Empenho.";
+                return;                
+            }            
+            $dadosEmpenho = $daoFinEmpenho->getMsgRetorno();
+            
+            //Atualiza o Valor do Empenho
+            $daoFinEmpenho->updateValorEmpenho($pdo);
+            if(!$daoFinEmpenho->sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinEmpenho->getMsgRetorno();
+                return; 
+            }
+            
+            if (!Log::SalvaLogU('fin_empenho', $this->id_empenho, $dadosEmpenho, $pdo)) {                
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar Empenho. LOG";
+                return;                                
+            }
+                        
+            //Busca dados do Pedido
+            $pedido = new Pedido();
+            $pedido->setIdPedido($dadosEmpenho['id_pedido']);
+            $dadosPedido = $pedido->retornaDadosPedido();
+            if(empty($dadosPedido)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar os Dados do Pedido.";
+                return;                
+            }                                     
+                        
+            //echo "\n".$valorPedidoEmpenhoAntigo." - ".$this->vl_empenho."\n";
+                     
+            //Atualiza o QDD pelo Empenho
+            $qdd = new Qdd();
+            $data = new DateTime($dadosEmpenho['dt_empenho_safira']);
+            //seto o ano do empenho para pega o id do qdd
+            $qdd->setAaQdd($data->format('Y'));
+            $qdd->verificaExisteCarregaDados($pdo);                                    
+            if (!empty($qdd->getIdQdd())) {
+                //instancio a classe do qddValor
+                $qddValor = new QddValor();
+                $qddValor->setIdQdd($qdd->getIdQdd());
+                $qddValor->setIdFonte($dadosPedido['id_fonte']);
+                $qddValor->setIdProgramaTrabalho($dadosPedido['id_programa_trabalho']);
+                $qddValor->setIdDespesaElemento($dadosPedido['id_despesa_elemento']);
+                $qddValor->carregaDadosQddFonteProgDespesa($pdo);                                                                              
+                if (!empty($qddValor->getIdQddValor())) {
+                    //Verifica se o valor Empenho irá ficar menor que 0
+                    $valorEmpenho = $qddValor->getVlEmpenhado() - $valorPedidoEmpenhoAntigo + $this->vl_empenho;
+                    $valorEmpenho = round($valorEmpenho, 4);
+                    if($valorEmpenho >= 0){                                              
+                        //seta o resultado da soma para atualiza o qdd
+                        $qddValor->setVlEmpenhado($valorEmpenho);
+                        $qddValor->atualizaValoresEmpenhado($pdo);
+                        //esse array foi criado para atualiza os valores do qdd valor pois a classe espera um array
+                        $array = array();
+                        $array[] = $qddValor->getIdQddValor();
+                        $qddValor->atualizaValoresPorArray($array, $pdo);
+                        if (!$qddValor->Sucesso()) {
+                            $this->sucesso = false;
+                            $this->msgRetorno = "Não foi possível atualizar os Valores do QDD.";
+                            return;                            
+                        }
+                    } else {
+                        $this->sucesso = false;
+                        $this->msgRetorno = "O Valor Empenhado irá ficar Negativa se o Empenho for anulado. ".STR_ERROR;
+                        return; 
+                        
+                    }
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível localizar o QDD ao qual irá ajustar o valor";
+                    return;                    
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível localizar o QDD";
+                return;                  
+            }                     
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Empenho e QDD Atualziado";            
+                                                           
+        } catch (Exception $ex) {
+            $this->sucesso = true;
+            $this->msgRetorno = "Empenho e QDD Atualziado";  
         }
     }
 

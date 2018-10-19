@@ -284,6 +284,25 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
+    
+    public function updateValorEmpenho(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "UPDATE fin_empenho SET vl_empenho = :vl_empenho where id_empenho = :id_empenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":vl_empenho", $this->getVlEmpenho(), PDO::PARAM_STR);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
 
     public function retornaEmpenhoGdof(PDO $pdo) {
         try {
@@ -458,6 +477,29 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $sql = "select * from fin_empenho where id_empenho = :idEmpenho";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoPorPedido(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_empenho where id_pedido = :idPedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
