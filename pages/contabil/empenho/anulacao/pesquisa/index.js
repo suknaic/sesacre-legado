@@ -30,6 +30,11 @@ $(document).ready(function () {
         lista(dados);
     });
     
+    $('body').on('click','.ver-anulacao-empenho',function(){
+        var id = $(this).val();
+        window.open("/pages/contabil/empenho/anulacao/ver/index.php?&id=" + id);
+    });
+    
 });
 
 function lista(dados) {

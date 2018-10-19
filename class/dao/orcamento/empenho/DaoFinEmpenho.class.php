@@ -374,7 +374,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         try {
             if (!empty($pdo)) {
                 $sql = "select
-                            emp.nr_empenho,
+                            --emp.nr_empenho,
+                            concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho)-4)) ), '/',  substring(nr_empenho FROM '....$')) as nr_empenho,
                             emp.id_empenho,
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
@@ -414,7 +415,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-
+    
     public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {

@@ -590,6 +590,39 @@ class Session {
         }
         RETURN FALSE;
     }
+    
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL
+    public function vPContabilAdministracao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_ADMINISTRACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+    
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - LIQUIDAÇÃO
+    public function vPContabilLiquidacao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_LIQUIDACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+    
+     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - ANULAÇÃO DE EMEPENHO
+    public function vPContabilEmpenhoAnulacao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO_ANULACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
 
 }
 

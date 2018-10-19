@@ -50,7 +50,7 @@ require_once "index.load.php";
                         <h1 class="page-header text-overflow">Detalhes da Anulação do Empenho</h1> 
                     </div>
                     <ol class="breadcrumb">
-                        <li><a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Voltar</a></li>                        
+                        <li><a href="/pages/contabil/empenho/anulacao/pesquisa/">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     
@@ -64,6 +64,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
+                                            <?php echo $dadosContrato; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -71,6 +72,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
+                                            <?php echo $dadosPedido; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -78,11 +80,12 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
+                                            <?php echo $dadosEmpenho; ?>
                                         </div>
                                     </div>
                                 </div>
 
-                                <?php if($tem_itens) {?>
+                                <?php if(!empty($dadosAnulacaoItens)) {?>
                                     <!--Form das entrega-->
                                     <div class="form-group">
                                         <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -90,7 +93,7 @@ require_once "index.load.php";
                                                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">Itens do Pedido Anulados</h4>
+                                                            <h4 class="panel-title">Itens Anulados do Pedido</h4>
                                                         </div>
                                                         <div class="panel-body">
                                                             <div class="form-group">
@@ -109,11 +112,11 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Utilizado</th>
                                                                                 <th class="text-center">Saldo</th>
                                                                                 <th class="text-center">Qtd. Anulado</th>
-                                                                                <th class="text-center">Valor. Anulado</th>
+                                                                                <th class="text-center">Valor Anulado</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            
+                                                                            <?php echo $dadosAnulacaoItens; ?>
                                                                         </tbody>
 
                                                                     </table>
@@ -138,22 +141,22 @@ require_once "index.load.php";
                                                     <input type="hidden" id="id_empenho_anulacao" value="" />
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da Anulaçao:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Anulação:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" disabled />
+                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosAnulacao['nr_empenho_anulacao']; ?>" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
                                                         
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Anulaçao:</b></div>
+                                                            <div class="col-sm-2"><b>Data da Anulação:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_empenho_anulacao" id="dt_empenho_anulacao" disabled />
+                                                                    <input class="form-control" type="text" name="dt_empenho_anulacao" id="dt_empenho_anulacao" value="<?php echo $dadosAnulacao['dt_empenho_anulacao']; ?>" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -164,7 +167,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho_anulacao" id="vl_empenho_anulacao" disabled />
+                                                                    <input type="text" class="form-control" name="vl_empenho_anulacao" id="vl_empenho_anulacao" value="<?php echo $dadosAnulacao['vl_empenho_anulacao']; ?>" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -188,7 +191,7 @@ require_once "index.load.php";
                                                     </div>
 
                                                     <div class="panel-body">
-                                                        <textarea class="form-control anotacoes" rows="7" readonly></textarea>
+                                                        <textarea class="form-control anotacoes" rows="7" readonly><?php echo $dadosAnotacoes; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -205,7 +208,7 @@ require_once "index.load.php";
                                                         <h4 class="panel-title">Histórico</h4>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <textarea class="form-control" rows="7" readonly="true"></textarea>
+                                                        <textarea class="form-control" rows="7" readonly="true"><?php echo $dadosHistorico; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -213,8 +216,9 @@ require_once "index.load.php";
                                     </div>
                                 </div>
 
-
+                                 <br>
                             </div>
+                           
                         </form>
                     </div>
                 </div>
