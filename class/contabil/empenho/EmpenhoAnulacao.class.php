@@ -567,24 +567,24 @@ class EmpenhoAnulacao{
             }
             
             
-            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
-            if(!is_array($dadosEmpenho)){
-                $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
-                return; 
-            }
+//            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
+//            if(!is_array($dadosEmpenho)){
+//                $this->sucesso = false;
+//                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
+//                return; 
+//            }
             
 //            echo "<pre>";
 //            print_r($dadosEmpenho);
 //            echo "</pre>";
             
-            $finOrdemModel = new FinOrdemModel();
-            $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
-            if(!$ItensPreOrdem){
-                $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";       
-                return;
-            }
+//            $finOrdemModel = new FinOrdemModel();
+//            $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
+//            if(!$ItensPreOrdem){
+//                $this->sucesso = false;
+//                $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";       
+//                return;
+//            }
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
