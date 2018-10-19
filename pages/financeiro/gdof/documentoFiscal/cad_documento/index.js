@@ -242,6 +242,7 @@ $(document).ready(function () {
 
             },
             "success": function (response) {
+                console.log(response);
                 $("#selectEntrega").html("");
                 $("#selectEntrega").append(response);
             }

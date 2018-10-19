@@ -122,6 +122,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     left join
                        fin_contrato cnt
                        on cnt.id_contrato = fornecedor.id_contrato " . $str_filtro;
+        
         try {
             if(!empty($pdo)){
                 $stmt = $pdo->prepare($sql);

@@ -59,13 +59,7 @@ require_once "index.load.php";
                     <div id="page-content">
 
                         <div class="panel">
-                            <div class="panel-heading">
-
-                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/contabil/empenho/anulacao/cadastro" role="button">
-                                    <i class="fa fa-plus-circle fa-1x inputPFa"></i>
-                                    Cadastrar Anulação do Empenho
-                                </a>
-                            </div>
+                    
                             <form>
                                 <div class="panel-body">
                                     <br>
