@@ -99,7 +99,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                                 from fin_ordem as ordem
                                                 inner join fin_ordem_itens as itens
                                                 on ordem.id_ordem = itens.id_ordem
-                                                where ordem.sit_ordem > '0' and ordem.sit_ordem < '2'
+                                                where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
                                                 group by itens.id_pre_ordem
                                           ) as ordemItens
                         on ordemItens.id_pre_ordem = pre.id_pre_ordem
@@ -114,7 +114,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                                 on confirmacao.id_ordem = ordem.id_ordem
                                                 inner join fin_entrega_itens as itens
                                                 on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                                where ordem.sit_ordem > '2'
+                                                where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
                                                 group  by  ordemItens.id_pre_ordem
                                            ) as entregas
                         on entregas.id_pre_ordem = pre.id_pre_ordem
@@ -614,7 +614,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                                 from fin_ordem as ordem
                                                 inner join fin_ordem_itens as itens
                                                 on ordem.id_ordem = itens.id_ordem
-                                                where ordem.sit_ordem > '0' and ordem.sit_ordem < '2'
+                                                where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
                                                 group by itens.id_pre_ordem
                                           ) as ordemItens
                         on ordemItens.id_pre_ordem = pre.id_pre_ordem
@@ -629,7 +629,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                                 on confirmacao.id_ordem = ordem.id_ordem
                                                 inner join fin_entrega_itens as itens
                                                 on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                                where ordem.sit_ordem > '2'
+                                                where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
                                                 group  by  ordemItens.id_pre_ordem
                                            ) as entregas
                         on entregas.id_pre_ordem = pre.id_pre_ordem

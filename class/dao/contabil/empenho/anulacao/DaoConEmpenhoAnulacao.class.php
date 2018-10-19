@@ -6,7 +6,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
 
     private $sucesso = null;
     private $msgRetorno = null;
-    
+
     function getSucesso() {
         return $this->sucesso;
     }
@@ -15,7 +15,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
         return $this->msgRetorno;
     }
 
-    function insert(PDO $pdo){
+    function insert(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "insert into con_empenho_anulacao "
@@ -25,7 +25,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 . " (:id_pedido,:nr_empenho_anulacao,:dt_empenho_anulacao,:vl_empenho_anulacao,:vl_empenho_antigo,"
                 . ":id_empenho_anulacao_situacao,:id_empenho_anulacao_status,:id_pessoa)";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":nr_empenho_anulacao", $this->getNrEmpenhoAnulacao(), PDO::PARAM_STR);
@@ -44,13 +44,13 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retorna(PDO $pdo){
+
+    function retorna(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select * from con_empenho_anulacao where id_empenho_anulacao = :id_empenho_anulacao";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -67,18 +67,18 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaPesquisaEmpenhoAnulacao(PDO $pdo, array $filtroSql = []){
+
+    function retornaPesquisaEmpenhoAnulacao(PDO $pdo, array $filtroSql = []) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        
+
         $str_filtro = '';
         if (!empty($filtroSql)) {
             foreach ($filtroSql as $filtro) {
                 $str_filtro .= $filtro['sql'];
             }
         }
-        
+
         $sql = "select
                     anulacaoEmp.nr_empenho_anulacao,
                     emp.nr_empenho,
@@ -122,17 +122,17 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     left join
                        fin_contrato cnt
                        on cnt.id_contrato = fornecedor.id_contrato " . $str_filtro;
-        
+
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
-                
+
                 if (!empty($filtroSql)) {
                     foreach ($filtroSql as $filtro) {
                         $stmt->bindValue($filtro['bind'], $filtro['valor'], $filtro['pdo_param']);
                     }
                 }
-                
+
                 $stmt->execute();
                 if ($stmt->rowCount() >= 1) {
                     $this->sucesso = true;
@@ -146,6 +146,24 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
         } catch (PDOException $e) {
             $this->msgRetorno = $e->getMessage();
         }
-    } 
+    }
+
+    public function atualizaStatusSituacaoEmpenhoAnulacao(PDO $pdo = null) {
+        try {
+            if (empty(!$pdo)) {
+                $sql = "update con_empenho_anulacao set id_empenho_anulacao_situacao = :situacao, id_empenho_anulacao_status = :status 
+                        where id_empenho_anulacao = :anulacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $this->getIdEmpenhoAnulacaoSituacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":status", $this->getIdEmpenhoAnulacaoStatus(), PDO::PARAM_INT);
+                $stmt->bindValue(":anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (Exception $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
 
 }
