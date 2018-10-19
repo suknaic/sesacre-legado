@@ -136,7 +136,7 @@ class EmpenhoAnulacaoPesquisa {
                                 . '<td class="text-center">'.$linha['vl_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
                                 . '<td class="text-center">'
-                                    . '<button type="button" title="Ver Anulação do Empenho" class="ver-anulacao-empenho" value=>'
+                                    . '<button type="button" title="Ver Anulação do Empenho" class="ver-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
                                         . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
                                     . '</button>'
                                 .'</td>'

@@ -37,10 +37,10 @@ class Perfil{
         
     private function getPerfisContabil(){
         $array = array(
+            PERFIL_CONTABIL_ADMINISTRACAO =>  "Perfil Contábil Administração",
             PERFIL_CONTABIL_EMPENHO_ANULACAO => "Perfil Contábil Empenho Anulacão",
             PERFIL_CONTABIL_LIQUIDACAO => "Perfil Contábil Liquidação",
             PERFIL_CONTABIL_PAGAMENTO =>  "Perfil Contábil Pagamento",
-            PERFIL_CONTABIL_ADMINISTRACAO =>  "Perfil Contábil Administração",
             PERFIL_CONTABIL_ZEUS => "Perfil Contábil Zeus"
             );
         return $array;
