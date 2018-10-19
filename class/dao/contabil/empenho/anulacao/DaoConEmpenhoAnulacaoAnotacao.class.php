@@ -58,8 +58,7 @@ class DaoConEmpenhoAnulacaoAnotacao extends ConEmpenhoAnulacaoAnotacao {
     public function lista(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "select pessoa.nm_pessoa, to_char(anotacao.dh_empenho_anulacao_anotacao,'dd/mm/yyyy HH24:MI:SS') as dh_empenho_anulacao_anotacao, 
-                    anotacao.ds_empenho_anulacao_anotacao
+        $sql = "select (pessoa.nm_pessoa || ' - ' || to_char(anotacao.dh_empenho_anulacao_anotacao,'dd/mm/yyyy HH24:MI:SS') || ': ' || anotacao.ds_empenho_anulacao_anotacao) as anotacao
                     from con_empenho_anulacao_anotacao as anotacao
                     inner join ses_pessoa as pessoa
                     on pessoa.id_pessoa = anotacao.id_pessoa

@@ -613,12 +613,316 @@ class EmpenhoAnulacao{
     
     
     
+    public function retornaDadosDaAnulacaoDoEmpenho() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacao->retornaDadosDaAnulacaoDoEmpenho($pdo);
+            return $daoConEmpenhoAnulacao->getMsgRetorno();
+
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
     
+    public function retornaDadosEmpenhoDaAnulacao() {
+        try {
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $dadosEmpenho = '';
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacao->retornaDadosEmpenhoDaAnulacao($pdo);
+
+            if ($daoConEmpenhoAnulacao->getSucesso()) {
+                $campos = $daoConEmpenhoAnulacao->getMsgRetorno();
+                
+                $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingThree">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree"
+                                                        aria-expanded="false" aria-controls="collapseThree" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
+                                                <div class="panel-body">
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["dt_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos["nm_tipo_empenho"] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho:</b></div>
+                                                        <div class="col-sm-3">' . $campos['vl_empenho_antigo'] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Empenho após a Anulação:</b></div>
+                                                        <div class="col-sm-3">' . $campos['vl_empenho_atual'] . '</div>
+                                                        <div class="col-sm-7"></div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosEmpenho;
+            }
+            return $dadosEmpenho;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
     
+    public function retornaDadosContratoDaAnulacao() {
+        try {
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $dadosContrato = '';
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacao->retornaDadosContratoDaAnulacao($pdo);
+            if ($daoConEmpenhoAnulacao->getSucesso()) {
+                $campos = $daoConEmpenhoAnulacao->getMsgRetorno();
+
+                $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionOne" href="#collapseOne" 
+                                                        aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                                                <div class="panel-body">
+                                                
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Licitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Objeto:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Modalidade:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::formataCnpj($campos["cpfcnpj"]) . '</div>
+                                                    </div>
+                                                    
+                                                     <div class="form-group">
+                                                        <div class="col-sm-2"><b>Nº do Processo Administrativo da Despesa Publica:</b></div>
+                                                        <div class="col-sm-10"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosContrato;
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
     
+    public function retornaDadosPedidoDaAnulacao() {
+        try {
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $dadosPedido = '';
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacao->retornaDadosPedidoDaAnulacao($pdo);
+
+            if ($daoConEmpenhoAnulacao->getSucesso()) {
+                $campos = $daoConEmpenhoAnulacao->getMsgRetorno();
+
+                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingTwo">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
+                                                        aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"].'/'.$campos['ano']. '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
+                                                <div class="panel-body">
+                                                    <input type="hidden" id="id_pedido" value=' . $campos['id_pedido'] . ' data-tipo-solicitacao=' . $campos['id_tipo_solicitacao'] . ' />
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>' . STR_FUNCIONAL_PROGRAMATICA . ':</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . '- ' . $campos["ds_programa_trabalho"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Despesa:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . '- ' . $campos["ds_despesa"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo da Solicitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>
+                                                                                                        
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosPedido;
+            }
+            return $dadosPedido;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
     
+    public function retornaItensDaAnulacaoDoEmpenho() {
+        try {
+            $tabela = '';
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacao->retornaItensDaAnulacaoDoEmpenho($pdo);
+
+            if ($daoConEmpenhoAnulacao->getSucesso()) {
+                foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
+                    $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
+                    $tabela .= '<tr>
+                                    <td class="text-center">' . $linha["nr_item"] . '</td>
+                                    <td class="text-center">' . $linha["nm_material"] . '</td>
+                                    <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
+                                    <td class="text-center">' . $linha["tp_material"] . '</td>
+                                    <td class="text-center">' . $linha["nr_lote"] . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_saldo"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_anulado"], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($total_anulado, 4) . '</td>
+                                </tr>';
+                }
+            }
+            return $tabela;
+        } catch (Exception $exc) {
+            return $ex->getMessage();
+        }
+    }
     
+    public function retornaAnotacoesDaAnulacaoDoEmpenho(){
+        try {
+            $anotacoes = '';
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoConEmpenhoAnulacaoAnotacao = new DaoConEmpenhoAnulacaoAnotacao();
+            $daoConEmpenhoAnulacaoAnotacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacaoAnotacao->lista($pdo);
+            
+            if ($daoConEmpenhoAnulacaoAnotacao->getSucesso()) {
+                foreach ($daoConEmpenhoAnulacaoAnotacao->getMsgRetorno() as $linha) {
+                    $anotacoes .=  $linha['anotacao'] . "\n";
+                }
+            }
+            return $anotacoes;
+        } catch (Exception $exc) {
+            return $exc->getTraceAsString();
+        }
+    }
     
+    public function retornaHistoricoDaAnulacaoDoEmpenho(){
+        try {
+            $historico = '';
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoConEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
+            $daoConEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
+            $daoConEmpenhoAnulacaoHistorico->lista($pdo);
+            
+            if ($daoConEmpenhoAnulacaoHistorico->getSucesso()) {
+                foreach ($daoConEmpenhoAnulacaoHistorico->getMsgRetorno() as $linha) {
+                    $historico .= $linha['historico'] . "\n";
+                }
+            }
+            return $historico;
+        } catch (Exception $exc) {
+            return $exc->getTraceAsString();
+        }
+    }
     
 }
 
