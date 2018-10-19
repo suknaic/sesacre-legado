@@ -846,17 +846,23 @@ class FinOrdemModel {
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
-                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>';
+                        
+                        $label = "Quantidade";
+//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+//                            $label = "Vlr. Unitário";
+//                        }
+                        
+                        $retorno .= '<td class="text-center itens">'.$label.'<input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
                                             quantidade="' . $linha["saldo"] . '"
                                             class="form-control input-sm qtd_anulacao" >';
 
-                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
-                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
-					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
-                        }
+//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+//                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
+//					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
+//                        }
                         $retorno .= '</td>'
                                 . '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td></tr>';
                     }
