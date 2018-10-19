@@ -610,9 +610,6 @@ class FinEntregaConfirmacaoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $arrayIdOrdens = array();
-
-//            $finDocumentoFiscal = new FinDocumentoFiscal();
-
             $idDocumentoFiscal = $dados['documento'] ?? ""; 
             $idOrdens = implode(' , ', $dados['ordens']);
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();

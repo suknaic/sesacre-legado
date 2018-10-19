@@ -8,7 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralMo
 
 $session = new Session();
 
-if(!$session->vPGeral()){
+if(!$session->vPFinanceiro()){
     header("Location: /pages/index.php"); 
 }
 
