@@ -64,5 +64,33 @@ class DaoConEmpenhoAnulacaoItem extends ConEmpenhoAnulacaoItem {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    function retornaItensComPreOrdem(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "SELECT AI.id_empenho_anulacao_item, AI.id_pre_ordem"
+                . " , AI.qt_item, AI.vl_item, AI.qt_anulado, AI.vl_anulado, AI.vl_saldo"
+                . " , PO.id_cont_itens, PO.qt_itens_pre, PO.vl_itens_pre"
+                . " FROM con_empenho_anulacao_item AI"
+                . " INNER JOIN fin_pre_ordem PO ON PO.id_pre_ordem = AI.id_pre_ordem"
+                . " WHERE AI.id_empenho_anulacao = :id_empenho_anulacao";
+        try {
+            if(!empty($pdo)){
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados.';
+            }
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
 
 }
