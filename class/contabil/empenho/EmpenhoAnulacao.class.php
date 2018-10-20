@@ -272,11 +272,9 @@ class EmpenhoAnulacao {
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
-
-            
 //            $pdo->rollBack();
 //            return;
-            
+
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -289,25 +287,22 @@ class EmpenhoAnulacao {
                 }
 
 
-                $valorInformado = round($this->itens[$kI]['valor'], 4);
 
-                                                
                 $valorInformado = $value['vl_itens_pre'];
 
                 $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
 
                 $valorTotalParaAnular = $quantidadeInformado;
-         
-                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
-                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
 
+                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
+                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
                 }
 
                 //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
 
-                 
-                
-                if(round($value['saldo'], 4) < $valorTotalParaAnular){
+
+
+                if (round($value['saldo'], 4) < $valorTotalParaAnular) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
                                     . "de Número " . $value['nr_item'] . " Pois o Valor Informado Para Anulação "
@@ -380,7 +375,7 @@ class EmpenhoAnulacao {
             return Metodos::retornoAjax("Erro", "alert", $exc->getMessage());
         }
     }
-    
+
     public function atualizaValoresFinPreOrdem(PDO $pdo = null) {
         try {
             if (empty($pdo)) {
@@ -416,11 +411,11 @@ class EmpenhoAnulacao {
             }
 
             $itensAnulacao = $daoEmpenhoAnulacaoItem->getMsgRetorno();
-            
+
 //            echo "<pre>";
 //            print_r($itensAnulacao);
 //            echo "</pre>";
-                                
+
             $itensArray = array();
 
             foreach ($itensAnulacao as $key => $value) {
@@ -438,7 +433,7 @@ class EmpenhoAnulacao {
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
-                                    
+
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -450,112 +445,112 @@ class EmpenhoAnulacao {
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR;
                     return;
                 }
-                                                
+
                 $valorInformado = $value['vl_itens_pre'];
                 $quantidadeInformado = round($itensAnulacao[$kI]['qt_anulado'], 4);
 
                 $valorTotalParaAnular = $quantidadeInformado;
-                
-                if($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1){
-                    $valorTotalParaAnular = round( ($valorInformado * $quantidadeInformado), 4);
+
+                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
+                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
                 }
-                
+
                 //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-                
-                if(round($value['saldo'], 4) < $valorTotalParaAnular){
+
+                if (round($value['saldo'], 4) < $valorTotalParaAnular) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
                             . "de Número " . $value['nr_item'] . " Pois o Valor Informado Para Anulação "
                             . "ficará menor que o Saldo Disponível para Anualação.";
                     return;
                 }
-          
-                if($value['qt_itens_pre'] < $quantidadeInformado){
+
+                if ($value['qt_itens_pre'] < $quantidadeInformado) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
-                            . "de Número ".$value['nr_item']." Pois a Quantidade Informado Para Anulação "
-                            . "ficará zerado";       
-                    return; 
+                            . "de Número " . $value['nr_item'] . " Pois a Quantidade Informado Para Anulação "
+                            . "ficará zerado";
+                    return;
                 }
-                
+
                 $quantidadeNovo = round(($value['qt_itens_pre'] - $quantidadeInformado), 4);
-                if($quantidadeNovo <= 0){
+                if ($quantidadeNovo < 0) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
-                            . "de Número ".$value['nr_item']." Pois a Quantidade Informado Para Anulação "
-                            . "ficará zerado";       
-                    return; 
+                            . "de Número " . $value['nr_item'] . " Pois a Quantidade Informado Para Anulação "
+                            . "ficará zerado";
+                    return;
                 }
-                
+
                 $preOrdem = new PreOrdem();
                 $preOrdem->setIdPreOrdem($value['id_pre_ordem']);
                 //$preOrdem->setVlItensPre($valorInformado);
                 $preOrdem->setQtItensPre($quantidadeNovo);
                 $preOrdem->editarPreOrdemAnulacaoEmpenho($pdo);
-                if(!$preOrdem->Sucesso()){
+                if (!$preOrdem->Sucesso()) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
-                            . "de Número ".$value['nr_item']." Pois não foi possível Atualizar os Itens da Pre Ordem.";
-                    return; 
-                }                                        
+                            . "de Número " . $value['nr_item'] . " Pois não foi possível Atualizar os Itens da Pre Ordem.";
+                    return;
+                }
             }
-            
+
             $pedido = new Pedido();
             $pedido->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
             $dadosPedido = $pedido->retornaDadosPedido($pdo);
-            if(!is_array($dadosPedido)){
+            if (!is_array($dadosPedido)) {
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível Localizar o Pedido.";       
-                return; 
+                $this->msgRetorno = "Não foi possível Localizar o Pedido.";
+                return;
             }
-            
+
             $valorPedidoEmpenhoAntigo = $dadosPedido['vl_pedido'];
-            
+
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
-            
+
             $empenho = new FinEmpenhoModel();
             $empenho->setIdPedido($dadosPedido['id_pedido']);
             $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
-            if(!is_array($dadosEmpenho)){
+            if (!is_array($dadosEmpenho)) {
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
-                return; 
+                $this->msgRetorno = "Não foi possível Localizar o Empenho.";
+                return;
             }
-            
+
 //            echo "<pre>";
 //            print_r($dadosEmpenho);
 //            echo "</pre>";
-            
-            
+
+
             $preOrdem = new PreOrdem();
             $preOrdem->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
             if (!$preOrdem->atualizaValorPedido($pdo)) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível Atualizar o Valor do Pedido.";
-                return;                
+                return;
             }
-                                                            
+
             $pedidoAux = new Pedido();
             $pedidoAux->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
             $dadosPedido = $pedidoAux->retornaDadosPedido($pdo);
-            
+
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
-            
+
             $empenho->setVlEmpenho($dadosPedido['vl_pedido']);
             $empenho->setIdEmpenho($dadosEmpenho['id_empenho']);
-            
+
             $empenho->atualizaValorEmpenhoAtualizaQDD($valorPedidoEmpenhoAntigo, $pdo);
-            if(!$empenho->sucesso()){
+            if (!$empenho->sucesso()) {
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível atualizar o Valor do Empenho e nem o QDD.";       
-                return; 
+                $this->msgRetorno = "Não foi possível atualizar o Valor do Empenho e nem o QDD.";
+                return;
             }
-            
-            
+
+
 //            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
 //            if(!is_array($dadosEmpenho)){
 //                $this->sucesso = false;
@@ -572,44 +567,37 @@ class EmpenhoAnulacao {
 //                $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";       
 //                return;
 //            }
-
 //            echo "<pre>";
 //            print_r($ItensPreOrdem);
 //            echo "</pre>";
 //            echo " \n E";
 //            $pdo->commit();
 //            return;
-            
+
             $this->sucesso = true;
             $this->msgRetorno = "Atualização do Empenho/QDD Realizado com Sucesso";
-          
-
         } catch (Exception $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    
-    
-    
+
     public function retornaDadosDaAnulacaoDoEmpenho() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
             $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
             $daoConEmpenhoAnulacao->retornaDadosDaAnulacaoDoEmpenho($pdo);
             return $daoConEmpenhoAnulacao->getMsgRetorno();
-
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
             return;
         }
     }
-    
+
     public function retornaDadosEmpenhoDaAnulacao() {
         try {
 
@@ -623,7 +611,7 @@ class EmpenhoAnulacao {
 
             if ($daoConEmpenhoAnulacao->getSucesso()) {
                 $campos = $daoConEmpenhoAnulacao->getMsgRetorno();
-                
+
                 $dadosEmpenho .= '<div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingThree">
@@ -676,7 +664,7 @@ class EmpenhoAnulacao {
             return;
         }
     }
-    
+
     public function retornaDadosContratoDaAnulacao() {
         try {
 
@@ -752,7 +740,7 @@ class EmpenhoAnulacao {
             return;
         }
     }
-    
+
     public function retornaDadosPedidoDaAnulacao() {
         try {
 
@@ -774,7 +762,7 @@ class EmpenhoAnulacao {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo" 
                                                         aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"].'/'.$campos['ano']. '</span> 
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] . '/' . $campos['ano'] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
@@ -825,7 +813,7 @@ class EmpenhoAnulacao {
             return;
         }
     }
-    
+
     public function retornaItensDaAnulacaoDoEmpenho() {
         try {
             $tabela = '';
@@ -860,8 +848,8 @@ class EmpenhoAnulacao {
             return $ex->getMessage();
         }
     }
-    
-    public function retornaAnotacoesDaAnulacaoDoEmpenho(){
+
+    public function retornaAnotacoesDaAnulacaoDoEmpenho() {
         try {
             $anotacoes = '';
 
@@ -870,10 +858,10 @@ class EmpenhoAnulacao {
             $daoConEmpenhoAnulacaoAnotacao = new DaoConEmpenhoAnulacaoAnotacao();
             $daoConEmpenhoAnulacaoAnotacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
             $daoConEmpenhoAnulacaoAnotacao->lista($pdo);
-            
+
             if ($daoConEmpenhoAnulacaoAnotacao->getSucesso()) {
                 foreach ($daoConEmpenhoAnulacaoAnotacao->getMsgRetorno() as $linha) {
-                    $anotacoes .=  $linha['anotacao'] . "\n";
+                    $anotacoes .= $linha['anotacao'] . "\n";
                 }
             }
             return $anotacoes;
@@ -881,18 +869,18 @@ class EmpenhoAnulacao {
             return $exc->getTraceAsString();
         }
     }
-    
-    public function retornaHistoricoDaAnulacaoDoEmpenho(){
+
+    public function retornaHistoricoDaAnulacaoDoEmpenho() {
         try {
             $historico = '';
-            
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoConEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
             $daoConEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
             $daoConEmpenhoAnulacaoHistorico->lista($pdo);
-            
+
             if ($daoConEmpenhoAnulacaoHistorico->getSucesso()) {
                 foreach ($daoConEmpenhoAnulacaoHistorico->getMsgRetorno() as $linha) {
                     $historico .= $linha['historico'] . "\n";
@@ -903,8 +891,6 @@ class EmpenhoAnulacao {
             return $exc->getTraceAsString();
         }
     }
-    
-
 
     public function deferimentoDaAnulacaoEmpenho() {
         try {
@@ -940,8 +926,8 @@ class EmpenhoAnulacao {
             }
 
             $daoConEmpenhoAnulacao->atualizaStatusSituacaoEmpenhoAnulacao($pdo);
-            
-            if(!$daoConEmpenhoAnulacao->getSucesso()){
+
+            if (!$daoConEmpenhoAnulacao->getSucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação e status");
             }
 
@@ -949,10 +935,16 @@ class EmpenhoAnulacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
+            $this->atualizaValoresFinPreOrdem($pdo);
+
+            if (!$this->sucesso) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
+            }
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Ação realizada com Sucesso.");
-            
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();

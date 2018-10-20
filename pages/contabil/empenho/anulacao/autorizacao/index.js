@@ -1,20 +1,20 @@
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
-    
+
     url = 'request.php';
 
     $('body').find('select').select2({
         width: '100%'
     });
-    
-    $('select').change( function (){
+
+    $('select').change(function () {
         $(this).select2();
     });
-    
+
     retornaOptionsEmpenhoAnulacaoSituacoes();
-    
-    $('body').on('click','.btn-pesquisar', function(){
+
+    $('body').on('click', '.btn-pesquisar', function () {
         var dados = {
             'nr_empenho_anulacao': $("#nr_empenho_anulacao").val(),
             'nr_empenho': $("#nr_empenho").val(),
@@ -26,10 +26,15 @@ $(document).ready(function () {
             'situacao': $("#situacao option:selected").val(),
             'central_demanda': $("#id_central option:selected").val()
         }
-        
+
         lista(dados);
     });
-    
+
+    $('body').on('click', '.ver-anulacao-empenho', function () {
+        var id = $(this).val();
+        window.open("/pages/contabil/empenho/anulacao/ver_autorizacao/index.php?&id=" + id);
+    });
+
 });
 
 function lista(dados) {
@@ -47,14 +52,14 @@ function lista(dados) {
     });
 }
 
-function retornaOptionsEmpenhoAnulacaoSituacoes(){
+function retornaOptionsEmpenhoAnulacaoSituacoes() {
     $.ajax({
         "url": url,
         "dataType": 'html',
         "data": {
             "acao": "retornaOptionsEmpenhoAnulacaoSituacoes"
         },
-        "success": function (response){
+        "success": function (response) {
             console.log(response);
             $("#situacao").html("");
             $("#situacao").append(response);
