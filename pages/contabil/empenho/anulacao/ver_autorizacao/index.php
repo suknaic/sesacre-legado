@@ -107,9 +107,11 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Tipo</th>
                                                                                 <th class="text-center">Lote</th>
                                                                                 <th class="text-center">Qtd.</th>
-                                                                                <th class="text-center">Valor Unit.</th>
-                                                                                <th class="text-center">Total</th>
-                                                                                <th class="text-center">Saldo</th>
+                                                                                <th class="text-center">Valor Unitário</th>
+                                                                                <th class="text-center">Valor Total</th>
+                                                                                <th class="text-center">Qtd. Utilizado</th>
+                                                                                <th class="text-center">Valor Utilizado</th>
+                                                                                <th class="text-center">Saldo a Anular</th>
                                                                                 <th class="text-center">Qtd. Anulado</th>
                                                                                 <th class="text-center">Valor Anulado</th>
                                                                             </tr>
