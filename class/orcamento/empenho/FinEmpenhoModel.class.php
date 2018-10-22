@@ -25,13 +25,11 @@ class FinEmpenhoModel {
     private $statusAguardandoFinalizarLiquidacao = 2;
     private $statusAguardandoPagamento = 3;
     private $statusAguardandoFinalizarPagamento = 4;
-    private $statusFinalizado = 5;    
-    
+    private $statusFinalizado = 5;
     private $msg_erros = null;
-    
     private $sucesso = null;
-    private $msgRetorno = null;   
-    
+    private $msgRetorno = null;
+
     public function sucesso() {
         return $this->sucesso;
     }
@@ -40,7 +38,6 @@ class FinEmpenhoModel {
         return $this->msgRetorno;
     }
 
-        
     public function getStatusAguardandoLiquidacao() {
         return $this->statusAguardandoLiquidacao;
     }
@@ -59,7 +56,7 @@ class FinEmpenhoModel {
 
     public function getStatusFinalizado() {
         return $this->statusFinalizado;
-    }        
+    }
 
     function getMsgErros() {
         return $this->msg_erros;
@@ -88,7 +85,7 @@ class FinEmpenhoModel {
     function getSitCancelado() {
         return $this->sit_cancelado;
     }
-    
+
     function getIdEmpenhoStatus() {
         return $this->id_empenho_status;
     }
@@ -97,8 +94,8 @@ class FinEmpenhoModel {
         $this->id_empenho_status = $id_empenho_status;
         return $this;
     }
-    
-    private function getSituacoes() : array {
+
+    private function getSituacoes(): array {
         $situacoes = array(
             '1' => 'Cadastrado',
             '2' => 'Liquidado Parcial',
@@ -109,7 +106,6 @@ class FinEmpenhoModel {
         );
         return $situacoes;
     }
-
 
     /**
      * @return mixed
@@ -491,9 +487,9 @@ class FinEmpenhoModel {
 
             $classPedido = new Pedido();
             $classPedido->setIdPedido($this->id_pedido);
-            
+
             $classPedido->atualizaStatusSituacaoOficialPedido($pdo);
-            if(!$classPedido->sucesso()){
+            if (!$classPedido->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("ok", "html", "Não foi possível Atualizar o Status/Situação do Pedido.");
             }
@@ -511,7 +507,7 @@ class FinEmpenhoModel {
                 return Metodos::retornoAjax("ok", "html", "Empenho cadastrado com sucesso");
             }
             $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR );
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -524,11 +520,11 @@ class FinEmpenhoModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            
+
             $dadosEmpenho = '';
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
-            $daoFinEmpenho->retornaEmpenhoGdof($pdo);            
+            $daoFinEmpenho->retornaEmpenhoGdof($pdo);
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
 
@@ -711,7 +707,8 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
+
+
     public function retornaEmpenhoAnulacao($pdo) {
         try {
 
@@ -763,7 +760,8 @@ class FinEmpenhoModel {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo a Anular do Empenho:</b></div>
-                                                        <div class="col-sm-3"></div>
+                                                        <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -777,6 +775,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
+
     
     public function trEmpenhoBuscaLiquidacao() {
         $conexao = new Conexao();
@@ -801,20 +800,20 @@ class FinEmpenhoModel {
         }
         return $retorno;
     }
-    
+
     public function buscaEmpenhoParaLiquidacao() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
-        
+
         if ($daoFinEmpenho->sucesso()) {
             foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
                 return Metodos::retornoAjax("ok", "ok", $dados);
-            }            
+            }
         }
-        return Metodos::retornoAjax("no", "no", array());        
+        return Metodos::retornoAjax("no", "no", array());
     }
 
     /**
@@ -837,7 +836,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
+
     public function retornaDadosEmpenhoPorPedido($pdo) {
         try {
             if (empty($pdo)) {
@@ -847,7 +846,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->retornaDadosEmpenhoPorPedido($pdo);
-            if ($daoFinEmpenho->sucesso()) {                
+            if ($daoFinEmpenho->sucesso()) {
                 return $daoFinEmpenho->getMsgRetorno();
             }
             return "";
@@ -855,8 +854,6 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
-    
 
     /*
      * Cancelar o Empenho Global
@@ -869,6 +866,7 @@ class FinEmpenhoModel {
      * Atualizar o QDD pelo Empenho
      * Não pode ter Ordem ou Documento Fiscal ou Liquidação     
      */
+
     public function cancelarEmpenho(string $justificativa) {
         try {
             if (empty($pdo)) {
@@ -877,103 +875,103 @@ class FinEmpenhoModel {
                 $pdo->beginTransaction();
             }
             $daoFinEmpenho = new DaoFinEmpenho();
-            $daoFinEmpenho->setIdEmpenho($this->id_empenho);            
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);            
-          
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+
             if (!$daoFinEmpenho->sucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");                
-            }            
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
+            }
             $dadosEmpenho = $daoFinEmpenho->getMsgRetorno();
-            
+
             //Busca dados do Pedido
             $pedido = new Pedido();
             $pedido->setIdPedido($dadosEmpenho['id_pedido']);
             $dadosPedido = $pedido->retornaDadosPedido();
-            if(empty($dadosPedido)){
+            if (empty($dadosPedido)) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Pedido.");
-            }                       
+            }
             $this->id_pedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
-            if($dadosEmpenho['sit_empenho'] == $this->sit_cancelado){
+            if ($dadosEmpenho['sit_empenho'] == $this->sit_cancelado) {
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
-                                                
+
             //Verifica se o Empenho possui Ordem ou Documento Fiscal ou Liquidação
             $daoFinEmpenho->verificaExisteOrdemDocumentoLiquidacao($pdo);
-            if($daoFinEmpenho->sucesso()){
+            if ($daoFinEmpenho->sucesso()) {
                 $msg = "";
                 $msgArray = array();
-                if(!empty($daoFinEmpenho->getMsgRetorno()['id_liquidacao'])){
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_liquidacao'])) {
                     $msgArray[] = " Liquidação";
                 }
-                if(!empty($daoFinEmpenho->getMsgRetorno()['id_documento_fiscal'])){
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_documento_fiscal'])) {
                     $msgArray[] = " Documento Fiscal";
                 }
-                if(!empty($daoFinEmpenho->getMsgRetorno()['id_ordem'])){
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_ordem'])) {
                     $msgArray[] = " Ordem ";
-                }                
-                $msg = implode(",", $msgArray);                
-                return Metodos::retornoAjax("Erro", "alert", "O Empenho Não pode ser Cancelado, pois possui as Seguintes Restrições: ".$msg);
+                }
+                $msg = implode(",", $msgArray);
+                return Metodos::retornoAjax("Erro", "alert", "O Empenho Não pode ser Cancelado, pois possui as Seguintes Restrições: " . $msg);
             }
-                        
+
             //Muda Status e Situação do Empenho            
             $daoFinEmpenho->setSitEmpenho($this->sit_cancelado);
             $daoFinEmpenho->setIdEmpenhoStatus($this->statusFinalizado);
             $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
-            if(!$daoFinEmpenho->sucesso()){
+            if (!$daoFinEmpenho->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar o Status do Empenho.");
             }
-                        
+
             //Muda Status e Situação do Pedido
             $pedido->setStPedido(0);
             $pedido->setIdPedidoSituacao(10);
             $pedido->atualizaTramitacaoPedidoSituacao($pdo);
-            if(!$pedido->sucesso()){
+            if (!$pedido->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar o Status e a Situação do Pedido.");
             }
-            
+
             //Atualiza o Fin Autorização do Pedido
             $finAutoriza = new FinAutorizacao();
             $finAutoriza->setIdPedido($dadosPedido['id_pedido']);
             $finAutoriza->setIdPessoa($this->id_pessoa);
-            $finAutoriza->setStNivel(0);   
+            $finAutoriza->setStNivel(0);
             $finAutoriza->setDsAutorizacao($justificativa);
             $finAutoriza->salvaAutorizacaoPedidoSemUpdate($pdo);
-            if(!$finAutoriza->Sucesso()){
+            if (!$finAutoriza->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Atualizar a Autorização do Pedido.");
-            }        
-            
-            
+            }
+
+
             //Se o Pedido Possui Diaria, então deve atualizar os Dados da Diária
             $diaria = new Diaria();
             $diaria->setIdPedido($this->id_pedido);
             $diaria->setUsuarioPedido($this->id_pessoa);
             $diaria->desvinculaPedidoDiariaSeExistir($pdo);
-            if(!$diaria->sucesso()){
+            if (!$diaria->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $diaria->getMsgRetorno());
             }
-            
+
             //Atualiza a Anotação do Pedido
             $finPedidoAnotacao = new PedidoAnotacao();
             $finPedidoAnotacao->setIdPedido($dadosPedido['id_pedido']);
             $finPedidoAnotacao->setIdPessoa($this->id_pessoa);
-            $finPedidoAnotacao->setDsPedidoAnotacao("Cancelado: ".$justificativa);
+            $finPedidoAnotacao->setDsPedidoAnotacao("Cancelado: " . $justificativa);
             $finPedidoAnotacao->salvaAnotacao($pdo);
-            if(!$finPedidoAnotacao->sucesso()){
+            if (!$finPedidoAnotacao->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $finPedidoAnotacao->getMsgRetorno());
-            }            
-                     
+            }
+
             //Atualiza o QDD pelo Empenho
             $qdd = new Qdd();
             $data = new DateTime($dadosEmpenho['dt_empenho_safira']);
             //seto o ano do empenho para pega o id do qdd
             $qdd->setAaQdd($data->format('Y'));
-            $qdd->verificaExisteCarregaDados($pdo);                                    
+            $qdd->verificaExisteCarregaDados($pdo);
             if (!empty($qdd->getIdQdd())) {
                 //instancio a classe do qddValor
                 $qddValor = new QddValor();
@@ -981,12 +979,12 @@ class FinEmpenhoModel {
                 $qddValor->setIdFonte($dadosPedido['id_fonte']);
                 $qddValor->setIdProgramaTrabalho($dadosPedido['id_programa_trabalho']);
                 $qddValor->setIdDespesaElemento($dadosPedido['id_despesa_elemento']);
-                $qddValor->carregaDadosQddFonteProgDespesa($pdo);                                                                              
+                $qddValor->carregaDadosQddFonteProgDespesa($pdo);
                 if (!empty($qddValor->getIdQddValor())) {
                     //Verifica se o valor Empenho irá ficar menor que 0
                     $valorEmpenho = $qddValor->getVlEmpenhado() - $dadosEmpenho['vl_empenho'];
                     $valorEmpenho = round($valorEmpenho, 4);
-                    if($valorEmpenho >= 0){                                              
+                    if ($valorEmpenho >= 0) {
                         //seta o resultado da soma para atualiza o qdd
                         $qddValor->setVlEmpenhado($valorEmpenho);
                         $qddValor->atualizaValoresEmpenhado($pdo);
@@ -995,36 +993,33 @@ class FinEmpenhoModel {
                         $array[] = $qddValor->getIdQddValor();
                         $qddValor->atualizaValoresPorArray($array, $pdo);
                         if (!$qddValor->Sucesso()) {
-                            $pdo->rollBack();                                                        
+                            $pdo->rollBack();
                             return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar os Valores do QDD.");
                         }
                     } else {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "O Valor Empenhado irá ficar Negativa se o Empenho for cancelado. ".STR_ERROR);
+                        return Metodos::retornoAjax("Erro", "alert", "O Valor Empenhado irá ficar Negativa se o Empenho for cancelado. " . STR_ERROR);
                     }
                 } else {
-                    $pdo->rollBack();                    
+                    $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o QDD ao qual irá ajustar o valor");
                 }
             } else {
-                $pdo->rollBack();                
+                $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o QDD");
             }
-            
-                                    
+
+
             //$pdo->rollBack();
             //echo "fechou;";
-            
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Cancelamento do Empenho/Pedido de Necessidade Cancelado com Sucesso.");
-                                                           
         } catch (Exception $ex) {
             return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
         }
     }
 
-
-    
     public function atualizaSituacaoStatusEmpenho(PDO $pdo) {
 
         try {
@@ -1077,8 +1072,7 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
-    
-    
+
     public function atualizaValorEmpenhoAtualizaQDD($valorPedidoEmpenhoAntigo, PDO $pdo = null) {
         try {
             if (empty($pdo)) {
@@ -1086,52 +1080,51 @@ class FinEmpenhoModel {
                 $this->msgRetorno = "Conexão não possui nada.";
                 return;
             }
-            
+
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->setVlEmpenho($this->vl_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);            
-          
+            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+
             if (!$daoFinEmpenho->sucesso()) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível localizar o Empenho.";
-                return;                
-            }            
+                return;
+            }
             $dadosEmpenho = $daoFinEmpenho->getMsgRetorno();
-            
+
             //Atualiza o Valor do Empenho
             $daoFinEmpenho->updateValorEmpenho($pdo);
-            if(!$daoFinEmpenho->sucesso()){
+            if (!$daoFinEmpenho->sucesso()) {
                 $this->sucesso = false;
                 $this->msgRetorno = $daoFinEmpenho->getMsgRetorno();
-                return; 
+                return;
             }
-            
-            if (!Log::SalvaLogU('fin_empenho', $this->id_empenho, $dadosEmpenho, $pdo)) {                
+
+            if (!Log::SalvaLogU('fin_empenho', $this->id_empenho, $dadosEmpenho, $pdo)) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível atualizar Empenho. LOG";
-                return;                                
+                return;
             }
-                        
+
             //Busca dados do Pedido
             $pedido = new Pedido();
             $pedido->setIdPedido($dadosEmpenho['id_pedido']);
             $dadosPedido = $pedido->retornaDadosPedido();
-            if(empty($dadosPedido)){
+            if (empty($dadosPedido)) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível localizar os Dados do Pedido.";
-                return;                
-            }                                     
-                        
+                return;
+            }
+
             //echo "\n".$valorPedidoEmpenhoAntigo." - ".$this->vl_empenho."\n";
-                     
             //Atualiza o QDD pelo Empenho
             $qdd = new Qdd();
             $data = new DateTime($dadosEmpenho['dt_empenho_safira']);
             //seto o ano do empenho para pega o id do qdd
             $qdd->setAaQdd($data->format('Y'));
-            $qdd->verificaExisteCarregaDados($pdo);                                    
+            $qdd->verificaExisteCarregaDados($pdo);
             if (!empty($qdd->getIdQdd())) {
                 //instancio a classe do qddValor
                 $qddValor = new QddValor();
@@ -1139,12 +1132,12 @@ class FinEmpenhoModel {
                 $qddValor->setIdFonte($dadosPedido['id_fonte']);
                 $qddValor->setIdProgramaTrabalho($dadosPedido['id_programa_trabalho']);
                 $qddValor->setIdDespesaElemento($dadosPedido['id_despesa_elemento']);
-                $qddValor->carregaDadosQddFonteProgDespesa($pdo);                                                                              
+                $qddValor->carregaDadosQddFonteProgDespesa($pdo);
                 if (!empty($qddValor->getIdQddValor())) {
                     //Verifica se o valor Empenho irá ficar menor que 0
                     $valorEmpenho = $qddValor->getVlEmpenhado() - $valorPedidoEmpenhoAntigo + $this->vl_empenho;
                     $valorEmpenho = round($valorEmpenho, 4);
-                    if($valorEmpenho >= 0){                                              
+                    if ($valorEmpenho >= 0) {
                         //seta o resultado da soma para atualiza o qdd
                         $qddValor->setVlEmpenhado($valorEmpenho);
                         $qddValor->atualizaValoresEmpenhado($pdo);
@@ -1155,31 +1148,29 @@ class FinEmpenhoModel {
                         if (!$qddValor->Sucesso()) {
                             $this->sucesso = false;
                             $this->msgRetorno = "Não foi possível atualizar os Valores do QDD.";
-                            return;                            
+                            return;
                         }
                     } else {
                         $this->sucesso = false;
-                        $this->msgRetorno = "O Valor Empenhado irá ficar Negativa se o Empenho for anulado. ".STR_ERROR;
-                        return; 
-                        
+                        $this->msgRetorno = "O Valor Empenhado irá ficar Negativa se o Empenho for anulado. " . STR_ERROR;
+                        return;
                     }
                 } else {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível localizar o QDD ao qual irá ajustar o valor";
-                    return;                    
+                    return;
                 }
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível localizar o QDD";
-                return;                  
-            }                     
-            
+                return;
+            }
+
             $this->sucesso = true;
-            $this->msgRetorno = "Empenho e QDD Atualziado";            
-                                                           
+            $this->msgRetorno = "Empenho e QDD Atualziado";
         } catch (Exception $ex) {
             $this->sucesso = true;
-            $this->msgRetorno = "Empenho e QDD Atualziado";  
+            $this->msgRetorno = "Empenho e QDD Atualziado";
         }
     }
 
