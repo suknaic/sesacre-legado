@@ -14,7 +14,18 @@ class ConEmpenhoAnulacao {
     private $id_pessoa = null;
     private $id_lotacao = null;
     private $id_doc_tipo_lotacao = null;
+    private $vl_empenho_saldo = null;
     
+    public function getVlEmpenhoSaldo() {
+        return $this->vl_empenho_saldo;
+    }
+
+    public function setVlEmpenhoSaldo($vl_empenho_saldo) {
+        $this->vl_empenho_saldo = $vl_empenho_saldo;
+        return $this;
+    }
+
+        
     function getIdLotacao() {
         return $this->id_lotacao;
     }
