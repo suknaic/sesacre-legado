@@ -357,7 +357,8 @@ class EmpenhoAnulacao {
                 $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
                 $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
                 $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
-                $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['utilizado'], 4));
+                $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['vl_utilizado'], 4));
+                $daoEmpenhoAnulacaoItens->setQtUtilizado(round($value['qt_utilizado'],4));
                 $daoEmpenhoAnulacaoItens->insert($pdo);
                 if (!$daoEmpenhoAnulacaoItens->getSucesso()) {
                     $pdo->rollBack();

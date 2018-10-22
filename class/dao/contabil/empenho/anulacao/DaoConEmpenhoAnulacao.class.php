@@ -233,6 +233,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     anuEmpItem.vl_anulado,
                     anuEmpItem.vl_saldo,
                     anuEmpItem.vl_utilizado,
+                    anuEmpItem.qt_utilizado,
                     itens.fl_valor_variavel
                  from
                     con_empenho_anulacao_item anuEmpItem 
