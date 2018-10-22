@@ -44,12 +44,15 @@ class DaoConEmpenhoAnulacaoHistorico extends ConEmpenhoAnulacaoHistorico {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
-                    (to_char(dh_empenho_anulacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || nm_pessoa || ': ' || 'Situacao: ' || anuEmpSit.nm_empenho_anulacao_situacao || '. Status: ' || anuEmpSts.nm_empenho_anulacao_status || '. ' || anuEmpHst.ds_empenho_anulacao_historico) as historico 
+                    (to_char(dh_empenho_anulacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || nm_pessoa || ': ' anuEmpSit.nm_empenho_anulacao_situacao || ' pelo(a)  ' || lotacao.nm_lotacao || '. Justificativa: ' || anuEmpHst.ds_empenho_anulacao_historico) as historico 
                  from
                     con_empenho_anulacao_historico anuEmpHst 
                     inner join
                        ses_pessoa pessoa 
-                       on pessoa.id_pessoa = anuEmpHst.id_pessoa 
+                       on pessoa.id_pessoa = anuEmpHst.id_pessoa
+                    inner join
+                       ses_lotacao lotacao
+                       on lotacao.id_lotacao = anuEmpHst.id_lotacao
                     left join
                        con_empenho_anulacao_situacao anuEmpSit 
                        on anuEmpSit.id_empenho_anulacao_situacao = anuEmpHst.id_empenho_anulacao_situacao 
