@@ -29,7 +29,18 @@ class EmpenhoAnulacao {
     private $dsJustificativa = null;
     private $idDocTipoLotacao = null;
     private $idLotacao = null;
+    private $vlEmpenhoSaldo = null;
     
+    public function getVlEmpenhoSaldo() {
+        return $this->vlEmpenhoSaldo;
+    }
+
+    public function setVlEmpenhoSaldo($vlEmpenhoSaldo) {
+        $this->vlEmpenhoSaldo = $vlEmpenhoSaldo;
+        return $this;
+    }
+
+        
     public function getIdDocTipoLotacao() {
         return $this->idDocTipoLotacao;
     }
@@ -253,7 +264,7 @@ class EmpenhoAnulacao {
             
             
             //Verifica o Valor do Saldo do Empenho no momento da anulação
-
+            
 
 
             $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
@@ -265,9 +276,8 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacao->setIdDocTipoLotacao($this->idDocTipoLotacao);
             $daoEmpenhoAnulacao->setIdLotacao($this->idLotacao);
             $daoEmpenhoAnulacao->setIdPessoa($this->idPessoa);
-            $daoEmpenhoAnulacao->setVlEmpenhoSaldo(0);
-            
-            
+            $daoEmpenhoAnulacao->setVlEmpenhoSaldo($this->vlEmpenhoSaldo);
+                        
             $daoEmpenhoAnulacao->insert($pdo);
             if (!$daoEmpenhoAnulacao->getSucesso()) {
                 $pdo->rollBack();

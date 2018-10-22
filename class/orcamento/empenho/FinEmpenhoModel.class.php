@@ -740,6 +740,7 @@ class FinEmpenhoModel {
                                                 <div class="panel-body">
                                                     <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
                                                     <input id="numero_empenho" type="hidden" value="'.$campos["nr_empenho"].'" />
+                                                    <input id="saldo_empenho" type="hidden" value="'.$campos["saldo"].'" />                                                    
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dataempenho"] . '</div>

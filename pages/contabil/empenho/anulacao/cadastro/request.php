@@ -129,6 +129,7 @@ switch ($_REQUEST['acao']) {
                         ->setDsJustificativa(trim($dados['justificativa']));                       
             $empenho->setIdDocTipoLotacao((int)$dados['idDocTipoLotacao']);
             $empenho->setIdLotacao((int)$dados['idLotacao']);
+            $empenho->setVlEmpenhoSaldo($dados['saldo_empenho']);
             echo $empenho->salvarAnulacao($perfilTI);
             return;
             break;
