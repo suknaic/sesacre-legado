@@ -30,9 +30,14 @@ $(document).ready(function () {
         lista(dados);
     });
 
-    $('body').on('click', '.ver-anulacao-empenho', function () {
+    $('body').on('click', '.autorizar-anulacao-empenho', function () {
         var id = $(this).val();
         window.open("/pages/contabil/empenho/anulacao/ver_autorizacao/index.php?&id=" + id);
+    });
+    
+    $('body').on('click', '.ver-anulacao-empenho', function () {
+        var id = $(this).val();
+        window.open("/pages/contabil/empenho/anulacao/ver/index.php?&id=" + id);
     });
 
 });

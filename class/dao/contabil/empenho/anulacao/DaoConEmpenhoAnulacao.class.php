@@ -295,7 +295,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     coalesce(pj.nr_cnpj, pf.nr_cpf) as doc_fornecedor,
                     trim(to_char(anulacaoEmp.vl_empenho_anulacao, '999G999G999G990D9999')) as vl_empenho_anulacao,
                     to_char(anulacaoEmp.dt_empenho_anulacao, 'dd/mm/yyyy') as dt_empenho_anulacao,
-                    anulacaoSit.nm_empenho_anulacao_situacao 
+                    anulacaoSit.nm_empenho_anulacao_situacao,
+                    anulacaoSit.id_empenho_anulacao_situacao
                  from
                     con_empenho_anulacao anulacaoEmp 
                     inner join

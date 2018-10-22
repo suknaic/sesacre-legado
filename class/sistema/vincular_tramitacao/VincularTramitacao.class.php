@@ -239,6 +239,28 @@ class VincularTramitacao {
         }
     }
     
+    function listaLotacaoTipoPorUsuarioAutorizacaoAnulacaoEmpenho(){
+        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
+            
+            $daoSesVincularTramitacao->retornaLotacaoTipoAnulacaoEmpenhoPorUsuario($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                }
+            }
+            return $opcoes;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
     
     function listaLotacaoTipoPorLotacaoETipo(){
        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";

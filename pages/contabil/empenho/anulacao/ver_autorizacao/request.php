@@ -38,7 +38,23 @@ switch ($_REQUEST['acao']) {
             $empenhoAnulacao->setIdEmpenhoAnulacao($dados["pagamento"]);
             $empenhoAnulacao->setIdPessoa($session->getIdUser());
             $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao($dados["deferir"]);
+            $empenhoAnulacao->setNrAnulacao($dados['nr_anulacao']);
+            $empenhoAnulacao->setDtAnulacao($dados['dt_anulacao']);
+            $empenhoAnulacao->setIdLotacao($dados['id_lotacao']);
+            $empenhoAnulacao->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
             echo $empenhoAnulacao->deferimentoDaAnulacaoEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioAutorizacaoAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {

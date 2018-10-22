@@ -1,12 +1,45 @@
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
+    
+    var url = "request.php";
+    
+    $('#dt_empenho_anulacao').mask("99/99/9999");
+    
+    //select2
+    $('body').find('select').select2({
+        width: '100%'
+    });
+    
+    $.ajax({
+        "url": url,
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function(response){
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
+    });
 
     $("body").on("click", ".btn-deferir", function (e) {
         var $this = $(this);
         var dados = {
             "deferir": $this.val(),
-            "pagamento": $("#pagamento").val()
+            "pagamento": $("#pagamento").val(),
+            "nr_anulacao": $("#nr_empenho_anulacao").val(),
+            "dt_anulacao": $("#dt_empenho_anulacao").val(),
+            "idLotacao": $("#id_remetente option:selected").data('lotacao'),
+            "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao')
+        }
+        
+        if (dados.deferir == 2) {
+            if (dados.nr_anulacao == "" || dados.dt_anulacao == "") {
+                func.modalAlert("Por favor preencha as informações obrigatórias.");
+                $this.prop("disabled", false);
+                return false;
+            }
         }
         
         $.ajax({
@@ -46,7 +79,7 @@ $(document).ready(function () {
                 } else if (response.tipoMsg === "ok") {
                     func.modalAlert('Itens cadastros com Sucesso', 'success');
                     $('.modal-alert').on('hidden.bs.modal', function (e) {
-                        window.location.href = "/pages/contabil/empenho/anulacao/ver_autorizacao/index.php";
+                        window.location.href = "/pages/contabil/empenho/anulacao/autorizacao/index.php";
                     });
                     return false;
                 } else {
