@@ -175,8 +175,8 @@ class EmpenhoAnulacaoPesquisa {
                                     . '</button>';
                     
                         if ($linha['id_empenho_anulacao_situacao'] == 1) {
-                            $tabela .=  '<button type="button" title="Autorizar Anulação do Empenho" class="autorizar-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
-                                        . '<i class="fa fa-gavel text-info" aria-hidden="true"></i>'
+                            $tabela .=  ' <button type="button" title="Autorizar Anulação do Empenho" class="autorizar-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
+                                        . '<i class="fa fa-gavel text-dark" aria-hidden="true"></i>'
                                     . '</button>';
                         }
                                     
