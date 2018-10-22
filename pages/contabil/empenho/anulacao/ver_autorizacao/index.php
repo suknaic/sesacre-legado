@@ -59,7 +59,7 @@ require_once "index.load.php";
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
                             <div class="panel">                                
-                                <input type="hidden" name="pagamento" id="pagamento" value="<?php echo $id;?>">
+                                <input type="hidden" name="pagamento" id="pagamento" value="<?php echo $id; ?>">
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -214,7 +214,7 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body remetente">
@@ -243,7 +243,7 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <br>
-                                
+
                                 <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
@@ -254,35 +254,15 @@ require_once "index.load.php";
                                                     </button>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-danger btn-rounded btn-deferir" type="button" value="3">
+                                                    <button class="btn btn-danger btn-rounded btn-indeferido" type="button" value="3">
                                                         <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Indeferido
                                                     </button>
                                                 </div>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
-
-<!--                                <div class="panel ">
-                                    <div class="panel-body">-->
-<!--                                        <div class="row">
-
-                                            <div class="col-md-2" style="display:inline-block;">
-                                                <button class="btn btn-success btn-rounded btn-deferir" type="button" value="2">
-                                                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Deferido
-                                                </button>
-                                            </div>
-
-
-                                            <div class="col-md-2" style="display:inline-block;">
-                                                <button class="btn btn-danger btn-rounded btn-deferir" type="button" value="3">
-                                                    <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Indeferido
-                                                </button>
-                                            </div>
-                                        </div>-->
-<!--                                    </div>
-                                </div>-->
                                 <br>
                             </div>
 
@@ -326,14 +306,14 @@ require_once "index.load.php";
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>        
-
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>  
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>

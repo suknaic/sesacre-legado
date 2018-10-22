@@ -66,8 +66,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaDadosDaAnulacaoDoEmpenho(PDO $pdo){
+
+    function retornaDadosDaAnulacaoDoEmpenho(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select "
@@ -77,7 +77,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 . "from con_empenho_anulacao "
                 . "where id_empenho_anulacao = :id_empenho_anulacao ";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -94,8 +94,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaDadosEmpenhoDaAnulacao(PDO $pdo){
+
+    function retornaDadosEmpenhoDaAnulacao(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select 
@@ -112,7 +112,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 on anuEmp.id_pedido = emp.id_pedido
                 where anuEmp.id_empenho_anulacao = :id_empenho_anulacao";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -129,8 +129,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaDadosPedidoDaAnulacao(PDO $pdo){
+
+    function retornaDadosPedidoDaAnulacao(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
@@ -150,7 +150,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
                 where anuEmp.id_empenho_anulacao = :id_empenho_anulacao";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -167,8 +167,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaDadosContratoDaAnulacao(PDO $pdo){
+
+    function retornaDadosContratoDaAnulacao(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select cont.nr_contrato, processo.cd_pregao, tp.nm_tipo_gasto, obj.nm_objeto,
@@ -201,7 +201,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 on pj.id_pessoa = p.id_pessoa
                 where empAnu.id_empenho_anulacao = :id_empenho_anulacao";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -218,8 +218,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaItensDaAnulacaoDoEmpenho(PDO $pdo){
+
+    function retornaItensDaAnulacaoDoEmpenho(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
@@ -251,7 +251,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     anuEmpItem.id_empenho_anulacao = :id_empenho_anulacao
                  order by itens.nr_item";
         try {
-            if(!empty($pdo)){
+            if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -268,8 +268,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaPesquisaEmpenhoAnulacao(PDO $pdo, array $filtroSql = []){
+
+    function retornaPesquisaEmpenhoAnulacao(PDO $pdo, array $filtroSql = []) {
 
         $this->sucesso = false;
         $this->msgRetorno = null;
@@ -360,6 +360,24 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":situacao", $this->getIdEmpenhoAnulacaoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":status", $this->getIdEmpenhoAnulacaoStatus(), PDO::PARAM_INT);
+                $stmt->bindValue(":anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (Exception $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function atualizaNumeroEdataAnulacaoEmpenho(PDO $pdo = null) {
+        try {
+            if (empty(!$pdo)) {
+                $sql = "update con_empenho_anulacao set nr_empenho_anulacao = :numero, dt_empenho_anulacao = :data 
+                        where id_empenho_anulacao = :anulacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrEmpenhoAnulacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":data", $this->getDtEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
