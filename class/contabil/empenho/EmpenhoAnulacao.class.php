@@ -251,16 +251,16 @@ class EmpenhoAnulacao {
             }
 
 
-//            if (!$perfilTI) {
-//                $CentralResponsavel = new CentralResponsavel();
-//                $CentralResponsavel->setIdPessoa($this->idPessoa);
-//                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
-//                $CentralResponsavel->verificaPermissao($pdo);
-//                if (!$CentralResponsavel->Sucesso()) {
-//                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
-//                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
-//                }
-//            }
+            if (!$perfilTI) {
+                $CentralResponsavel = new CentralResponsavel();
+                $CentralResponsavel->setIdPessoa($this->idPessoa);
+                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
+                $CentralResponsavel->verificaPermissao($pdo);
+                if (!$CentralResponsavel->Sucesso()) {
+                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
+                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
+                }
+            }
             
             
             //Verifica o Valor do Saldo do Empenho no momento da anulação
