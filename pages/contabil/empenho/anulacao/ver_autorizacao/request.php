@@ -33,15 +33,15 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastrarAnulacao':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
             $empenhoAnulacao = new EmpenhoAnulacao();
             $empenhoAnulacao->setIdEmpenhoAnulacao($dados["pagamento"]);
             $empenhoAnulacao->setIdPessoa($session->getIdUser());
             $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao($dados["deferir"]);
             $empenhoAnulacao->setNrAnulacao($dados['nr_anulacao']);
             $empenhoAnulacao->setDtAnulacao($dados['dt_anulacao']);
-            $empenhoAnulacao->setIdLotacao($dados['id_lotacao']);
+            $empenhoAnulacao->setIdLotacao($dados['idLotacao']);
             $empenhoAnulacao->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
+            $empenhoAnulacao->setDsJustificativa($dados["justificativa"]);
             echo $empenhoAnulacao->deferimentoDaAnulacaoEmpenho();
             return;
             break;
