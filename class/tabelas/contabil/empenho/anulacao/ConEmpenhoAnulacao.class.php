@@ -11,7 +11,7 @@ class ConEmpenhoAnulacao {
     private $vl_empenho_antigo = null;
     private $id_empenho_anulacao_situacao = null;
     private $id_empenho_anulacao_status = null;
-    private $id_pessoa = null;
+    private $id_pessoa = null;   
 
     function getIdEmpenhoAnulacao() {
         return $this->id_empenho_anulacao;

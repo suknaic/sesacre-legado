@@ -435,6 +435,41 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
     
+    public function retornaEmpenhoAnulacao(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select                            
+                            concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho)-4)) ), '/',  substring(nr_empenho FROM '....$')) as nr_empenho,
+                            emp.id_empenho,
+                            to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                            tpEmp.nm_tipo_empenho,
+                            emp.vl_empenho                             
+                         from
+                            fin_empenho as emp 
+                            inner join
+                               fin_tipo_empenho as tpEmp 
+                               on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
+                         where
+                            id_pedido = :pedido";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
     public function buscaEmpenhoPesquisaLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {

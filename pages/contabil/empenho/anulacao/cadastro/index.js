@@ -43,6 +43,18 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    $.ajax({
+        "url": url,
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function(response){
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
+    });
                         
     
     //$('.docFis').hide();
@@ -129,7 +141,7 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaEmpenhoLiquidacao",
+                "acao": "retornaEmpenhoAnulacao",
                 "dados": dados
 
             },
@@ -246,8 +258,17 @@ $(document).ready(function () {
                 "idEmpenho": $("#id_empenho").val(),                
                 "vlAnulacao": $("#vl_anulacao").val(),
                 "anotacoes": $("#anotacoes").val(),
-                "itens": itens
+                "idLotacao": $("#id_remetente option:selected").data('lotacao'),
+                "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
+                "itens": itens,
+                "justificativa": ""
             }
+            
+            if(dados.idLotacao == 0 || dados.idLotacao == undefined){
+                func.modalAlert("É Necessário informar um Remetente");
+                $this.prop("disabled", false);
+                return false;
+            }         
             
             if (!(dados.idEmpenho && dados.vlAnulacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
@@ -255,66 +276,123 @@ $(document).ready(function () {
                 return false;
             }                        
             
+            
+            
+            
             if (dados.itens.length <= 0) {
                 func.modalAlert("É Necessário que ao menos um Item do Pedido tenha os Valores de Anulação informado.");
                 $this.prop("disabled", false);
                 return false;
             }
 
-            $.ajax({
-                "url": "request.php",
-                "method": "POST",
-                "dataType": "html",
-                "data": {
-                    "acao": "cadastrarAnulacao",
-                    "dados": dados
+            $this.prop("disabled", false);
+            bootbox.confirm({
+                title: 'Anulação do Empenho',
+                message: 'Você tem Certeza que deseja continuar com o \n\
+                    Anulação do Empenho <span class="text-danger">' + $("#numero_empenho").val() + '</span>?\n\
+                    <br> \n\
+                    <div class="form-group"> \n\
+                        <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label> \n\
+                        <div class="input-group"> \n\
+                            <span class="input-group-addon"> \n\
+                                <p class="fa fa-list inputPFa"></p> \n\
+                            </span> \n\
+                            <textarea id="rem_justificativa" class="form-control"></textarea>\n\
+                        </div> \n\
+                    </div>',           
+                buttons: {
+                    'cancel': {
+                        label: 'Não',
+                        className: 'btn-default btn-rounded'
+                    },
+                    'confirm': {
+                        label: 'Sim',
+                        className: 'btn-primary btn-rounded'
+                    }
                 },
-                "success": function (response) {
-                    console.log(response);
-                    $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
 
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        return false;
-                    }
+                callback: function (result) {                
 
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
+                    if (result) {                                                            
+                        if($("#rem_justificativa").val() == ""){
+                            func.modalAlert("É Necessário Informar um Justificativa.");                        
+                            return true;
                         }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            //window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
-                            location.reload();
-                        });
-                        return false;
-                    } else {
-                        console.log('Ultimo else');
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
+                            
+                        dados.justificativa = $("#rem_justificativa").val();                       
+
+                        $.ajax({
+                            "url": "request.php",
+                            "method": "POST",
+                            "dataType": "html",
+                            "data": {
+                                "acao": "cadastrarAnulacao",
+                                "dados": dados
+                            },
+                            "success": function (response) {
+                                console.log(response);
+
+                                if (response.trim() == "SessaoExpirada") {
+                                    func.modalAlert(func.msgSemPermissao);
+                                    return false;
+                                }
+
+                                try {
+                                    response = JSON.parse(response);
+                                } catch (e) {
+                                    func.modalAlert(func.msgErroPadrao);
+                                    console.log("Parse JSON");
+                                    return false;
+                                }
+
+                                if (response.tipoMsg === "Erro") {
+                                    if (response.tipoExibicao === "console") {
+                                        console.log('Console Mensagem');
+                                        func.modalAlert(func.msgErroPadrao);
+                                        return false;
+                                    } else if (response.tipoExibicao === "alert") {
+                                        func.modalAlert(response.msg);
+                                        return false;
+                                    }
+                                } else if (response.tipoMsg === "ok") {
+                                    func.modalAlert(response.msg, 'success');
+                                    $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                        //window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
+                                        location.reload();
+                                    });
+                                    return false;
+                                } else {
+                                    console.log('Ultimo else');
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                }
+                            },
+                            "error": function (response) {
+                                $this.prop("disabled", false);
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        });                      
                     }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao);
-                    return false;
                 }
             });
+
+
+
+
+
+
+            
         }
     });
+    
+    
+    
+    
+    
+    
+    
+    
 
 });
 

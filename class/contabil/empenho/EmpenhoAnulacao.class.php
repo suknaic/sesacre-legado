@@ -26,6 +26,7 @@ class EmpenhoAnulacao {
     private $statusFinalizado = 2;
     private $sucesso = null;
     private $msgRetorno = null;
+    private $dsJustificativa = null;
 
     public function getSituacaoCadastrado() {
         return $this->situacaoCadastrado;
@@ -157,7 +158,16 @@ class EmpenhoAnulacao {
         $this->idEmpenhoAnulacao = $idEmpenhoAnulacao;
         return $this;
     }
+    
+    public function getDsJustificativa() {
+        return $this->dsJustificativa;
+    }
 
+    public function setDsJustificativa($dsJustificativa) {
+        $this->dsJustificativa = $dsJustificativa;
+        return $this;
+    }
+    
     /**
      * Cadastra a Anulação
      * @param bool $perfilTI
@@ -166,7 +176,9 @@ class EmpenhoAnulacao {
     public function salvarAnulacao(bool $perfilTI) {
         try {
 
-            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getVlAnulacao()) || empty($this->getItens())) {
+            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) 
+                    || empty($this->getVlAnulacao()) || empty($this->getItens())
+                    || empty($this->dsJustificativa)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -217,6 +229,9 @@ class EmpenhoAnulacao {
                                     . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
                 }
             }
+            
+            
+            //Verifica o Valor do Saldo do Empenho no momento da anulação
 
 
 
@@ -325,7 +340,7 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
             $daoEmpenhoAnulacaoHistorico->setIdPessoa($this->idPessoa);
-            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico("");
+            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico($this->dsJustificativa);
             $daoEmpenhoAnulacaoHistorico->insert($pdo);
             if (!$daoEmpenhoAnulacaoHistorico->getSucesso()) {
                 $pdo->rollBack();
