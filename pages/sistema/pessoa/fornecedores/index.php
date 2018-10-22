@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -50,7 +50,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Pessoas</h1>                       
+                        <h1 class="page-header text-overflow">Fornecedor</h1>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -64,11 +64,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <div class="panel-footer text-left">
-                                        <button class="btn btn-primary btn-rounded btn-novoPf" type="button">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Nova Pessoa Física
-                                        </button>
-                                        <button class="btn btn-primary btn-rounded btn-novoPj" type="button" style="">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Nova Pessoa Jurídica
+                                        <button class="btn btn-primary btn-rounded btn-novoFornecedor" type="button">
+                                            <i class="fa fa-plus" aria-hidden="true"></i> Novo Fornecedor
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
@@ -79,7 +76,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
 
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
-                                    <form class="form-horizontal formPesquisaPessoa">
+                                    <form class="form-horizontal formFornecedor">
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <div class="col-md-1"></div>
@@ -94,7 +91,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                             <option value="1">Pessoa Física</option>
                                                             <option value="2">Pessoa Jurídica</option>
                                                             <?php
-// echo $lotacoes;
+
                                                             ?>
                                                         </select>
                                                     </div>
@@ -136,7 +133,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                         <!-- Footer Form -->
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                 Limpar
                                             </button>     
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
@@ -245,7 +242,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/js/sistema/pessoa/index.js"></script>
+        <script src="/pages/sistema/pessoa/fornecedores/index.js"></script>
         <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->

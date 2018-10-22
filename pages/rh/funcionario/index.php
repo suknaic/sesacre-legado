@@ -147,7 +147,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                         <!-- Footer Form -->
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>     
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar

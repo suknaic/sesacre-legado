@@ -177,7 +177,7 @@ class Cidade {
             $busca = $cidade->retornaCidade($pdo);
             if (!is_array($busca)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Cidade.");
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
             }
 
             if (!Log::SalvaLogD('ses_cidade', $cidade->getId_cidade(), $pdo)) {
@@ -186,12 +186,17 @@ class Cidade {
             }
 
             $deleta = $cidade->delete($pdo);
-            if (!$deleta) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $deleta);
-            } else {
+            if ($cidade->getSucess()) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
+            } else {
+                if ($deleta->getCode() == 23503) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", 'Registro Vinculado a Outro Registro.');
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $deleta->getMessage());
+                }
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -208,7 +213,7 @@ class Cidade {
             $cidade->setId_estado($this->id_estado);
 
             $filtro = '';
-            if (!empty($this->id_estado) && $this->id_estado != 'Todos') {
+            if ($this->id_estado != 'Todos') {
                 $filtro = array();
                 if (!empty($this->nm_cidade)) {
                     $filtro[] ="unaccent(lower(CID.nm_cidade)) ilike '".$this->nm_cidade."%'";

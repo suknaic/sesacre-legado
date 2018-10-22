@@ -101,10 +101,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Voltar
                                             </button>
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                                Limpar
                                             </button>
-                                            <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Editar
+                                            <button type="button" class="btn btn-default btn-success btn-rounded btn-editar" style="display: none;">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
                                             </button>
                                             <button class="btn btn-success btn-rounded btn-salvar" type="button">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar

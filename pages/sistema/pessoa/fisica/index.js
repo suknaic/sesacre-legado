@@ -223,22 +223,4 @@ $(document).ready(function () {
             return false;
         }
     });
-
-    // $("body").on("change", "#nmPessoa", function () {
-    //     var texto = $(this).val();
-    //     if (texto != '') {
-    //         $("#nrCpf").prop('disabled', true);
-    //     } else {
-    //         $("#nrCpf").prop('disabled', false);
-    //     }
-    // });
-    //
-    // $("body").on("change", "#nrCpf", function () {
-    //     var texto = $(this).val();
-    //     if (texto != '') {
-    //         $("#nmPessoa").prop('disabled', true);
-    //     } else {
-    //         $("#nmPessoa").prop('disabled', false);
-    //     }
-    // });
 });
