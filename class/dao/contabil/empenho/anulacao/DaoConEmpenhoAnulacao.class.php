@@ -102,7 +102,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho)-4)) ), '/',  substring(nr_empenho FROM '....$')) as nr_empenho,
                 to_char(dt_empenho_safira,'dd/mm/yyyy') as dt_empenho ,
                 tpEmp.nm_tipo_empenho,
-                trim(to_char(anuEmp.vl_empenho_antigo,'999G999G990D0000')) as vl_empenho_antigo,
+                trim(to_char(anuEmp.vl_empenho_antigo,'999G999G990D9999')) as vl_empenho_antigo,
+                trim(to_char(anuEmp.vl_empenho_saldo,'999G999G990D9999')) as vl_empenho_saldo,
                 trim(to_char((vl_empenho_antigo - vl_empenho_anulacao),'999G999G990D9999')) as vl_empenho_atual
                 from fin_empenho emp
                 inner join fin_tipo_empenho tpEmp

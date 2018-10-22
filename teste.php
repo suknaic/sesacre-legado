@@ -25,7 +25,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.p
 $session = new Session('ajax');
 
 $empenhoAnulacao = new EmpenhoAnulacao();
-$empenhoAnulacao->setIdEmpenhoAnulacao(10);
+$empenhoAnulacao->setIdEmpenhoAnulacao(12);
 $empenhoAnulacao->setIdPessoa(2);
 $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao(2);
 var_dump($empenhoAnulacao->deferimentoDaAnulacaoEmpenho());

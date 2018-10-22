@@ -693,7 +693,7 @@ class EmpenhoAnulacao {
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Saldo a Anular do Empenho:</b></div>
-                                                        <div class="col-sm-3">' . $campos['vl_empenho_atual'] . '</div>
+                                                        <div class="col-sm-3">' . $campos['vl_empenho_saldo'] . '</div>
                                                         <div class="col-sm-7"></div>
                                                     </div>
 
