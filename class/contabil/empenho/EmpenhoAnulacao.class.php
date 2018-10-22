@@ -652,7 +652,7 @@ class EmpenhoAnulacao {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Empenho após a Anulação:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo a Anular do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos['vl_empenho_atual'] . '</div>
                                                         <div class="col-sm-7"></div>
                                                     </div>
@@ -834,7 +834,7 @@ class EmpenhoAnulacao {
                 foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
                     $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
-                    $tabela .= '<tr>
+                    $tabela .= '<tr data="'. json_encode($linha,JSON_HEX_APOS).'">
                                     <td class="text-center">' . $linha["nr_item"] . '</td>
                                     <td class="text-center">' . $linha["nm_material"] . '</td>
                                     <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
@@ -843,6 +843,7 @@ class EmpenhoAnulacao {
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_geral, 4) . '</td>
+                                    <td class="text-center qtdVlr"></td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_saldo"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_anulado"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_anulado, 4) . '</td>

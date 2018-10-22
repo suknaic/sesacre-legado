@@ -9,6 +9,26 @@ class ConEmpenhoAnulacaoHistorico {
    private $id_pessoa = null;
    private $ds_empenho_anulacao_historico = null;
    private $dh_empenho_anulacao_historico = null;
+   private $id_lotacao = null;
+   private $id_doc_tipo_lotacao = null;
+    
+   function getIdLotacao() {
+       return $this->id_lotacao;
+   }
+
+   function getIdDocTipoLotacao() {
+       return $this->id_doc_tipo_lotacao;
+   }
+
+   function setIdLotacao($id_lotacao) {
+       $this->id_lotacao = $id_lotacao;
+       return $this;
+   }
+
+   function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+       $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+       return $this;
+   }
 
    function getIdEmpenhoAnulacaoHistorico() {
        return $this->id_empenho_anulacao_historico;
