@@ -166,7 +166,7 @@ class EmpenhoAnulacao {
     public function salvarAnulacao(bool $perfilTI) {
         try {
 
-            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getNrAnulacao()) || empty($this->getDtAnulacao()) || empty($this->getVlAnulacao()) || empty($this->getItens())) {
+            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getVlAnulacao()) || empty($this->getItens())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -177,13 +177,6 @@ class EmpenhoAnulacao {
             $this->vlAnulacao = Metodos::ConverteValorIng($this->vlAnulacao);
             if ($this->vlAnulacao == "0" || $this->vlAnulacao == "0.0" || $this->vlAnulacao == "0.0000" || $this->vlAnulacao == "0.00" || $this->vlAnulacao <= 0) {
                 return Metodos::retornoAjax("Erro", "alert", "Valor da Anulação não pode ser Zero ou menor que zero.");
-            }
-
-            $this->dtAnulacao = Metodos::validaConverteDataING($this->dtAnulacao);
-            if (empty($this->dtAnulacao)) {
-                return Metodos::retornoAjax("Erro", "alert", 'Informe uma Data Para Anulação.');
-            } else {
-                $this->dtAnulacao = new DateTime($this->dtAnulacao);
             }
 
             $conexao = new Conexao();
@@ -229,8 +222,6 @@ class EmpenhoAnulacao {
 
             $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
             $daoEmpenhoAnulacao->setIdPedido($this->idPedido);
-            $daoEmpenhoAnulacao->setNrEmpenhoAnulacao($this->nrAnulacao);
-            $daoEmpenhoAnulacao->setDtEmpenhoAnulacao($this->dtAnulacao->format("Y-m-d"));
             $daoEmpenhoAnulacao->setVlEmpenhoAnulacao($this->vlAnulacao);
             $daoEmpenhoAnulacao->setVlEmpenhoAntigo($dadosEmpenho['vl_empenho']);
             $daoEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
@@ -239,7 +230,7 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacao->insert($pdo);
             if (!$daoEmpenhoAnulacao->getSucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar a Anulação do Empenho.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar a Anulação do Empenho.".$daoEmpenhoAnulacao->getMsgRetorno());
             }
 
             $this->idEmpenhoAnulacao = $pdo->lastInsertId('con_empenho_anulacao_id_empenho_anulacao_seq');

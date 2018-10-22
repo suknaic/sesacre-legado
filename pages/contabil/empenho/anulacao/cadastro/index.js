@@ -232,15 +232,7 @@ $(document).ready(function () {
             $(".itens").each(function(){   
                 let qtd = $(this).closest("tr").find('.qtd_anulacao').val();
                 qtd = func.converteValorIngFloat(qtd);  
-//                let valor = 0;
-//                if($(this).closest("tr").find('.vl_anulacao').length > 0){
-//                    valor = $(this).closest("tr").find('.vl_anulacao').val();
-//                    valor = func.converteValorIngFloat(valor);
-//                    if((valor == 0 || isNaN(valor))){
-//                        qtd = 0;
-//                        valor = 0; 
-//                    }
-//                }
+
                 if( !(qtd == 0 || isNaN(qtd) ) ){
                     itens.push({
                         id: $(this).closest("tr").find('.qtd_anulacao').attr('idpreordem'),
@@ -252,15 +244,12 @@ $(document).ready(function () {
                         
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),                
-                "nrAnulacao": $("#nr_anulacao").val(),
                 "vlAnulacao": $("#vl_anulacao").val(),
-                "dtAnulacao": $("#dt_anulacao").val(),
                 "anotacoes": $("#anotacoes").val(),
                 "itens": itens
             }
             
-            if (!(dados.idEmpenho && dados.nrAnulacao && dados.vlAnulacao 
-                    && dados.dtAnulacao )) {
+            if (!(dados.idEmpenho && dados.vlAnulacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 $this.prop("disabled", false);
                 return false;
@@ -282,8 +271,6 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
-                    //$this.prop("disabled", false);
-                    //return false;
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

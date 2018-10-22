@@ -119,9 +119,7 @@ switch ($_REQUEST['acao']) {
             $empenho = new EmpenhoAnulacao();
             $empenho->setIdEmpenho((int)$dados['idEmpenho'])
                        ->setIdPessoa($session->getIdUser())
-                       ->setDtAnulacao($dados['dtAnulacao'])
                        ->setVlAnulacao($dados['vlAnulacao'])
-                       ->setNrAnulacao($dados['nrAnulacao'])
                        ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
                        ->setItens($dados['itens']);                       
             echo $empenho->salvarAnulacao($perfilTI);
