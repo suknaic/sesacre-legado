@@ -853,7 +853,7 @@ class FinOrdemModel {
 //                            $label = "Vlr. Unitário";
 //                        }
                         
-                        $retorno .= '<td class="text-center itens">'.$label.'<input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                        $retorno .= '<td class="text-center itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
                                             quantidade="' . $linha["saldo"] . '"

@@ -19,9 +19,9 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "insert into con_empenho_anulacao "
-                . "(id_pedido,vl_empenho_anulacao, vl_empenho_antigo, id_empenho_anulacao_situacao, id_empenho_anulacao_status,id_pessoa,id_lotacao,id_doc_tipo_lotacao) "
+                . "(id_pedido,vl_empenho_anulacao, vl_empenho_antigo, id_empenho_anulacao_situacao, id_empenho_anulacao_status,id_pessoa,id_lotacao,id_doc_tipo_lotacao, vl_empenho_saldo) "
                 . "values"
-                . " (:id_pedido,:vl_empenho_anulacao,:vl_empenho_antigo,:id_empenho_anulacao_situacao,:id_empenho_anulacao_status,:id_pessoa,:id_lotacao,:id_doc_tipo_lotacao)";
+                . " (:id_pedido,:vl_empenho_anulacao,:vl_empenho_antigo,:id_empenho_anulacao_situacao,:id_empenho_anulacao_status,:id_pessoa,:id_lotacao,:id_doc_tipo_lotacao, :vl_empenho_saldo)";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
@@ -33,6 +33,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":vl_empenho_saldo", $this->getVlEmpenhoSaldo(), PDO::PARAM_STR);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {

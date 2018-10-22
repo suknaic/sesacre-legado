@@ -26,7 +26,39 @@ class EmpenhoAnulacao {
     private $statusFinalizado = 2;
     private $sucesso = null;
     private $msgRetorno = null;
+    private $dsJustificativa = null;
+    private $idDocTipoLotacao = null;
+    private $idLotacao = null;
+    private $vlEmpenhoSaldo = null;
+    
+    public function getVlEmpenhoSaldo() {
+        return $this->vlEmpenhoSaldo;
+    }
 
+    public function setVlEmpenhoSaldo($vlEmpenhoSaldo) {
+        $this->vlEmpenhoSaldo = $vlEmpenhoSaldo;
+        return $this;
+    }
+
+        
+    public function getIdDocTipoLotacao() {
+        return $this->idDocTipoLotacao;
+    }
+
+    public function getIdLotacao() {
+        return $this->idLotacao;
+    }
+
+    public function setIdDocTipoLotacao($idDocTipoLotacao) {
+        $this->idDocTipoLotacao = $idDocTipoLotacao;
+        return $this;
+    }
+
+    public function setIdLotacao($idLotacao) {
+        $this->idLotacao = $idLotacao;
+        return $this;
+    }       
+    
     public function getSituacaoCadastrado() {
         return $this->situacaoCadastrado;
     }
@@ -157,7 +189,16 @@ class EmpenhoAnulacao {
         $this->idEmpenhoAnulacao = $idEmpenhoAnulacao;
         return $this;
     }
+    
+    public function getDsJustificativa() {
+        return $this->dsJustificativa;
+    }
 
+    public function setDsJustificativa($dsJustificativa) {
+        $this->dsJustificativa = $dsJustificativa;
+        return $this;
+    }
+    
     /**
      * Cadastra a Anulação
      * @param bool $perfilTI
@@ -166,7 +207,10 @@ class EmpenhoAnulacao {
     public function salvarAnulacao(bool $perfilTI) {
         try {
 
-            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getVlAnulacao()) || empty($this->getItens())) {
+            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) 
+                    || empty($this->getVlAnulacao()) || empty($this->getItens())
+                    || empty($this->dsJustificativa)
+                    || empty($this->idDocTipoLotacao) || empty($this->idLotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -207,17 +251,20 @@ class EmpenhoAnulacao {
             }
 
 
-            if (!$perfilTI) {
-                $CentralResponsavel = new CentralResponsavel();
-                $CentralResponsavel->setIdPessoa($this->idPessoa);
-                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
-                $CentralResponsavel->verificaPermissao($pdo);
-                if (!$CentralResponsavel->Sucesso()) {
-                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
-                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
-                }
-            }
-
+//            if (!$perfilTI) {
+//                $CentralResponsavel = new CentralResponsavel();
+//                $CentralResponsavel->setIdPessoa($this->idPessoa);
+//                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
+//                $CentralResponsavel->verificaPermissao($pdo);
+//                if (!$CentralResponsavel->Sucesso()) {
+//                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
+//                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
+//                }
+//            }
+            
+            
+            //Verifica o Valor do Saldo do Empenho no momento da anulação
+            
 
 
             $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
@@ -226,7 +273,11 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacao->setVlEmpenhoAntigo($dadosEmpenho['vl_empenho']);
             $daoEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
             $daoEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
+            $daoEmpenhoAnulacao->setIdDocTipoLotacao($this->idDocTipoLotacao);
+            $daoEmpenhoAnulacao->setIdLotacao($this->idLotacao);
             $daoEmpenhoAnulacao->setIdPessoa($this->idPessoa);
+            $daoEmpenhoAnulacao->setVlEmpenhoSaldo($this->vlEmpenhoSaldo);
+                        
             $daoEmpenhoAnulacao->insert($pdo);
             if (!$daoEmpenhoAnulacao->getSucesso()) {
                 $pdo->rollBack();
@@ -306,6 +357,7 @@ class EmpenhoAnulacao {
                 $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
                 $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
                 $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
+                $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['utilizado'], 4));
                 $daoEmpenhoAnulacaoItens->insert($pdo);
                 if (!$daoEmpenhoAnulacaoItens->getSucesso()) {
                     $pdo->rollBack();
@@ -325,7 +377,9 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
             $daoEmpenhoAnulacaoHistorico->setIdPessoa($this->idPessoa);
-            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico("");
+            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico($this->dsJustificativa);
+            $daoEmpenhoAnulacaoHistorico->setIdDocTipoLotacao($this->idDocTipoLotacao);
+            $daoEmpenhoAnulacaoHistorico->setIdLotacao($this->idLotacao);
             $daoEmpenhoAnulacaoHistorico->insert($pdo);
             if (!$daoEmpenhoAnulacaoHistorico->getSucesso()) {
                 $pdo->rollBack();

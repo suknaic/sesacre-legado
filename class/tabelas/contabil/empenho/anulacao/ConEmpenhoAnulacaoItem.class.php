@@ -10,7 +10,18 @@ class ConEmpenhoAnulacaoItem {
     private $qt_anulacao = null;
     private $vl_anulado = null;
     private $vl_saldo = null;
+    private $vl_utilizado = null;
     
+    public function getVlUtilizado() {
+        return $this->vl_utilizado;
+    }
+
+    public function setVlUtilizado($vl_utilizado) {
+        $this->vl_utilizado = $vl_utilizado;
+        return $this;
+    }
+
+        
     function getVlSaldo() {
         return $this->vl_saldo;
     }
