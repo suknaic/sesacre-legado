@@ -71,7 +71,7 @@ class Estado {
             if (!$busca) {
                 //return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Estado com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -89,21 +89,20 @@ class Estado {
             if (Log::SalvaLogI('ses_estado', $est->getIdEstado(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro do Novo País Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
 
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -134,7 +133,7 @@ class Estado {
             if (!$busca) {
                 //return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um Estado com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -142,7 +141,7 @@ class Estado {
             $busca = $est->retornaEstado($pdo);
 
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -155,7 +154,7 @@ class Estado {
             }
 
             if (!Log::SalvaLogU('ses_estado', $est->getIdEstado(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -164,16 +163,14 @@ class Estado {
 
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Edição do País Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -197,36 +194,38 @@ class Estado {
 
             if ($busca) {
                 if (!Log::SalvaLogD('ses_estado', $est->getIdEstado(), $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
                     return $retorno;
                 }
             } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o Estado.");
+                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o Registro.");
                 $pdo->rollBack();
                 return $retorno;
             }
 
             $resultDao = $est->delete($est, $pdo);
             if ($resultDao != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $resultDao);
-                $pdo->rollBack();
-                return $retorno;
+                if ($resultDao->getCode() == 23503) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Registro está vinculado a outro registro.");
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", $resultDao->getMessage());
+                }
             }
 
             $sucesso = true;
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "País removido com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

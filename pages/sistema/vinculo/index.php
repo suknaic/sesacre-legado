@@ -77,9 +77,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/vinculo/index.load.php"
                                                 </div>
                                             </div>                                                                                     
                                         </div>
-                                        <div class="panel-footer text-right">
+                                        <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                Limpar
+                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição

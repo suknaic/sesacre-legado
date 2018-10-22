@@ -42,7 +42,7 @@ class DaoSesEstado extends SesEstado{
 
             return "Sucesso";
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return $e;
         }
     }
 

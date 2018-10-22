@@ -22,6 +22,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!--Select2-->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
@@ -69,7 +71,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                     <div class="panel-heading ">
                                         <h3 class="panel-title">Formulário</h3>
                                     </div>
-
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formCidade">
@@ -83,7 +84,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                                 <div class="col-sm-3">
                                                     Estado Referente: <span class="text-danger">*</span></label>
                                                     <select id= "idEstado" class="form-control select">
-                                                        <option value="">Selecione o Estado Referente</option>
+                                                        <option value="">Selecione o Estado</option>
 
                                                     </select>
                                                 </div>
@@ -91,7 +92,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                         </div>
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                                Limpar
                                             </button>
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
@@ -100,7 +101,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
-
                                 </div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
 
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Cidades</h3>
+                                <h3 class="panel-title">Lista de Cidades</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -119,7 +119,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                                     <tr>
                                                         <th>Cidade</th>
                                                         <th>Estado</th>
-                                                        <th>Pais</th>
+                                                        <th>País</th>
                                                         <th>Regional Geográfica</th>
                                                         <th>Regional Saúde</th>
                                                         <th class="text-center">Ações</th>
@@ -131,45 +131,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                                             </table>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
@@ -180,10 +163,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
+        <!--DataTables-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
@@ -193,6 +182,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         <script src="/pages/sistema/cidade/index.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

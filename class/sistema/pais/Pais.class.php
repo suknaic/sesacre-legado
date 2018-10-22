@@ -35,7 +35,7 @@ class Pais {
     public function cadastrarPais() {
         try {
 
-            if ($this->nmPais == "" || $this->nmSigla == "") {
+            if (empty($this->nmPais && $this->nmSigla)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -60,9 +60,14 @@ class Pais {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um País com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
+            }
+
+            if ($pais->verificaSiglaPais($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", 'Registro com mesma <strong>sigla</strong> já existe.');
             }
 
             $result = $pais->insert($pais, $pdo);
@@ -77,21 +82,19 @@ class Pais {
             if (Log::SalvaLogI('ses_pais', $pais->getIdPais(), $pdo)) {
                 $sucesso = true;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Cadastro do Novo País Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -122,7 +125,7 @@ class Pais {
             if (!$busca) {
                 //return $retorno;            
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Já Existe um País com esse nome.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -130,9 +133,16 @@ class Pais {
             $busca = $pais->retornaPais($pdo);
 
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
+            }
+
+            if ($busca['nm_sigla'] != $this->nmSigla) {
+                if ($pais->verificaSiglaPais($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", 'Registro com mesma <strong>sigla</strong> já existe.');
+                }
             }
 
             $result = $pais->update($pais, $pdo);
@@ -143,7 +153,7 @@ class Pais {
             }
 
             if (!Log::SalvaLogU('ses_pais', $pais->getIdPais(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             } else {
@@ -152,11 +162,11 @@ class Pais {
 
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "Edição do País Realizado com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Error, Por favor, contate o administrador do sistema.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
                 return $retorno;
             }
@@ -190,22 +200,26 @@ class Pais {
                     return $retorno;
                 }
             } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o País.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o País.");
                 $pdo->rollBack();
                 return $retorno;
             }
 
             $resultDao = $pais->delete($pais, $pdo);
             if ($resultDao != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $resultDao);
-                $pdo->rollBack();
-                return $retorno;
+                if ($resultDao->getCode() == 23503) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", 'Registro está vinculado a outro registro.');
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $resultDao->getMessage());
+                }
             }
 
             $sucesso = true;
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", "País removido com Sucesso.");
+                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
                 $pdo->commit();
                 return $retorno;
             } else {
@@ -213,8 +227,6 @@ class Pais {
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

@@ -95,7 +95,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                                 </div>
                                             </div>                                                                                     
                                         </div>
-                                        <div class="panel-footer text-right">
+                                        <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-cancelar">
                                                 Cancelar
                                             </button>

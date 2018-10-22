@@ -464,7 +464,7 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
             $result->execute();
             return "Sucesso";
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return $e;
             //return false;
         }
     }
@@ -500,7 +500,6 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
                 inner join ses_pessoa_fisica PF on P.id_pessoa = PF.id_pessoa
                 left join ses_cidade ci on p.id_cidade = ci.id_cidade
                 left join ses_estado e on ci.id_estado = e.id_estado
-                where PF.id_pessoa_fisica in (select id_pessoa_fisica from ses_contrato where st_ativo = '1')
                 $filtro
                 order by P.nm_pessoa";
         try {

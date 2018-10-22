@@ -39,7 +39,7 @@ class DaoSesPais extends SesPais{
 
             return "Sucesso";
         } catch (PDOException $e) {
-            return $e->getMessage();            
+            return $e;
         }
     }
     
@@ -163,7 +163,20 @@ class DaoSesPais extends SesPais{
         }  
     }
     
-    
+    public function verificaSiglaPais($pdo) {
+        try {
+            $sql = $pdo->prepare('SELECT nm_pais FROM ses_pais WHERE nm_sigla = :sigla');
+            $sql->bindValue(':sigla', $this->getNmSigla(), PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return $e;
+        }
+    }
     
 }
 

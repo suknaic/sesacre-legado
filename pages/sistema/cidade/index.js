@@ -2,14 +2,7 @@ $(document).ready(function () {
 
     func = new Funcoes();
     //******** Carrega o DataTable pra tabela não ficar feia **********
-    var table = $('#tabela').DataTable({
-        "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-        "order": [[0, "asc"]],
-        "language": {
-            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-        },
-        responsive: true
-    });
+    func.carregaTabelaPadrao('tabela', null, [7]);
     //*****************************************************************
 
     //************ Carrega o select2 em todos os select's *************

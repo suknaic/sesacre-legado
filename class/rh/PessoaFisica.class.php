@@ -516,7 +516,11 @@ class pessoaFisica {
             $rs = $pessoaFisica->deletePessoaFisica($pdo);
             if ($rs != "Sucesso") {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", 'Registro está vinculado a outro registro.');
+                if ($rs->getCode() == 23503) {
+                    return Metodos::retornoAjax("Erro", "alert", 'Registro está vinculado a outro registro.');
+                } else {
+                    return Metodos::retornoAjax("Erro", "alert", $rs->getMessage());
+                }
             }
             //***************remove pessoa*********************************************************
             $pessoa = new Pessoa();
@@ -598,7 +602,7 @@ class pessoaFisica {
                 $filter[] = "PF.nr_cpf = '".Metodos::formataCpf($cpf)."'";
             }
             if (count($filter) > 0) {
-                $filtro = " and " . implode(' and ', $filter);
+                $filtro = " where " . implode(' and ', $filter);
             }
             if ($filtro == "") {
                 return false;
