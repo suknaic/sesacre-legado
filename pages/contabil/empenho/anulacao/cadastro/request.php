@@ -34,7 +34,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
-            echo $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
+            echo $finEmpenhoModel->trEmpenhoBuscaAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {

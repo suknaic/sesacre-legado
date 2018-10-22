@@ -81,7 +81,7 @@ require_once "index.load.php";
                                                             <th>Fonte</th>
                                                             <th>Elemento de Despesa</th>                                                            
                                                             <th>Valor Total</th>
-                                                            <th>Saldo a Liquidar</th>
+                                                            <th>Saldo a Anular do Empenho</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
