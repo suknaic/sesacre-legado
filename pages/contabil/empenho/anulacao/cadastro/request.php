@@ -109,19 +109,24 @@ switch ($_REQUEST['acao']) {
             
             if (empty($dados['itens'])) {
                 $dados['itens'] = array();
-            }                      
+            }                                              
             
             $perfilTI = false;
             if($session->vPGeralAcao()){
                 $perfilTI = true;
             }
             
+            echo "<pre>";
+            print_r($dados);
+            echo "</pre>";
+            return;
             $empenho = new EmpenhoAnulacao();
             $empenho->setIdEmpenho((int)$dados['idEmpenho'])
-                       ->setIdPessoa($session->getIdUser())
-                       ->setVlAnulacao($dados['vlAnulacao'])
-                       ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
-                       ->setItens($dados['itens']);                       
+                        ->setIdPessoa($session->getIdUser())
+                        ->setVlAnulacao($dados['vlAnulacao'])
+                        ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
+                        ->setItens($dados['itens'])
+                        ->setDsJustificativa(trim($dados['justificativa']));                       
             echo $empenho->salvarAnulacao($perfilTI);
             return;
             break;
@@ -137,6 +142,19 @@ switch ($_REQUEST['acao']) {
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
             echo $finEmpenhoModel->buscaEmpenhoParaLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {

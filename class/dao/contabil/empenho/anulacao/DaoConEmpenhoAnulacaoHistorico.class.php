@@ -18,8 +18,8 @@ class DaoConEmpenhoAnulacaoHistorico extends ConEmpenhoAnulacaoHistorico {
     function insert(PDO $pdo){
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "INSERT INTO con_empenho_anulacao_historico (id_empenho_anulacao ,id_empenho_anulacao_situacao, id_empenho_anulacao_status, id_pessoa, ds_empenho_anulacao_historico)"                    
-                    . " VALUES (:id_empenho_anulacao,:id_empenho_anulacao_situacao, :id_empenho_anulacao_status, :id_pessoa, :ds_empenho_anulacao_historico);";
+        $sql = "INSERT INTO con_empenho_anulacao_historico (id_empenho_anulacao ,id_empenho_anulacao_situacao, id_empenho_anulacao_status, id_pessoa, ds_empenho_anulacao_historico,id_lotacao, id_doc_tipo_lotacao)"                    
+                    . " VALUES (:id_empenho_anulacao,:id_empenho_anulacao_situacao, :id_empenho_anulacao_status, :id_pessoa, :ds_empenho_anulacao_historico, :id_lotacao, :id_doc_tipo_lotacao);";
         try {                      
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);                                                            
@@ -27,7 +27,9 @@ class DaoConEmpenhoAnulacaoHistorico extends ConEmpenhoAnulacaoHistorico {
                 $stmt->bindValue(":id_empenho_anulacao_situacao", $this->getIdEmpenhoAnulacaoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_empenho_anulacao_status", $this->getIdEmpenhoAnulacaoStatus(), PDO::PARAM_INT);            
                 $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);            
-                $stmt->bindValue(":ds_empenho_anulacao_historico", $this->getDsEmpenhoAnulacaoHistorico(), PDO::PARAM_INT);            
+                $stmt->bindValue(":ds_empenho_anulacao_historico", $this->getDsEmpenhoAnulacaoHistorico(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true; 
             } else {

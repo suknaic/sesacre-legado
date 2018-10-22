@@ -708,6 +708,7 @@ class FinEmpenhoModel {
         }
     }
 
+
     public function retornaEmpenhoAnulacao($pdo) {
         try {
 
@@ -738,6 +739,7 @@ class FinEmpenhoModel {
                                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
                                                 <div class="panel-body">
                                                     <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
+                                                    <input id="numero_empenho" type="hidden" value="'.$campos["nr_empenho"].'" />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
@@ -757,8 +759,9 @@ class FinEmpenhoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo do Empenho a anular:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo a Anular do Empenho:</b></div>
                                                         <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+
                                                         <div class="col-sm-7"></div>    
                                                     </div>
                                                 </div>
@@ -773,6 +776,7 @@ class FinEmpenhoModel {
         }
     }
 
+    
     public function trEmpenhoBuscaLiquidacao() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();

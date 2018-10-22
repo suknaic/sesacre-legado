@@ -435,6 +435,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         }
     }
     
+
       public function retornaEmpenhoAnulacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {

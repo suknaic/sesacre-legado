@@ -26,6 +26,7 @@ class EmpenhoAnulacao {
     private $statusFinalizado = 2;
     private $sucesso = null;
     private $msgRetorno = null;
+    private $dsJustificativa = null;
 
     public function getSituacaoCadastrado() {
         return $this->situacaoCadastrado;
@@ -157,7 +158,16 @@ class EmpenhoAnulacao {
         $this->idEmpenhoAnulacao = $idEmpenhoAnulacao;
         return $this;
     }
+    
+    public function getDsJustificativa() {
+        return $this->dsJustificativa;
+    }
 
+    public function setDsJustificativa($dsJustificativa) {
+        $this->dsJustificativa = $dsJustificativa;
+        return $this;
+    }
+    
     /**
      * Cadastra a Anulação
      * @param bool $perfilTI
@@ -166,7 +176,9 @@ class EmpenhoAnulacao {
     public function salvarAnulacao(bool $perfilTI) {
         try {
 
-            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getVlAnulacao()) || empty($this->getItens())) {
+            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) 
+                    || empty($this->getVlAnulacao()) || empty($this->getItens())
+                    || empty($this->dsJustificativa)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -217,6 +229,9 @@ class EmpenhoAnulacao {
                                     . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
                 }
             }
+            
+            
+            //Verifica o Valor do Saldo do Empenho no momento da anulação
 
 
 
@@ -325,7 +340,7 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
             $daoEmpenhoAnulacaoHistorico->setIdPessoa($this->idPessoa);
-            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico("");
+            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico($this->dsJustificativa);
             $daoEmpenhoAnulacaoHistorico->insert($pdo);
             if (!$daoEmpenhoAnulacaoHistorico->getSucesso()) {
                 $pdo->rollBack();
@@ -637,7 +652,7 @@ class EmpenhoAnulacao {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Empenho após a Anulação:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo a Anular do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos['vl_empenho_atual'] . '</div>
                                                         <div class="col-sm-7"></div>
                                                     </div>
@@ -819,7 +834,7 @@ class EmpenhoAnulacao {
                 foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
                     $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
-                    $tabela .= '<tr>
+                    $tabela .= '<tr data="'. json_encode($linha,JSON_HEX_APOS).'">
                                     <td class="text-center">' . $linha["nr_item"] . '</td>
                                     <td class="text-center">' . $linha["nm_material"] . '</td>
                                     <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
@@ -828,6 +843,7 @@ class EmpenhoAnulacao {
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_geral, 4) . '</td>
+                                    <td class="text-center qtdVlr"></td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_saldo"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_anulado"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_anulado, 4) . '</td>

@@ -177,7 +177,7 @@ class EmpenhoAnulacaoPesquisa {
             if (!empty($this->getAnoEmpenhoAnulacao())) {
                 $and_ou_where = empty($array_filtro) ? " where " : " and ";
                 $array_filtro[] = array(
-                    'sql' => $and_ou_where . "to_char(dt_empenho_anulacao,'YYYY') = :ano_empenho_anulacao",
+                    'sql' => $and_ou_where . "to_char(dh_empenho_anulacao,'YYYY') = :ano_empenho_anulacao",
                     'bind' => ':ano_empenho_anulacao',
                     'valor' => $this->getAnoEmpenhoAnulacao(),
                     'pdo_param' => PDO::PARAM_INT);
