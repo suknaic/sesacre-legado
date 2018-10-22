@@ -9,6 +9,11 @@ class SesCidade{
     private $nm_cidade = null;
     private $st_ativo = null;
     private $nm_uf = null;
+
+    //*************************
+    private $sucess = null;
+    //*************************
+
     //*************************
     function getNm_uf() {
         return $this->nm_uf;
@@ -66,5 +71,20 @@ class SesCidade{
         $this->st_ativo = $st_ativo;
     }
 
-    
+    /**
+     * @return null
+     */
+    public function getSucess()
+    {
+        return $this->sucess;
+    }
+
+    /**
+     * @param null $sucess
+     */
+    public function setSucess($sucess)
+    {
+        $this->sucess = $sucess;
+    }
+
 }

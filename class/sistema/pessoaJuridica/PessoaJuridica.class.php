@@ -314,9 +314,11 @@ class pessoaJuridica {
             if ($rs != "Sucesso") {
                 $pdo->rollBack();
                 if ($rs->getCode() == 23503) {
+                    $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Registro está vinculado a outro registro.");
                 } else {
-                    return Metodos::retornoAjax("Erro", "console", $rs);
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $rs->getMessage());
                 }
             }
             //***************remove pessoa*********************************************************

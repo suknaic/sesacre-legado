@@ -1,15 +1,7 @@
 $(document).ready(function () {
 
     func = new Funcoes();
-    var table = $('#tabela').DataTable({
-        "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-        "order": [[0, "asc"]],
-        "language": {
-            "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-        },
-        responsive: true
-    });
-
+    func.carregaTabelaPadrao('tabela', null, [4], true);
 
     function listaPaises() {
         $.ajax({
@@ -22,25 +14,7 @@ $(document).ready(function () {
             "success": function (response)
 
             {
-                // window.alert(response)
-
-
-
-                var oTable = $('#tabela').dataTable();
-                oTable.fnDestroy();
-                $("#tabela").find("tbody").html(response);
-                var table = $('#tabela').DataTable({
-                    "lengthMenu": [[10, 25, 50, 10, -1], [10, 25, 50, 100, "Todos"]],
-                    "order": [[0, "asc"]],
-                    "language": {
-                        "url": "/assets/lib/template/plugins/datatables/media/js/Portuguese-Brasil.json"
-                    },
-                    responsive: true
-                });
-                $("#tabela").show();
-
-
-
+                func.carregaTabelaPadrao('tabela', response, [4], true);
             }
         });
     }
@@ -81,39 +55,30 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.modalAlert(response.msg, 'success');
+                        func.fechaModalReload();
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -159,39 +124,31 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg);
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
+                        func.modalAlert(response.msg, 'success');
+                        func.fechaModalReload();
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
                     console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -248,17 +205,13 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);
-                                console.log("Parse JSON");
-                                console.log(response);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    console.log('Console Mensagem');
-                                    console.log(response);
-                                    func.modalAlert(func.msgErroPadrao);
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
@@ -266,20 +219,15 @@ $(document).ready(function () {
                                 }
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg);
-                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    location.reload();
-                                });
+                                func.fechaModalReload();
                                 return false;
                             } else {
-                                console.log('Ultimo else');
-                                console.log(response);
-                                func.modalAlert(func.msgErroPadrao);
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });

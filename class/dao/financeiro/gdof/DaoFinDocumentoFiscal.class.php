@@ -975,7 +975,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     from fin_doc_lotacao as docLotacao
                     inner join ses_lotacao as lotacao
                     on lotacao.id_lotacao = docLotacao.id_lotacao
-                    where docLotacao.id_doc_tipo_lotacao = :tipo";
+                    where docLotacao.id_doc_tipo_lotacao = :tipo and docLotacao.st_ativo = '1'";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":tipo", $tipo, PDO::PARAM_INT);
             $stmt->execute();

@@ -102,7 +102,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho)-4)) ), '/',  substring(nr_empenho FROM '....$')) as nr_empenho,
                 to_char(dt_empenho_safira,'dd/mm/yyyy') as dt_empenho ,
                 tpEmp.nm_tipo_empenho,
-                trim(to_char(anuEmp.vl_empenho_antigo,'999G999G990D0000')) as vl_empenho_antigo,
+                trim(to_char(anuEmp.vl_empenho_antigo,'999G999G990D9999')) as vl_empenho_antigo,
+                trim(to_char(anuEmp.vl_empenho_saldo,'999G999G990D9999')) as vl_empenho_saldo,
                 trim(to_char((vl_empenho_antigo - vl_empenho_anulacao),'999G999G990D9999')) as vl_empenho_atual
                 from fin_empenho emp
                 inner join fin_tipo_empenho tpEmp
@@ -231,7 +232,10 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     anuEmpItem.vl_item,
                     anuEmpItem.qt_anulado,
                     anuEmpItem.vl_anulado,
-                    anuEmpItem.vl_saldo 
+                    anuEmpItem.vl_saldo,
+                    anuEmpItem.vl_utilizado,
+                    anuEmpItem.qt_utilizado,
+                    itens.fl_valor_variavel
                  from
                     con_empenho_anulacao_item anuEmpItem 
                     inner join
@@ -291,7 +295,8 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                     coalesce(pj.nr_cnpj, pf.nr_cpf) as doc_fornecedor,
                     trim(to_char(anulacaoEmp.vl_empenho_anulacao, '999G999G999G990D9999')) as vl_empenho_anulacao,
                     to_char(anulacaoEmp.dt_empenho_anulacao, 'dd/mm/yyyy') as dt_empenho_anulacao,
-                    anulacaoSit.nm_empenho_anulacao_situacao 
+                    anulacaoSit.nm_empenho_anulacao_situacao,
+                    anulacaoSit.id_empenho_anulacao_situacao
                  from
                     con_empenho_anulacao anulacaoEmp 
                     inner join

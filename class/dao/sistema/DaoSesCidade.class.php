@@ -45,9 +45,10 @@ class DaoSesCidade extends SesCidade {
             $result->bindValue(":idCidade", $this->getId_cidade(), PDO::PARAM_INT);
             $result->execute();
 
-            return True;
+            $this->setSucess(true);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            $this->setSucess(false);
+            return $e;
         }
     }
 
@@ -212,7 +213,7 @@ class DaoSesCidade extends SesCidade {
                                                         INNER JOIN ses_pais PAI ON PAI.id_pais = EST.id_pais 
                                                             WHERE CID.st_ativo = '1'".$filtro);
             $sql->execute();
-            if ($sql->rowCount() > 0) {
+            if ($sql->rowCount() >= 0) {
                 return $sql->fetchAll(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $e) {

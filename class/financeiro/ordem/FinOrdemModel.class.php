@@ -845,7 +845,8 @@ class FinOrdemModel {
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
-                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_utilizado"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_utilizado"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>';
                         
                         $label = "Quantidade";

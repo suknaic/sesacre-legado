@@ -149,6 +149,47 @@ class EmpenhoAnulacaoPesquisa {
         }
     }
     
+    function retornaAnulacoesAutorizacao(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $tabela = '';
+            $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+            $daoConEmpenhoAnulacao->retornaPesquisaEmpenhoAnulacao($pdo, $this->filtroSql());
+            if ($daoConEmpenhoAnulacao->getSucesso()) {
+                foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
+                    $cpf_cnpj_mascarado = !empty($linha['doc_fornecedor']) ? Metodos::formataCnpj($linha['doc_fornecedor']) : "";
+                    $tabela .= '<tr>'
+                                . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
+                                . '<td class="text-center">'.$linha['nr_empenho'].'</td>'
+                                . '<td class="text-center">'.$linha['nr_pedido'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_lotacao'].'</td>'
+                                . '<td class="text-center">'.$cpf_cnpj_mascarado . ' - '. $linha['nm_fornecedor'].'</td>'
+                                . '<td class="text-center">'.$linha['dt_empenho_anulacao'].'</td>'
+                                . '<td class="text-center">'.$linha['vl_empenho_anulacao'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
+                                . '<td class="text-center">'
+                                    . '<button type="button" title="Ver do Anulação do Empenho" class="ver-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
+                                        . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
+                                    . '</button>';
+                    
+                        if ($linha['id_empenho_anulacao_situacao'] == 1) {
+                            $tabela .=  '<button type="button" title="Autorizar Anulação do Empenho" class="autorizar-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
+                                        . '<i class="fa fa-gavel text-info" aria-hidden="true"></i>'
+                                    . '</button>';
+                        }
+                                    
+                        $tabela .= '</td>'
+                            . '</tr>';                    
+                    }
+                }
+            return $tabela;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR );
+        }
+    }
+    
     private function filtroSql(){
 
         $array_filtro = array();

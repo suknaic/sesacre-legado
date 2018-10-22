@@ -20,7 +20,7 @@ switch ($_REQUEST['acao']) {
                             ->setTipoGasto($dados['tipo_gasto'])
                             ->setSituacao($dados['situacao'])
                             ->setCentralDemanda($dados['central_demanda']);
-            echo $empenhoAnulacaoPesquisa->retornaAnulacoes();
+            echo $empenhoAnulacaoPesquisa->retornaAnulacoesAutorizacao();
             return;
             break;
         } catch (Error $e) {

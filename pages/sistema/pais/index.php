@@ -22,6 +22,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
+        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
     </head>
@@ -64,18 +66,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                                             <div class="form-group">
                                                 <div class="col-sm-3"></div>
                                                 <div class="col-sm-3">
-                                                    <label class="control-label" for="nmPais">Nome do Páis: <span class="text-danger">*</span></label>
+                                                    <label class="control-label" for="nmPais">Nome do País: <span class="text-danger">*</span></label>
                                                     <input type="text" placeholder="Nome do Pais" id="nmPais" class="form-control" required autofocus>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label class="control-label" for="nmSigla">Nome da Sigla: <span class="text-danger">*</span></label>
-                                                    <input type="text" placeholder="Nome da Sigla" id="nmSigla" class="form-control" maxlength="3" >
+                                                    <label class="control-label" for="nmSigla">Sigla: <span class="text-danger">*</span></label>
+                                                    <input type="text" placeholder="Sigla" id="nmSigla" class="form-control" maxlength="3" >
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                                 Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-info btn-rounded btn-editar" style="display: none;">
                                                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
@@ -93,7 +95,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
                         <!-- Fim do Formulario -->
                         <div class="panel">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Países</h3>
+                                <h3 class="panel-title">Lista de Países</h3>
                             </div>
                             <div class="panel-body">
                                 <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -146,10 +148,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pais/index.load.php";
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
+        <!--DataTables-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>

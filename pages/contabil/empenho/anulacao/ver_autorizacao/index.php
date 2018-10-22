@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Detalhes da Anulação do Empenho</h1> 
+                        <h1 class="page-header text-overflow">Autorização da Anulação do Empenho</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/empenho/anulacao/pesquisa/">Voltar</a></li>                        
@@ -140,22 +140,22 @@ require_once "index.load.php";
                                                     <input type="hidden" id="id_empenho_anulacao" value="" />
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da Anulação:</b></div>
+                                                            <div class="col-sm-2"><b>Nº da Anulação:</b> <span class="text-danger">*</span></b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosAnulacao['nr_empenho_anulacao']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosAnulacao['nr_empenho_anulacao']; ?>"  />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Anulação:</b></div>
+                                                            <div class="col-sm-2"><b>Data da Anulação:</b> <span class="text-danger">*</span></b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_empenho_anulacao" id="dt_empenho_anulacao" value="<?php echo $dadosAnulacao['dt_empenho_anulacao']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="dt_empenho_anulacao" id="dt_empenho_anulacao" value="<?php echo $dadosAnulacao['dt_empenho_anulacao']; ?>"  />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -214,10 +214,59 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body remetente">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente">
+                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <button class="btn btn-success btn-rounded btn-deferir" type="button" value="2">
+                                                        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Deferido
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-danger btn-rounded btn-deferir" type="button" value="3">
+                                                        <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Indeferido
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <div class="panel ">
-                                    <div class="panel-body">
-                                        <div class="row">
+<!--                                <div class="panel ">
+                                    <div class="panel-body">-->
+<!--                                        <div class="row">
 
                                             <div class="col-md-2" style="display:inline-block;">
                                                 <button class="btn btn-success btn-rounded btn-deferir" type="button" value="2">
@@ -231,9 +280,9 @@ require_once "index.load.php";
                                                     <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Indeferido
                                                 </button>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        </div>-->
+<!--                                    </div>
+                                </div>-->
                                 <br>
                             </div>
 
