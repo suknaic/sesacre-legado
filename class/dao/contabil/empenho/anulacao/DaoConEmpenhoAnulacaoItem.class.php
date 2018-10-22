@@ -19,9 +19,9 @@ class DaoConEmpenhoAnulacaoItem extends ConEmpenhoAnulacaoItem {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "insert into con_empenho_anulacao_item "
-                . "(id_empenho_anulacao, id_pre_ordem, qt_item,vl_item,qt_anulado,vl_anulado,vl_saldo) "
+                . "(id_empenho_anulacao, id_pre_ordem, qt_item,vl_item,qt_anulado,vl_anulado,vl_saldo,vl_utilizado) "
                 . "values "
-                . "(:id_empenho_anulacao, :id_pre_ordem, :qt_item,:vl_item,:qt_anulado,:vl_anulado, :vl_saldo)";
+                . "(:id_empenho_anulacao, :id_pre_ordem, :qt_item,:vl_item,:qt_anulado,:vl_anulado, :vl_saldo, :vl_utilizado)";
         try {
             if(!empty($pdo)){
                 $stmt = $pdo->prepare($sql);
@@ -32,6 +32,8 @@ class DaoConEmpenhoAnulacaoItem extends ConEmpenhoAnulacaoItem {
                 $stmt->bindValue(":qt_anulado", $this->getQtAnulacao(), PDO::PARAM_STR);
                 $stmt->bindValue(":vl_anulado", $this->getVlAnulado(), PDO::PARAM_STR);
                 $stmt->bindValue(":vl_saldo", $this->getVlSaldo(), PDO::PARAM_STR);
+                $stmt->bindValue(":vl_utilizado", $this->getVlUtilizado(), PDO::PARAM_STR);
+                
                 $stmt->execute();
                 $this->sucesso = true;
             } else {

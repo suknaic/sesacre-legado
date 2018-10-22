@@ -34,7 +34,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
-            echo $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
+            echo $finEmpenhoModel->trEmpenhoBuscaAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {
@@ -116,10 +116,10 @@ switch ($_REQUEST['acao']) {
                 $perfilTI = true;
             }
             
-            echo "<pre>";
-            print_r($dados);
-            echo "</pre>";
-            return;
+//            echo "<pre>";
+//            print_r($dados);
+//            echo "</pre>";
+//            return;
             $empenho = new EmpenhoAnulacao();
             $empenho->setIdEmpenho((int)$dados['idEmpenho'])
                         ->setIdPessoa($session->getIdUser())
@@ -127,6 +127,9 @@ switch ($_REQUEST['acao']) {
                         ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
                         ->setItens($dados['itens'])
                         ->setDsJustificativa(trim($dados['justificativa']));                       
+            $empenho->setIdDocTipoLotacao((int)$dados['idDocTipoLotacao']);
+            $empenho->setIdLotacao((int)$dados['idLotacao']);
+            $empenho->setVlEmpenhoSaldo($dados['saldo_empenho']);
             echo $empenho->salvarAnulacao($perfilTI);
             return;
             break;

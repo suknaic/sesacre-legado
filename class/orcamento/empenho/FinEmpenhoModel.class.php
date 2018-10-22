@@ -740,6 +740,7 @@ class FinEmpenhoModel {
                                                 <div class="panel-body">
                                                     <input id="id_empenho" type="hidden" value="' . $campos['id_empenho'] . '" />
                                                     <input id="numero_empenho" type="hidden" value="'.$campos["nr_empenho"].'" />
+                                                    <input id="saldo_empenho" type="hidden" value="'.$campos["saldo"].'" />                                                    
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dataempenho"] . '</div>
@@ -800,6 +801,30 @@ class FinEmpenhoModel {
         }
         return $retorno;
     }
+    
+    public function trEmpenhoBuscaAnulacaoEmpenho() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoFinEmpenho = new DaoFinEmpenho();
+        $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+
+        $retorno = '';
+        if ($daoFinEmpenho->sucesso()) {
+            foreach ($daoFinEmpenho->getMsgRetorno() as $dados) {
+                $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '"  idEmpenho="' . $dados["id_empenho"] . '" nrPedido="' . $dados["nr_pedido"] . '" 
+                    style="cursor:pointer;">
+                <td>' . $dados["nr_empenho"] . '</td>
+                <td>' . $dados["nm_tipo_empenho"] . '</td>
+                <td>' . $dados["nr_fonte"] . '</td>
+                <td>' . $dados["cd_despesa_elemento"] . '</td>
+                <td>' . Metodos::ConverteValorBr($dados["vl_empenho"], 4) . '</td>    
+                <td>' . Metodos::ConverteValorBr($dados["saldo"], 4) . '</td>
+                </tr>';
+            }
+        }
+        return $retorno;
+    }
 
     public function buscaEmpenhoParaLiquidacao() {
         $conexao = new Conexao();
@@ -815,6 +840,8 @@ class FinEmpenhoModel {
         }
         return Metodos::retornoAjax("no", "no", array());
     }
+    
+    
 
     /**
      * Retorna os dados do empenho 

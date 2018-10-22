@@ -261,7 +261,9 @@ $(document).ready(function () {
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
                 "itens": itens,
-                "justificativa": ""
+                "justificativa": "",
+                "saldo_empenho": $("#saldo_empenho").val()
+                
             }
             
             if(dados.idLotacao == 0 || dados.idLotacao == undefined){
