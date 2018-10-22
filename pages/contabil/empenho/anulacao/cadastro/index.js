@@ -129,7 +129,7 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaEmpenhoLiquidacao",
+                "acao": "retornaEmpenhoAnulacao",
                 "dados": dados
 
             },

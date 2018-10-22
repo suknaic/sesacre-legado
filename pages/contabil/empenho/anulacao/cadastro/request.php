@@ -71,14 +71,14 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaEmpenhoLiquidacao':
+    CASE 'retornaEmpenhoAnulacao':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoLiquidacao(null);
+            echo $finEmpenhoModel->retornaEmpenhoAnulacao(null);
             return;
             break;
         } catch (Error $e) {
