@@ -43,6 +43,18 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    $.ajax({
+        "url": url,
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function(response){
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
+    });
                         
     
     //$('.docFis').hide();
@@ -129,7 +141,7 @@ $(document).ready(function () {
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaEmpenhoLiquidacao",
+                "acao": "retornaEmpenhoAnulacao",
                 "dados": dados
 
             },
@@ -154,21 +166,14 @@ $(document).ready(function () {
             "success": function (response){
                 $("#tabelaItensPedido tbody").html("");
                 $("#tabelaItensPedido tbody").html(response);    
-                $(".qtd_anulacao").val(0)
-                $(".vl_anulacao").val(0)
+                $(".qtd_anulacao").val(0)                
                 
                 $(".qtd_anulacao").priceFormat({
                     centsLimit: 4,
                     prefix: '',
                     centsSeparator: ',',
                     thousandsSeparator: '.',
-                });
-                $(".vl_anulacao").priceFormat({
-                    centsLimit: 4,
-                    prefix: '',
-                    centsSeparator: ',',
-                    thousandsSeparator: '.',
-                });
+                });                
             }
         });
     }
@@ -178,9 +183,7 @@ $(document).ready(function () {
     $('body').on('keyup', '.qtd_anulacao', function(){
         calculaValorTotal(this);
     });  
-    $('body').on('keyup', '.vl_anulacao', function(){
-        calculaValorTotal(this);
-    });  
+    
            
     //Calculo da Tabela dos Itens
     function calculaValorTotal(elemento){
@@ -189,12 +192,8 @@ $(document).ready(function () {
         
         qtd = $(elemento).closest("tr").find('.qtd_anulacao').val();
         
-        if($(elemento).closest("tr").find('.vl_anulacao').length > 0){
-            valor = $(elemento).closest("tr").find('.vl_anulacao').val();
-            valor = func.converteValorIngFloat(valor);   
-        }else{
-            valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
-        }                               
+        valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
+                                       
         qtd = func.converteValorIngFloat(qtd);                       
         console.log(`Quantidade: ${qtd} ... Valor Unitário: ${valor}`)                           
         $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
@@ -245,39 +244,42 @@ $(document).ready(function () {
             $(".itens").each(function(){   
                 let qtd = $(this).closest("tr").find('.qtd_anulacao').val();
                 qtd = func.converteValorIngFloat(qtd);  
-                let valor = 0;
-                if($(this).closest("tr").find('.vl_anulacao').length > 0){
-                    valor = $(this).closest("tr").find('.vl_anulacao').val();
-                    valor = func.converteValorIngFloat(valor);
-                    if((valor == 0 || isNaN(valor))){
-                        qtd = 0;
-                        valor = 0; 
-                    }
-                }
+
                 if( !(qtd == 0 || isNaN(qtd) ) ){
                     itens.push({
                         id: $(this).closest("tr").find('.qtd_anulacao').attr('idpreordem'),
-                        quantidade : qtd,
-                        valor: valor
+                        quantidade : qtd
+                        //valor: valor
                     })                    
                 }
             });                                                
                         
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),                
-                "nrAnulacao": $("#nr_anulacao").val(),
                 "vlAnulacao": $("#vl_anulacao").val(),
-                "dtAnulacao": $("#dt_anulacao").val(),
                 "anotacoes": $("#anotacoes").val(),
-                "itens": itens
+                "idLotacao": $("#id_remetente option:selected").data('lotacao'),
+                "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
+                "itens": itens,
+                "justificativa": "",
+                "saldo_empenho": $("#saldo_empenho").val()
+                
             }
             
-            if (!(dados.idEmpenho && dados.nrAnulacao && dados.vlAnulacao 
-                    && dados.dtAnulacao )) {
+            if(dados.idLotacao == 0 || dados.idLotacao == undefined){
+                func.modalAlert("É Necessário informar um Remetente");
+                $this.prop("disabled", false);
+                return false;
+            }         
+            
+            if (!(dados.idEmpenho && dados.vlAnulacao )) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 $this.prop("disabled", false);
                 return false;
             }                        
+            
+            
+            
             
             if (dados.itens.length <= 0) {
                 func.modalAlert("É Necessário que ao menos um Item do Pedido tenha os Valores de Anulação informado.");
@@ -285,61 +287,114 @@ $(document).ready(function () {
                 return false;
             }
 
-            $.ajax({
-                "url": "request.php",
-                "method": "POST",
-                "dataType": "html",
-                "data": {
-                    "acao": "cadastrarAnulacao",
-                    "dados": dados
+            $this.prop("disabled", false);
+            bootbox.confirm({
+                title: 'Anulação do Empenho',
+                message: 'Você tem Certeza que deseja continuar com o \n\
+                    Anulação do Empenho <span class="text-danger">' + $("#numero_empenho").val() + '</span>?\n\
+                    <br> \n\
+                    <div class="form-group"> \n\
+                        <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label> \n\
+                        <div class="input-group"> \n\
+                            <span class="input-group-addon"> \n\
+                                <p class="fa fa-list inputPFa"></p> \n\
+                            </span> \n\
+                            <textarea id="rem_justificativa" class="form-control"></textarea>\n\
+                        </div> \n\
+                    </div>',           
+                buttons: {
+                    'cancel': {
+                        label: 'Não',
+                        className: 'btn-default btn-rounded'
+                    },
+                    'confirm': {
+                        label: 'Sim',
+                        className: 'btn-primary btn-rounded'
+                    }
                 },
-                "success": function (response) {
-                    console.log(response);
-                    $this.prop("disabled", false);
-                    return false;
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
 
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        return false;
-                    }
+                callback: function (result) {                
 
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
+                    if (result) {                                                            
+                        if($("#rem_justificativa").val() == ""){
+                            func.modalAlert("É Necessário Informar um Justificativa.");                        
+                            return true;
                         }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
-                            //location.reload();
-                        });
-                        return false;
-                    } else {
-                        console.log('Ultimo else');
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
+                            
+                        dados.justificativa = $("#rem_justificativa").val();                       
+
+                        $.ajax({
+                            "url": "request.php",
+                            "method": "POST",
+                            "dataType": "html",
+                            "data": {
+                                "acao": "cadastrarAnulacao",
+                                "dados": dados
+                            },
+                            "success": function (response) {
+                                console.log(response);
+
+                                if (response.trim() == "SessaoExpirada") {
+                                    func.modalAlert(func.msgSemPermissao);
+                                    return false;
+                                }
+
+                                try {
+                                    response = JSON.parse(response);
+                                } catch (e) {
+                                    func.modalAlert(func.msgErroPadrao);
+                                    console.log("Parse JSON");
+                                    return false;
+                                }
+
+                                if (response.tipoMsg === "Erro") {
+                                    if (response.tipoExibicao === "console") {
+                                        console.log('Console Mensagem');
+                                        func.modalAlert(func.msgErroPadrao);
+                                        return false;
+                                    } else if (response.tipoExibicao === "alert") {
+                                        func.modalAlert(response.msg);
+                                        return false;
+                                    }
+                                } else if (response.tipoMsg === "ok") {
+                                    func.modalAlert(response.msg, 'success');
+                                    $('.modal-alert').on('hidden.bs.modal', function (e) {
+                                        //window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
+                                        location.reload();
+                                    });
+                                    return false;
+                                } else {
+                                    console.log('Ultimo else');
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                }
+                            },
+                            "error": function (response) {
+                                $this.prop("disabled", false);
+                                func.modalAlert(func.msgErroPadrao);
+                                return false;
+                            }
+                        });                      
                     }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao);
-                    return false;
                 }
             });
+
+
+
+
+
+
+            
         }
     });
+    
+    
+    
+    
+    
+    
+    
+    
 
 });
 

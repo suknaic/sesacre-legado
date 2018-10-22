@@ -271,5 +271,69 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
         }
     }
     
+    function retornaLotacaoTipoAnulacaoEmpenhoPorUsuario (PDO $pdo = null){
+        try {
+            $sql = "select distinct
+                        svt.id_lotacao,
+                        svt.id_doc_tipo_lotacao,
+                        nm_lotacao,
+                        nm_doc_tipo_lotacao 
+                     from
+                        ses_vincular_tramitacao as svt 
+                        inner join
+                           ses_lotacao as lot 
+                           on lot.id_lotacao = svt.id_lotacao 
+                        inner join
+                           fin_doc_tipo_lotacao as tipoLot 
+                           on tipoLot.id_doc_tipo_lotacao = svt.id_doc_tipo_lotacao 
+                     where svt.id_pessoa = :id_pessoa
+                     and svt.id_tramitacao = 4 --Liquidar";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    function retornaLotacaoTipoAutorizacaoAnulacaoEmpenhoPorUsuario (PDO $pdo = null){
+        try {
+            $sql = "select distinct
+                        svt.id_lotacao,
+                        svt.id_doc_tipo_lotacao,
+                        nm_lotacao,
+                        nm_doc_tipo_lotacao 
+                     from
+                        ses_vincular_tramitacao as svt 
+                        inner join
+                           ses_lotacao as lot 
+                           on lot.id_lotacao = svt.id_lotacao 
+                        inner join
+                           fin_doc_tipo_lotacao as tipoLot 
+                           on tipoLot.id_doc_tipo_lotacao = svt.id_doc_tipo_lotacao 
+                     where svt.id_pessoa = :id_pessoa
+                     and svt.id_tramitacao = 5 --Autorização da Anulação do Empenho";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
 }
 

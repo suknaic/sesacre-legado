@@ -21,11 +21,11 @@ class DaoConEmpenhoAnulacaoAnotacao extends ConEmpenhoAnulacaoAnotacao {
         $sql = "INSERT INTO con_empenho_anulacao_anotacao (id_pessoa, id_empenho_anulacao, ds_empenho_anulacao_anotacao)"                    
                     . " VALUES (:id_pessoa, :id_empenho_anulacao, :ds_empenho_anulacao_anotacao);";
         try {
-            if (!empty($pdo)) {
+            if (!empty($pdo)) {                    
                 $stmt = $pdo->prepare($sql);                                        
                 $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);            
                 $stmt->bindValue(":id_empenho_anulacao", $this->getIdEmpenhoAnulacao(), PDO::PARAM_INT);            
-                $stmt->bindValue(":ds_liquidacao_anotacao", $this->getDsEmpenhoAnulacaoAnotacao(), PDO::PARAM_STR);            
+                $stmt->bindValue(":ds_empenho_anulacao_anotacao", $this->getDsEmpenhoAnulacaoAnotacao(), PDO::PARAM_STR);            
                 $stmt->execute();
                 $this->sucesso = true; 
             } else {
@@ -58,8 +58,7 @@ class DaoConEmpenhoAnulacaoAnotacao extends ConEmpenhoAnulacaoAnotacao {
     public function lista(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "select pessoa.nm_pessoa, to_char(anotacao.dh_empenho_anulacao_anotacao,'dd/mm/yyyy HH24:MI:SS') as dh_empenho_anulacao_anotacao, 
-                    anotacao.ds_empenho_anulacao_anotacao
+        $sql = "select (pessoa.nm_pessoa || ' - ' || to_char(anotacao.dh_empenho_anulacao_anotacao,'dd/mm/yyyy HH24:MI:SS') || ': ' || anotacao.ds_empenho_anulacao_anotacao) as anotacao
                     from con_empenho_anulacao_anotacao as anotacao
                     inner join ses_pessoa as pessoa
                     on pessoa.id_pessoa = anotacao.id_pessoa

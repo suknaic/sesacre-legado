@@ -17,15 +17,30 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFis
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/empenho/EmpenhoAnulacao.class.php";
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/preOrdem/PreOrdem.class.php";
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 
-$session = new Session('ajax');
+$session = new Session();
+
+
+$idAnulacao = 38;
+
+//echo $idAnulacao;
+
+//echo round(3.990666667, 4);
+//echo " - ";
+//echo round(35916.3, 4);
+//echo " - ";
+//echo round(2757.092527488, 4);
+$conexao = new Conexao();
+$pdo = $conexao->connect();
+$pdo->beginTransaction();
 
 $empenhoAnulacao = new EmpenhoAnulacao();
-$empenhoAnulacao->setIdEmpenhoAnulacao(12);
-$empenhoAnulacao->setIdPessoa(2);
-$empenhoAnulacao->setIdEmpenhoAnulacaoSituacao(2);
-var_dump($empenhoAnulacao->deferimentoDaAnulacaoEmpenho());
+$empenhoAnulacao->setIdEmpenhoAnulacao($idAnulacao);
+$empenhoAnulacao->atualizaValoresFinPreOrdem($pdo);
+$pdo->rollBack();
+echo "<br>";
+echo "FECHOU";

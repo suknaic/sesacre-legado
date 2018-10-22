@@ -22,10 +22,45 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/preOrdem/PreOrdem.cl
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 
+
+
+
 $session = new Session('ajax');
 
-$empenhoAnulacao = new EmpenhoAnulacao();
-$empenhoAnulacao->setIdEmpenhoAnulacao(12);
-$empenhoAnulacao->setIdPessoa(2);
-$empenhoAnulacao->setIdEmpenhoAnulacaoSituacao(2);
-var_dump($empenhoAnulacao->deferimentoDaAnulacaoEmpenho());
+switch ($_REQUEST['acao']) {
+
+
+    CASE 'cadastrarAnulacao':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $empenhoAnulacao = new EmpenhoAnulacao();
+            $empenhoAnulacao->setIdEmpenhoAnulacao($dados["pagamento"]);
+            $empenhoAnulacao->setIdPessoa($session->getIdUser());
+            $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao($dados["deferir"]);
+            $empenhoAnulacao->setNrAnulacao($dados['nr_anulacao']);
+            $empenhoAnulacao->setDtAnulacao($dados['dt_anulacao']);
+            $empenhoAnulacao->setIdLotacao($dados['id_lotacao']);
+            $empenhoAnulacao->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
+            echo $empenhoAnulacao->deferimentoDaAnulacaoEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioAutorizacaoAnulacaoEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+}
+

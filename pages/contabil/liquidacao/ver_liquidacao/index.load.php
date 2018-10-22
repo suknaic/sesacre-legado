@@ -24,11 +24,9 @@ $liquidacao->setIdLiquidacao($id);
 //DADOS DA LIQUIDAÇÃO
 $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 
-//OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
 $historico = $liquidacao->retornaHistorico();
-
 
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
@@ -36,7 +34,6 @@ if ($dadosLiquidacao['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃ
     $tem_documentos = true;
     $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao(false);
 }
-
 
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);

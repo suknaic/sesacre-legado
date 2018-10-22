@@ -52,70 +52,64 @@ class DaoFinOrdem extends FinOrdemTb {
     public function listaItensPreOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select pre.id_pre_ordem, p.id_pedido, p.nr_pedido, p.ds_pedido, tp.nm_tipo_gasto, mat.cd_material, mat.nm_material, mat.nm_grupo,
-                        mat.nm_sub_grupo, desp.ds_despesa_elemento, mat.tp_material, contItens.nr_lote, mat.nm_desc_material,
-                        pre.qt_itens_pre, pre.vl_itens_pre, contItens.nr_item, unid.nm_unidade_medida, contItens.fl_valor_variavel,
-                        CASE WHEN mat.tp_material = 'C'
-                        THEN coalesce(pre.qt_itens_pre,0.0000)
-                        ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
-                        END as total,
+                $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
+                        unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
+                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel, (pre.qt_itens_pre * pre.vl_itens_pre ) as total,
+                        case 
+                                when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                            then  coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000')
+                            when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
+                            then coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000')
+                        end utilizado,
 
-                        coalesce((select 
-                                     CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
-                                     THEN  coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
-                                     ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
-                                     from fin_ordem as ordem
-                                     inner join fin_ordem_itens as itemOrdem
-                                     on ordem.id_ordem =  itemOrdem.id_ordem 
-                                     inner join fin_pre_ordem as preSub
-                                     on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
-                                     inner join fin_cont_itens as contItensSub
-                                     on contItensSub.id_cont_itens = pre.id_cont_itens
-                                     inner join pla_material as matSub
-                                     on matSub.id_material = contItensSub.id_material
-                                     where ordem.sit_ordem > '0' 
-                                     and itemOrdem.id_pre_ordem = pre.id_pre_ordem
-                                     group by itemOrdem.id_pre_ordem, matSub.tp_material
-                                     ),0.0000) as utilizado,
+                        coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000') as qt_utilizado,
 
-                        (CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
-                        THEN  coalesce(pre.qt_itens_pre,0.0000)
-                        ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
-                        END
-                        -
-                        coalesce((select 
-                                     CASE WHEN matSub.tp_material = 'C' OR matSub.tp_material = 'P' 
-                                     THEN coalesce(sum(itemOrdem.qt_itens_ordem),0.0000)
-                                     ELSE coalesce(sum((itemOrdem.qt_itens_ordem * itemOrdem.vl_itens_ordem)),0.0000) END as uti	
-                                     from fin_ordem as ordem
-                                     inner join fin_ordem_itens as itemOrdem
-                                     on ordem.id_ordem =  itemOrdem.id_ordem 
-                                     inner join fin_pre_ordem as preSub
-                                     on itemOrdem.id_pre_ordem = preSub.id_pre_ordem
-                                     inner join fin_cont_itens as contItensSub
-                                     on contItensSub.id_cont_itens = pre.id_cont_itens
-                                     inner join pla_material as matSub
-                                     on matSub.id_material = contItensSub.id_material
-                                     where ordem.sit_ordem > '0'
-                                     and itemOrdem.id_pre_ordem = pre.id_pre_ordem
-                                     group by itemOrdem.id_pre_ordem, matSub.tp_material
-                                     ),0.0000) 
-                        ) as saldo
+                        coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000') as vl_utilizado,
 
-                        from fin_pre_ordem as pre
-                        inner join fin_pedido as p
-                        on p.id_pedido = pre.id_pedido
-                        inner join pla_tipo_gasto as tp
-                        on tp.id_tipo_gasto = p.id_tipo_gasto
-                        inner join fin_cont_itens as contItens
-                        on contItens.id_cont_itens = pre.id_cont_itens
+
+                        case 
+                                when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                            then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
+                            when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
+                            then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                        end saldo
+                        from fin_pedido as pedido
+                        inner join fin_pre_ordem as pre
+                        on pedido.id_pedido = pre.id_pedido
+                        inner join fin_cont_itens as itens 
+                        on itens.id_cont_itens = pre.id_cont_itens
                         inner join pla_material as mat
-                        on mat.id_material = contItens.id_material
+                        on mat.id_material = itens.id_material
+                        inner join view_despesa as desp
+                        on desp.id_despesa = mat.id_despesa
                         inner join pla_unidade_medida as unid
-                        on unid.id_unidade_medida = contItens.id_unidade_medida
-                        inner join view_despesa_elemento as desp
-                        on desp.id_despesa_elemento = p.id_despesa_elemento
-                        where pre.id_pedido = :pedido order by contItens.nr_lote, contItens.nr_item";
+                        on unid.id_unidade_medida = itens.id_unidade_medida
+                        left join (select sum(itens.qt_itens_ordem) as qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,  
+                                                itens.id_pre_ordem
+                                                from fin_ordem as ordem
+                                    inner join fin_ordem_itens as itens
+                                    on ordem.id_ordem = itens.id_ordem
+                                    where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
+                                    group by itens.id_pre_ordem
+                                  ) as ordemItens
+                        on ordemItens.id_pre_ordem = pre.id_pre_ordem
+
+                        left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
+                                           from fin_pedido as pedido 
+                                   inner join fin_ordem as ordem
+                                   on ordem.id_pedido = pedido.id_pedido
+                                   inner join fin_ordem_itens as ordemItens 
+                                   on ordemItens.id_ordem = ordem.id_ordem
+                                   inner join fin_entrega_confirmacao as confirmacao
+                                   on confirmacao.id_ordem = ordem.id_ordem
+                                   inner join fin_entrega_itens as itens
+                                   on itens.id_ordem_itens = ordemItens.id_ordem_itens
+                                   where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                                   group  by  ordemItens.id_pre_ordem
+                                   ) as entregas
+                        on entregas.id_pre_ordem = pre.id_pre_ordem
+                        where pedido.id_pedido = :pedido
+                        order by itens.nr_lote, itens.nr_item";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -550,6 +544,105 @@ class DaoFinOrdem extends FinOrdemTb {
             }
         } catch (PDOException $e) {
             $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
+    
+    /**
+     * 
+     * @param type $itens
+     * @param PDO $pdo
+     */
+    public function listaItensPreOrdemPorPreOrdem($itens, PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
+                        unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
+                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel,
+                        case 
+                                when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                                then pre.qt_itens_pre
+                                when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
+                                then pre.qt_itens_pre * pre.vl_itens_pre 
+                        end total,
+
+                        case 
+                                when( mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                                then  coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000')
+                                when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
+                                then coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000')
+                        end utilizado,
+                        
+                        coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000') as qt_utilizado,
+
+                        coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000') as vl_utilizado,
+
+                        case 
+                                when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                                then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
+                                when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
+                                then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                        end saldo
+
+                        from fin_pedido as pedido
+
+                        inner join fin_pre_ordem as pre
+                        on pedido.id_pedido = pre.id_pedido
+
+                        inner join fin_cont_itens as itens 
+                        on itens.id_cont_itens = pre.id_cont_itens
+
+                        inner join pla_material as mat
+                        on mat.id_material = itens.id_material
+
+                        inner join view_despesa as desp
+                        on desp.id_despesa = mat.id_despesa
+
+                        inner join pla_unidade_medida as unid
+                        on unid.id_unidade_medida = itens.id_unidade_medida
+
+                        left join (select sum(itens.qt_itens_ordem) as qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,  
+                                           itens.id_pre_ordem
+
+                                                from fin_ordem as ordem
+                                                inner join fin_ordem_itens as itens
+                                                on ordem.id_ordem = itens.id_ordem
+                                                where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
+                                                group by itens.id_pre_ordem
+                                          ) as ordemItens
+                        on ordemItens.id_pre_ordem = pre.id_pre_ordem
+
+                        left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
+                                                from fin_pedido as pedido 
+                                                inner join fin_ordem as ordem
+                                                on ordem.id_pedido = pedido.id_pedido
+                                                inner join fin_ordem_itens as ordemItens 
+                                                on ordemItens.id_ordem = ordem.id_ordem
+                                                inner join fin_entrega_confirmacao as confirmacao
+                                                on confirmacao.id_ordem = ordem.id_ordem
+                                                inner join fin_entrega_itens as itens
+                                                on itens.id_ordem_itens = ordemItens.id_ordem_itens
+                                                where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                                                group  by  ordemItens.id_pre_ordem
+                                           ) as entregas
+                        on entregas.id_pre_ordem = pre.id_pre_ordem
+
+                        where pre.id_pre_ordem in ( ".$itens." )";                        
+                $stmt = $pdo->prepare($sql);                
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão';
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
     

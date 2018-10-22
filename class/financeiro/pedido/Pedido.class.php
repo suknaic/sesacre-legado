@@ -404,10 +404,12 @@ class Pedido {
         }
     }
 
-    public function retornaDadosPedido() {
+    public function retornaDadosPedido(PDO $pdo = null) {
         try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->setIdPedido($this->idPedido);
             $daoFinPedido->retornaDadosPedido($pdo);

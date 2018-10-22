@@ -81,7 +81,7 @@ require_once "index.load.php";
                                                             <th>Fonte</th>
                                                             <th>Elemento de Despesa</th>                                                            
                                                             <th>Valor Total</th>
-                                                            <th>Saldo a Liquidar</th>
+                                                            <th>Saldo a Anular do Empenho</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -157,17 +157,14 @@ require_once "index.load.php";
                                                                         <tr>
                                                                             <th class="text-center">Nº</th>
                                                                             <th class="text-center">Item</th>
-                                                                            <th class="text-center">Descrição</th>
-                                                                            <th class="text-center">Grupo</th>
-                                                                            <th class="text-center">Sub Grupo</th>
-                                                                            <th class="text-center">Unid</th>
-                                                                            <th class="text-center">Despesa</th>
+                                                                            <th class="text-center">Descrição</th>                                                                                                                                                        
                                                                             <th class="text-center">Tipo</th>
                                                                             <th class="text-center">Lote</th>
                                                                             <th class="text-center">QTD</th>
                                                                             <th class="text-center">Valor Unit</th>
                                                                             <th class="text-center">Total</th>
-                                                                            <th class="text-center">Utilizado</th>
+                                                                            <th class="text-center">Qtd. Utilizado</th>
+                                                                            <th class="text-center">Valor Utilizado</th>
                                                                             <th class="text-center">Saldo</th>
                                                                             <th class="text-center">Valores Para Anulação</th>
                                                                             <th class="text-center">Valor Total</th>
@@ -197,28 +194,6 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº da Anulação:</b> <span class="text-danger">*</span></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_anulacao" id="nr_anulacao" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-                                                        
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Anulação:</b> <span class="text-danger">*</span></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_anulacao" id="dt_anulacao" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Valor Total:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
@@ -229,6 +204,34 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>                                                       
 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body remetente">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente">
+                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -312,6 +315,9 @@ require_once "index.load.php";
         
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>  
         
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>

@@ -839,28 +839,31 @@ class FinOrdemModel {
                         $retorno .= '<tr>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
-                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>
-                                        <td class="text-center">' . $linha["nm_grupo"] . '</td>
-                                        <td class="text-center">' . $linha["nm_sub_grupo"] . '</td>
-                                        <td class="text-center">' . $linha["nm_unidade_medida"] . '</td>    
-                                        <td class="text-center">' . wordwrap($linha["ds_despesa_elemento"], 20, "<br />\n") . '</td>
+                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
                                         <td class="text-center">' . $linha["tp_material"] . '</td>
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
-                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
-                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_utilizado"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_utilizado"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>';
+                        
+                        $label = "Quantidade";
+//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+//                            $label = "Vlr. Unitário";
+//                        }
+                        
+                        $retorno .= '<td class="text-center itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
                                             quantidade="' . $linha["saldo"] . '"
                                             class="form-control input-sm qtd_anulacao" >';
 
-                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
-                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
-					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
-                        }
+//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+//                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
+//					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
+//                        }
                         $retorno .= '</td>'
                                 . '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td></tr>';
                     }
@@ -871,6 +874,26 @@ class FinOrdemModel {
                 return $retorno;
             }
         }
+    }
+    
+    public function retornaItensParaAnulacaoEmpenhoPorItens(array $itens, PDO $pdo = null){
+        if (!empty($itens)){
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();            
+            }
+                        
+            $itens = implode(",", $itens);
+            
+            $daoFinOrdem = new DaoFinOrdem();            
+            $daoFinOrdem->listaItensPreOrdemPorPreOrdem($itens, $pdo);            
+            if ($daoFinOrdem->Sucesso()) {
+                return $daoFinOrdem->getMsgRetorno();                
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
     
 }

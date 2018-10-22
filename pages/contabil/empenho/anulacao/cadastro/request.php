@@ -18,6 +18,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/Vin
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/empenho/EmpenhoAnulacao.class.php";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/preOrdem/PreOrdem.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
+
+
 
 
 $session = new Session('ajax');
@@ -29,7 +34,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
-            echo $finEmpenhoModel->trEmpenhoBuscaLiquidacao();
+            echo $finEmpenhoModel->trEmpenhoBuscaAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {
@@ -66,14 +71,14 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaEmpenhoLiquidacao':
+    CASE 'retornaEmpenhoAnulacao':
         try {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pedido = new Pedido();
             $pedido->setNrPedido($dados);
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setIdPedido($dados["id_pedido"]);
-            echo $finEmpenhoModel->retornaEmpenhoLiquidacao(null);
+            echo $finEmpenhoModel->retornaEmpenhoAnulacao(null);
             return;
             break;
         } catch (Error $e) {
@@ -104,22 +109,28 @@ switch ($_REQUEST['acao']) {
             
             if (empty($dados['itens'])) {
                 $dados['itens'] = array();
-            }
-                       
+            }                                              
             
+            $perfilTI = false;
+            if($session->vPGeralAcao()){
+                $perfilTI = true;
+            }
+            
+//            echo "<pre>";
+//            print_r($dados);
+//            echo "</pre>";
+//            return;
             $empenho = new EmpenhoAnulacao();
-            $liquidacao->setIdEmpenho($dados['idEmpenho'])
-                       ->setUsuario($session->getIdUser())
-                       ->setIdLotacao($dados['idLotacao'])
-                       ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
-                       ->setNrLiquidacao($dados['nrLiquidacao'])
-                       ->setVlLiquidacao($dados['vlLiquidacao'])
-                       ->setDtLiquidacao($dados['dtLiquidacao'])
-                       ->setAnotacoes($dados['anotacoes'])
-                       ->setTipoSolicitacao($dados['tipoSolicitacao'])
-                       ->setQtdDocumentosDisponiveis($dados['qtdDocumentos'])
-                       ->setDocumentos($dados['docsLiquidacao']);
-            echo $liquidacao->salvarLiquidacao();
+            $empenho->setIdEmpenho((int)$dados['idEmpenho'])
+                        ->setIdPessoa($session->getIdUser())
+                        ->setVlAnulacao($dados['vlAnulacao'])
+                        ->setDsEmpenhoAnulacaoAnotacao(trim($dados['anotacoes']))
+                        ->setItens($dados['itens'])
+                        ->setDsJustificativa(trim($dados['justificativa']));                       
+            $empenho->setIdDocTipoLotacao((int)$dados['idDocTipoLotacao']);
+            $empenho->setIdLotacao((int)$dados['idLotacao']);
+            $empenho->setVlEmpenhoSaldo($dados['saldo_empenho']);
+            echo $empenho->salvarAnulacao($perfilTI);
             return;
             break;
         } catch (Error $e) {
@@ -134,6 +145,19 @@ switch ($_REQUEST['acao']) {
             $finEmpenhoModel = new FinEmpenhoModel();
             $finEmpenhoModel->setNrEmpenho($dados);
             echo $finEmpenhoModel->buscaEmpenhoParaLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+        
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioAnulacaoEmpenho();
             return;
             break;
         } catch (Error $e) {

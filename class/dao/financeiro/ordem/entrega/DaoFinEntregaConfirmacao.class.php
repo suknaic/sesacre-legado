@@ -515,8 +515,7 @@ where orItens.id_ordem = :ordem";
         }
     }
 
-    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, $idDocumentoFiscal
-    /*, string $sqlDocumentoExiste = null, int $idDocumentoFiscal = null, int $idDocSitCadastrado*/) {
+    public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, $idDocumentoFiscal ) {
         try {
 //            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
             if (!empty($idDocumentoFiscal)) {;
@@ -550,7 +549,6 @@ where orItens.id_ordem = :ordem";
                     on saldoEntregas.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
                     WHERE protocolo.id_ordem in(" . $idOrdens . ") and saldoEntregas.saldo > 0
                     order by  confirmacao.nr_entrega_confirmacao, concat(concat(ordem.nr_ordem,'/'),ordem.aa_ordem)";
-            
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
