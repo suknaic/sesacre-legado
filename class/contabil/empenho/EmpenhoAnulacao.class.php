@@ -232,7 +232,7 @@ class EmpenhoAnulacao {
             $finEmpenho->setIdEmpenho($this->idEmpenho);
             $dadosEmpenho = $finEmpenho->retornaDadosEmpenho($pdo);
 
-            if (empty($dadosEmpenho)) {
+            if (empty($dadosEmpenho)){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
             }
 
