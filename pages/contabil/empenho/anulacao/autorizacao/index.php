@@ -213,9 +213,9 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº da Anulação</th>
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Nº Pedido</th>
+                                                    <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Tipo de Gasto</th>
-                                                    <th class="text-center">Central de Demanda</th>
-                                                    <th class="text-center">CPF/CNPJ Fornecedor</th>
+                                                    <th class="text-center">Central de Demanda</th>                                                    
                                                     <th class="text-center">Data Anulação</th>
                                                     <th class="text-center">Valor Total</th>
                                                     <th class="text-center">Situação</th> 

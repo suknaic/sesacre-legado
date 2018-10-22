@@ -839,7 +839,7 @@ class FinOrdemModel {
                         $retorno .= '<tr>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
-                                        <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
+                                        <td class="text-center">' . wordwrap($linha["nm_desc_material"], 20, "<br />\n") . '</td>                                                                                                                        
                                         <td class="text-center">' . $linha["tp_material"] . '</td>
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
@@ -854,7 +854,7 @@ class FinOrdemModel {
 //                            $label = "Vlr. Unitário";
 //                        }
                         
-                        $retorno .= '<td class="text-center itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                        $retorno .= '<td class="text-right itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
                                             quantidade="' . $linha["saldo"] . '"
