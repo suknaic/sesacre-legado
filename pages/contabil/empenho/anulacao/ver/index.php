@@ -93,7 +93,7 @@ require_once "index.load.php";
                                                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">Itens Anulados do Pedido</h4>
+                                                            <h4 class="panel-title">Itens do Pedido para Anulação</h4>
                                                         </div>
                                                         <div class="panel-body">
                                                             <div class="form-group">
@@ -108,7 +108,8 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Lote</th>
                                                                                 <th class="text-center">Qtd.</th>
                                                                                 <th class="text-center">Valor Unit.</th>
-                                                                                <th class="text-center">Total</th>
+                                                                                <th class="text-center">Valor Total</th>
+                                                                                <th class="text-center qtdVlr"></th>
                                                                                 <th class="text-center">Saldo</th>
                                                                                 <th class="text-center">Qtd. Anulado</th>
                                                                                 <th class="text-center">Valor Anulado</th>
