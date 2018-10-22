@@ -578,6 +578,10 @@ class DaoFinOrdem extends FinOrdemTb {
                                 when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
                                 then coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000')
                         end utilizado,
+                        
+                        coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000') as qt_utilizado,
+
+                        coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000') as vl_utilizado,
 
                         case 
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
