@@ -147,7 +147,7 @@ require_once "index.load.php";
                                             <div class="panel-group" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Itens do Pedido Para Anulação</h4>
+                                                        <h4 class="panel-title">Dados dos Itens do Pedido de Necessidade</h4>
                                                     </div>
                                                     <div class="panel-body">                                                        
                                                         <div class="form-group">
@@ -160,14 +160,14 @@ require_once "index.load.php";
                                                                             <th class="text-center">Descrição</th>                                                                                                                                                        
                                                                             <th class="text-center">Tipo</th>
                                                                             <th class="text-center">Lote</th>
-                                                                            <th class="text-center">QTD</th>
-                                                                            <th class="text-center">Valor Unit</th>
-                                                                            <th class="text-center">Total</th>
+                                                                            <th class="text-center">Qtd.</th>
+                                                                            <th class="text-center">Valor Unitário</th>
+                                                                            <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Qtd. Utilizado</th>
                                                                             <th class="text-center">Valor Utilizado</th>
-                                                                            <th class="text-center">Saldo</th>
-                                                                            <th class="text-center">Valores Para Anulação</th>
-                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo a Anular</th>
+                                                                            <th class="text-center">Qtd. da Anulação</th>
+                                                                            <th class="text-center">Valor da Anulação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -190,7 +190,7 @@ require_once "index.load.php";
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Anulação</h4>
+                                                        <h4 class="panel-title">Dados da Anulação do Empenho</h4>
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
@@ -221,7 +221,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="row">
-                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>

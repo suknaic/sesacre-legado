@@ -248,7 +248,7 @@ class VincularTramitacao {
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
             
-            $daoSesVincularTramitacao->retornaLotacaoTipoAnulacaoEmpenhoPorUsuario($pdo);
+            $daoSesVincularTramitacao->retornaLotacaoTipoAutorizacaoAnulacaoEmpenhoPorUsuario($pdo);
             
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {

@@ -807,7 +807,7 @@ class FinEmpenhoModel {
         $pdo = $conexao->connect();
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
-        $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);
+        $daoFinEmpenho->buscaEmpenhoPesquisaAnulacaoEmpenho($pdo);
 
         $retorno = '';
         if ($daoFinEmpenho->sucesso()) {

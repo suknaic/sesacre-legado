@@ -129,9 +129,9 @@ class EmpenhoAnulacaoPesquisa {
                                 . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['nr_empenho'].'</td>'
                                 . '<td class="text-center">'.$linha['nr_pedido'].'</td>'
-                                . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'
-                                . '<td class="text-center">'.$linha['nm_lotacao'].'</td>'
                                 . '<td class="text-center">'.$cpf_cnpj_mascarado . ' - '. $linha['nm_fornecedor'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_lotacao'].'</td>'                                
                                 . '<td class="text-center">'.$linha['dt_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['vl_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
@@ -163,9 +163,9 @@ class EmpenhoAnulacaoPesquisa {
                                 . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['nr_empenho'].'</td>'
                                 . '<td class="text-center">'.$linha['nr_pedido'].'</td>'
-                                . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'
-                                . '<td class="text-center">'.$linha['nm_lotacao'].'</td>'
-                                . '<td class="text-center">'.$cpf_cnpj_mascarado . ' - '. $linha['nm_fornecedor'].'</td>'
+                                . '<td class="text-center">'.$cpf_cnpj_mascarado . ' - '. $linha['nm_fornecedor'].'</td>'    
+                                . '<td class="text-center">'.$linha['nm_tipo_gasto'].'</td>'                                
+                                . '<td class="text-center">'.$linha['nm_lotacao'].'</td>'                                
                                 . '<td class="text-center">'.$linha['dt_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['vl_empenho_anulacao'].'</td>'
                                 . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
@@ -175,8 +175,8 @@ class EmpenhoAnulacaoPesquisa {
                                     . '</button>';
                     
                         if ($linha['id_empenho_anulacao_situacao'] == 1) {
-                            $tabela .=  '<button type="button" title="Autorizar Anulação do Empenho" class="autorizar-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
-                                        . '<i class="fa fa-gavel text-info" aria-hidden="true"></i>'
+                            $tabela .=  ' <button type="button" title="Autorizar Anulação do Empenho" class="autorizar-anulacao-empenho" value='.$linha['id_empenho_anulacao'].'>'
+                                        . '<i class="fa fa-gavel text-dark" aria-hidden="true"></i>'
                                     . '</button>';
                         }
                                     

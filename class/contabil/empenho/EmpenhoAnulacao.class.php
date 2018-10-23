@@ -30,7 +30,7 @@ class EmpenhoAnulacao {
     private $idDocTipoLotacao = null;
     private $idLotacao = null;
     private $vlEmpenhoSaldo = null;
-    
+
     public function getVlEmpenhoSaldo() {
         return $this->vlEmpenhoSaldo;
     }
@@ -40,7 +40,6 @@ class EmpenhoAnulacao {
         return $this;
     }
 
-        
     public function getIdDocTipoLotacao() {
         return $this->idDocTipoLotacao;
     }
@@ -57,8 +56,8 @@ class EmpenhoAnulacao {
     public function setIdLotacao($idLotacao) {
         $this->idLotacao = $idLotacao;
         return $this;
-    }       
-    
+    }
+
     public function getSituacaoCadastrado() {
         return $this->situacaoCadastrado;
     }
@@ -189,7 +188,7 @@ class EmpenhoAnulacao {
         $this->idEmpenhoAnulacao = $idEmpenhoAnulacao;
         return $this;
     }
-    
+
     public function getDsJustificativa() {
         return $this->dsJustificativa;
     }
@@ -198,7 +197,7 @@ class EmpenhoAnulacao {
         $this->dsJustificativa = $dsJustificativa;
         return $this;
     }
-    
+
     /**
      * Cadastra a Anulação
      * @param bool $perfilTI
@@ -207,10 +206,7 @@ class EmpenhoAnulacao {
     public function salvarAnulacao(bool $perfilTI) {
         try {
 
-            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) 
-                    || empty($this->getVlAnulacao()) || empty($this->getItens())
-                    || empty($this->dsJustificativa)
-                    || empty($this->idDocTipoLotacao) || empty($this->idLotacao)) {
+            if (empty($this->getIdEmpenho()) || empty($this->getIdPessoa()) || empty($this->getVlAnulacao()) || empty($this->getItens()) || empty($this->dsJustificativa) || empty($this->idDocTipoLotacao) || empty($this->idLotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -232,7 +228,7 @@ class EmpenhoAnulacao {
             $finEmpenho->setIdEmpenho($this->idEmpenho);
             $dadosEmpenho = $finEmpenho->retornaDadosEmpenho($pdo);
 
-            if (empty($dadosEmpenho)) {
+            if (empty($dadosEmpenho)){
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
             }
 
@@ -251,20 +247,20 @@ class EmpenhoAnulacao {
             }
 
 
-//            if (!$perfilTI) {
-//                $CentralResponsavel = new CentralResponsavel();
-//                $CentralResponsavel->setIdPessoa($this->idPessoa);
-//                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
-//                $CentralResponsavel->verificaPermissao($pdo);
-//                if (!$CentralResponsavel->Sucesso()) {
-//                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
-//                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
-//                }
-//            }
-            
-            
+            if (!$perfilTI) {
+                $CentralResponsavel = new CentralResponsavel();
+                $CentralResponsavel->setIdPessoa($this->idPessoa);
+                $CentralResponsavel->setIdLotacao($dadosPedido['id_lotacao']);
+                $CentralResponsavel->verificaPermissao($pdo);
+                if (!$CentralResponsavel->Sucesso()) {
+                    return Metodos::retornoAjax("Erro", "alert", "Você não possui permissão para Cancelar o Empenho/Pedido Dessa Central"
+                                    . ". Somente poderá Anular Empenho/Pedido Da sua Central de Demanda");
+                }
+            }
+
+
             //Verifica o Valor do Saldo do Empenho no momento da anulação
-            
+
 
 
             $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
@@ -277,11 +273,11 @@ class EmpenhoAnulacao {
             $daoEmpenhoAnulacao->setIdLotacao($this->idLotacao);
             $daoEmpenhoAnulacao->setIdPessoa($this->idPessoa);
             $daoEmpenhoAnulacao->setVlEmpenhoSaldo($this->vlEmpenhoSaldo);
-                        
+
             $daoEmpenhoAnulacao->insert($pdo);
             if (!$daoEmpenhoAnulacao->getSucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar a Anulação do Empenho.".$daoEmpenhoAnulacao->getMsgRetorno());
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar a Anulação do Empenho." . $daoEmpenhoAnulacao->getMsgRetorno());
             }
 
             $this->idEmpenhoAnulacao = $pdo->lastInsertId('con_empenho_anulacao_id_empenho_anulacao_seq');
@@ -358,7 +354,7 @@ class EmpenhoAnulacao {
                 $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
                 $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
                 $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['vl_utilizado'], 4));
-                $daoEmpenhoAnulacaoItens->setQtUtilizado(round($value['qt_utilizado'],4));
+                $daoEmpenhoAnulacaoItens->setQtUtilizado(round($value['qt_utilizado'], 4));
                 $daoEmpenhoAnulacaoItens->insert($pdo);
                 if (!$daoEmpenhoAnulacaoItens->getSucesso()) {
                     $pdo->rollBack();
@@ -672,7 +668,7 @@ class EmpenhoAnulacao {
 
                                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
                                                 <div class="panel-body">
-
+                                                    <input id="numero_empenho" type="hidden" value="' . $campos["nr_empenho"] . '" />
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dt_empenho"] . '</div>
@@ -883,8 +879,8 @@ class EmpenhoAnulacao {
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_item"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_geral, 4) . '</td>
-                                    <td class="text-center">' . Metodos::ConverteValorBr($linha['qt_utilizado'], 4).'</td>
-                                    <td class="text-center">' . Metodos::ConverteValorBr($linha['vl_utilizado'], 4).'</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha['qt_utilizado'], 4) . '</td>
+                                    <td class="text-center">' . Metodos::ConverteValorBr($linha['vl_utilizado'], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_saldo"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_anulado"], 4) . '</td>
                                     <td class="text-center">' . Metodos::ConverteValorBr($total_anulado, 4) . '</td>
@@ -946,7 +942,7 @@ class EmpenhoAnulacao {
             if (empty($this->idEmpenhoAnulacao) || empty($this->idPessoa) || empty($this->idEmpenhoAnulacaoSituacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+
             if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoDeferido && (empty($this->nrAnulacao) || empty(Metodos::validaConverteDataING($this->dtAnulacao)))) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
@@ -956,10 +952,13 @@ class EmpenhoAnulacao {
             $pdo->beginTransaction();
             $dadosEmpenhoAnulacao = '';
 
+            $daoEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
             $daoConEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
+
+
             $daoConEmpenhoAnulacao->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
             $daoConEmpenhoAnulacao->setIdPessoa($this->idPessoa);
-            
+
             //retorna dados antes do update das situaçoes para salva no log
             $daoConEmpenhoAnulacao->retorna($pdo);
             if (!$daoConEmpenhoAnulacao->getSucesso()) {
@@ -968,17 +967,37 @@ class EmpenhoAnulacao {
             $dadosEmpenhoAnulacao = $daoConEmpenhoAnulacao->getMsgRetorno();
 
             if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoDeferido) {
+                //seta a situacao e status no dao da anulacao e no dao do historico
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->getSituacaoDeferido());
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
+                $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->getSituacaoDeferido());
+                $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
+                //atualiza numero e data da anulaçao
+                $daoConEmpenhoAnulacao->setNrEmpenhoAnulacao($this->nrAnulacao);
+                $daoConEmpenhoAnulacao->setDtEmpenhoAnulacao(Metodos::ConverteDataING($this->dtAnulacao));
+                $daoConEmpenhoAnulacao->atualizaNumeroEdataAnulacaoEmpenho($pdo);
+
+                if (!$daoConEmpenhoAnulacao->getSucesso()) {
+                    return Metodos::retornoAjax("Erro", "alert", "Erro na atualização do número ou data da anulação");
+                }
+
+                $this->atualizaValoresFinPreOrdem($pdo);
+
+                if (!$this->sucesso) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
+                }
+                
             } else if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoIndeferido) {
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->getSituacaoIndeferido());
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
+                $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->getSituacaoIndeferido());
+                $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
             } else {
                 return Metodos::retornoAjax("Erro", "alert", "Erro no deferimento");
             }
 
             $daoConEmpenhoAnulacao->atualizaStatusSituacaoEmpenhoAnulacao($pdo);
-            
 
             if (!$daoConEmpenhoAnulacao->getSucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação e status");
@@ -988,20 +1007,18 @@ class EmpenhoAnulacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
             //Salva o Histórico da Anulação
-            $daoEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
-            $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->situacaoCadastrado);
-            $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->statusAguardandoDeferido);
             $daoEmpenhoAnulacaoHistorico->setIdPessoa($this->idPessoa);
             $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico($this->dsJustificativa);
             $daoEmpenhoAnulacaoHistorico->setIdDocTipoLotacao($this->idDocTipoLotacao);
             $daoEmpenhoAnulacaoHistorico->setIdLotacao($this->idLotacao);
+            $daoEmpenhoAnulacaoHistorico->setDsEmpenhoAnulacaoHistorico($this->dsJustificativa);
             $daoEmpenhoAnulacaoHistorico->insert($pdo);
             if (!$daoEmpenhoAnulacaoHistorico->getSucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar o Histórico da Anulação do Empenho.");
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Criar o Histórico da Anulação do Empenho." . $daoEmpenhoAnulacaoHistorico->getMsgRetorno());
             }
 
             $idEmpenhoHistorico = $pdo->lastInsertId('con_empenho_anulacao_historic_id_empenho_anulacao_historico_seq');
@@ -1010,12 +1027,7 @@ class EmpenhoAnulacao {
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar o Histórico da Anulação no LOG. Operação Cadastro.");
             }
 
-            $this->atualizaValoresFinPreOrdem($pdo);
 
-            if (!$this->sucesso) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
-            }
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Ação realizada com Sucesso.");

@@ -49,7 +49,9 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Anulação do Empenho</h1>                       
+
+                        <h1 class="page-header text-overflow">Autorização da Anulação do Empenho</h1>                       
+
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -211,9 +213,9 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº da Anulação</th>
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Nº Pedido</th>
+                                                    <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Tipo de Gasto</th>
-                                                    <th class="text-center">Central de Demanda</th>
-                                                    <th class="text-center">CPF/CNPJ Fornecedor</th>
+                                                    <th class="text-center">Central de Demanda</th>                                                    
                                                     <th class="text-center">Data Anulação</th>
                                                     <th class="text-center">Valor Total</th>
                                                     <th class="text-center">Situação</th> 

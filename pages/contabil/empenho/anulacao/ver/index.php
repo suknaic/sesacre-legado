@@ -93,7 +93,7 @@ require_once "index.load.php";
                                                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">Itens do Pedido para Anulação</h4>
+                                                            <h4 class="panel-title">Dados dos Itens do Pedido de Necessidade</h4>
                                                         </div>
                                                         <div class="panel-body">
                                                             <div class="form-group">
@@ -107,11 +107,11 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Tipo</th>
                                                                                 <th class="text-center">Lote</th>
                                                                                 <th class="text-center">Qtd.</th>
-                                                                                <th class="text-center">Valor Unit.</th>
+                                                                                <th class="text-center">Valor Unitário</th>
                                                                                 <th class="text-center">Valor Total</th>
                                                                                 <th class="text-center">Qtd. Utilizado</th>
                                                                                 <th class="text-center">Valor Utilizado</th>
-                                                                                <th class="text-center">Saldo</th>
+                                                                                <th class="text-center">Saldo a Anular</th>
                                                                                 <th class="text-center">Qtd. Anulado</th>
                                                                                 <th class="text-center">Valor Anulado</th>
                                                                             </tr>
@@ -137,7 +137,7 @@ require_once "index.load.php";
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados da Anulação</h4>
+                                                        <h4 class="panel-title">Dados da Anulação do Empenho</h4>
                                                     </div>
                                                     <input type="hidden" id="id_empenho_anulacao" value="" />
                                                     <div class="panel-body">

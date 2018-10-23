@@ -384,8 +384,26 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="/pages/contabil/empenho/pesquisa_empenho/">Empenho</a>
+                                    <a href="#">
+                                        <span class="menu-title">Gerenciar Empenho</span>
+                                        <i class="arrow"></i>
+                                    </a>
+                                    <!--Submenu-->
+                                    <ul class="collapse">                                                                                 
+                                        <li>
+                                            <a href="/pages/contabil/empenho/pesquisa_empenho/">Empenho</a>
+                                        </li>     
+
+                                        <li>
+                                            <a href="/pages/contabil/empenho/anulacao/pesquisa/">Anulação do Empenho</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/pages/contabil/empenho/anulacao/autorizacao/">Autorização da Anulação do Empenho</a>
+                                        </li>                                                                                  
+                                    </ul>
                                 </li>
+                                
                                 <li>
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
                                 </li>
@@ -394,13 +412,7 @@
                                     <a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Pagamento</a>
                                 </li>
                                 
-                                <li>
-                                    <a href="/pages/contabil/empenho/anulacao/pesquisa/">Anulação do Empenho</a>
-                                </li>
-                                
-                                <li>
-                                    <a href="/pages/contabil/empenho/anulacao/autorizacao/">Autorização da Anulação do Empenho</a>
-                                </li>
+                               
                                 
                                 <li>
                                     <a href="#">
@@ -424,7 +436,7 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                      </ul>
+                                    </ul>
                                 </li>
                             </ul>
                         </li>
