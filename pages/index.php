@@ -65,8 +65,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
         <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
             <?php
-            //Cabeçalho do Sistema
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+                //Cabeçalho do Sistema
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+                if ($_SESSION['idUser'] == 6) {
+                    require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/killCecs.html";
+                }
             ?>
 
             <div class="boxed">
@@ -87,7 +90,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                             <!-- Dasboard chamados -->
                             <div class="row">
                                 <div class="col-sm-4 col-lg-4">
-
                                     <!--Sparkline bar chart -->
                                     <div class="panel panel-success panel-colorful">
                                         <div class="pad-all media">
@@ -623,8 +625,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
                 </div>
             </div>
         </div>
-
-
-
     </body>
 </html>
