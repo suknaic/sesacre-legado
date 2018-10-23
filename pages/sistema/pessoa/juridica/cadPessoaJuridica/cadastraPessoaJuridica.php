@@ -365,7 +365,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                 </button>
                                             </div>
                                             <br>
-                                            <div class="panel-footer text-right">
+                                            <div class="panel-footer text-center">
                                                 <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
                                                     Limpar
                                                 </button>
