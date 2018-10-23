@@ -58,6 +58,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+                        
+                        <!--Modal Itens Entrega-->
+                        <div class="modal fade" id="entrega"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Dados da Entrega</h4>
+                                    </div>
+                                    <div class="modal-body" id="dados-entrega">
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fim Modal Itens entrega-->
+                        
                         <form data-toggle="valisenha123
                               dator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <input type="hidden" id="idDocumentoFiscal" value="<?php echo $id; ?>" />
@@ -148,6 +174,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/gdof/documentoFiscal
                                                                             <th class="text-center">Saldo</th>
                                                                             <th class="text-center">Valor do Documento Fiscal</th>
                                                                             <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>

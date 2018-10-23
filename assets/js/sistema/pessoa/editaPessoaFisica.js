@@ -588,6 +588,9 @@ $(document).ready(function () {
             return false;
         }
     });
+    $(".sexo").select2({
+        width: " 100%"
+    });
     //*************************************************************************************************
     $('body').on('click', '.cep', function (e) {
         //Nova variável "cep" somente com dígitos.

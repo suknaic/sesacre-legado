@@ -53,7 +53,6 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
                 $("#id_estado_endereco").val(estado);
 //                $("#id_estado_endereco").trigger('change');
             }
-
         }
     });
 }
@@ -133,7 +132,6 @@ $(document).ready(function () {
             return;
         }
         listaEstadoNaturalidadeCombo($idPais, 2);
-
     });
     //******************************************************************************************
     $("body").on("change.select2", "#id_estado_endereco", function (e) {
@@ -142,8 +140,7 @@ $(document).ready(function () {
         if ($idEstado == 0) {
             return;
         }
-        listaCidadeCombo($idEstado, 2);
-
+        listaCidadeCombo($idEstado, 2, null);
     });
     //******************************************************************************************
     $("body").on("change", "#id_cidade", function (e) {
@@ -269,16 +266,12 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao);
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -288,18 +281,14 @@ $(document).ready(function () {
                         func.modalAlert(response.msg, 'success');
                         func.fechaModalReload();
                         return false;
-                        //top.location = "/pages/rh/pessoaJuridica/index.php";
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao);
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -308,7 +297,6 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-limpar', function (e) {
-
         $("#nome").val("");
         $("#dt_inicio").val("");
         $("#dt_fim").val("");
@@ -323,6 +311,17 @@ $(document).ready(function () {
             return false;
         }
     });
+
+    $(".pais").select2({
+        width: " 100%"
+    });
+    $(".estado").select2({
+        width: " 100%"
+    });
+    $(".idCidade").select2({
+        width: " 100%"
+    });
+
     //*************************************************************************************************
     $('body').on('click', '.cep', function (e) {
         //Nova variável "cep" somente com dígitos.

@@ -62,7 +62,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                 <div class="panel">
                                     <div class="panel-footer text-left">
                                         <button class="btn btn-primary btn-rounded btn-novo" type="button">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Curso
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Curso
                                         </button>
                                     </div>
                                     <div class="panel-heading ">

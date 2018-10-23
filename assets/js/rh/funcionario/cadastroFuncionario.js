@@ -113,7 +113,6 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
                 });
                 $("#id_estado_endereco").val(estado);
             }
-
         }
     });
 }
@@ -825,6 +824,20 @@ $(document).ready(function () {
             return false;
         }
     });
+
+    $(".pais").select2({
+        width: " 100%"
+    });
+    $(".estado").select2({
+        width: " 100%"
+    });
+    $(".idCidade").select2({
+        width: " 100%"
+    });
+    $(".sexo").select2({
+        width: " 100%"
+    });
+
     //*************************************************************************************************
     $('body').on('click', '.cep', function (e) {
         //Nova variável "cep" somente com dígitos.

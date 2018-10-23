@@ -67,9 +67,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
             <?php
                 //Cabeçalho do Sistema
                 require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-                if ($_SESSION['idUser'] == 6) {
-                    require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/killCecs.html";
-                }
             ?>
 
             <div class="boxed">
