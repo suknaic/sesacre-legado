@@ -1245,14 +1245,18 @@ class FinDocumentoFiscal {
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_total_entrega"], 4) . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_entrega_saldo"], 4) . '</td>
                                  <td class = "text-center">' . Metodos::ConverteValorBr($campos["vl_entrega_documento"], 4) . '</td>
-                                 <td class = "text-center">' . $campos["situacao"] . '</td>';
+                                 <td class = "text-center">' . $campos["situacao"] . '</td>
+                                 <td class = "text-center">
+                                   <button type="button" title="Visualizar Entrega" class="ver-entrega text-info" value="' . $campos["id_entrega_confirmacao"] . '">
+                                       <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                    </button>';
+                                
                     if ($excluir) {
-                        $tabela .= ' <td class="text-center">
-                                      <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
+                        $tabela .= '<button type="button" title="Excluir Entrega" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                       </button>
-                                     </td>';
+                                    </button>';
                     }
+                    $tabela .= '</td>';
                 }
                 $totalEntrega = Metodos::ConverteValorBr($totalEntrega, 4);
                 $tabela .= '<tr>

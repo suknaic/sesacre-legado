@@ -173,7 +173,8 @@ $(document).ready(function () {
                     prefix: '',
                     centsSeparator: ',',
                     thousandsSeparator: '.',
-                });                
+                });
+                mudaLabelQuantidadeValor();
             }
         });
     }
@@ -377,26 +378,23 @@ $(document).ready(function () {
                         });                      
                     }
                 }
-            });
-
-
-
-
-
-
-            
+            });            
         }
     });
-    
-    
-    
-    
-    
-    
-    
-    
-
 });
+
+function mudaLabelQuantidadeValor(){
+    $("#tabelaItensPedido tbody tr .tipo").each(function(){
+        var tipoMaterial = $(this).html();
+        var cabecalho = $("#tabelaItensPedido > thead > tr");
+        if (tipoMaterial == 'S') {
+            cabecalho.find('.quantidade-valor').html('Valor da Anulação');
+        } else {
+            cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');
+        }
+        return false;
+    });
+}
 
 function atualizaValorLiquidacao(){
     var vl_liquidacao = 0;

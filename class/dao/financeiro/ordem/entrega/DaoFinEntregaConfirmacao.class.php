@@ -673,4 +673,63 @@ where orItens.id_ordem = :ordem";
             $this->sucesso = false;
         }
     }
+    
+    public function retornaDadosDaEntrega(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "SELECT entregaItens.id_entrega_itens,
+                        confirmacao.nr_entrega_confirmacao,
+                        itens.nr_item,
+                        mat.cd_desc_material,
+                        mat.nm_material,
+                        to_char(confirmacao.dt_entrega, 'DD/MM/YYYY') AS dt_entrega,
+                        to_char(confirmacao.dh_cadastramento, 'DD/MM/YYYY HH:MI:SS') AS dh_cadastramento,
+                        mat.tp_material,
+                        itens.nr_lote,
+                        entregaItens.qt_itens_entrega,
+                        entregaItens.vl_itens_entrega,
+                        confirmacao.id_entrega_confirmacao,
+                        CASE
+                            WHEN confirmacao.sit_entrega = 1 THEN 'Parcial'
+                            WHEN confirmacao.sit_entrega = 2 THEN 'Total'
+                        END situacao,
+                        CASE
+                            WHEN itens.ds_itens != '' THEN itens.ds_itens
+                            ELSE mat.nm_desc_material
+                        END descricao,
+                        CASE
+                            WHEN (mat.tp_material = 'C'
+                                  OR mat.tp_material = 'P')
+                                 AND itens.fl_valor_variavel = '0' THEN entregaItens.qt_itens_entrega
+                            WHEN mat.tp_material = 'S'
+                                 OR itens.fl_valor_variavel = '1' THEN (entregaItens.qt_itens_entrega * entregaItens.vl_itens_entrega)
+                        END entregue,
+                        despesa.cd_despesa
+                 FROM fin_entrega_confirmacao AS confirmacao
+                 INNER JOIN fin_entrega_itens AS entregaItens ON entregaItens.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                 INNER JOIN fin_ordem_itens AS ordemItens ON ordemItens.id_ordem_itens = entregaItens.id_ordem_itens
+                 INNER JOIN fin_pre_ordem AS preOrdem ON preOrdem.id_pre_ordem = ordemItens.id_pre_ordem
+                 INNER JOIN fin_cont_itens AS itens ON itens.id_cont_itens = preOrdem.id_cont_itens
+                 INNER JOIN pla_material AS mat ON mat.id_material = itens.id_material
+                 INNER JOIN view_despesa AS despesa ON despesa.id_despesa = mat.id_despesa
+                 WHERE confirmacao.id_entrega_confirmacao = :id_entrega_confirmacao
+                 ORDER BY confirmacao.nr_entrega_confirmacao";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_entrega_confirmacao", $this->getIdEntregaConfirmacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = "Nenhum registro encontrado";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com banco de dados';
+            }
+        } catch (PDOException $exc) {
+             $this->msgRetorno = $exc->getMessage();
+        }
+    }
 }
