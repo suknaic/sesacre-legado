@@ -15,6 +15,18 @@ $(document).ready(function () {
         }
     });
 
+    // Desativa todos os funcionários com o vínculo CEC
+    // function killCecs() {
+        // var kill = $('#doidoKill').val();
+        // if (kill != "") {
+        //
+        // }
+        // return;
+    //     $('#modalKill').modal('show');
+    // }
+    // killCecs();
+    //*************************************************
+
     function aniversario() {
         $.ajax({
             "url": "/model/request.php",
@@ -24,8 +36,6 @@ $(document).ready(function () {
                 acao: "aniversario"
             },
             "success": function (response) {
-                console.log(response);
-
                 $(".aniversario").html(response);
                 setTimeout(function () {
                     $(".aniversario").html("");
