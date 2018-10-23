@@ -166,7 +166,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Qtd. Utilizado</th>
                                                                             <th class="text-center">Valor Utilizado</th>
                                                                             <th class="text-center">Saldo a Anular</th>
-                                                                            <th class="text-center">Qtd. da Anulação</th>
+                                                                            <th class="text-center quantidade-valor">Qtd. da Anulação</th>
                                                                             <th class="text-center">Valor da Anulação</th>
                                                                         </tr>
                                                                     </thead>

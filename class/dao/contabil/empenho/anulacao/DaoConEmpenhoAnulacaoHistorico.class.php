@@ -44,23 +44,32 @@ class DaoConEmpenhoAnulacaoHistorico extends ConEmpenhoAnulacaoHistorico {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
-                    (to_char(dh_empenho_anulacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || nm_pessoa || ': ' || anuEmpSit.nm_empenho_anulacao_situacao || ' pelo(a) ' || lotacao.nm_lotacao || '. Justificativa: ' || anuEmpHst.ds_empenho_anulacao_historico) as historico 
-                 from
-                    con_empenho_anulacao_historico anuEmpHst 
-                    inner join
-                       ses_pessoa pessoa 
-                       on pessoa.id_pessoa = anuEmpHst.id_pessoa
-                    inner join
-                       ses_lotacao lotacao
-                       on lotacao.id_lotacao = anuEmpHst.id_lotacao
-                    left join
-                       con_empenho_anulacao_situacao anuEmpSit 
-                       on anuEmpSit.id_empenho_anulacao_situacao = anuEmpHst.id_empenho_anulacao_situacao 
-                    left join
-                       con_empenho_anulacao_status anuEmpSts 
-                       on anuEmpSts.id_empenho_anulacao_status = anuEmpHst.id_empenho_anulacao_status
-                 where anuEmpHst.id_empenho_anulacao = :id_empenho_anulacao
-                 order by anuEmpHst.id_empenho_anulacao_historico";
+                (to_char(dh_empenho_anulacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || nm_pessoa || ': ' || anuEmpSit.nm_empenho_anulacao_situacao || ' pelo(a) ' || lotacao.nm_lotacao || '. ' || coalesce(
+                   case
+                      when
+                         anuEmpHst.ds_empenho_anulacao_historico <> '' 
+                      then
+                         'Justificativa: ' 
+                   end
+                , '') || anuEmpHst.ds_empenho_anulacao_historico) as historico 
+                from
+                   con_empenho_anulacao_historico anuEmpHst 
+                   inner join
+                      ses_pessoa pessoa 
+                      on pessoa.id_pessoa = anuEmpHst.id_pessoa 
+                   inner join
+                      ses_lotacao lotacao 
+                      on lotacao.id_lotacao = anuEmpHst.id_lotacao 
+                   left join
+                      con_empenho_anulacao_situacao anuEmpSit 
+                      on anuEmpSit.id_empenho_anulacao_situacao = anuEmpHst.id_empenho_anulacao_situacao 
+                   left join
+                      con_empenho_anulacao_status anuEmpSts 
+                      on anuEmpSts.id_empenho_anulacao_status = anuEmpHst.id_empenho_anulacao_status 
+                where
+                   anuEmpHst.id_empenho_anulacao = :id_empenho_anulacao 
+                order by
+                   anuEmpHst.id_empenho_anulacao_historico";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
