@@ -850,5 +850,76 @@ class FinEntregaConfirmacaoModel {
             return false;
         }
     }
+    
+    public function retornaDadosDaEntrega(PDO $pdo = null){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dados = '';
+            $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
+            $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
+            $daoFinEntregaConfirmacao->retornaDadosDaEntrega($pdo);
+            
+            if ($daoFinEntregaConfirmacao->sucesso()) {
+                foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $indice => $linha) {
+                    if (empty($dados)) {
+                        $dados .= '<div class="panel-group" id="accordion' . $indice . '" role="tablist" aria-multiselectable="true">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" role="tab" id="heading' . $indice . '">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion' . $indice . '" href="#' . $indice . '" aria-expanded="false" aria-controls="collapse' . $indice . '" class="collapsed">
+                                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                                    <b>Entrega: </b><span style="color:#758697">' . $linha['nr_entrega_confirmacao'] . '</span> <b style=" margin-left: 1%">Tipo de Entrega: </b>
+                                                    <span style="color:#758697">' . $linha["situacao"] . '</span> <b style=" margin-left: 1%">Data de Entrega: </b>
+                                                    <span style="color:#758697">' . $linha["dt_entrega"] . '</span>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    <div id="' . $indice . '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading' . $indice . '" aria-expanded="false">
+                                        <div class="panel-body">
+                                             <table class="table table-striped table-bordered" id="tabela2">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Nº</th>
+                                                        <th class="text-center">Item</th>
+                                                        <th class="text-center">Descrição</th>
+                                                        <th class="text-center">Elemento de Despesa</th>
+                                                        <th class="text-center">Tipo</th>
+                                                        <th class="text-center">Lote</th>
+                                                        <th class="text-center">Qtd</th>
+                                                        <th class="text-center">Valor unit</th>
+                                                        <th class="text-center">Entregue</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>';
+                    }
+                    $dados .= '<tr>
+                                <td class="text-center">' . $linha["nr_item"] . '</td>
+                                <td class="text-center">' . $linha["cd_desc_material"] . ' - .' . $linha["nm_material"] . '</td>
+                                <td class="text-center">' . $linha["descricao"] . '</td>
+                                <td class="text-center">' . $linha["cd_despesa"] . '</td>
+                                <td class="text-center">' . $linha["tp_material"] . '</td>
+                                <td class="text-center">' . $linha["nr_lote"] . '</td>
+                                <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_entrega"], 4) . '</td>
+                                <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_entrega"], 4) . '</td>
+                                <td class="text-center">' . Metodos::ConverteValorBr($linha["entregue"], 4) . '</td>
+                            </tr>';
+                }
+                $dados .= '</tbody>
+                            </table>
+                            </div>
+                            </div>
+                            </div>
+                            </div>';
+            } else {
+                $dados = $daoFinEntregaConfirmacao->getMsgRetorno();
+            }
+            return $dados;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
 
 }
