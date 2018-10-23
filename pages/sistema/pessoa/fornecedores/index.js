@@ -13,20 +13,20 @@ $(document).ready(function () {
         $("#nr_cpf").val("");
         switch ($('#tipoPessoa').val()) {
             case '0' :
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').hide();
                 break;
             case '1':
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').show();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').show();
                 $("#nr_cpf").focus();
                 break;
             case '2':
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').show();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').show();
                 $("#nr_cnpj").focus();
                 break;
         }

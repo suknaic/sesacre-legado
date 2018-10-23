@@ -88,7 +88,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/juridica/index.l
                                 </div>
                                 <div class="panel-footer text-center">
                                     <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                        <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                       Limpar
                                     </button>
                                     <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                         <i class="fa fa-search" aria-hidden="true"></i> Pesquisar

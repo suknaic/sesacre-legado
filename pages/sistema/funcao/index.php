@@ -79,7 +79,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/funcao/index.load.php";
                                         </div>
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                                Limpar
                                             </button>
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-cancelar">
                                                 <i class="fa fa-remove" aria-hidden="true"></i> Cancelar

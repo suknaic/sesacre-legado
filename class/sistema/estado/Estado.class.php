@@ -45,7 +45,7 @@ class Estado {
     public function cadastrarEstado() {
         try {
 
-            if ($this->nmEstado == "" || $this->nmSigla == "" || $this->idPais == "") {
+            if (empty($this->nmEstado && $this->nmSigla && $this->idPais)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -55,8 +55,6 @@ class Estado {
             //Seta os Campos
             $est = new DaoSesEstado();
 
-//            $aux=;
-            //echo $aux;
             $est->setNmEstado($this->nmEstado);
             $est->setIdPais($this->idPais);
 
@@ -76,8 +74,12 @@ class Estado {
                 return $retorno;
             }
 
+            if ($est->verificaSiglaEstado($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", 'Registro com mesma <strong>sigla</strong> já existe.');
+            }
+
             $result = $est->insert($est, $pdo);
-            //echo ($this->idPais);
             if ($result != "Sucesso") {
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
                 $pdo->rollBack();
@@ -199,7 +201,7 @@ class Estado {
                     return $retorno;
                 }
             } else {
-                $retorno = retornoAjax("Erro", "alert", "Não foi possível localizar o Registro.");
+                $retorno = Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Registro.");
                 $pdo->rollBack();
                 return $retorno;
             }

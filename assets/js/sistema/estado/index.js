@@ -221,7 +221,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'sucess');
+                                func.modalAlert(response.msg, 'success');
                                 func.fechaModalReload();
                                 return false;
                             } else {
