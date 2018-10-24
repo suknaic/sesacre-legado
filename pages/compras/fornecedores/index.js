@@ -62,7 +62,7 @@ $(document).ready(function () {
                 tipoPessoa: $("#tipoPessoa").val()
             };
             $.ajax({
-                "url": "/model/sistema/pessoa/request.php",
+                "url": "/pages/compras/fornecedores/request.php",
                 "dataType": 'html',
                 "method": "POST",
                 "data": {
@@ -109,7 +109,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "inativarPessoa",
@@ -181,7 +181,7 @@ $(document).ready(function () {
 
                     };
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "method": "POST",
                         "data": {
@@ -260,7 +260,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "removerPessoa",
@@ -317,13 +317,13 @@ $(document).ready(function () {
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();
         //**********************
-        var id = $(this).val();
-        if (id.split("-")[0] == 1) {
-            top.location.href = "/pages/sistema/pessoa/editaPessoaFisica.php?id=" + id;
-        }
-        if (id.split("-")[0] == 2) {
-            top.location.href = "/pages/sistema/pessoa/editaPessoaJuridica.php?id=" + id;
-        }
+        // var id = $(this).val();
+        // if (id.split("-")[0] == 1) {
+        //     top.location.href = "/pages/sistema/pessoa/editaPessoaFisica.php?id=" + id;
+        // }
+        // if (id.split("-")[0] == 2) {
+        //     top.location.href = "/pages/sistema/pessoa/editaPessoaJuridica.php?id=" + id;
+        // }
 
     });
 

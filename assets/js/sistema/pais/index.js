@@ -30,7 +30,7 @@ $(document).ready(function () {
             var Pais = {
                 nome: $("#nmPais").val(),
                 sigla: $("#nmSigla").val()
-            }
+            };
 
             if ($("#nmPais").val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -99,7 +99,7 @@ $(document).ready(function () {
                 nome: $("#nmPais").val(),
                 sigla: $("#nmSigla").val(),
                 id: $this.val()
-            }
+            };
 
             if ($("#nmPais").val() == "" || $this.val() == "") {
                 func.modalAlert(func.msgPreencherCampos);
@@ -115,6 +115,7 @@ $(document).ready(function () {
                     "pais": Pais
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -218,7 +219,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg);
+                                func.modalAlert(response.msg, 'success');
                                 func.fechaModalReload();
                                 return false;
                             } else {

@@ -147,9 +147,13 @@ class Pais {
 
             $result = $pais->update($pais, $pdo);
             if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
-                $pdo->rollBack();
-                return $retorno;
+                if ($result->getCode() == 23505) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", $result->getMessage());
+                }
             }
 
             if (!Log::SalvaLogU('ses_pais', $pais->getIdPais(), $busca, $pdo)) {
@@ -170,8 +174,6 @@ class Pais {
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -209,7 +211,7 @@ class Pais {
             if ($resultDao != "Sucesso") {
                 if ($resultDao->getCode() == 23503) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", 'Registro está vinculado a outro registro.');
+                    return Metodos::retornoAjax("Erro", "alert", 'Não foi Possível Realizar a Exclusão desse País. Este registro está Vinculado a uma Pessoa.');
                 } else {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", $resultDao->getMessage());

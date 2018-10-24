@@ -118,8 +118,8 @@ class Cidade {
             $cidade = new DaoSesCidade();
             $cidade->setId_cidade(base64_decode($this->id_cidade));
             $cidade->setId_estado($this->id_estado);
-            $cidade->setId_regional_saude($this->id_regional_saude);
-            $cidade->setId_regional_geo($this->id_regional_geo);
+            $cidade->setId_regional_saude($this->id_regional_saude == 0 || $this->id_regional_saude == '' ? null:$this->id_regional_saude);
+            $cidade->setId_regional_geo($this->id_regional_geo == 0 || $this->id_regional_geo == '' ? null:$this->id_regional_geo);
             $cidade->setNm_cidade($this->nm_cidade);
 
             //************ Busca Cidade Pelo Id ***********

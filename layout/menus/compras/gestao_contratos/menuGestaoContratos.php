@@ -12,8 +12,8 @@ echo '
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Administração<b class="caret"></b></a>
                         <ul class="dropdown-menu dropdown-menu-md">
-                            <li class="text-center"><a href="/pages/compras/fornecedores/cad_fornecedor.php">Novo fornecedor</a></li>
-                            <li class="text-center"><a href="#">Lista de fornecedor</a></li>
+                            <!--<li class="text-center"><a href="/pages/compras/fornecedores/cadfornecedores/cad_fornecedor.php">Novo fornecedor</a></li>
+                            <li class="text-center"><a href="#">Lista de fornecedor</a></li>-->
                         </ul>
                     </li>
                 </ul>';

@@ -450,7 +450,7 @@
                             <!--Submenu-->
                             <ul class="collapse">
                                 <li>
-                                    <a href="/pages/sistema/pessoa/fornecedores/index.php">Fornecedores</a>
+                                    <a href="/pages/compras/fornecedores/">Fornecedores</a>
                                 </li>
                                 <li>
                                     <a href="/pages/compras/gcon/">
