@@ -152,7 +152,7 @@ class DocVincRecebimento {
                             . "<td>" . $linha['nm_lotacao'] . "</td>"
                             . "<td>" . $linha['nm_doc_tipo_lotacao'] . "</td>"
                             . "<td class='text-center'>"
-                            . "<button type='button' class='btn btn-default btn-xs btn-excluir'><i class='fa fa-trash fa-lg text-danger' aria-hidden=true></i></button>"
+                            . "<button type='button' title='Remover Registro' class='btn-excluir'><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>"
                             . "</td>"
                             . "</tr>";
                 }

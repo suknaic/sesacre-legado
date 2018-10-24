@@ -54,7 +54,7 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
                 $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
                         unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
-                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel, (pre.qt_itens_pre * pre.vl_itens_pre ) as total,
+                        mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel, (pre.vl_total ) as total,
                         case 
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                             then  coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000')
@@ -71,7 +71,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                             then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
                             when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                            then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                            then ((pre.vl_total) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
                         end saldo
                         from fin_pedido as pedido
                         inner join fin_pre_ordem as pre
@@ -558,12 +558,13 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
                 $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
                         unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
+                        pre.vl_total,
                         mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel,
                         case 
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                                 then pre.qt_itens_pre
                                 when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                                then pre.qt_itens_pre * pre.vl_itens_pre 
+                                then pre.vl_total
                         end total,
 
                         case 
@@ -581,7 +582,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                                 then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
                                 when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                                then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                                then ((pre.vl_total) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
                         end saldo
 
                         from fin_pedido as pedido

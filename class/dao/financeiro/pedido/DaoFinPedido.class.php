@@ -1195,20 +1195,21 @@ class DaoFinPedido extends FinPedidoTb {
                                                                 group by itens.id_pre_ordem
                                                               ) as ordemItens
                                                     on ordemItens.id_pre_ordem = pre.id_pre_ordem
-
+                                                    
                                                     left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                                                                       from fin_pedido as pedido 
-                                                               inner join fin_ordem as ordem
-                                                               on ordem.id_pedido = pedido.id_pedido
-                                                               inner join fin_ordem_itens as ordemItens 
-                                                               on ordemItens.id_ordem = ordem.id_ordem
-                                                               inner join fin_entrega_confirmacao as confirmacao
-                                                               on confirmacao.id_ordem = ordem.id_ordem
-                                                               inner join fin_entrega_itens as itens
-                                                               on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                                               where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                                                               group  by  ordemItens.id_pre_ordem
-                                                               ) as entregas
+                                                            from fin_pedido as pedido 
+                                                            inner join fin_ordem as ordem
+                                                            on ordem.id_pedido = pedido.id_pedido
+                                                            inner join fin_ordem_itens as ordemItens 
+                                                            on ordemItens.id_ordem = ordem.id_ordem
+                                                            inner join fin_entrega_confirmacao as confirmacao
+                                                            on confirmacao.id_ordem = ordem.id_ordem
+                                                            inner join fin_entrega_itens as itens
+                                                            on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
+                                                            where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                                                            group  by  ordemItens.id_pre_ordem
+                                                            ) as entregas
+                                                    
                                                     on entregas.id_pre_ordem = pre.id_pre_ordem			
                                             ) t
                                             where t.saldo > 0

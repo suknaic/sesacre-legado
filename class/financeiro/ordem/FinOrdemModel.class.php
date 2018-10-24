@@ -856,7 +856,8 @@ class FinOrdemModel {
                         
                         $retorno .= '<td class="text-right itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
-                                            quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '" 
+                                            quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '"
+                                            fl_valor_variavel="'.$linha['fl_valor_variavel'].'"
                                             quantidade="' . $linha["saldo"] . '"
                                             class="form-control input-sm qtd_anulacao" >';
 

@@ -17,6 +17,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
         <!-- themify icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css" rel="stylesheet">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
@@ -313,6 +315,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!--Input valor priceformat-->
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
+        <!--Select2-->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
