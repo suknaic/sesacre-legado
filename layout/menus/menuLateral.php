@@ -358,12 +358,6 @@
                                                     <a href="/pages/financeiro/administracao/tipoGastoDespesa/index.php">Tipo de Gasto e Elemento</a>
                                                 </li>
                                                 <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/tipo_lotacao/">Tipo de Remetente / Destinatário</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tipo_remetente_destinatario/">Vincular Tipo de Remetente / Destinatário</a>
-                                                </li>
-                                                <li>
                                                     <a href="/pages/financeiro/administracao/tabelas_gerenciais/vincular_tramitacao/">Vincular Tramitação</a>
                                                 </li>
                                             </ul>
@@ -535,6 +529,12 @@
                                 </li>
                                 <li>
                                     <a href="/pages/administracao/tipo_tramitacao/">Tipos de Tramitações</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/administracao/tipo_lotacao/">Tipo de Remetente / Destinatário</a>
+                                </li>
+                                <li>
+                                    <a href="/pages/administracao/vincular_tipo_remetente_destinatario/">Vincular Tipo de Remetente / Destinatário</a>
                                 </li>
                                 <li>
                                     <a href="/pages/administracao/administracao_solicitacao/">Vincular Administração/Solicitação</a>
