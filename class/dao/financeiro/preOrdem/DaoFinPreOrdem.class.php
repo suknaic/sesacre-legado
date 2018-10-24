@@ -182,12 +182,13 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
         }
     }
     
-    public function editarQuantidadePreOrdem($pdo = null) {
+    public function editarQuantidadeTotalPreOrdem($pdo = null) {
         if (!empty($pdo)) {
             try {
-                $sql = "update fin_pre_ordem SET qt_itens_pre = :qtd where id_pre_ordem = :ordem";
+                $sql = "update fin_pre_ordem SET qt_itens_pre = :qtd, vl_total = :vl_total where id_pre_ordem = :ordem";
                 $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":qtd", $this->getQtItensPre(), PDO::PARAM_STR);                
+                $stmt->bindValue(":qtd", $this->getQtItensPre(), PDO::PARAM_STR);    
+                $stmt->bindValue(":vl_total", $this->getVlTotal(), PDO::PARAM_STR);                    
                 $stmt->bindValue(":ordem", $this->getIdPreOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -301,6 +302,20 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                         set vl_pedido = (select sum(pre.qt_itens_pre * pre.vl_itens_pre) 
                                          from fin_pre_ordem as pre 
                                          where pre.id_pedido = :pedido
+                                         )
+                        where id_pedido = :pedido";
+                
+                $sql = "update fin_pedido 
+                        set vl_pedido = (SELECT SUM(CASE 
+                                        WHEN (M.tp_material = 'C' or M.tp_material = 'P') and CI.fl_valor_variavel = '0' 
+                                        THEN coalesce((pre.qt_itens_pre * pre.vl_itens_pre), 0.0000)
+                                        WHEN M.tp_material = 'S' or CI.fl_valor_variavel = '1'
+                                        THEN coalesce(PRE.vl_total, 0.0000)
+                                        END) valor
+                                        FROM fin_pre_ordem as PRE
+                                        INNER JOIN fin_cont_itens CI ON CI.id_cont_itens = PRE.id_cont_itens
+                                        INNER JOIN pla_material M ON M.id_material = CI.id_material
+                                        WHERE PRE.id_pedido = :pedido
                                          )
                         where id_pedido = :pedido";
                 $stmt = $pdo->prepare($sql);

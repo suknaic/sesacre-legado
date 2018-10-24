@@ -481,10 +481,7 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";
                 return;
             }
-//            echo "<pre>";
-//            print_r($ItensPreOrdem);
-//            echo "</pre>";
-
+                       
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -496,17 +493,18 @@ class EmpenhoAnulacao {
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR;
                     return;
                 }
-
+                
                 $valorInformado = $value['vl_itens_pre'];
                 $quantidadeInformado = round($itensAnulacao[$kI]['qt_anulado'], 4);
-
+                $vlTotal = round(($valorInformado * $quantidadeInformado),4);
                 $valorTotalParaAnular = $quantidadeInformado;
 
                 if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
+                    $valorTotalParaAnular = $itensAnulacao[$kI]['vl_anulado'];
+                    $vlTotal = $valorTotalParaAnular;
                 }
 
-                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+                                
 
                 if (round($value['saldo'], 4) < $valorTotalParaAnular) {
                     $this->sucesso = false;
@@ -523,7 +521,17 @@ class EmpenhoAnulacao {
                             . "ficará zerado";
                     return;
                 }
-
+                
+                $vlTotalNovo = $value['vl_total'] - $vlTotal;
+                if ($vlTotalNovo < 0) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
+                            . "de Número " . $value['nr_item'] . " Pois o Valor Anulado Informado Para Anulação "
+                            . "ficará zerado";
+                    return;
+                }
+            
+                
                 $quantidadeNovo = round(($value['qt_itens_pre'] - $quantidadeInformado), 4);
                 if ($quantidadeNovo < 0) {
                     $this->sucesso = false;
@@ -533,10 +541,13 @@ class EmpenhoAnulacao {
                     return;
                 }
 
+                
+                
                 $preOrdem = new PreOrdem();
                 $preOrdem->setIdPreOrdem($value['id_pre_ordem']);
                 //$preOrdem->setVlItensPre($valorInformado);
-                $preOrdem->setQtItensPre($quantidadeNovo);
+                $preOrdem->setQtItensPre($quantidadeNovo);      
+                $preOrdem->setVlTotal($vlTotalNovo);
                 $preOrdem->editarPreOrdemAnulacaoEmpenho($pdo);
                 if (!$preOrdem->Sucesso()) {
                     $this->sucesso = false;
@@ -556,7 +567,7 @@ class EmpenhoAnulacao {
             }
 
             $valorPedidoEmpenhoAntigo = $dadosPedido['vl_pedido'];
-
+//
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
@@ -590,7 +601,7 @@ class EmpenhoAnulacao {
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
-
+                       
             $empenho->setVlEmpenho($dadosPedido['vl_pedido']);
             $empenho->setIdEmpenho($dadosEmpenho['id_empenho']);
 
@@ -878,6 +889,10 @@ class EmpenhoAnulacao {
             if ($daoConEmpenhoAnulacao->getSucesso()) {
                 foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
                     $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
+                    if($linha['fl_valor_variavel'] == 1 || $linha['tp_material'] == "S"){
+                        $total_anulado = $linha['vl_anulado'];
+                    }
+                    
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
                     $tabela .= '<tr>
                                     <td class="text-center">' . $linha["nr_item"] . '</td>

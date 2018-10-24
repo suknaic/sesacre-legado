@@ -13,7 +13,17 @@ class PreOrdem {
     private $tipoMaterial = null;
     private $sucesso = false;
     private $msgRetorno = null;
+    private $vlTotal = null;
     
+    public function getVlTotal() {
+        return $this->vlTotal;
+    }
+
+    public function setVlTotal($vlTotal) {
+        $this->vlTotal = $vlTotal;
+        return $this;
+    }
+        
     public function Sucesso() {
         return $this->sucesso;
     }
@@ -522,7 +532,8 @@ class PreOrdem {
             $busca = $daoFinPreOrdem->getMsgRetorno();
             
             $daoFinPreOrdem->setQtItensPre($this->qtItensPre);
-            $daoFinPreOrdem->editarQuantidadePreOrdem($pdo);
+            $daoFinPreOrdem->setVlTotal($this->vlTotal);
+            $daoFinPreOrdem->editarQuantidadeTotalPreOrdem($pdo);
             if(!$daoFinPreOrdem->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível atualizar a Pre Ordem";
