@@ -51,7 +51,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
         if (!empty($pdo)) {
             try {
                 $sql = "SELECT pre.id_pre_ordem, pre.id_fornecedor, contIt.id_cont_itens, contIt.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo, 
-                        desp.cd_despesa, mat.tp_material, contIt.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, (pre.qt_itens_pre * pre.vl_itens_pre) as total,
+                        desp.cd_despesa, mat.tp_material, contIt.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, (pre.vl_total) as total,
                         contIt.nr_item, unid.nm_unidade_medida, mat.cd_desc_material
 			FROM fin_pre_ordem as pre
 			INNER JOIN fin_cont_itens as contIt
@@ -224,7 +224,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                         coalesce((select 
                         CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P' 
                         THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                        ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                        ELSE coalesce(sum((pre.vl_total)),0.0000)
                         END as busca
                         from fin_pre_ordem as pre 
                         inner join fin_pedido as p

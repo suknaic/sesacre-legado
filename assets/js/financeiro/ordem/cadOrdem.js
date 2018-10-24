@@ -21,7 +21,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#id_lotacao").select2({
+    $('body').find('select').select2({
     });
 
     //função para pesquisa licitacao do gcon

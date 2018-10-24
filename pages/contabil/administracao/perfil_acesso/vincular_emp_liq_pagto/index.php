@@ -163,10 +163,10 @@ require_once "index.load.php";
                                             <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center">Usuário</th>
-                                                        <th class="text-center">Tramitação</th>
-                                                        <th class="text-center">Remetente/Destinatário</th>
-                                                        <th class="text-center">Tipo do Remetente/Destinatário</th>
+                                                        <th>Usuário</th>
+                                                        <th>Tramitação</th>
+                                                        <th>Remetente/Destinatário</th>
+                                                        <th>Tipo do Remetente/Destinatário</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

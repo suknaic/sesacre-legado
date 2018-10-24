@@ -39,7 +39,7 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
                 $sql = "select pre.id_pre_ordem,
                         (CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P' 
                                 THEN  coalesce(pre.qt_itens_pre,0.0000)
-                            ELSE coalesce((pre.qt_itens_pre * pre.vl_itens_pre),0.0000)
+                            ELSE coalesce((pre.vl_total),0.0000)
                             END
                             -
                             coalesce((select 

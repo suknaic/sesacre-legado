@@ -22,6 +22,8 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    $('body').find('select').select2({});
   
     $('[data-toggle="popover"]').popover();
 

@@ -154,10 +154,10 @@ class VincularTramitacao {
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
                     $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
-                                . "<td class='text-center'>".$linha['nm_pessoa']."</td>"
-                                . "<td class='text-center'>".$linha['nm_tramitacao']."</td>"
-                                . "<td class='text-center'>".$linha['nm_lotacao']."</td>"
-                                . "<td class='text-center'>".$linha['nm_doc_tipo_lotacao']."</td>"
+                                . "<td>".$linha['nm_pessoa']."</td>"
+                                . "<td>".$linha['nm_tramitacao']."</td>"
+                                . "<td>".$linha['nm_lotacao']."</td>"
+                                . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
                                 . "<td class='text-center'>"
                                     . "<button type='button' title='Remover Registro' class='remover-vinculo'>"
                                         . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
