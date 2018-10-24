@@ -59,7 +59,7 @@ function retornaOptionsEmpenhoAnulacaoSituacoes(){
             "acao": "retornaOptionsEmpenhoAnulacaoSituacoes"
         },
         "success": function (response){
-            console.log(response);
+            //console.log(response);
             $("#situacao").html("");
             $("#situacao").append(response);
         }
