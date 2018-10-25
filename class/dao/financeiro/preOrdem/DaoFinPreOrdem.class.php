@@ -323,7 +323,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                 
                 $sql = "update fin_pedido 
                         set vl_pedido = (SELECT SUM(coalesce(PRE.vl_total, 0.0000)) valor
-                                        FROM fin_pre_ordem as PRE
+                                        FROM fin_pre_ordem PRE
                                         INNER JOIN fin_cont_itens CI ON CI.id_cont_itens = PRE.id_cont_itens
                                         INNER JOIN pla_material M ON M.id_material = CI.id_material
                                         WHERE PRE.id_pedido = :pedido
@@ -334,8 +334,8 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
-            } catch (Exception $ex) {
-                $this->msgRetorno = $e->getMessage();
+            } catch (PDOException $ex) {
+                $this->msgRetorno = $ex->getMessage();
                 $this->sucesso = false;
             }
         }

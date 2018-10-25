@@ -338,13 +338,15 @@ class EmpenhoAnulacao {
                  */
                 if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {                    
                     $quantidadeInformado = round(($quantidadeInformado/$value['vl_itens_pre']), 4);
+                }else{
+                    $valorTotalParaAnular = round(($valorInformado*$quantidadeInformado),4);
                 }
                 
 
 //                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
 //                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
 //                }
-
+//                $pdo->rollBack();
 //                echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
 //                return;
 
@@ -522,7 +524,7 @@ class EmpenhoAnulacao {
                     return;
                 }
                 
-                $vlTotalNovo = $value['vl_total'] - $vlTotal;
+                $vlTotalNovo = $value['total'] - $vlTotal;
                 if ($vlTotalNovo < 0) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
@@ -888,10 +890,10 @@ class EmpenhoAnulacao {
 
             if ($daoConEmpenhoAnulacao->getSucesso()) {
                 foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
-                    $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
-                    if($linha['fl_valor_variavel'] == 1 || $linha['tp_material'] == "S"){
-                        $total_anulado = $linha['vl_anulado'];
-                    }
+                    $total_anulado = $linha['vl_anulado'];
+//                    if($linha['fl_valor_variavel'] == 1 || $linha['tp_material'] == "S"){
+//                        $total_anulado = $linha['vl_anulado'];
+//                    }
                     
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
                     $tabela .= '<tr>
