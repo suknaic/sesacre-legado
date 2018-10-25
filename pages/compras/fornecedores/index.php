@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -205,7 +205,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/sistema/pessoa/fornecedores/index.js"></script>
+        <script src="/pages/compras/fornecedores/index.js"></script>
         <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->

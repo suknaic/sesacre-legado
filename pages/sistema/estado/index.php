@@ -120,7 +120,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                                                     <tr>
                                                         <th>Estado</th>
                                                         <th>Pais Referente</th>
-                                                        <th>Sigla Estado</th>
+                                                        <th>Sigla do Estado</th>
                                                         <th class="text-center">Ações</th>
                                                     </tr>
                                                 </thead>
