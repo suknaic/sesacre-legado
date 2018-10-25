@@ -194,12 +194,19 @@ $(document).ready(function () {
         qtd = $(elemento).closest("tr").find('.qtd_anulacao').val();
         
         valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
+        
         if($(elemento).closest("tr").find('.qtd_anulacao').attr('tp') == "S"
                 || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){
+            
+            
+            
             valor = 1;
         }
-                                
-        qtd = func.converteValorIngFloat(qtd);                       
+
+        qtd = func.converteValorIngFloat(qtd);
+        
+        
+        
         //console.log(`Quantidade: ${qtd} ... Valor Unitário: ${valor}`)                           
         $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
         $(elemento).closest("tr").find(".valor_total_itens").priceFormat({
