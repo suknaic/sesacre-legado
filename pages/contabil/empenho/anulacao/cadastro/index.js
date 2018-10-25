@@ -174,7 +174,7 @@ $(document).ready(function () {
                     centsSeparator: ',',
                     thousandsSeparator: '.',
                 });
-                mudaLabelQuantidadeValor();
+                //mudaLabelQuantidadeValor();
             }
         });
     }
@@ -198,7 +198,7 @@ $(document).ready(function () {
                 || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){
             valor = 1;
         }
-                                       
+                                
         qtd = func.converteValorIngFloat(qtd);                       
         //console.log(`Quantidade: ${qtd} ... Valor Unitário: ${valor}`)                           
         $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
@@ -391,7 +391,7 @@ function mudaLabelQuantidadeValor(){
     $("#tabelaItensPedido tbody tr .tipo").each(function(){
         var tipoMaterial = $(this).html();
         var cabecalho = $("#tabelaItensPedido > thead > tr");
-        if (tipoMaterial == 'S') {
+        if (tipoMaterial == 'S' || $(this).attr('fl_valor_variavel') == 1) {
             cabecalho.find('.quantidade-valor').html('Valor da Anulação');
         } else {
             cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');
