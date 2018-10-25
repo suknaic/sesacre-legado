@@ -1173,7 +1173,7 @@ class DaoFinPedido extends FinPedidoTb {
                                                             when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                                                         then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
                                                         when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                                                        then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                                                        then (pre.vl_total - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
                                                     end saldo
                                                     from fin_pedido as pedido
                                                     inner join fin_pre_ordem as pre

@@ -111,7 +111,7 @@ class DaoFinItens extends FinItensTb {
                         coalesce((select 
                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                   THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                  ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                  ELSE coalesce(sum(pre.vl_total),0.0000)
                                   END as busca
                                   from fin_pre_ordem as pre 
                                   inner join fin_pedido as p
@@ -145,7 +145,7 @@ class DaoFinItens extends FinItensTb {
                         coalesce((select 
                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                   THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                  ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                  ELSE coalesce(sum(pre.vl_total),0.0000)
                                   END as busca
                         from fin_pre_ordem as pre 
                         inner join fin_pedido as p
@@ -177,7 +177,7 @@ class DaoFinItens extends FinItensTb {
                         coalesce((select 
                                   CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                   THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                  ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                  ELSE coalesce(sum(pre.vl_total),0.0000)
                                   END as busca
                                   from fin_pre_ordem as pre 
                                   inner join fin_pedido as p
@@ -204,7 +204,7 @@ class DaoFinItens extends FinItensTb {
 			                         where it.id_cont_itens_alt =  item.id_cont_itens
 			                         group by m.tp_material), 0.0000)
 	                        -
-	                        coalesce((select coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000) as busca
+	                        coalesce((select coalesce(sum(pre.vl_total),0.0000) as busca
 	                                  from fin_pre_ordem as pre 
 	                                  inner join fin_pedido as p
 	                                  on p.id_pedido = pre.id_pedido
@@ -373,7 +373,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -407,7 +407,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -439,7 +439,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -511,7 +511,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -547,7 +547,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -580,7 +580,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -652,7 +652,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p
@@ -685,7 +685,7 @@ class DaoFinItens extends FinItensTb {
                                                 coalesce((select 
                                                           CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                                                          ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                                                          ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
                                                           from fin_pre_ordem as pre 
                                                           inner join fin_pedido as p

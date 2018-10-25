@@ -22,13 +22,14 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
     public function cadastrarPreOrdem($pdo = null) {
         if (!empty($pdo)) {
             try {
-                $sql = "INSERT INTO fin_pre_ordem (id_cont_itens, id_pedido, id_fornecedor, qt_itens_pre, vl_itens_pre) VALUES (:item, :pedido, :fornecedor, :qtd, :vl)";
+                $sql = "INSERT INTO fin_pre_ordem (id_cont_itens, id_pedido, id_fornecedor, qt_itens_pre, vl_itens_pre, vl_total) VALUES (:item, :pedido, :fornecedor, :qtd, :vl, :vlTotal)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":item", $this->getIdContItens(), PDO::PARAM_INT);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":fornecedor", $this->getIdFornecedor(), PDO::PARAM_INT);
                 $stmt->bindValue(":qtd", $this->getQtItensPre(), PDO::PARAM_STR);
                 $stmt->bindValue(":vl", $this->getVlItensPre(), PDO::PARAM_STR);
+                $stmt->bindValue(":vlTotal", $this->getVlTotal(), PDO::PARAM_STR);
                 $stmt->execute();
                 $this->sucesso = true;
                 $this->msgRetorno = '';
@@ -51,7 +52,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
         if (!empty($pdo)) {
             try {
                 $sql = "SELECT pre.id_pre_ordem, pre.id_fornecedor, contIt.id_cont_itens, contIt.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo, 
-                        desp.cd_despesa, mat.tp_material, contIt.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, (pre.vl_total) as total,
+                        desp.cd_despesa, mat.tp_material, contIt.nr_lote, pre.qt_itens_pre, pre.vl_itens_pre, pre.vl_total as total,
                         contIt.nr_item, unid.nm_unidade_medida, mat.cd_desc_material
 			FROM fin_pre_ordem as pre
 			INNER JOIN fin_cont_itens as contIt
@@ -160,10 +161,11 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
     public function editarItensPreOrdem($pdo = null) {
         if (!empty($pdo)) {
             try {
-                $sql = "update fin_pre_ordem SET qt_itens_pre = :qtd, vl_itens_pre = :valor where id_pre_ordem = :ordem";
+                $sql = "update fin_pre_ordem SET qt_itens_pre = :qtd, vl_itens_pre = :valor, vl_total = :vlTotal where id_pre_ordem = :ordem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":qtd", $this->getQtItensPre(), PDO::PARAM_STR);
                 $stmt->bindValue(":valor", $this->getVlItensPre(), PDO::PARAM_STR);
+                $stmt->bindValue(":vlTotal", $this->getVlTotal(), PDO::PARAM_STR);
                 $stmt->bindValue(":ordem", $this->getIdPreOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -225,7 +227,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                         coalesce((select 
                         CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P' 
                         THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                        ELSE coalesce(sum((pre.vl_total)),0.0000)
+                        ELSE coalesce(sum(pre.vl_total),0.0000)
                         END as busca
                         from fin_pre_ordem as pre 
                         inner join fin_pedido as p
@@ -257,7 +259,7 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                         coalesce((select 
                         CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P' 
                         THEN coalesce(sum(pre.qt_itens_pre),0.0000)
-                        ELSE coalesce(sum((pre.qt_itens_pre * pre.vl_itens_pre)),0.0000)
+                        ELSE coalesce(sum(pre.vl_total),0.0000)
                         END as busca
                         from fin_pre_ordem as pre 
                         inner join fin_pedido as p
