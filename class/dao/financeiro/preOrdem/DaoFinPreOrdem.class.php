@@ -324,8 +324,8 @@ class DaoFinPreOrdem extends FinPreOrdemTb {
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
-            } catch (Exception $ex) {
-                $this->msgRetorno = $e->getMessage();
+            } catch (PDOException $ex) {
+                $this->msgRetorno = $ex->getMessage();
                 $this->sucesso = false;
             }
         }

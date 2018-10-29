@@ -312,7 +312,7 @@ class DaoFinItens extends FinItensTb {
             try {
                 $sql = "select material.id_material, material.cd_desc_material, material.nm_material, material.nm_desc_material, material.nm_grupo, material.nm_sub_grupo,
 						material.cd_elemento_despesa, material.tp_material, item.nr_lote, item.nm_marca, item.nm_modelo, item.qt_itens, item.vl_itens, item.pc_desconto,
-						item.id_cont_itens,id_cont_itens_alt, f.id_fornecedor, item.id_unidade_medida, item.nr_item, item.ds_itens,
+						item.id_cont_itens,id_cont_itens_alt, f.id_fornecedor, item.id_unidade_medida, item.nr_item, item.ds_itens, item.fl_valor_variavel,
 						CASE
 						WHEN item.pc_desconto is not null or item.pc_desconto <> '0'
 						THEN ((item.qt_itens * item.vl_itens)-((item.pc_desconto*(item.qt_itens * item.vl_itens))/100))
@@ -489,7 +489,7 @@ class DaoFinItens extends FinItensTb {
             try {
                 $sql = "SELECT f.id_fornecedor, item.id_cont_itens, item.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo,
 						mat.cd_elemento_despesa, mat.tp_material, item.nr_lote, item.qt_itens, item.vl_itens,
-						item.pc_desconto, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,
+						item.pc_desconto, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,item.fl_valor_variavel,
 						CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
 						THEN  item.qt_itens
 						ELSE (item.qt_itens * item.vl_itens)

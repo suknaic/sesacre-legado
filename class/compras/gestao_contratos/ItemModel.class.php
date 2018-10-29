@@ -738,12 +738,12 @@ class ItemModel {
             //verifica o saldo do item
             $daoFinItens->retornaSaldoItemAta($pdo, $condicao, $subCondicao);
 
-            if ($tipo == 'C' && $daoFinItens->Sucesso()) {
+            if (($tipo == 'C' || $tipo == 'P') && $this->flValorVariavel == '0' && $daoFinItens->Sucesso()) {
 
                 if ((float) $daoFinItens->getMsgRetorno()[0]["saldo"] < Metodos::ConverteValorIng($this->qtItens) && !empty($this->qtItens)) {
                     return false;
                 }
-            } else if ($tipo == 'S' && $daoFinItens->Sucesso() && !empty($this->qtItens) && !empty($this->vlItens)) {
+            } else if (($tipo == 'S' || $this->flValorVariavel == '1') && $daoFinItens->Sucesso() && !empty($this->qtItens) && !empty($this->vlItens)) {
                 if (round((float) $daoFinItens->getMsgRetorno()[0]["saldo"], 4) < round((Metodos::ConverteValorIng($this->qtItens) * Metodos::ConverteValorIng($this->vlItens)), 4)) {
                     return false;
                 }
@@ -806,7 +806,7 @@ class ItemModel {
                     $descritivoItem = $value["ds_itens"];
                 }
                 
-                $tabela .= '<tr>
+                $tabela .= '<tr data-id='.$value["id_cont_itens"].' data-tp-material='. $value["tp_material"].' data-fl-valor-variavel='.$value["fl_valor_variavel"].' class="itens">
                                 <td>' . $value["nr_item"] . '</td>
 				<td>' . $value["nm_material"] . '</td>
 				<td>' . $descritivoItem . '</td>
@@ -822,11 +822,11 @@ class ItemModel {
 				<td class="text-center">' . Metodos::ConverteValorBr($value["total"], 4) . '</td>
 				<td class="text-center">' . Metodos::ConverteValorBr($value["utilizado"], 4) . '</td>
 				<td class="text-center">' . Metodos::ConverteValorBr($value["saldo"], 4) . '</td>
-				<td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" itemId="' . $value["id_cont_itens"] . '"
+				<td class="text-center">Quantidade<input type="text" name="qtd" id="qtd" itemId="' . $value["id_cont_itens"] . '"
 				tp="' . $value["tp_material"] . '" class="form-control input-sm qtd" >';
 
-                if ($value["tp_material"] == 'S') {
-                    $tabela .= 'Vlr. Unitário<input type="text" name="vl" id="vl" itemId="' . $value["id_cont_itens"] . '"
+                if ($value["tp_material"] == 'S' || $value["fl_valor_variavel"] == "1") {
+                    $tabela .= '<br>Vlr. Unitário<input type="text" name="vl" id="vl" itemId="' . $value["id_cont_itens"] . '"
 					tp="' . $value["tp_material"] . '" class="form-control input-sm vl">';
                 }
                 $tabela .= '</td></tr>';

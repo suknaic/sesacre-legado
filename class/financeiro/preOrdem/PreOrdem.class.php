@@ -119,7 +119,8 @@ class PreOrdem {
                 $erro = false;
 
                 for ($i = 0; $i < $cont; $i++) {
-                    if ($array[$i]->tp == 'C' || $array[$i]->tp == 'P') {
+                    $itemModel->setFlValorVariavel($result[$i]['fl_valor_variavel']);
+                    if (($array[$i]->tp == 'C' || $array[$i]->tp == 'P') && $result[$i]['fl_valor_variavel'] == "0") {
                         $valorPedido += (Metodos::ConverteValorIng($array[$i]->qtd) * $result[$i]['vl_itens']);
                         $itemModel->setQtItens($array[$i]->qtd);
                         if ($itemModel->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor . " and item.id_cont_itens =   " . $array[$i]->idItem, ' ', $pdo)) {
@@ -135,6 +136,7 @@ class PreOrdem {
                     } else {
                         $valorPedido += (Metodos::ConverteValorIng($array[$i]->qtd) * Metodos::ConverteValorIng($array[$i]->vl));
                         $itemModel->setVlItens($array[$i]->vl);
+                        $itemModel->setQtItens($array[$i]->qtd);
                         if ($itemModel->verificaSaldoAtaContrato($array[$i]->tp, " where f.id_fornecedor = " . $fornecedor . " and item.id_cont_itens =   " . $array[$i]->idItem, ' ', $pdo)) {
                             $daoFinPreOrdem->setIdContItens($array[$i]->idItem);
                             $daoFinPreOrdem->setIdPedido($array[$i]->id);
@@ -148,13 +150,14 @@ class PreOrdem {
                     }
                     
                     $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
-
+                    
                     $daoFinPreOrdem->cadastrarPreOrdem($pdo);
 
                     if (!$daoFinPreOrdem->Sucesso()) {
                         $erro = true;
                     }
                 }
+                
 
                 //setando o id do pedido para pode atualiza o valor
                 $this->idPedido = $array[0]->id;
