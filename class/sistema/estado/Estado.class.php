@@ -64,7 +64,7 @@ class Estado {
                 $est->setNmsigla(strtoupper($this->nmSigla));
             }
 
-            $busca = $est->buscaEstadoPorNome($est, $pdo);
+            $busca = $est->buscaEstadoPorNome($pdo);
 
             if (!$busca) {
                 //return $retorno;
@@ -113,7 +113,7 @@ class Estado {
     public function editarEstado() {
         try {
 
-            if ($this->nmEstado == "" || $this->idEstado == "" || $this->idPais == "") {
+            if (empty($this->nmEstado && $this->idEstado && $this->idPais)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
 
@@ -125,53 +125,48 @@ class Estado {
             $est->setIdPais($this->idPais);
             $est->setIdEstado($this->idEstado);
             $est->setNmEstado($this->nmEstado);
+            $est->setNmSigla($this->nmSigla);
+
             if (strlen($this->nmSigla) != 2) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             } else {
                 $est->setNmsigla(strtoupper($this->nmSigla));
             }
-            $busca = $est->buscaEstadoPorNome($est, $pdo);
-
-            if (!$busca) {
-                //return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
-                $pdo->rollBack();
-                return $retorno;
-            }
 
             $busca = $est->retornaEstado($pdo);
-
             if (!$busca) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
-                return $retorno;
+                return  Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
+            }
+
+            if ($busca['nm_estado'] != $this->nmEstado) {
+                $verifica = $est->buscaEstadoPorNome($pdo);
+            }
+
+            if (is_array($verifica)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", STR_REGISTRO_EXISTE);
+            }
+
+            if ($busca['nm_sigla'] != $this->nmSigla) {
+                if ($est->verificaSiglaEstado($pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", 'Registro com mesma <strong>sigla</strong> já existe.');
+                }
             }
 
             $result = $est->update($est, $pdo);
             if ($result != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $result);
             }
 
             if (!Log::SalvaLogU('ses_estado', $est->getIdEstado(), $busca, $pdo)) {
-                $retorno = retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             } else {
-                $sucesso = true;
-            }
-
-
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
                 $pdo->commit();
-                return $retorno;
-            } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -196,37 +191,26 @@ class Estado {
 
             if ($busca) {
                 if (!Log::SalvaLogD('ses_estado', $est->getIdEstado(), $pdo)) {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Registro.");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_NAO_ENCONTRADO);
             }
 
-            $resultDao = $est->delete($est, $pdo);
+            $resultDao = $est->delete($pdo);
             if ($resultDao != "Sucesso") {
                 if ($resultDao->getCode() == 23503) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Registro está vinculado a outro registro.");
+                    return Metodos::retornoAjax("Erro", "alert", " Não foi Possível Realizar a Exclusão desse Estado. Este registro está Vinculado a uma Pessoa.");
                 } else {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $resultDao->getMessage());
                 }
-            }
-
-            $sucesso = true;
-
-            if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-                $pdo->commit();
-                return $retorno;
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-                $pdo->rollBack();
-                return $retorno;
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

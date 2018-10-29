@@ -136,35 +136,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/estado/index.load.php";
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->

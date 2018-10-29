@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     //*********** Carregas todos os estado no select option ***********
     $.ajax({
-        "url": "/pages/sistema/cidade/request.php",
+        "url": "request.php",
         "dataType": 'html',
         "data": {
             acao: "SelectEstadoOption"
@@ -42,7 +42,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/pages/sistema/cidade/request.php",
+                "url": "request.php",
                 "dataType": "html",
                 "data": {
                     "acao": "listaCidadesTable",
@@ -107,7 +107,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/pages/sistema/cidade/request.php",
+                        "url": "request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "remCidade",
@@ -165,12 +165,12 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-newCidade', function (e) {
-        top.location.href='cadEditCidade.php';
+        top.location.href='cadEditCidade/index.php';
     });
 
     $('body').on('click', '.btn-edit', function (e) {
         var id = $(this).val();
-        top.location.href='cadEditCidade.php?key='+id;
+        top.location.href='cadEditCidade/index.php?key='+id;
     });
 
     $('body').on('keypress', '.formCidade', function (e) {
