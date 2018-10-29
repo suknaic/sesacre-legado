@@ -34,10 +34,10 @@ class DaoSesEstado extends SesEstado{
         }
     }
 
-    function delete(SesEstado $est, $pdo) {
+    function delete($pdo) {
         try {
             $result = $pdo->prepare("DELETE FROM ses_estado WHERE id_estado = :idEstado");
-            $result->bindValue(":idEstado", $est->getIdEstado(), PDO::PARAM_INT);
+            $result->bindValue(":idEstado", $this->getIdEstado(), PDO::PARAM_INT);
             $result->execute();
 
             return "Sucesso";
@@ -84,8 +84,6 @@ class DaoSesEstado extends SesEstado{
             }else{
                 return $retorno;
             }
-            return $retorno;
-
         } catch (PDOException $e) {
             echo $e->getMessage();
             return $retorno;
@@ -108,7 +106,6 @@ class DaoSesEstado extends SesEstado{
             }else{
                 return $retorno;
             }
-            return $retorno;
         } catch (PDOException $e) {
             echo $e->getMessage();
             return $retorno;
@@ -122,10 +119,10 @@ class DaoSesEstado extends SesEstado{
      * @param type $pdo
      * @return boolean/Object
      */
-    function buscaEstadoPorNome(SesEstado $est, $pdo) {
+    function buscaEstadoPorNome($pdo) {
         $retorno = false;
         $semEstado = "";
-        if($est->getIdEstado() != NULL || $est->getIdEstado() != ""){
+        if($this->getIdEstado() != NULL || $this->getIdEstado() != ""){
             $semEstado = " AND id_estado <> :idEstado";
         }
         $sql = " SELECT "
@@ -136,20 +133,19 @@ class DaoSesEstado extends SesEstado{
                 . "";
         try {
             $sth = $pdo->prepare($sql);
-            $sth->bindValue(":nmEstado", $est->getNmEstado(), PDO::PARAM_STR);
-             if($est->getIdEstado() != NULL || $est->getIdEstado() != ""){
-                $sth->bindValue(":idEstado", $est->getIdPais(), PDO::PARAM_INT);
+            $sth->bindValue(":nmEstado", $this->getNmEstado(), PDO::PARAM_STR);
+            if($this->getIdEstado() != NULL || $this->getIdEstado() != ""){
+                $sth->bindValue(":idEstado", $this->getIdEstado(), PDO::PARAM_INT);
             }
             $sth->execute();
             if ($sth->rowCount() >= 1) {
                 return $sth->fetchAll(PDO::FETCH_ASSOC);
-            }else{
+            } else {
                 return $retorno;
             }
-            return $retorno;
         } catch (PDOException $e) {
-            //echo $e->getMessage();
-            return $retorno;
+            echo $e->getMessage();
+//            return $retorno;
         }
 
     }
