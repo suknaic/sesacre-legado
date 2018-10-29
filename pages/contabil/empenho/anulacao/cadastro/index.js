@@ -196,10 +196,7 @@ $(document).ready(function () {
         valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
         
         if($(elemento).closest("tr").find('.qtd_anulacao').attr('tp') == "S"
-                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){
-            
-            
-            
+                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){                                    
             valor = 1;
         }
 
