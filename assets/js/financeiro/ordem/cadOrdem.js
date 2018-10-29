@@ -159,28 +159,73 @@ $(document).ready(function () {
 //            var $this = $(this);
             var itens = [];
             // $this.prop("disabled", true);
+            var idPedido = $("#id_pedido").val();
+            var local = $("body").find("#id_lotacao").val();
+            var vig_inicial = $("body").find("#vig_inicial").val();
+            var vig_final = $("body").find("#vig_final").val();
+            var tipoOrdem = $("body").find("#tipoOrdem").val();
+            var pergunta = $("input[name='optradio']:checked").val();
+            
+            
             $(".itens").each(function () {
-                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
-                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
-                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
-                    }
+                
+                var quantidade = $(this).find(".qtd").val();
+                var valor = $(this).find(".vl").val();
+                var tp = $(this).data("tp-material");
+                var idPreOrdem = $(this).data("id-pre-ordem");
+                var flVariavel = $(this).data('fl-valor-variavel');
+                
+                if (!quantidade || quantidade == "0,0000") {
+                    quantidade = 0;
                 }
-
-                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
-                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
-                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
-                            'id': $("body").find("#id").val(),
-                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
-                    }
+                
+                if (!valor || valor == "0,0000") {
+                    valor = 0;
                 }
+                
+                var item = {
+                    idPedido: idPedido,
+                    idPreOrdem: idPreOrdem,
+                    local: local,
+                    tp: tp,
+                    vig_inicial: vig_inicial,
+                    vig_final: vig_final,
+                    tipoOrdem: tipoOrdem,
+                    pergunta: pergunta,
+                    qtd: quantidade,
+                    vl: valor,
+                    flVariavel: flVariavel
+                }
+                
+                if ((item.tp == "C" || item.tp == "P") && item.qtd != 0 && flVariavel == "0") {
+                    itens.push(item);
+                }
+                
+                if ((item.tp == "S" || flVariavel == '1') && item.qtd != 0 && item.vl != 0) {
+                    itens.push(item);
+                }
+                
+//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
+//                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+//                        itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
+//                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+//                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
+//                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+//                    }
+//                }
+//
+//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
+//                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
+//                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+//                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
+//                            'id': $("body").find("#id").val(),
+//                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
+//                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
+//                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
+//                    }
+//                }
             });
-
+            
             var enc = JSON.stringify(itens);
             
             $.ajax({

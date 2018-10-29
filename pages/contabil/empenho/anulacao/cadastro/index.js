@@ -191,21 +191,28 @@ $(document).ready(function () {
         let valor = "0";
         let qtd = "0"; 
         
-        qtd = $(elemento).closest("tr").find('.qtd_anulacao').val();
-        
+        qtd = $(elemento).closest("tr").find('.qtd_anulacao').val();        
         valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
+        let valorPorItem = 0;
+        let qtdOrValor = 0;
         
-        if($(elemento).closest("tr").find('.qtd_anulacao').attr('tp') == "S"
-                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){                                    
-            valor = 1;
-        }
-
         qtd = func.converteValorIngFloat(qtd);
         
+        if($(elemento).closest("tr").find('.qtd_anulacao').attr('tp') == "S"
+                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){   
+            valorPorItem = qtd;            
+            qtdOrValor = qtd/valor;
+            valor = 1;
+        }else{
+            qtdOrValor = qtd*valor;
+            valorPorItem = func.arrendondaValorParaQuatroCasas(qtd*valor);
+        }
         
         
+        //console.log(`${qtdOrValor} .... ${valorPorItem}`);
         //console.log(`Quantidade: ${qtd} ... Valor Unitário: ${valor}`)                           
-        $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
+        $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtdOrValor));
+        $(elemento).closest("tr").find(".valor_total_itens").attr("valor_por_item", valorPorItem);
         $(elemento).closest("tr").find(".valor_total_itens").priceFormat({
             prefix: '',
             centsSeparator: ',',
@@ -213,10 +220,17 @@ $(document).ready(function () {
             centsLimit: 4
         });
         
-        let valorTotal = 0;
+        
+        
+        let valorTotal = 0.000;
         $(".valor_total_itens").each(function(index){            
-            let valorInformado = func.converteValorIngFloat($(this).text());            
-            valorTotal = valorTotal + valorInformado;
+            //let valorInformado = func.converteValorIngFloat($(this).text());     
+            if($(this).attr('valor_por_item') != undefined){
+                console.log($(this).attr('valor_por_item'));
+                let valorInformado = parseFloat($(this).attr('valor_por_item'));            
+                valorTotal = valorTotal + valorInformado;
+                console.log(valorTotal);
+            }
         });
         $("#vl_anulacao").val(func.arrendondaValorParaQuatroCasas(valorTotal));
         $("#vl_anulacao").priceFormat({
@@ -392,10 +406,10 @@ $(document).ready(function () {
 });
 
 function mudaLabelQuantidadeValor(){
-    $("#tabelaItensPedido tbody tr .tipo").each(function(){
-        var tipoMaterial = $(this).html();
+    $("#tabelaItensPedido tbody tr").each(function(){
+        var linha = $(this);
         var cabecalho = $("#tabelaItensPedido > thead > tr");
-        if (tipoMaterial == 'S' || $(this).attr('fl_valor_variavel') == 1) {
+        if (linha.data('tp-material') == 'S' || linha.data('fl-valor-variavel') == '1') {
             cabecalho.find('.quantidade-valor').html('Valor da Anulação');
         } else {
             cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');
