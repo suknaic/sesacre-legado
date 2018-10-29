@@ -406,10 +406,10 @@ $(document).ready(function () {
 });
 
 function mudaLabelQuantidadeValor(){
-    $("#tabelaItensPedido tbody tr .tipo").each(function(){
-        var tipoMaterial = $(this).html();
+    $("#tabelaItensPedido tbody tr").each(function(){
+        var linha = $(this);
         var cabecalho = $("#tabelaItensPedido > thead > tr");
-        if (tipoMaterial == 'S' || $(this).attr('fl_valor_variavel') == 1) {
+        if (linha.data('tp-material') == 'S' || linha.data('fl-valor-variavel') == '1') {
             cabecalho.find('.quantidade-valor').html('Valor da Anulação');
         } else {
             cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');

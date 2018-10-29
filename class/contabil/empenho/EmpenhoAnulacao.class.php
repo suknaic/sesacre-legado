@@ -923,7 +923,7 @@ class EmpenhoAnulacao {
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
                     $tabela .= '<tr>
                                     <td class="text-center">' . $linha["nr_item"] . '</td>
-                                    <td class="text-center">' . $linha["nm_material"] . '</td>
+                                    <td class="text-center">' . $linha["cd_desc_material"]." - ".$linha["nm_material"] . '</td>
                                     <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
                                     <td class="text-center tpMaterial">' . $linha["tp_material"] . '</td>
                                     <td class="text-center">' . $linha["nr_lote"] . '</td>

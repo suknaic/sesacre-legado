@@ -139,7 +139,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem, ordem.sit_ordem,
                         valorOrdem.valor,
                         case 
-                                when ordem.tp_ordem = '1' THEN 'ENTREGA'
+                            when ordem.tp_ordem = '1' THEN 'ENTREGA'
                             when ordem.tp_ordem = '2' THEN 'EXECUÇÃO/SERVIÇO'
                         END as tipo, 
                         case 
@@ -491,8 +491,6 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    
     /**
      * 
      * @param type $itens
@@ -501,8 +499,10 @@ class DaoFinOrdem extends FinOrdemTb {
     public function listaItensPreOrdemPorPreOrdem($itens, PDO $pdo) {
         try {
             if (!empty($pdo)) {
+
                 $sql = "select * from view_pedido_saldo
                         where id_pre_ordem in ( ".$itens." )";                        
+
                 $stmt = $pdo->prepare($sql);                
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {

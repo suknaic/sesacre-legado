@@ -51,21 +51,55 @@ $(document).ready(function () {
             var itens = [];
             var erro = false;
             // $this.prop("disabled", true);
+            
+            var id = $("body").find("#id").val();
+            
             $(".itens").each(function () {
-                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
-                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
-                            'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
-                    }
+                var quantidade = $(this).find(".qtd").val();
+                var valor = $(this).find(".vl").val();
+                var idItem = $(this).data('id');
+                var tp = $(this).data('tp-material');
+                var flVariavel = $(this).data('fl-valor-variavel');
+                
+                if (!quantidade || quantidade == "0,0000") {
+                    quantidade = 0;
                 }
-
-                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
-                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
-                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idItem': $(this).find(".vl").attr("itemId"),
-                            'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
-                    }
+                
+                if (!valor || valor == "0,0000") {
+                    valor = 0;
                 }
+                
+                var item = {
+                    'id': id,
+                    'idItem': idItem,
+                    'tp': tp,
+                    'qtd': quantidade,
+                    'vl': valor
+                }
+                
+                if ((item.tp == "C" || item.tp == "P") && item.qtd != 0 && flVariavel == "0") {
+                    itens.push(item);
+                }
+                
+                if ((item.tp == "S" || flVariavel == '1') && item.qtd != 0 && item.vl != 0) {
+                    itens.push(item);
+                }
+                
+                
+//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
+//                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+//                        itens.push({'qtd':item.find(".qtd").val(), 'idItem': $(this).find(".qtd").attr("itemId"),
+//                            'id': id, 'tp': $(this).find(".qtd").attr("tp")});
+//                    }
+//                }
+//
+//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
+//                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
+//                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
+//                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idItem': $(this).find(".vl").attr("itemId"),
+//                            'id': $("body").find("#id").val(), 'tp': $(this).find(".qtd").attr("tp")});
+//                    }
+//                }
             });
             
             if(itens.length === 0){

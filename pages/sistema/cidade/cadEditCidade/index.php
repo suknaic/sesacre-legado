@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/cadEditCidade/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -44,7 +44,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cidade</h1>
+                        <?php
+                            if (empty($idCidade)) {
+                                echo '<h1 class="page-header text-overflow">Cadastro de Cidade</h1>';
+                            } else {
+                                echo '<h1 class="page-header text-overflow">Edição de Cidade</h1>';
+                            }
+                        ?>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -154,7 +160,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/sistema/cidade/cadEditCidade.js"></script>
+        <script src="/pages/sistema/cidade/cadEditCidade/index.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>

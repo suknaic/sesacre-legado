@@ -11,25 +11,8 @@ if(!$session->verificaPermissao(PERFIL_TI)){
 }
 
 switch ($_REQUEST['acao']) {
-    
-    case 'remCidade':
-        try {
-                        
-            $id = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-            $cidade = new Cidade();
-            $cidade->setId_cidade($id['id']);
-
-            echo $cidade->removerCidade();
-            return;
-            break;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-            break;
-        }
-     
-    case 'listaCidadesTable':
+               
+    case 'cadCidade':
         try {
 
             if(!$session->verificaPermissao(PERFIL_TI)){
@@ -39,12 +22,35 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             $cidade = new Cidade();
-            $cidade->setNm_cidade($dados['nome']);
-            $cidade->setId_estado($dados['idEstado']);
 
-            echo $cidade->retornaTrCidades();
+            $cidade->setNm_cidade(trim($dados['nome']));
+            $cidade->setId_estado(($dados['estado']));
+            $cidade->setId_regional_geo(($dados['regionalGeo']));
+            $cidade->setId_regional_saude(($dados['regionalSaude']));
+
+            echo $cidade->cadastrarCidade();
             return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+        
+    case 'edtCidade':
+        try {
             
+            $dados = filter_input(INPUT_GET, 'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $cidade = new Cidade();
+            $cidade->setId_cidade($dados['id']);
+            $cidade->setNm_cidade(trim($dados['nome']));
+            $cidade->setId_estado(($dados['estado']));
+            $cidade->setId_regional_geo(($dados['regionalGeo']));
+            $cidade->setId_regional_saude(($dados['regionalSaude']));
+
+            echo $cidade->editarCidade();
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -62,8 +68,7 @@ switch ($_REQUEST['acao']) {
             $id = filter_input(INPUT_GET, 'id_cidade', FILTER_DEFAULT);
 
             $estado = new Estado();
-            echo "<option value = ''>Selecione o Estado</option>
-                  <option value = 'Todos'>Todos os Estados</option>";
+            echo "<option value = ''>Selecione o Estado</option>";
             echo $estado->retornaOptionEstado(null, $id);
             return;
             
@@ -112,6 +117,26 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
+    case 'carregaDadosCidade':
+        try {
+
+            if(!$session->verificaPermissao(PERFIL_TI)){
+                header("Location: /pages/index.php");
+            }
+
+            $id = filter_input(INPUT_GET, 'id_cidade', FILTER_DEFAULT);
+
+            $cidade = new Cidade();
+            $cidade->setId_cidade(base64_decode($id));
+
+            echo $cidade->carregaDadosCidade();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }
 
 ?>

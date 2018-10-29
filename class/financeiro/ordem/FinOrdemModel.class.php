@@ -836,11 +836,13 @@ class FinOrdemModel {
                 $retorno = '';
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
-                        $retorno .= '<tr>
+
+                        $retorno .= '<tr data-tipo-material='.$linha['tp_material'].' data-fl-valor-variavel='.$linha['fl_valor_variavel'].'>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
                                         <td class="text-center">' . wordwrap($linha["nm_desc_material"], 20, "<br />\n") . '</td>                                                                                                                        
-                                        <td class="text-center tipo" fl_valor_variavel="'.$linha['fl_valor_variavel'].'">' . $linha["tp_material"] . '</td>
+                                        <td class="text-center">' . $linha["tp_material"] . '</td>
+
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>

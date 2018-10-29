@@ -8,7 +8,7 @@ $(document).ready(function () {
     //********** Carrega todos os Estados no select **********
     function carregaEstados(idCidade = null) {
         $.ajax({
-            "url": "/pages/sistema/cidade/request.php",
+            "url": "/pages/sistema/cidade/cadEditCidade/request.php",
             "dataType": 'html',
             "data": {
                 acao: "SelectEstadoOption",
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     function carregaRegiopnaisSaude(idRegional = null) {
         $.ajax({
-            "url": "/pages/sistema/cidade/request.php",
+            "url": "/pages/sistema/cidade/cadEditCidade/request.php",
             "dataType": 'html',
             "data": {
                 acao: "SelectRegionalSaudeOption",
@@ -40,7 +40,7 @@ $(document).ready(function () {
 
     function carregaRegionaisGeo(idRegional = null) {
         $.ajax({
-            "url": "/pages/sistema/cidade/request.php",
+            "url": "/pages/sistema/cidade/cadEditCidade/request.php",
             "dataType": 'html',
             "data": {
                 acao: "SelectRegionalGeoOption",
@@ -58,7 +58,7 @@ $(document).ready(function () {
     //*********** Carregas dados da cidade ***********
     function carregaDadosCidade(){
         $.ajax({
-            "url": "/pages/sistema/cidade/request.php",
+            "url": "/pages/sistema/cidade/cadEditCidade/request.php",
             "dataType": 'html',
             "data": {
                 acao: "carregaDadosCidade",
@@ -120,7 +120,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/pages/sistema/cidade/request.php",
+                "url": "/pages/sistema/cidade/cadEditCidade/request.php",
                 "dataType": "html",
                 "data": {
                     "acao": "cadCidade",
@@ -189,7 +189,7 @@ $(document).ready(function () {
             }
 
             $.ajax({
-                "url": "/pages/sistema/cidade/request.php",
+                "url": "/pages/sistema/cidade/cadEditCidade/request.php",
                 "dataType": "html",
                 "data": {
                     "acao": "edtCidade",
