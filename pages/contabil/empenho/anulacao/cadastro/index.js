@@ -174,7 +174,7 @@ $(document).ready(function () {
                     centsSeparator: ',',
                     thousandsSeparator: '.',
                 });
-                mudaLabelQuantidadeValor();
+                //mudaLabelQuantidadeValor();
             }
         });
     }
@@ -194,12 +194,16 @@ $(document).ready(function () {
         qtd = $(elemento).closest("tr").find('.qtd_anulacao').val();
         
         valor = $(elemento).closest("tr").find('.qtd_anulacao').attr('valor_unitario');
+        
         if($(elemento).closest("tr").find('.qtd_anulacao').attr('tp') == "S"
-                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){
+                || $(elemento).closest("tr").find('.qtd_anulacao').attr('fl_valor_variavel') == 1){                                    
             valor = 1;
         }
-                                       
-        qtd = func.converteValorIngFloat(qtd);                       
+
+        qtd = func.converteValorIngFloat(qtd);
+        
+        
+        
         //console.log(`Quantidade: ${qtd} ... Valor Unitário: ${valor}`)                           
         $(elemento).closest("tr").find(".valor_total_itens").text(func.arrendondaValorParaQuatroCasas(qtd*valor));
         $(elemento).closest("tr").find(".valor_total_itens").priceFormat({
@@ -391,7 +395,7 @@ function mudaLabelQuantidadeValor(){
     $("#tabelaItensPedido tbody tr .tipo").each(function(){
         var tipoMaterial = $(this).html();
         var cabecalho = $("#tabelaItensPedido > thead > tr");
-        if (tipoMaterial == 'S') {
+        if (tipoMaterial == 'S' || $(this).attr('fl_valor_variavel') == 1) {
             cabecalho.find('.quantidade-valor').html('Valor da Anulação');
         } else {
             cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');

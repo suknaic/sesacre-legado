@@ -146,6 +146,8 @@ class PreOrdem {
                             $erro = true;
                         }
                     }
+                    
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
 
                     $daoFinPreOrdem->cadastrarPreOrdem($pdo);
 
@@ -236,6 +238,7 @@ class PreOrdem {
                     $daoFinPreOrdem->setIdPreOrdem($this->idPreOrdem);
                     $daoFinPreOrdem->setQtItensPre(Metodos::ConverteValorIng($this->qtItensPre));
                     $daoFinPreOrdem->setVlItensPre($busca['vl_itens_pre']);
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
                     $daoFinPreOrdem->editarItensPreOrdem($pdo);
                 } else {
                     return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
@@ -247,6 +250,7 @@ class PreOrdem {
                     $daoFinPreOrdem->setIdPreOrdem($this->idPreOrdem);
                     $daoFinPreOrdem->setQtItensPre(Metodos::ConverteValorIng($this->qtItensPre));
                     $daoFinPreOrdem->setVlItensPre(Metodos::ConverteValorIng($this->vlItensPre));
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
                     $daoFinPreOrdem->editarItensPreOrdem($pdo);
                 } else {
                     return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
