@@ -1,5 +1,4 @@
 <?php
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
 $session = new Session('ajax');

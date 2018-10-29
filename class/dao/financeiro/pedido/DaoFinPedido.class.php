@@ -1173,7 +1173,7 @@ class DaoFinPedido extends FinPedidoTb {
                                                             when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                                                         then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
                                                         when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                                                        then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
+                                                        then (pre.vl_total - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
                                                     end saldo
                                                     from fin_pedido as pedido
                                                     inner join fin_pre_ordem as pre
@@ -1195,20 +1195,21 @@ class DaoFinPedido extends FinPedidoTb {
                                                                 group by itens.id_pre_ordem
                                                               ) as ordemItens
                                                     on ordemItens.id_pre_ordem = pre.id_pre_ordem
-
+                                                    
                                                     left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                                                                       from fin_pedido as pedido 
-                                                               inner join fin_ordem as ordem
-                                                               on ordem.id_pedido = pedido.id_pedido
-                                                               inner join fin_ordem_itens as ordemItens 
-                                                               on ordemItens.id_ordem = ordem.id_ordem
-                                                               inner join fin_entrega_confirmacao as confirmacao
-                                                               on confirmacao.id_ordem = ordem.id_ordem
-                                                               inner join fin_entrega_itens as itens
-                                                               on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                                               where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                                                               group  by  ordemItens.id_pre_ordem
-                                                               ) as entregas
+                                                            from fin_pedido as pedido 
+                                                            inner join fin_ordem as ordem
+                                                            on ordem.id_pedido = pedido.id_pedido
+                                                            inner join fin_ordem_itens as ordemItens 
+                                                            on ordemItens.id_ordem = ordem.id_ordem
+                                                            inner join fin_entrega_confirmacao as confirmacao
+                                                            on confirmacao.id_ordem = ordem.id_ordem
+                                                            inner join fin_entrega_itens as itens
+                                                            on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
+                                                            where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                                                            group  by  ordemItens.id_pre_ordem
+                                                            ) as entregas
+                                                    
                                                     on entregas.id_pre_ordem = pre.id_pre_ordem			
                                             ) t
                                             where t.saldo > 0

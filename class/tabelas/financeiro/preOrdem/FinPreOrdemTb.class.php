@@ -8,7 +8,17 @@ class FinPreOrdemTb {
 	private $idFornecedor = null;
 	private $qtItensPre = null;
 	private $vlItensPre = null;
+        private $vlTotal = null;
+        
+        public function getVlTotal() {
+            return $this->vlTotal;
+        }
 
+        public function setVlTotal($vlTotal) {
+            $this->vlTotal = $vlTotal;
+            return $this;
+        }
+       
 	function getIdPreOrdem() {
 		return $this->idPreOrdem;
 	}

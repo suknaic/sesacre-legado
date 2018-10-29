@@ -124,7 +124,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="tp_sexo" class="form-control">
+                                                                <select id="tp_sexo" class="form-control sexo">
                                                                     <option value="0">Selecione o Sexo</option>
                                                                     <option value="1">Feminino</option>
                                                                     <option value="2">Masculino</option>

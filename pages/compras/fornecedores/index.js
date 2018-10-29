@@ -13,20 +13,20 @@ $(document).ready(function () {
         $("#nr_cpf").val("");
         switch ($('#tipoPessoa').val()) {
             case '0' :
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').hide();
                 break;
             case '1':
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').show();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').show();
                 $("#nr_cpf").focus();
                 break;
             case '2':
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cpf').hide();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.cnpj').show();
-                $('#tipoPessoa').closest(".formPesquisaPessoa").find('.nome').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cpf').hide();
+                $('#tipoPessoa').closest(".formFornecedor").find('.cnpj').show();
+                $('#tipoPessoa').closest(".formFornecedor").find('.nome').show();
                 $("#nr_cnpj").focus();
                 break;
         }
@@ -62,7 +62,7 @@ $(document).ready(function () {
                 tipoPessoa: $("#tipoPessoa").val()
             };
             $.ajax({
-                "url": "/model/sistema/pessoa/request.php",
+                "url": "/pages/compras/fornecedores/request.php",
                 "dataType": 'html',
                 "method": "POST",
                 "data": {
@@ -109,7 +109,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "inativarPessoa",
@@ -181,7 +181,7 @@ $(document).ready(function () {
 
                     };
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "method": "POST",
                         "data": {
@@ -260,7 +260,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/pages/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "removerPessoa",
@@ -317,13 +317,13 @@ $(document).ready(function () {
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();
         //**********************
-        var id = $(this).val();
-        if (id.split("-")[0] == 1) {
-            top.location.href = "/pages/sistema/pessoa/editaPessoaFisica.php?id=" + id;
-        }
-        if (id.split("-")[0] == 2) {
-            top.location.href = "/pages/sistema/pessoa/editaPessoaJuridica.php?id=" + id;
-        }
+        // var id = $(this).val();
+        // if (id.split("-")[0] == 1) {
+        //     top.location.href = "/pages/sistema/pessoa/editaPessoaFisica.php?id=" + id;
+        // }
+        // if (id.split("-")[0] == 2) {
+        //     top.location.href = "/pages/sistema/pessoa/editaPessoaJuridica.php?id=" + id;
+        // }
 
     });
 

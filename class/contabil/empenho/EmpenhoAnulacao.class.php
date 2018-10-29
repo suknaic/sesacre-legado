@@ -290,6 +290,8 @@ class EmpenhoAnulacao {
 //            echo "<pre>";
 //            print_r($this->itens);
 //            echo "</pre>";
+//            
+            
 
             /*
              * Verifica os Itens da Pre Ordem que o usuário deseja anular
@@ -325,19 +327,38 @@ class EmpenhoAnulacao {
                 }
 
 
-
-                $valorInformado = $value['vl_itens_pre'];
-
+                //Vamos do Items da Pre Ordem
+                $valorUnitario = $value['vl_itens_pre'];
+                
+                //Quantidade/Valor Informado pelo usuário
                 $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
-
+                /*
+                 * Se o Item for Consumo ou Permanente(e não for fl_valor_variavel = 1)
+                 * Então esse também será o valor para Anular
+                 */
                 $valorTotalParaAnular = $quantidadeInformado;
-
-                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
+                /*
+                 * Se o Item for de Serviço ou fl_valor_variavel = 1
+                 * , então a "quantidade" que o usuário informou era o valor da anulação 
+                 * para o item. Então é necessário calcular o valor da nova quantidade.
+                 */
+                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {                    
+                    $quantidadeInformado = round(($quantidadeInformado/$value['vl_itens_pre']), 4);
+                }else{
+                    /*
+                     * Se não era de serviço nem valor variavel
+                     * então o Valor Para Anular, será a Quantidade do Item * o Valor Unitário
+                     */
+                    $valorTotalParaAnular = round(($valorUnitario*$quantidadeInformado),4);
                 }
+                
 
-                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-
+//                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
+//                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
+//                }
+//                $pdo->rollBack();
+//                echo " \n ".$valorUnitario." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+//                return;
 
 
                 if (round($value['saldo'], 4) < $valorTotalParaAnular) {
@@ -351,7 +372,7 @@ class EmpenhoAnulacao {
                 $daoEmpenhoAnulacaoItens->setQtItem($value['qt_itens_pre']);
                 $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
                 $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
-                $daoEmpenhoAnulacaoItens->setVlAnulado($valorInformado);
+                $daoEmpenhoAnulacaoItens->setVlAnulado($valorTotalParaAnular);
                 $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
                 $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['vl_utilizado'], 4));
                 $daoEmpenhoAnulacaoItens->setQtUtilizado(round($value['qt_utilizado'], 4));
@@ -472,10 +493,7 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";
                 return;
             }
-//            echo "<pre>";
-//            print_r($ItensPreOrdem);
-//            echo "</pre>";
-
+                       
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -487,18 +505,23 @@ class EmpenhoAnulacao {
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR;
                     return;
                 }
-
+                
                 $valorInformado = $value['vl_itens_pre'];
                 $quantidadeInformado = round($itensAnulacao[$kI]['qt_anulado'], 4);
-
+                $vlTotal = round(($valorInformado * $quantidadeInformado),4);
                 $valorTotalParaAnular = $quantidadeInformado;
 
                 if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
+                    $valorTotalParaAnular = $itensAnulacao[$kI]['vl_anulado'];
+                    $vlTotal = $valorTotalParaAnular;
                 }
 
-                //echo " \n ".$valorInformado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-
+                                
+                /*
+                 * o value contem o saldo, se for consumo ele retorna quantidade
+                 * se for serviço será o valor
+                 * o $valorTotalParaAnular tem q ser menor que esse saldo
+                 */
                 if (round($value['saldo'], 4) < $valorTotalParaAnular) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
@@ -507,6 +530,9 @@ class EmpenhoAnulacao {
                     return;
                 }
 
+                /*
+                 * Não deixar o item negativo
+                 */
                 if ($value['qt_itens_pre'] < $quantidadeInformado) {
                     $this->sucesso = false;
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
@@ -514,7 +540,25 @@ class EmpenhoAnulacao {
                             . "ficará zerado";
                     return;
                 }
-
+                
+                /*
+                 * o vl_total da pre ordem, tem q ser ajustado.
+                 * Então será subtraido do valor que o usuário deseja anular.
+                 */
+                $vlTotalNovo = $value['total'] - $vlTotal;
+                if ($vlTotalNovo < 0) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não foi possível fazer a Anulação do Item "
+                            . "de Número " . $value['nr_item'] . " Pois o Valor Anulado Informado Para Anulação "
+                            . "ficará zerado";
+                    return;
+                }
+            
+                /*
+                 * o qt_itens_pre da pre ordem, tem que ser ajustado
+                 * Então será subtraido do valor que o usuário deseja anular
+                 * (No caso de serviço ou valor variavel, essa quantidade é calculada automatica pelo sistema)
+                 */
                 $quantidadeNovo = round(($value['qt_itens_pre'] - $quantidadeInformado), 4);
                 if ($quantidadeNovo < 0) {
                     $this->sucesso = false;
@@ -524,10 +568,13 @@ class EmpenhoAnulacao {
                     return;
                 }
 
+                
+                
                 $preOrdem = new PreOrdem();
                 $preOrdem->setIdPreOrdem($value['id_pre_ordem']);
                 //$preOrdem->setVlItensPre($valorInformado);
-                $preOrdem->setQtItensPre($quantidadeNovo);
+                $preOrdem->setQtItensPre($quantidadeNovo);      
+                $preOrdem->setVlTotal($vlTotalNovo);
                 $preOrdem->editarPreOrdemAnulacaoEmpenho($pdo);
                 if (!$preOrdem->Sucesso()) {
                     $this->sucesso = false;
@@ -547,7 +594,7 @@ class EmpenhoAnulacao {
             }
 
             $valorPedidoEmpenhoAntigo = $dadosPedido['vl_pedido'];
-
+//
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
@@ -581,7 +628,7 @@ class EmpenhoAnulacao {
 //            echo "<pre>";
 //            print_r($dadosPedido);
 //            echo "</pre>";
-
+                       
             $empenho->setVlEmpenho($dadosPedido['vl_pedido']);
             $empenho->setIdEmpenho($dadosEmpenho['id_empenho']);
 
@@ -868,7 +915,11 @@ class EmpenhoAnulacao {
 
             if ($daoConEmpenhoAnulacao->getSucesso()) {
                 foreach ($daoConEmpenhoAnulacao->getMsgRetorno() as $linha) {
-                    $total_anulado = $linha['qt_anulado'] * $linha['vl_anulado'];
+                    $total_anulado = $linha['vl_anulado'];
+//                    if($linha['fl_valor_variavel'] == 1 || $linha['tp_material'] == "S"){
+//                        $total_anulado = $linha['vl_anulado'];
+//                    }
+                    
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
                     $tabela .= '<tr>
                                     <td class="text-center">' . $linha["nr_item"] . '</td>

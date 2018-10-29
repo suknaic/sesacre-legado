@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -31,22 +31,17 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
 
     </head>
     <!--TIPS-->
-
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
-
             <?php
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
             //Modal Alert
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
-
             <div class="boxed">
-
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
@@ -58,22 +53,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-
                         <!-- Inicio Form -->
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <div class="panel-footer text-left">
                                         <button class="btn btn-primary btn-rounded btn-novoFornecedor" type="button">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Novo Fornecedor
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Novo Fornecedor
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
-                                        <h3 class="panel-title">Formulário de Pesquisa
-
-                                        </h3>
+                                        <h3 class="panel-title">Formulário de Pesquisa</h3>
                                     </div>
-
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formFornecedor">
@@ -115,7 +106,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5 nome" style="display: none;">
-                                                    Nome: <i class="fa fa-question-circle" title="Informe Nome de Pessoa"></i>
+                                                    Nome:
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -123,10 +114,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                                                         <input type="text" class="form-control" name="nm_pessoa" id="nm_pessoa" required="true">
                                                     </div>
                                                 </div>
-                                                
-
-                                            </div>    
-
+                                            </div>
                                             <!-- End <div class="form-group"> -->
                                         </div>
                                         <!-- <div class="panel-body"> -->
@@ -139,9 +127,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
                                             </button>
                                         </div>
-                                        <!-- End Form -->
-
                                     </form>
+                                    <!-- End Form -->
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
                                 </div>
@@ -161,12 +148,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                                                     <tr>                                                        
                                                         <th>Nome</th>
                                                         <th>CPF/CNPJ</th>
-                                                        <th>Cidade</th>
-                                                        <th>Logradouro</th>
-                                                        <th>Bairro</th>
-                                                        <th>Telefone</th>
-                                                        <th>Celular</th>
-                                                        <th>Email</th>
+                                                        <th>Fornecedor</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
@@ -176,50 +158,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
                                             </table>            
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -242,7 +205,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/pages/sistema/pessoa/fornecedores/index.js"></script>
+        <script src="/pages/compras/fornecedores/index.js"></script>
         <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->
@@ -251,6 +214,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/pessoa/fornecedores/ind
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

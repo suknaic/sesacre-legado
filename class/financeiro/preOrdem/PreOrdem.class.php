@@ -13,7 +13,17 @@ class PreOrdem {
     private $tipoMaterial = null;
     private $sucesso = false;
     private $msgRetorno = null;
+    private $vlTotal = null;
     
+    public function getVlTotal() {
+        return $this->vlTotal;
+    }
+
+    public function setVlTotal($vlTotal) {
+        $this->vlTotal = $vlTotal;
+        return $this;
+    }
+        
     public function Sucesso() {
         return $this->sucesso;
     }
@@ -136,6 +146,8 @@ class PreOrdem {
                             $erro = true;
                         }
                     }
+                    
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
 
                     $daoFinPreOrdem->cadastrarPreOrdem($pdo);
 
@@ -226,6 +238,7 @@ class PreOrdem {
                     $daoFinPreOrdem->setIdPreOrdem($this->idPreOrdem);
                     $daoFinPreOrdem->setQtItensPre(Metodos::ConverteValorIng($this->qtItensPre));
                     $daoFinPreOrdem->setVlItensPre($busca['vl_itens_pre']);
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
                     $daoFinPreOrdem->editarItensPreOrdem($pdo);
                 } else {
                     return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
@@ -237,6 +250,7 @@ class PreOrdem {
                     $daoFinPreOrdem->setIdPreOrdem($this->idPreOrdem);
                     $daoFinPreOrdem->setQtItensPre(Metodos::ConverteValorIng($this->qtItensPre));
                     $daoFinPreOrdem->setVlItensPre(Metodos::ConverteValorIng($this->vlItensPre));
+                    $daoFinPreOrdem->setVlTotal($daoFinPreOrdem->getQtItensPre() * $daoFinPreOrdem->getVlItensPre());
                     $daoFinPreOrdem->editarItensPreOrdem($pdo);
                 } else {
                     return Metodos::retornoAjax("Erro", "alert", "Saldo indisponível, por favor verifique os itens");
@@ -522,7 +536,8 @@ class PreOrdem {
             $busca = $daoFinPreOrdem->getMsgRetorno();
             
             $daoFinPreOrdem->setQtItensPre($this->qtItensPre);
-            $daoFinPreOrdem->editarQuantidadePreOrdem($pdo);
+            $daoFinPreOrdem->setVlTotal($this->vlTotal);
+            $daoFinPreOrdem->editarQuantidadeTotalPreOrdem($pdo);
             if(!$daoFinPreOrdem->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível atualizar a Pre Ordem";

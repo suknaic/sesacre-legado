@@ -1,5 +1,5 @@
 <?php
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/sistema/DaoSesPessoaJuridica.class.php";
 
 class pessoaJuridica {

@@ -794,6 +794,7 @@ switch ($_REQUEST['acao']) {
             $prog = new Estado();
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
+            echo '<option selected>Selecione o Estado</option>';
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;

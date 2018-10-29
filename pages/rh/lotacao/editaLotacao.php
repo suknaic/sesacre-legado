@@ -340,7 +340,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                     </div>
                                     <!-- <div class="panel-body"> -->
                                     <!-- Footer Form -->
-                                    <div class="panel-footer text-right">
+                                    <div class="panel-footer text-center">
                                         <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
                                             Limpar
                                         </button>                                  

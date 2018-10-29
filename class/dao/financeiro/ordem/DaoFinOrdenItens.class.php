@@ -38,7 +38,7 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
             if (!empty($pdo)) {
                 $sql = "select pre.id_pre_ordem,
                         case 
-                                when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
+                            when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                             then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
                             when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
                             then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
@@ -105,10 +105,10 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
             if (!empty($pdo)) {
                 $sql = "select ordemItens.id_ordem_itens, 
                         case 
-                                when (material.tp_material = 'C' OR material.tp_material = 'P') and itens.fl_valor_variavel = '0'
-                                then round((ordemItens.qt_itens_ordem - sum(COALESCE(entItens.qt_itens_entrega, '0.0000'))),4)	
-                                when (material.tp_material = 'S' OR itens.fl_valor_variavel = '1')
-                                then round(((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) - sum(COALESCE((entItens.qt_itens_entrega * entItens.vl_itens_entrega),'0.0000'))),4)		
+                            when (material.tp_material = 'C' OR material.tp_material = 'P') and itens.fl_valor_variavel = '0'
+                            then round((ordemItens.qt_itens_ordem - sum(COALESCE(entItens.qt_itens_entrega, '0.0000'))),4)	
+                            when (material.tp_material = 'S' OR itens.fl_valor_variavel = '1')
+                            then round(((ordemItens.qt_itens_ordem * ordemItens.vl_itens_ordem) - sum(COALESCE((entItens.qt_itens_entrega * entItens.vl_itens_entrega),'0.0000'))),4)		
                         end saldoItens
                         from fin_ordem_itens as ordemItens
                         inner join fin_pre_ordem as preOrdem

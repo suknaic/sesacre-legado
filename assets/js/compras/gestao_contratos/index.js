@@ -31,7 +31,7 @@ $(document).ready(function () {
     });
     //fim
 
-    //Listando fornecedores
+    //Listando cadfornecedores
     $.ajax({
         "url": "/model/compras/gestaoContratos/request.php",
         "dataType": 'html',

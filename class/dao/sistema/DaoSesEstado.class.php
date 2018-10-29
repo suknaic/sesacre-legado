@@ -154,4 +154,19 @@ class DaoSesEstado extends SesEstado{
 
     }
 
+    public function verificaSiglaEstado($pdo){
+        try {
+            $sql = $pdo->prepare('SELECT E.nm_sigla FROM ses_estado E WHERE E.nm_sigla = :sigla');
+            $sql->bindValue(":sigla", $this->getNmSigla(), PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
 }

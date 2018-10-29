@@ -111,7 +111,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                         <div class="form-group has-feedback">
                                                             <div class="col-md-4"></div>
                                                             <div class="col-md-4">
-                                                                email: <span class="text-danger">*</span>
+                                                                E-mail: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -152,7 +152,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="tp_sexo" class="form-control">
+                                                                    <select id="tp_sexo" class="form-control sexo">
                                                                         <option value="0">Selecione Sexo</option>                                                                
                                                                         <option value="1">Feminino</option>
                                                                         <option value="2">Masculino</option>

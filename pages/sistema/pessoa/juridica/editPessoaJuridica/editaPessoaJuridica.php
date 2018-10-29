@@ -111,7 +111,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                         <div class="form-group has-feedback">
                                                             <div class="col-md-4"></div>
                                                             <div class="col-md-4">
-                                                                email: <span class="text-danger">*</span>
+                                                                E-mail: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -161,7 +161,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-2">
-                                                                Data Fundação:
+                                                                Data da Fundação:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-calendar inputPFa"></p>
@@ -377,10 +377,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                     </div>
                                 </div>
                             </div>
-
-
-
-
                             <!--===================================================-->
                             <!--End Horizontal Form-->
                         </div>
@@ -392,7 +388,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
             </div>
             <!--===================================================-->
             <!--END CONTENT CONTAINER-->
-
             <!--MENU LATERAL-->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
             <!--END MENU LATERAL-->
@@ -406,13 +401,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -444,6 +435,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

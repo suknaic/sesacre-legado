@@ -65,7 +65,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                 <div class="panel">
                                     <div class="panel-footer text-left">
                                         <button class="btn btn-primary btn-rounded btn-novo" type="button">
-                                            <i class="fa fa-plus" aria-hidden="true"></i> Nova Lotação
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Nova Lotação
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
@@ -121,7 +121,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                         <!-- Footer Form -->
                                         <div class="panel-footer text-center">
                                             <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
-                                                <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                                Limpar
                                             </button>     
                                             <button class="btn btn-primary btn-rounded btn-pesquisar" type="button">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar

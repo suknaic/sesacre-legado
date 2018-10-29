@@ -27,7 +27,7 @@ class DaoSesPais extends SesPais{
             $result->execute();
             return "Sucesso";
         } catch (PDOException $e) {
-            return $e->getMessage();            
+            return $e;
         }
     }
 

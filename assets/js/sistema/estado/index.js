@@ -119,6 +119,7 @@ $(document).ready(function () {
                     "estado": Estado
                 },
                 "success": function (response) {
+                    console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -221,7 +222,7 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'sucess');
+                                func.modalAlert(response.msg, 'success');
                                 func.fechaModalReload();
                                 return false;
                             } else {
@@ -249,12 +250,13 @@ $(document).ready(function () {
         $('.btn-editar').val(id);       
         $("#nmEstado").val($(this).attr('nome'));
         $("#nmSigla").val($(this).attr('sigla'));
-        $("#idPais").val($(this).attr('idpa'));
+        $("#idPais").val($(this).attr('idpa')).trigger('change.select2');
         $('.btn-salvar').hide();
         $('.btn-editar').show();
         $("#nmEstado").focus();
 
     });
+
     $('body').on('click', '.btn-limpar', function (e) {
         $('.btn-salvar').prop("disabled", false);
         $('.btn-editar').prop("disabled", false);
@@ -263,7 +265,7 @@ $(document).ready(function () {
         $('.btn-editar').hide();
         $("#nmEstado").val("");
         $("#nmSigla").val("");
-        $("#idPais").val("");
+        $("#idPais").val('').trigger('change.select2');
 
     });
 
