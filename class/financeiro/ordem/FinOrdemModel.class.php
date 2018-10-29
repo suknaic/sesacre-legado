@@ -366,7 +366,7 @@ class FinOrdemModel {
                 $idOrdem = ($pdo->lastInsertId('fin_ordem_id_ordem_seq'));
                 $finOrdemItensModel = new FinOrdemItensModel();
                 foreach ($ordem as $linha) {
-                    if ($linha->tp == "C" || $linha->tp == "P") {
+                    if (($linha->tp == "C" || $linha->tp == "P") && $linha->flVariavel == '0') {
 
                         $finOrdemItensModel->setIdPedido($ordem[0]->idPedido);
                         $finOrdemItensModel->setTpItem($linha->tp);
@@ -395,7 +395,7 @@ class FinOrdemModel {
                             return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
                             $pdo->rollBack();
                         }
-                    } else if ($linha->tp == "S") {
+                    } else if ($linha->tp == "S" || $linha->flVariavel == '1') {
                         $finOrdemItensModel->setIdPedido($ordem[0]->idPedido);
                         $finOrdemItensModel->setTpItem($linha->tp);
                         $finOrdemItensModel->setIdOrdem($idOrdem);
@@ -468,7 +468,7 @@ class FinOrdemModel {
                 $retorno = '';
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
-                        $retorno .= '<tr>
+                        $retorno .= '<tr data-tp-material='.$linha["tp_material"].' data-id-pre-ordem='.$linha["id_pre_ordem"].' data-id-pedido='.$linha["id_pedido"].' data-fl-valor-variavel='.$linha["fl_valor_variavel"].' class="itens">
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
                                         <td class="text-center">' . $linha["nm_desc_material"] . '</td>
@@ -483,12 +483,12 @@ class FinOrdemModel {
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>
-                                        <td class="text-center itens">Quantidade<input type="text" name="qtd" id="qtd" idPedido="' . $linha["id_pedido"] . '"
+                                        <td class="text-center">Quantidade<input type="text" name="qtd" id="qtd" idPedido="' . $linha["id_pedido"] . '"
                                          idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                          class="form-control input-sm qtd" >';
 
-                        if ($linha["tp_material"] == 'S') {
-                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" id="vl" idPedido="' . $linha["id_pedido"] . '"
+                        if ($linha["tp_material"] == 'S' || $linha["fl_valor_variavel"] == '1') {
+                            $retorno .= '<br>Vlr. Unitário<input type="text" name="vl" id="vl" idPedido="' . $linha["id_pedido"] . '"
 					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl">';
                         }
                         $retorno .= '</td></tr>';
