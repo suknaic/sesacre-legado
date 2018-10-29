@@ -192,7 +192,7 @@ class Cidade {
             } else {
                 if ($deleta->getCode() == 23503) {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", 'Registro Vinculado a Outro Registro.');
+                    return Metodos::retornoAjax("Erro", "alert", ' Não foi Possível Realizar a Exclusão dessa Cidade. Este registro está Vinculado a uma Pessoa.');
                 } else {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", $deleta->getMessage());

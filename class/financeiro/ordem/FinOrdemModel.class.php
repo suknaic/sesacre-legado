@@ -836,11 +836,13 @@ class FinOrdemModel {
                 $retorno = '';
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
+
                         $retorno .= '<tr data-tipo-material='.$linha['tp_material'].' data-fl-valor-variavel='.$linha['fl_valor_variavel'].'>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
                                         <td class="text-center">' . wordwrap($linha["nm_desc_material"], 20, "<br />\n") . '</td>                                                                                                                        
                                         <td class="text-center">' . $linha["tp_material"] . '</td>
+
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
@@ -853,20 +855,28 @@ class FinOrdemModel {
 //                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
 //                            $label = "Vlr. Unitário";
 //                        }
-                        
-                        $retorno .= '<td class="text-right itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
+                        $inputAnulacao = '<td class="text-right itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '"
                                             fl_valor_variavel="'.$linha['fl_valor_variavel'].'"
                                             quantidade="' . $linha["saldo"] . '"
-                                            class="form-control input-sm qtd_anulacao" >';
+                                            class="form-control input-sm qtd_anulacao" ></td>';
+                        
+                        $tdValorAnulacao = '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td>';
+                        
+                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+                            $retorno .= $tdValorAnulacao.$inputAnulacao;
+                        }else{
+                            $retorno .= $inputAnulacao.$tdValorAnulacao;
+                        }
+                        
+                        
 
 //                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
 //                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
 //					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
 //                        }
-                        $retorno .= '</td>'
-                                . '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td></tr>';
+                        $retorno .= '</tr>';
                     }
                 }
                 if (empty($retorno)) {

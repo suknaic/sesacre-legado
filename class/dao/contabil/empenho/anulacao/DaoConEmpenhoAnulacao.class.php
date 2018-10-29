@@ -225,6 +225,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
         $sql = "select
                     itens.nr_item,
                     mat.nm_material,
+                    mat.cd_desc_material,
                     mat.nm_desc_material,
                     mat.tp_material,
                     itens.nr_lote,
