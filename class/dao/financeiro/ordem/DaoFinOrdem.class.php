@@ -55,6 +55,7 @@ class DaoFinOrdem extends FinOrdemTb {
                 $sql = "select pedido.id_pedido, pre.id_pre_ordem, itens.nr_item, mat.nm_material, mat.nm_grupo, mat.nm_sub_grupo,
                         unid.nm_unidade_medida, desp.ds_despesa_elemento, mat.tp_material, pre.qt_itens_pre, pre.vl_itens_pre,
                         mat.nm_desc_material, itens.nr_lote, itens.fl_valor_variavel, (pre.qt_itens_pre * pre.vl_itens_pre ) as total,
+                        mat.cd_desc_material,
                         case 
                                 when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
                             then  coalesce(ordemItens.qt_itens_ordem,'0.0000') + coalesce(entregas.qt_itens_entrega,'0.0000')
@@ -94,19 +95,19 @@ class DaoFinOrdem extends FinOrdemTb {
                                   ) as ordemItens
                         on ordemItens.id_pre_ordem = pre.id_pre_ordem
 
-                        left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                                           from fin_pedido as pedido 
-                                   inner join fin_ordem as ordem
-                                   on ordem.id_pedido = pedido.id_pedido
-                                   inner join fin_ordem_itens as ordemItens 
-                                   on ordemItens.id_ordem = ordem.id_ordem
-                                   inner join fin_entrega_confirmacao as confirmacao
-                                   on confirmacao.id_ordem = ordem.id_ordem
-                                   inner join fin_entrega_itens as itens
-                                   on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                   where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                                   group  by  ordemItens.id_pre_ordem
-                                   ) as entregas
+                    left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
+                               from fin_pedido as pedido 
+                               inner join fin_ordem as ordem
+                               on ordem.id_pedido = pedido.id_pedido
+                               inner join fin_ordem_itens as ordemItens 
+                               on ordemItens.id_ordem = ordem.id_ordem
+                               inner join fin_entrega_confirmacao as confirmacao
+                               on confirmacao.id_ordem = ordem.id_ordem
+                               inner join fin_entrega_itens as itens
+                               on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
+                               where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                               group  by  ordemItens.id_pre_ordem
+                               ) as entregas
                         on entregas.id_pre_ordem = pre.id_pre_ordem
                         where pedido.id_pedido = :pedido
                         order by itens.nr_lote, itens.nr_item";
@@ -613,18 +614,18 @@ class DaoFinOrdem extends FinOrdemTb {
                         on ordemItens.id_pre_ordem = pre.id_pre_ordem
 
                         left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                                                from fin_pedido as pedido 
-                                                inner join fin_ordem as ordem
-                                                on ordem.id_pedido = pedido.id_pedido
-                                                inner join fin_ordem_itens as ordemItens 
-                                                on ordemItens.id_ordem = ordem.id_ordem
-                                                inner join fin_entrega_confirmacao as confirmacao
-                                                on confirmacao.id_ordem = ordem.id_ordem
-                                                inner join fin_entrega_itens as itens
-                                                on itens.id_ordem_itens = ordemItens.id_ordem_itens
-                                                where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                                                group  by  ordemItens.id_pre_ordem
-                                           ) as entregas
+                                 from fin_pedido as pedido 
+                                 inner join fin_ordem as ordem
+                                 on ordem.id_pedido = pedido.id_pedido
+                                 inner join fin_ordem_itens as ordemItens 
+                                 on ordemItens.id_ordem = ordem.id_ordem
+                                 inner join fin_entrega_confirmacao as confirmacao
+                                 on confirmacao.id_ordem = ordem.id_ordem
+                                 inner join fin_entrega_itens as itens
+                                 on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
+                                 where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
+                                 group  by  ordemItens.id_pre_ordem
+                                 ) as entregas
                         on entregas.id_pre_ordem = pre.id_pre_ordem
 
                         where pre.id_pre_ordem in ( ".$itens." )";                        

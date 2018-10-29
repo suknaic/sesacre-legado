@@ -837,8 +837,8 @@ class FinOrdemModel {
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
                         $retorno .= '<tr>
-                                        <td class="text-center">' . $linha["nr_item"] . '</td>
-                                        <td class="text-center">' . $linha["nm_material"] . '</td>
+                                        <td class="text-center">' .$linha["nr_item"] . '</td>
+                                        <td class="text-center">' .$linha["cd_desc_material"].' - '.  $linha["nm_material"] . '</td>
                                         <td class="text-center">' . wordwrap($linha["nm_desc_material"], 20, "<br />\n") . '</td>                                                                                                                        
                                         <td class="text-center tipo">' . $linha["tp_material"] . '</td>
                                         <td class="text-center">' . $linha["nr_lote"] . '</td>

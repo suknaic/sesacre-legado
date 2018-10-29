@@ -8,10 +8,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralMo
 
 $session = new Session();
 
-if(!$session->vPGeral()){
-    header("Location: /pages/index.php"); 
-}
-
 $tipoGasto = new TipoGasto();
 $pessoaJuridicaOptions = SesPessoaJuridicaModel::optionPessoaJuridica();
 
