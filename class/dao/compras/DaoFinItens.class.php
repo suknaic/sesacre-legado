@@ -490,13 +490,13 @@ class DaoFinItens extends FinItensTb {
                 $sql = "SELECT f.id_fornecedor, item.id_cont_itens, item.ds_itens, mat.nm_material, mat.nm_desc_material, mat.nm_grupo, mat.nm_sub_grupo,
 						mat.cd_elemento_despesa, mat.tp_material, item.nr_lote, item.qt_itens, item.vl_itens,
 						item.pc_desconto, item.nr_item, unid.nm_unidade_medida, mat.cd_desc_material,item.fl_valor_variavel,
-						CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
+						CASE WHEN (mat.tp_material = 'C' OR mat.tp_material = 'P') AND item.fl_valor_variavel = '0'
 						THEN  item.qt_itens
 						ELSE (item.qt_itens * item.vl_itens)
 						END as total,
 
 						coalesce((select
-							  CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+							  CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
 							  THEN coalesce(sum(it.qt_itens),0.0000)
 							  ELSE coalesce(sum((it.qt_itens * it.vl_itens)),0.0000)
 							  END as busca
@@ -504,12 +504,12 @@ class DaoFinItens extends FinItensTb {
 							  inner join pla_material as m
 							  ON m.id_material = it.id_material
 							  where it.id_cont_itens_alt =  item.id_cont_itens
-							  group by m.tp_material)
+							  group by m.tp_material,it.fl_valor_variavel)
 					        ,0.0000)
                                                 
                                                 +  
                                                 coalesce((select 
-                                                          CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+                                                          CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
                                                           ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
@@ -524,16 +524,16 @@ class DaoFinItens extends FinItensTb {
                                                           and pre.id_fornecedor = :fornecedor
                                                           and pre.id_cont_itens = item.id_cont_itens
                                                           and p.id_despesa = :subElemento
-                                                         group by m.tp_material)
+                                                         group by m.tp_material,it.fl_valor_variavel)
                                                 ,0.0000)
                                                 
                                                 as utilizado,
 
-						CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
+						CASE WHEN (mat.tp_material = 'C' OR mat.tp_material = 'P') and item.fl_valor_variavel = '0'
 						THEN  item.qt_itens
 						-
 						coalesce((select
-								CASE WHEN m.tp_material = 'C'
+								CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
 								THEN coalesce(sum(it.qt_itens),0.0000)
 								ELSE coalesce(sum((it.qt_itens * it.vl_itens)),0.0000)
 								END as busca
@@ -541,11 +541,11 @@ class DaoFinItens extends FinItensTb {
 								inner join pla_material as m
 								ON m.id_material = it.id_material
 								where it.id_cont_itens_alt =  item.id_cont_itens
-								group by m.tp_material)
+								group by m.tp_material,it.fl_valor_variavel)
 						,0.0000)
                                                 -
                                                 coalesce((select 
-                                                          CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+                                                          CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
                                                           ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
@@ -560,13 +560,13 @@ class DaoFinItens extends FinItensTb {
                                                           and pre.id_fornecedor = :fornecedor
                                                           and pre.id_cont_itens = item.id_cont_itens
                                                           and p.id_despesa = :subElemento
-                                                         group by m.tp_material)
+                                                         group by m.tp_material,it.fl_valor_variavel)
                                                 ,0.0000)                                             
 						/*Fim*/
 						ELSE (item.qt_itens * item.vl_itens)
 						-
 						coalesce((select
-								CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+								CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
 								THEN coalesce(sum(it.qt_itens),0.0000)
 								ELSE coalesce(sum((it.qt_itens * it.vl_itens)),0.0000)
 								END as busca
@@ -574,11 +574,11 @@ class DaoFinItens extends FinItensTb {
 								inner join pla_material as m
 								ON m.id_material = it.id_material
 								where it.id_cont_itens_alt =  item.id_cont_itens
-								group by m.tp_material),
+								group by m.tp_material,it.fl_valor_variavel),
 						0.0000)
                                                 -
                                                 coalesce((select 
-                                                          CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+                                                          CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
                                                           ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
@@ -593,7 +593,7 @@ class DaoFinItens extends FinItensTb {
                                                           and pre.id_fornecedor = :fornecedor
                                                           and pre.id_cont_itens = item.id_cont_itens
                                                           and p.id_despesa = :subElemento
-                                                         group by m.tp_material)
+                                                         group by m.tp_material,it.fl_valor_variavel)
                                                 ,0.0000)
 
 						END as saldo
@@ -633,11 +633,11 @@ class DaoFinItens extends FinItensTb {
         if (!empty($pdo) && !empty($condicao)) {
             try {
                 $sql = "SELECT
-						CASE WHEN mat.tp_material = 'C' OR mat.tp_material = 'P'
+						CASE WHEN (mat.tp_material = 'C' OR mat.tp_material = 'P') and item.fl_valor_variavel = '0'
 						THEN  item.qt_itens
 						-
 						coalesce((select
-						CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+						CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
 						THEN coalesce(sum(it.qt_itens),0.0000)
 						ELSE coalesce(sum((it.qt_itens * it.vl_itens)),0.0000)
 						END as busca
@@ -646,11 +646,11 @@ class DaoFinItens extends FinItensTb {
 						ON m.id_material = it.id_material
 						where it.id_cont_itens_alt =  item.id_cont_itens 
 						" . $subCondicao . "
-						group by m.tp_material)
+						group by m.tp_material,it.fl_valor_variavel)
 						,0.0000)
                                                 -
                                                 coalesce((select 
-                                                          CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+                                                          CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
                                                           ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
@@ -664,13 +664,13 @@ class DaoFinItens extends FinItensTb {
                                                           where p.st_pedido > '0'
                                                           and pre.id_fornecedor = f.id_fornecedor
                                                           and pre.id_cont_itens = item.id_cont_itens
-                                                         group by m.tp_material)
+                                                         group by m.tp_material,it.fl_valor_variavel)
                                                 ,0.0000)
 						/*Fim*/
 						ELSE (item.qt_itens * item.vl_itens)
 						-
 						coalesce((select
-						CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+						CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
 						THEN coalesce(sum(it.qt_itens),0.0000)
 						ELSE coalesce(sum((it.qt_itens * it.vl_itens)),0.0000)
 						END as busca
@@ -679,11 +679,11 @@ class DaoFinItens extends FinItensTb {
 						ON m.id_material = it.id_material
 						where it.id_cont_itens_alt =  item.id_cont_itens 
 						" . $subCondicao . "
-						group by m.tp_material),
+						group by m.tp_material,it.fl_valor_variavel),
 						0.0000)
                                                 -
                                                 coalesce((select 
-                                                          CASE WHEN m.tp_material = 'C' OR m.tp_material = 'P'
+                                                          CASE WHEN (m.tp_material = 'C' OR m.tp_material = 'P') and it.fl_valor_variavel = '0'
                                                           THEN coalesce(sum(pre.qt_itens_pre),0.0000)
                                                           ELSE coalesce(sum(pre.vl_total),0.0000)
                                                           END as busca
@@ -697,7 +697,7 @@ class DaoFinItens extends FinItensTb {
                                                           where p.st_pedido > '0'
                                                           and pre.id_fornecedor = f.id_fornecedor
                                                           and pre.id_cont_itens = item.id_cont_itens
-                                                         group by m.tp_material)
+                                                         group by m.tp_material,it.fl_valor_variavel)
                                                 ,0.0000)
 
 						END as saldo
@@ -715,7 +715,7 @@ class DaoFinItens extends FinItensTb {
                 } else {
                     $this->sucesso = false;
                 }
-            } catch (Error $e) {
+            } catch (PDOException $e) {
                 $this->msgRetorno = $e->getMessage();
                 $this->sucesso = false;
             }
