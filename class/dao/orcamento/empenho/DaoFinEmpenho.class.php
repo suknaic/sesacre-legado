@@ -415,7 +415,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                fin_tipo_empenho as tpEmp 
                                on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
                          where
-                            id_pedido = :pedido";
+                            id_pedido = :pedido and emp.sit_empenho <> '6'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -558,7 +558,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             ON F.id_fonte = p.id_fonte
                         INNER JOIN view_despesa_elemento DE 
                             ON DE.id_despesa_elemento = p.id_despesa_elemento
-                        WHERE emp.nr_empenho = :nr_empenho";
+                        WHERE emp.nr_empenho = :nr_empenho and emp.sit_empenho <> '6'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
                 $stmt->execute();
