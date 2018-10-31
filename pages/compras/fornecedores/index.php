@@ -254,6 +254,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
     <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
     <!-- END JAVASCRIPT -->
-
     </body>
 </html>

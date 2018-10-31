@@ -352,7 +352,6 @@ $(document).ready(function () {
         if (id.split("-")[0] == 2) {
             top.location.href = "/pages/sistema/pessoa/juridica/editPessoaJuridica/editaPessoaJuridica.php?id=" + id;
         }
-
     });
     $('body').on('click', '.btn-limpar', function (e) {
 
