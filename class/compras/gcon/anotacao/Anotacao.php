@@ -97,7 +97,7 @@ class Anotacao {
 
             $dados = $anotacao->retornarAnotacoes($pdo);
             $retorno = '';
-            if (count($dados != 0)) {
+            if (count($dados) > 0) {
                 foreach ($dados as $anotacoes) {
                     $retorno .= date('d/m/Y H:i:s', strtotime($anotacoes['dh_anotacao'])) . ' - ' . $anotacoes['nm_pessoa'] . ': ' . $anotacoes['ds_anotacao'] . "\n";
                 }

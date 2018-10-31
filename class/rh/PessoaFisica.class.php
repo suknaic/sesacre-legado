@@ -631,9 +631,13 @@ class pessoaFisica {
                         }
 //*************************************************************
                         $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
-                                        <td>" . $cpf2 . "</td>
-                                        <td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>
-                                        <td>" . $v['ds_logradouro'] . "</td>   
+                                        <td>" . $cpf2 . "</td>";
+                                        if ($v['nm_cidade'] != '') {
+                                            $retorno .= "<td>" . $v['nm_sigla'] . " - " . $v['nm_cidade'] . "</td>";
+                                        } else {
+                                            $retorno .= "<td> </td>";
+                                        }
+                        $retorno .=    "<td>" . $v['ds_logradouro'] . "</td>
                                         <td>" . $v['ds_bairro'] . "</td>
                                         <td>" . ($v['nr_telefone_residencial'] === NULL ? "" : Metodos::formataTelefone($v['nr_telefone_residencial'])) . "</td>
                                         <td>" . ($v['nr_telefone_celular'] === NULL ? "" : Metodos::formataCelular($v['nr_telefone_celular'])) . "</td>

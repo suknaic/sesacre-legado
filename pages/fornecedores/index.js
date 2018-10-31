@@ -1,202 +1,188 @@
-
-function listaPaisCombo() {
-    $.ajax({
-        "url": "/model/fornecedores/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaPaisOption"
-        },
-        "success": function (response) {
-            $(".pais").append(response);
-            $(".pais").select2({
-                width: " 100%"
-            });
-        }
-    });
-}
-listaPaisCombo();
-function listaEstadoNaturalidadeCombo(sw, estado) {
-    $.ajax({
-        "url": "/model/fornecedores/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaEstadoOption",
-            idEstado: estado
-        },
-        "success": function (response) {
-            if (sw == 1) {
-                $("#id_estado_naturalidade").empty();
-                $("#id_estado_naturalidade").append(response);
-                $("#id_estado_naturalidade").select2({
-                    width: " 100%"
-                });
-                $("#id_estado_naturalidade").val(estado);
-            }
-            if (sw == 2) {
-                $("#id_estado_endereco").empty();
-                $("#id_estado_endereco").append(response);
-                $("#id_estado_endereco").select2({
-                    width: " 100%"
-                });
-                $("#id_estado_endereco").val(estado);
-            }
-
-        }
-    });
-}
-
-//listaEstadoCombo();
-function listaCidadeCombo(idEstado, sw, cidade) {
-    //alert(cidade);
-    $.ajax({
-        "url": "/model/fornecedores/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaCidadeOption",
-            idEstado: idEstado,
-            idCidade: cidade
-        },
-        "success": function (response) {
-            if (sw == 1) {
-                $("#id_naturalidade").empty();
-                $("#id_naturalidade").append(response);
-                $("#id_naturalidade").select2({
-                    width: " 100%"
-                });
-
-                $("#id_naturalidade").val(cidade);
-            }
-            if (sw == 2) {
-                $("#id_cidade").empty();
-                $("#id_cidade").append(response);
-                $("#id_cidade").select2({
-                    width: " 100%"
-                });
-                $("#id_cidade").val(cidade);
-            }
-
-
-        }
-    });
-}
-//**********************uf para cep**********************************************************
-function listaCidadeComboUf(idEstado, uf) {
-    //alert(cidade);
-    $.ajax({
-        "url": "/model/fornecedores/request.php",
-        "dataType": 'html',
-        "method": 'POST',
-        "data": {
-            acao: "listaCidadeOptionUf",
-            idEstado: idEstado,
-            uf: uf
-        },
-        "success": function (response) {
-
-            $("#id_cidade").empty();
-            $("#id_cidade").append(response);
-            $("#id_cidade").select2({
-                width: " 100%"
-            });
-
-
-        }
-    });
-}
-//******************************************************************************************    
-function listaEstadoCombo() {
-    $.ajax({
-        "url": "/model/fornecedores/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaEstadoOption"
-        },
-        "success": function (response) {
-            $("#id_estado").append(response);
-            $("#id_estado").select2({
-                width: " 100%"
-            });
-        }
-    });
-}
-listaEstadoCombo();
 $(document).ready(function () {
 
     func = new Funcoes();
+
+    function gerarCloneSelectMedicamentos() {
+        $("#medicamentos").append(' <div class="medicamentos row">\n\
+                                        <div class="col-sm-5">\n\
+                                            <div class="panel-body">\n\
+                                                <div class="medicamentosCampos input-group">\n\
+                                                    <span class="input-group-addon">\n\
+                                                         <p class="fa fa-list inputPFa"></p>\n\
+                                                    </span>\n\
+                                                    <select class="form-control selectMedicamentos" name="medicamentos[]" required id="medicamentos">\n\
+                                                        <option value="0" selected="">Selecione um tipo de Medicamento</option>\n\
+                                                    </select>\n\
+                                                </div>\n\
+                                            </div>\n\
+                                        </div><br>\n\
+                                        <div class="col-md-3">\n\
+                                            <div class="panel-body">\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerMedicamento"></button>\n\
+                                            </div>\n\
+                                        <div>\n\
+                                    </div>');
+
+    }
+
+    $("body").on("click", ".addMedicamentos", function (e) {
+        e.preventDefault();
+        gerarCloneSelectMedicamentos();
+        $(".selectMedicamentos").select2({
+            width: " 100%"
+        });
+    });
+
+    $("body").on('click', '.btn-removerMedicamento', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".medicamentos").remove();
+    });
+
+    function gerarCloneSelectServico() {
+        $("#servico").append(' <div class="servico row">\n\
+                                        <div class="col-sm-5">\n\
+                                            <div class="panel-body">\n\
+                                                <div class="servicoCampos input-group">\n\
+                                                    <span class="input-group-addon">\n\
+                                                         <p class="fa fa-list inputPFa"></p>\n\
+                                                    </span>\n\
+                                                    <select class="form-control selectServico" name="servicos[]" required id="servico">\n\
+                                                        <option value="0" selected="">Selecione um tipo de Serviço</option>\n\
+                                                    </select>\n\
+                                                </div>\n\
+                                            </div>\n\
+                                        </div><br>\n\
+                                        <div class="col-md-3">\n\
+                                            <div class="panel-body">\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerServico"></button>\n\
+                                            </div>\n\
+                                        <div>\n\
+                                    </div>');
+
+    }
+
+    $("body").on("click", ".addServico", function (e) {
+        e.preventDefault();
+        gerarCloneSelectServico();
+        $(".selectServico").select2({
+            width: " 100%"
+        });
+    });
+
+    $("body").on('click', '.btn-removerServico', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".servico").remove();
+    });
+
+    function gerarCloneSelectConsumo() {
+        $("#consumo").append(' <div class="consumo row">\n\
+                                        <div class="col-sm-5">\n\
+                                            <div class="panel-body">\n\
+                                                <div class="consumoCampos input-group">\n\
+                                                    <span class="input-group-addon">\n\
+                                                         <p class="fa fa-list inputPFa"></p>\n\
+                                                    </span>\n\
+                                                    <select class="form-control selectConsumo" name="consumo[]" required id="consumo">\n\
+                                                        <option value="0" selected="">Selecione um tipo de Material de Consumo</option>\n\
+                                                    </select>\n\
+                                                </div>\n\
+                                            </div>\n\
+                                        </div><br>\n\
+                                        <div class="col-md-3">\n\
+                                            <div class="panel-body">\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerConsumo"></button>\n\
+                                            </div>\n\
+                                        <div>\n\
+                                    </div>');
+    }
+
+    $("body").on("click", ".addConsumo", function (e) {
+        e.preventDefault();
+        gerarCloneSelectConsumo();
+        $(".selectConsumo").select2({
+            width: " 100%"
+        });
+    });
+
+    $("body").on('click', '.btn-removerConsumo', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".consumo").remove();
+    });
+
+    function gerarCloneSelectPermanente() {
+        $("#permanente").append(' <div class="permanente row">\n\
+                                        <div class="col-sm-5">\n\
+                                            <div class="panel-body">\n\
+                                                <div class="permanenteCampos input-group">\n\
+                                                    <span class="input-group-addon">\n\
+                                                         <p class="fa fa-list inputPFa"></p>\n\
+                                                    </span>\n\
+                                                    <select class="form-control selectPermanente" name="permanente[]" required id="permanente">\n\
+                                                        <option value="0" selected="">Selecione um tipo de Material Permanente</option>\n\
+                                                    </select>\n\
+                                                </div>\n\
+                                            </div>\n\
+                                        </div><br>\n\
+                                        <div class="col-md-3">\n\
+                                            <div class="panel-body">\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerPermanente"></button>\n\
+                                            </div>\n\
+                                        <div>\n\
+                                    </div>');
+    }
+
+    $("body").on("click", ".addPermanente", function (e) {
+        e.preventDefault();
+        gerarCloneSelectPermanente();
+        $(".selectPermanente").select2({
+            width: " 100%"
+        });
+    });
+
+    $("body").on('click', '.btn-removerPermanente', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".permanente").remove();
+    });
+
     $('body').find("select").select2({});
-//******************************************************************************************
-    function listaPjCombo() {
+
+    //******************************************************************************************
+    function listaPais() {
         $.ajax({
             "url": "/model/fornecedores/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaPessoaJuridicaOption"
+                acao: "listaPaisOption"
             },
             "success": function (response) {
-                $("#id_pessoa_juridica").append(response);
-                $("#id_pessoa_juridica").select2({
+                $(".pais").append(response);
+                $(".pais").select2({
                     width: " 100%"
                 });
             }
         });
     }
-    listaPjCombo();
-    // função do botão Próximo
-    $(".pro").click(function () {
-        $('.nav > .active').next('li').find('a').trigger('click');
-    });
-    // função do botão anterior
-    $(".ant").click(function () {
-// aba que esta ativa no momento
-        $('.nav > .active').prev('li').find('a').trigger('click');
-    });
-    //******************************************************************************************
-    $("body").on("change", "#id_cidade", function (e) {
-        $("#ds_logradouro").val("");
-        $("#ds_bairro").val("");
-        $("#ds_complemento").val("");
-        $("#nr_cep").val("");
-
-    });
-    //******************************************************************************************
-    $("body").on("change.select2", "#id_pais_naturalidade", function (e) {
-        $("#id_estado_naturalidade").empty();
-        $("#id_naturalidade").empty();
-        $idPais = $("#id_pais_naturalidade").val();
-        if ($idPais == 0) {
-            return;
-        }
-        listaEstadoNaturalidadeCombo($idPais, 0);
-    });
-    //******************************************************************************************
-    $("body").on("change.select2", "#id_estado_naturalidade", function (e) {
-        $("#id_naturalidade").empty();
-        $idEstado = $("#id_estado_naturalidade").val();
-        if ($idEstado == 0) {
-            return;
-        }
-        listaCidadeCombo($idEstado, 1, null);
-    });
-    //******************************************************************************************
-    $("body").on("change.select2", "#id_pais_endereco", function (e) {
-        $("#id_estado_endereco").empty();
-        $("#id_cidade").empty();
-        $idPais = $("#id_pais_endereco").val();
-        if ($idPais == 0) {
-            return;
-        }
-        listaEstadoNaturalidadeCombo($idPais, 0);
-    });
-    //******************************************************************************************
-    $("body").on("change.select2", "#id_estado_endereco", function (e) {
-        $("#id_cidade").empty();
-        $idEstado = $("#id_estado_endereco").val();
-        if ($idEstado == 0) {
-            return;
-        }
-        listaCidadeCombo($idEstado, 1, null);
-    });
-
+    listaPais();
+    function listaEstado() {
+        $.ajax({
+            "url": "/model/fornecedores/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaEstadoOption"
+            },
+            "success": function (response) {
+                $("#id_estado").append(response);
+                $("#id_estado").select2({
+                    width: " 100%"
+                });
+            }
+        });
+    }
+    listaEstado();
 //******************************************************************************************
     $(".nr").mask("99");
     $("#nr_cnpj").mask("99.999.999/9999-99");
@@ -361,14 +347,9 @@ $(document).ready(function () {
                                     console.log(response);
                                     return false;
                                 }
-                                $("#id_pais_endereco").val(response[0]["id_pais"]).change();
-                                listaEstadoNaturalidadeCombo(response[0]['id_pais'], 2, response[0]['id_estado']);
-                                listaCidadeComboUf(response[0]['id_estado'], cidade);
                             }
                         });
-                        //$("#ibge").val(dados.ibge);
-                        //console.log(dados);
-                    } //end if.
+                    }
                     else {
                         //CEP pesquisado não foi encontrado.
                         alert("CEP não encontrado.");
@@ -384,16 +365,7 @@ $(document).ready(function () {
             //cep sem valor, limpa formulário.
         }
         //*************************************************************************************************
-//        $('body').on('click', '.cnpj', function (e){
-//        var cnpj = $("#nr_cnpj").val().replace();
-//        
-//        if (cnpj != ""){
-//            var validacnpj = ;
-//            if (validacnpj.teste (cnpj)) {
-//                $ds
-//            }
-//        }
-//        }) 
+
 
     });
 });
