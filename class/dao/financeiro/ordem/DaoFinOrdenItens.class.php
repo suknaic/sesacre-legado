@@ -36,62 +36,8 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
     public function retornaSaldoItemPreOrdem(PDO $pdo, int $idPedido = 0) {
         try {
             if (!empty($pdo)) {
-                $sql = "SELECT 
-                        CASE 
-                            WHEN (mat.tp_material = 'C' OR mat.tp_material = 'P') AND itens.fl_valor_variavel = '0' 
-                            THEN (pre.qt_itens_pre - COALESCE(ordemItens.qt_itens_ordem,'0.0000') - COALESCE(entregas.qt_itens_entrega,'0.0000') - COALESCE(anulacoes.qt_anulado,'0.0000'))
-                            WHEN mat.tp_material = 'S' OR itens.fl_valor_variavel = '1'
-                            THEN (pre.vl_total - COALESCE(ordemItens.total,'0.0000') - COALESCE(entregas.total,'0.0000') - COALESCE(anulacoes.total,'0.0000'))
-                        END saldoOrdem
-                        FROM fin_pedido AS pedido
-                        INNER JOIN fin_pre_ordem AS pre
-                        ON pedido.id_pedido = pre.id_pedido
-                        INNER JOIN fin_cont_itens AS itens 
-                        ON itens.id_cont_itens = pre.id_cont_itens
-                        INNER JOIN pla_material AS mat
-                        ON mat.id_material = itens.id_material
-                        INNER JOIN view_despesa AS desp
-                        ON desp.id_despesa = mat.id_despesa
-                        INNER JOIN pla_unidade_medida AS unid
-                        ON unid.id_unidade_medida = itens.id_unidade_medida
-                        LEFT JOIN (SELECT sum(itens.qt_itens_ordem) AS qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) AS total, itens.id_pre_ordem
-                                   FROM fin_ordem AS ordem
-                                   INNER JOIN fin_ordem_itens AS itens
-                                   ON ordem.id_ordem = itens.id_ordem
-                                   WHERE ordem.sit_ordem > '0' AND ordem.sit_ordem < '3'	
-                                   GROUP BY itens.id_pre_ordem
-                                   ) AS ordemItens
-                        ON ordemItens.id_pre_ordem = pre.id_pre_ordem
-
-                        LEFT JOIN (SELECT sum(itens.qt_itens_entrega) AS qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) AS total, ordemItens.id_pre_ordem
-                                   FROM fin_pedido AS pedido 
-                                   INNER JOIN fin_ordem AS ordem
-                                   ON ordem.id_pedido = pedido.id_pedido
-                                   INNER JOIN fin_ordem_itens AS ordemItens 
-                                   ON ordemItens.id_ordem = ordem.id_ordem
-                                   INNER JOIN fin_entrega_confirmacao AS confirmacao
-                                   ON confirmacao.id_ordem = ordem.id_ordem
-                                   INNER JOIN fin_entrega_itens AS itens
-                                   ON itens.id_ordem_itens = ordemItens.id_ordem_itens and itens.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
-                                   WHERE ordem.sit_ordem > '2' AND confirmacao.sit_entrega > '0'
-                                   GROUP  BY  ordemItens.id_pre_ordem
-                                   ) AS entregas
-                        ON entregas.id_pre_ordem = pre.id_pre_ordem
-
-                        LEFT JOIN (SELECT sum(qt_anulado) as qt_anulado, sum(vl_anulado)as total, preOrdem.id_pre_ordem 
-                                   FROM fin_pedido as pedido
-                                   INNER JOIN fin_pre_ordem as preOrdem
-                                   ON preOrdem.id_pedido = pedido.id_pedido
-                                   INNER JOIN con_empenho_anulacao as anulacao
-                                   ON anulacao.id_pedido = pedido.id_pedido
-                                   INNER JOIN con_empenho_anulacao_item as itensAnulacao
-                                   ON itensAnulacao.id_pre_ordem = preOrdem.id_pre_ordem 
-                                   AND itensAnulacao.id_empenho_anulacao = anulacao.id_empenho_anulacao
-                                   WHERE anulacao.id_empenho_anulacao_situacao = 1
-                                   GROUP  BY preOrdem.id_pre_ordem 
-                                  ) as anulacoes
-                        ON anulacoes.id_pre_ordem = pre.id_pre_ordem
-                        WHERE pre.id_pedido = :pedido AND pre.id_pre_ordem = :preOrdem";
+                $sql = "SELECT * from view_pedido_saldo            
+                        WHERE id_pedido = :pedido AND id_pre_ordem = :preOrdem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $idPedido, PDO::PARAM_INT);
                 $stmt->bindValue(":preOrdem", $this->getIdPreOrdem(), PDO::PARAM_INT);
