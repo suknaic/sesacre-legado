@@ -336,7 +336,9 @@ class EmpenhoAnulacao {
                  * Se o Item for Consumo ou Permanente(e não for fl_valor_variavel = 1)
                  * Então esse também será o valor para Anular
                  */
-                $valorTotalParaAnular = $quantidadeInformado;
+                $valorTotalParaAnular = $quantidadeInformado;                
+                
+                $valorAnulado = $quantidadeInformado;
                 /*
                  * Se o Item for de Serviço ou fl_valor_variavel = 1
                  * , então a "quantidade" que o usuário informou era o valor da anulação 
@@ -349,7 +351,8 @@ class EmpenhoAnulacao {
                      * Se não era de serviço nem valor variavel
                      * então o Valor Para Anular, será a Quantidade do Item * o Valor Unitário
                      */
-                    $valorTotalParaAnular = round(($valorUnitario*$quantidadeInformado),4);
+                    //$valorTotalParaAnular = round(($valorUnitario*$quantidadeInformado),4);
+                    $valorAnulado = round(($valorUnitario*$quantidadeInformado),4);
                 }
                 
 
@@ -357,7 +360,7 @@ class EmpenhoAnulacao {
 //                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
 //                }
 //                $pdo->rollBack();
-//                echo " \n ".$valorUnitario." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
+//                echo " \n ".$valorAnulado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
 //                return;
 
 
@@ -372,7 +375,7 @@ class EmpenhoAnulacao {
                 $daoEmpenhoAnulacaoItens->setQtItem($value['qt_itens_pre']);
                 $daoEmpenhoAnulacaoItens->setVlItem($value['vl_itens_pre']);
                 $daoEmpenhoAnulacaoItens->setQtAnulacao($quantidadeInformado);
-                $daoEmpenhoAnulacaoItens->setVlAnulado($valorTotalParaAnular);
+                $daoEmpenhoAnulacaoItens->setVlAnulado($valorAnulado);
                 $daoEmpenhoAnulacaoItens->setVlSaldo(round($value['saldo'], 4));
                 $daoEmpenhoAnulacaoItens->setVlUtilizado(round($value['vl_utilizado'], 4));
                 $daoEmpenhoAnulacaoItens->setQtUtilizado(round($value['qt_utilizado'], 4));

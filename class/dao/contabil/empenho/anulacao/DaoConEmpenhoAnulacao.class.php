@@ -110,7 +110,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
                 on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
                 inner join con_empenho_anulacao anuEmp
                 on anuEmp.id_pedido = emp.id_pedido
-                where anuEmp.id_empenho_anulacao = :id_empenho_anulacao";
+                where anuEmp.id_empenho_anulacao = :id_empenho_anulacao and emp.sit_empenho <> '6'";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
