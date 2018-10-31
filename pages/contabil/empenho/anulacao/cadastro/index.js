@@ -174,7 +174,7 @@ $(document).ready(function () {
                     centsSeparator: ',',
                     thousandsSeparator: '.',
                 });
-                //mudaLabelQuantidadeValor();
+                mudaLabelQuantidadeValor();
             }
         });
     }
@@ -408,11 +408,11 @@ $(document).ready(function () {
 function mudaLabelQuantidadeValor(){
     $("#tabelaItensPedido tbody tr").each(function(){
         var linha = $(this);
-        var cabecalho = $("#tabelaItensPedido > thead > tr");
-        if (linha.data('tp-material') == 'S' || linha.data('fl-valor-variavel') == '1') {
-            cabecalho.find('.quantidade-valor').html('Valor da Anulação');
+        var cabecalho = $("#tabelaItensPedido > thead > tr");        
+        if (linha.data('tipo-material') == 'S' || linha.data('fl-valor-variavel') == '1') {
+            cabecalho.find('.saldo-valor').html('Saldo do Valor a Anular');
         } else {
-            cabecalho.find('.quantidade-valor').html('Qtd. da Anulação');
+            cabecalho.find('.saldo-valor').html('Saldo da Qtd. a Anular');
         }
         return false;
     });

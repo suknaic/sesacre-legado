@@ -372,6 +372,7 @@ class FinOrdemModel {
                         $finOrdemItensModel->setTpItem($linha->tp);
                         $finOrdemItensModel->setIdOrdem($idOrdem);
                         $finOrdemItensModel->setIdPreOrdem($linha->idPreOrdem);
+                        $finOrdemItensModel->setFlValorVariavel($linha->flVariavel);
                         $finOrdemItensModel->setQdItensPre(Metodos::ConverteValorIng($linha->qtd));
 
                         $daoFinOrdem->retornaValorPreOrdem($pdo, $linha->idPreOrdem);
@@ -402,6 +403,7 @@ class FinOrdemModel {
                         $finOrdemItensModel->setIdPreOrdem($linha->idPreOrdem);
                         $finOrdemItensModel->setQdItensPre(Metodos::ConverteValorIng($linha->qtd));
                         $finOrdemItensModel->setVlItensPre(Metodos::ConverteValorIng($linha->vl));
+                        $finOrdemItensModel->setFlValorVariavel($linha->flVariavel);
                         $finOrdemItensModel->retornaSaldoItemPreOrdem($pdo);
 
                         if ($finOrdemItensModel->getSucesso()) {
