@@ -36,49 +36,62 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
     public function retornaSaldoItemPreOrdem(PDO $pdo, int $idPedido = 0) {
         try {
             if (!empty($pdo)) {
-                $sql = "select pre.id_pre_ordem,
-                        case 
-                            when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
-                            then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
-                            when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                            then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
-                        end saldo
-                        from fin_pedido as pedido
-                        inner join fin_pre_ordem as pre
-                        on pedido.id_pedido = pre.id_pedido
-                        inner join fin_cont_itens as itens 
-                        on itens.id_cont_itens = pre.id_cont_itens
-                        inner join pla_material as mat
-                        on mat.id_material = itens.id_material
-                        inner join view_despesa as desp
-                        on desp.id_despesa = mat.id_despesa
-                        inner join pla_unidade_medida as unid
-                        on unid.id_unidade_medida = itens.id_unidade_medida
-                        left join (select sum(itens.qt_itens_ordem) as qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,  
-                                                itens.id_pre_ordem
-                                                from fin_ordem as ordem
-                                    inner join fin_ordem_itens as itens
-                                    on ordem.id_ordem = itens.id_ordem
-                                    where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
-                                    group by itens.id_pre_ordem
-                                  ) as ordemItens
-                        on ordemItens.id_pre_ordem = pre.id_pre_ordem
+                $sql = "SELECT 
+                        CASE 
+                            WHEN (mat.tp_material = 'C' OR mat.tp_material = 'P') AND itens.fl_valor_variavel = '0' 
+                            THEN (pre.qt_itens_pre - COALESCE(ordemItens.qt_itens_ordem,'0.0000') - COALESCE(entregas.qt_itens_entrega,'0.0000') - COALESCE(anulacoes.qt_anulado,'0.0000'))
+                            WHEN mat.tp_material = 'S' OR itens.fl_valor_variavel = '1'
+                            THEN (pre.vl_total - COALESCE(ordemItens.total,'0.0000') - COALESCE(entregas.total,'0.0000') - COALESCE(anulacoes.total,'0.0000'))
+                        END saldoOrdem
+                        FROM fin_pedido AS pedido
+                        INNER JOIN fin_pre_ordem AS pre
+                        ON pedido.id_pedido = pre.id_pedido
+                        INNER JOIN fin_cont_itens AS itens 
+                        ON itens.id_cont_itens = pre.id_cont_itens
+                        INNER JOIN pla_material AS mat
+                        ON mat.id_material = itens.id_material
+                        INNER JOIN view_despesa AS desp
+                        ON desp.id_despesa = mat.id_despesa
+                        INNER JOIN pla_unidade_medida AS unid
+                        ON unid.id_unidade_medida = itens.id_unidade_medida
+                        LEFT JOIN (SELECT sum(itens.qt_itens_ordem) AS qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) AS total, itens.id_pre_ordem
+                                   FROM fin_ordem AS ordem
+                                   INNER JOIN fin_ordem_itens AS itens
+                                   ON ordem.id_ordem = itens.id_ordem
+                                   WHERE ordem.sit_ordem > '0' AND ordem.sit_ordem < '3'	
+                                   GROUP BY itens.id_pre_ordem
+                                   ) AS ordemItens
+                        ON ordemItens.id_pre_ordem = pre.id_pre_ordem
 
-                        left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                               from fin_pedido as pedido 
-                               inner join fin_ordem as ordem
-                               on ordem.id_pedido = pedido.id_pedido
-                               inner join fin_ordem_itens as ordemItens 
-                               on ordemItens.id_ordem = ordem.id_ordem
-                               inner join fin_entrega_confirmacao as confirmacao
-                               on confirmacao.id_ordem = ordem.id_ordem
-                               inner join fin_entrega_itens as itens
-                               on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
-                               where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                               group  by  ordemItens.id_pre_ordem
-                               ) as entregas
-                        on entregas.id_pre_ordem = pre.id_pre_ordem
-                        where pre.id_pedido = :pedido and pre.id_pre_ordem = :preOrdem";
+                        LEFT JOIN (SELECT sum(itens.qt_itens_entrega) AS qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) AS total, ordemItens.id_pre_ordem
+                                   FROM fin_pedido AS pedido 
+                                   INNER JOIN fin_ordem AS ordem
+                                   ON ordem.id_pedido = pedido.id_pedido
+                                   INNER JOIN fin_ordem_itens AS ordemItens 
+                                   ON ordemItens.id_ordem = ordem.id_ordem
+                                   INNER JOIN fin_entrega_confirmacao AS confirmacao
+                                   ON confirmacao.id_ordem = ordem.id_ordem
+                                   INNER JOIN fin_entrega_itens AS itens
+                                   ON itens.id_ordem_itens = ordemItens.id_ordem_itens and itens.id_entrega_confirmacao = confirmacao.id_entrega_confirmacao
+                                   WHERE ordem.sit_ordem > '2' AND confirmacao.sit_entrega > '0'
+                                   GROUP  BY  ordemItens.id_pre_ordem
+                                   ) AS entregas
+                        ON entregas.id_pre_ordem = pre.id_pre_ordem
+
+                        LEFT JOIN (SELECT sum(qt_anulado) as qt_anulado, sum(vl_anulado)as total, preOrdem.id_pre_ordem 
+                                   FROM fin_pedido as pedido
+                                   INNER JOIN fin_pre_ordem as preOrdem
+                                   ON preOrdem.id_pedido = pedido.id_pedido
+                                   INNER JOIN con_empenho_anulacao as anulacao
+                                   ON anulacao.id_pedido = pedido.id_pedido
+                                   INNER JOIN con_empenho_anulacao_item as itensAnulacao
+                                   ON itensAnulacao.id_pre_ordem = preOrdem.id_pre_ordem 
+                                   AND itensAnulacao.id_empenho_anulacao = anulacao.id_empenho_anulacao
+                                   WHERE anulacao.id_empenho_anulacao_situacao = 1
+                                   GROUP  BY preOrdem.id_pre_ordem 
+                                  ) as anulacoes
+                        ON anulacoes.id_pre_ordem = pre.id_pre_ordem
+                        WHERE pre.id_pedido = :pedido AND pre.id_pre_ordem = :preOrdem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $idPedido, PDO::PARAM_INT);
                 $stmt->bindValue(":preOrdem", $this->getIdPreOrdem(), PDO::PARAM_INT);
