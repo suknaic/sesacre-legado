@@ -11,7 +11,7 @@ $(document).ready(function() {
     function retornatrItensAtaContrato(){
         var dados = {
             "id": $("#id").val()
-        }
+        };
 
         $.ajax({
             "url": "/model/compras/itens/request.php",

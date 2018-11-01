@@ -484,7 +484,7 @@ class FinOrdemModel {
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_pre"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["total"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["utilizado"], 4) . '</td>
-                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>
+                                        <td class="text-center">' . Metodos::ConverteValorBr($linha["saldoordem"], 4) . '</td>
                                         <td class="text-center">Quantidade<input type="text" name="qtd" id="qtd" idPedido="' . $linha["id_pedido"] . '"
                                          idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                          class="form-control input-sm qtd" >';

@@ -31,7 +31,15 @@
         <style>
             li.active {
                 background:#EEEEEE;  
-            } 
+            }
+            .cep {
+                padding: 10px 20px;
+                margin: 43px ;
+            }
+            .adicionar {
+                margin: 32px;
+                margin-left: 0;
+            }
         </style>
     </head>
     <!--TIPS-->
@@ -234,7 +242,7 @@
                                 </div>
 
                                 <div class="col-sm-1">
-                                    <div class="panel-body">
+                                    <div class="panel-group">
                                         <button class="btn btn-info btn-rounded cep" type="button">
                                             <i class="fa fa-search" aria-hidden="true"></i> CEP
                                         </button>
@@ -322,153 +330,160 @@
                                     <h5 class="panel-title">Tipos de Produtos ou Serviços que a Empresa Fornece</h5>
                                 </div>
 
-                                <div class="col-sm-5">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Medicamentos: </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-list inputPFa"></p>
-                                            </span>
-                                            <select id="id_medicamentos" class="form-control select">
-                                                <option value="0">Selecione o tipo de Medicamento</option>
-                                                <option value="1">Medicamentos</option>
-                                                <option value="2">Medicamentos Manipulados</option>
-                                                <option value="3">Medicamentos Importados</option>
-                                            </select>
+                                <div id="medicamentos">
+                                    <div class="col-sm-5">
+                                        <div class="panel-body">
+                                            <p class= "form-control-static"><strong>Medicamentos: </strong><span class="text-danger">*</span></p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="id_medicamentos" class="form-control select">
+                                                    <option value="0">Selecione o tipo de Medicamento</option>
+                                                    <option value="1">Medicamentos</option>
+                                                    <option value="2">Medicamentos Manipulados</option>
+                                                    <option value="3">Medicamentos Importados</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p><br></p>
-                                    <div class="panel-body">
-                                        <button  type="button" class="btn btn-primary">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
+
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <button  type="button" class="btn btn-primary adicionar addMedicamentos">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-5">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Serviços: </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-list inputPFa"></p>
-                                            </span>
-                                            <select id="id_servicos" class="form-control select">
-                                                <option value="0">Selecione o tipo de Serviços</option>
-                                                <option value="1">Alimentação</option>
-                                                <option value="2">Home Care</option>
-                                                <option value="3">Fisioterapia Therasuit</option>
-                                                <option value="4">Fisioterapia Pediasuit</option>
-                                                <option value="5">Fisioterapia Equoterapia</option>
-                                                <option value="6">Fisioterapia Hidroterapia</option>
-                                                <option value="7">Informática</option>
-                                                <option value="8">Lavagem de Roupa</option>
-                                                <option value="9">Limpeza</option>
-                                                <option value="10">Telefonia</option>
-                                                <option value="11">Veículos</option>
-                                                <option value="12">Vigilância</option>
-                                                <option value="13">Clínica de Exame</option>
-                                                <option value="14">Clínica de Imagem</option>
-                                                <option value="15">Clínica de Drenagem Linfática</option>
-                                                <option value="16">Óticas</option>
-                                            </select>
+                                <div id="servico">
+                                    <div class="col-sm-5">
+                                        <div class="panel-body">
+                                            <p class= "form-control-static"><strong>Serviços: </strong><span class="text-danger">*</span></p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="id_servicos" class="form-control select">
+                                                    <option value="0">Selecione o tipo de Serviço</option>
+                                                    <option value="1">Alimentação</option>
+                                                    <option value="2">Home Care</option>
+                                                    <option value="3">Fisioterapia Therasuit</option>
+                                                    <option value="4">Fisioterapia Pediasuit</option>
+                                                    <option value="5">Fisioterapia Equoterapia</option>
+                                                    <option value="6">Fisioterapia Hidroterapia</option>
+                                                    <option value="7">Informática</option>
+                                                    <option value="8">Lavagem de Roupa</option>
+                                                    <option value="9">Limpeza</option>
+                                                    <option value="10">Telefonia</option>
+                                                    <option value="11">Veículos</option>
+                                                    <option value="12">Vigilância</option>
+                                                    <option value="13">Clínica de Exame</option>
+                                                    <option value="14">Clínica de Imagem</option>
+                                                    <option value="15">Clínica de Drenagem Linfática</option>
+                                                    <option value="16">Óticas</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p><br></p>
-                                    <div class="panel-body">
-                                        <button  type="button" class="btn btn-primary">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <button  type="button" class="btn btn-primary adicionar addServico">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-5">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Material de Consumo:  </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-list inputPFa"></p>
-                                            </span>
-                                            <select id="id_material_consumo" class="form-control select">
-                                                <option value="0">Selecione o tipo de Material de Consumo</option>
-                                                <option value="1">Material Médico Hospitalar - Cirúrgico</option>
-                                                <option value="2">Material Médico Hospitalar - Descartável (Agulhas, Seringas, Curativos, etc)</option>
-                                                <option value="3">Material Odontológico</option>
-                                                <option value="4">Material para Hemoterapia</option>
-                                                <option value="5">Roupas Hospitalares</option>
-                                                <option value="6">Material Laboratorial (Reagentes e Testes)</option>
-                                                <option value="7">Saneantes</option>
-                                                <option value="8">Fórmula Alimentar</option>
-                                                <option value="9">Vidraria</option>
-                                                <option value="10">Bolsa de Ostomia</option>
-                                                <option value="11">Filmes Radiológicos</option>
-                                            </select>
+                                <div id="consumo">
+                                    <div class="col-sm-5">
+                                        <div class="panel-body">
+                                            <p class= "form-control-static"><strong>Material de Consumo:  </strong><span class="text-danger">*</span></p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="id_material_consumo" class="form-control select">
+                                                    <option value="0">Selecione o tipo de Material de Consumo</option>
+                                                    <option value="1">Material Médico Hospitalar - Cirúrgico</option>
+                                                    <option value="2">Material Médico Hospitalar - Descartável (Agulhas, Seringas, Curativos, etc)</option>
+                                                    <option value="3">Material Odontológico</option>
+                                                    <option value="4">Material para Hemoterapia</option>
+                                                    <option value="5">Roupas Hospitalares</option>
+                                                    <option value="6">Material Laboratorial (Reagentes e Testes)</option>
+                                                    <option value="7">Saneantes</option>
+                                                    <option value="8">Fórmula Alimentar</option>
+                                                    <option value="9">Vidraria</option>
+                                                    <option value="10">Bolsa de Ostomia</option>
+                                                    <option value="11">Filmes Radiológicos</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p><br></p>
-                                    <div class="panel-body">
-                                        <button  type="button" class="btn btn-primary">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <button  type="button" class="btn btn-primary adicionar addConsumo">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-5">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Material Permanente: </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-list inputPFa"></p>
-                                            </span>
-                                            <select id="idmaterial_permanente" class="form-control select">
-                                                <option value="0">Selecione o tipo Material</option>
-                                                <option value="1">Máquinas e Equipamentos Hospitalares</option>
-                                                <option value="2">Máquinas e Equipamentos Hospitalares de Imagem</option>
-                                                <option value="3">Máquinas e Equipamentos Médico Cirúrgicos</option>
-                                                <option value="4">Máquinas e Equipamentos Médico Endoscópios</option>
-                                                <option value="5">Máquinas e Equipamentos Médico Oftalmológicos</option>
-                                                <option value="6">Máquinas e Equipamentos Médico Auditivos</option>
-                                                <option value="7">Máquinas e Equipamentos Odontológicos</option>
-                                                <option value="8">Máquinas e Equipamentos Ortopédicos e Mobilidade</option>
-                                                <option value="9">Máquinas e Equipamentos de Laboratórios</option>
-                                                <option value="10">Máquinas e Equipamentos de Fisioterapia</option>
-                                                <option value="11">Máquinas e Equipamentos de Informática</option>
-                                                <option value="12">Eletroeletrônicos</option>
-                                                <option value="13">Mobiliário Hospitalar</option>
-                                                <option value="14">Mobiliário de Escritório</option>
-                                            </select>
+                                <div id="permanente">
+                                    <div class="col-sm-5">
+                                        <div class="panel-body">
+                                            <p class= "form-control-static"><strong>Material Permanente: </strong><span class="text-danger">*</span></p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-list inputPFa"></p>
+                                                </span>
+                                                <select id="idmaterial_permanente" class="form-control select">
+                                                    <option value="0">Selecione o tipo Material</option>
+                                                    <option value="1">Máquinas e Equipamentos Hospitalares</option>
+                                                    <option value="2">Máquinas e Equipamentos Hospitalares de Imagem</option>
+                                                    <option value="3">Máquinas e Equipamentos Médico Cirúrgicos</option>
+                                                    <option value="4">Máquinas e Equipamentos Médico Endoscópios</option>
+                                                    <option value="5">Máquinas e Equipamentos Médico Oftalmológicos</option>
+                                                    <option value="6">Máquinas e Equipamentos Médico Auditivos</option>
+                                                    <option value="7">Máquinas e Equipamentos Odontológicos</option>
+                                                    <option value="8">Máquinas e Equipamentos Ortopédicos e Mobilidade</option>
+                                                    <option value="9">Máquinas e Equipamentos de Laboratórios</option>
+                                                    <option value="10">Máquinas e Equipamentos de Fisioterapia</option>
+                                                    <option value="11">Máquinas e Equipamentos de Informática</option>
+                                                    <option value="12">Eletroeletrônicos</option>
+                                                    <option value="13">Mobiliário Hospitalar</option>
+                                                    <option value="14">Mobiliário de Escritório</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p><br></p>
-                                    <div class="panel-body">
-                                        <button  type="button" class="btn btn-primary">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                        </button>
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            <button  type="button" class="btn btn-primary adicionar addPermanente">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <hr>
-                                <div class="col-sm-5"></div>
+                                <div class="col-sm-4"></div>
                                 <div class="col-sm-2">
-                                    <button class="btn btn-default btn-rounded btn-limpar" type="button">
+                                    <button class="btn btn-default btn-rounded btn-limpar btn-block" type="button">
                                         <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
                                     </button>
-                                    <button class="btn btn-success btn-rounded btn-salvar" type="button">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-success btn-rounded btn-salvar btn-block" type="button">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                     </button>
                                 </div><br><br><br>
-                                <div class="col-sm-5"></div>
+                                <div class="col-sm-4"></div>
                             </div>
                         </div>
                     </form>

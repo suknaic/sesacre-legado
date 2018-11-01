@@ -211,13 +211,13 @@ class FinOrdemItensModel {
 
         if ($daoFinOrdenItens->Sucesso()) {
             if (($this->tp_item == "C" || $this->tp_item == "P") && $this->fl_valor_variavel == "0") {
-                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round($this->qd_itens_pre, 4)) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldoordem"], 4) >= round($this->qd_itens_pre, 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;
                 }
             } else if ($this->tp_item == "S" || $this->fl_valor_variavel == "1") {
-                if (round($daoFinOrdenItens->getMsgRetorno()["saldo"], 4) >= round(($this->qd_itens_pre * $this->vl_itens_pre), 4)) {
+                if (round($daoFinOrdenItens->getMsgRetorno()["saldoordem"], 4) >= round(($this->qd_itens_pre * $this->vl_itens_pre), 4)) {
                     $this->sucesso = true;
                 } else {
                     $this->sucesso = false;

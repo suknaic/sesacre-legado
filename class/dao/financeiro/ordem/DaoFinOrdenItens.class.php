@@ -36,49 +36,8 @@ class DaoFinOrdenItens extends FinOrdemItensTb {
     public function retornaSaldoItemPreOrdem(PDO $pdo, int $idPedido = 0) {
         try {
             if (!empty($pdo)) {
-                $sql = "select pre.id_pre_ordem,
-                        case 
-                            when (mat.tp_material = 'C' or mat.tp_material = 'P') and itens.fl_valor_variavel = '0' 
-                            then (pre.qt_itens_pre - coalesce(ordemItens.qt_itens_ordem,'0.0000') - coalesce(entregas.qt_itens_entrega,'0.0000'))
-                            when mat.tp_material = 'S' or itens.fl_valor_variavel = '1'
-                            then ((pre.qt_itens_pre * pre.vl_itens_pre) - coalesce(ordemItens.total,'0.0000') - coalesce(entregas.total,'0.0000'))
-                        end saldo
-                        from fin_pedido as pedido
-                        inner join fin_pre_ordem as pre
-                        on pedido.id_pedido = pre.id_pedido
-                        inner join fin_cont_itens as itens 
-                        on itens.id_cont_itens = pre.id_cont_itens
-                        inner join pla_material as mat
-                        on mat.id_material = itens.id_material
-                        inner join view_despesa as desp
-                        on desp.id_despesa = mat.id_despesa
-                        inner join pla_unidade_medida as unid
-                        on unid.id_unidade_medida = itens.id_unidade_medida
-                        left join (select sum(itens.qt_itens_ordem) as qt_itens_ordem, sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,  
-                                                itens.id_pre_ordem
-                                                from fin_ordem as ordem
-                                    inner join fin_ordem_itens as itens
-                                    on ordem.id_ordem = itens.id_ordem
-                                    where ordem.sit_ordem > '0' and ordem.sit_ordem < '3'
-                                    group by itens.id_pre_ordem
-                                  ) as ordemItens
-                        on ordemItens.id_pre_ordem = pre.id_pre_ordem
-
-                        left join (select sum(itens.qt_itens_entrega)as qt_itens_entrega, sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total, ordemItens.id_pre_ordem
-                               from fin_pedido as pedido 
-                               inner join fin_ordem as ordem
-                               on ordem.id_pedido = pedido.id_pedido
-                               inner join fin_ordem_itens as ordemItens 
-                               on ordemItens.id_ordem = ordem.id_ordem
-                               inner join fin_entrega_confirmacao as confirmacao
-                               on confirmacao.id_ordem = ordem.id_ordem
-                               inner join fin_entrega_itens as itens
-                               on itens.id_ordem_itens = ordemItens.id_ordem_itens and confirmacao.id_entrega_confirmacao = itens.id_entrega_confirmacao
-                               where ordem.sit_ordem > '2' and confirmacao.sit_entrega > '0'
-                               group  by  ordemItens.id_pre_ordem
-                               ) as entregas
-                        on entregas.id_pre_ordem = pre.id_pre_ordem
-                        where pre.id_pedido = :pedido and pre.id_pre_ordem = :preOrdem";
+                $sql = "SELECT * from view_pedido_saldo            
+                        WHERE id_pedido = :pedido AND id_pre_ordem = :preOrdem";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $idPedido, PDO::PARAM_INT);
                 $stmt->bindValue(":preOrdem", $this->getIdPreOrdem(), PDO::PARAM_INT);
