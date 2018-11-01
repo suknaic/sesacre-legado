@@ -439,66 +439,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
       public function retornaEmpenhoAnulacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-//                $sql = "select concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/', substring(emp.nr_empenho from '....$')) as nr_empenho,
-//                        emp.id_empenho                        
-//                        ,	to_char(emp.dt_empenho_safira,'DD/MM/YYYY') as dataEmpenho,tpEmp.nm_tipo_empenho,emp.vl_empenho,
-//                        (emp.vl_empenho - ROUND(sum(coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000')),4)) as saldo
-//                        from fin_pedido as pedido
-//
-//                        inner join fin_empenho as emp
-//                        on emp.id_pedido = pedido.id_pedido
-//                        inner join fin_tipo_empenho as tpEmp
-//                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
-//                        inner join fin_pre_ordem as pre 
-//                        on	pedido.id_pedido = pre.id_pedido
-//                        inner join fin_cont_itens as itens 
-//                        on	itens.id_cont_itens = pre.id_cont_itens
-//                        inner join pla_material as mat 
-//                        on	mat.id_material = itens.id_material
-//                        inner join view_despesa as desp 
-//                        on	desp.id_despesa = mat.id_despesa
-//                        inner join pla_unidade_medida as unid 
-//                        on	unid.id_unidade_medida = itens.id_unidade_medida                        
-//                        left join (
-//                                select
-//                                        sum(itens.qt_itens_ordem) as qt_itens_ordem,
-//                                        sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,
-//                                        itens.id_pre_ordem
-//                                from
-//                                        fin_ordem as ordem
-//                                inner join fin_ordem_itens as itens 
-//                                on	ordem.id_ordem = itens.id_ordem
-//                                where
-//                                        ordem.sit_ordem > '0'
-//                                        and ordem.sit_ordem < '3'
-//                                group by
-//                                        itens.id_pre_ordem ) as ordemItens 
-//                        on	ordemItens.id_pre_ordem = pre.id_pre_ordem
-//                        left join (
-//                                select
-//                                        sum(itens.qt_itens_entrega)as qt_itens_entrega,
-//                                        sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total,
-//                                        ordemItens.id_pre_ordem
-//                                from
-//                                        fin_pedido as pedido
-//                                inner join fin_ordem as ordem 
-//                                on	ordem.id_pedido = pedido.id_pedido
-//
-//                                inner join fin_ordem_itens as ordemItens on
-//                                        ordemItens.id_ordem = ordem.id_ordem
-//                                inner join fin_entrega_confirmacao as confirmacao on
-//                                        confirmacao.id_ordem = ordem.id_ordem
-//                                inner join fin_entrega_itens as itens on
-//                                        itens.id_ordem_itens = ordemItens.id_ordem_itens
-//                                where
-//                                        ordem.sit_ordem > '2'
-//                                        and confirmacao.sit_entrega > '0'
-//                                group by
-//                                        ordemItens.id_pre_ordem ) as entregas 
-//                        on	entregas.id_pre_ordem = pre.id_pre_ordem
-//                        where	pedido.id_pedido = :pedido
-//                        group by emp.nr_empenho, emp.vl_empenho, emp.id_empenho, tpEmp.nm_tipo_empenho,	emp.vl_empenho";
-                
+               
                 $sql = "SELECT concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/', substring(emp.nr_empenho from '....$')) as nr_empenho
                             , emp.id_empenho ,pedido.id_pedido, pedido.nr_pedido
                             , fonte.nr_fonte, DESPESA.cd_despesa_elemento AS cd_despesa_elemento, SALDO.saldo
@@ -581,87 +522,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function buscaEmpenhoPesquisaAnulacaoEmpenho(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-//                $sql = "SELECT p.id_pedido, p.nr_pedido, emp.id_empenho, emp.nr_empenho,
-//                        emp.dt_empenho_safira, emp.vl_empenho
-//                        , TE.nm_tipo_empenho, F.nr_fonte, DE.cd_despesa_elemento
-//                        , (emp.vl_empenho - coalesce((select sum(vl_liquidacao) from con_liquidacao liq where liq.id_empenho = emp.id_empenho and liq.id_liquidacao_situacao <> 4),0)) as saldo
-//                        FROM fin_empenho AS emp
-//                        INNER JOIN fin_pedido AS p
-//                            ON p.id_pedido = emp.id_pedido
-//                        INNER JOIN fin_tipo_empenho TE 
-//                            ON TE.id_tipo_empenho = emp.id_tipo_empenho
-//                        INNER JOIN fin_fonte F 
-//                            ON F.id_fonte = p.id_fonte
-//                        INNER JOIN view_despesa_elemento DE 
-//                            ON DE.id_despesa_elemento = p.id_despesa_elemento
-//                        WHERE emp.nr_empenho = :nr_empenho";
-                
-//                $sql = "select concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/', substring(emp.nr_empenho from '....$')) as nr_empenho,
-//                        emp.id_empenho , pedido.id_pedido, pedido.nr_pedido
-//                        , fonte.nr_fonte, desp.cd_despesa as cd_despesa_elemento
-//                        , to_char(emp.dt_empenho_safira,'DD/MM/YYYY') as dataEmpenho,tpEmp.nm_tipo_empenho,emp.vl_empenho,
-//                        (emp.vl_empenho - ROUND(sum(coalesce(ordemItens.total,'0.0000') + coalesce(entregas.total,'0.0000')),4)) as saldo
-//                        from fin_pedido as pedido
-//
-//                        inner join fin_empenho as emp
-//                        on emp.id_pedido = pedido.id_pedido
-//                        inner join fin_tipo_empenho as tpEmp
-//                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho
-//                        inner join fin_pre_ordem as pre 
-//                        on	pedido.id_pedido = pre.id_pedido
-//                        inner join fin_cont_itens as itens 
-//                        on	itens.id_cont_itens = pre.id_cont_itens
-//                        inner join pla_material as mat 
-//                        on	mat.id_material = itens.id_material
-//                        inner join view_despesa as desp 
-//                        on	desp.id_despesa = mat.id_despesa
-//                        inner join pla_unidade_medida as unid 
-//                        on	unid.id_unidade_medida = itens.id_unidade_medida    
-//                        inner join fin_fonte as fonte 
-//                        on fonte.id_fonte = pedido.id_fonte
-//                        left join (
-//                                select
-//                                        sum(itens.qt_itens_ordem) as qt_itens_ordem,
-//                                        sum(itens.qt_itens_ordem * itens.vl_itens_ordem) as total,
-//                                        itens.id_pre_ordem
-//                                from
-//                                        fin_ordem as ordem
-//                                inner join fin_ordem_itens as itens 
-//                                on	ordem.id_ordem = itens.id_ordem
-//                                where
-//                                        ordem.sit_ordem > '0'
-//                                        and ordem.sit_ordem < '3'
-//                                group by
-//                                        itens.id_pre_ordem ) as ordemItens 
-//                        on	ordemItens.id_pre_ordem = pre.id_pre_ordem
-//                        left join (
-//                                select
-//                                        sum(itens.qt_itens_entrega)as qt_itens_entrega,
-//                                        sum(itens.qt_itens_entrega * itens.vl_itens_entrega) as total,
-//                                        ordemItens.id_pre_ordem
-//                                from
-//                                        fin_pedido as pedido
-//                                inner join fin_ordem as ordem 
-//                                on	ordem.id_pedido = pedido.id_pedido
-//
-//                                inner join fin_ordem_itens as ordemItens on
-//                                        ordemItens.id_ordem = ordem.id_ordem
-//                                inner join fin_entrega_confirmacao as confirmacao on
-//                                        confirmacao.id_ordem = ordem.id_ordem
-//                                inner join fin_entrega_itens as itens on
-//                                        itens.id_ordem_itens = ordemItens.id_ordem_itens
-//                                where
-//                                        ordem.sit_ordem > '2'
-//                                        and confirmacao.sit_entrega > '0'
-//                                group by
-//                                        ordemItens.id_pre_ordem ) as entregas 
-//                        on	entregas.id_pre_ordem = pre.id_pre_ordem
-//                        --where	pedido.id_pedido = :pedido
-//                        where emp.nr_empenho = :nr_empenho
-//                        group by emp.nr_empenho, emp.vl_empenho, emp.id_empenho, tpEmp.nm_tipo_empenho
-//                        , emp.vl_empenho, fonte.id_fonte, desp.cd_despesa, pedido.id_pedido";
-                
-                
+               
                 $sql = "SELECT concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/', substring(emp.nr_empenho from '....$')) as nr_empenho
                             , emp.id_empenho ,pedido.id_pedido, pedido.nr_pedido
                             , fonte.nr_fonte, DESPESA.cd_despesa_elemento AS cd_despesa_elemento, SALDO.saldo
@@ -709,7 +570,25 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaDadosEmpenho(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select * from fin_empenho where id_empenho = :idEmpenho";
+                $sql = "select
+                            tpEmp.nm_tipo_empenho,
+                            emp.id_empenho,
+                            emp.id_pedido,
+                            to_char(emp.dt_empenho_safira,'dd/mm/yyyy') as dt_empenho_safira,
+                            trim(to_char(emp.vl_empenho,'999G999G999G990D9999')) as vl_empenho,
+                            concat(substr(nr_empenho, 1, 
+                            (
+                         (LENGTH(nr_empenho) - 4)
+                            )
+                         ), '/', substring(nr_empenho 
+                         FROM
+                            '....$')) as nr_empenho 
+                         from
+                            fin_empenho emp,
+                            fin_tipo_empenho tpEmp 
+                         where
+                            emp.id_tipo_empenho = tpEmp.id_tipo_empenho 
+                            and id_empenho = :idEmpenho";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
                 $stmt->execute();
@@ -927,6 +806,174 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             }
         } catch (PDOException $ex) {
             $this->sucesso = true;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoPedido(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
+                        programa.cd_programa_trabalho, programa.ds_programa_trabalho,
+                        despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,despesa_elemento.cd_despesa_elemento, despesa_elemento.ds_despesa_elemento,
+                        p.vl_pedido, to_char(p.dt_pedido, 'yyyy') AS ano, pedido_saldo.saldo
+                        from fin_empenho as emp
+                        inner join fin_pedido as p
+                        on p.id_pedido = emp.id_pedido
+                        inner join fin_fonte as f
+                        on f.id_fonte = p.id_fonte
+                        inner join view_programa_trabalho as programa
+                        on programa.id_programa_trabalho = p.id_programa_trabalho
+                        inner join view_despesa as despesa
+                        on despesa.id_despesa = p.id_despesa
+                        inner join view_despesa_elemento as despesa_elemento
+                        on despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
+                        inner join (select id_pedido, sum(saldo) as saldo from view_pedido_saldo group by id_pedido ) as pedido_saldo
+                        on pedido_saldo.id_pedido = p.id_pedido
+                        left join fin_tipo_solicitacao as tpSol
+                        on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
+                        where emp.id_pedido = :pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoPedidoItens(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select * from view_pedido_saldo where id_pedido = :pedido order by nr_item";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoPedidoItensAnulados(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    saldo_item.tp_material,
+                    saldo_item.nr_item,
+                    saldo_item.nm_material,
+                    saldo_item.nm_desc_material,
+                    saldo_item.vl_itens_pre,
+                    saldo_item.total,
+                    saldo_item.qt_utilizado,
+                    saldo_item.vl_utilizado,
+                    anulacao_item.vl_anulado,
+                    anulacao_item.qt_anulado,
+                    anulacao.nr_empenho_anulacao,
+                    anulacao_situacao.nm_empenho_anulacao_situacao
+                 from
+                    con_empenho_anulacao anulacao,
+                    con_empenho_anulacao_item anulacao_item,
+                    con_empenho_anulacao_situacao anulacao_situacao,
+                    view_pedido_saldo saldo_item 
+                 where
+                    anulacao.id_empenho_anulacao = anulacao_item.id_empenho_anulacao 
+                    and saldo_item.id_pedido = anulacao.id_pedido
+                    and saldo_item.id_pre_ordem = anulacao_item.id_pre_ordem
+                    and anulacao.id_empenho_anulacao_situacao = anulacao_situacao.id_empenho_anulacao_situacao
+                    and anulacao.id_pedido = :pedido
+                    order by anulacao.id_empenho_anulacao,nr_item";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoContrato(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select cont.nr_contrato, cont.nr_contrato, processo.cd_pregao, tp.nm_tipo_gasto, obj.nm_objeto, central.nm_lotacao,cont.id_contrato,
+                        mod.nm_modalidade, p.nm_pessoa, cont_itens.vl_contrato,
+                        case 
+                                when pf.nr_cpf is not null then pf.nr_cpf
+                            when pf.nr_cpf is null then pj.nr_cnpj
+                        end as cpfCnpj
+                        from fin_empenho as emp
+                        inner join fin_pedido as pedido 
+                        on pedido.id_pedido = emp.id_pedido
+                        inner join fin_fornecedor as f
+                        on f.id_fornecedor  =  pedido.id_fornecedor
+                        inner join fin_contrato as cont
+                        on cont.id_contrato = f.id_contrato
+                        inner join fin_cont_central as cont_central
+                        on cont_central.id_contrato = cont.id_contrato
+                        left join ses_lotacao as central
+                        on central.id_lotacao = cont_central.id_lotacao
+                        inner join (select id_fornecedor, round(sum(qt_itens * vl_itens),4) as vl_contrato from fin_cont_itens group by id_fornecedor) as cont_itens
+                        on cont_itens.id_fornecedor = f.id_fornecedor
+                        inner join gco_processo as processo
+                        on processo.id_processo = cont.id_processo
+                        inner join gco_objeto as obj
+                        on obj.id_objeto = processo.id_objeto
+                        inner join pla_tipo_gasto as tp
+                        on tp.id_tipo_gasto = cont.id_tipo_gasto
+                        inner join gco_modalidade as mod
+                        on mod.id_modalidade = processo.id_modalidade
+                        inner join ses_pessoa as p
+                        on p.id_pessoa = f.id_pessoa 
+                        left join ses_pessoa_fisica as pf
+                        on pf.id_pessoa = p.id_pessoa
+                        left join ses_pessoa_juridica as pj
+                        on pj.id_pessoa = p.id_pessoa
+                        where emp.id_pedido = :pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
             $this->msgRetorno = $ex->getMessage();
         }
     }

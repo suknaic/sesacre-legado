@@ -192,7 +192,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/compras/contrato/cad_contrato.l
                                 <div class="form-group campoAta hidden">
                                     <div class="col-sm-6">
                                         <div class="panel-body">
-                                            ATA:<span class="text-danger">*</span>
+                                            ATA:<!--<span class="text-danger">*</span>-->
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                 <select class="form-control select" name="ata" id="ata" required="true">
