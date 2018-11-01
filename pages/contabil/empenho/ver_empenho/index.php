@@ -52,7 +52,7 @@ require_once "index.load.php";
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/contabil/empenho/ver_empenho/">Voltar</a></li>                        
+                        <li><a href="/pages/contabil/empenho/pesquisa_empenho/">Voltar</a></li>                        
                     </ol>
 
                     <!--Page content-->
