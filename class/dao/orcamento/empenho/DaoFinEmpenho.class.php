@@ -685,7 +685,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                 FROM view_pedido_saldo
                                 GROUP BY id_pedido    	    	
                             ) AS SALDO ON SALDO.id_pedido = pedido.id_pedido
-                            WHERE emp.nr_empenho = :nr_empenho";
+                            WHERE emp.nr_empenho = :nr_empenho and emp.sit_empenho <> '6'";
                 
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
