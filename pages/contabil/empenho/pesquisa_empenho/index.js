@@ -121,7 +121,10 @@ $(document).ready(function () {
     });
     
     
-    
+    $('body').on('click', '.ver-empenho', function (e) {
+        var id = $(this).val();
+        window.open("/pages/contabil/empenho/ver_empenho/index.php?&id=" + id);
+    });
     
 });
 
