@@ -1290,6 +1290,7 @@ class FinEmpenhoModel {
                                     . '<td class="text-center">'.$linha['nm_material'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_desc_material'].'</td>'
                                     . '<td class="text-center">'.$linha['tp_material'].'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_itens_pre'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_itens_pre'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['total'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_utilizado'],4).'</td>'
@@ -1317,6 +1318,7 @@ class FinEmpenhoModel {
                                                                 . '<th class="text-center">Item</th>'
                                                                 . '<th class="text-center">Descrição</th>'
                                                                 . '<th class="text-center">Tipo</th>'
+                                                                . '<th class="text-center">Qunatidade</th>'
                                                                 . '<th class="text-center">Valor Unitário</th>'
                                                                 . '<th class="text-center">Valor Total</th>'
                                                                 . '<th class="text-center">Qtd. Utilizada</th>'
@@ -1354,6 +1356,8 @@ class FinEmpenhoModel {
                 $linhaItens = '';
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
                     $linhaItens .= '<tr>'
+                                    . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
+                                    . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
                                     . '<td class="text-center">'.$linha['nr_item'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_material'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_desc_material'].'</td>'
@@ -1382,6 +1386,8 @@ class FinEmpenhoModel {
                                                     . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
                                                         . '<thead>'
                                                             . '<tr>'
+                                                                . '<th class="text-center">Nº Anulação</th>'
+                                                                . '<th class="text-center">Situação Anulação</th>'
                                                                 . '<th class="text-center">Nº</th>'
                                                                 . '<th class="text-center">Item</th>'
                                                                 . '<th class="text-center">Descrição</th>'

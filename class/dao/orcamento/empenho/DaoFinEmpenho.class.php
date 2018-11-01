@@ -888,16 +888,21 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     saldo_item.qt_utilizado,
                     saldo_item.vl_utilizado,
                     anulacao_item.vl_anulado,
-                    anulacao_item.qt_anulado 
+                    anulacao_item.qt_anulado,
+                    anulacao.nr_empenho_anulacao,
+                    anulacao_situacao.nm_empenho_anulacao_situacao
                  from
                     con_empenho_anulacao anulacao,
                     con_empenho_anulacao_item anulacao_item,
+                    con_empenho_anulacao_situacao anulacao_situacao,
                     view_pedido_saldo saldo_item 
                  where
                     anulacao.id_empenho_anulacao = anulacao_item.id_empenho_anulacao 
                     and saldo_item.id_pedido = anulacao.id_pedido
+                    and saldo_item.id_pre_ordem = anulacao_item.id_pre_ordem
+                    and anulacao.id_empenho_anulacao_situacao = anulacao_situacao.id_empenho_anulacao_situacao
                     and anulacao.id_pedido = :pedido
-                    order by nr_item";
+                    order by anulacao.id_empenho_anulacao,nr_item";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
