@@ -64,6 +64,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/login/index.load.php";
                                 </div>
                             </div>
                             <button class="btn btn-success btn-lg btn-block" type="button" id="btn-logar">Logar</button>
+                            <button class="btn btn-danger btn-lg btn-block" type="button" id="cadFornecedoresExt">Cadastro de Fornecedores</button>
                         </form>
                     </div>
                 </div>
@@ -95,7 +96,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/login/index.load.php";
         <script src="/assets/js/sistema/login/login.js"></script>
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <!-- END JAVASCRIPT -->
-
-
     </body>
 </html>

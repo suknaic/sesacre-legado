@@ -153,7 +153,7 @@ $(document).ready(function () {
     //******************************************************************************************
     function listaPais() {
         $.ajax({
-            "url": "/model/fornecedores/request.php",
+            "url": "/model/fornecedores_ext/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaPaisOption"
@@ -169,7 +169,7 @@ $(document).ready(function () {
     listaPais();
     function listaEstado() {
         $.ajax({
-            "url": "/model/fornecedores/request.php",
+            "url": "/model/fornecedores_ext/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaEstadoOption"
@@ -247,7 +247,7 @@ $(document).ready(function () {
             }
 //***********************************************
             $.ajax({
-                "url": "/model/fornecedores/request.php",
+                "url": "/model/fornecedores_ext/request.php",
                 "dataType": "html",
                 "method": "POST",
                 "data": {
