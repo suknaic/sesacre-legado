@@ -574,6 +574,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             tpEmp.nm_tipo_empenho,
                             emp.id_empenho,
                             emp.id_pedido,
+                            emp.id_tipo_empenho,
                             to_char(emp.dt_empenho_safira,'dd/mm/yyyy') as dt_empenho_safira,
                             trim(to_char(emp.vl_empenho,'999G999G999G990D9999')) as vl_empenho,
                             concat(substr(nr_empenho, 1, 

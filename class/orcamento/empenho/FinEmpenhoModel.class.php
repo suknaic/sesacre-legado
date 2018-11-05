@@ -1540,7 +1540,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
             
             $daoFinEmpenho->retorna($pdo);
-            if (!$daoFinPedido->sucesso()) {
+            if (!$daoFinEmpenho->sucesso()) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível definir o Status do Empenho";
                 return;
@@ -1557,7 +1557,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setIdEmpenhoStatus($retorno['status']);
             $daoFinEmpenho->setSitEmpenho($retorno['situacao']);
             $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
-            if(!$daoFinPedido->Sucesso()){
+            if(!$daoFinEmpenho->Sucesso()){
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível atualizar o Status do Empenho";
                 return;
