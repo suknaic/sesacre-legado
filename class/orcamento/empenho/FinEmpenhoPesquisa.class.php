@@ -131,8 +131,11 @@ class FinEmpenhoPesquisa {
                                     . '</button>';
                     //Situação Cadastrado Pode Cancelar
                     if($linha['sit_empenho'] == '1'){
-                        $tabela .= ' <button type="button" title="Cancelar Empenho Total" class="cancelar-empenho" value='.$linha['id_empenho'].'>'
-                                    . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
+                        $tabela .=  '<button type="button" title="Editar Empenho" class="editar-empenho" value='.$linha['id_empenho'].'>'
+                                        . '<i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>'
+                                    . '</button>'
+                                    .'<button type="button" title="Cancelar Empenho Total" class="cancelar-empenho" value='.$linha['id_empenho'].'>'
+                                        . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
                                     . '</button>';
                     }
                     $tabela .= '</td>'

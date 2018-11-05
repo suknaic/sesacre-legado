@@ -97,3 +97,5 @@ GitHub.sublime-settings
 #Pasta Files para serem ignorados
 files/
 class/lib/mpdf/vendor/mpdf/mpdf/tmp/*
+
+teste/
