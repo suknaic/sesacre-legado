@@ -572,6 +572,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             if (!empty($pdo)) {
                 $sql = "select
                             tpEmp.nm_tipo_empenho,
+                            emp.id_tipo_empenho,
+                            emp.ds_empenho,
                             emp.id_empenho,
                             emp.id_pedido,
                             to_char(emp.dt_empenho_safira,'dd/mm/yyyy') as dt_empenho_safira,
@@ -883,12 +885,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     saldo_item.nr_item,
                     saldo_item.nm_material,
                     saldo_item.nm_desc_material,
-                    saldo_item.vl_itens_pre,
                     saldo_item.total,
                     saldo_item.qt_utilizado,
                     saldo_item.vl_utilizado,
+                    anulacao.id_empenho_anulacao,
+                    anulacao.nr_empenho_anulacao,
                     anulacao_item.vl_anulado,
                     anulacao_item.qt_anulado,
+                    anulacao_item.vl_item,
+                    anulacao_item.qt_item,
                     anulacao.nr_empenho_anulacao,
                     anulacao_situacao.nm_empenho_anulacao_situacao
                  from
@@ -901,6 +906,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     and saldo_item.id_pedido = anulacao.id_pedido
                     and saldo_item.id_pre_ordem = anulacao_item.id_pre_ordem
                     and anulacao.id_empenho_anulacao_situacao = anulacao_situacao.id_empenho_anulacao_situacao
+                    and anulacao.id_empenho_anulacao_situacao = 2
                     and anulacao.id_pedido = :pedido
                     order by anulacao.id_empenho_anulacao,nr_item";
         try {

@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Detalhes do Empenho</h1> 
+                        <h1 class="page-header text-overflow">Cadastro do Empenho</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -86,14 +86,6 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
-                                 <!--Form dos dados dos itens anulados do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body itens-anulados">
-                                            <?php echo $itensAnuladosDoPedido; ?>
-                                        </div>
-                                    </div>
-                                </div>
                                  
                                  <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -109,7 +101,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -120,7 +112,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-file-text-o" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="ds_empenho" id="ds_empenho" value="<?php echo $dadosDoEmpenho['ds_empenho']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="ds_empenho" id="ds_empenho" value="<?php echo $dadosDoEmpenho['ds_empenho']; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -131,7 +123,9 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="tipo_empenho" id="tipo_empenho" value="<?php echo $dadosDoEmpenho['nm_tipo_empenho']; ?>" disabled />
+                                                                    <select class="form-control select" name="id_tipo_empenho" id="id_tipo_empenho">
+                                                                        <?php echo $empenho->retornaOptionsTipoEmpenho(); ?>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -142,7 +136,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_empenho" id="dt_empenho" value="<?php echo $dadosDoEmpenho['dt_empenho_safira']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="dt_empenho" id="dt_empenho" value="<?php echo $dadosDoEmpenho['dt_empenho_safira']; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -153,7 +147,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho']; ?>" disabled />
+                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho']; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -165,7 +159,15 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
-                                <br>
+                                <div class="form-group">
+                                    <div  class="col-sm-12">
+                                        <div class="panel-body">
+                                            <button class="btn btn-success btn-salvar btn-rounded" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

@@ -1299,7 +1299,7 @@ class FinEmpenhoModel {
                                 . '</td>';
                 }
                 if (empty($dadosPedidoItens)) {
-                        $dadosPedidoItens = '<div class="panel-group" id="itensAccordion">'
+                        $dadosPedidoItens = '<div class="panel-group" id="itensAccordion" aria-multiselectable="true">'
                                     . '<div class="panel panel-default">'
                                             . '<div class="panel-heading">'
                                                 . '<h4 class="panel-title">'
@@ -1354,61 +1354,68 @@ class FinEmpenhoModel {
             $daoFinEmpenho->retornaDadosEmpenhoPedidoItensAnulados($pdo);
             if ($daoFinEmpenho->sucesso()) {
                 $linhaItens = '';
+                $nr_anulacao = '';
+                $dadosPedidoItensAnulados .= '<div class="panel-group" id="itens_anulados">';
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
-                    $linhaItens .= '<tr>'
-                                    . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
-                                    . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
+                    if ($nr_anulacao != $linha['id_empenho_anulacao']) {
+                        
+                        //Condição para fechar o panel do accordion, pois o resultado da função retorna os itens das anulações do empenho em ordem
+                        if (!empty($nr_anulacao) and $nr_anulacao != $linha['id_empenho_anulacao']) {
+                            $dadosPedidoItensAnulados .= '</tbody>'
+                                                    . '</table>'
+                                                . '</div>'
+                                            . '</div>'
+                                    . '</div>';
+                        }
+                        
+                        $nr_anulacao = $linha['id_empenho_anulacao'];
+                        $dadosPedidoItensAnulados .= '<div class="panel panel-default">'
+                                                        . '<div class="panel-heading">'
+                                                            . '<h4 class="panel-title">'
+                                                                . '<a class="accordion-toggle" data-toggle="collapse" href="#anulacao'.$linha['id_empenho_anulacao'].'">'
+                                                                    . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                                    . '<b>Dados dos Itens do Pedido de Necessidade Anulados:</b> <span style="color:#758697"> Nº '.$linha['nr_empenho_anulacao'].'</span>'
+                                                                . '</a>'
+                                                            . '</h4>'
+                                                        . '</div>'
+                                                        . '<div id="anulacao'.$linha['id_empenho_anulacao'].'" class="panel-collapse collapse">'
+                                                            . '<div class="panel-body">'
+                                                                . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                    . '<thead>'
+                                                                        . '<tr>'
+                                                                            . '<th class="text-center">Nº</th>'
+                                                                            . '<th class="text-center">Item</th>'
+                                                                            . '<th class="text-center">Descrição</th>'
+                                                                            . '<th class="text-center">Tipo</th>'
+                                                                            . '<th class="text-center">Valor Unitário</th>'
+                                                                            . '<th class="text-center">Valor Total</th>'
+                                                                            . '<th class="text-center">Qtd. Utilizado</th>'
+                                                                            . '<th class="text-center">Valor Utilizado</th>'
+                                                                            . '<th class="text-center">Qtd. Anulado</th>'
+                                                                            . '<th class="text-center">Valor Anulado</th>'
+                                                                        . '</tr>'
+                                                                    . '</thead>'
+                                                                    . '<tbody>';
+                    }
+                    $dadosPedidoItensAnulados .= '<tr>'
                                     . '<td class="text-center">'.$linha['nr_item'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_material'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_desc_material'].'</td>'
                                     . '<td class="text-center">'.$linha['tp_material'].'</td>'
-                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_itens_pre'],4).'</td>'
-                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['total'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_item'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_item'] * $linha['vl_item'] ,4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_utilizado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_utilizado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_anulado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_anulado'],4).'</td>'
                                 . '</td>';
                 }
-                if (empty($dadosPedidoItensAnulados)) {
-                        $dadosPedidoItensAnulados = '<div class="panel-group" id="itensAnuladosAccordion">'
-                                    . '<div class="panel panel-default">'
-                                            . '<div class="panel-heading">'
-                                                . '<h4 class="panel-title">'
-                                                    . '<a role="button" data-toggle="collapse" data-parent="#itensAnuladosAccordion" href="#expandeItensAnulados">'
-                                                        . '<i class="glyphicon glyphicon-chevron-up"></i> '
-                                                        . '<b>Dados dos Itens Anulados do Pedido de Necessidade</b>'
-                                                    . '</a>'
-                                                . '</h4>'
-                                            . '</div>'
-                                            . '<div id="expandeItensAnulados" class="panel-collapse collapse in" >'
-                                                . '<div class="panel-body">'
-                                                    . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
-                                                        . '<thead>'
-                                                            . '<tr>'
-                                                                . '<th class="text-center">Nº Anulação</th>'
-                                                                . '<th class="text-center">Situação Anulação</th>'
-                                                                . '<th class="text-center">Nº</th>'
-                                                                . '<th class="text-center">Item</th>'
-                                                                . '<th class="text-center">Descrição</th>'
-                                                                . '<th class="text-center">Tipo</th>'
-                                                                . '<th class="text-center">Valor Unitário</th>'
-                                                                . '<th class="text-center">Valor Total</th>'
-                                                                . '<th class="text-center">Qtd. Utilizada</th>'
-                                                                . '<th class="text-center">Valor Utilizado</th>'
-                                                                . '<th class="text-center">Qtd. Anulado</th>'
-                                                                . '<th class="text-center">Valor Anulado</th>'
-                                                            . '</tr>'
-                                                        . '</thead>'
-                                                        . '<tbody>'
-                                                        . $linhaItens
-                                                        . '</tbody>'
-                                                    . '</table>'
-                                                . '</div>'                                    
-                                            . '</div>'
+                $dadosPedidoItensAnulados .= '</tbody>'
+                                            . '</table>'
+                                        . '</div>'
                                     . '</div>'
-                                . '</div>';
-                    }
+                                . '</div>'
+                            . '</div>';
             }
             return $dadosPedidoItensAnulados;
         } catch (Exception $ex) {
