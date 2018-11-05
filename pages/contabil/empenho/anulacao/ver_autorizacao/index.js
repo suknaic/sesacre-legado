@@ -27,6 +27,7 @@ $(document).ready(function () {
         var $this = $(this);
         var dados = {
             "deferir": $this.val(),
+            "id_pedido": $("#id_pedido").val(),
             "pagamento": $("#pagamento").val(),
             "nr_anulacao": $("#nr_empenho_anulacao").val(),
             "dt_anulacao": $("#dt_empenho_anulacao").val(),
@@ -48,11 +49,10 @@ $(document).ready(function () {
             "url": "/pages/contabil/empenho/anulacao/ver_autorizacao/request.php",
             "dataType": "html",
             "data": {
-                "acao": "cadastrarAnulacao",
+                "acao": "validaAnulacao",
                 "dados": dados
             },
             "success": function (response) {
-                console.log(response);
                 $this.prop("disabled", false);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);
@@ -103,6 +103,7 @@ $(document).ready(function () {
         var $this = $(this);
         var dados = {
             "deferir": $this.val(),
+            "id_pedido": $("#id_pedido").val(),
             "pagamento": $("#pagamento").val(),
             "nr_anulacao": $("#nr_empenho_anulacao").val(),
             "dt_anulacao": $("#dt_empenho_anulacao").val(),
@@ -158,11 +159,10 @@ $(document).ready(function () {
                         "method": "POST",
                         "dataType": "html",
                         "data": {
-                            "acao": "cadastrarAnulacao",
+                            "acao": "validaAnulacao",
                             "dados": dados
                         },
                         "success": function (response) {
-                            console.log(response);
 
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
@@ -189,7 +189,6 @@ $(document).ready(function () {
                             } else if (response.tipoMsg === "ok") {
                                 func.modalAlert(response.msg, 'success');
                                 $('.modal-alert').on('hidden.bs.modal', function (e) {
-                                    //window.location.href = "/pages/contabil/liquidacao/cad_liquidacao/";
                                     location.reload();
                                 });
                                 return false;

@@ -60,6 +60,7 @@ require_once "index.load.php";
                         <form class="form-horizontal" id="form-documento" role="form">
                             <div class="panel">                                
                                 <input type="hidden" name="pagamento" id="pagamento" value="<?php echo $id; ?>">
+                                <input type="hidden" name="id_pedido" id="id_pedido" value="<?php echo $dadosAnulacao["id_pedido"]; ?>">
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">

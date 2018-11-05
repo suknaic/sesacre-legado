@@ -42,16 +42,16 @@ switch ($_REQUEST['acao']) {
 
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
+            $pagamento->setIdPagamento($dados["id_pagamento"]);
             $pagamento->setIdLotacao($dados["idLotacao"]);
             $pagamento->setIdDocTipoLotacao($dados["idDocTipoLotacao"]);
             $pagamento->setNrPagamento($dados["nrPagamento"]);
             $pagamento->setDtPagamento($dados["dtPagamento"]);
             $pagamento->setVlPagamento($dados["vlPagamento"]);
-            $pagamento->setVlPagamentoSaldo($dados["saldoLiquidacao"]);
             $pagamento->setDocsPagamento($dados["docsPagamento"]);
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
-            echo $pagamento->salvaPagamento();
+            echo $pagamento->editarPagamento();
             return;
             break;
         } catch (Error $e) {

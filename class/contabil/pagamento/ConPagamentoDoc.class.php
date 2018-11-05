@@ -113,9 +113,9 @@ class ConPagamentoDoc {
                             . "<td class='text-center'>" . $linha['mm_competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
-                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'],4) . "</td>"
-                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'],4) . "</td>"
-                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc'],4) . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'], 4) . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'], 4) . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc'], 4) . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
                             . "<td class='text-center'>"
                             . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=" . $linha['id_documento_fiscal'] . ">"
@@ -133,6 +133,29 @@ class ConPagamentoDoc {
             return $tabela;
         } catch (Exception $exc) {
             return $ex->getMessage();
+        }
+    }
+
+    public function retornaTodosConPagamentoPorPagamento($pdo) {
+        try {
+            if (!empty($pdo)) {
+                $daoConPagamentoDoc = new DaoConPagamentoDoc();
+                $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
+                $daoConPagamentoDoc->documentosFiscaisPagamento($pdo);
+                if ($daoConPagamentoDoc->Sucesso()) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $daoConPagamentoDoc->getMsgRetorno();
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Nenhum documento fiscal encontrado";
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro de conexão";
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
         }
     }
 
