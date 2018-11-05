@@ -1,7 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/PagamentoPesquisa.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoPesquisa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
 
 
