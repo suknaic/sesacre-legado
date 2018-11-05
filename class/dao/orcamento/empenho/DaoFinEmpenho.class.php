@@ -572,23 +572,35 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             if (!empty($pdo)) {
                 $sql = "select
                             tpEmp.nm_tipo_empenho,
-                            emp.id_tipo_empenho,
                             emp.ds_empenho,
                             emp.id_empenho,
                             emp.id_pedido,
                             emp.id_tipo_empenho,
-                            to_char(emp.dt_empenho_safira,'dd/mm/yyyy') as dt_empenho_safira,
-                            trim(to_char(emp.vl_empenho,'999G999G999G990D9999')) as vl_empenho,
+                            to_char(emp.dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
+                            trim(to_char(emp.vl_empenho, '999G999G999G990D9999')) as vl_empenho,
                             concat(substr(nr_empenho, 1, 
                             (
-                         (LENGTH(nr_empenho) - 4)
+                         (LENGTH(nr_empenho) - 4) 
                             )
                          ), '/', substring(nr_empenho 
                          FROM
-                            '....$')) as nr_empenho 
+                            '....$')) as nr_empenho,
+                            tp.vl_total 
                          from
-                            fin_empenho emp,
-                            fin_tipo_empenho tpEmp 
+                            fin_empenho emp 
+                            LEFT JOIN
+                               (
+                                  SELECT
+                                     sum(vl_total) AS vl_total,
+                                     id_pedido 
+                                  FROM
+                                     fin_pre_ordem 
+                                  GROUP BY
+                                     id_pedido
+                               )
+                               AS TP 
+                               ON TP.id_pedido = emp.id_pedido,
+                               fin_tipo_empenho tpEmp 
                          where
                             emp.id_tipo_empenho = tpEmp.id_tipo_empenho 
                             and id_empenho = :idEmpenho";

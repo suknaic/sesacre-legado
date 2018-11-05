@@ -109,7 +109,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" disabled />
+                                                                    <input class="form-control" type="text" name="nr_empenho" id="nr_empenho" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>

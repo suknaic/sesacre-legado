@@ -1112,7 +1112,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->setVlEmpenho($this->vl_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            $daoFinEmpenho->retorna($pdo);
 
             if (!$daoFinEmpenho->sucesso()) {
                 $this->sucesso = false;

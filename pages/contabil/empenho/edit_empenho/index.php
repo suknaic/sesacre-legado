@@ -96,12 +96,13 @@ require_once "index.load.php";
                                                         <h4 class="panel-title">Dados do Empenho</h4>
                                                     </div>
                                                     <div class="panel-body">
+                                                        <input type="hidden" id="id_empenho" value="<?php echo $dadosDoEmpenho['id_empenho']; ?>">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº do Empenho:</b></div>
+                                                            <div class="col-sm-2"><b>Nº do Empenho:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho_anulacao" id="nr_empenho_anulacao" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" />
+                                                                    <input class="form-control" type="text" name="nr_empenho" id="nr_empenho" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -119,7 +120,7 @@ require_once "index.load.php";
                                                         </div>
                                                         
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Tipo do Empenho:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo do Empenho:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
@@ -132,7 +133,7 @@ require_once "index.load.php";
                                                         </div>
                                                         
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data do Empenho:</b></div>
+                                                            <div class="col-sm-2"><b>Data do Empenho:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
@@ -147,7 +148,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho']; ?>" />
+                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo Metodos::ConverteValorBr($dadosDoEmpenho['vl_total'],4); ?>" disabled/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
