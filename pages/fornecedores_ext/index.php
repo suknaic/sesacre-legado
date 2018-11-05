@@ -1,5 +1,9 @@
-
 <!DOCTYPE html>
+
+<?php
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/fornecedores_ext/index.load.php";
+?>
+
 <html lang="pt-br">
     <head>
         <meta charset="utf-8">

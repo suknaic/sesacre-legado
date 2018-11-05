@@ -43,7 +43,6 @@ $(document).ready(function(){
                   if (response.tipoMsg === "Erro") {
                       if (response.tipoExibicao === "console") {
                           console.log('Console Mensagem');
-                          console.log(response);
                           func.modalAlert(func.msgErroPadrao);
                           return false;
                       } else if (response.tipoExibicao === "alert") {                        
@@ -58,14 +57,12 @@ $(document).ready(function(){
                       return false;               
                   } else {
                       console.log('Ultimo else');
-                      console.log(response);
                       func.modalAlert(func.msgErroPadrao);
                       return false;
                   }
               },
               "error": function (response) {
                   $this.prop( "disabled", false );
-                  console.log(response);
                   func.modalAlert(func.msgErroPadrao);
                   return false;
               }
@@ -147,7 +144,6 @@ $(document).ready(function(){
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
                             console.log('Console Mensagem');
-                            console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         } else if (response.tipoExibicao === "alert") {                        
@@ -162,14 +158,12 @@ $(document).ready(function(){
                         return false;
                     } else {
                         console.log('Ultimo else');
-                        console.log(response);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop( "disabled", false );
-                    console.log(response);
                     func.modalAlert(func.msgErroPadrao);
                     return false;
                 }
@@ -178,8 +172,11 @@ $(document).ready(function(){
             $this.prop( "disabled", false );
         }
     });
-    
-    
+
+    $('body').on('click', '#cadFornecedoresExt', function(e){
+        top.location.href = "/pages/fornecedores_ext/index.php";
+    });
+
     $('body').on('keypress', '#senha', function (e) {
         var key = e.which;
         if (key == 13) {                
