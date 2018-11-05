@@ -1095,7 +1095,8 @@ class Liquidacao {
 
             $valor_empenho = $dados_empenho['vl_empenho'];
             $valor_liquidado = $total_liquidado['total_liquidado'];
-
+            $valor_empenho = Metodos::ConverteValorIng($valor_empenho);            
+            
             switch (true) {
                 case ($valor_liquidado == 0): //Se não houver valores de liquidação para o empenho, altera para a situação 'Cadastrado'
                     $empenho->setSitEmpenho($empenho->getSitCadastrado());
@@ -1116,12 +1117,12 @@ class Liquidacao {
                     return false;
                     break;
             }
-
-
-            if ($empenho->atualizaSituacaoStatusEmpenho($pdo)) {
+            
+            $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);            
+            if ($empenho->sucesso()) {
                 return true;
             } else {
-                $this->mensagens = $empenho->getMsgErros();
+                $this->mensagens = $empenho->getMsgRetorno();
                 return false;
             }
         } catch (Exception $exc) {

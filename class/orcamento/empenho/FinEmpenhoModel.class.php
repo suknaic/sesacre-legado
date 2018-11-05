@@ -1507,4 +1507,76 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }  
     }
+    
+    public function retornaStatusOficialEmpenho(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dao = new DaoFinEmpenho();
+            $dao->setIdEmpenho($this->id_empenho);
+            $dao->retornaStatusEmpenho($pdo);
+            if ($dao->sucesso()) {                
+                return array("status" => $dao->getMsgRetorno()['status_oficial']
+                        , "situacao" => $dao->getMsgRetorno()['situacao_oficial']);                                
+            }
+            return null;
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();            
+            return null;
+        }
+    }
+    
+    public function atualizaStatusSituacaoOficialEmpenho(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não existe transação ativa";
+                return;
+            }
+            
+            $retorno = $this->retornaStatusOficialEmpenho($pdo);
+            if(empty($retorno)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Empenho";
+                return;
+            }                        
+            
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            
+            $daoFinEmpenho->retorna($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Empenho";
+                return;
+            }
+
+            $busca = $daoFinEmpenho->getMsgRetorno();          
+
+            if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Empenho no LOG.";
+                return false;
+            }
+                                                                                                
+            $daoFinEmpenho->setIdEmpenhoStatus($retorno['status']);
+            $daoFinEmpenho->setSitEmpenho($retorno['situacao']);
+            $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
+            if(!$daoFinEmpenho->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar o Status do Empenho";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualizado";                        
+            
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;            
+        }
+    }
+    
 }

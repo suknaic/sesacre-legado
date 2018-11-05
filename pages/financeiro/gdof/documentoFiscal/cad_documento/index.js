@@ -36,7 +36,6 @@ $(document).ready(function () {
         thousandsSeparator: '.',
     });
 
-
     function limpaCampos() {
         $("#tabelaOrdem tbody").html("");
         $("#tabelaEntrega tbody").html("");
@@ -227,7 +226,7 @@ $(document).ready(function () {
         $(".linha-ordem").each(function () {
             ordens.push($(this).data('id'));
         });
-        
+
         var dados = {
             ordens: ordens,
             documento: ""
@@ -493,8 +492,8 @@ $(document).ready(function () {
             });
         }
     });
-    
-    
+
+
     $('body').on('click', '.ver-entrega', function (e) {
         $('#entrega').modal();
 
@@ -505,7 +504,7 @@ $(document).ready(function () {
                 "acao": "retornaDadosDaEntrega",
                 "dados": $(this).val()
             },
-            "success": function(response){
+            "success": function (response) {
                 $("#dados-entrega").html("");
                 $("#dados-entrega").append(response);
             }
