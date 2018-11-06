@@ -12,6 +12,16 @@ $(document).ready(function (){
         $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
     }); 
     
+    //Masca para valor
+    $("body").on("focus", "#vl_empenho", function () {
+        $(this).priceFormat({
+            centsLimit: 4,
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+        });
+    });
+    
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -22,18 +32,19 @@ $(document).ready(function (){
             
             var dados = {
                 "idEmpenho": $("#id_empenho").val(),
+                "idPedido": $("#id_pedido").val(),
                 "nrEmpenho": $("#nr_empenho").val(),
                 "tpEmpenho": $("#id_tipo_empenho").val(),
-                "dtEmpenho": $("#vl_empenho").val(),
+                "dtEmpenho": $("#dt_empenho").val(),
+                "vlEmpenho": $("#vl_empenho").val(),
                 "dsEmpenho": $("#ds_empenho").val()
             }
             
-            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho) {
+            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho || !dados.vlEmpenho || dados.vlEmpenho == '0,0000') {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 $this.prop("disabled", false);
                 return false;
             }
-            console.log(dados);
 
             $.ajax({
                 "url": "request.php",

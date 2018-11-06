@@ -92,7 +92,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -115,7 +115,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -148,7 +148,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -211,7 +211,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -233,7 +233,30 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    /**
+     * Metodo responsavel por verificar se o número do empenho já existe para atualização
+     * @param PDO $pdo
+     */
+    public function verificarEmpenhoPeloNumeroUpdate(PDO $pdo = null) {
+        try {
+            $sql = "select emp.id_empenho from fin_empenho as emp
+                    where emp.nr_empenho = :numero and emp.sit_empenho <> '6' and emp.id_empenho <> :empenho";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":numero", $this->getNrEmpenho(), PDO::PARAM_STR);
+            $stmt->bindValue(":empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -261,8 +284,37 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function updateEmpenho(PDO $pdo = null) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "update
+                    fin_empenho 
+                 set
+                    id_pessoa = :id_pessoa, id_tipo_empenho = :id_tipo_empenho, nr_empenho = :nr_empenho, dt_empenho_safira = :dt_empenho_safira, vl_empenho = :vl_empenho ,ds_empenho = :ds_empenho 
+                 where
+                    id_empenho = :id_empenho";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_tipo_empenho", $this->getIdTipoEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_empenho_safira", $this->getDtEmpenhoSafira(), PDO::PARAM_STR);
+                $stmt->bindValue(":vl_empenho", $this->getVlEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":ds_empenho", $this->getDsEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->msgRetorno = $ex->getMessage();
         }
     }
@@ -279,7 +331,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -298,7 +350,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -429,7 +481,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -477,7 +529,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -513,7 +565,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -561,7 +613,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -585,7 +637,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                          ), '/', substring(nr_empenho 
                          FROM
                             '....$')) as nr_empenho,
-                            tp.vl_total 
+                            tp.vl_total,
+                            ped.vl_pedido
                          from
                             fin_empenho emp 
                             LEFT JOIN
@@ -600,9 +653,11 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                )
                                AS TP 
                                ON TP.id_pedido = emp.id_pedido,
-                               fin_tipo_empenho tpEmp 
+                               fin_tipo_empenho tpEmp,
+                               fin_pedido ped
                          where
                             emp.id_tipo_empenho = tpEmp.id_tipo_empenho 
+                            and emp.id_pedido = ped.id_pedido
                             and id_empenho = :idEmpenho";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);

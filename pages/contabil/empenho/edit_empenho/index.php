@@ -97,6 +97,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <input type="hidden" id="id_empenho" value="<?php echo $dadosDoEmpenho['id_empenho']; ?>">
+                                                        <input type="hidden" id="id_pedido" value="<?php echo $dadosDoEmpenho['id_pedido']; ?>">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Nº do Empenho:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
@@ -144,11 +145,11 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
+                                                            <div class="col-sm-2"><b>Valor Total:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo Metodos::ConverteValorBr($dadosDoEmpenho['vl_total'],4); ?>" disabled/>
+                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo Metodos::ConverteValorBr($dadosDoEmpenho['vl_pedido'],4); ?>" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
