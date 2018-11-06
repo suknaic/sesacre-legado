@@ -32,14 +32,13 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'editarEmpenho':
+    CASE 'editarPagamento':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
-
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
             $pagamento->setIdPagamento($dados["id_pagamento"]);
@@ -51,7 +50,7 @@ switch ($_REQUEST['acao']) {
             $pagamento->setDocsPagamento($dados["docsPagamento"]);
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
-            echo $pagamento->editarPagamento();
+            echo $pagamento->editarPagamento(2);
             return;
             break;
         } catch (Error $e) {

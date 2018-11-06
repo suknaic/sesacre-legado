@@ -1170,5 +1170,5 @@ class Pedido {
             $this->msgRetorno = $ex->getMessage();                             
         }
     }
-
+    
 }

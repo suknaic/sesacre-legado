@@ -242,8 +242,7 @@ $(document).ready(function () {
                 
                 var linha = $(this).data('objeto');
 
-
-                var vl_documento_pagamento =  $("input[name=valorRetPagamento\\[\\]]").val();
+                var vl_documento_pagamento =  $(this).find(".valorRetPagamento").val();
 
                 var vl_documento_pagamento_saldo = linha.saldo;
 
@@ -257,9 +256,9 @@ $(document).ready(function () {
 
             });
 
-
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
+                "id_pedido": $("#id_pedido").val(),
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),

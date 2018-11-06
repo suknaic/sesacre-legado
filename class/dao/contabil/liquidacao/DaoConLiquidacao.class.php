@@ -205,7 +205,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto, 
                 trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
                 coalesce(pagamento.valorPagamento,'0.0000') as pagamento,
-                (vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')) as saldo,
+                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G999D9999') as saldo,
                 docFis.id_documento_situacao, docSit.nm_situacao 
 
                 from con_liquidacao as liq 
@@ -221,7 +221,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 on docSit.id_documento_situacao = docFis.id_documento_situacao 
                 left join (select sum(vl_pagamento) as valorPagamento, id_liquidacao  
                            from con_pagamento 
-                           where id_pagamento_situacao = '2' 
+                           where id_pagamento_situacao = '1' 
                            group by id_liquidacao) as pagamento
                 on pagamento.id_liquidacao = liq.id_liquidacao
                 where liq.id_liquidacao = :id_liquidacao
@@ -394,13 +394,14 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
             $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
                     liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
-                    liquidacao.vl_liquidacao, (liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')) as saldo
+                    to_char(liquidacao.vl_liquidacao, '999G999G999D9999') as vl_liquidacao, 
+                    to_char((liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')), '999G999G999D9999') as saldo
                     from con_liquidacao as liquidacao
                     inner join fin_empenho as empenho
                     on empenho.id_empenho = liquidacao.id_empenho
                     inner join fin_pedido as pedido
                     on pedido.id_pedido = empenho.id_pedido
-                    left join (select sum(vl_pagamento) as vl_pagamento, id_liquidacao from con_pagamento group by id_liquidacao) as pagamento
+                    left join (select sum(vl_pagamento) as vl_pagamento, id_liquidacao from con_pagamento where id_pagamento_situacao = '1' group by id_liquidacao) as pagamento
                     on pagamento.id_liquidacao = liquidacao.id_liquidacao
                     where liquidacao.nr_liquidacao = :numero";
             $stmt = $pdo->prepare($sql);
