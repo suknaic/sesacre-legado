@@ -193,4 +193,49 @@ class DaoConPagamento extends ConPagamentoTb {
         }
     }
 
+    public function retornaIdPedidoEIdEmpenhoPorPagamento(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select emp.id_empenho, emp.id_pedido from con_pagamento as pagamento
+                        inner join con_liquidacao as liquidacao
+                        on pagamento.id_liquidacao = liquidacao.id_liquidacao
+                        inner join fin_empenho as emp
+                        on emp.id_empenho = liquidacao.id_empenho
+                        where pagamento.id_pagamento = :id_pagamento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function atualizaPagamento(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "UPDATE con_pagamento SET nr_pagamento = :numero, dt_pagamento = :data WHERE id_pagamento = :pagamento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrPagamento(), PDO::PARAM_STR);
+                $stmt->bindValue(":data", $this->getDtPagamento(), PDO::PARAM_STR);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
 }

@@ -138,6 +138,7 @@ switch ($_REQUEST['acao']) {
             $pagamento->setDocsPagamento($dados["docsPagamento"]);
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
+            $pagamento->setIdPedido($dados["id_pedido"]);
             echo $pagamento->salvaPagamento();
             return;
             break;

@@ -73,7 +73,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
         $sql = "select "
                 . "to_char(dt_empenho_anulacao,'dd/mm/yyyy') as dt_empenho_anulacao, "
                 . "trim(to_char(vl_empenho_anulacao,'999G999G990D9999')) as vl_empenho_anulacao, "
-                . "nr_empenho_anulacao, id_empenho_anulacao "
+                . "nr_empenho_anulacao, id_empenho_anulacao, id_pedido "
                 . "from con_empenho_anulacao "
                 . "where id_empenho_anulacao = :id_empenho_anulacao ";
         try {

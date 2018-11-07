@@ -172,7 +172,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>" />
+                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>"  disabled="true"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>

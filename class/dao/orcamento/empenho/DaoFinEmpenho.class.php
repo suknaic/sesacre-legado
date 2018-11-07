@@ -92,7 +92,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -115,7 +115,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -148,7 +148,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -211,7 +211,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -233,7 +233,30 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    /**
+     * Metodo responsavel por verificar se o número do empenho já existe para atualização
+     * @param PDO $pdo
+     */
+    public function verificarEmpenhoPeloNumeroUpdate(PDO $pdo = null) {
+        try {
+            $sql = "select emp.id_empenho from fin_empenho as emp
+                    where emp.nr_empenho = :numero and emp.sit_empenho <> '6' and emp.id_empenho <> :empenho";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":numero", $this->getNrEmpenho(), PDO::PARAM_STR);
+            $stmt->bindValue(":empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -261,8 +284,37 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function updateEmpenho(PDO $pdo = null) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "update
+                    fin_empenho 
+                 set
+                    id_pessoa = :id_pessoa, id_tipo_empenho = :id_tipo_empenho, nr_empenho = :nr_empenho, dt_empenho_safira = :dt_empenho_safira, vl_empenho = :vl_empenho ,ds_empenho = :ds_empenho 
+                 where
+                    id_empenho = :id_empenho";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_tipo_empenho", $this->getIdTipoEmpenho(), PDO::PARAM_INT);
+                $stmt->bindValue(":nr_empenho", $this->getNrEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":dt_empenho_safira", $this->getDtEmpenhoSafira(), PDO::PARAM_STR);
+                $stmt->bindValue(":vl_empenho", $this->getVlEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":ds_empenho", $this->getDsEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->msgRetorno = $ex->getMessage();
         }
     }
@@ -279,7 +331,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -298,7 +350,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -429,7 +481,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -477,7 +529,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -513,7 +565,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -561,7 +613,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -572,22 +624,40 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             if (!empty($pdo)) {
                 $sql = "select
                             tpEmp.nm_tipo_empenho,
+                            emp.ds_empenho,
                             emp.id_empenho,
                             emp.id_pedido,
-                            to_char(emp.dt_empenho_safira,'dd/mm/yyyy') as dt_empenho_safira,
-                            trim(to_char(emp.vl_empenho,'999G999G999G990D9999')) as vl_empenho,
+                            emp.id_tipo_empenho,
+                            to_char(emp.dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
+                            trim(to_char(emp.vl_empenho, '999G999G999G990D9999')) as vl_empenho,
                             concat(substr(nr_empenho, 1, 
                             (
-                         (LENGTH(nr_empenho) - 4)
+                         (LENGTH(nr_empenho) - 4) 
                             )
                          ), '/', substring(nr_empenho 
                          FROM
-                            '....$')) as nr_empenho 
+                            '....$')) as nr_empenho,
+                            tp.vl_total,
+                            ped.vl_pedido
                          from
-                            fin_empenho emp,
-                            fin_tipo_empenho tpEmp 
+                            fin_empenho emp 
+                            LEFT JOIN
+                               (
+                                  SELECT
+                                     sum(vl_total) AS vl_total,
+                                     id_pedido 
+                                  FROM
+                                     fin_pre_ordem 
+                                  GROUP BY
+                                     id_pedido
+                               )
+                               AS TP 
+                               ON TP.id_pedido = emp.id_pedido,
+                               fin_tipo_empenho tpEmp,
+                               fin_pedido ped
                          where
                             emp.id_tipo_empenho = tpEmp.id_tipo_empenho 
+                            and emp.id_pedido = ped.id_pedido
                             and id_empenho = :idEmpenho";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
@@ -614,6 +684,29 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $sql = "select * from fin_empenho where id_pedido = :idPedido";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":idPedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function retorna(PDO $pdo) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select * from fin_empenho where id_empenho = :idEmpenho";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idEmpenho", $this->getIdEmpenho(), PDO::PARAM_INT);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -883,12 +976,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     saldo_item.nr_item,
                     saldo_item.nm_material,
                     saldo_item.nm_desc_material,
-                    saldo_item.vl_itens_pre,
                     saldo_item.total,
                     saldo_item.qt_utilizado,
                     saldo_item.vl_utilizado,
+                    anulacao.id_empenho_anulacao,
+                    anulacao.nr_empenho_anulacao,
                     anulacao_item.vl_anulado,
                     anulacao_item.qt_anulado,
+                    anulacao_item.vl_item,
+                    anulacao_item.qt_item,
                     anulacao.nr_empenho_anulacao,
                     anulacao_situacao.nm_empenho_anulacao_situacao
                  from
@@ -901,6 +997,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     and saldo_item.id_pedido = anulacao.id_pedido
                     and saldo_item.id_pre_ordem = anulacao_item.id_pre_ordem
                     and anulacao.id_empenho_anulacao_situacao = anulacao_situacao.id_empenho_anulacao_situacao
+                    and anulacao.id_empenho_anulacao_situacao = 2
                     and anulacao.id_pedido = :pedido
                     order by anulacao.id_empenho_anulacao,nr_item";
         try {
@@ -977,4 +1074,222 @@ class DaoFinEmpenho extends FinEmpenhoTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
+    
+    public function retornaStatusEmpenho(PDO $pdo){
+        $this->sucesso = false;
+        $sql = "SELECT 
+                    E.id_empenho, 
+                    P.id_pedido, P.nr_pedido, P.id_tipo_solicitacao
+                    , P.id_fornecedor, P.dt_pedido, P.st_pedido, P.id_pedido_situacao
+                    , E.id_empenho as id_pedido_empenho
+                    , L.id_pedido AS id_pedido_liquidacao
+                    , SALLIQUIDACAO.id_pedido AS id_pedido_saldo_liquidacao
+                    , PAG.id_pedido AS id_pedido_pagamento
+                    , SALPAG.id_pedido AS id_pedido_saldo_pagamento
+
+                    , CASE	
+
+                            /*
+                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento
+                             * Deve ser Aguardando Liquidação
+                             */
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                    ) THEN 1	
+
+                            /*
+                             * Pedido Possui Liquidação e Não possui Pagamento
+                             * Precisa Verificar os Valores da Liquidação desse Pedido 
+                             * Pode ser Aguardando Finalizar Liquidação ou Aguardando Pagamento
+                             * O Pedido não tem mais Saldo de Acordo com as Liquidações então ele é Aguardando Pagamento
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL	
+                                            AND SALLIQUIDACAO.id_pedido IS NULL
+                                    ) THEN 3
+                            /*
+                             * O Pedido possui Saldo de Acordo com as Liquidações então ele é Aguardando Finalizar Liquidação 
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                            AND SALLIQUIDACAO.id_pedido IS NOT NULL
+                                    ) THEN 2
+
+                            /*
+                             * Pedido Possui Pagamento 
+                             * Precisa Verificar os Valores da Pagamento desse Pedido 
+                             * Pode ser Aguardando Finalizar Pagamento ou Finalizado
+                             * O Pedido não tem mais Saldo de Acordo com os Pagamentos então ele é Finalizado
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NOT NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL	
+                                            AND SALPAG.id_pedido IS NULL
+                                    ) THEN 5
+                            /*
+                             * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Aguardando Finalizar Pagamento
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NOT NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                            AND SALPAG.id_pedido IS NOT NULL
+                                    ) THEN 4
+
+                            ELSE null
+                    END AS status_oficial	
+
+                    /*
+                     * Situação do Empenho
+                     */
+                    , CASE
+                            /*
+                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento
+                             * Deve ser Cadastrado
+                             */
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                    ) THEN 1	
+
+                            /*
+                             * Pedido Possui Liquidação e Não possui Pagamento
+                             * Precisa Verificar os Valores da Liquidação desse Pedido 
+                             * Pode ser Liquidado Parcial ou Liquidado
+                             * O Pedido não tem mais Saldo de Acordo com as Liquidações então ele é Liquidado
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL	
+                                            AND SALLIQUIDACAO.id_pedido IS NULL
+                                    ) THEN 3
+                            /*
+                             * O Pedido possui Saldo de Acordo com as Liquidações então ele é Liquidado Parcial
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                            AND SALLIQUIDACAO.id_pedido IS NOT NULL
+                                    ) THEN 2
+
+                            /*
+                             * Pedido Possui Pagamento 
+                             * Precisa Verificar os Valores da Pagamento desse Pedido 
+                             * Pode ser Pago Parcial ou Pago
+                             * O Pedido não tem mais Saldo de Acordo com os Pagamentos então ele é Pago
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NOT NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL	
+                                            AND SALPAG.id_pedido IS NULL
+                                    ) THEN 5
+                            /*
+                             * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Pago Parcial
+                             */		
+                            WHEN (
+                                            PAG.id_pedido IS NOT NULL
+                                            AND L.id_pedido IS NOT NULL							
+                                            AND E.id_pedido IS NOT NULL			
+                                            AND SALPAG.id_pedido IS NOT NULL
+                                    ) THEN 4
+
+                            ELSE null
+                    END AS situacao_oficial
+
+                    FROM fin_pedido P
+                    LEFT JOIN fin_empenho E ON E.id_pedido = P.id_pedido AND E.sit_empenho <> '6'
+
+                    LEFT JOIN (
+                                            SELECT distinct on (P.id_pedido) P.id_pedido
+                                            FROM fin_pedido P
+                                            INNER JOIN fin_empenho E ON E.id_pedido = P.id_pedido AND E.sit_empenho <> '6'
+                                            INNER JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4
+                                            ) AS L ON L.id_pedido = P.id_pedido
+
+                    LEFT JOIN (
+                                            SELECT distinct on (P.id_pedido) P.id_pedido
+                                            FROM fin_pedido P
+                                            INNER JOIN fin_empenho E ON E.id_pedido = P.id_pedido AND E.sit_empenho <> '6'
+                                            INNER JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4
+                                            INNER JOIN con_pagamento PAG ON PAG.id_liquidacao = L.id_liquidacao AND PAG.id_pagamento_situacao <> 2
+                                            ) AS PAG ON PAG.id_pedido = P.id_pedido						
+
+
+                    LEFT JOIN (SELECT * 
+                                            FROM (
+                                            select
+                                                ped.id_pedido,                    
+                                                coalesce(sum(vl_liquidacao), 0) as valor_liquidado,                                       
+                                                vl_pedido as valor_pedido     
+                                                , (vl_pedido - coalesce(sum(vl_liquidacao), 0)) AS saldo 
+                                             from
+                                                fin_pedido ped                     
+                                                inner join
+                                                   fin_empenho emp 
+                                                   on ped.id_pedido = emp.id_pedido AND emp.sit_empenho <> '6'
+                                                left join
+                                                   con_liquidacao liq 
+                                                   on emp.id_empenho = liq.id_empenho 
+                                                   and liq.id_liquidacao_situacao <> 4 
+                                             group by ped.id_pedido ) t2  
+                                             where t2.saldo > 0
+                                            ) AS SALLIQUIDACAO ON SALLIQUIDACAO.id_pedido = P.id_pedido
+
+                    LEFT JOIN (SELECT *
+                                            FROM (
+                                            select
+                                                ped.id_pedido,                    
+                                                coalesce(sum(vl_pagamento), 0) as valor_pago,                                       
+                                                vl_pedido as valor_pedido     
+                                                , (vl_pedido - coalesce(sum(vl_pagamento), 0)) AS saldo 
+                                             from
+                                                fin_pedido ped                     
+                                                inner join
+                                                   fin_empenho emp 
+                                                   on ped.id_pedido = emp.id_pedido AND emp.sit_empenho <> '6'
+                                                left join
+                                                   con_liquidacao liq 
+                                                   on emp.id_empenho = liq.id_empenho 
+                                                   and liq.id_liquidacao_situacao <> 4
+                                                 left join
+                                                   con_pagamento pag 
+                                                   on pag.id_liquidacao = liq.id_liquidacao 
+                                                   and pag.id_pagamento_situacao <> 2
+                                             group by ped.id_pedido ) t2  
+                                             where t2.saldo > 0
+                                            ) AS SALPAG ON SALPAG.id_pedido = P.id_pedido
+                    WHERE E.id_empenho = :id_empenho";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+        
 }

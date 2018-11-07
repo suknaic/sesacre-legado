@@ -30,11 +30,12 @@ $session = new Session('ajax');
 switch ($_REQUEST['acao']) {
 
 
-    CASE 'cadastrarAnulacao':
+    CASE 'validaAnulacao':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $empenhoAnulacao = new EmpenhoAnulacao();
             $empenhoAnulacao->setIdEmpenhoAnulacao($dados["pagamento"]);
+            $empenhoAnulacao->setIdPedido($dados["id_pedido"]);
             $empenhoAnulacao->setIdPessoa($session->getIdUser());
             $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao($dados["deferir"]);
             $empenhoAnulacao->setNrAnulacao($dados['nr_anulacao']);

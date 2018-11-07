@@ -1095,33 +1095,18 @@ class Liquidacao {
 
             $valor_empenho = $dados_empenho['vl_empenho'];
             $valor_liquidado = $total_liquidado['total_liquidado'];
-
-            switch (true) {
-                case ($valor_liquidado == 0): //Se não houver valores de liquidação para o empenho, altera para a situação 'Cadastrado'
-                    $empenho->setSitEmpenho($empenho->getSitCadastrado());
-                    $empenho->setIdEmpenhoStatus(1); //Muda status do empenho para 'Aguardando Liquidação'
-                    break;
-
-                case ($valor_liquidado > 0 && $valor_liquidado < $valor_empenho): //Se a soma dos valores da liquidação for inferior ao valor do Empenho, altera para situação 'Liquidado Parcial'
-                    $empenho->setSitEmpenho($empenho->getSitLiquidadoParcial());
-                    $empenho->setIdEmpenhoStatus(2); //Muda status do empenho para 'Aguardando Finalizar Liquidação'
-                    break;
-
-                case ($valor_liquidado == $valor_empenho): //Se a soma dos valores da liquidação for igual ao do Empenho, altera para situação 'Liquidado Total'
-                    $empenho->setSitEmpenho($empenho->getSitLiquidadoTotal());
-                    $empenho->setIdEmpenhoStatus(3);
-                    break;
-                case ($valor_liquidado > $valor_empenho): //Se o total liquidado for superior ao valor do empenho, retorna erro
-                    $this->mensagens = 'O total liquidado deste empenho ultrapassou o valor do empenho.';
-                    return false;
-                    break;
+            $valor_empenho = Metodos::ConverteValorIng($valor_empenho);            
+            
+            if ($valor_liquidado > $valor_empenho){ //Se o total liquidado for superior ao valor do empenho, retorna erro
+                $this->mensagens = 'O total liquidado deste empenho ultrapassou o valor do empenho.';
+                return false;
             }
-
-
-            if ($empenho->atualizaSituacaoStatusEmpenho($pdo)) {
+            
+            $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);            
+            if ($empenho->sucesso()) {
                 return true;
             } else {
-                $this->mensagens = $empenho->getMsgErros();
+                $this->mensagens = $empenho->getMsgRetorno();
                 return false;
             }
         } catch (Exception $exc) {

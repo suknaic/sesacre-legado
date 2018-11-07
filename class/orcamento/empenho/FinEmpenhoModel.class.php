@@ -512,6 +512,116 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }
     }
+    
+    public function atualizaEmpenho(){
+        try {
+            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            $daoFinEmpenho = new DaoFinEmpenho();
+            //removendo barra do numero do empenho
+            $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
+            //----------------------------------------------------------
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            $daoFinEmpenho->setIdPessoa($this->id_pessoa);
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->setIdTipoEmpenho($this->id_tipo_empenho);
+            $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
+            $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
+            $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
+            $daoFinEmpenho->setDsEmpenho($this->ds_empenho);
+            
+            //verificar se o empenho ja está cadastrado
+            $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Já existe um empenho ativo com este número!");
+            }
+            
+            //retorna os dados anteriores do empenho para verificações posteriores
+            $daoFinEmpenho->retorna($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao consultar os dados do empenho!");
+            }
+            $dadosEmpenho = $daoFinEmpenho->getMsgRetorno();
+            
+            
+            $daoFinEmpenho->retornaInfPedidoEmpenho($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao consultar os dados do pedido de necessidade vinculado a este empenho!");
+            }
+            $dadosPedido = $daoFinEmpenho->getMsgRetorno();
+            //Verificar se o valor do empenho esta diferente do valor do pedido de necessidade
+            if ($dadosPedido[0]['vl_pedido'] != $daoFinEmpenho->getVlEmpenho()) {
+                return Metodos::retornoAjax("Erro", "alert", "Valor do empenho está diferente do valor do pedido de necessidade!");
+            }
+            
+            //Atualiza os dados do Empenho
+            $daoFinEmpenho->updateEmpenho($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoFinEmpenho->getMsgRetorno());
+            }
+
+            //Registra a operação no LOG
+            if (!Log::SalvaLogU('fin_empenho', $this->id_empenho, $dadosEmpenho, $pdo)) {
+                return Metodos::retornoAjax("Erro", "console", "Não foi possível atualizar Empenho. LOG");
+            }
+            
+            //Atualiza o QDD pelo Empenho
+            $qdd = new Qdd();
+            $data = new DateTime(Metodos::ConverteDataING($this->dt_empenho_safira));
+            //seto o ano do empenho para pega o id do qdd
+            $qdd->setAaQdd($data->format('Y'));
+            $qdd->verificaExisteCarregaDados($pdo);
+            if (!empty($qdd->getIdQdd())) {
+                //instancio a classe do qddValor
+                $qddValor = new QddValor();
+                $qddValor->setIdQdd($qdd->getIdQdd());
+                $qddValor->setIdFonte($dadosPedido[0]['id_fonte']);
+                $qddValor->setIdProgramaTrabalho($dadosPedido[0]['id_programa_trabalho']);
+                $qddValor->setIdDespesaElemento($dadosPedido[0]['id_despesa_elemento']);
+                $qddValor->carregaDadosQddFonteProgDespesa($pdo);
+                
+//                echo $dadosEmpenho['vl_empenho'] . ' - ' . Metodos::ConverteValorIng($this->vl_empenho) . ' - ' . $qddValor->getVlEmpenhado();
+//                $pdo->rollBack();
+//                return;
+                if (!empty($qddValor->getIdQddValor())) {
+                    //Verifica se o valor Empenho irá ficar menor que 0
+                    $valorEmpenho = $qddValor->getVlEmpenhado() - $dadosEmpenho['vl_empenho'] + Metodos::ConverteValorIng($this->vl_empenho);
+                    $valorEmpenho = round($valorEmpenho, 4);
+                    if ($valorEmpenho >= 0) {
+                        //seta o resultado da soma para atualiza o qdd
+                        $qddValor->setVlEmpenhado($valorEmpenho);
+                        $qddValor->atualizaValoresEmpenhado($pdo);
+                        //esse array foi criado para atualiza os valores do qdd valor pois a classe espera um array
+                        $array = array();
+                        $array[] = $qddValor->getIdQddValor();
+                        $qddValor->atualizaValoresPorArray($array, $pdo);
+                        if (!$qddValor->Sucesso()) {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro","alert", "Não foi possível atualizar os Valores do QDD.");
+                        }
+                    } else {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro","alert", "O Valor Empenhado irá ficar Negativa se o Empenho for alterado.");
+                    }
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro","alert", "Não foi possível localizar o QDD ao qual irá ajustar o valor");
+                }
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro","alert", "Não foi possível localizar o QDD.");
+            }
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Empenho Alterado com sucesso");
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro","console",$exc->getMessage());
+        }
+    }
 
     public function retornaEmpenhoGdof($pdo) {
         try {
@@ -1112,7 +1222,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
             $daoFinEmpenho->setIdPedido($this->id_pedido);
             $daoFinEmpenho->setVlEmpenho($this->vl_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            $daoFinEmpenho->retorna($pdo);
 
             if (!$daoFinEmpenho->sucesso()) {
                 $this->sucesso = false;
@@ -1299,7 +1409,7 @@ class FinEmpenhoModel {
                                 . '</td>';
                 }
                 if (empty($dadosPedidoItens)) {
-                        $dadosPedidoItens = '<div class="panel-group" id="itensAccordion">'
+                        $dadosPedidoItens = '<div class="panel-group" id="itensAccordion" aria-multiselectable="true">'
                                     . '<div class="panel panel-default">'
                                             . '<div class="panel-heading">'
                                                 . '<h4 class="panel-title">'
@@ -1354,61 +1464,68 @@ class FinEmpenhoModel {
             $daoFinEmpenho->retornaDadosEmpenhoPedidoItensAnulados($pdo);
             if ($daoFinEmpenho->sucesso()) {
                 $linhaItens = '';
+                $nr_anulacao = '';
+                $dadosPedidoItensAnulados .= '<div class="panel-group" id="itens_anulados">';
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
-                    $linhaItens .= '<tr>'
-                                    . '<td class="text-center">'.$linha['nr_empenho_anulacao'].'</td>'
-                                    . '<td class="text-center">'.$linha['nm_empenho_anulacao_situacao'].'</td>'
+                    if ($nr_anulacao != $linha['id_empenho_anulacao']) {
+                        
+                        //Condição para fechar o panel do accordion, pois o resultado da função retorna os itens das várias anulações do empenho
+                        if (!empty($nr_anulacao) and $nr_anulacao != $linha['id_empenho_anulacao']) {
+                            $dadosPedidoItensAnulados .= '</tbody>'
+                                                    . '</table>'
+                                                . '</div>'
+                                            . '</div>'
+                                    . '</div>';
+                        }
+                        
+                        $nr_anulacao = $linha['id_empenho_anulacao'];
+                        $dadosPedidoItensAnulados .= '<div class="panel panel-default">'
+                                                        . '<div class="panel-heading">'
+                                                            . '<h4 class="panel-title">'
+                                                                . '<a class="accordion-toggle" data-toggle="collapse" href="#anulacao'.$linha['id_empenho_anulacao'].'">'
+                                                                    . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                                    . '<b>Dados dos Itens do Pedido de Necessidade Anulados:</b> <span style="color:#758697"> Nº '.$linha['nr_empenho_anulacao'].'</span>'
+                                                                . '</a>'
+                                                            . '</h4>'
+                                                        . '</div>'
+                                                        . '<div id="anulacao'.$linha['id_empenho_anulacao'].'" class="panel-collapse collapse">'
+                                                            . '<div class="panel-body">'
+                                                                . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                    . '<thead>'
+                                                                        . '<tr>'
+                                                                            . '<th class="text-center">Nº</th>'
+                                                                            . '<th class="text-center">Item</th>'
+                                                                            . '<th class="text-center">Descrição</th>'
+                                                                            . '<th class="text-center">Tipo</th>'
+                                                                            . '<th class="text-center">Valor Unitário</th>'
+                                                                            . '<th class="text-center">Valor Total</th>'
+                                                                            . '<th class="text-center">Qtd. Utilizado</th>'
+                                                                            . '<th class="text-center">Valor Utilizado</th>'
+                                                                            . '<th class="text-center">Qtd. Anulado</th>'
+                                                                            . '<th class="text-center">Valor Anulado</th>'
+                                                                        . '</tr>'
+                                                                    . '</thead>'
+                                                                    . '<tbody>';
+                    }
+                    $dadosPedidoItensAnulados .= '<tr>'
                                     . '<td class="text-center">'.$linha['nr_item'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_material'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_desc_material'].'</td>'
                                     . '<td class="text-center">'.$linha['tp_material'].'</td>'
-                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_itens_pre'],4).'</td>'
-                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['total'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_item'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_item'] * $linha['vl_item'] ,4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_utilizado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_utilizado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_anulado'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_anulado'],4).'</td>'
                                 . '</td>';
                 }
-                if (empty($dadosPedidoItensAnulados)) {
-                        $dadosPedidoItensAnulados = '<div class="panel-group" id="itensAnuladosAccordion">'
-                                    . '<div class="panel panel-default">'
-                                            . '<div class="panel-heading">'
-                                                . '<h4 class="panel-title">'
-                                                    . '<a role="button" data-toggle="collapse" data-parent="#itensAnuladosAccordion" href="#expandeItensAnulados">'
-                                                        . '<i class="glyphicon glyphicon-chevron-up"></i> '
-                                                        . '<b>Dados dos Itens Anulados do Pedido de Necessidade</b>'
-                                                    . '</a>'
-                                                . '</h4>'
-                                            . '</div>'
-                                            . '<div id="expandeItensAnulados" class="panel-collapse collapse in" >'
-                                                . '<div class="panel-body">'
-                                                    . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
-                                                        . '<thead>'
-                                                            . '<tr>'
-                                                                . '<th class="text-center">Nº Anulação</th>'
-                                                                . '<th class="text-center">Situação Anulação</th>'
-                                                                . '<th class="text-center">Nº</th>'
-                                                                . '<th class="text-center">Item</th>'
-                                                                . '<th class="text-center">Descrição</th>'
-                                                                . '<th class="text-center">Tipo</th>'
-                                                                . '<th class="text-center">Valor Unitário</th>'
-                                                                . '<th class="text-center">Valor Total</th>'
-                                                                . '<th class="text-center">Qtd. Utilizada</th>'
-                                                                . '<th class="text-center">Valor Utilizado</th>'
-                                                                . '<th class="text-center">Qtd. Anulado</th>'
-                                                                . '<th class="text-center">Valor Anulado</th>'
-                                                            . '</tr>'
-                                                        . '</thead>'
-                                                        . '<tbody>'
-                                                        . $linhaItens
-                                                        . '</tbody>'
-                                                    . '</table>'
-                                                . '</div>'                                    
-                                            . '</div>'
+                $dadosPedidoItensAnulados .= '</tbody>'
+                                            . '</table>'
+                                        . '</div>'
                                     . '</div>'
-                                . '</div>';
-                    }
+                                . '</div>'
+                            . '</div>';
             }
             return $dadosPedidoItensAnulados;
         } catch (Exception $ex) {
@@ -1500,4 +1617,76 @@ class FinEmpenhoModel {
             return $ex->getMessage();
         }  
     }
+    
+    public function retornaStatusOficialEmpenho(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dao = new DaoFinEmpenho();
+            $dao->setIdEmpenho($this->id_empenho);
+            $dao->retornaStatusEmpenho($pdo);
+            if ($dao->sucesso()) {                
+                return array("status" => $dao->getMsgRetorno()['status_oficial']
+                        , "situacao" => $dao->getMsgRetorno()['situacao_oficial']);                                
+            }
+            return null;
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();            
+            return null;
+        }
+    }
+    
+    public function atualizaStatusSituacaoOficialEmpenho(PDO $pdo) {
+        try {
+            if (empty($pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não existe transação ativa";
+                return;
+            }
+            
+            $retorno = $this->retornaStatusOficialEmpenho($pdo);
+            if(empty($retorno)){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Empenho";
+                return;
+            }                        
+            
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdEmpenho($this->id_empenho);
+            
+            $daoFinEmpenho->retorna($pdo);
+            if (!$daoFinEmpenho->sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível definir o Status do Empenho";
+                return;
+            }
+
+            $busca = $daoFinEmpenho->getMsgRetorno();          
+
+            if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Empenho no LOG.";
+                return false;
+            }
+                                                                                                
+            $daoFinEmpenho->setIdEmpenhoStatus($retorno['status']);
+            $daoFinEmpenho->setSitEmpenho($retorno['situacao']);
+            $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
+            if(!$daoFinEmpenho->Sucesso()){
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível atualizar o Status do Empenho";
+                return;
+            }
+            
+            $this->sucesso = true;
+            $this->msgRetorno = "Atualizado";                        
+            
+        } catch (Exception $exc) {
+            $this->msgRetorno = $exc->getMessage();
+            $this->sucesso = false;            
+        }
+    }
+    
 }

@@ -126,6 +126,11 @@ $(document).ready(function () {
         window.open("/pages/contabil/empenho/ver_empenho/index.php?&id=" + id);
     });
     
+    $('body').on('click', '.editar-empenho', function (e) {
+        var id = $(this).val();
+        window.open("/pages/contabil/empenho/edit_empenho/index.php?&id=" + id);
+    });
+    
 });
 
 function lista(dados) {

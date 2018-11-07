@@ -47,4 +47,4 @@ if ($dadosPagamento['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosPagamento['id_doc_tipo_lotacao']);
 $vincTramitacao->setIdLotacao($dadosPagamento['id_lotacao']);
-$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo(); $liquidacao->retornaLiquidacaoParaPagamento(null);
+$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo(); 

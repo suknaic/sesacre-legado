@@ -1042,6 +1042,15 @@ class EmpenhoAnulacao {
                     return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
                 }
                 
+                $pedido = new Pedido();
+                $pedido->setIdPedido($this->idPedido);
+                $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+                
+                 if (!$pedido->sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
+                }
+                
             } else if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoIndeferido) {
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->getSituacaoIndeferido());
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
