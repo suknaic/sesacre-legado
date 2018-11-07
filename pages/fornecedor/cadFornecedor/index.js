@@ -526,6 +526,25 @@ $(document).ready(function () {
         }
     });
 
+    $("#id_estado").attr('disabled', true);
+    $("#id_cidade").attr('disabled', true);
+    $("body").on("change", "#id_pais", function () {
+        var texto = $(this).val();
+        if (texto != 0) {
+            $('#id_estado').prop('disabled', false);
+        } else {
+            $('#id_estado').prop('disabled', true);
+        }
+    });
+
+    $("body").on("change", "#id_estado", function () {
+        var texto = $(this).val();
+        if (texto != 0) {
+            $("#id_cidade").prop('disabled', false);
+        } else {
+            $("#id_cidade").prop('disabled', true);
+        }
+    });
 
     //******************************************************************************************
     $("body").on("change.select2", "#id_pais", function (e) {
