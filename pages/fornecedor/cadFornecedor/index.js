@@ -150,6 +150,7 @@ $(document).ready(function () {
 
 //******************************************************************************************
     $('body').find("select").select2({});
+    $('body').find("selectTipoPessoa").select2({});
     $(".nr").mask("99");
     $("#nr_cpf").mask("999.999.999-99");
     $("#nr_cnpj").mask("99.999.999/9999-99");
@@ -169,7 +170,8 @@ $(document).ready(function () {
                 var PessoaFisica = {
                     sexo: $('#tp_sexo').val(),
                     cpf: $('#nr_cpf').val(),
-                    tl_celular: $("#nr_telefone_celular").val()
+                    tl_celular: $("#nr_telefone_celular").val(),
+                    nmPessoaFisica: $('#nm_pessoa').val()
                 };
             }
 
@@ -180,15 +182,13 @@ $(document).ready(function () {
                     cnpj: $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, ""),
                     nrEstudal: $('#nr_estadual').val(),
                     nrMunicipal: $('#nr_municipal').val(),
-                    tl_empresa: $("#nr_telefone_empresa").val()
+                    tl_empresa: $("#nr_telefone_empresa").val(),
+                    natureza: $("#id_natureza").val()
                 };
             }
 
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
             var Pessoa = {
-                nmPessoa: $('#nm_pessoa').val(),
-                // pais: $("#id_pais").val(),
-                // estado: $("#id_estado").val(),
                 cidade: $("#id_cidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 bairro: $("#ds_bairro").val(),
@@ -233,19 +233,22 @@ $(document).ready(function () {
             };
 
             if ($("#id_tipo_fornecedor").val() == 1) {
-                if (PessoaFisica.nmPessoaFisica == '' && PessoaFisica.cpf == '' && PessoaFisica.tl_celular == ''){
+                if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0) || PessoaFisica.cpf == '' || PessoaFisica.tl_celular == ''){
                     func.modalAlert(func.msgPreencherCampos);
+                    return false;
                 }
             }
 
             if ($("#id_tipo_fornecedor").val() == 2) {
-                if (PessoaJuridica.nmRazaoSoc == '' && PessoaJuridica.nmFantasia == '' && PessoaJuridica.cnpj == '' && PessoaJuridica.nrEstudal == '' && PessoaJuridica.nrMunicipal =='' && PessoaJuridica.tl_empresa ==''){
+                if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '') || PessoaJuridica.nmRazaoSoc == '' || PessoaJuridica.nmFantasia == '' || PessoaJuridica.cnpj == '' || PessoaJuridica.tl_empresa == ''){
                     func.modalAlert(func.msgPreencherCampos);
+                    return false;
                 }
             }
 
-            if (Pessoa.cep == '' && Pessoa.cidade == '' && Pessoa.estado == '' && Pessoa.pais == '' && Pessoa.bairro == '' && Pessoa.email == '' && Pessoa.empDist == '' && Pessoa.empExc == '' && Pessoa.logradouro == ''){
+            if (Pessoa.cep == '' || (Pessoa.cidade == '' || Pessoa.cidade == 0) || (Pessoa.estado == '' || Pessoa.estado == 0) || (Pessoa.pais == '' || Pessoa.pais == 0) || Pessoa.bairro == '' || Pessoa.empDist == '' || Pessoa.empExc == '' || Pessoa.logradouro == ''){
                 func.modalAlert(func.msgPreencherCampos);
+                return false;
             }
 
             var Fornecedor = {
@@ -253,8 +256,8 @@ $(document).ready(function () {
                 pessoaJuridica: PessoaJuridica,
                 pessoa: Pessoa,
                 materialServico: MaterialServico,
-                empExc: $("#emp_exc").val(),
-                empDist: $("#emp_dist").val(),
+                empExc: $("input[name='emp_exc']:checked").val(),
+                empDist: $("input[name='emp_dist']:checked").val()
             };
 
             $.ajax({
@@ -267,6 +270,7 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
+                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -289,7 +293,7 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        func.fechaModalHref('/pages/rh/funcionario/index.php');
+                        func.fechaModalHref('/pages/sistema/login/index.php');
                         return false;
                     } else {
                         console.log(response);
@@ -322,6 +326,76 @@ $(document).ready(function () {
             return false;
         }
     });
+
+    function listaNatureza() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaNatureza"
+            },
+            "success": function (response) {
+                $("#id_natureza").append(response);
+            }
+        });
+    }
+    listaNatureza();
+
+    function listaMedicamento() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaMedicamento"
+            },
+            "success": function (response) {
+                $("#id_medicamentos").append(response);
+            }
+        });
+    }
+    listaMedicamento();
+
+    function listaServico() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaServico"
+            },
+            "success": function (response) {
+                $("#id_servicos").append(response);
+            }
+        });
+    }
+    listaServico();
+
+    function listaMaterialConsumo() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaMaterialConsumo"
+            },
+            "success": function (response) {
+                $("#id_material_consumo").append(response);
+            }
+        });
+    }
+    listaMaterialConsumo();
+
+    function listaMaterialPermanente() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaMaterialPermanente"
+            },
+            "success": function (response) {
+                $("#id_material_permanente").append(response);
+            }
+        });
+    }
+    listaMaterialPermanente();
 
     //************************* Enderedeço *********************
     function listaPais() {
@@ -452,23 +526,6 @@ $(document).ready(function () {
         }
     });
 
-    // $('.dist').hide();
-    // $('input[id="emp_dist"]').on('click change', function(e) {
-    //     if ($(this).val() == 'sim') {
-    //         $('.dist').show();
-    //     } else {
-    //         $('.dist').hide();
-    //     }
-    // });
-    //
-    // $('.exc').hide();
-    // $('input[id="emp_exc"]').on('click change', function(e) {
-    //     if ($(this).val() == 'sim') {
-    //         $('.exc').show();
-    //     } else {
-    //         $('.exc').hide();
-    //     }
-    // });
 
     //******************************************************************************************
     $("body").on("change.select2", "#id_pais", function (e) {

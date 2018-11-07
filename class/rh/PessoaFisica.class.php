@@ -223,6 +223,7 @@ class pessoaFisica {
                 return;
             }
 //************************************************************************
+
             if (!empty($this->dt_nascimento)){
                 $dtNascimento = strtotime($this->dt_nascimento);
                 $dtAtual = strtotime(date("d-m-Y"));

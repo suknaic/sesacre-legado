@@ -5,13 +5,15 @@
  * Date: 05/11/18
  * Time: 10:50
  */
-
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/MaterialPermanente.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/MaterialConsumo.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/Servico.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/Medicamento.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pais/Pais.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/estado/Estado.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/cidade/Cidade.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Metodos.class.php";
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/Fornecedor.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoaJuridica/PessoaJuridica.class.php";
     $session = new Session('ajaxSemAcesso');
@@ -75,13 +77,65 @@
                 return;
             }
 
+        case 'retornaNatureza':
+            try {
+                $natureza = new pessoaJuridica();
+
+                echo $natureza->retornaNatureza();
+                return;
+            } catch (Exception $e) {
+                echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+                return;
+            }
+
+        case 'retornaMedicamento':
+            try {
+                $medicamento = new Medicamento();
+
+                echo $medicamento->retornaOptionMedicamento();
+                return;
+            } catch (Exception $e) {
+                echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+                return;
+            }
+
+        case 'retornaServico':
+            try {
+                $servico = new Servico();
+
+                echo $servico->retornaOptionServico();
+                return;
+            } catch (Exception $e) {
+                echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+                return;
+            }
+
+        case 'retornaMaterialConsumo':
+            try {
+                $materialConsumo = new MaterialConsumo();
+
+                echo $materialConsumo->retornaOptionMaterialConsumo();
+                return;
+            } catch (Exception $e) {
+                echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+                return;
+            }
+
+        case 'retornaMaterialPermanente':
+            try {
+                $materialPermanente = new MaterialPermanente();
+
+                echo $materialPermanente->retornaOptionMaterialPermanente();
+                return;
+            } catch (Exception $e) {
+                echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+                return;
+            }
+
         case 'cadastrarFornecedor':
             try {
                 $dados = filter_input(INPUT_POST, 'dadosFornecedor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//                print_r($dados);
-//                return;
-                session_start();
-                $_SESSION['idUser'] = 7;
+
                 $fornecedor = new Fornecedor();
                 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
                 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);

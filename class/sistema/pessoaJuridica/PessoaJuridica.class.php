@@ -479,7 +479,7 @@ class pessoaJuridica {
     }
 
     //************************************************************************************************************************
-    public function retornaNatureza($id) {
+    public function retornaNatureza($id = null) {
         $retorno = "";
         try {
             $conexao = new Conexao();

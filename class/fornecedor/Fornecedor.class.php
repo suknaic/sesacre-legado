@@ -1,5 +1,11 @@
 <?php
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/fornecedor/DaoFornecedor.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorMedicamento.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorServico.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorMaterialConsumo.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorMaterialPermanente.class.php";
 /**
  * Created by PhpStorm.
  * User: elivelton
@@ -201,9 +207,7 @@ class Fornecedor {
 
     public function cadastrarFornecedor() {
         try {
-//            var_dump($this->pessoaFisica);
-//            return;
-            if (empty($this->pessoa['nmPessoa'] && $this->pessoa['cidade'] && $this->pessoa['logradouro'] && $this->pessoa['bairro'] && $this->pessoa['cep'] && $this->pessoa['email'])) {
+            if ((empty($this->pessoaFisica['nmPessoaFisica']) || empty($this->pessoaJuridica['nmRazaoSoc'])) && empty($this->pessoa['cidade'] && $this->pessoa['logradouro'] && $this->pessoa['bairro'] && $this->pessoa['cep'])) {
                 return Metodos::retornoAjax('Erro', 'alert', STR_PREENCHER_CAMPOS);
             }
 
@@ -212,51 +216,127 @@ class Fornecedor {
             $pdo->beginTransaction();
 
             $pessoa = new Pessoa();
-            $pessoa->setNm_pessoa(trim($this->pessoa['nmPessoa']));
+            $pessoa->setNm_pessoa(empty($this->pessoaFisica['nmPessoaFisica']) ? trim($this->pessoaJuridica['nmRazaoSoc']):trim($this->pessoaFisica['nmPessoaFisica']));
             $pessoa->setId_cidade($this->pessoa['cidade']);
             $pessoa->setDs_logradouro($this->pessoa['logradouro']);
             $pessoa->setDs_bairro($this->pessoa['bairro']);
             $pessoa->setNr_cep($this->pessoa['cep']);
-            $pessoa->setNm_email($this->pessoa['email'] == '' ? null:$this->pessoa['email']);
-            $pessoa->setNr_telefone_celular($this->pessoaFisica['tl_celular'] == '' ? Metodos::formataTelefone($this->pessoaJuridica['tl_empresa']): Metodos::formataTelefone($this->pessoaFisica['tl_celular']));
-            $pessoa->setNr_elefone_residencial($this->pessoa['tl_residencial'] == '' ? null: Metodos::formataTelefone($this->pessoa['tl_residencial']));
+            $pessoa->setNm_email(empty($this->pessoa['email']) ? null:$this->pessoa['email']);
+            $pessoa->setNr_telefone_celular(empty($this->pessoaFisica['tl_celular']) ? Metodos::formataTelefone($this->pessoaJuridica['tl_empresa']):Metodos::formataTelefone($this->pessoaFisica['tl_celular']));
+            $pessoa->setNr_elefone_residencial($this->pessoa['tl_residencial'] == '' ? null:Metodos::formataTelefone($this->pessoa['tl_residencial']));
 
             $continua = false;
             $pessoa->cadastrarPessoa($pdo);
             if ($pessoa->getSuccess()) {
                 if (!empty($this->pessoaFisica)) {
                     $pessoaFisica = new pessoaFisica();
-                    $pessoaFisica->setId_pessoa($pessoa->getMsg());
-                    $pessoaFisica->setTp_sexo($pessoaFisica['sexo']);
-                    $pessoaFisica->setNr_cpf($pessoaFisica['cpf']);
+
+                    $pessoaFisica->setId_pessoa($pessoa->getId_pessoa());
+                    $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
+                    $pessoaFisica->setNr_cpf($this->pessoaFisica['cpf']);
 
                     $pessoaFisica->cadastrarPessoaFisica($pdo);
                     if ($pessoaFisica->getSuccess()) {
                         $continua = true;
+                    } else {
+                        return Metodos::retornoAjax('Erro', 'console', $pessoaFisica->getMsg());
                     }
                 }
 
-//                if (!empty($this->pessoaJuridica)) {
-//
-//                }
+                if (!empty($this->pessoaJuridica)) {
+                    $pessoaJuridica = new pessoaJuridica();
+                    $pessoaJuridica->setId_pessoa($pessoa->getId_pessoa());
+                    $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
+                    $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+                    $pessoaJuridica->setDs_insc_estadual(empty($this->pessoaJuridica['nrEstudal']) ? null:trim($this->pessoaJuridica['nrEstudal']));
+                    $pessoaJuridica->setDs_insc_municipal(empty($this->pessoaJuridica['nrMunicipal']) ? null:trim($this->pessoaJuridica['nrMunicipal']));
+                    $pessoaJuridica->setId_natureza($this->pessoaJuridica['natureza']);
+
+                    $pessoaJuridica->cadastrarPessoaJuridica($pdo);
+                    if ($pessoaJuridica->getSuccess()) {
+                        $continua = true;
+                    } else {
+                        return Metodos::retornoAjax('Erro', 'console', $pessoaJuridica->getMsg());
+                    }
+                }
 
                 if ($continua) {
                     $fornedor = new DaoFornecedor();
-                    $fornedor->setIdPessoa($pessoa->getMsg());
+                    $fornedor->setIdPessoa($pessoa->getId_pessoa());
                     $fornedor->setFlDistribuidora($this->flDistribuidora);
                     $fornedor->setFlExclusiva($this->flExclusiva);
 
                     $cadastraFornecedor = $fornedor->cadastrarFornecedor($pdo);
-
-                } else {
-                    return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                    if ($cadastraFornecedor) {
+                        $this->setIdFornecedor($pdo->lastInsertId('for_fornecedor_id_fornecedor_seq'));
+                        if (!LOG::SalvaLogI('for_fornecedor', $this->getIdFornecedor(), $pdo)) {
+                            return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                        }
+                        $continua = true;
+                    } else {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'console', $cadastraFornecedor);
+                    }
                 }
 
+                if ($continua) {
+                    if (!empty($this->medicamento)) {
+                        $fornecedorMedicamento = new FornecedorMedicamento();
+                        foreach ($this->medicamento as $idMedicamento) {
+                            $fornecedorMedicamento->setIdMedicamento($idMedicamento);
+                            $fornecedorMedicamento->setIdFornecedor($this->getIdFornecedor());
+
+                            if (!$fornecedorMedicamento->cadastrarFornecedorMedicamento($pdo)) {
+                                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                            }
+                        }
+                    }
+
+                    if (!empty($this->servico)) {
+                        $fornecedorServico = new FornecedorServico();
+                        foreach ($this->servico as $idServico) {
+                            $fornecedorServico->setIdServico($idServico);
+                            $fornecedorServico->setIdFornecedor($this->getIdFornecedor());
+
+                            if (!$fornecedorServico->cadastraFornecedorServico($pdo)) {
+                                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                            }
+                        }
+                    }
+
+                    if (!empty($this->materialConsumo)) {
+                        $fornedorMaterialConsumo = new FornecedorMaterialConsumo();
+                        foreach ($this->materialConsumo as $idMaterialConsumo) {
+                            $fornedorMaterialConsumo->setIdMaterialConsumo($idMaterialConsumo);
+                            $fornedorMaterialConsumo->setIdFornecedor($this->getIdFornecedor());
+
+                            if (!$fornedorMaterialConsumo->cadastrarFornecedorMaterialConsumo($pdo)){
+                                return Metodos::retornoAjax('Erro', 'alert', STR_ERROR);
+                            }
+                        }
+                    }
+
+                    if (!empty($this->materialPermanente)) {
+                        $fornedorMaterialPermanente = new FornecedorMaterialPermanente();
+                        foreach ($this->materialPermanente as $idMaterialPermanente) {
+                            $fornedorMaterialPermanente->setIdMaterialPermanente($idMaterialPermanente);
+                            $fornedorMaterialPermanente->setIdFornecedor($this->getIdFornecedor());
+
+                            if (!$fornedorMaterialPermanente->cadastraFornecedorMaterialPermanente($pdo)) {
+                                return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                            }
+                        }
+                    }
+                    $continua = true;
+                }
+
+                if ($continua) {
+                    $pdo->commit();
+                    return Metodos::retornoAjax('ok', 'html', STR_CADASTRO_SUCESSO);
+                }
+            } else {
+                return Metodos::retornoAjax('Erro', 'alert', $pessoa->getMsg());
             }
-            var_dump($pessoa->getSuccess());
-            var_dump($pessoa->getMsg());
-//            $pdo->rollBack();
-            return;
         } catch (Exception $ex) {
             return Metodos::retornoAjax($ex->getMessage());
         }

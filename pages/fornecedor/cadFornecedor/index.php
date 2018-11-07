@@ -51,43 +51,6 @@
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
-            <!--NAVBAR-->
-            <!--===================================================-->
-<!--            <header id="navbar">-->
-<!--                <div id="navbar-container" class="boxed">-->
-                    <!--Brand logo & name-->
-                    <!--================================-->
-                    <!--<div class="navbar-header">
-                        <a href="/index.php" class="navbar-brand">
-                            <img src="/assets/img/esfera.png" alt="Nifty Logo" class="brand-icon">
-                            <div class="brand-title">
-                                <span class="brand-text">SESACRENET</span>
-                            </div>
-                        </a>
-                    </div>-->
-                    <!--================================-->
-                    <!--End brand logo & name-->
-                    <!--Navbar Dropdown-->
-                    <!--================================-->
-<!--                    <div class="navbar-content clearfix">-->
-<!--                        <ul class="nav navbar-top-links pull-left">-->
-
-                            <!--Navigation toogle button-->
-                            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!--                            <li class="tgl-menu-btn">-->
-<!--                                <a class="mainnav-toggle" href="#">-->
-<!--                                    <i class="ti-view-list"></i>-->
-<!--                                </a>-->
-<!--                            </li>-->
-
-<!--                        </ul>-->
-<!--                    </div>-->
-                    <!--================================-->
-                    <!--End Navbar Dropdown-->
-<!--                </div>-->
-<!--            </header>-->
-            <!--===================================================-->
-            <!--END NAVBAR-->
             <div id="page-title">
                 <h2 class="text-overflow">Cadastro de Fornecedores</h2>
             </div>
@@ -99,7 +62,7 @@
 
             <div class="boxed">
                 <div id="page-content"><br>
-                    <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
+                    <form data-toggle="validator" class="form-horizontal" id="form_fornecedor" role="form" action="#"method="post">
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Formulário</h3>
@@ -111,7 +74,7 @@
                                             <span class="input-group-addon">
                                                 <p class="fa fa-list inputPFa"></p>
                                             </span>
-                                            <select id="id_tipo_fornecedor" class="form-control select">
+                                            <select id="id_tipo_fornecedor" class="form-control selectTipoPessoa">
                                                 <option value="0">Selecione o Tipo de Pessoa</option>
                                                 <option value="1">Pessoa Física</option>
                                                 <option value="2">Pessoa Jurídica</option>
@@ -180,7 +143,7 @@
 
                             </div>
                             <div class="form-group juridica">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="panel-body"><strong>CNPJ: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -191,8 +154,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="panel-body"><strong>Inscrição Estadual: </strong><span class="text-danger">*</span>
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Inscrição Estadual: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -202,13 +165,26 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="panel-body"><strong>Inscrição Municipal: </strong><span class="text-danger">*</span>
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Inscrição Municipal: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                             </span>
                                             <input type="text" class="form-control" name="nr_municipal" id="nr_municipal" required="true">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Natureza: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                            </span>
+                                            <select id="id_natureza" class="form-control select">
+                                                <option value="0">Selecione a Natureza</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -319,7 +295,7 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body"><strong>Telefone Residêncial:
+                                    <div class="panel-body"><strong>Telefone Residêncial: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -330,7 +306,7 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body"><strong>E-mail: </strong><span class="text-danger">*</span>
+                                    <div class="panel-body"><strong>E-mail: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -368,9 +344,6 @@
                                                 </span>
                                                 <select id="id_medicamentos" class="form-control select" name="medicamento[]">
                                                     <option value="0">Selecione o tipo de Medicamento</option>
-                                                    <option value="1">Medicamentos</option>
-                                                    <option value="2">Medicamentos Manipulados</option>
-                                                    <option value="3">Medicamentos Importados</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -394,23 +367,6 @@
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
                                                 <select id="id_servicos" class="form-control select" name="servico[]">
-                                                    <option value="0">Selecione o tipo de Serviço</option>
-                                                    <option value="1">Alimentação</option>
-                                                    <option value="2">Home Care</option>
-                                                    <option value="3">Fisioterapia Therasuit</option>
-                                                    <option value="4">Fisioterapia Pediasuit</option>
-                                                    <option value="5">Fisioterapia Equoterapia</option>
-                                                    <option value="6">Fisioterapia Hidroterapia</option>
-                                                    <option value="7">Informática</option>
-                                                    <option value="8">Lavagem de Roupa</option>
-                                                    <option value="9">Limpeza</option>
-                                                    <option value="10">Telefonia</option>
-                                                    <option value="11">Veículos</option>
-                                                    <option value="12">Vigilância</option>
-                                                    <option value="13">Clínica de Exame</option>
-                                                    <option value="14">Clínica de Imagem</option>
-                                                    <option value="15">Clínica de Drenagem Linfática</option>
-                                                    <option value="16">Óticas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -434,17 +390,6 @@
                                                 </span>
                                                 <select id="id_material_consumo" class="form-control select" name="materialConsumo[]">
                                                     <option value="0">Selecione o tipo de Material de Consumo</option>
-                                                    <option value="1">Material Médico Hospitalar - Cirúrgico</option>
-                                                    <option value="2">Material Médico Hospitalar - Descartável (Agulhas, Seringas, Curativos, etc)</option>
-                                                    <option value="3">Material Odontológico</option>
-                                                    <option value="4">Material para Hemoterapia</option>
-                                                    <option value="5">Roupas Hospitalares</option>
-                                                    <option value="6">Material Laboratorial (Reagentes e Testes)</option>
-                                                    <option value="7">Saneantes</option>
-                                                    <option value="8">Fórmula Alimentar</option>
-                                                    <option value="9">Vidraria</option>
-                                                    <option value="10">Bolsa de Ostomia</option>
-                                                    <option value="11">Filmes Radiológicos</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -466,22 +411,8 @@
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="idmaterial_permanente" class="form-control select" name="materialPermanente[]">
+                                                <select id="id_material_permanente" class="form-control select" name="materialPermanente[]">
                                                     <option value="0">Selecione o tipo Material</option>
-                                                    <option value="1">Máquinas e Equipamentos Hospitalares</option>
-                                                    <option value="2">Máquinas e Equipamentos Hospitalares de Imagem</option>
-                                                    <option value="3">Máquinas e Equipamentos Médico Cirúrgicos</option>
-                                                    <option value="4">Máquinas e Equipamentos Médico Endoscópios</option>
-                                                    <option value="5">Máquinas e Equipamentos Médico Oftalmológicos</option>
-                                                    <option value="6">Máquinas e Equipamentos Médico Auditivos</option>
-                                                    <option value="7">Máquinas e Equipamentos Odontológicos</option>
-                                                    <option value="8">Máquinas e Equipamentos Ortopédicos e Mobilidade</option>
-                                                    <option value="9">Máquinas e Equipamentos de Laboratórios</option>
-                                                    <option value="10">Máquinas e Equipamentos de Fisioterapia</option>
-                                                    <option value="11">Máquinas e Equipamentos de Informática</option>
-                                                    <option value="12">Eletroeletrônicos</option>
-                                                    <option value="13">Mobiliário Hospitalar</option>
-                                                    <option value="14">Mobiliário de Escritório</option>
                                                 </select>
                                             </div>
                                         </div>
