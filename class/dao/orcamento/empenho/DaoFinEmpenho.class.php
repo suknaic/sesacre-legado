@@ -921,7 +921,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         on despesa.id_despesa = p.id_despesa
                         inner join view_despesa_elemento as despesa_elemento
                         on despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
-                        inner join (select id_pedido, sum(saldo) as saldo from view_pedido_saldo group by id_pedido ) as pedido_saldo
+                        left join (select id_pedido, sum(saldo) as saldo from view_pedido_saldo group by id_pedido ) as pedido_saldo
                         on pedido_saldo.id_pedido = p.id_pedido
                         left join fin_tipo_solicitacao as tpSol
                         on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
