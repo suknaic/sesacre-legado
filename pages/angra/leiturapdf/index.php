@@ -15,7 +15,7 @@ require_once "index.load.php";
         <link href="/assets/lib/template/css/nifty.min.css" rel="stylesheet">
         
         <!--JSTree [ OPTIONAL ]-->
-        <link href="/assets/lib/jstree/dist/themes/default/style.css" rel="stylesheet">                
+        <link href="/assets/lib/jstree/disti/themes/default/style.css" rel="stylesheet">                
         
         <!-- Font Awesome [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/font-awesome/css/font-awesome.min.css">
@@ -141,7 +141,7 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="/assets/lib/jstree/dist/jstree.min.js"></script>    
+        <script src="/assets/lib/jstree/disti/jstree.min.js"></script>    
         <script src="index.js"></script>    
         <!-- END JAVASCRIPT -->
         
