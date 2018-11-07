@@ -906,7 +906,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaDadosEmpenhoPedido(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
+        $sql = "select p.nr_pedido, p.id_lotacao,central.nm_lotacao , p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
                         programa.cd_programa_trabalho, programa.ds_programa_trabalho,
                         despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,despesa_elemento.cd_despesa_elemento, despesa_elemento.ds_despesa_elemento,
                         p.vl_pedido, to_char(p.dt_pedido, 'yyyy') AS ano, pedido_saldo.saldo
@@ -917,6 +917,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         on f.id_fonte = p.id_fonte
                         inner join view_programa_trabalho as programa
                         on programa.id_programa_trabalho = p.id_programa_trabalho
+                        inner join ses_lotacao as central
+                        on central.id_lotacao = p.id_lotacao
                         inner join view_despesa as despesa
                         on despesa.id_despesa = p.id_despesa
                         inner join view_despesa_elemento as despesa_elemento
@@ -933,6 +935,75 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosEmpenhoPedidoDiaria(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    diaria.id_diaria,
+                    diaria.nr_protocolo,
+                    pes_proponente.nm_pessoa as nm_proponente,
+                    lot_proponente.nm_lotacao as lt_proponente,
+                    fn_proponente.nm_funcao as fn_proponente,
+                    pes_proposto.nm_pessoa as nm_proposto,
+                    lot_proposto.nm_lotacao as lt_proposto,
+                    fn_proposto.nm_funcao as fn_proposto,
+                    cid_ini.nm_cidade as nm_cidade_origem,
+                    est_ini.nm_sigla as uf_cidade_origem,
+                    trim(to_char(dest.dh_inicio,'dd/mm/yyyy hh24:mi')) as dh_inicio,
+                    cid_fim.nm_cidade as nm_cidade_destino,
+                    est_fim.nm_sigla as uf_cidade_destino,
+                    trim(to_char(dest.dh_fim,'dd/mm/yyyy hh24:mi')) as dh_fim,
+                    dest.qt_diaria_destino,
+                    dest.vl_diaria_destino
+                 from
+                    dia_diaria diaria,
+                    dia_diaria_destino dest,
+                    fin_empenho emp,
+                    ses_lotacao lot_proponente,
+                    ses_lotacao lot_proposto,
+                    ses_pessoa pes_proponente,
+                    ses_pessoa pes_proposto,
+                    ses_funcao fn_proponente,
+                    ses_funcao fn_proposto,
+                    ses_cidade cid_ini,
+                    ses_estado est_ini,
+                    ses_cidade cid_fim,
+                    ses_estado est_fim
+                 where
+                    diaria.id_pedido = emp.id_pedido 
+                    and diaria.id_diaria = dest.id_diaria 
+                    and diaria.id_lotacao_proponente = lot_proponente.id_lotacao 
+                    and diaria.id_pessoa_proponente = pes_proponente.id_pessoa 
+                    and diaria.id_funcao_proponente = fn_proponente.id_funcao 
+                    and diaria.id_lotacao_proposto = lot_proposto.id_lotacao 
+                    and diaria.id_pessoa_proposto = pes_proposto.id_pessoa 
+                    and diaria.id_funcao_proposto = fn_proposto.id_funcao 
+                    and dest.id_cidade_inicio = cid_ini.id_cidade 
+                    and dest.id_cidade_fim = cid_fim.id_cidade 
+                    and cid_ini.id_estado = est_ini.id_estado
+                    and cid_fim.id_estado = est_fim.id_estado
+                    and diaria.id_pedido = :pedido
+                 order by
+                    diaria.id_diaria, dest.id_diaria_destino";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $this->sucesso = true;
                 } else {
                     $this->msgRetorno = 'Nenhum registro encontrado';

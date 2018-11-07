@@ -18,6 +18,7 @@ $dadosDoEmpenho = $empenho->retornaDadosEmpenho(null);
 $empenho->setIdPedido($dadosDoEmpenho['id_pedido']);
 
 $dadosDoPedido = $empenho->retornaEmpenhoPedidoAccordion(null);
+$dadosDaDiaria = $empenho->retornaEmpenhoPedidoDiariaAccordion(null);
 $dadosDoContrato = $empenho->retornaEmpenhoContratoAccordion(null);
 $itensDoPedido = $empenho->retornaEmpenhoPedidoItensAccordion(null);
 $itensAnuladosDoPedido = $empenho->retornaEmpenhoPedidoItensAnuladosAccordion(null);
