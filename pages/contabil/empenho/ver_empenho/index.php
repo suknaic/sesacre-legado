@@ -75,6 +75,7 @@ require_once "index.load.php";
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
                                             <?php echo $dadosDoPedido; ?>
+                                            <?php echo $dadosDaDiaria; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -116,17 +117,6 @@ require_once "index.load.php";
                                                         </div>
                                                         
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Descrição do Empenho:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-file-text-o" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="ds_empenho" id="ds_empenho" value="<?php echo $dadosDoEmpenho['ds_empenho']; ?>" disabled />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-                                                        
-                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Tipo do Empenho:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
@@ -154,6 +144,17 @@ require_once "index.load.php";
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
                                                                     <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho']; ?>" disabled />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                        
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Observação:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-file-text-o" style="margin-bottom: -4px"></p></span>
+                                                                    <textarea class="form-control" type="text" name="ds_empenho" id="ds_empenho" disabled><?php echo $dadosDoEmpenho['ds_empenho']; ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>

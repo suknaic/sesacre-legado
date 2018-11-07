@@ -25,7 +25,8 @@ $(document).ready(function () {
         var $this = $(this);
         var dsCidade = $this.find("td:eq(0)").text() + ' - ' + $this.find("td:eq(1)").text();
         if ($("#origDest").val() == 'origem') {
-            $("#id_cidade_inicio").val($this.data('cidade'));
+            $("#id_cidade_inicio").data('estado',$this.find("td:eq(1)").text()); //Salva o estado de destino para verificar se a diária é Estadual ou Nacional
+            $("#id_cidade_inicio").val($this.data('cidade')).trigger('change'); //Dispara o evento 'change' para mostrar para o usuário se é uma diária Estadual ou Nacional
             $("#ds_cidade_inicio").val(dsCidade);
         } else {
             $("#id_cidade_fim").data('estado',$this.find("td:eq(1)").text()); //Salva o estado de destino para verificar se a diária é Estadual ou Nacional
