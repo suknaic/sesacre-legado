@@ -40,6 +40,9 @@ class Log {
         $id_tabela_pk = $id_tabela_pk;
         $tp_log = "I";
         $id_pessoa = $_SESSION['idUser'];
+        if(empty($_SESSION['idUser'])){
+            $id_pessoa = 7;
+        }        
         $ds_ip = self::getIp();
         $pref = explode("_", $ds_tabela);
         $pref = $pref[0];

@@ -211,7 +211,7 @@ $(document).ready(function () {
                 "method": "POST",
                 "dataType": "html",
                 "data": {
-                    "acao": "editarEmpenho",
+                    "acao": "editarPagamento",
                     "dados": dados
                 },
                 "success": function (response) {
