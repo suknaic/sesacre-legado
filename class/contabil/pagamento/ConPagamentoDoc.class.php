@@ -79,7 +79,7 @@ class ConPagamentoDoc {
                 $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
                 $daoConPagamentoDoc->setIdDocumentoFiscal($this->id_documento_fiscal);
                 $daoConPagamentoDoc->setVlDocumentoFiscal(Metodos::ConverteValorIng($this->vl_documento_fiscal));
-                $daoConPagamentoDoc->setVlPagamentoDocSaldo($this->vl_pagamento_doc_saldo);
+                $daoConPagamentoDoc->setVlPagamentoDocSaldo(Metodos::ConverteValorIng($this->vl_pagamento_doc_saldo));
                 $daoConPagamentoDoc->salvaDocPagamento($pdo);
                 if ($daoConPagamentoDoc->Sucesso()) {
                     $this->sucesso = true;
