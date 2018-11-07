@@ -422,7 +422,7 @@ $(document).ready(function () {
     
     $('body').on('change','#id_cidade_fim',function(e){
         //Aqui atribui ao input '#estadual_nacional' se é uma diária no Estado ou Fora do Estado(Nacional)
-        if ($("#id_cidade_fim").data('estado') == 'AC') {
+        if ($("#id_cidade_fim").data('estado') == 'AC' && $("#id_cidade_inicio").data('estado') == 'AC') {
             $("#estadual_nacional").val("Estadual");
             $("#estadual_nacional").data('tipo','E');
         } else {
