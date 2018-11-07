@@ -575,7 +575,7 @@ class FinContratoAditivo {
             $proximoSequencial = $daoContratoAditivo->getMsgRetorno();
             
             
-            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor                        
+            //Carregar Todos os Dados do Contrato, Cont Itens, Fornecedor.class
             $contratoRef = new FinContratoModel();
             $contratoRef->setIdContrato($this->idContrato);
             $contratoRef->retornaDadosContratoCompleto($pdo);
@@ -1219,7 +1219,7 @@ class FinContratoAditivo {
             
             
             //Preparar Dados Para Inserir no Banco            
-            //Do Fin contrato, Fin Fornecedor, Fin Cont Central, Fin Cont Itens e Todos os 
+            //Do Fin contrato, Fin Fornecedor.class, Fin Cont Central, Fin Cont Itens e Todos os
             //gestores, fiscais e subfiscais            
                                     
             //Adiciona os Dados na classe que representa a tabela Fin Contrato
@@ -1254,7 +1254,7 @@ class FinContratoAditivo {
             $finContratoTb->setIdContratoAditivoPai($this->idContratoAditivoPai);                 
             
             
-            //Adiciona os Dados na classe que representa a tabela Fin Fornecedor
+            //Adiciona os Dados na classe que representa a tabela Fin Fornecedor.class
             $finFornecedorTb = new FinFornecedoresTb();      
             $finFornecedorTb->setIdPessoa($contRef->getFornecedor()->getIdPessoa());
             
@@ -2049,7 +2049,7 @@ class FinContratoAditivo {
                     
                                 .   '<div class="row">
                                         <div class="col-sm-6 celulas">
-                                            <p class="text-bold">Fornecedor:</p>
+                                            <p class="text-bold">Fornecedor.class:</p>
                                             <p>&nbsp;'.$result['nm_pessoa'].'</p>
                                         </div>
                                         <div class="col-sm-6 celulas">

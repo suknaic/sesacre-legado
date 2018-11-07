@@ -15,10 +15,10 @@ $(document).ready(function () {
                                                     </select>\n\
                                                 </div>\n\
                                             </div>\n\
-                                        </div><br>\n\
+                                        </div>\n\
                                         <div class="col-md-3">\n\
                                             <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerMedicamento"></button>\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerMedicamento remover"></button>\n\
                                             </div>\n\
                                         <div>\n\
                                     </div>');
@@ -52,10 +52,10 @@ $(document).ready(function () {
                                                     </select>\n\
                                                 </div>\n\
                                             </div>\n\
-                                        </div><br>\n\
+                                        </div>\n\
                                         <div class="col-md-3">\n\
                                             <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerServico"></button>\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerServico remover"></button>\n\
                                             </div>\n\
                                         <div>\n\
                                     </div>');
@@ -89,10 +89,10 @@ $(document).ready(function () {
                                                     </select>\n\
                                                 </div>\n\
                                             </div>\n\
-                                        </div><br>\n\
+                                        </div>\n\
                                         <div class="col-md-3">\n\
                                             <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerConsumo"></button>\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerConsumo remover"></button>\n\
                                             </div>\n\
                                         <div>\n\
                                     </div>');
@@ -125,10 +125,10 @@ $(document).ready(function () {
                                                     </select>\n\
                                                 </div>\n\
                                             </div>\n\
-                                        </div><br>\n\
+                                        </div>\n\
                                         <div class="col-md-3">\n\
                                             <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerPermanente"></button>\n\
+                                                <button class="fa fa-remove btn btn-danger btn-removerPermanente remover"></button>\n\
                                             </div>\n\
                                         <div>\n\
                                     </div>');
@@ -148,47 +148,15 @@ $(document).ready(function () {
         $this.closest(".permanente").remove();
     });
 
-    $('body').find("select").select2({});
-
-    //******************************************************************************************
-    function listaPais() {
-        $.ajax({
-            "url": "/model/fornecedores_ext/request.php",
-            "dataType": 'html',
-            "data": {
-                acao: "listaPaisOption"
-            },
-            "success": function (response) {
-                $(".pais").append(response);
-                $(".pais").select2({
-                    width: " 100%"
-                });
-            }
-        });
-    }
-    listaPais();
-    function listaEstado() {
-        $.ajax({
-            "url": "/model/fornecedores_ext/request.php",
-            "dataType": 'html',
-            "data": {
-                acao: "listaEstadoOption"
-            },
-            "success": function (response) {
-                $("#id_estado").append(response);
-                $("#id_estado").select2({
-                    width: " 100%"
-                });
-            }
-        });
-    }
-    listaEstado();
 //******************************************************************************************
+    $('body').find("select").select2({});
     $(".nr").mask("99");
+    $("#nr_cpf").mask("999.999.999-99");
     $("#nr_cnpj").mask("99.999.999/9999-99");
     $("#nr_cep").mask("99999-999");
-    $("#nr_telefone_residencial").mask("(99) 9 9999-9999 ");
-    $("#nr_telefone_celular").mask("(99) 9 9999-9999 ");
+    $("#nr_telefone_residencial").mask("(99) 9999-9999");
+    $("#nr_telefone_empresa").mask("(99) 9 9999-9999");
+    $("#nr_telefone_celular").mask("(99) 9 9999-9999");
 //******************************************************************************************
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -197,64 +165,108 @@ $(document).ready(function () {
             e.preventDefault();
             var $this = $(this);
 
+            if ($('#id_tipo_fornecedor').val() == 1) {
+                var PessoaFisica = {
+                    sexo: $('#tp_sexo').val(),
+                    cpf: $('#nr_cpf').val(),
+                    tl_celular: $("#nr_telefone_celular").val()
+                };
+            }
+
+            if ($('#id_tipo_fornecedor').val() == 2) {
+                var PessoaJuridica = {
+                    nmRazaoSoc: $('#rz_social').val(),
+                    nmFantasia: $('#nm_fantasia').val(),
+                    cnpj: $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, ""),
+                    nrEstudal: $('#nr_estadual').val(),
+                    nrMunicipal: $('#nr_municipal').val(),
+                    tl_empresa: $("#nr_telefone_empresa").val()
+                };
+            }
+
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
-            var DadosPessoa = {
-                //****************dados pessoais*********************
-                razaosoc: $("#razao_soc").val(),
-                pais: $("#id_pais_naturalidade").val(),
-                estado: $("#id_estado_naturalidade"),
-                cidade: $("#id_naturalidade").val(),
+            var Pessoa = {
+                nmPessoa: $('#nm_pessoa').val(),
+                // pais: $("#id_pais").val(),
+                // estado: $("#id_estado").val(),
+                cidade: $("#id_cidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 bairro: $("#ds_bairro").val(),
-                cep: $("#nr_cep").val(),
-                telefone_residencial: $("#nr_telefone_residencial").val(),
+                cep: cep,
                 email: $("#nm_email").val(),
-                empDist: $("#emp_dist").val(),
-                empExc: $("#emp_exc").val(),
-
-            };
-            $cnpj = $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, "");
-            var DadosDaEmpresa = {
-                cnpj: $cnpj,
-
-            };
-//*******************************************************************
-            var DadosObrigatorio = {
-                //**************6***********************
-                "Razão Social": DadosPessoa.razaosoc,
-                "CNPJ": DadosDaEmpresa.cnpj,
-                "Cidade Endereço": DadosPessoa.cidade,
-                "CEP": DadosPessoa.cep,
-                "Telefone": DadosPessoa.telefone_residencial,
-                "Email": DadosPessoa.email,
+                tl_residencial: $("#nr_telefone_residencial").val()
             };
 
-            $campo = 0;
-            $i = 0;
-            $.each(DadosObrigatorio, function (index, value) {
-                $i++;
-                $campo = "";
-                if (value == 0 || value == "" || value == null) {
-                    if ($i <= 6) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Obrigatórios (" + index + ")</strong>");
-                    }
-                    $campo = 1;
-                    return false;
+            var medicamento = [];
+            $("select[name=medicamento\\[\\]]").each(function () {
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    medicamento.push($(this).val());
                 }
             });
-            if ($campo == 1) {
-                return false;
+
+            var servico = [];
+            $("select[name=servico\\[\\]]").each(function () {
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    servico.push($(this).val());
+                }
+            });
+
+            var materialConsumo = [];
+            $("select[name=materialConsumo\\[\\]]").each(function () {
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    materialConsumo.push($(this).val());
+                }
+            });
+
+            var materialPermanente = [];
+            $("select[name=materialPermanente\\[\\]]").each(function () {
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    materialPermanente.push($(this).val());
+                }
+            });
+
+            var MaterialServico = {
+                medicamento: medicamento,
+                servico: servico,
+                materialConsumo: materialConsumo,
+                materialPermanente: materialPermanente
+            };
+
+            if ($("#id_tipo_fornecedor").val() == 1) {
+                if (PessoaFisica.nmPessoaFisica == '' && PessoaFisica.cpf == '' && PessoaFisica.tl_celular == ''){
+                    func.modalAlert(func.msgPreencherCampos);
+                }
             }
-//***********************************************
+
+            if ($("#id_tipo_fornecedor").val() == 2) {
+                if (PessoaJuridica.nmRazaoSoc == '' && PessoaJuridica.nmFantasia == '' && PessoaJuridica.cnpj == '' && PessoaJuridica.nrEstudal == '' && PessoaJuridica.nrMunicipal =='' && PessoaJuridica.tl_empresa ==''){
+                    func.modalAlert(func.msgPreencherCampos);
+                }
+            }
+
+            if (Pessoa.cep == '' && Pessoa.cidade == '' && Pessoa.estado == '' && Pessoa.pais == '' && Pessoa.bairro == '' && Pessoa.email == '' && Pessoa.empDist == '' && Pessoa.empExc == '' && Pessoa.logradouro == ''){
+                func.modalAlert(func.msgPreencherCampos);
+            }
+
+            var Fornecedor = {
+                pessoaFisica: PessoaFisica,
+                pessoaJuridica: PessoaJuridica,
+                pessoa: Pessoa,
+                materialServico: MaterialServico,
+                empExc: $("#emp_exc").val(),
+                empDist: $("#emp_dist").val(),
+            };
+
             $.ajax({
-                "url": "/model/fornecedores_ext/request.php",
+                "url": "request.php",
                 "dataType": "html",
                 "method": "POST",
                 "data": {
-                    "acao": "cadastrarContrato",
-                    "dadosPessoa": DadosPessoa,
+                    "acao": "cadastrarFornecedor",
+                    "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -295,9 +307,11 @@ $(document).ready(function () {
             $this.prop("disabled", false);
         }
     });
+
     $('body').on('click', '.btn-limpar', function (e) {
         location.reload();
     });
+
     $('.modal-alert').on('shown.bs.modal', function (e) {
         $("#nome").focus();
     });
@@ -309,6 +323,53 @@ $(document).ready(function () {
         }
     });
 
+    //************************* Enderedeço *********************
+    function listaPais() {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaPais"
+            },
+            "success": function (response) {
+                $("#id_pais").html(response);
+            }
+        });
+    }
+    listaPais();
+
+    function listaEstado(pais = 0, estado = 0) {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaEstado",
+                pais: pais,
+                estado: estado
+            },
+            "success": function (response) {
+                $("#id_estado").html(response);
+            }
+        });
+    }
+    listaEstado();
+
+    function listaCidade(estado = 0, cidade) {
+        $.ajax({
+            "url": "request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "retornaCidade",
+                estado: estado,
+                cidade: cidade
+            },
+            "success": function (response) {
+                $("#id_cidade").html(response);
+            }
+        });
+    }
+    listaCidade();
+    //***********************************************************
     //*************************************************************************************************
     $('body').on('click', '.cep', function (e) {
         //Nova variável "cep" somente com dígitos.
@@ -322,10 +383,12 @@ $(document).ready(function () {
                 //Preenche os campos com "..." enquanto consulta webservice.
                 $("#ds_logradouro").val("");
                 $("#ds_bairro").val("");
-                $("#id_pais_endereco").val(0).change();
+                $("#id_pais").val(0).trigger('change.select2');
+                // return false;
                 //Consulta o webservice viacep.com.br/
                 $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
                     if (!("erro" in dados)) {
+                        // console.log(dados);
                         //Atualiza os campos com os valores da consulta.
                         $("#ds_logradouro").val(dados.logradouro);
                         $("#ds_bairro").val(dados.bairro);
@@ -333,39 +396,96 @@ $(document).ready(function () {
                         var uf = dados.uf;
                         var cidade = dados.localidade;
                         $.ajax({
-                            "url": "/model/rh/funcionario/request.php",
+                            "url": "request.php",
                             "dataType": "html",
                             "method": "POST",
                             "data": {
-                                "acao": "buscaCidadeUf",
+                                "acao": "retornaCidadeUf",
                                 "uf": uf
                             },
                             "success": function (response) {
                                 try {
                                     response = JSON.parse(response);
+                                    $('#id_pais').val(response[0].id_pais).trigger('change.select2');
+                                    listaEstado(response[0].id_pais, response[0]['id_estado']);
+                                    listaCidade(response[0]['id_estado'], cidade);
+                                    // console.log(response);
+                                    // $('#id_estado').val(response[0].id_estado).trigger('change.select2');
+                                    // $('#id_cidade').val($('option:contains("'+cidade+'")').val()).trigger('change.select2');
                                 } catch (e) {
                                     console.log(response);
                                     return false;
                                 }
                             }
                         });
-                    }
-                    else {
+                    } else {
                         //CEP pesquisado não foi encontrado.
-                        alert("CEP não encontrado.");
+                        func.modalAlert("CEP não encontrado.");
                     }
                 });
-            } //end if.
-            else {
+            } else {
                 //cep é inválido.
-                alert("Formato de CEP inválido.");
+                func.modalAlert("Formato de CEP inválido.");
             }
-        } //end if.
-        else {
+        } else {
             //cep sem valor, limpa formulário.
         }
         //*************************************************************************************************
-
-
     });
+
+    $('.fisica').hide();
+    $('.juridica').hide();
+    $('.resto').hide();
+    $('body').on("change", "#id_tipo_fornecedor", function(){
+        if ($('#id_tipo_fornecedor').val() == 1) {
+            $('.juridica').hide();
+            $('.fisica').show();
+            $('.resto').show();
+        } else if ($('#id_tipo_fornecedor').val() == 2) {
+            $('.juridica').show();
+            $('.fisica').hide();
+            $('.resto').show();
+        } else {
+            $('.juridica').hide();
+            $('.fisica').hide();
+            $('.resto').hide();
+        }
+    });
+
+    // $('.dist').hide();
+    // $('input[id="emp_dist"]').on('click change', function(e) {
+    //     if ($(this).val() == 'sim') {
+    //         $('.dist').show();
+    //     } else {
+    //         $('.dist').hide();
+    //     }
+    // });
+    //
+    // $('.exc').hide();
+    // $('input[id="emp_exc"]').on('click change', function(e) {
+    //     if ($(this).val() == 'sim') {
+    //         $('.exc').show();
+    //     } else {
+    //         $('.exc').hide();
+    //     }
+    // });
+
+    //******************************************************************************************
+    $("body").on("change.select2", "#id_pais", function (e) {
+        pais = $("#id_pais").val();
+        if (pais == 0) {
+            return;
+        }
+        listaEstado(pais, 0);
+    });
+
+    $("body").on("change.select2", "#id_estado", function (e) {
+        estado = $("#id_estado").val();
+        if (estado == 0) {
+            return;
+        }
+        listaCidade(estado, 0);
+    });
+    //******************************************************************************************
+
 });

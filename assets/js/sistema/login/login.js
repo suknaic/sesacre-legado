@@ -173,8 +173,8 @@ $(document).ready(function(){
         }
     });
 
-    $('body').on('click', '#cadFornecedoresExt', function(e){
-        top.location.href = "/pages/fornecedores_ext/index.php";
+    $('body').on('click', '#cadFornecedor', function(e){
+        top.location.href = "/pages/fornecedor/cadFornecedor/index.php";
     });
 
     $('body').on('keypress', '#senha', function (e) {

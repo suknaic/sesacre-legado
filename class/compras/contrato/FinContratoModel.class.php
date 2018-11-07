@@ -50,7 +50,7 @@ class FinContratoModel {
     private $id_pessoa_sub_fiscal_substituto = null;
     //fin_orgao_gerenciador
     private $id_orgao_gerenciador = null;
-    //Tabela Fornecedor
+    //Tabela Fornecedor.class
     private $fornecedor = null;
     private $contratoAditivo = null;
     private $items = null;
@@ -2236,7 +2236,7 @@ class FinContratoModel {
             }
 
             //Final do Cadastro do Contrato
-            //Iniciar o Cadastro do Fornecedor
+            //Iniciar o Cadastro do Fornecedor.class
             //cadastrar fornecedor
             $fornecedor = new FinFornecedoresModel();
             $fornecedor->setIdContrato($daoContrato->getIdContrato());
@@ -2244,7 +2244,7 @@ class FinContratoModel {
             $fornecedor->cadastrarFornecedores($pdo);
             if (!$fornecedor->sucesso()) {
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi Possível Cadastrar o novo Fornecedor";
+                $this->msgRetorno = "Não foi Possível Cadastrar o novo Fornecedor.class";
                 $pdo->rollBack();
                 return;
             }
@@ -2264,7 +2264,7 @@ class FinContratoModel {
                 return;
             }
 
-            //Adiciona os Itens para o Novo Fornecedor
+            //Adiciona os Itens para o Novo Fornecedor.class
             $itemModal = new ItemModel();
             $itemModal->cadastraItensContratoAditivo($itens, (int) $fornecedor->getIdFornecedor(), $pdo);
             if (!$itemModal->Sucesso()) {
@@ -2560,7 +2560,7 @@ class FinContratoModel {
             }
 
 
-            //Remover o Fornecedor
+            //Remover o Fornecedor.class
             $finFornecedor = new FinFornecedoresModel();
             $finFornecedor->setIdFornecedor($idFornecedor);
             $finFornecedor->removerAditivoPorFornecedor($pdo);
@@ -2660,12 +2660,12 @@ class FinContratoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . Metodos::formataCnpj($campos["cpfcnpj"]) . '</div>
                                                     </div>
                                                     
