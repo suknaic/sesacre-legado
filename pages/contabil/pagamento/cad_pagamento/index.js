@@ -3,7 +3,9 @@ $(document).ready(function () {
     func = new Funcoes();
 
     var url = "request.php";
-
+    
+    $("#nr_pagamento").mask("9999999999/9999");
+    
     //select2
     $('body').find('select').select2({
         width: '100%'
@@ -72,7 +74,7 @@ $(document).ready(function () {
         var dados = {
             "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
             "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
-            "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
+            "id_empenho": $("body").find(".selecionaItem").attr("idempenho"),
             "id_liquidacao": $("body").find(".selecionaItem").attr("idLiquidacao"),
             "nr_liquidacao": $("#codItemPesquisa").val()
         }

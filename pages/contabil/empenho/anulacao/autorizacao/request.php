@@ -14,7 +14,7 @@ switch ($_REQUEST['acao']) {
             $empenhoAnulacaoPesquisa->setAnoEmpenhoAnulacao($dados['ano_empenho_anulacao'])
                             ->setNrEmpenho($dados['nr_empenho'])
                             ->setNrEmpenhoAnulacao($dados['nr_empenho_anulacao'])
-                            ->setIdFornecedor($dados['Fornecedor.class'])
+                            ->setIdFornecedor($dados['fornecedor'])
                             ->setNrContrato($dados['nr_contrato'])
                             ->setNrPedido($dados['nr_pedido'])
                             ->setTipoGasto($dados['tipo_gasto'])
