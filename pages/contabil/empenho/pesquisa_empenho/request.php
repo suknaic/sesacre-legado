@@ -20,12 +20,13 @@ switch ($_REQUEST['acao']) {
             $empenhoPesquisa = new FinEmpenhoPesquisa();
             $empenhoPesquisa->setAnoExercicio($dados['ano_exercicio'])
                             ->setNrEmpenho($dados['nr_empenho'])
-                            ->setFornecedor($dados['Fornecedor.class'])
+                            ->setFornecedor($dados['fornecedor'])
                             ->setNrContrato($dados['nr_contrato'])
                             ->setNrPedido($dados['nr_pedido'])
                             ->setTipoGasto($dados['tipo_gasto'])
                             ->setSituacao($dados['situacao'])
-                            ->setCentral($dados['central']);
+                            ->setCentral($dados['central'])
+                            ->setUsuario($session);
             echo $empenhoPesquisa->retornaEmpenhos();
             return;
             break;
