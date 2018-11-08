@@ -377,7 +377,7 @@ class FinFornecedoresModel {
                                     
             if(empty($this->id_fornecedor)){
                 $this->sucesso = false;
-                $this->msgRetorno = "É Necessário o Fornecedor.class";
+                $this->msgRetorno = "É Necessário o Fornecedor";
                 return;
             }
             if(empty($pdo)){
@@ -392,12 +392,12 @@ class FinFornecedoresModel {
             if($dao->getSucesso()){
                 if (!Log::SalvaLogD('fin_fornecedor', $dao->getIdFornecedor(), $pdo)) {
                     $this->sucesso = false;
-                    $this->msgRetorno = "Erro no Log do Fornecedor.class";
+                    $this->msgRetorno = "Erro no Log do Fornecedor";
                     return;
                 }
             }else{
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível localizar o Fornecedor.class.";
+                $this->msgRetorno = "Não foi possível localizar o Fornecedor";
                 return;   
             }
                                     

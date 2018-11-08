@@ -317,13 +317,13 @@ class Liquidacao {
             $pdo = $conexao->connect();
 
             $daoConLiquidacao = new DaoConLiquidacao();
-                        
+
             if ($this->getIdLiquidacao()) {
                 $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
             } else {
                 $daoConLiquidacao->setIdLiquidacao(0);
             }
-            
+
             $daoConLiquidacao->retornaDocumentosPorLiquidacao($pdo);
 
             if ($daoConLiquidacao->Sucesso()) {
@@ -331,7 +331,7 @@ class Liquidacao {
                     $opcoes .= "<option data-objeto='" . json_encode($linha) . "' value=" . $linha['id_documento_fiscal'] . ">" . $linha['nr_documento_fiscal'] . ' - ' . $linha['competencia'] . "</option>";
                 }
             }
-            
+
             return $opcoes;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -831,6 +831,10 @@ class Liquidacao {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+
+            //removendo barra do numero do pagamento
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
@@ -841,9 +845,10 @@ class Liquidacao {
                 $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '" nrpedido = "' . $dados["nr_pedido"] . '" 
                                   idEmpenho ="' . $dados["id_empenho"] . '" idLiquidacao="' . $dados["id_liquidacao"] . '"  
                         style="cursor:pointer;">
-                <td>' . $dados["nr_pedido"] . '</td>
                 <td>' . $dados["nr_liquidacao"] . '</td>
-                <td>' . $dados["dt_liquidacao"] . '</td>    
+                <td>' . $dados["nr_pedido"] . '</td>
+                <td>' . $dados["dt_liquidacao"] . '</td>
+                <td>' . $dados["saldo"] . '</td>        
      
                 </tr>';
             }
@@ -868,6 +873,10 @@ class Liquidacao {
 
             $dadosContrato = '';
             $daoConLiquidacao = new DaoConLiquidacao();
+
+            //removendo barra do numero da liquidacao
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
 
@@ -889,22 +898,31 @@ class Liquidacao {
                                             <div id="collapseFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFor" aria-expanded="false">
                                                 <div class="panel-body">
                                                 <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
-                                                <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" />    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Data da Liquidação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["dt_liquidacao"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor da Liquidação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["vl_liquidacao"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo da liquidação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["saldo"] . '</div>
-                                                    </div>
-                
+                                                <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" /> 
+                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Data da Liquidação</th>
+                                                            <th class="text-center">Valor da Liquidação</th>
+                                                            <th class="text-center">Saldo da liquidação</th>
+                                                            <th class="text-center">Situação</th>
+                                                            <th class="text-center">Ação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center">' . $campos["dt_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["vl_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["saldo"] . '</td>
+                                                            <td class="text-center">' . $campos["status"] . '</td>
+                                                            <td class="text-center">
+                                                                <button type="button" title="Ver Liquidação" class="ver-liquidacao" value="' . $campos['id_liquidacao'] . '">
+                                                                <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>    
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                                 </div>
                                             </div>
                                          </div>
@@ -1095,14 +1113,14 @@ class Liquidacao {
 
             $valor_empenho = $dados_empenho['vl_empenho'];
             $valor_liquidado = $total_liquidado['total_liquidado'];
-            $valor_empenho = Metodos::ConverteValorIng($valor_empenho);            
-            
-            if ($valor_liquidado > $valor_empenho){ //Se o total liquidado for superior ao valor do empenho, retorna erro
+            $valor_empenho = Metodos::ConverteValorIng($valor_empenho);
+
+            if ($valor_liquidado > $valor_empenho) { //Se o total liquidado for superior ao valor do empenho, retorna erro
                 $this->mensagens = 'O total liquidado deste empenho ultrapassou o valor do empenho.';
                 return false;
             }
-            
-            $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);            
+
+            $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);
             if ($empenho->sucesso()) {
                 return true;
             } else {
@@ -1139,17 +1157,16 @@ class Liquidacao {
                 $this->mensagens = 'Não foi possível localizar os dados do Pedido.';
                 return false;
             }
-            
+
             //Retorna os totais do pedido
             $totais_pedido = $pedido->retornaTotaisDoPedido($pdo);
             $valor_pedido = $totais_pedido['valor_pedido'];
             $valor_liquidado = $totais_pedido['valor_liquidado'];
-            
+
             //Se o total liquidado for superior ao valor do empenho, retorna erro
-            if ($valor_liquidado > $valor_pedido){
+            if ($valor_liquidado > $valor_pedido) {
                 $this->mensagens = 'O total liquidado ultrapassou o valor do pedido. valor pedido: ' . $valor_pedido . ' valor liquidado: ' . $valor_liquidado;
                 return false;
-
             }
 
             $pedido->atualizaStatusSituacaoOficialPedido($pdo);

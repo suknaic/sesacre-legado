@@ -31,12 +31,12 @@ switch ($_REQUEST['acao']) {
             $pagamento =  new ConPagamentoPesquisa();
             $pagamento->setNumero_pagamento($dados["nrPagamento"]);
             $pagamento->setExecio_pagamento($dados['exercicio']);
-            $pagamento->setNumero_contrato($dados['Fornecedor.class']);
+            $pagamento->setNumero_contrato($dados['fornecedor']);
             $pagamento->setNumero_pedido($dados["pedido"]);
             $pagamento->setNumero_empenho($dados["empenho"]);
             $pagamento->setNumero_documento_fiscal($dados["nrDoc"]);
             $pagamento->setTipo_gato($dados["tpGasto"]);
-//            $pagamento->setSituacao($dados["situacao"]);
+            $pagamento->setSituacao($dados["situacao"]);
             echo $pagamento->retornaPagamento();
             return;
             break;

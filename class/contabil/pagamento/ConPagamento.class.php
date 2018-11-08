@@ -8,6 +8,7 @@ class ConPagamento {
     private $id_pagamento_situacao = null;
     private $id_pagamento_status = null;
     private $id_liquidacao = null;
+    private $id_empenho = null;
     private $id_lotacao = null;
     private $id_doc_tipo_lotacao = null;
     private $nr_pagamento = null;
@@ -58,6 +59,16 @@ class ConPagamento {
 
     public function setIdLiquidacao($id_liquidacao) {
         $this->id_liquidacao = $id_liquidacao;
+
+        return $this;
+    }
+
+    public function getIdEmpenho() {
+        return $this->id_empenho;
+    }
+
+    public function setIdEmpenho($id_empenho) {
+        $this->id_empenho = $id_empenho;
 
         return $this;
     }
@@ -192,7 +203,10 @@ class ConPagamento {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-
+            
+            //removendo barra do numero do pagamento
+            $this->nr_pagamento = str_replace("/", "", $this->nr_pagamento);
+            
             $daoConPagamento = new DaoConPagamento();
             $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
@@ -205,6 +219,7 @@ class ConPagamento {
             $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
             $daoConPagamento->setVlPagamentoSaldo(Metodos::ConverteValorIng($this->vl_pagamento_saldo));
             $daoConPagamento->salvaPagamento($pdo);
+            
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
 
             if (!empty($this->docs_pagamento)) {
@@ -263,6 +278,15 @@ class ConPagamento {
             if (!$pedido->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
+            }
+            //atualiza situacao e status empenho
+            $empenho = new FinEmpenhoModel();
+            $empenho->setIdEmpenho($this->id_empenho);
+            $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);
+
+            if (!$empenho->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $empenho->getMsgRetorno());
             }
 
             if ($daoConPagamento->Sucesso()) {
@@ -331,18 +355,35 @@ class ConPagamento {
             }
 
 
-            $id_pedido = $this->retornaIdPedidoPorIdPagamento($pdo);
+            $arrayIds = $this->retornaIdPedidoEIdEmpenhoPorIdPagamento($pdo);
 
-            if (array_key_exists("id_pedido", $id_pedido) && is_numeric($id_pedido["id_pedido"])) {
+            if (array_key_exists("id_pedido", $arrayIds) && is_numeric($arrayIds["id_pedido"])) {
                 //atualiza situacao e status pedido
                 $pedido = new Pedido();
-                $pedido->setIdPedido($id_pedido["id_pedido"]);
+                $pedido->setIdPedido($arrayIds["id_pedido"]);
                 $pedido->atualizaStatusSituacaoOficialPedido($pdo);
 
                 if (!$pedido->sucesso()) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
                 }
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualiza o pedido.");
+            }
+
+            if (array_key_exists("id_empenho", $arrayIds) && is_numeric($arrayIds["id_empenho"])) {
+                $empenho = new FinEmpenhoModel();
+                $empenho->setIdEmpenho($arrayIds["id_empenho"]);
+                $empenho->atualizaStatusSituacaoOficialEmpenho($pdo);
+
+                if (!$empenho->sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", $empenho->getMsgRetorno());
+                }
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualiza o empenho.");
             }
 
             if (!Log::SalvaLogU('con_pagamento', $this->id_pagamento, $dadosPagamento, $pdo)) {
@@ -400,6 +441,10 @@ class ConPagamento {
             }
 
             $daoConPagamento = new DaoConPagamento();
+            
+            //removendo barra do numero do pagamento
+            $this->nr_pagamento = str_replace("/", "", $this->nr_pagamento);
+            
             $daoConPagamento->setIdPagamento($this->id_pagamento);
             $daoConPagamento->setNrPagamento($this->nr_pagamento);
             $daoConPagamento->setDtPagamento(Metodos::ConverteDataING($this->dt_pagamento));
@@ -412,17 +457,16 @@ class ConPagamento {
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Pagamento atualizado com sucesso.");
-            
         } catch (Exception $ex) {
             //Se der algum erro, registra o erro no objeto
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
 
-    public function retornaIdPedidoPorIdPagamento(PDO $pdo = null) {
+    public function retornaIdPedidoEIdEmpenhoPorIdPagamento(PDO $pdo = null) {
         $daoConPagamento = new DaoConPagamento();
         $daoConPagamento->setIdPagamento($this->id_pagamento);
-        $daoConPagamento->retornaIdPedidoPorPagamento($pdo);
+        $daoConPagamento->retornaIdPedidoEIdEmpenhoPorPagamento($pdo);
         return $daoConPagamento->getMsgRetorno();
     }
 

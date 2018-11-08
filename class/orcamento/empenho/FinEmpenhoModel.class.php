@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/orcamento/empenho/DaoFinEmpenho.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 class FinEmpenhoModel {
 
@@ -494,14 +495,6 @@ class FinEmpenhoModel {
                 return Metodos::retornoAjax("ok", "html", "Não foi possível Atualizar o Status/Situação do Pedido.");
             }
 
-//            if ($classPedido->retornaTipoSolicitacaoPedido($pdo)["id_tipo_solicitacao"] == 2) {
-//                $classPedido->setStPedido(16);
-//                $classPedido->atualizaTramitacaoPedido($pdo);
-//            } else {
-//                $classPedido->setStPedido(21);
-//                $classPedido->atualizaTramitacaoPedido($pdo);
-//            }
-
             if ($sucesso) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", "Empenho cadastrado com sucesso");
@@ -521,6 +514,18 @@ class FinEmpenhoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+            
+            //Só pode Editar o empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->id_pessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+            }
+            
+            
+            
             $daoFinEmpenho = new DaoFinEmpenho();
             //removendo barra do numero do empenho
             $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
@@ -538,6 +543,24 @@ class FinEmpenhoModel {
             $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
             if ($daoFinEmpenho->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Já existe um empenho ativo com este número!");
+            }
+            
+            //Verifica se o Empenho possui Ordem ou Documento Fiscal ou Liquidação
+            $daoFinEmpenho->verificaExisteOrdemDocumentoLiquidacao($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                $msg = "";
+                $msgArray = array();
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_liquidacao'])) {
+                    $msgArray[] = " Liquidação";
+                }
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_documento_fiscal'])) {
+                    $msgArray[] = " Documento Fiscal";
+                }
+                if (!empty($daoFinEmpenho->getMsgRetorno()['id_ordem'])) {
+                    $msgArray[] = " Ordem ";
+                }
+                $msg = implode(",", $msgArray);
+                return Metodos::retornoAjax("Erro", "alert", "O Empenho Não pode ser Alterado, pois possui as Seguintes Restrições: " . $msg);
             }
             
             //retorna os dados anteriores do empenho para verificações posteriores
@@ -737,7 +760,7 @@ class FinEmpenhoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo do Empenho para Pagamento:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo do Empenho a Pagar:</b></div>
                                                         <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_pagamento"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>
@@ -1011,9 +1034,20 @@ class FinEmpenhoModel {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
             }
+            
+            //Só pode Cancelar empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->id_pessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+            }
+            
+            
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            $daoFinEmpenho->retorna($pdo);
 
             if (!$daoFinEmpenho->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
@@ -1402,12 +1436,12 @@ class FinEmpenhoModel {
                 $dadosGerais = $daoFinEmpenho->getMsgRetorno()[0];
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
                     $destinos .= "<tr>"
-                                    . "<td>".$linha['nm_cidade_origem']. " - " . $linha['uf_cidade_origem'] ."</td>"
-                                    . "<td>".$linha['nm_cidade_destino']. " - " . $linha['uf_cidade_destino'] ."</td>"
-                                    . "<td>".$linha["dh_inicio"]."</td>"
-                                    . "<td>".$linha["dh_fim"]."</td>"
-                                    . "<td>".Metodos::ConverteValorBr($linha["qt_diaria_destino"],2)."</td>"
-                                    . "<td>".Metodos::ConverteValorBr($linha["vl_diaria_destino"],2)."</td>"
+                                    . "<td class='text-center'>".$linha['nm_cidade_origem']. " - " . $linha['uf_cidade_origem'] ."</td>"
+                                    . "<td class='text-center'>".$linha['nm_cidade_destino']. " - " . $linha['uf_cidade_destino'] ."</td>"
+                                    . "<td class='text-center'>".$linha["dh_inicio"]."</td>"
+                                    . "<td class='text-center'>".$linha["dh_fim"]."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["qt_diaria_destino"],2)."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["vl_diaria_destino"],2)."</td>"
                                 . "</tr>";
                 }
                 
@@ -1427,56 +1461,46 @@ class FinEmpenhoModel {
                                                         . '<div class="row">'
                                                             . '<div class="col-sm-6">'
                                                                 . '<div class="rpw">'
-                                                                    . '<div class="col-sm-4">'
-                                                                        . '<b>Proponente:</b>'
-                                                                        . '<br>'
-                                                                        . '<b>Lotação Proponente:</b>'
-                                                                        . '<br>'
-                                                                        . '<b>Função Proponente:</b>'
-                                                                        . '<br>'
-                                                                    . '</div>'
-                                                                    . '<div class="col-sm-8">'
-                                                                        . $dadosGerais['nm_proponente']
-                                                                        .'<br>'
-                                                                        . $dadosGerais['lt_proponente']
-                                                                        .'<br>'
-                                                                        . $dadosGerais['fn_proponente']
-                                                                        .'<br>'
-                                                                    . '</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Proponente:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["nm_proponente"] . '</div>'
+                                                                    .'</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Lotação Proponente:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["lt_proponente"] . '</div>'
+                                                                    .'</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Função Proponente:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["fn_proponente"] . '</div>'
+                                                                    .'</div>'
                                                                 . '</div>'
                                                             . '</div>'
                                                             . '<div class="col-sm-6">'
                                                                 . '<div class="rpw">'
-                                                                    . '<div class="col-sm-4">'
-                                                                        . '<b>Proposto:</b>'
-                                                                        . '<br>'
-                                                                        . '<b>Lotação Proposto:</b>'
-                                                                        . '<br>'
-                                                                        . '<b>Função Proposto:</b>'
-                                                                        . '<br>'
-                                                                    . '</div>'
-                                                                    . '<div class="col-sm-8">'
-                                                                        . $dadosGerais['nm_proposto']
-                                                                        .'<br>'
-                                                                        . $dadosGerais['lt_proposto']
-                                                                        .'<br>'
-                                                                        . $dadosGerais['fn_proposto']
-                                                                        .'<br>'
-                                                                    . '</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Proposto:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["nm_proposto"] . '</div>'
+                                                                    .'</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Lotação Proposto:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["lt_proposto"] . '</div>'
+                                                                    .'</div>'
+                                                                    .'<div class="form-group">'
+                                                                        .'<div class="col-sm-2"><b>Função Proposto:</b></div>'
+                                                                        .'<div class="col-sm-10">' . $dadosGerais["fn_proposto"] . '</div>'
+                                                                    .'</div>'
                                                                 . '</div>'
                                                             . '</div>'
-                                                        . '</div>' 
-                                                    . '</div>'
-                                                    . '<div class="panel-footer">'
-                                                        . '<table class="table" cellspacing="0" widht="100%">'
+                                                        . '</div>'
+                                                        . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
                                                             . '<thead>'
                                                                 . '<tr>'
-                                                                    . '<th>Origem</th>'
-                                                                    . '<th>Destino</th>'
-                                                                    . '<th>Horário Partida</th>'
-                                                                    . '<th>Horário Chegada</th>'
-                                                                    . '<th>Qtd. Diárias</th>'
-                                                                    . '<th>Valor Unit.</th>'
+                                                                    . '<th class="text-center">Origem</th>'
+                                                                    . '<th class="text-center">Destino</th>'
+                                                                    . '<th class="text-center">Horário Partida</th>'
+                                                                    . '<th class="text-center">Horário Chegada</th>'
+                                                                    . '<th class="text-center">Qtd. Diárias</th>'
+                                                                    . '<th class="text-center">Valor Unitário</th>'
                                                                 . '</tr>'
                                                             . '</thead>'
                                                             . '<tbody>'
@@ -1700,12 +1724,12 @@ class FinEmpenhoModel {
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor.class:</b></div>
+                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor.class:</b></div>
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
                                                         <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
                                                     </div>
                                                     

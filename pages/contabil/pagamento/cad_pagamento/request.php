@@ -126,9 +126,10 @@ switch ($_REQUEST['acao']) {
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
-
+            
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
+            $pagamento->setIdEmpenho($dados["idEmpenho"]);
             $pagamento->setIdLotacao($dados["idLotacao"]);
             $pagamento->setIdDocTipoLotacao($dados["idDocTipoLotacao"]);
             $pagamento->setNrPagamento($dados["nrPagamento"]);
