@@ -7,7 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoPes
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/central/FinCentralModel.class.php";
 
 $session = new Session();
-if(!$session->vPFinanceiro()){
+if(!$session->vPContabilEmpenho()){
     header("Location: /pages/index.php"); 
 }
 $tipoGasto = new TipoGasto();

@@ -93,6 +93,15 @@ class FinEmpenhoAnotacao {
             $pdo->beginTransaction();
             
             
+            //Só pode Editar o empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->idPessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+            }
+            
             $daoFinEmpenhoAnotacao = new DaoFinEmpenhoAnotacao();
             $daoFinEmpenhoAnotacao->setIdEmpenho($this->getIdEmpenho())
                                  ->setDsEmpenhoAnotacao($this->getDsEmpenhoAnotacao())

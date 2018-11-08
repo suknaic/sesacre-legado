@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/orcamento/empenho/DaoFinEmpenho.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 class FinEmpenhoModel {
 
@@ -513,6 +514,18 @@ class FinEmpenhoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+            
+            //Só pode Editar o empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->id_pessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+            }
+            
+            
+            
             $daoFinEmpenho = new DaoFinEmpenho();
             //removendo barra do numero do empenho
             $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
@@ -1021,9 +1034,20 @@ class FinEmpenhoModel {
                 $pdo = $conexao->connect();
                 $pdo->beginTransaction();
             }
+            
+            //Só pode Cancelar empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->id_pessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+            }
+            
+            
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
+            $daoFinEmpenho->retorna($pdo);
 
             if (!$daoFinEmpenho->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");

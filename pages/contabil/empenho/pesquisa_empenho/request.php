@@ -9,8 +9,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/PedidoAnotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session('ajax');
+
+if(!$session->vPContabilEmpenho()){
+    echo "SessionEXpirada";
+    return;
+}
 
 switch ($_REQUEST['acao']) {
 
@@ -38,11 +44,7 @@ switch ($_REQUEST['acao']) {
                            
     CASE 'cancelarEmpenho':
         try {
-        
-            if(!$session->vPFinanceiro()){
-                return Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
-            }
-        
+                            
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);                        
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($dados['id']);   

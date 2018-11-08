@@ -5,6 +5,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoMod
 
 $session = new Session();
 
+if(!$session->vPContabilEmpenho()){
+    header("Location: /pages/index.php"); 
+}
+
 $id = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
 
 if (empty($id)) {

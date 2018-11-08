@@ -11,6 +11,11 @@ class VincularTramitacao {
     private $idDocTipoLotacao = null;
     private $sucesso = false;
     private $msgRetorno = null;
+    private $tramitacaoEmpenhar = 1;
+    private $tramitacaoLiquidar = 2;
+    private $tramitacaoPagar = 3;
+    private $tramitacaoAnularEmpenho = 4;
+    private $tramitacaoAutorizarAnulacaoEmpenho = 5;
    
     function Sucesso() {
         return $this->sucesso;
@@ -64,8 +69,28 @@ class VincularTramitacao {
         $this->idDocTipoLotacao = $idDocTipoLotacao;
         return $this;
     }
+    
+    public function getTramitacaoEmpenhar() {
+        return $this->tramitacaoEmpenhar;
+    }
 
+    public function getTramitacaoLiquidar() {
+        return $this->tramitacaoLiquidar;
+    }
 
+    public function getTramitacaoPagar() {
+        return $this->tramitacaoPagar;
+    }
+
+    public function getTramitacaoAnularEmpenho() {
+        return $this->tramitacaoAnularEmpenho;
+    }
+
+    public function getTramitacaoAutorizarAnulacaoEmpenho() {
+        return $this->tramitacaoAutorizarAnulacaoEmpenho;
+    }
+
+    
     public function cadastrar(){
         try {  
             
@@ -302,6 +327,31 @@ class VincularTramitacao {
             if ($daoSesVincularTramitacao->getSucesso()) {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoSesVincularTramitacao->getMsgRetorno();
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não possui registro";
+            }                                               
+        } catch (Exception $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }  
+    }
+    
+    public function verificaPessoaTramitacao(PDO $pdo = null){
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);                                     
+            $daoSesVincularTramitacao->setIdTramitacao($this->idTramitacao);
+            
+            $daoSesVincularTramitacao->verificaTramitacaoPessoa($pdo);
+            
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                $this->sucesso = true;                
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não possui registro";

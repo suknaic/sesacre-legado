@@ -2,13 +2,29 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoAnotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session();
+
+if(!$session->vPContabilEmpenho()){
+    header("Location: /pages/index.php"); 
+}
+
+/*
+ * Só pode Editar o Empenho quem tiver Tramitação Empenhar
+ */
+$tramitacao = new VincularTramitacao();
+$tramitacao->setIdPessoa($session->getIdUser());
+$tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+$tramitacao->verificaPessoaTramitacao();
+if(!$tramitacao->Sucesso()){
+    header("Location: /pages/index.php");
+}
 
 $id = filter_input(INPUT_GET, 'id', FILTER_DEFAULT);
 
 if (empty($id)) {
-	header("Location: /pages/index.php");
+    header("Location: /pages/index.php");
 }
 
 $empenho = new FinEmpenhoModel();
