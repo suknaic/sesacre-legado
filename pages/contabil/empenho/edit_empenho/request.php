@@ -2,6 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoAnotacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 
@@ -33,4 +34,26 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'insereAnotacao':
+        try {
+            if(!$session->vPFinanceiro()){
+                return Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+            }
+            
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
+            $empenhoAnotacao = new FinEmpenhoAnotacao();
+            $empenhoAnotacao->setIdEmpenho($dados['idEmpenho']);
+            $empenhoAnotacao->setIdPessoa($session->getIdUser());
+            $empenhoAnotacao->setDsEmpenhoAnotacao($dados['anotacao']);
+            echo $empenhoAnotacao->salvaAnotacao();
+            return;
+            break;
+            
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
 }

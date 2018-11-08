@@ -1,48 +1,48 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/pedido/DaoFinPedidoAnotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/orcamento/empenho/DaoFinEmpenhoAnotacao.class.php";
 
 
 class FinEmpenhoAnotacao {
 
-    private $idPedidoAnotacao = null;
-    private $dhPedidoAnotacao = null;
-    private $dsPedidoAnotacao = null;
+    private $idEmpenhoAnotacao = null;
+    private $dhEmpenhoAnotacao = null;
+    private $dsEmpenhoAnotacao = null;
     private $idPessoa = null;
-    private $idPedido = null;
+    private $idEmpenho = null;
     
-    function getIdPedidoAnotacao() {
-        return $this->idPedidoAnotacao;
+    function getIdEmpenhoAnotacao() {
+        return $this->idEmpenhoAnotacao;
     }
 
-    function getDhPedidoAnotacao() {
-        return $this->dhPedidoAnotacao;
+    function getDhEmpenhoAnotacao() {
+        return $this->dhEmpenhoAnotacao;
     }
 
-    function getDsPedidoAnotacao() {
-        return $this->dsPedidoAnotacao;
+    function getDsEmpenhoAnotacao() {
+        return $this->dsEmpenhoAnotacao;
     }
 
     function getIdPessoa() {
         return $this->idPessoa;
     }
 
-    function getIdPedido() {
-        return $this->idPedido;
+    function getIdEmpenho() {
+        return $this->idEmpenho;
     }
 
-    function setIdPedidoAnotacao($idPedidoAnotacao) {
-        $this->idPedidoAnotacao = $idPedidoAnotacao;
+    function setIdEmpenhoAnotacao($idEmpenhoAnotacao) {
+        $this->idEmpenhoAnotacao = $idEmpenhoAnotacao;
         return $this;
     }
 
-    function setDhPedidoAnotacao($dhPedidoAnotacao) {
-        $this->dhPedidoAnotacao = $dhPedidoAnotacao;
+    function setDhEmpenhoAnotacao($dhEmpenhoAnotacao) {
+        $this->dhEmpenhoAnotacao = $dhEmpenhoAnotacao;
         return $this;
     }
 
-    function setDsPedidoAnotacao($dsPedidoAnotacao) {
-        $this->dsPedidoAnotacao = $dsPedidoAnotacao;
+    function setDsEmpenhoAnotacao($dsEmpenhoAnotacao) {
+        $this->dsEmpenhoAnotacao = $dsEmpenhoAnotacao;
         return $this;
     }
 
@@ -51,8 +51,8 @@ class FinEmpenhoAnotacao {
         return $this;
     }
 
-    function setIdPedido($idPedido) {
-        $this->idPedido = $idPedido;
+    function setIdEmpenho($idEmpenho) {
+        $this->idEmpenho = $idEmpenho;
         return $this;
     }
 
@@ -63,16 +63,16 @@ class FinEmpenhoAnotacao {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             
-            $daoFinPedidoAnotacao = new DaoFinPedidoAnotacao();
-            $daoFinPedidoAnotacao->setIdPedido($this->getIdPedido());
-            $daoFinPedidoAnotacao->selectPorPedido($pdo);
+            $daoFinEmpenhoAnotacao = new DaoFinEmpenhoAnotacao();
+            $daoFinEmpenhoAnotacao->setIdEmpenho($this->getIdEmpenho());
+            $daoFinEmpenhoAnotacao->selectPorEmpenho($pdo);
             
-            if ($daoFinPedidoAnotacao->getSucesso()) {
-                foreach ($daoFinPedidoAnotacao->getMsgRetorno() as $linha) {
-                    $retorno .= $linha['dh_pedido_anotacao'] ." - ". $linha['nm_pessoa'] .": ".$linha['ds_pedido_anotacao']. "\n";
+            if ($daoFinEmpenhoAnotacao->getSucesso()) {
+                foreach ($daoFinEmpenhoAnotacao->getMsgRetorno() as $linha) {
+                    $retorno .= $linha['dh_empenho_anotacao'] ." - ". $linha['nm_pessoa'] .": ".$linha['ds_empenho_anotacao']. "\n";
                 }
             } else {
-                $retorno = $daoFinPedidoAnotacao->getMsgRetorno();
+                $retorno = $daoFinEmpenhoAnotacao->getMsgRetorno();
             }
             return $retorno;
         } catch (Exception $exc) {
@@ -84,7 +84,7 @@ class FinEmpenhoAnotacao {
         try {
             $retorno = "";
             
-            if (empty($this->getDsPedidoAnotacao())){
+            if (empty($this->getDsEmpenhoAnotacao())){
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             
@@ -93,25 +93,25 @@ class FinEmpenhoAnotacao {
             $pdo->beginTransaction();
             
             
-            $daoFinPedidoAnotacao = new DaoFinPedidoAnotacao();
-            $daoFinPedidoAnotacao->setIdPedido($this->getIdPedido())
-                                 ->setDsPedidoAnotacao($this->getDsPedidoAnotacao())
+            $daoFinEmpenhoAnotacao = new DaoFinEmpenhoAnotacao();
+            $daoFinEmpenhoAnotacao->setIdEmpenho($this->getIdEmpenho())
+                                 ->setDsEmpenhoAnotacao($this->getDsEmpenhoAnotacao())
                                  ->setIdPessoa($this->getIdPessoa());
             
-            $daoFinPedidoAnotacao->insert($pdo);
-            if ($daoFinPedidoAnotacao->getSucesso()) {
-                $idPedidoAnotacao = $pdo->lastInsertId('fin_pedido_anotacao_id_pedido_anotacao_seq');
-                if (!Log::SalvaLogI('fin_pedido_anotacao', $idPedidoAnotacao, $pdo)) {
+            $daoFinEmpenhoAnotacao->insert($pdo);
+            if ($daoFinEmpenhoAnotacao->getSucesso()) {
+                $idEmpenhoAnotacao = $pdo->lastInsertId('fin_empenho_anotacao_id_empenho_anotacao_seq');
+                if (!Log::SalvaLogI('fin_empenho_anotacao', $idEmpenhoAnotacao, $pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
-                $this->setIdPedidoAnotacao($idPedidoAnotacao);
+                $this->setIdEmpenhoAnotacao($idEmpenhoAnotacao);
                 
                 $pdo->commit();
                 $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinPedidoAnotacao->getMsgRetorno());
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinEmpenhoAnotacao->getMsgRetorno());
             }
             return $retorno;
         } catch (Exception $exc) {

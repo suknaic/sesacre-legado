@@ -136,7 +136,7 @@ class FinEmpenhoPesquisa {
                                         . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
                                     . '</button>';
                     //Situação Cadastrado Pode Cancelar
-                    if($linha['sit_empenho'] == '1' and $this->usuario->vPFinanceiro()){
+                    if($linha['edita'] == 'S' and $this->usuario->vPFinanceiro()){
                         $tabela .=  '<button type="button" title="Editar Empenho" class="editar-empenho" value='.$linha['id_empenho'].'>'
                                         . '<i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>'
                                     . '</button>'

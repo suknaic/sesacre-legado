@@ -34,69 +34,9 @@ $(document).ready(function () {
             
             callback: function (result) {                
                 
-//                if (result) {                   
-//                    if (id == "") {
-//                        func.modalAlert(func.msgPreencherCampos);                        
-//                        return true;
-//                    }                    
-//                    if($("#rem_justificativa").val() == ""){
-//                        func.modalAlert("É Necessário Informar um Justificativa.");                        
-//                        return true;
-//                    }
-//                    
-//                    var dados = {
-//                        id: id,
-//                        justificativa: $("#rem_justificativa").val()
-//                    }
-//
-//                    $.ajax({
-//                        "url": "request.php",
-//                        "dataType": "html",
-//                        "data": {
-//                            "acao": "removerDocumentoFiscal",
-//                            "dados": dados
-//                        },
-//                        "success": function (response) {    
-//                            
-//                            if (response.trim() == "SessaoExpirada") {
-//                                func.modalAlert(func.msgSemPermissao);
-//                                return true;
-//                            }
-//
-//                            try {
-//                                response = JSON.parse(response);
-//                            } catch (e) {
-//                                func.modalAlert(func.msgErroPadrao);                                
-//                                return true;
-//                            }
-//
-//                            if (response.tipoMsg === "Erro") {
-//                                if (response.tipoExibicao === "console") {                                    
-//                                    func.modalAlert(func.msgErroPadrao);
-//                                    return false;
-//                                } else if (response.tipoExibicao === "alert") {
-//                                    func.modalAlert(response.msg);
-//                                    return true;
-//                                }
-//                            } else if (response.tipoMsg === "ok") {
-//                                func.modalAlert(response.msg, 'success');
-//                                $('.modal-alert').on('hidden.bs.modal', function (e) {
-//                                    location.reload();
-//                                });
-//                                return true;
-//                            } else {                                
-//                                func.modalAlert(func.msgErroPadrao);
-//                                return true;
-//                            }
-//                        },
-//                        "error": function (response) {                            
-//                            func.modalAlert(func.msgErroPadrao);
-//                            return true;
-//                        }
-//                    });
-//                }
+
             }
         });
-    })
+    });
 });
 

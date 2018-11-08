@@ -1,6 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoAnotacao.class.php";
 
 $session = new Session();
 
@@ -21,3 +22,8 @@ $dadosDaDiaria = $empenho->retornaEmpenhoPedidoDiariaAccordion(null);
 $dadosDoPedido = $empenho->retornaEmpenhoPedidoAccordion(null);
 $dadosDoContrato = $empenho->retornaEmpenhoContratoAccordion(null);
 $itensDoPedido = $empenho->retornaEmpenhoPedidoItensAccordion(null);
+
+
+$empenhoAnotacao = new FinEmpenhoAnotacao();
+$empenhoAnotacao->setIdEmpenho($id);
+$anotacoes = $empenhoAnotacao->retornaAnotacoes();

@@ -804,24 +804,59 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         $this->sucesso = false;
         $sql = "select
                     emp.id_empenho,
-                    (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
+                    (
+                       substr(emp.nr_empenho, 1, 10) || '/' || substr(emp.nr_empenho, 11, 4) 
+                    )
+                    as nr_empenho,
                     ped.nr_pedido,
                     coalesce(pf.nr_cpf, pj.nr_cnpj, '') as cpf_cnpj,
-                    coalesce(upper(pf.nm_civil), upper(pj.nm_fantasia),'') as nome_razao,
+                    coalesce(upper(pf.nm_civil), upper(pj.nm_fantasia), '') as nome_razao,
                     tpEmp.nm_tipo_empenho,
                     to_char(dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
                     tpGasto.nm_tipo_gasto,
                     central.nm_lotacao as central_demanda,
-                    trim(to_char(vl_empenho,'999G999G999G990D9999')) as vl_empenho,
-                    case sit_empenho 
-                         when '1' then 'Cadastrado'
-                         when '2' then 'Liquidado Parcial'
-                         when '3' then 'Liquidado Total'
-                         when '4' then 'Pago Parcial'
-                         when '5' then 'Pago Total'
-                         when '6' then 'Cancelado'
-                    end as situacao
-                    , sit_empenho
+                    trim(to_char(vl_empenho, '999G999G999G990D9999')) as vl_empenho,
+                    case
+                       sit_empenho 
+                       when
+                          '1' 
+                       then
+                          'Cadastrado' 
+                       when
+                          '2' 
+                       then
+                          'Liquidado Parcial' 
+                       when
+                          '3' 
+                       then
+                          'Liquidado Total' 
+                       when
+                          '4' 
+                       then
+                          'Pago Parcial' 
+                       when
+                          '5' 
+                       then
+                          'Pago Total' 
+                       when
+                          '6' 
+                       then
+                          'Cancelado' 
+                    end
+                    as situacao , 
+                    case
+                       when
+                          (
+                             sit_emp.id_liquidacao is null 
+                             and sit_emp.id_ordem is null
+                             and sit_emp.id_documento_fiscal is null
+                          )
+                       then
+                          'S' 
+                       Else
+                          'N' 
+                    End
+                    as edita 
                  from
                     fin_empenho emp 
                     inner join
@@ -829,10 +864,10 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                        on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
                     inner join
                        fin_pedido ped 
-                       on ped.id_pedido = emp.id_pedido
+                       on ped.id_pedido = emp.id_pedido 
                     inner join
-                        ses_lotacao central
-                        on central.id_lotacao = ped.id_lotacao
+                       ses_lotacao central 
+                       on central.id_lotacao = ped.id_lotacao 
                     left join
                        fin_fornecedor fornec 
                        on fornec.id_fornecedor = ped.id_fornecedor 
@@ -847,8 +882,41 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                        on pf.id_pessoa = fornec.id_pessoa 
                     left join
                        ses_pessoa_juridica pj 
-                       on pj.id_pessoa = fornec.id_pessoa ". $str_filtro ."
-                 order by dt_empenho_safira desc,nr_empenho, nr_pedido";
+                       on pj.id_pessoa = fornec.id_pessoa 
+                    left join
+                       (
+                          SELECT distinct
+                             on (E.id_empenho) E.id_empenho,
+                             O.id_ordem,
+                             DF.id_documento_fiscal,
+                             L.id_liquidacao 
+                          FROM
+                             fin_empenho E 
+                             LEFT JOIN
+                                fin_ordem O 
+                                ON O.id_pedido = E.id_pedido 
+                                AND O.sit_ordem <> '0' 
+                             LEFT JOIN
+                                fin_documento_fiscal DF 
+                                ON DF.id_pedido = E.id_pedido 
+                                AND DF.id_documento_situacao <> 7 
+                             LEFT JOIN
+                                con_liquidacao L 
+                                ON L.id_empenho = E.id_empenho 
+                                AND L.id_liquidacao_situacao <> 4 
+                          where
+                             (
+                                O.id_ordem IS NOT NULL 
+                                OR DF.id_documento_fiscal IS NOT NULL 
+                                OR L.id_liquidacao IS NOT NULL 
+                             )
+                       )
+                       sit_emp 
+                       on sit_emp.id_empenho = emp.id_empenho ".$str_filtro."
+                 order by
+                    dt_empenho_safira desc,
+                    nr_empenho,
+                    nr_pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
