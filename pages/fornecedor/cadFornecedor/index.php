@@ -320,13 +320,13 @@
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-5">
                                     <label><strong>A Empresa é Distribuidora? <span class="text-danger">*</span></strong></label>
-                                    <input type="radio" name="emp_dist" id="emp_dist" value="1"> Sim
-                                    <input type="radio" name="emp_dist" id="emp_dist" value="0"> Não
+                                    <input type="checkbox" name="emp_dist" id="empDistS" value="1"> Sim
+                                    <input type="checkbox" name="emp_dist" id="empDistN" value="0"> Não
                                 </div>
                                 <div class="col-sm-5">
                                     <label><strong>A Empresa possui Exclusividade? <span class="text-danger">*</span></strong></label>
-                                    <input type="radio" name="emp_exc" id="emp_exc" value="1"> Sim
-                                    <input type="radio" name="emp_exc" id="emp_exc" value="0"> Não
+                                    <input type="checkbox" name="emp_exc[]" id="empExcS" value="1"> Sim
+                                    <input type="checkbox" name="emp_exc[]" id="empExcN" value="0"> Não
                                 </div>
                             </div>
 
@@ -342,7 +342,7 @@
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_medicamentos" class="form-control select" name="medicamento[]">
+                                                <select id="id_medicamentos" class="form-control select selectMedicamentos" name="medicamento[]">
                                                     <option value="0">Selecione o tipo de Medicamento</option>
                                                 </select>
                                             </div>
@@ -366,7 +366,8 @@
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_servicos" class="form-control select" name="servico[]">
+                                                <select id="id_servicos" class="form-control select selectServico" name="servico[]">
+                                                    <option value="0">Selecione o tipo de Serviço</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -388,7 +389,7 @@
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_material_consumo" class="form-control select" name="materialConsumo[]">
+                                                <select id="id_material_consumo" class="form-control select selectConsumo" name="materialConsumo[]">
                                                     <option value="0">Selecione o tipo de Material de Consumo</option>
                                                 </select>
                                             </div>
@@ -411,7 +412,7 @@
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_material_permanente" class="form-control select" name="materialPermanente[]">
+                                                <select id="id_material_permanente" class="form-control select selectPermanente" name="materialPermanente[]">
                                                     <option value="0">Selecione o tipo Material</option>
                                                 </select>
                                             </div>
