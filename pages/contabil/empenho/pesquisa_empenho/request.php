@@ -20,7 +20,7 @@ switch ($_REQUEST['acao']) {
             $empenhoPesquisa = new FinEmpenhoPesquisa();
             $empenhoPesquisa->setAnoExercicio($dados['ano_exercicio'])
                             ->setNrEmpenho($dados['nr_empenho'])
-                            ->setFornecedor($dados['fornecedor'])
+                            ->setFornecedor($dados['Fornecedor.class'])
                             ->setNrContrato($dados['nr_contrato'])
                             ->setNrPedido($dados['nr_pedido'])
                             ->setTipoGasto($dados['tipo_gasto'])

@@ -1342,6 +1342,11 @@ class FinEmpenhoModel {
                                                         <div class="col-sm-2"><b>Descrição:</b></div>
                                                         <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
                                                     </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                    </div>
 
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Fonte:</b></div>
@@ -1380,6 +1385,114 @@ class FinEmpenhoModel {
         } catch (Exception $ex) {
             return $ex->getMessage();
         }        
+    }
+    
+    public function retornaEmpenhoPedidoDiariaAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedidoDiaria = '';
+            $daoFinEmpenho = new DaoFinEmpenho();
+            $daoFinEmpenho->setIdPedido($this->id_pedido);
+            $daoFinEmpenho->retornaDadosEmpenhoPedidoDiaria($pdo);
+            if ($daoFinEmpenho->sucesso()) {
+                $destinos = '';
+                $dadosGerais = $daoFinEmpenho->getMsgRetorno()[0];
+                foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
+                    $destinos .= "<tr>"
+                                    . "<td>".$linha['nm_cidade_origem']. " - " . $linha['uf_cidade_origem'] ."</td>"
+                                    . "<td>".$linha['nm_cidade_destino']. " - " . $linha['uf_cidade_destino'] ."</td>"
+                                    . "<td>".$linha["dh_inicio"]."</td>"
+                                    . "<td>".$linha["dh_fim"]."</td>"
+                                    . "<td>".Metodos::ConverteValorBr($linha["qt_diaria_destino"],2)."</td>"
+                                    . "<td>".Metodos::ConverteValorBr($linha["vl_diaria_destino"],2)."</td>"
+                                . "</tr>";
+                }
+                
+                if (!empty($destinos)) {
+                    $dadosPedidoDiaria .= "<div class='panel-group' id='diaria'>"
+                                            . "<div class='panel panel-default'>"
+                                                . "<div class='panel-heading'>"
+                                                    . "<h4 class='panel-title'>"
+                                                        . '<a role="button" data-toggle="collapse" data-parent="#diaria" href="#destinos">'
+                                                            . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                            . '<b>Dados da Diária: <span style="color:#758697"> Nº ' . $dadosGerais["id_diaria"] .'/'. $dadosGerais["nr_protocolo"] . '</span></b>'
+                                                        . '</a>'
+                                                    . "</h4>"
+                                                . "</div>"
+                                                . '<div id="destinos" class="panel-collapse collapse">'
+                                                    . '<div class="panel-body">'
+                                                        . '<div class="row">'
+                                                            . '<div class="col-sm-6">'
+                                                                . '<div class="rpw">'
+                                                                    . '<div class="col-sm-4">'
+                                                                        . '<b>Proponente:</b>'
+                                                                        . '<br>'
+                                                                        . '<b>Lotação Proponente:</b>'
+                                                                        . '<br>'
+                                                                        . '<b>Função Proponente:</b>'
+                                                                        . '<br>'
+                                                                    . '</div>'
+                                                                    . '<div class="col-sm-8">'
+                                                                        . $dadosGerais['nm_proponente']
+                                                                        .'<br>'
+                                                                        . $dadosGerais['lt_proponente']
+                                                                        .'<br>'
+                                                                        . $dadosGerais['fn_proponente']
+                                                                        .'<br>'
+                                                                    . '</div>'
+                                                                . '</div>'
+                                                            . '</div>'
+                                                            . '<div class="col-sm-6">'
+                                                                . '<div class="rpw">'
+                                                                    . '<div class="col-sm-4">'
+                                                                        . '<b>Proposto:</b>'
+                                                                        . '<br>'
+                                                                        . '<b>Lotação Proposto:</b>'
+                                                                        . '<br>'
+                                                                        . '<b>Função Proposto:</b>'
+                                                                        . '<br>'
+                                                                    . '</div>'
+                                                                    . '<div class="col-sm-8">'
+                                                                        . $dadosGerais['nm_proposto']
+                                                                        .'<br>'
+                                                                        . $dadosGerais['lt_proposto']
+                                                                        .'<br>'
+                                                                        . $dadosGerais['fn_proposto']
+                                                                        .'<br>'
+                                                                    . '</div>'
+                                                                . '</div>'
+                                                            . '</div>'
+                                                        . '</div>' 
+                                                    . '</div>'
+                                                    . '<div class="panel-footer">'
+                                                        . '<table class="table" cellspacing="0" widht="100%">'
+                                                            . '<thead>'
+                                                                . '<tr>'
+                                                                    . '<th>Origem</th>'
+                                                                    . '<th>Destino</th>'
+                                                                    . '<th>Horário Partida</th>'
+                                                                    . '<th>Horário Chegada</th>'
+                                                                    . '<th>Qtd. Diárias</th>'
+                                                                    . '<th>Valor Unit.</th>'
+                                                                . '</tr>'
+                                                            . '</thead>'
+                                                            . '<tbody>'
+                                                            . $destinos
+                                                            . '</tbody>'
+                                                        . '</table>'   
+                                                    . '</div>'                                    
+                                                . '</div>'
+                                            . "</div>"
+                                        . "</div>";
+                }
+            }
+            return $dadosPedidoDiaria;
+        } catch (Exception $exc) {
+            return $ex->getMessage();
+        }
     }
     
     public function retornaEmpenhoPedidoItensAccordion($pdo){
@@ -1428,7 +1541,7 @@ class FinEmpenhoModel {
                                                                 . '<th class="text-center">Item</th>'
                                                                 . '<th class="text-center">Descrição</th>'
                                                                 . '<th class="text-center">Tipo</th>'
-                                                                . '<th class="text-center">Qunatidade</th>'
+                                                                . '<th class="text-center">Qtd.</th>'
                                                                 . '<th class="text-center">Valor Unitário</th>'
                                                                 . '<th class="text-center">Valor Total</th>'
                                                                 . '<th class="text-center">Qtd. Utilizada</th>'
@@ -1565,15 +1678,15 @@ class FinEmpenhoModel {
                                                         <div class="col-sm-2"><b>Licitação:</b></div>
                                                         <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
                                                     </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                        <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                                                    </div>
 
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Tipo de gasto:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
                                                     </div>
 
                                                     <div class="form-group">
@@ -1587,12 +1700,12 @@ class FinEmpenhoModel {
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
                                                     </div>
                                                     

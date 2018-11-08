@@ -806,12 +806,12 @@ class EmpenhoAnulacao {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor.class:</b></div>
                                                         <div class="col-sm-10">' . Metodos::formataCnpj($campos["cpfcnpj"]) . '</div>
                                                     </div>
                                                     

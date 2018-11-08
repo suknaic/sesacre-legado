@@ -844,10 +844,10 @@ class ItemModel {
         $finFornecedoresModel = new FinFornecedoresModel();
         $finFornecedoresModel->setIdContrato($idContrato);
 
-        //Retorna o id do Fornecedor, o primeiro, do contrato para buscar os itens dele
+        //Retorna o id do Fornecedor.class, o primeiro, do contrato para buscar os itens dele
         $finFornecedoresModel->retornaPrimeiroFornecedorDoContrato($pdo);
         if (!$finFornecedoresModel->sucesso()){
-            return "Não foi possível Localizar o Fornecedor do Contrato.";
+            return "Não foi possível Localizar o Fornecedor.class do Contrato.";
         }
         
         //criando objeto do Dao dos itens da ata
@@ -1190,7 +1190,7 @@ class ItemModel {
                                             <th>Número</th>
                                             <th>Objeto</th>
                                             <th>Tipo de Gasto</th>
-                                            <th>Fornecedor</th>
+                                            <th>Fornecedor.class</th>
                                             <th>Modalidade</th>
                                             <th style="text-align: center;">Vigência Inicial</th>
                                             <th style="text-align: center;">Vigência Final</th>

@@ -196,7 +196,7 @@ class DaoFinFornecedores extends FinFornecedoresTb {
     
     
     /**
-     * Retorna o Id Do Fornecedor de um Contrato
+     * Retorna o Id Do Fornecedor.class de um Contrato
      * Utilizada pois quando foi implementado a funcionalidade, não tinhamos a certeza 
      * como iriamos buscar o ID do fornecedor do contrato, pois as ATAS estavam duplicado o id do Contrato
      * na tabela de fornecedor, por isso a SQL utilizada tem limit 1 e order by asc

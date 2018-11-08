@@ -342,7 +342,7 @@ class FinFornecedoresModel {
     
     
     /**
-     * Retorna o Id Do Fornecedor de um Contrato
+     * Retorna o Id Do Fornecedor.class de um Contrato
      * Utilizada pois quando foi implementado a funcionalidade, não tinhamos a certeza 
      * como iriamos buscar o ID do fornecedor do contrato, pois as ATAS estavam duplicado o id do Contrato
      * na tabela de fornecedor, por isso a SQL utilizada tem limit 1 e order by asc
@@ -377,7 +377,7 @@ class FinFornecedoresModel {
                                     
             if(empty($this->id_fornecedor)){
                 $this->sucesso = false;
-                $this->msgRetorno = "É Necessário o Fornecedor";
+                $this->msgRetorno = "É Necessário o Fornecedor.class";
                 return;
             }
             if(empty($pdo)){
@@ -392,12 +392,12 @@ class FinFornecedoresModel {
             if($dao->getSucesso()){
                 if (!Log::SalvaLogD('fin_fornecedor', $dao->getIdFornecedor(), $pdo)) {
                     $this->sucesso = false;
-                    $this->msgRetorno = "Erro no Log do Fornecedor";
+                    $this->msgRetorno = "Erro no Log do Fornecedor.class";
                     return;
                 }
             }else{
                 $this->sucesso = false;
-                $this->msgRetorno = "Não foi possível localizar o Fornecedor.";
+                $this->msgRetorno = "Não foi possível localizar o Fornecedor.class.";
                 return;   
             }
                                     

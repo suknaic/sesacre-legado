@@ -135,7 +135,7 @@ class DaoSesCidade extends SesCidade {
 
         $sql = "select cid.id_cidade,cid.nm_cidade,est.nm_sigla "
                 . "from ses_cidade cid, ses_estado est"
-                . "where cid.id_estado = est.id_estado" ;
+                . " where cid.id_estado = est.id_estado" ;
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->execute();

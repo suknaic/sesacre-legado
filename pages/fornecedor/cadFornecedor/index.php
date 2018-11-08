@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/fornecedores_ext/index.load.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/fornecedor/cadFornecedor/index.load.php";
 ?>
 
 <html lang="pt-br">
@@ -38,55 +38,19 @@
             }
             .cep {
                 padding: 10px 20px;
-                margin: 43px ;
+                margin: 28px ;
             }
             .adicionar {
-                margin: 32px;
+                margin: 15px;
                 margin-left: 0;
             }
+
         </style>
     </head>
     <!--TIPS-->
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
-            <!--NAVBAR-->
-            <!--===================================================-->
-<!--            <header id="navbar">-->
-<!--                <div id="navbar-container" class="boxed">-->
-                    <!--Brand logo & name-->
-                    <!--================================-->
-                    <!--<div class="navbar-header">
-                        <a href="/index.php" class="navbar-brand">
-                            <img src="/assets/img/esfera.png" alt="Nifty Logo" class="brand-icon">
-                            <div class="brand-title">
-                                <span class="brand-text">SESACRENET</span>
-                            </div>
-                        </a>
-                    </div>-->
-                    <!--================================-->
-                    <!--End brand logo & name-->
-                    <!--Navbar Dropdown-->
-                    <!--================================-->
-<!--                    <div class="navbar-content clearfix">-->
-<!--                        <ul class="nav navbar-top-links pull-left">-->
-
-                            <!--Navigation toogle button-->
-                            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-<!--                            <li class="tgl-menu-btn">-->
-<!--                                <a class="mainnav-toggle" href="#">-->
-<!--                                    <i class="ti-view-list"></i>-->
-<!--                                </a>-->
-<!--                            </li>-->
-
-<!--                        </ul>-->
-<!--                    </div>-->
-                    <!--================================-->
-                    <!--End Navbar Dropdown-->
-<!--                </div>-->
-<!--            </header>-->
-            <!--===================================================-->
-            <!--END NAVBAR-->
             <div id="page-title">
                 <h2 class="text-overflow">Cadastro de Fornecedores</h2>
             </div>
@@ -98,15 +62,28 @@
 
             <div class="boxed">
                 <div id="page-content"><br>
-                    <form data-toggle="validator" class="form-horizontal formPesquisa" id="form_pesquisa" role="form" action="#"method="post">
+                    <form data-toggle="validator" class="form-horizontal" id="form_fornecedor" role="form" action="#"method="post">
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Formulário</h3>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-6">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Razão Social: </strong><span class="text-danger">*</span></p>
+                                <div class="col-sm-4">
+                                    <div class="panel-body"><strong>Tipo de Pessoa: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-list inputPFa"></p>
+                                            </span>
+                                            <select id="id_tipo_fornecedor" class="form-control selectTipoPessoa">
+                                                <option value="0">Selecione o Tipo de Pessoa</option>
+                                                <option value="1">Pessoa Física</option>
+                                                <option value="2">Pessoa Jurídica</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 juridica">
+                                    <div class="panel-body"><strong>Razão Social: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -116,9 +93,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Nome Fantasia:  </strong><span class="text-danger">*</span></p>
+                                <div class="col-sm-4 juridica">
+                                    <div class="panel-body"><strong>Nome Fantasia:  </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -127,11 +103,48 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4 fisica">
+                                    <div class="panel-body"><strong>Nome da Pessoa:  </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                            </span>
+                                            <input type="text" class="form-control" name="nm_pessoa" id="nm_pessoa" required="true">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2 fisica">
+                                    <div class="panel-body"><strong>CPF: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                            </span>
+                                            <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" required="true" placeholder="___.___.___-__">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2 fisica">
+                                    <div class="panel-body"><strong>Sexo: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-list inputPFa"></p>
+                                            </span>
+                                            <select id="tp_sexo" class="form-control select">
+                                                <option value="0">Selecione o Sexo</option>
+                                                <option value="1">Feminino</option>
+                                                <option value="2">Masculino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>CNPJ: </strong><span class="text-danger">*</span></p>
+                            <div class="form-group juridica">
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>CNPJ: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -141,9 +154,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Inscrição Estadual: </strong><span class="text-danger">*</span></p>
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Inscrição Estadual: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -153,9 +165,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Inscrição Municipal: </strong><span class="text-danger">*</span></p>
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Inscrição Municipal: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -164,54 +175,63 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-3">
+                                    <div class="panel-body"><strong>Natureza: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                            </span>
+                                            <select id="id_natureza" class="form-control select">
+                                                <option value="0">Selecione a Natureza</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>País: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>País: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-list inputPFa"></p>
                                             </span>
                                             <select id="id_pais" class="form-control select">
-                                                <option value="0">Selecione o País</option>
+                                                <option value="0">Selecione um País</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Estado: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>Estado: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-list inputPFa"></p>
                                             </span>
                                             <select id="id_estado" class="form-control select">
-                                                <option value="0">Selecione o Estado</option>
+                                                <option value="0">Selecione um Estado</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Cidade: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>Cidade: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-list inputPFa"></p>
                                             </span>
                                             <select id="id_cidade" class="form-control select">
-                                                <option value="0">Selecione o Cidade</option>
+                                                <option value="0">Selecione uma Cidade</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Logradouro: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>Logradouro: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -222,8 +242,7 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Bairro: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>Bairro: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -234,8 +253,7 @@
                                 </div>
 
                                 <div class="col-sm-2">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>CEP: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>CEP: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
@@ -253,100 +271,79 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Telefone da Empresa: </strong><span class="text-danger">*</span></p>
+                            <div class="form-group resto">
+                                <div class="col-sm-4 juridica">
+                                    <div class="panel-body"><strong>Telefone da Empresa: </strong><span class="text-danger">*</span>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                             </span>
-                                            <input type="text" class="form-control" name="telefone" id="nr_telefone_empresa" required="true" placeholder="(  )______-_____">
+                                            <input type="text" class="form-control" name="telefone" id="nr_telefone_empresa" required="true" placeholder="(   )______-_____">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 fisica">
+                                    <div class="panel-body"><strong>Telefone Celular: </strong><span class="text-danger">*</span>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                            </span>
+                                            <input type="text" class="form-control" name="telefone" id="nr_telefone_celular" required="true" placeholder="(   ) _ ____-____">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Telefone Celular: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>Telefone Residêncial: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                             </span>
-                                            <input type="text" class="form-control" name="telefone" id="nr_telefone_celular" required="true" placeholder="(  )______-_____">
+                                            <input type="text" class="form-control" name="telefone" id="nr_telefone_residencial" required="true" placeholder="(   ) ____-____">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>E-mail: </strong><span class="text-danger">*</span></p>
+                                    <div class="panel-body"><strong>E-mail: </strong>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                             </span>
-                                            <input type="text" class="form-control" name="email" id="nm_email" required="true" placeholder="Ex.: sesacre@ac.gov.com">
+                                            <input type="email" class="form-control" name="email" id="nm_email" required="true" placeholder="Ex.: sesacre@ac.gov.com">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-5">
                                     <label><strong>A Empresa é Distribuidora? <span class="text-danger">*</span></strong></label>
-                                    <input type="radio" name="emp_dist" id="emp_dist" value="sim"> Sim
-                                    <input type="radio" name="emp_dist" id="emp_dist" value="nao"> Não
+                                    <input type="radio" name="emp_dist" id="emp_dist" value="1"> Sim
+                                    <input type="radio" name="emp_dist" id="emp_dist" value="0"> Não
                                 </div>
                                 <div class="col-sm-5">
                                     <label><strong>A Empresa possui Exclusividade? <span class="text-danger">*</span></strong></label>
-                                    <input type="radio" name="emp_exc" id="emp_exc" value="sim"> Sim
-                                    <input type="radio" name="emp_exc" id="emp_exc" value="nao"> Não
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Caso a empresa seja distribuidora, informar para qual empresa presta esse serviço. </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-file-text-o inputPFa"></p>
-                                            </span>
-                                            <input type="text" class="form-control" name="emp_dist" id="emp_dist" required="true">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="panel-body">
-                                        <p class= "form-control-static"><strong>Caso a empresa possua exclusividade, informar para qual empresa presta esse serviço. </strong><span class="text-danger">*</span></p>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <p class="fa fa-file-text-o inputPFa"></p>
-                                            </span>
-                                            <input type="text" class="form-control" name="emp_exclu" id="emp_exclu" required="true">
-                                        </div>
-                                    </div>
+                                    <input type="radio" name="emp_exc" id="emp_exc" value="1"> Sim
+                                    <input type="radio" name="emp_exc" id="emp_exc" value="0"> Não
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div class="panel-heading">
                                     <h5 class="panel-title">Tipos de Produtos ou Serviços que a Empresa Fornece</h5>
                                 </div>
 
                                 <div id="medicamentos">
                                     <div class="col-sm-5">
-                                        <div class="panel-body">
-                                            <p class= "form-control-static"><strong>Medicamentos: </strong><span class="text-danger">*</span></p>
+                                        <div class="panel-body"><strong>Medicamentos: </strong><span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_medicamentos" class="form-control select">
+                                                <select id="id_medicamentos" class="form-control select" name="medicamento[]">
                                                     <option value="0">Selecione o tipo de Medicamento</option>
-                                                    <option value="1">Medicamentos</option>
-                                                    <option value="2">Medicamentos Manipulados</option>
-                                                    <option value="3">Medicamentos Importados</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -361,33 +358,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div id="servico">
                                     <div class="col-sm-5">
-                                        <div class="panel-body">
-                                            <p class= "form-control-static"><strong>Serviços: </strong><span class="text-danger">*</span></p>
+                                        <div class="panel-body"><strong>Serviços: </strong><span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_servicos" class="form-control select">
-                                                    <option value="0">Selecione o tipo de Serviço</option>
-                                                    <option value="1">Alimentação</option>
-                                                    <option value="2">Home Care</option>
-                                                    <option value="3">Fisioterapia Therasuit</option>
-                                                    <option value="4">Fisioterapia Pediasuit</option>
-                                                    <option value="5">Fisioterapia Equoterapia</option>
-                                                    <option value="6">Fisioterapia Hidroterapia</option>
-                                                    <option value="7">Informática</option>
-                                                    <option value="8">Lavagem de Roupa</option>
-                                                    <option value="9">Limpeza</option>
-                                                    <option value="10">Telefonia</option>
-                                                    <option value="11">Veículos</option>
-                                                    <option value="12">Vigilância</option>
-                                                    <option value="13">Clínica de Exame</option>
-                                                    <option value="14">Clínica de Imagem</option>
-                                                    <option value="15">Clínica de Drenagem Linfática</option>
-                                                    <option value="16">Óticas</option>
+                                                <select id="id_servicos" class="form-control select" name="servico[]">
                                                 </select>
                                             </div>
                                         </div>
@@ -401,28 +380,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div id="consumo">
                                     <div class="col-sm-5">
-                                        <div class="panel-body">
-                                            <p class= "form-control-static"><strong>Material de Consumo:  </strong><span class="text-danger">*</span></p>
+                                        <div class="panel-body"><strong>Material de Consumo:  </strong><span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="id_material_consumo" class="form-control select">
+                                                <select id="id_material_consumo" class="form-control select" name="materialConsumo[]">
                                                     <option value="0">Selecione o tipo de Material de Consumo</option>
-                                                    <option value="1">Material Médico Hospitalar - Cirúrgico</option>
-                                                    <option value="2">Material Médico Hospitalar - Descartável (Agulhas, Seringas, Curativos, etc)</option>
-                                                    <option value="3">Material Odontológico</option>
-                                                    <option value="4">Material para Hemoterapia</option>
-                                                    <option value="5">Roupas Hospitalares</option>
-                                                    <option value="6">Material Laboratorial (Reagentes e Testes)</option>
-                                                    <option value="7">Saneantes</option>
-                                                    <option value="8">Fórmula Alimentar</option>
-                                                    <option value="9">Vidraria</option>
-                                                    <option value="10">Bolsa de Ostomia</option>
-                                                    <option value="11">Filmes Radiológicos</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -436,31 +403,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group resto">
                                 <div id="permanente">
                                     <div class="col-sm-5">
-                                        <div class="panel-body">
-                                            <p class= "form-control-static"><strong>Material Permanente: </strong><span class="text-danger">*</span></p>
+                                        <div class="panel-body"><strong>Material Permanente: </strong><span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>
                                                 </span>
-                                                <select id="idmaterial_permanente" class="form-control select">
+                                                <select id="id_material_permanente" class="form-control select" name="materialPermanente[]">
                                                     <option value="0">Selecione o tipo Material</option>
-                                                    <option value="1">Máquinas e Equipamentos Hospitalares</option>
-                                                    <option value="2">Máquinas e Equipamentos Hospitalares de Imagem</option>
-                                                    <option value="3">Máquinas e Equipamentos Médico Cirúrgicos</option>
-                                                    <option value="4">Máquinas e Equipamentos Médico Endoscópios</option>
-                                                    <option value="5">Máquinas e Equipamentos Médico Oftalmológicos</option>
-                                                    <option value="6">Máquinas e Equipamentos Médico Auditivos</option>
-                                                    <option value="7">Máquinas e Equipamentos Odontológicos</option>
-                                                    <option value="8">Máquinas e Equipamentos Ortopédicos e Mobilidade</option>
-                                                    <option value="9">Máquinas e Equipamentos de Laboratórios</option>
-                                                    <option value="10">Máquinas e Equipamentos de Fisioterapia</option>
-                                                    <option value="11">Máquinas e Equipamentos de Informática</option>
-                                                    <option value="12">Eletroeletrônicos</option>
-                                                    <option value="13">Mobiliário Hospitalar</option>
-                                                    <option value="14">Mobiliário de Escritório</option>
                                                 </select>
                                             </div>
                                         </div>

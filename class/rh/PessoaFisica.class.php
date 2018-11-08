@@ -223,13 +223,16 @@ class pessoaFisica {
                 return;
             }
 //************************************************************************
-            $dtNascimento = strtotime($this->dt_nascimento);
-            $dtAtual = strtotime(date("d-m-Y"));
-            if ($dtNascimento > $dtAtual) {
-                $this->setSuccess(false);
-                $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
-                $pdo->rollBack();
-                return;
+
+            if (!empty($this->dt_nascimento)){
+                $dtNascimento = strtotime($this->dt_nascimento);
+                $dtAtual = strtotime(date("d-m-Y"));
+                if ($dtNascimento > $dtAtual) {
+                    $this->setSuccess(false);
+                    $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
+                    $pdo->rollBack();
+                    return;
+                }
             }
 //*****************************************
             $result = $pessoaFisica->insert($pdo);
