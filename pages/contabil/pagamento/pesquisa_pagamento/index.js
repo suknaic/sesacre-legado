@@ -3,8 +3,6 @@ func = new Funcoes();
 
 $(document).ready(function () {
     
-    retonaOptiosSituacao();
-    
     $('body').find('select').select2({
         width: '100%'
     });
@@ -137,8 +135,8 @@ function lista() {
         pedido: $("#nr_pedido").val(),
         empenho: $("#nr_empenho").val(),
         nrDoc: $("#nr_documento_fiscal").val(),
-        tpGasto: $("#tipo_gasto option:selected").val()
-//        situacao: $("#situacao option:selected").val()
+        tpGasto: $("#tipo_gasto option:selected").val(),
+        situacao: $("#situacao option:selected").val()
     }
     
     $.ajax({
@@ -154,15 +152,3 @@ function lista() {
     });
 }
 
-function retonaOptiosSituacao(){
-    $.ajax({
-        "url": "request.php",
-        "dataType": "html",
-        "data": {
-            "acao": "retornaOptionsSituacaoLiquidacao"
-        },
-        "success": function (response){
-            $("#situacao").html(response);
-        }
-    });
-}

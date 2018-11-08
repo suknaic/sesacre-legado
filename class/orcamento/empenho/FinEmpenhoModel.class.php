@@ -737,7 +737,7 @@ class FinEmpenhoModel {
                                                     </div>
                                                     
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo do Empenho para Pagamento:</b></div>
+                                                        <div class="col-sm-2"><b>Saldo do Empenho a Pagar:</b></div>
                                                         <div class="col-sm-3">' . Metodos::ConverteValorBr($campos["saldo_empenho_pagamento"], 4) . '</div>
                                                         <div class="col-sm-7"></div>    
                                                     </div>

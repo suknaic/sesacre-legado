@@ -183,11 +183,13 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
+                                                        <option value="0">Selecione uma Situação</option>
+                                                        <option value="1">Cadastrado</option>
+                                                        <option value="2">Cancelado</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                     </div>
 
                                 </div>
@@ -212,10 +214,11 @@ require_once "index.load.php";
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">Nº Pagamento</th>
+                                                    <th class="text-center">Nº Liquidação</th>
                                                     <th class="text-center">Nº Pedido</th>
                                                     <th class="text-center">Nº Empenho</th>
                                                     <th class="text-center">Nº Doc. Fiscal</th>
-                                                    <th class="text-center">CPF/CNPJ Fornecedor</th>
+                                                    <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Data Pagamento</th>
                                                     <th class="text-center">Valor</th>
                                                     <th class="text-center">Situação</th>

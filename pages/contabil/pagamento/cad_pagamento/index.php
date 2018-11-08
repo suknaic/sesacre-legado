@@ -76,9 +76,10 @@ require_once "index.load.php";
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                     <thead>
                                                         <tr>
-                                                            <th>Pedido</th>
                                                             <th>Nº liquidação</th>
+                                                            <th>Pedido</th>
                                                             <th>Data liquidação</th>
+                                                            <th>Saldo</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

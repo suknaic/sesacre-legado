@@ -52,11 +52,16 @@ class DaoConPagamento extends ConPagamentoTb {
             $this->sucesso = false;
             if (!empty($pdo)) {
 
-                $sql = "select pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, empenho.nr_empenho,
+                $sql = "select pagamento.id_pagamento, 
+                        concat(substr(pagamento.nr_pagamento, 1, ((LENGTH(pagamento.nr_pagamento)-4)) ), '/',  substring(pagamento.nr_pagamento FROM '....$')) 
+                        as nr_pagamento, pedido.nr_pedido, 
+                        concat(substr(empenho.nr_empenho, 1, ((LENGTH(empenho.nr_empenho)-4)) ), '/',  substring(empenho.nr_empenho FROM '....$')) 
+                        as nr_empenho,
                         string_agg(documento.nr_documento_fiscal, ', ') as documentos_fiscais, pj.nr_cnpj,  
                         pj.nm_fantasia, to_char(pagamento.dt_pagamento,'dd/mm/yyyy') as data_pagamento, 
-                        pagamento.vl_pagamento, pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao
-
+                        pagamento.vl_pagamento, pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao,
+                        concat(substr(liquidacao.nr_liquidacao, 1, ((LENGTH(liquidacao.nr_liquidacao)-4)) ), '/',  substring(liquidacao.nr_liquidacao FROM '....$'))
+                        as nr_liquidacao
                         from con_pagamento as pagamento
 
                         inner join con_pagamento_situacao as pagSit
@@ -90,8 +95,8 @@ class DaoConPagamento extends ConPagamentoTb {
                         on pj.id_pessoa = fornec.id_pessoa 
                         " . $filtros . "
                         group by pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, 
-                        empenho.nr_empenho, pj.nr_cnpj,  pj.nm_fantasia, pagamento.dt_pagamento, 
-                        pagamento.vl_pagamento, pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao ";
+                        empenho.nr_empenho, pj.nr_cnpj,  pj.nm_fantasia, pagamento.dt_pagamento, liquidacao.nr_liquidacao,
+                        pagamento.vl_pagamento,  pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() >= 1) {
