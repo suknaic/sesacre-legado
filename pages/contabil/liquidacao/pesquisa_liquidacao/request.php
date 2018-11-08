@@ -35,7 +35,7 @@ switch ($_REQUEST['acao']) {
             $liquidacao = new LiquidacaoPesquisa();
             $liquidacao->setNrLiquidacao($dados['nrLiq'])
                        ->setAnoLiquidacao($dados['exercicio'])
-                       ->setContratado($dados['Fornecedor.class'])
+                       ->setContratado($dados['fornecedor'])
                        ->setNrPedido($dados['pedido'])
                        ->setNrEmpenho($dados['empenho'])
                        ->setNrContrato($dados['contrato'])

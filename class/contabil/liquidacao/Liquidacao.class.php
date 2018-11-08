@@ -831,6 +831,10 @@ class Liquidacao {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
+
+            //removendo barra do numero do pagamento
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
@@ -869,6 +873,10 @@ class Liquidacao {
 
             $dadosContrato = '';
             $daoConLiquidacao = new DaoConLiquidacao();
+
+            //removendo barra do numero da liquidacao
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+
             $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
             $daoConLiquidacao->retornaLiquidacaoPorNumeroPamento($pdo);
 
@@ -903,12 +911,12 @@ class Liquidacao {
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="text-center">'.$campos["dt_liquidacao"].'</td>
-                                                            <td class="text-center">'.$campos["vl_liquidacao"].'</td>
-                                                            <td class="text-center">'.$campos["saldo"].'</td>
-                                                            <td class="text-center">'.$campos["status"].'</td>
+                                                            <td class="text-center">' . $campos["dt_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["vl_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["saldo"] . '</td>
+                                                            <td class="text-center">' . $campos["status"] . '</td>
                                                             <td class="text-center">
-                                                                <button type="button" title="Ver Liquidação" class="ver-liquidacao" value="'.$campos['id_liquidacao'].'">
+                                                                <button type="button" title="Ver Liquidação" class="ver-liquidacao" value="' . $campos['id_liquidacao'] . '">
                                                                 <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
                                                                 </button>
                                                             </td>    
