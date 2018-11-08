@@ -10,6 +10,11 @@ $session = new Session('ajax');
 switch ($_REQUEST['acao']) {
     CASE 'atualizaEmpenho':
         try {
+        
+            if(!$session->vPFinanceiro()){
+                return Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+            }
+        
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($dados['idEmpenho']);

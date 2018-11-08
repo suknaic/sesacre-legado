@@ -25,7 +25,8 @@ switch ($_REQUEST['acao']) {
                             ->setNrPedido($dados['nr_pedido'])
                             ->setTipoGasto($dados['tipo_gasto'])
                             ->setSituacao($dados['situacao'])
-                            ->setCentral($dados['central']);
+                            ->setCentral($dados['central'])
+                            ->setUsuario($session);
             echo $empenhoPesquisa->retornaEmpenhos();
             return;
             break;
