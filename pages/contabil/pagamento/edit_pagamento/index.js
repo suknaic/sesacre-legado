@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     var url = "request.php";
 
+    $("#nr_pagamento").mask("9999999999/9999");
+    
     //select2
     $('body').find('select').select2({
         width: '100%'

@@ -441,6 +441,10 @@ class ConPagamento {
             }
 
             $daoConPagamento = new DaoConPagamento();
+            
+            //removendo barra do numero do pagamento
+            $this->nr_pagamento = str_replace("/", "", $this->nr_pagamento);
+            
             $daoConPagamento->setIdPagamento($this->id_pagamento);
             $daoConPagamento->setNrPagamento($this->nr_pagamento);
             $daoConPagamento->setDtPagamento(Metodos::ConverteDataING($this->dt_pagamento));

@@ -394,8 +394,8 @@ class DaoConLiquidacao extends ConLiquidacao {
         try {
             $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
                     liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
-                    to_char(liquidacao.vl_liquidacao, '999G999G999D9999') as vl_liquidacao, 
-                    to_char((liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')), '999G999G999D9999') as saldo,
+                    to_char(liquidacao.vl_liquidacao, '999G999G990D9999') as vl_liquidacao, 
+                    to_char((liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')), '999G999G990D9999') as saldo,
                     status.nm_liquidacao_status as status
                     from con_liquidacao as liquidacao
                     inner join fin_empenho as empenho
