@@ -468,7 +468,7 @@ class ConPagamento {
             }
 
             $daoConPagamento = new DaoConPagamento();
-            
+
 
             if ($conPagamentoDoc->Sucesso()) {
                 foreach ($conPagamentoDoc->getMsgRetorno() as $entregas) {
@@ -489,25 +489,25 @@ class ConPagamento {
             if (!empty($this->docs_pagamento)) {
                 foreach ($this->docs_pagamento as $dados) {
                     $daoConPagamento->retornaSaldoDocumentoFiscalEdicao($pdo, $dados["id_documento_fiscal"]);
-
+                    $saldo = $daoConPagamento->getMsgRetorno()["saldo"];
                     if (!$daoConPagamento->Sucesso()) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna o saldo do documento fiscal.");
                     }
 
-                    if (round($daoConPagamento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4)) {
+                    if (round($saldo, 4) < round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Verifique os valore(s) do(s) documento(s) fiscais.");
                     }
 
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
                     $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
-                    $conPagamentoDoc->setVlPagamentoDocSaldo($daoConPagamento->getMsgRetorno()["saldo"]);
+                    $conPagamentoDoc->setVlPagamentoDocSaldo(Metodos::ConverteValorBr($saldo, 4));
                     $conPagamentoDoc->salvaDocPagamento($pdo);
 
                     if (!$conPagamentoDoc->Sucesso()) {
                         $pdo->rollBack();
-                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o(s) documento(s) fiscais.".$conPagamentoDoc->getMsgRetorno());
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o(s) documento(s) fiscais." . $conPagamentoDoc->getMsgRetorno());
                     }
 
                     if (!$this->atualizaDocumentoFiscalPagamento($pdo, $dados["id_documento_fiscal"])) {
@@ -545,12 +545,12 @@ class ConPagamento {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao atualiza o pagamento");
             }
-            
-              
+
             if (!$this->atualizaLiquidacaoPagamento($pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação da liquidação");
             }
+
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Pagamento atualizado com sucesso.");
