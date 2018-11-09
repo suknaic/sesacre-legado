@@ -153,6 +153,4 @@
                 echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
                 return;
             }
-
-
     }
