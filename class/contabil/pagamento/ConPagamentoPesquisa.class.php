@@ -58,8 +58,8 @@ class ConPagamentoPesquisa {
     function setNumero_pagamento($numero_pagamento) {
         $this->numero_pagamento = $numero_pagamento;
     }
-    
-     function setNumero_liquidacao($numero_liquidacao) {
+
+    function setNumero_liquidacao($numero_liquidacao) {
         $this->numero_liquidacao = $numero_liquidacao;
     }
 
@@ -121,14 +121,14 @@ class ConPagamentoPesquisa {
                             . "<button type='button' title='Ver Pagamento' class='ver-pagamento' value=" . $linha['id_pagamento'] . ">"
                             . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
                             . "</button>";
-
-                    $retorno .= "<button type='button' title='Editar Pagamento' class='editar-pagamento' value=" . $linha['id_pagamento'] . ">"
-                            . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
-                            . "</button>"
-                            . "<button type='button' title='Excluir Pagamento' class='excluir-pagamento' value=" . $linha['id_pagamento'] . ">"
-                            . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
-                            . "</button>";
-
+                    if ($linha["id_pagamento_situacao"] == 1) {
+                        $retorno .= "<button type='button' title='Editar Pagamento' class='editar-pagamento' value=" . $linha['id_pagamento'] . ">"
+                                . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
+                                . "</button>"
+                                . "<button type='button' title='Excluir Pagamento' class='excluir-pagamento' value=" . $linha['id_pagamento'] . ">"
+                                . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                                . "</button>";
+                    }
                     $retorno .= "</td></tr>";
                 }
             }
