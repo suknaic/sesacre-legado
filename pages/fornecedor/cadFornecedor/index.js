@@ -2,154 +2,120 @@ $(document).ready(function () {
 
     func = new Funcoes();
 
-    function gerarCloneSelectMedicamentos() {
-        $("#medicamentos").append(' <div class="medicamentos row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="medicamentosCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectMedicamentos" name="medicamentos[]" required id="medicamentos">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Medicamento</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerMedicamento remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
 
+    function gerarSelect2(classe) {
+        $("." + classe).select2({
+            width: " 100%"
+        });
+    }
+
+
+    function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
+        var html = '';
+        $("." + campoPrincipal).find('.' + select).select2('destroy');
+        html = $("." + campoSelect).clone();
+        html.find('.select2-selection--single').remove();
+        $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-5"><div class="panel-body">' + html.html() +
+            '</div></div><div class="col-sm-3"><div class="panel-body"><button href="#" class="btn-' + classeremove + ' btn btn-danger"><i class="fa fa-remove" aria-hidden="true"></i></button></div></div></div>');
+        gerarSelect2(select);
     }
 
     $("body").on("click", ".addMedicamentos", function (e) {
-        e.preventDefault();
-        gerarCloneSelectMedicamentos();
-        $(".selectMedicamentos").select2({
-            width: " 100%"
+        $("select[name=medicamento\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
-        listaMedicamento();
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("medicamentos", "medicamentosCampos", "selectMedicamentos", "removeMedicamento");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de medicamento.');
+        }
     });
 
-    $("body").on('click', '.btn-removerMedicamento', function (e) {
+    $("body").on('click', '.btn-removeMedicamento', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".medicamentos").remove();
+        $this.closest(".form-group").remove();
     });
 
-    function gerarCloneSelectServico() {
-        $("#servico").append(' <div class="servico row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="servicoCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectServico" name="servicos[]" required id="servico">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Serviço</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerServico remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-
-    }
 
     $("body").on("click", ".addServico", function (e) {
-        e.preventDefault();
-        gerarCloneSelectServico();
-        $(".selectServico").select2({
-            width: " 100%"
+        $("select[name=servico\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
-        listaServico();
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("servicos", "servicoCampos", "selectServico", "removeServico");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de serviço.');
+        }
     });
 
-    $("body").on('click', '.btn-removerServico', function (e) {
+    $("body").on('click', '.btn-removeServico', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".servico").remove();
+        $this.closest(".form-group").remove();
     });
 
-    function gerarCloneSelectConsumo() {
-        $("#consumo").append(' <div class="consumo row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="consumoCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectConsumo" name="consumo[]" required id="consumo">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Material de Consumo</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerConsumo remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-    }
 
     $("body").on("click", ".addConsumo", function (e) {
-        e.preventDefault();
-        gerarCloneSelectConsumo();
-        $(".selectConsumo").select2({
-            width: " 100%"
+        $("select[name=materialConsumo\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
-        listaMaterialConsumo();
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("consumo", "consumoCampos", "selectConsumo", "removeMaterialConsumo");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de material consumo.');
+        }
     });
 
-    $("body").on('click', '.btn-removerConsumo', function (e) {
+    $("body").on('click', '.btn-removeMaterialConsumo', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".consumo").remove();
+        $this.closest(".form-group").remove();
     });
-
-    function gerarCloneSelectPermanente() {
-        $("#permanente").append(' <div class="permanente row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="permanenteCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectPermanente" name="permanente[]" required id="permanente">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Material Permanente</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerPermanente remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-    }
 
     $("body").on("click", ".addPermanente", function (e) {
-        e.preventDefault();
-        gerarCloneSelectPermanente();
-        $(".selectPermanente").select2({
-            width: " 100%"
+        $("select[name=materialPermanente\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
-        listaMaterialPermanente();
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("permanente", "permanenteCampos", "selectPermanente", "removePermanente");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de material permanente.');
+        }
     });
 
-    $("body").on('click', '.btn-removerPermanente', function (e) {
+    $("body").on('click', '.btn-removePermanente', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".permanente").remove();
+        $this.closest(".form-group").remove();
     });
 
 //******************************************************************************************
@@ -282,8 +248,7 @@ $(document).ready(function () {
                 empExc: empExc,
                 empDist: empDist
             };
-            // console.log(MaterialServico);
-            // return false;
+            
             $.ajax({
                 "url": "request.php",
                 "dataType": "html",
@@ -373,7 +338,7 @@ $(document).ready(function () {
                 acao: "retornaMedicamento"
             },
             "success": function (response) {
-                $(".selectMedicamentos").append(response);
+                $("#id_medicamentos").append(response);
             }
         });
     }
@@ -387,7 +352,7 @@ $(document).ready(function () {
                 acao: "retornaServico"
             },
             "success": function (response) {
-                $(".selectServico").append(response);
+                $("#id_servicos").append(response);
             }
         });
     }
@@ -401,7 +366,7 @@ $(document).ready(function () {
                 acao: "retornaMaterialConsumo"
             },
             "success": function (response) {
-                $(".selectConsumo").append(response);
+                $("#id_material_consumo").append(response);
             }
         });
     }
@@ -415,7 +380,7 @@ $(document).ready(function () {
                 acao: "retornaMaterialPermanente"
             },
             "success": function (response) {
-                $(".selectPermanente").append(response);
+                $("#id_material_permanente").append(response);
             }
         });
     }
