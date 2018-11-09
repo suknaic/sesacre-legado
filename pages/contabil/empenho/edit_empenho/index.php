@@ -58,7 +58,7 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        
+
                         
                         <form class="form-horizontal">
                             <div class="panel">
@@ -162,6 +162,27 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações
+                                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control anotacoes" rows="7" readonly><?php echo $anotacoes; ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
                                             <button class="btn btn-success btn-salvar btn-rounded" type="button">
@@ -213,6 +234,8 @@ require_once "index.load.php";
         <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
         <!--Select2-->
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
+        <!-- DIALOG CONFIRM [OPT] -->
+        <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>  
         <!--DataTables [OPT]-->
         <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
         <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>

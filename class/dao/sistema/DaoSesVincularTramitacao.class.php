@@ -335,5 +335,25 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
         }
     }
     
+    function verificaTramitacaoPessoa (PDO $pdo = null){
+        try {
+            $sql = "SELECT id_tramitacao"
+                    . " FROM ses_vincular_tramitacao"
+                    . " WHERE id_tramitacao = :id_tramitacao AND id_pessoa = :id_pessoa";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $stmt->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {                
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
 }
 

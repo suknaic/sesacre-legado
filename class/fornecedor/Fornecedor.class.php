@@ -233,11 +233,18 @@ class Fornecedor {
 
                     $pessoaFisica->setId_pessoa($pessoa->getId_pessoa());
                     $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
-                    $pessoaFisica->setNr_cpf($this->pessoaFisica['cpf']);
+
+                    if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
+                        $pessoaFisica->setNr_cpf(Metodos::validaCPF($this->pessoaFisica['cpf']));
+                    } else {
+                        return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
+                    }
 
                     $pessoaFisica->cadastrarPessoaFisica($pdo);
                     if ($pessoaFisica->getSuccess()) {
                         $continua = true;
+                    } elseif ($pessoaFisica->getMsg() == STR_CPF_EXISTE) {
+                        return Metodos::retornoAjax('Erro', 'alert', $pessoaFisica->getMsg());
                     } else {
                         return Metodos::retornoAjax('Erro', 'console', $pessoaFisica->getMsg());
                     }
@@ -247,7 +254,13 @@ class Fornecedor {
                     $pessoaJuridica = new pessoaJuridica();
                     $pessoaJuridica->setId_pessoa($pessoa->getId_pessoa());
                     $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
-                    $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+
+                    if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+                        $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+                    } else {
+                        return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+                    }
+
                     $pessoaJuridica->setDs_insc_estadual(empty($this->pessoaJuridica['nrEstudal']) ? null:trim($this->pessoaJuridica['nrEstudal']));
                     $pessoaJuridica->setDs_insc_municipal(empty($this->pessoaJuridica['nrMunicipal']) ? null:trim($this->pessoaJuridica['nrMunicipal']));
                     $pessoaJuridica->setId_natureza($this->pessoaJuridica['natureza']);
@@ -255,6 +268,8 @@ class Fornecedor {
                     $pessoaJuridica->cadastrarPessoaJuridica($pdo);
                     if ($pessoaJuridica->getSuccess()) {
                         $continua = true;
+                    } elseif ($pessoaJuridica->getMsg() == STR_CNPJ_EXISTE) {
+                        return Metodos::retornoAjax('Erro', 'alert', $pessoaJuridica->getMsg());
                     } else {
                         return Metodos::retornoAjax('Erro', 'console', $pessoaJuridica->getMsg());
                     }

@@ -166,6 +166,23 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
+                                 <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control anotacoes" rows="7" readonly disabled></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <br>
                             </div>
                         </form>

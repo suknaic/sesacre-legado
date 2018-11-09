@@ -1,6 +1,7 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/orcamento/empenho/DaoFinEmpenho.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 class FinEmpenhoPesquisa {
     
@@ -116,6 +117,17 @@ class FinEmpenhoPesquisa {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $tabela = '';
+            
+            //Só pode visualziar os botões de Edição ou Cancelar Empenho quem tiver Tramitação Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->usuario->getIdUser());
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            $flVisualizaBotoes = false;
+            if($tramitacao->Sucesso()){
+                $flVisualizaBotoes = true;
+            }
+                        
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->retornaEmpenhos($pdo, $this->filtroSql());
             if ($daoFinEmpenho->sucesso()) {
@@ -136,7 +148,7 @@ class FinEmpenhoPesquisa {
                                         . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
                                     . '</button>';
                     //Situação Cadastrado Pode Cancelar
-                    if($linha['sit_empenho'] == '1' and $this->usuario->vPFinanceiro()){
+                    if($linha['edita'] == 'S' and $flVisualizaBotoes){
                         $tabela .=  '<button type="button" title="Editar Empenho" class="editar-empenho" value='.$linha['id_empenho'].'>'
                                         . '<i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>'
                                     . '</button>'
