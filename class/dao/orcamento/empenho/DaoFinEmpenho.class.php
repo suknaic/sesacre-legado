@@ -408,8 +408,9 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaEmpenhoPagamento(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select emp.id_pedido, emp.nr_empenho,emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                $sql = "select emp.id_pedido, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                         tpEmp.nm_tipo_empenho, emp.vl_empenho,
+                        concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
                         (emp.vl_empenho -
                          coalesce((select sum(vl_pagamento) 
                                    from con_pagamento as pagamento 

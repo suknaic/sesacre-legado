@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Editar pagamento</h1> 
+                        <h1 class="page-header text-overflow">Edição do Pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
@@ -157,7 +157,7 @@ require_once "index.load.php";
                                                                                 <th class="text-center">Data Atesto</th>
                                                                                 <th class="text-center">Valor Total</th>
                                                                                 <th class="text-center">Saldo</th>
-                                                                                <th class="text-center">Valor do pagamento</th>
+                                                                                <th class="text-center">Valor do Pagamento</th>
                                                                                 <th class="text-center">Situação</th>
                                                                                 <th class="text-center">Ação</th>
                                                                             </tr>
@@ -187,7 +187,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº do pagamento:</b></div>
+                                                            <div class="col-sm-2"><b>Nº do Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -198,7 +198,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Pagamento:</b></div>
+                                                            <div class="col-sm-2"><b>Data do Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>

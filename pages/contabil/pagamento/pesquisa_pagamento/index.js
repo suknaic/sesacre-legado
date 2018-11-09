@@ -134,7 +134,7 @@ function lista() {
         contrato: $("#nr_contrato").val(),
         pedido: $("#nr_pedido").val(),
         empenho: $("#nr_empenho").val(),
-        nrDoc: $("#nr_documento_fiscal").val(),
+        nrLiquidacao: $("#nr_liquidacao").val(),
         tpGasto: $("#tipo_gasto option:selected").val(),
         situacao: $("#situacao option:selected").val()
     }

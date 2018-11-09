@@ -848,6 +848,7 @@ class Liquidacao {
                 <td>' . $dados["nr_liquidacao"] . '</td>
                 <td>' . $dados["nr_pedido"] . '</td>
                 <td>' . $dados["dt_liquidacao"] . '</td>
+                <td>' . $dados["vl_liquidacao"] . '</td>    
                 <td>' . $dados["saldo"] . '</td>        
      
                 </tr>';

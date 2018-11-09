@@ -110,7 +110,7 @@ class ConPagamentoDoc {
                     $tabela .= "<tr data-id=" . $linha['id_documento_fiscal'] . " data-objeto='" . json_encode($linha) . "' class='documentoFiscal'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
-                            . "<td class='text-center'>" . $linha['mm_competencia'] . "</td>"
+                            . "<td class='text-center'>" . $linha['mm_competencia'] ."/".$linha['aa_competencia'] ."</td>"
                             . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
                             . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'], 4) . "</td>"
