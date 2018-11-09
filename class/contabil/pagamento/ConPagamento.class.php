@@ -545,6 +545,12 @@ class ConPagamento {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao atualiza o pagamento");
             }
+            
+              
+            if (!$this->atualizaLiquidacaoPagamento($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação da liquidação");
+            }
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Pagamento atualizado com sucesso.");
