@@ -115,7 +115,10 @@ class ConPagamentoDoc {
                             . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'], 4) . "</td>"
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'], 4) . "</td>"
-                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc'], 4) . "</td>"
+                            . "<td class='text-center'>
+                            <input class='form-control valorRetPagamento' type='text' name='valorRetPagamento[]' id='valorRetPagamento[]' 
+                             value='".Metodos::ConverteValorBr($linha['vl_pagamento_doc'], 4)."' disabled = 'true'>
+                            </td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
                             . "<td class='text-center'>"
                             . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=" . $linha['id_documento_fiscal'] . ">"
