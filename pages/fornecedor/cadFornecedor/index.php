@@ -52,7 +52,7 @@
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
             <div id="page-title">
-                <h2 class="text-overflow">Cadastro de Fornecedores</h2>
+                <h1 class="page-header text-overflow">Cadastro de Fornecedores</h1>
             </div>
 
             <?php
@@ -457,14 +457,15 @@
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-2">
                                     <button class="btn btn-default btn-rounded btn-limpar btn-block" type="button">
-                                        <i class="fa fa-eraser" aria-hidden="true"></i> Limpar
+                                         Limpar
                                     </button>
                                 </div>
                                 <div class="col-sm-2">
                                     <button class="btn btn-success btn-rounded btn-salvar btn-block" type="button">
                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                     </button>
-                                </div><br><br><br>
+                                </div>
+                                <br><br><br>
                                 <div class="col-sm-4"></div>
                             </div>
                         </div>

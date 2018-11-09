@@ -84,7 +84,7 @@ $(document).ready(function () {
         } else {
             e.preventDefault();
             $('.selectMedicamentos').focus();
-            func.modalAlert('Selecione um tipo de material consumo.');
+            func.modalAlert('Selecione um tipo de material de consumo.');
         }
     });
 
