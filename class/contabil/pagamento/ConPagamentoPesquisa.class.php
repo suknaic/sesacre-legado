@@ -102,7 +102,7 @@ class ConPagamentoPesquisa {
                     $retorno .= "<tr data-id=" . $linha['id_pagamento'] . " data-objeto='" . json_encode($linha) . "'>"
                             . "<td class='text-center'>" . $linha['nr_pagamento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_liquidacao'] . "</td>"
-                            . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nr_pedido'] .'/'.$linha['dt_pedido']. "</td>"
                             . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
                             . "<td class='text-center'>" . $linha['documentos_fiscais'] . "</td>"
                             . "<td class='text-center'>" . $cnpj_razao . "</td>"

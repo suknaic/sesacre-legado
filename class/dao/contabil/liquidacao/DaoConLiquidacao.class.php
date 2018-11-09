@@ -203,9 +203,9 @@ class DaoConLiquidacao extends ConLiquidacao {
                 (trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
                 )as competencia, to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,    
                 to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto, 
-                trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
+                trim(to_char(vl_documento,'999G999G990D0999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
                 coalesce(pagamento.valorPagamento,'0.0000') as pagamento,
-                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G999D9999') as saldo,
+                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G990D0999') as saldo,
                 docFis.id_documento_situacao, docSit.nm_situacao 
 
                 from con_liquidacao as liq 

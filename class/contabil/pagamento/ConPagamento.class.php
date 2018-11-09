@@ -203,10 +203,10 @@ class ConPagamento {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             //removendo barra do numero do pagamento
             $this->nr_pagamento = str_replace("/", "", $this->nr_pagamento);
-            
+
             $daoConPagamento = new DaoConPagamento();
             $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
@@ -219,7 +219,7 @@ class ConPagamento {
             $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
             $daoConPagamento->setVlPagamentoSaldo(Metodos::ConverteValorIng($this->vl_pagamento_saldo));
             $daoConPagamento->salvaPagamento($pdo);
-            
+
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
 
             if (!empty($this->docs_pagamento)) {
@@ -240,6 +240,11 @@ class ConPagamento {
                     if (!$conPagamentoDoc->Sucesso()) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o(s) documento(s) fiscais.");
+                    }
+
+                    if (!$this->atualizaDocumentoFiscalPagamento($pdo, $dados["id_documento_fiscal"])) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situacao do(s) documento(s) fiscais.");
                     }
                 }
             }
@@ -287,6 +292,11 @@ class ConPagamento {
             if (!$empenho->sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $empenho->getMsgRetorno());
+            }
+
+            if (!$this->atualizaLiquidacaoPagamento($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação da liquidação");
             }
 
             if ($daoConPagamento->Sucesso()) {
@@ -339,6 +349,13 @@ class ConPagamento {
             $daoConPagamento->setIdPagamento($this->id_pagamento);
             $daoConPagamento->setIdPagamentoSituacao($this->getSitCancelado());
 
+            $daoConPagamento->retornaDocumentosFiscaisPagamento($pdo);
+            $documentoFiscais = array();
+            if ($daoConPagamento->Sucesso()) {
+
+                $documentoFiscais = $daoConPagamento->getMsgRetorno();
+            }
+
             $daoConPagamento->retornaDadosLogPagamaneto($pdo);
 
             if (!$daoConPagamento->Sucesso()) {
@@ -352,6 +369,15 @@ class ConPagamento {
             if (!$daoConPagamento->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", $daoConPagamento->getMsgRetorno());
+            }
+
+            if (!empty($documentoFiscais)) {
+                foreach ($documentoFiscais as $doc) {
+                    if (!$this->atualizaDocumentoFiscalPagamento($pdo, $doc["id_documento_fiscal"])) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situacao do(s) documento(s) fiscais.");
+                    }
+                }
             }
 
 
@@ -391,6 +417,27 @@ class ConPagamento {
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
 
+            $conPagamentoHistorico = new ConPagamentoHistorico();
+            $conPagamentoHistorico->setIdPagamento($this->id_pagamento);
+            $conPagamentoHistorico->setIdPessoa($this->id_pessoa);
+            $conPagamentoHistorico->setIdLotacao($dadosPagamento["id_lotacao"]);
+            $conPagamentoHistorico->setIdDocTipoLotacao($dadosPagamento["id_doc_tipo_lotacao"]);
+            $conPagamentoHistorico->setIdPagamentoSituacao($this->sitCancelado);
+            $conPagamentoHistorico->setIdPagamentoStatus(1);
+            $conPagamentoHistorico->setDsPagamentoHistorico($this->ds_anotacao);
+
+            $conPagamentoHistorico->salvaHistoricoPagamento($pdo);
+
+            if (!$conPagamentoHistorico->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", "Erro na atualização do histórico." . $conPagamentoHistorico->getMsgRetorno());
+            }
+            $this->id_liquidacao = $dadosPagamento["id_liquidacao"];
+            if (!$this->atualizaLiquidacaoPagamento($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação da liquidação");
+            }
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Pagamento cancelado com sucesso.");
         } catch (Exception $exc) {
@@ -399,7 +446,7 @@ class ConPagamento {
         }
     }
 
-    public function editarPagamento(int $tipoSolicitacao = null) {
+    public function editarPagamento() {
         try {
 
             if (empty($this->id_liquidacao) || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao) || empty($this->nr_pagamento) ||
@@ -416,38 +463,82 @@ class ConPagamento {
             $conPagamentoDoc->setIdPagamento($this->id_pagamento);
             $conPagamentoDoc->retornaTodosConPagamentoPorPagamento($pdo);
 
-            if (!$conPagamentoDoc->Sucesso()) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar os Dados do Documento Fiscal.");
-            }
-
-            if ($tipoSolicitacao == 2) {
-                if (empty($this->docs_pagamento)) {
-                    return Metodos::retornoAjax("Erro", "alert", "É Necessário Ter Documentos Fiscais");
-                }
-            }
-
             if ($this->vl_pagamento == "0,0000" || $this->vl_pagamento == "0,00" || (float) Metodos::ConverteValorIng($this->vl_pagamento) <= 0) {
                 return Metodos::retornoAjax("Erro", "alert", "Valor do Documento Fiscal não pode ser Zerado.");
             }
 
+            $daoConPagamento = new DaoConPagamento();
+            
 
-            foreach ($conPagamentoDoc->getMsgRetorno() as $entregas) {
+            if ($conPagamentoDoc->Sucesso()) {
+                foreach ($conPagamentoDoc->getMsgRetorno() as $entregas) {
 
-                if (!$entregas["vl_pagamento_doc_saldo"] >= $this->vl_pagamento) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Saldo(s) da(s) entrega(s) insuficiente");
+                    $daoConPagamento->deletaDocumentoPagamentoEdicao($pdo, $entregas["id_pagamento_doc"]);
+
+                    if (!$daoConPagamento->Sucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação do documento fiscal 01");
+                    }
+                    if (!$this->atualizaDocumentoFiscalPagamento($pdo, $entregas["id_documento_fiscal"])) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação do documento fiscal 02");
+                    }
                 }
             }
 
-            $daoConPagamento = new DaoConPagamento();
-            
+            if (!empty($this->docs_pagamento)) {
+                foreach ($this->docs_pagamento as $dados) {
+                    $daoConPagamento->retornaSaldoDocumentoFiscalEdicao($pdo, $dados["id_documento_fiscal"]);
+
+                    if (!$daoConPagamento->Sucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna o saldo do documento fiscal.");
+                    }
+
+                    if (round($daoConPagamento->getMsgRetorno()["saldo"], 4) < round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Verifique os valore(s) do(s) documento(s) fiscais.");
+                    }
+
+                    $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
+                    $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
+                    $conPagamentoDoc->setVlPagamentoDocSaldo($daoConPagamento->getMsgRetorno()["saldo"]);
+                    $conPagamentoDoc->salvaDocPagamento($pdo);
+
+                    if (!$conPagamentoDoc->Sucesso()) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o(s) documento(s) fiscais.".$conPagamentoDoc->getMsgRetorno());
+                    }
+
+                    if (!$this->atualizaDocumentoFiscalPagamento($pdo, $dados["id_documento_fiscal"])) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situacao do(s) documento(s) fiscais.");
+                    }
+                }
+            }
+
             //removendo barra do numero do pagamento
             $this->nr_pagamento = str_replace("/", "", $this->nr_pagamento);
-            
             $daoConPagamento->setIdPagamento($this->id_pagamento);
             $daoConPagamento->setNrPagamento($this->nr_pagamento);
             $daoConPagamento->setDtPagamento(Metodos::ConverteDataING($this->dt_pagamento));
+            $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
+            $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
+            $daoConPagamento->retornaSaldoLiquidacaoPagamentoEdicao($pdo);
+
+            if (!$daoConPagamento->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna o saldo da liquidação");
+            }
+            $saldoLiquidacao = 0;
+            $saldoLiquidacao = $daoConPagamento->getMsgRetorno()["saldo"];
+            $daoConPagamento->setVlPagamentoSaldo($saldoLiquidacao);
+
+            if (!round($saldoLiquidacao, 4) >= round(Metodos::ConverteValorIng($this->vl_pagamento), 4)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Valor do pagamento e maior que o saldo da liquidação.");
+            }
+
             $daoConPagamento->atualizaPagamento($pdo);
 
             if (!$daoConPagamento->Sucesso()) {
@@ -468,6 +559,75 @@ class ConPagamento {
         $daoConPagamento->setIdPagamento($this->id_pagamento);
         $daoConPagamento->retornaIdPedidoEIdEmpenhoPorPagamento($pdo);
         return $daoConPagamento->getMsgRetorno();
+    }
+
+    public function retornaHistorico() {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->setIdPagamento($this->id_pagamento);
+            $daoConPagamento->retornaHistoricoPagamento($pdo);
+
+            if ($daoConPagamento->Sucesso()) {
+                foreach ($daoConPagamento->getMsgRetorno() as $linha) {
+                    $retorno .= $linha['historico'] . "\n";
+                }
+            } else {
+                $retorno = $daoConPagamento->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
+        }
+    }
+
+    public function atualizaLiquidacaoPagamento(PDO $pdo) {
+        try {
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
+            $daoConPagamento->retornaSituacaoParaAtualizaLiquidacao($pdo);
+            if (!$daoConPagamento->Sucesso()) {
+                return false;
+            }
+            $situacao = $daoConPagamento->getMsgRetorno();
+
+            if (!is_numeric($situacao["status"])) {
+                return false;
+            }
+
+            $daoConPagamento->atualizaSituacaoLiquidacao($pdo, $situacao["status"]);
+            if (!$daoConPagamento->Sucesso()) {
+                return false;
+            }
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function atualizaDocumentoFiscalPagamento(PDO $pdo, $documento = null) {
+        try {
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->retornaSituacaoParaAtualizaDocumentoFiscal($pdo, $documento);
+            if (!$daoConPagamento->Sucesso()) {
+                return false;
+            }
+            $situacao = $daoConPagamento->getMsgRetorno();
+            if (!is_numeric($situacao["status"])) {
+                return false;
+            }
+
+            $daoConPagamento->atualizaSituacaoDocumentoFiscal($pdo, $documento, $situacao["status"]);
+            if (!$daoConPagamento->Sucesso()) {
+                return false;
+            }
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
     }
 
 }

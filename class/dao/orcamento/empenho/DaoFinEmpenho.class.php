@@ -416,6 +416,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                    inner join con_liquidacao as liquidacao
                                    on liquidacao.id_liquidacao = pagamento.id_liquidacao
                                    where liquidacao.id_empenho = emp.id_empenho
+                                   and pagamento.id_pagamento_situacao = 1
                                    ),0)) as saldo_empenho_pagamento
 
                         from fin_empenho as emp 

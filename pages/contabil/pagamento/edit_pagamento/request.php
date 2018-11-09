@@ -48,10 +48,15 @@ switch ($_REQUEST['acao']) {
             $pagamento->setNrPagamento($dados["nrPagamento"]);
             $pagamento->setDtPagamento($dados["dtPagamento"]);
             $pagamento->setVlPagamento($dados["vlPagamento"]);
-            $pagamento->setDocsPagamento($dados["docsPagamento"]);
+
+            if (!empty($dados["docsPagamento"])) {
+                $pagamento->setDocsPagamento($dados["docsPagamento"]);
+            } else {
+                $pagamento->setDocsPagamento(null);
+            }
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
-            echo $pagamento->editarPagamento(2);
+            echo $pagamento->editarPagamento();
             return;
             break;
         } catch (Error $e) {

@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro do pagamento</h1> 
+                        <h1 class="page-header text-overflow">Ver Pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
@@ -115,7 +115,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Data Atesto</th>
                                                                             <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Saldo</th>
-                                                                            <th class="text-center">Valor do pagamento</th>
+                                                                            <th class="text-center">Valor do Pagamento</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
@@ -144,22 +144,11 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº do pagamento:</b></div>
+                                                            <div class="col-sm-2"><b>Nº do Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="nr_pagamento" id="nr_pagamento" value="<?php echo $dadosPagamento["nr_pagamento"]; ?>" disabled="true"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>" disabled="true"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -171,6 +160,17 @@ require_once "index.load.php";
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
                                                                     <input class="form-control" type="text" name="dt_pagamento" id="dt_pagamento" value="<?php echo $dadosPagamento["dt_pagamento"]; ?>" disabled="true"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
+                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>" disabled="true"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -225,6 +225,23 @@ require_once "index.load.php";
                                                         <div class="form-group">
                                                             <textarea class="form-control" rows="7" id="anotacoes" disabled="true"></textarea>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Histórico</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="7" readonly="true"><?php echo $historico; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

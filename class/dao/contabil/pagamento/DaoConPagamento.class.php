@@ -54,7 +54,7 @@ class DaoConPagamento extends ConPagamentoTb {
 
                 $sql = "select pagamento.id_pagamento, 
                         concat(substr(pagamento.nr_pagamento, 1, ((LENGTH(pagamento.nr_pagamento)-4)) ), '/',  substring(pagamento.nr_pagamento FROM '....$')) 
-                        as nr_pagamento, pedido.nr_pedido, 
+                        as nr_pagamento, pedido.nr_pedido, to_char(pedido.dt_pedido, 'YYYY') as dt_pedido, 
                         concat(substr(empenho.nr_empenho, 1, ((LENGTH(empenho.nr_empenho)-4)) ), '/',  substring(empenho.nr_empenho FROM '....$')) 
                         as nr_empenho,
                         string_agg(documento.nr_documento_fiscal, ', ') as documentos_fiscais, pj.nr_cnpj,  
@@ -94,7 +94,7 @@ class DaoConPagamento extends ConPagamentoTb {
                         left join ses_pessoa_juridica as pj 
                         on pj.id_pessoa = fornec.id_pessoa 
                         " . $filtros . "
-                        group by pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, 
+                        group by pagamento.id_pagamento, pagamento.nr_pagamento, pedido.nr_pedido, to_char(pedido.dt_pedido, 'YYYY'),
                         empenho.nr_empenho, pj.nr_cnpj,  pj.nm_fantasia, pagamento.dt_pagamento, liquidacao.nr_liquidacao,
                         pagamento.vl_pagamento,  pagamento.id_pagamento_situacao, pagSit.nm_pagamento_situacao ";
                 $stmt = $pdo->prepare($sql);
@@ -229,11 +229,261 @@ class DaoConPagamento extends ConPagamentoTb {
         try {
             $this->sucesso = false;
             if (!empty($pdo)) {
-                $sql = "UPDATE con_pagamento SET nr_pagamento = :numero, dt_pagamento = :data WHERE id_pagamento = :pagamento";
+                $sql = "UPDATE con_pagamento 
+                        SET nr_pagamento = :numero, dt_pagamento = :data,  vl_pagamento = :valor, vl_pagamento_saldo = :saldo
+                        WHERE id_pagamento = :pagamento";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":numero", $this->getNrPagamento(), PDO::PARAM_STR);
                 $stmt->bindValue(":data", $this->getDtPagamento(), PDO::PARAM_STR);
+                $stmt->bindValue(":valor", $this->getVlPagamento(), PDO::PARAM_STR);
+                $stmt->bindValue(":saldo", $this->getVlPagamentoSaldo(), PDO::PARAM_STR);
                 $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaHistoricoPagamento(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select (to_char(dh_pagamento_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pessoa.nm_pessoa || ': ' ||  situacao.nm_pagamento_situacao || ' pelo(a) ' || lotacao.nm_lotacao || '.') as historico 
+                        from con_pagamento_historico as hist
+                        inner join ses_pessoa as pessoa
+                        on pessoa.id_pessoa = hist.id_pessoa
+                        inner join ses_lotacao as lotacao 
+                        on lotacao.id_lotacao = hist.id_lotacao
+                        inner join fin_doc_tipo_lotacao as tipoLot
+                        on tipoLot.id_doc_tipo_lotacao = hist.id_doc_tipo_lotacao
+                        inner join con_pagamento_situacao as situacao
+                        on situacao.id_pagamento_situacao = hist.id_pagamento_situacao
+                        where hist.id_pagamento = :pagamento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaSituacaoParaAtualizaLiquidacao(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select 
+                        case 
+                                when (liquidacao.vl_liquidacao - coalesce(pagamento.valor,'0.0000')) > 0 
+                                and 
+                                (liquidacao.vl_liquidacao - coalesce(pagamento.valor,'0.0000')) <> liquidacao.vl_liquidacao
+                                then '2'
+                                when (liquidacao.vl_liquidacao - coalesce(pagamento.valor,'0.0000')) = 0
+                                then '3'
+                                when (liquidacao.vl_liquidacao - coalesce(pagamento.valor,'0.0000')) = liquidacao.vl_liquidacao
+                                then '1'
+                        end status	
+                        from con_liquidacao as liquidacao
+                        left join (select sum(vl_pagamento) as valor, id_liquidacao from con_pagamento where id_pagamento_situacao = 1 group by id_liquidacao) as pagamento
+                        on pagamento.id_liquidacao = liquidacao.id_liquidacao
+                        where liquidacao.id_liquidacao = :liquidacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaSituacaoParaAtualizaDocumentoFiscal(PDO $pdo, $documento = null) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo) && !empty($documento)) {
+                $sql = "select 
+                        case 
+                                when (documento.vl_documento - coalesce(pagamentoDoc.valor,'0.0000')) > 0 
+                            and 
+                            (documento.vl_documento - coalesce(pagamentoDoc.valor,'0.0000')) <> documento.vl_documento
+                            then '5'
+                            when (documento.vl_documento - coalesce(pagamentoDoc.valor,'0.0000')) = 0
+                            then '6'
+                            when (documento.vl_documento - coalesce(pagamentoDoc.valor,'0.0000')) = documento.vl_documento
+                            then '4'
+                        end status
+                        from fin_documento_fiscal as documento
+                        left join (select sum(vl_pagamento_doc) as valor, id_documento_fiscal 
+                                   from con_pagamento as pagamento
+                                   inner join con_pagamento_doc as pagDoc
+                                   on pagDoc.id_pagamento = pagamento.id_pagamento
+                                   where pagamento.id_pagamento_situacao = 1 
+                                   group by id_documento_fiscal) as pagamentoDoc 
+                        on pagamentoDoc.id_documento_fiscal = documento.id_documento_fiscal
+                        where documento.id_documento_fiscal = :documento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":documento", $documento, PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function atualizaSituacaoLiquidacao(PDO $pdo, $situacao = null) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo) && !empty($situacao)) {
+                $sql = "UPDATE con_liquidacao SET id_liquidacao_situacao = :situacao WHERE id_liquidacao = :liquidacao";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $situacao, PDO::PARAM_INT);
+                $stmt->bindValue(":liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function atualizaSituacaoDocumentoFiscal(PDO $pdo, $documento, $situacao) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo) && !empty($documento) && !empty($situacao)) {
+                $sql = "UPDATE fin_documento_fiscal SET id_documento_situacao = :situacao WHERE id_documento_fiscal = :documento";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":situacao", $situacao, PDO::PARAM_INT);
+                $stmt->bindValue(":documento", $documento, PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaDocumentosFiscaisPagamento(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select id_documento_fiscal from con_pagamento_doc where id_pagamento = :pagamento ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaSaldoLiquidacaoPagamentoEdicao(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select (liquidacao.vl_liquidacao - coalesce(pagamento.valor,'0.0000')) as saldo
+                        from con_liquidacao as liquidacao
+                        left join (select sum(vl_pagamento) as valor, id_liquidacao 
+                                           from con_pagamento 
+                                           where id_pagamento_situacao = 1
+                                           and id_pagamento <> :pagamento
+                                           group by id_liquidacao
+                                          ) as pagamento
+                        on pagamento.id_liquidacao = liquidacao.id_liquidacao
+                        where liquidacao.id_liquidacao = :liquidacao ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->bindValue(":liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function retornaSaldoDocumentoFiscalEdicao(PDO $pdo, $documento = null) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo) && !empty($documento)) {
+                $sql = "select 
+                        (documento.vl_documento - coalesce(pagamentoDoc.valor,'0.0000')) as saldo                     
+                        from fin_documento_fiscal as documento
+                        left join (select sum(vl_pagamento_doc) as valor, id_documento_fiscal 
+                                           from con_pagamento as pagamento
+                                           inner join con_pagamento_doc as pagDoc
+                                           on pagDoc.id_pagamento = pagamento.id_pagamento
+                                           where pagamento.id_pagamento_situacao = 1 and pagamento.id_pagamento <> :pagamento
+                                           group by id_documento_fiscal) as pagamentoDoc 
+                        on pagamentoDoc.id_documento_fiscal = documento.id_documento_fiscal
+                        where documento.id_documento_fiscal = :documento ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+                $stmt->bindValue(":documento", $documento, PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                } else {
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    public function deletaDocumentoPagamentoEdicao(PDO $pdo, $pagagamentoDoc = null) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo) && !empty($pagagamentoDoc)) {
+                $sql = "delete from con_pagamento_doc where id_pagamento_doc = :pagDoc ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pagDoc", $pagagamentoDoc, PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             }

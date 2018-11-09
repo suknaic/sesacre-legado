@@ -257,7 +257,11 @@ $(document).ready(function () {
 
 
             });
-
+           
+            if(documentos.length == 0){
+                documentos = [];
+            }
+            
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
                 "id_pedido": $("#id_pedido").val(),
