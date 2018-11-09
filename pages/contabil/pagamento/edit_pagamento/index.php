@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro do pagamento</h1> 
+                        <h1 class="page-header text-overflow">Editar pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
@@ -56,6 +56,34 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
+                        <!--Modal addAnotacao-->
+                        <div class=" modal fade modal-footer" id="adAnotacao"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Anotação</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                            <input type="hidden" name="id_pedido_anotacao" id="id_processo_anotacao" value="">
+                                            <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                        <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fim Modal AddAnotacao-->
                         <form class="form-horizontal" id="form-documento" role="form">
                             <input type="hidden" name="id_pagamento" id="id_pagamento" value="<?php echo $id; ?>"/>
                             <input type="hidden" name="id_liquidacao" id="id_liquidacao" value="<?php echo $dadosPagamento["id_liquidacao"]; ?>"/>
@@ -93,51 +121,53 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
-                                <!--Form das documentos-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body docFis">
-                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab" id="headingTwo">
-                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
-                                                    </div>
-                                                    <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
-                                                                        <option value="0" selected="true">Selecione um Documento Fiscal</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
-                                                            <div class="col-sm-6"></div>
+                                <?php if ($dadosPagamento["id_tipo_solicitacao"] == 2) { ?>
+                                    <!--Form das documentos-->
+                                    <div class="form-group">
+                                        <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                            <div class="panel-body docFis">
+                                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" role="tab" id="headingTwo">
+                                                            <h4 class="panel-title">Dados do Documento Fiscal</h4>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
-                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered tabelaDocumentos" cellspacing="0" width="100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th class="text-center">Nº Documento Fiscal</th>
-                                                                            <th class="text-center">Tipo Documento Fiscal</th>
-                                                                            <th class="text-center">Competência</th>
-                                                                            <th class="text-center">Data Emissão</th>
-                                                                            <th class="text-center">Data Atesto</th>
-                                                                            <th class="text-center">Valor Total</th>
-                                                                            <th class="text-center">Saldo</th>
-                                                                            <th class="text-center">Valor do pagamento</th>
-                                                                            <th class="text-center">Situação</th>
-                                                                            <th class="text-center">Ação</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <?php echo $tabelaDocumentosFiscais; ?>
-                                                                    </tbody>
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
+                                                                <div class="col-sm-3">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                        <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
+                                                                            <option value="0" selected="true">Selecione um Documento Fiscal</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
+                                                                <div class="col-sm-6"></div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-12">
+                                                                    <table id="tabelaDocumentos" class="table table-striped table-bordered tabelaDocumentos" cellspacing="0" width="100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="text-center">Nº Documento Fiscal</th>
+                                                                                <th class="text-center">Tipo Documento Fiscal</th>
+                                                                                <th class="text-center">Competência</th>
+                                                                                <th class="text-center">Data Emissão</th>
+                                                                                <th class="text-center">Data Atesto</th>
+                                                                                <th class="text-center">Valor Total</th>
+                                                                                <th class="text-center">Saldo</th>
+                                                                                <th class="text-center">Valor do pagamento</th>
+                                                                                <th class="text-center">Situação</th>
+                                                                                <th class="text-center">Ação</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <?php echo $tabelaDocumentosFiscais; ?>
+                                                                        </tbody>
 
-                                                                </table>
+                                                                    </table>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -145,7 +175,7 @@ require_once "index.load.php";
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php } ?>
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -168,17 +198,6 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>"  disabled="true"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Data da Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
@@ -188,6 +207,22 @@ require_once "index.load.php";
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
+                                                                    <?php if ($dadosPagamento["id_tipo_solicitacao"] == 2) { ?>
+                                                                        <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>" disabled="true"/>
+                                                                    <?php } else { ?>
+                                                                        <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" value="<?php echo $dadosPagamento["vl_pagamento"]; ?>"/>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -225,18 +260,37 @@ require_once "index.load.php";
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Anotações</h4>
+                                                        <h4 class="panel-title">Anotações
+                                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+                                                        </h4>
                                                     </div>
 
                                                     <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" rows="7" id="anotacoes"></textarea>
-                                                        </div>
+                                                        <textarea class="form-control anotacoes" rows="7" readonly id="anotacoes"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Histórico</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="7" readonly="true"><?php echo $historico; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

@@ -126,7 +126,7 @@ switch ($_REQUEST['acao']) {
             if (empty($dados['docsLiquidacao'])) {
                 $dados['docsLiquidacao'] = array();
             }
-            
+
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
             $pagamento->setIdEmpenho($dados["idEmpenho"]);
@@ -136,7 +136,12 @@ switch ($_REQUEST['acao']) {
             $pagamento->setDtPagamento($dados["dtPagamento"]);
             $pagamento->setVlPagamento($dados["vlPagamento"]);
             $pagamento->setVlPagamentoSaldo($dados["saldoLiquidacao"]);
-            $pagamento->setDocsPagamento($dados["docsPagamento"]);
+            if (!empty($dados["docsPagamento"])) {
+                $pagamento->setDocsPagamento($dados["docsPagamento"]);
+            } else {
+                $pagamento->setDocsPagamento(null);
+            }
+            
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
             $pagamento->setIdPedido($dados["id_pedido"]);

@@ -70,7 +70,7 @@ class ConPagamentoAnotacoes {
         return $this;
     }
 
-    public function salvaAnotacaoPagamento(PDO $pdo) {
+    public function salvaAnotacaoPagamento($pdo = null) {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();

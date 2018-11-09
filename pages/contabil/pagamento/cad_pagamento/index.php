@@ -179,7 +179,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Data Atesto</th>
                                                                             <th class="text-center">Valor Total</th>
                                                                             <th class="text-center">Saldo</th>
-                                                                            <th class="text-center">Valor do pagamento</th>
+                                                                            <th class="text-center">Valor do Pagamento</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
                                                                         </tr>
@@ -219,17 +219,6 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Valor:</b></div>
-                                                            <div class="col-sm-3">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7"></div>
-                                                        </div>
-
-                                                        <div class="form-group">
                                                             <div class="col-sm-2"><b>Data da Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
@@ -239,6 +228,18 @@ require_once "index.load.php";
                                                             </div>
                                                             <div class="col-sm-7"></div>
                                                         </div>
+
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Valor Total:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
+                                                                    <input type="text" class="form-control" name="vl_pagamento" id="vl_pagamento" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>

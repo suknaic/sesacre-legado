@@ -22,6 +22,8 @@ $pagamento->setIdPagamento($id);
 
 //DADOS DA PAGAMENTO
 $dadosPagamento = $pagamento->retornaDadosPagamento();
+//DADOS DO HISTORICO
+$historico = $pagamento->retornaHistorico();
 //DADOS TRAMITACAO
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosPagamento['id_doc_tipo_lotacao']);
@@ -36,7 +38,7 @@ $pedido->setNrPedido($dadosPagamento["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
 //DADOS DO EMPENHO
 $empenho = new FinEmpenhoModel();
-$empenho->setIdPedido($dadosPagamento["id_pagamento"]);
+$empenho->setIdPedido($dadosPagamento["id_pedido"]);
 $dadosEmpenho = $empenho->retornaEmpenhoPagamento(null);
 //DADOS DA LIQUIDACAO
 $liquidacao = new Liquidacao();

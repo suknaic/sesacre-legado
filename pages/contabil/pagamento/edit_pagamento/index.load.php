@@ -1,4 +1,5 @@
 <?php
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
@@ -18,9 +19,10 @@ if (empty($id)) {
 
 $pagamento = new ConPagamento();
 $pagamento->setIdPagamento($id);
-
 //DADOS DA PAGAMENTO
 $dadosPagamento = $pagamento->retornaDadosPagamento();
+//DADOS DO HISTORICO
+$historico = $pagamento->retornaHistorico();
 //DADOS DO CONTRATO
 $finContratoModel = new FinContratoModel();
 $dadosContrato = $finContratoModel->retornaContratoGdof(null, $dadosPagamento["nr_pedido"]);
@@ -30,7 +32,7 @@ $pedido->setNrPedido($dadosPagamento["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
 //DADOS DO EMPENHO
 $empenho = new FinEmpenhoModel();
-$empenho->setIdPedido($dadosPagamento["id_pagamento"]);
+$empenho->setIdPedido($dadosPagamento["id_pedido"]);
 $dadosEmpenho = $empenho->retornaEmpenhoPagamento(null);
 //DADOS DA LIQUIDACAO
 $liquidacao = new Liquidacao();
@@ -39,7 +41,8 @@ $dadosLiquidacao = $liquidacao->retornaLiquidacaoParaPagamento(null);
 //DADOS DO DOCUMENTOS FISCAIS
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
-if ($dadosPagamento['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+// ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+if ($dadosPagamento['id_tipo_solicitacao'] == 2) {
     $tem_documentos = true;
     $tabelaDocumentosFiscais = $pagamento->tabelaDocumentoPagamentoVisualiza(true);
 }
@@ -47,4 +50,4 @@ if ($dadosPagamento['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosPagamento['id_doc_tipo_lotacao']);
 $vincTramitacao->setIdLotacao($dadosPagamento['id_lotacao']);
-$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo(); 
+$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo();
