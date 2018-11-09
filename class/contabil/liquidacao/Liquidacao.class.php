@@ -889,14 +889,14 @@ class Liquidacao {
                                             <div class="panel-heading" role="tab" id="headingFor">
                                                 <h4 class="panel-title">
                                                     <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
-                                                        aria-expanded="false" aria-controls="collapseFor" class="collapsed">
+                                                        aria-expanded="true" aria-controls="collapseFor" >
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
                                                         <b>Dados da Liquidação: </b><span style="color:#758697"> Nº ' . $campos["nr_liquidacao"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
                                         
-                                            <div id="collapseFor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFor" aria-expanded="false">
+                                            <div id="collapseFor" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFor" aria-expanded="true">
                                                 <div class="panel-body">
                                                 <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
                                                 <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" /> 
