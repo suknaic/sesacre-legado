@@ -35,7 +35,7 @@ $(document).ready(function () {
         var id = $this.val();
         var item = $this.closest('tr').find('td:first').text();        
         bootbox.confirm({
-            title: 'Caixa de Confirmação',
+            title: 'Cancelamento do Empenho',
             //message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
             message: 'Você tem Certeza que deseja continuar com o \n\
                 Cancelamento do Empenho <span class="text-danger">' + item + '</span>?\n\
@@ -51,7 +51,7 @@ $(document).ready(function () {
                 </div>',  
             buttons: {
                 'cancel': {
-                    label: 'Não',
+                    label: 'Fechar',
                     className: 'btn-default btn-rounded'
                 },
                 'confirm': {

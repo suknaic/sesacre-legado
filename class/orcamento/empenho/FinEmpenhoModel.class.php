@@ -1358,6 +1358,13 @@ class FinEmpenhoModel {
             
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
+                $saldoOrdenar = '';
+                if ($campos['id_tipo_solicitacao'] == '2') {
+                    $saldoOrdenar = '<div class="form-group">
+                                        <div class="col-sm-2"><b>Saldo a Ordenar:</b></div>
+                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+                                    </div>';
+                }
                 $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
                                         <div class="panel panel-default">
                                             <div class="panel-heading" role="tab" id="headingTwo">
@@ -1388,7 +1395,7 @@ class FinEmpenhoModel {
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Funcional programatica:</b></div>
+                                                        <div class="col-sm-2"><b>Funcional Programática:</b></div>
                                                         <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . ' - ' . $campos["ds_programa_trabalho"] . '</div>
                                                     </div>
 
@@ -1403,12 +1410,17 @@ class FinEmpenhoModel {
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do pedido:</b></div>
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
                                                         <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>'
+                                                    . $saldoOrdenar.
+                                                    '<div class="form-group">
+                                                        <div class="col-sm-2"><b>Saldo a Liquidar:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_liquidar"], 4) . '</div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo a Ordenar:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+                                                        <div class="col-sm-2"><b>Saldo a Pagar:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_pagar"], 4) . '</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1442,6 +1454,7 @@ class FinEmpenhoModel {
                                     . "<td class='text-center'>".$linha["dh_fim"]."</td>"
                                     . "<td class='text-center'>".Metodos::ConverteValorBr($linha["qt_diaria_destino"],2)."</td>"
                                     . "<td class='text-center'>".Metodos::ConverteValorBr($linha["vl_diaria_destino"],2)."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["qt_diaria_destino"] * $linha["vl_diaria_destino"],2)."</td>"
                                 . "</tr>";
                 }
                 
@@ -1501,6 +1514,7 @@ class FinEmpenhoModel {
                                                                     . '<th class="text-center">Horário Chegada</th>'
                                                                     . '<th class="text-center">Qtd. Diárias</th>'
                                                                     . '<th class="text-center">Valor Unitário</th>'
+                                                                    . '<th class="text-center">Valor Total</th>'
                                                                 . '</tr>'
                                                             . '</thead>'
                                                             . '<tbody>'
@@ -1621,7 +1635,7 @@ class FinEmpenhoModel {
                                                             . '<h4 class="panel-title">'
                                                                 . '<a class="accordion-toggle" data-toggle="collapse" href="#anulacao'.$linha['id_empenho_anulacao'].'">'
                                                                     . '<i class="glyphicon glyphicon-chevron-down"></i> '
-                                                                    . '<b>Dados dos Itens do Pedido de Necessidade Anulados:</b> <span style="color:#758697"> Nº '.$linha['nr_empenho_anulacao'].'</span>'
+                                                                    . '<b>Dados dos Itens Anulados do Pedido de Necessidade:</b> <span style="color:#758697"> Nº '.$linha['nr_empenho_anulacao'].'</span>'
                                                                 . '</a>'
                                                             . '</h4>'
                                                         . '</div>'
@@ -1634,6 +1648,7 @@ class FinEmpenhoModel {
                                                                             . '<th class="text-center">Item</th>'
                                                                             . '<th class="text-center">Descrição</th>'
                                                                             . '<th class="text-center">Tipo</th>'
+                                                                            . '<th class="text-center">Qtd.</th>'
                                                                             . '<th class="text-center">Valor Unitário</th>'
                                                                             . '<th class="text-center">Valor Total</th>'
                                                                             . '<th class="text-center">Qtd. Utilizado</th>'
@@ -1649,6 +1664,7 @@ class FinEmpenhoModel {
                                     . '<td class="text-center">'.$linha['nm_material'].'</td>'
                                     . '<td class="text-center">'.$linha['nm_desc_material'].'</td>'
                                     . '<td class="text-center">'.$linha['tp_material'].'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_item'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_item'],4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_item'] * $linha['vl_item'] ,4).'</td>'
                                     . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_utilizado'],4).'</td>'
