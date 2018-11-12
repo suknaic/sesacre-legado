@@ -204,26 +204,6 @@ $(document).ready(function () {
                 if ((item.tp == "S" || flVariavel == '1') && item.qtd != 0 && item.vl != 0) {
                     itens.push(item);
                 }
-                
-//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 0) {
-//                    if ($(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-//                        itens.push({'qtd': $(this).find(".qtd").val(), 'idPedido': $(this).find(".qtd").attr("idPedido"), 'id': $("body").find("#id").val(),
-//                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-//                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-//                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
-//                    }
-//                }
-//
-//                if (($(this).find(".qtd").length) == 1 && ($(this).find(".vl").length) == 1) {
-//                    if ($(this).find(".vl").val() != '0,0000' && $(this).find(".vl").val() != '' &&
-//                            $(this).find(".qtd").val() != '0,0000' && $(this).find(".qtd").val() != '') {
-//                        itens.push({'qtd': $(this).find(".qtd").val(), 'vl': $(this).find(".vl").val(), 'idPedido': $(this).find(".vl").attr("idPedido"),
-//                            'id': $("body").find("#id").val(),
-//                            'local': $("body").find("#id_lotacao").val(), 'tp': $(this).find(".qtd").attr("tp"), 'idPreOrdem': $(this).find(".qtd").attr("idPreOrdem"),
-//                            'vig_inicial': $("body").find("#vig_inicial").val(), 'vig_final': $("body").find("#vig_final").val(),
-//                            'prazo': $("body").find("#prazo").val(), 'tipoOrdem': $("body").find("#tipoOrdem").val(), 'pergunta': $("input[name='optradio']:checked").val()});
-//                    }
-//                }
             });
             
             var enc = JSON.stringify(itens);

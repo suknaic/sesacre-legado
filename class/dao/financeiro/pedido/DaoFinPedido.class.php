@@ -337,7 +337,8 @@ class DaoFinPedido extends FinPedidoTb {
                             emp.nr_empenho, 
                             emp.id_empenho,
                             p.id_tipo_solicitacao,
-                            doc.id_documento_fiscal
+                            doc.id_documento_fiscal,
+                            ps.nm_pedido_situacao
                          from
                             fin_pedido as p 
                             inner join
@@ -385,6 +386,8 @@ class DaoFinPedido extends FinPedidoTb {
                                 on emp.id_pedido = p.id_pedido
                             left join fin_documento_fiscal doc
                                 on doc.id_pedido = p.id_pedido
+                            left join fin_pedido_situacao ps
+                                on ps.id_pedido_situacao = p.id_pedido_situacao
                          where
                             p.id_pedido is not null " . $filter . "
                           order by

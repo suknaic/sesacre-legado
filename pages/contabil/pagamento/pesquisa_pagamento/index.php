@@ -72,7 +72,7 @@ require_once "index.load.php";
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="nr_liquidacao">Número do Pagamento:</label>
+                                                <label for="nr_pagamento">Número do Pagamento:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -151,12 +151,12 @@ require_once "index.load.php";
 
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="nr_documento_fiscal">Número do Documento Fiscal:</label>
+                                                <label for="nr_documento_fiscal">Número da Liquidação:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="nr_documento_fiscal" class="form-control" value=""/>
+                                                    <input type="text" id="nr_liquidacao" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>
@@ -217,7 +217,6 @@ require_once "index.load.php";
                                                     <th class="text-center">Nº Liquidação</th>
                                                     <th class="text-center">Nº Pedido</th>
                                                     <th class="text-center">Nº Empenho</th>
-                                                    <th class="text-center">Nº Doc. Fiscal</th>
                                                     <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Data Pagamento</th>
                                                     <th class="text-center">Valor</th>

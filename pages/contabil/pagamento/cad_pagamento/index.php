@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro do pagamento</h1> 
+                        <h1 class="page-header text-overflow">Cadastro do Pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
@@ -79,7 +79,8 @@ require_once "index.load.php";
                                                             <th>Nº liquidação</th>
                                                             <th>Pedido</th>
                                                             <th>Data liquidação</th>
-                                                            <th>Saldo</th>
+                                                            <th>Valor Total</th>
+                                                            <th>Saldo a Pagar</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>

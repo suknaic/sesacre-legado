@@ -32,9 +32,6 @@ $(document).ready(function () {
         });
     });
 
-
-
-
     function listaAnotacoes() {
         $.ajax({
             "url": "/pages/contabil/pagamento/ver_pagamento/request.php",
@@ -252,7 +249,7 @@ $(document).ready(function () {
 
             $(".documentoFiscal").each(function () {
                 var linha = $(this).data('objeto');
-                var vl_documento_pagamento = $("input[name=valorRetPagamento\\[\\]]").val();
+                var vl_documento_pagamento = $(this).find('.valorRetPagamento').val();
                 var vl_documento_pagamento_saldo = linha.saldo;
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
@@ -323,7 +320,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                            window.location.href = "/pages/contabil/pagamento/pesquisa_pagamento/index.php";
                         });
                         return false;
                     } else {
