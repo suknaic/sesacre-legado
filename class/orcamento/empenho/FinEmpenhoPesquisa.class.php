@@ -131,6 +131,14 @@ class FinEmpenhoPesquisa {
             if($tramitacao->Sucesso()){
                 $flVisualizaBotoes = true;
             }
+            
+            //Só pode visualziar o botão de Liquidar o Empenho quem tiver Tramitação Liquidar
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            $flBotaoLiquidar = false;
+            if ($tramitacao->Sucesso()) {
+                $flBotaoLiquidar = true;
+            }
                         
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->retornaEmpenhos($pdo, $this->filtroSql());
@@ -160,6 +168,12 @@ class FinEmpenhoPesquisa {
                                         . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
                                     . '</button>';
                     }
+                    if ($flBotaoLiquidar and $linha['liquida'] == 'S' ) {
+                        $tabela .= '<button title="Cadastrar Liquidação" type="button" class="enviar-liquidacao" value="' . $linha['empenho_sm'] . '">'
+                                    . '<i class="fa fa-calculator text-purple" aria-hidden="true"></i>'
+                                . '</button>';
+                    }
+
                     $tabela .= '</td>'
                             . '</tr>';                    
                 }

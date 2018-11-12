@@ -806,6 +806,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         $this->sucesso = false;
         $sql = "select
                     emp.id_empenho,
+                    emp.nr_empenho as empenho_sm,
                     ( substr(emp.nr_empenho,
                     1,
                     10) || '/' || substr(emp.nr_empenho,
@@ -824,22 +825,29 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     tpGasto.nm_tipo_gasto,
                     central.nm_lotacao as central_demanda,
                     trim(to_char(vl_empenho, '999G999G999G990D9999')) as vl_empenho,
-                    (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) as saldo_liquidar,  
+                    (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) as saldo_liquidar,
                     case
-                            sit_empenho
-                            when '1' then 'Cadastrado'
-                            when '2' then 'Liquidado Parcial'
-                            when '3' then 'Liquidado Total'
-                            when '4' then 'Pago Parcial'
-                            when '5' then 'Pago Total'
-                            when '6' then 'Cancelado'
+                        sit_empenho
+                        when '1' then 'Cadastrado'
+                        when '2' then 'Liquidado Parcial'
+                        when '3' then 'Liquidado Total'
+                        when '4' then 'Pago Parcial'
+                        when '5' then 'Pago Total'
+                        when '6' then 'Cancelado'
                     end as situacao ,
                     case
-                            when ( sit_emp.id_liquidacao is null
-                            and sit_emp.id_ordem is null
-                            and sit_emp.id_documento_fiscal is null ) then 'S'
-                            else 'N'
-                    end as edita
+                        when ( sit_emp.id_liquidacao is null
+                        and sit_emp.id_ordem is null
+                        and sit_emp.id_documento_fiscal is null ) then 'S'
+                        else 'N'
+                    end as edita,
+                    case
+                    when (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) > 0
+                        and (ped.id_tipo_solicitacao <> 2
+                        or (ped.id_tipo_solicitacao = 2
+                        and sit_emp.id_documento_situacao = 2 )) then 'S'
+                        else 'N'
+                    end as liquida
                 from
                     fin_empenho emp
                 inner join fin_tipo_empenho tpEmp on
@@ -873,6 +881,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         (E.id_empenho) E.id_empenho,
                         O.id_ordem,
                         DF.id_documento_fiscal,
+                        DF.id_documento_situacao,
                         L.id_liquidacao
                     from
                         fin_empenho E
@@ -973,8 +982,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     pedido_saldo.saldo,
                     (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,
                     0)) as saldo_liquidar,
-                    (coalesce(liqPag.vl_liquidacao,
-                    0) - coalesce(liqPag.vl_pagamento,
+                    (emp.vl_empenho - coalesce(liqPag.vl_pagamento,
                     0)) as saldo_pagar
                 from
                         fin_empenho as emp
