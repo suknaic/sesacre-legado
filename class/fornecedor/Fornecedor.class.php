@@ -235,7 +235,7 @@ class Fornecedor {
                     $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
 
                     if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
-                        $pessoaFisica->setNr_cpf($this->pessoaFisica['cpf']);
+                        $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
                     } else {
                         return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
                     }
@@ -256,7 +256,7 @@ class Fornecedor {
                     $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
 
                     if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                        $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+                        $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                     } else {
                         return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
                     }
