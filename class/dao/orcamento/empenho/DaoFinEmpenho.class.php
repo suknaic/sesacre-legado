@@ -1141,6 +1141,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     saldo_item.tp_material,
                     saldo_item.nr_item,
                     saldo_item.nm_material,
+                    saldo_item.cd_desc_material,
                     saldo_item.nm_desc_material,
                     saldo_item.total,
                     saldo_item.qt_utilizado,
