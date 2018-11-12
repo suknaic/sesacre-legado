@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/contabil/pagamento/DaoConPa
 class ConPagamentoPesquisa {
 
     private $numero_pagamento = null;
+    private $numero_liquidacao = null;
     private $numero_contrato = null;
     private $numero_documento_fiscal = null;
     private $execio_pagamento = null;
@@ -16,6 +17,10 @@ class ConPagamentoPesquisa {
 
     function getNumero_pagamento() {
         return $this->numero_pagamento;
+    }
+
+    function getNumero_liquidacao() {
+        return $this->numero_liquidacao;
     }
 
     function getNumero_contrato() {
@@ -52,6 +57,10 @@ class ConPagamentoPesquisa {
 
     function setNumero_pagamento($numero_pagamento) {
         $this->numero_pagamento = $numero_pagamento;
+    }
+
+    function setNumero_liquidacao($numero_liquidacao) {
+        $this->numero_liquidacao = $numero_liquidacao;
     }
 
     function setNumero_contrato($numero_contrato) {
@@ -102,9 +111,8 @@ class ConPagamentoPesquisa {
                     $retorno .= "<tr data-id=" . $linha['id_pagamento'] . " data-objeto='" . json_encode($linha) . "'>"
                             . "<td class='text-center'>" . $linha['nr_pagamento'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_liquidacao'] . "</td>"
-                            . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
+                            . "<td class='text-center'>" . $linha['nr_pedido'] . '/' . $linha['dt_pedido'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
-                            . "<td class='text-center'>" . $linha['documentos_fiscais'] . "</td>"
                             . "<td class='text-center'>" . $cnpj_razao . "</td>"
                             . "<td class='text-center'>" . $linha['data_pagamento'] . "</td>"
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento'], 4) . "</td>"
@@ -113,14 +121,14 @@ class ConPagamentoPesquisa {
                             . "<button type='button' title='Ver Pagamento' class='ver-pagamento' value=" . $linha['id_pagamento'] . ">"
                             . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
                             . "</button>";
-
-                    $retorno .= "<button type='button' title='Editar Pagamento' class='editar-pagamento' value=" . $linha['id_pagamento'] . ">"
-                            . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
-                            . "</button>"
-                            . "<button type='button' title='Excluir Pagamento' class='excluir-pagamento' value=" . $linha['id_pagamento'] . ">"
-                            . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
-                            . "</button>";
-
+                    if ($linha["id_pagamento_situacao"] == 1) {
+                        $retorno .= "<button type='button' title='Editar Pagamento' class='editar-pagamento' value=" . $linha['id_pagamento'] . ">"
+                                . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
+                                . "</button>"
+                                . "<button type='button' title='Excluir Pagamento' class='excluir-pagamento' value=" . $linha['id_pagamento'] . ">"
+                                . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                                . "</button>";
+                    }
                     $retorno .= "</td></tr>";
                 }
             }
@@ -168,8 +176,8 @@ class ConPagamentoPesquisa {
             $filtro .= (empty($filtro)) ? " where empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' " : " and empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' ";
         }
 
-        if ($this->getNumero_documento_fiscal()) {
-            $filtro .= (empty($filtro)) ? " where documento.nr_documento_fiscal ilike '%" . $this->getNumero_documento_fiscal() . "%' " : " and documento.nr_documento_fiscal ilike '%" . $this->getNumero_documento_fiscal() . "%' ";
+        if ($this->getNumero_liquidacao()) {
+            $filtro .= (empty($filtro)) ? " where liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' " : " and liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' ";
         }
 
         return $filtro;

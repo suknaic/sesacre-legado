@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoPesquisa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamento.class.php";
-
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/pagamento/ConPagamentoHistorico.class.php";
 
 $session = new Session('ajax');
 
@@ -30,11 +30,11 @@ switch ($_REQUEST['acao']) {
         try {
             $pagamento =  new ConPagamentoPesquisa();
             $pagamento->setNumero_pagamento($dados["nrPagamento"]);
+            $pagamento->setNumero_liquidacao($dados["nrLiquidacao"]);
             $pagamento->setExecio_pagamento($dados['exercicio']);
             $pagamento->setNumero_contrato($dados['fornecedor']);
             $pagamento->setNumero_pedido($dados["pedido"]);
             $pagamento->setNumero_empenho($dados["empenho"]);
-            $pagamento->setNumero_documento_fiscal($dados["nrDoc"]);
             $pagamento->setTipo_gato($dados["tpGasto"]);
             $pagamento->setSituacao($dados["situacao"]);
             echo $pagamento->retornaPagamento();

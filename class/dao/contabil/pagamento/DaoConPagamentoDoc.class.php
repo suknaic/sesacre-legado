@@ -40,8 +40,8 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
     public function documentosFiscaisPagamento(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select documento.id_documento_fiscal, documento.nr_documento_fiscal, tpDocumento.nm_tipo_documento, 
-                        documento.mm_competencia, to_char(documento.dt_emissao, 'DD/MM/YYYY') as dt_emissao,
+                $sql = "select pagDoc.id_pagamento_doc, documento.id_documento_fiscal, documento.nr_documento_fiscal, tpDocumento.nm_tipo_documento, 
+                        documento.mm_competencia, documento.aa_competencia, to_char(documento.dt_emissao, 'DD/MM/YYYY') as dt_emissao,
                         to_char(documento.dt_atesto, 'DD/MM/YYYY') as dt_atesto, documento.vl_documento, 
                         pagDoc.vl_pagamento_doc, pagDoc.vl_pagamento_doc_saldo, situacao.nm_situacao 
                         from con_pagamento as pagamento

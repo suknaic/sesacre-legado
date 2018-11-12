@@ -32,7 +32,6 @@ $(document).ready(function () {
         });
     });
 
-
     function listaAnotacoes() {
         $.ajax({
             "url": "/pages/contabil/pagamento/ver_pagamento/request.php",
@@ -166,6 +165,78 @@ $(document).ready(function () {
     });
 
 
+    $('body').on('click', '.btn-addAnotacao', function (e) {
+        $('#adAnotacao').modal();
+
+    });
+
+    $('#adAnotacao').on('shown.bs.modal', function () {
+        $('#anotacao').focus()
+    });
+
+
+    $('body').on('click', '.btn-enviarAnotacao', function (e) {
+        var Dados = {
+            "id_pagamento": $("#id_pagamento").val(),
+            "anotacao": $('#anotacao').val()
+        };
+        $.ajax({
+            "url": "/pages/contabil/pagamento/anotacao/request.php",
+            "method": "POST",
+            "dataType": "html",
+            "data": {
+                "acao": "salvaAnotacao",
+                "dados": Dados
+            },
+
+            "success": function (response) {
+                console.log(response);
+                if (response.trim() === "SessaoExpirada") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        $("#adAnotacao").modal('hide');
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(response.msg, 'success');
+                    $('.modal-alert').on('hidden.bs.modal', function (e) {
+                        listaAnotacoes();
+                    });
+                    return false;
+                } else {
+                    $("#adAnotacao").modal('hide');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {
+                $("#adAnotacao").modal('hide');
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+
+    });
+
     $("body").on("click", ".btn-salvar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -178,7 +249,7 @@ $(document).ready(function () {
 
             $(".documentoFiscal").each(function () {
                 var linha = $(this).data('objeto');
-                var vl_documento_pagamento = $("input[name=valorRetPagamento\\[\\]]").val();
+                var vl_documento_pagamento = $(this).find('.valorRetPagamento').val();
                 var vl_documento_pagamento_saldo = linha.saldo;
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
@@ -249,7 +320,7 @@ $(document).ready(function () {
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
+                            window.location.href = "/pages/contabil/pagamento/pesquisa_pagamento/index.php";
                         });
                         return false;
                     } else {

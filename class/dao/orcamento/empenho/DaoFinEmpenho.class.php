@@ -408,14 +408,16 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaEmpenhoPagamento(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "select emp.id_pedido, emp.nr_empenho,emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
+                $sql = "select emp.id_pedido, emp.id_empenho, to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                         tpEmp.nm_tipo_empenho, emp.vl_empenho,
+                        concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
                         (emp.vl_empenho -
                          coalesce((select sum(vl_pagamento) 
                                    from con_pagamento as pagamento 
                                    inner join con_liquidacao as liquidacao
                                    on liquidacao.id_liquidacao = pagamento.id_liquidacao
                                    where liquidacao.id_empenho = emp.id_empenho
+                                   and pagamento.id_pagamento_situacao = 1
                                    ),0)) as saldo_empenho_pagamento
 
                         from fin_empenho as emp 
@@ -801,123 +803,98 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $str_filtro .= $filtro['sql'];
             }
         }
-        
         $this->sucesso = false;
         $sql = "select
                     emp.id_empenho,
-                    (
-                       substr(emp.nr_empenho, 1, 10) || '/' || substr(emp.nr_empenho, 11, 4) 
-                    )
-                    as nr_empenho,
-                    ped.nr_pedido,
-                    coalesce(pf.nr_cpf, pj.nr_cnpj, '') as cpf_cnpj,
-                    coalesce(upper(pf.nm_civil), upper(pj.nm_fantasia), '') as nome_razao,
+                    ( substr(emp.nr_empenho,
+                    1,
+                    10) || '/' || substr(emp.nr_empenho,
+                    11,
+                    4) ) as nr_empenho,
+                    (ped.nr_pedido || '/' || to_char(ped.dt_pedido,'YYYY')) nr_pedido,
+                    coalesce(pf.nr_cpf,
+                    pj.nr_cnpj,
+                    '') as cpf_cnpj,
+                    coalesce(upper(pf.nm_civil),
+                    upper(pj.nm_fantasia),
+                    '') as nome_razao,
                     tpEmp.nm_tipo_empenho,
-                    to_char(dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
+                    to_char(dt_empenho_safira,
+                    'dd/mm/yyyy') as dt_empenho_safira,
                     tpGasto.nm_tipo_gasto,
                     central.nm_lotacao as central_demanda,
                     trim(to_char(vl_empenho, '999G999G999G990D9999')) as vl_empenho,
+                    (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) as saldo_liquidar,  
                     case
-                       sit_empenho 
-                       when
-                          '1' 
-                       then
-                          'Cadastrado' 
-                       when
-                          '2' 
-                       then
-                          'Liquidado Parcial' 
-                       when
-                          '3' 
-                       then
-                          'Liquidado Total' 
-                       when
-                          '4' 
-                       then
-                          'Pago Parcial' 
-                       when
-                          '5' 
-                       then
-                          'Pago Total' 
-                       when
-                          '6' 
-                       then
-                          'Cancelado' 
-                    end
-                    as situacao , 
+                            sit_empenho
+                            when '1' then 'Cadastrado'
+                            when '2' then 'Liquidado Parcial'
+                            when '3' then 'Liquidado Total'
+                            when '4' then 'Pago Parcial'
+                            when '5' then 'Pago Total'
+                            when '6' then 'Cancelado'
+                    end as situacao ,
                     case
-                       when
-                          (
-                             sit_emp.id_liquidacao is null 
-                             and sit_emp.id_ordem is null
-                             and sit_emp.id_documento_fiscal is null
-                          )
-                       then
-                          'S' 
-                       Else
-                          'N' 
-                    End
-                    as edita 
-                 from
-                    fin_empenho emp 
-                    inner join
-                       fin_tipo_empenho tpEmp 
-                       on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
-                    inner join
-                       fin_pedido ped 
-                       on ped.id_pedido = emp.id_pedido 
-                    inner join
-                       ses_lotacao central 
-                       on central.id_lotacao = ped.id_lotacao 
-                    left join
-                       fin_fornecedor fornec 
-                       on fornec.id_fornecedor = ped.id_fornecedor 
-                    left join
-                       fin_contrato cnt 
-                       on cnt.id_contrato = fornec.id_contrato 
-                    left join
-                       pla_tipo_gasto tpGasto 
-                       on tpGasto.id_tipo_gasto = ped.id_tipo_gasto 
-                    left join
-                       ses_pessoa_fisica pf 
-                       on pf.id_pessoa = fornec.id_pessoa 
-                    left join
-                       ses_pessoa_juridica pj 
-                       on pj.id_pessoa = fornec.id_pessoa 
-                    left join
-                       (
-                          SELECT distinct
-                             on (E.id_empenho) E.id_empenho,
-                             O.id_ordem,
-                             DF.id_documento_fiscal,
-                             L.id_liquidacao 
-                          FROM
-                             fin_empenho E 
-                             LEFT JOIN
-                                fin_ordem O 
-                                ON O.id_pedido = E.id_pedido 
-                                AND O.sit_ordem <> '0' 
-                             LEFT JOIN
-                                fin_documento_fiscal DF 
-                                ON DF.id_pedido = E.id_pedido 
-                                AND DF.id_documento_situacao <> 7 
-                             LEFT JOIN
-                                con_liquidacao L 
-                                ON L.id_empenho = E.id_empenho 
-                                AND L.id_liquidacao_situacao <> 4 
-                          where
-                             (
-                                O.id_ordem IS NOT NULL 
-                                OR DF.id_documento_fiscal IS NOT NULL 
-                                OR L.id_liquidacao IS NOT NULL 
-                             )
-                       )
-                       sit_emp 
-                       on sit_emp.id_empenho = emp.id_empenho ".$str_filtro."
-                 order by
-                    dt_empenho_safira desc,
-                    nr_empenho,
-                    nr_pedido";
+                            when ( sit_emp.id_liquidacao is null
+                            and sit_emp.id_ordem is null
+                            and sit_emp.id_documento_fiscal is null ) then 'S'
+                            else 'N'
+                    end as edita
+                from
+                    fin_empenho emp
+                inner join fin_tipo_empenho tpEmp on
+                    tpEmp.id_tipo_empenho = emp.id_tipo_empenho
+                inner join fin_pedido ped on
+                    ped.id_pedido = emp.id_pedido
+                inner join ses_lotacao central on
+                    central.id_lotacao = ped.id_lotacao
+                left join fin_fornecedor fornec on
+                    fornec.id_fornecedor = ped.id_fornecedor
+                left join fin_contrato cnt on
+                    cnt.id_contrato = fornec.id_contrato
+                left join pla_tipo_gasto tpGasto on
+                    tpGasto.id_tipo_gasto = ped.id_tipo_gasto
+                left join ses_pessoa_fisica pf on
+                    pf.id_pessoa = fornec.id_pessoa
+                left join ses_pessoa_juridica pj on
+                    pj.id_pessoa = fornec.id_pessoa
+                left join 
+                    (
+                        select id_empenho, sum(coalesce(vl_liquidacao,0)) as vl_liquidacao , sum(coalesce(vl_pagamento,0)) as vl_pagamento
+                        from con_liquidacao liq
+                        left join con_pagamento pag
+                        on pag.id_liquidacao = liq.id_liquidacao
+                        group by id_empenho
+                    ) liqPag
+                    on liqPag.id_empenho = emp.id_empenho
+                left join (
+                    select
+                        distinct on
+                        (E.id_empenho) E.id_empenho,
+                        O.id_ordem,
+                        DF.id_documento_fiscal,
+                        L.id_liquidacao
+                    from
+                        fin_empenho E
+                    left join fin_ordem O on
+                        O.id_pedido = E.id_pedido
+                        and O.sit_ordem <> '0'
+                    left join fin_documento_fiscal DF on
+                        DF.id_pedido = E.id_pedido
+                        and DF.id_documento_situacao <> 7
+                    left join con_liquidacao L on
+                        L.id_empenho = E.id_empenho
+                        and L.id_liquidacao_situacao <> 4
+                    where
+                        ( O.id_ordem is not null
+                        or DF.id_documento_fiscal is not null
+                        or L.id_liquidacao is not null ) ) sit_emp on
+                    sit_emp.id_empenho = emp.id_empenho
+                    ".$str_filtro."
+                            order by
+                               dt_empenho_safira desc,
+                               nr_empenho,
+                               nr_pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
@@ -975,28 +952,69 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function retornaDadosEmpenhoPedido(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "select p.nr_pedido, p.id_lotacao,central.nm_lotacao , p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
-                        programa.cd_programa_trabalho, programa.ds_programa_trabalho,
-                        despesa.cd_despesa, despesa.ds_despesa, tpSol.nm_tipo_solicitacao,despesa_elemento.cd_despesa_elemento, despesa_elemento.ds_despesa_elemento,
-                        p.vl_pedido, to_char(p.dt_pedido, 'yyyy') AS ano, pedido_saldo.saldo
-                        from fin_empenho as emp
-                        inner join fin_pedido as p
-                        on p.id_pedido = emp.id_pedido
-                        inner join fin_fonte as f
-                        on f.id_fonte = p.id_fonte
-                        inner join view_programa_trabalho as programa
-                        on programa.id_programa_trabalho = p.id_programa_trabalho
-                        inner join ses_lotacao as central
-                        on central.id_lotacao = p.id_lotacao
-                        inner join view_despesa as despesa
-                        on despesa.id_despesa = p.id_despesa
-                        inner join view_despesa_elemento as despesa_elemento
-                        on despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
-                        left join (select id_pedido, sum(saldo) as saldo from view_pedido_saldo group by id_pedido ) as pedido_saldo
-                        on pedido_saldo.id_pedido = p.id_pedido
-                        left join fin_tipo_solicitacao as tpSol
-                        on tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
-                        where emp.id_pedido = :pedido";
+        $sql = "select
+                    p.nr_pedido,
+                    p.id_lotacao,
+                    central.nm_lotacao ,
+                    p.ds_pedido,
+                    f.nr_fonte,
+                    p.id_tipo_solicitacao,
+                    p.id_pedido,
+                    programa.cd_programa_trabalho,
+                    programa.ds_programa_trabalho,
+                    despesa.cd_despesa,
+                    despesa.ds_despesa,
+                    tpSol.nm_tipo_solicitacao,
+                    despesa_elemento.cd_despesa_elemento,
+                    despesa_elemento.ds_despesa_elemento,
+                    p.vl_pedido,
+                    to_char(p.dt_pedido,
+                    'yyyy') as ano,
+                    pedido_saldo.saldo,
+                    (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,
+                    0)) as saldo_liquidar,
+                    (coalesce(liqPag.vl_liquidacao,
+                    0) - coalesce(liqPag.vl_pagamento,
+                    0)) as saldo_pagar
+                from
+                        fin_empenho as emp
+                inner join fin_pedido as p on
+                    p.id_pedido = emp.id_pedido
+                inner join fin_fonte as f on
+                    f.id_fonte = p.id_fonte
+                inner join view_programa_trabalho as programa on
+                    programa.id_programa_trabalho = p.id_programa_trabalho
+                inner join ses_lotacao as central on
+                    central.id_lotacao = p.id_lotacao
+                inner join view_despesa as despesa on
+                    despesa.id_despesa = p.id_despesa
+                inner join view_despesa_elemento as despesa_elemento on
+                    despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
+                left join (
+                    select
+                        id_empenho,
+                        sum(coalesce(vl_liquidacao, 0)) as vl_liquidacao ,
+                        sum(coalesce(vl_pagamento, 0)) as vl_pagamento
+                    from
+                        con_liquidacao liq
+                    left join con_pagamento pag on
+                        pag.id_liquidacao = liq.id_liquidacao
+                    group by
+                        id_empenho ) liqPag on
+                    liqPag.id_empenho = emp.id_empenho
+                left join (
+                    select
+                        id_pedido,
+                        sum(saldo) as saldo
+                    from
+                        view_pedido_saldo
+                    group by
+                        id_pedido ) as pedido_saldo on
+                    pedido_saldo.id_pedido = p.id_pedido
+                left join fin_tipo_solicitacao as tpSol on
+                        tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
+                where
+                        emp.id_pedido = :pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);

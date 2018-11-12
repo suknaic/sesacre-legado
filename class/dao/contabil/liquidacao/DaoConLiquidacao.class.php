@@ -203,9 +203,9 @@ class DaoConLiquidacao extends ConLiquidacao {
                 (trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
                 )as competencia, to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,    
                 to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto, 
-                trim(to_char(vl_documento,'999G999G999D9999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
+                trim(to_char(vl_documento,'999G999G990D0999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
                 coalesce(pagamento.valorPagamento,'0.0000') as pagamento,
-                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G999D9999') as saldo,
+                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G990D0999') as saldo,
                 docFis.id_documento_situacao, docSit.nm_situacao 
 
                 from con_liquidacao as liq 
@@ -219,11 +219,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                 on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
                 left join fin_documento_situacao as docSit 
                 on docSit.id_documento_situacao = docFis.id_documento_situacao 
-                left join (select sum(vl_pagamento) as valorPagamento, id_liquidacao  
-                           from con_pagamento 
-                           where id_pagamento_situacao = '1' 
-                           group by id_liquidacao) as pagamento
-                on pagamento.id_liquidacao = liq.id_liquidacao
+                left join (select sum(pagDoc.vl_pagamento_doc) as valorPagamento, pag.id_liquidacao , pagDoc.id_documento_fiscal 
+		   from con_pagamento as pag
+		   inner join con_pagamento_doc as pagDoc
+		   on pagDoc.id_pagamento = pag.id_pagamento
+                   where id_pagamento_situacao = '1' 
+                   group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
+                on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
                 where liq.id_liquidacao = :id_liquidacao
                 order by  docFis.nr_documento_fiscal";
         try {
@@ -393,7 +395,8 @@ class DaoConLiquidacao extends ConLiquidacao {
     public function retornaLiquidacaoPorNumeroPamento(PDO $pdo) {
         try {
             $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
-                    liquidacao.nr_liquidacao, to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
+                    concat(substr(liquidacao.nr_liquidacao, 1, ((LENGTH(liquidacao.nr_liquidacao)-4)) ), '/',  substring(liquidacao.nr_liquidacao FROM '....$')) as nr_liquidacao,
+                    to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
                     to_char(liquidacao.vl_liquidacao, '999G999G990D9999') as vl_liquidacao, 
                     to_char((liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')), '999G999G990D9999') as saldo,
                     status.nm_liquidacao_status as status

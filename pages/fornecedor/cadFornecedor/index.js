@@ -2,150 +2,120 @@ $(document).ready(function () {
 
     func = new Funcoes();
 
-    function gerarCloneSelectMedicamentos() {
-        $("#medicamentos").append(' <div class="medicamentos row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="medicamentosCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectMedicamentos" name="medicamentos[]" required id="medicamentos">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Medicamento</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerMedicamento remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
 
+    function gerarSelect2(classe) {
+        $("." + classe).select2({
+            width: " 100%"
+        });
+    }
+
+
+    function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
+        var html = '';
+        $("." + campoPrincipal).find('.' + select).select2('destroy');
+        html = $("." + campoSelect).clone();
+        html.find('.select2-selection--single').remove();
+        $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-5"><div class="panel-body">' + html.html() +
+            '</div></div><div class="col-sm-3"><div class="panel-body"><button href="#" class="btn-' + classeremove + ' btn btn-danger"><i class="fa fa-remove" aria-hidden="true"></i></button></div></div></div>');
+        gerarSelect2(select);
     }
 
     $("body").on("click", ".addMedicamentos", function (e) {
-        e.preventDefault();
-        gerarCloneSelectMedicamentos();
-        $(".selectMedicamentos").select2({
-            width: " 100%"
+        $("select[name=medicamento\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("medicamentos", "medicamentosCampos", "selectMedicamentos", "removeMedicamento");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de medicamento.');
+        }
     });
 
-    $("body").on('click', '.btn-removerMedicamento', function (e) {
+    $("body").on('click', '.btn-removeMedicamento', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".medicamentos").remove();
+        $this.closest(".form-group").remove();
     });
 
-    function gerarCloneSelectServico() {
-        $("#servico").append(' <div class="servico row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="servicoCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectServico" name="servicos[]" required id="servico">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Serviço</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerServico remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-
-    }
 
     $("body").on("click", ".addServico", function (e) {
-        e.preventDefault();
-        gerarCloneSelectServico();
-        $(".selectServico").select2({
-            width: " 100%"
+        $("select[name=servico\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("servicos", "servicoCampos", "selectServico", "removeServico");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de serviço.');
+        }
     });
 
-    $("body").on('click', '.btn-removerServico', function (e) {
+    $("body").on('click', '.btn-removeServico', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".servico").remove();
+        $this.closest(".form-group").remove();
     });
 
-    function gerarCloneSelectConsumo() {
-        $("#consumo").append(' <div class="consumo row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="consumoCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectConsumo" name="consumo[]" required id="consumo">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Material de Consumo</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerConsumo remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-    }
 
     $("body").on("click", ".addConsumo", function (e) {
-        e.preventDefault();
-        gerarCloneSelectConsumo();
-        $(".selectConsumo").select2({
-            width: " 100%"
+        $("select[name=materialConsumo\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("consumo", "consumoCampos", "selectConsumo", "removeMaterialConsumo");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de material de consumo.');
+        }
     });
 
-    $("body").on('click', '.btn-removerConsumo', function (e) {
+    $("body").on('click', '.btn-removeMaterialConsumo', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".consumo").remove();
+        $this.closest(".form-group").remove();
     });
-
-    function gerarCloneSelectPermanente() {
-        $("#permanente").append(' <div class="permanente row">\n\
-                                        <div class="col-sm-5">\n\
-                                            <div class="panel-body">\n\
-                                                <div class="permanenteCampos input-group">\n\
-                                                    <span class="input-group-addon">\n\
-                                                         <p class="fa fa-list inputPFa"></p>\n\
-                                                    </span>\n\
-                                                    <select class="form-control selectPermanente" name="permanente[]" required id="permanente">\n\
-                                                        <option value="0" selected="">Selecione um tipo de Material Permanente</option>\n\
-                                                    </select>\n\
-                                                </div>\n\
-                                            </div>\n\
-                                        </div>\n\
-                                        <div class="col-md-3">\n\
-                                            <div class="panel-body">\n\
-                                                <button class="fa fa-remove btn btn-danger btn-removerPermanente remover"></button>\n\
-                                            </div>\n\
-                                        <div>\n\
-                                    </div>');
-    }
 
     $("body").on("click", ".addPermanente", function (e) {
-        e.preventDefault();
-        gerarCloneSelectPermanente();
-        $(".selectPermanente").select2({
-            width: " 100%"
+        $("select[name=materialPermanente\\[\\]]").each(function () {
+            if ($(this).val() == 0 || $(this).val() == '') {
+                clone = false;
+            } else {
+                clone = true;
+            }
         });
+        if (clone == true) {
+            e.preventDefault();
+            gerarCloneSelect("permanente", "permanenteCampos", "selectPermanente", "removePermanente");
+        } else {
+            e.preventDefault();
+            $('.selectMedicamentos').focus();
+            func.modalAlert('Selecione um tipo de material permanente.');
+        }
     });
 
-    $("body").on('click', '.btn-removerPermanente', function (e) {
+    $("body").on('click', '.btn-removePermanente', function (e) {
         e.preventDefault();
         var $this = $(this);
-        $this.closest(".permanente").remove();
+        $this.closest(".form-group").remove();
     });
 
 //******************************************************************************************
@@ -232,6 +202,20 @@ $(document).ready(function () {
                 materialPermanente: materialPermanente
             };
 
+            var empDist = null;
+            if ($('#empDistS').is(":checked")) {
+                empDist = '1';
+            } else {
+                empDist = "0";
+            }
+
+            var empExc = null;
+            if ($('#empExcS').is(":checked")) {
+                empExc = '1';
+            } else {
+                empExc = "0";
+            }
+
             if ($("#id_tipo_fornecedor").val() == 1) {
                 if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0) || PessoaFisica.cpf == '' || PessoaFisica.tl_celular == ''){
                     func.modalAlert(func.msgPreencherCampos);
@@ -246,7 +230,12 @@ $(document).ready(function () {
                 }
             }
 
-            if (Pessoa.cep == '' || (Pessoa.cidade == '' || Pessoa.cidade == 0) || (Pessoa.estado == '' || Pessoa.estado == 0) || (Pessoa.pais == '' || Pessoa.pais == 0) || Pessoa.bairro == '' || Pessoa.empDist == '' || Pessoa.empExc == '' || Pessoa.logradouro == ''){
+            if (Pessoa.cep == '' || (Pessoa.cidade == '' || Pessoa.cidade == 0) || (Pessoa.estado == '' || Pessoa.estado == 0) || (Pessoa.pais == '' || Pessoa.pais == 0) || Pessoa.bairro == '' || empDist == '' || empExc == '' || Pessoa.logradouro == ''){
+                func.modalAlert(func.msgPreencherCampos);
+                return false;
+            }
+
+            if ((MaterialServico.materialPermanente == '' || MaterialServico.materialPermanente == 0) || (MaterialServico.materialConsumo == '' || MaterialServico.materialConsumo == 0) || (MaterialServico.medicamento == '' || MaterialServico.medicamento == 0) || (MaterialServico.servico == '' || MaterialServico.servico == 0)) {
                 func.modalAlert(func.msgPreencherCampos);
                 return false;
             }
@@ -256,10 +245,10 @@ $(document).ready(function () {
                 pessoaJuridica: PessoaJuridica,
                 pessoa: Pessoa,
                 materialServico: MaterialServico,
-                empExc: $("input[name='emp_exc']:checked").val(),
-                empDist: $("input[name='emp_dist']:checked").val()
+                empExc: empExc,
+                empDist: empDist
             };
-
+            
             $.ajax({
                 "url": "request.php",
                 "dataType": "html",
@@ -279,12 +268,12 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao, 'danger');
-                        console.log(response);
+                        // console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log(response);
+                            // console.log(response);
                             func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
@@ -296,14 +285,14 @@ $(document).ready(function () {
                         func.fechaModalHref('/pages/sistema/login/index.php');
                         return false;
                     } else {
-                        console.log(response);
+                        // console.log(response);
                         func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
+                    // console.log(response);
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
@@ -313,7 +302,7 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-limpar', function (e) {
-        location.reload();
+        $('#form_fornecedor').reset();
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {
@@ -515,14 +504,55 @@ $(document).ready(function () {
             $('.juridica').hide();
             $('.fisica').show();
             $('.resto').show();
+            $('#form_fornecedor input').val("");
+            $('input[type=checkbox]').attr('checked', false);
+            $('.select').val(0).trigger('change.select2');
         } else if ($('#id_tipo_fornecedor').val() == 2) {
             $('.juridica').show();
             $('.fisica').hide();
             $('.resto').show();
+            $('#form_fornecedor input').val("");
+            $('input[type=checkbox]').attr('checked', false);
+            $('.select').val(0).trigger('change.select2');
         } else {
             $('.juridica').hide();
             $('.fisica').hide();
             $('.resto').hide();
+            $('#form_fornecedor').reset();
+            $('input[type=checkbox]').attr('checked', false);
+            $('.select').val(0).trigger('change.select2');
+        }
+    });
+
+    $('body').on("change", "#empDistS", function(){
+        if ($('#empDistS').is(":checked")) {
+            $('#empDistN').prop('disabled', true);
+        } else {
+            $('#empDistN').prop('disabled', false);
+        }
+    });
+
+    $('body').on("change", "#empDistN", function(){
+        if ($('#empDistN').is(":checked")) {
+            $('#empDistS').prop('disabled', true);
+        } else {
+            $('#empDistS').prop('disabled', false);
+        }
+    });
+
+    $('body').on("change", "#empExcS", function(){
+        if ($('#empExcS').is(":checked")) {
+            $('#empExcN').prop('disabled', true);
+        } else {
+            $('#empExcN').prop('disabled', false);
+        }
+    });
+
+    $('body').on("change", "#empExcN", function(){
+        if ($('#empExcN').is(":checked")) {
+            $('#empExcS').prop('disabled', true);
+        } else {
+            $('#empExcS').prop('disabled', false);
         }
     });
 
@@ -563,5 +593,4 @@ $(document).ready(function () {
         listaCidade(estado, 0);
     });
     //******************************************************************************************
-
 });
