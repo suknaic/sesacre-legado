@@ -173,7 +173,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                        and liqDoc.id_liquidacao = liq.id_liquidacao
                  where
                     (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ or liqDoc.id_liquidacao = :id_liquidacao)
-                 or docFis.id_documento_situacao = 1
+                 and docFis.id_documento_situacao = 1
                  and
                     empenho.id_empenho = :id_empenho
                  order by
