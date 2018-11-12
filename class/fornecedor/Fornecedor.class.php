@@ -235,7 +235,7 @@ class Fornecedor {
                     $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
 
                     if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
-                        $pessoaFisica->setNr_cpf(Metodos::validaCPF($this->pessoaFisica['cpf']));
+                        $pessoaFisica->setNr_cpf($this->pessoaFisica['cpf']);
                     } else {
                         return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
                     }
