@@ -147,7 +147,7 @@ $(document).ready(function () {
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
-
+                
                 if (response.tipoMsg === "Erro") {
                     if (response.tipoExibicao === "console") {
                         $("#adAnotacao").modal('hide');

@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoAnotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/PedidoAnotacao.class.php";
 
 $session = new Session();
 
@@ -13,12 +13,12 @@ $finEmpenhoModel = new FinEmpenhoModel();
 $finEmpenhoModel->setIdPedido($id);
 $dados = $finEmpenhoModel->retornaDadosPedido();
 
-$finEmpenhoAnotacao = new FinEmpenhoAnotacao();
-$finEmpenhoAnotacao->setIdPedido($id);
+$pedidoAnotacao = new PedidoAnotacao();
+$pedidoAnotacao->setIdPedido($id);
 
 $tabela = '';
 $total = 0;
-$anotacoes = $finEmpenhoAnotacao->retornaAnotacoes();
+$anotacoes = $pedidoAnotacao->retornaAnotacoes();
 if(!empty($dados[0]["nr_item"])){
     
 foreach ($dados as $l){

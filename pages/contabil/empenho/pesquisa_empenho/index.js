@@ -131,6 +131,11 @@ $(document).ready(function () {
         window.open("/pages/contabil/empenho/edit_empenho/index.php?&id=" + id);
     });
     
+    $('body').on('click', '.enviar-liquidacao', function (e) {
+        var id = $(this).val();
+        window.open("/pages/contabil/liquidacao/cad_liquidacao/index.php?token=" + id);
+    });
+    
 });
 
 function lista(dados) {
