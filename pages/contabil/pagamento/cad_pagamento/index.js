@@ -296,8 +296,8 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -315,11 +315,9 @@ $(document).ready(function () {
                         if (response.tipoExibicao === "console") {
                             console.log('Console Mensagem');
                             func.modalAlert(func.msgErroPadrao);
-                            $this.prop("disabled", false);
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
-                            $this.prop("disabled", false);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {

@@ -264,12 +264,13 @@ class ConPagamento {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao salva o historico pagamento");
             }
-
-            $conPagamentoAnotacoes = new ConPagamentoAnotacoes();
-            $conPagamentoAnotacoes->setIdPagamento($this->id_pagamento);
-            $conPagamentoAnotacoes->setIdPessoa($this->id_pessoa);
-            $conPagamentoAnotacoes->setDsPagamentoAnotacao($this->ds_anotacao);
-            $conPagamentoAnotacoes->salvaAnotacaoPagamento($pdo);
+            if(!empty($this->ds_anotacao)){
+                $conPagamentoAnotacoes = new ConPagamentoAnotacoes();
+                $conPagamentoAnotacoes->setIdPagamento($this->id_pagamento);
+                $conPagamentoAnotacoes->setIdPessoa($this->id_pessoa);
+                $conPagamentoAnotacoes->setDsPagamentoAnotacao($this->ds_anotacao);
+                $conPagamentoAnotacoes->salvaAnotacaoPagamento($pdo);
+            }
 
             if (!$conPagamentoAnotacoes->Sucesso()) {
                 $pdo->rollBack();
