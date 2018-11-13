@@ -222,8 +222,8 @@ class Fornecedor {
             $pessoa->setDs_bairro($this->pessoa['bairro']);
             $pessoa->setNr_cep($this->pessoa['cep']);
             $pessoa->setNm_email(empty($this->pessoa['email']) ? null:$this->pessoa['email']);
-            $pessoa->setNr_telefone_celular(empty($this->pessoaFisica['tl_celular']) ? Metodos::formataTelefone($this->pessoaJuridica['tl_empresa']):Metodos::formataTelefone($this->pessoaFisica['tl_celular']));
-            $pessoa->setNr_elefone_residencial($this->pessoa['tl_residencial'] == '' ? null:Metodos::formataTelefone($this->pessoa['tl_residencial']));
+            $pessoa->setNr_telefone_celular(empty($this->pessoaFisica['tl_celular']) ? Metodos::removeMascaraCel_Tel($this->pessoaJuridica['tl_empresa']):Metodos::removeMascaraCel_Tel($this->pessoaFisica['tl_celular']));
+            $pessoa->setNr_elefone_residencial($this->pessoa['tl_residencial'] == '' ? null:Metodos::removeMascaraCel_Tel($this->pessoa['tl_residencial']));
 
             $continua = false;
             $pessoa->cadastrarPessoa($pdo);
@@ -235,7 +235,7 @@ class Fornecedor {
                     $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
 
                     if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
-                        $pessoaFisica->setNr_cpf(Metodos::validaCPF($this->pessoaFisica['cpf']));
+                        $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
                     } else {
                         return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
                     }
@@ -256,7 +256,7 @@ class Fornecedor {
                     $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
 
                     if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                        $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+                        $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                     } else {
                         return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
                     }

@@ -131,6 +131,7 @@ class FinEmpenhoPesquisa {
             if($tramitacao->Sucesso()){
                 $flVisualizaBotoes = true;
             }
+            $filtroDasCentrais = $flVisualizaBotoes; //O usuário que possuir o cadastro para Tramitar Empenho, não deve filtrar pelas centrais.
             
             //Só pode visualziar o botão de Liquidar o Empenho quem tiver Tramitação Liquidar
             $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
@@ -141,7 +142,7 @@ class FinEmpenhoPesquisa {
             }
                         
             $daoFinEmpenho = new DaoFinEmpenho();
-            $daoFinEmpenho->retornaEmpenhos($pdo, $this->filtroSql());
+            $daoFinEmpenho->retornaEmpenhos($pdo, $this->filtroSql($filtroDasCentrais));
             if ($daoFinEmpenho->sucesso()) {
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
                     $cpf_cnpj_mascarado = !empty($linha['cpf_cnpj']) ? Metodos::formataCnpj($linha['cpf_cnpj']) : "";
@@ -168,7 +169,8 @@ class FinEmpenhoPesquisa {
                                         . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
                                     . '</button>';
                     }
-                    if ($flBotaoLiquidar and $linha['liquida'] == 'S' ) {
+                    //Situação Cadastrado ou Liquidado Parcial Pode Liquidar. Obs.: Tipo de administração por licitação deve existir documento fiscal a liquidar
+                    if ($linha['liquida'] == 'S' and $flBotaoLiquidar) {
                         $tabela .= '<button title="Cadastrar Liquidação" type="button" class="enviar-liquidacao" value="' . $linha['empenho_sm'] . '">'
                                     . '<i class="fa fa-calculator text-purple" aria-hidden="true"></i>'
                                 . '</button>';
@@ -184,7 +186,7 @@ class FinEmpenhoPesquisa {
         }
     }
     
-    private function filtroSql(){
+    private function filtroSql($filtraCentrais = false){
 
         $array_filtro = array();
         $and_ou_where = '';
@@ -263,7 +265,7 @@ class FinEmpenhoPesquisa {
                     'pdo_param' => PDO::PARAM_INT);
             }
             
-            if (!$this->usuario->vPGeral()) {
+            if (!$this->usuario->vPGeral() or !$filtraCentrais) {
                 $and_ou_where = empty($array_filtro) ? " where " : " and ";
                 $array_filtro[] = array(
                     'sql' => $and_ou_where . "(central.id_lotacao) in (select distinct id_lotacao from fin_central_responsavel where id_pessoa = :usuario)",
