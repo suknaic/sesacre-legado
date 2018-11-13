@@ -665,6 +665,206 @@ class Pedido {
             return;
         }
     }
+    
+    public function retornaPedidoAtivoSemEmpenho($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $retorno = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setNrPedido($this->getNrPedido());
+            $daoFinPedido->retornaPedidoSemEmpenho($pdo);
+            
+            if($daoFinPedido->Sucesso()){
+                echo 'teste';
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $retorno .= '<tr class="seleciona-pedido" data-pedido='.$linha['id_pedido'].' style="cursor:pointer;">'
+                                . '<td>'.$linha['nr_pedido'].'</td>'
+                                . '<td>'.$linha['ds_pedido'].'</td>'
+                                . '<td>'.$linha['nm_tipo_gasto'].'</td>'
+                                . '<td>'.$linha['nr_fonte'].'</td>'
+                                . '<td>'.$linha['ds_despesa_elemento'].'</td>'
+                                . '<td>'.Metodos::ConverteValorBr($linha['vl_pedido'],4).'</td>'
+                                . '<td>'.$linha['tp_contrato'].'</td>'
+                                . '<td>'.$linha['nr_contrato'].'</td>'
+                                . '<td>'.$linha['nm_modalidade'].'</td>'
+                                . '<td>'.$linha['ds_programa_trabalho'].'</td>'
+                                . '<td>'.$linha['nm_pedido_situacao'].'</td>'
+                            . '</tr>';
+                }
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaPedidoContratoAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosContrato = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaDadosPedidoContratoAccordion($pdo);
+            
+            if ($daoFinPedido->sucesso()) {
+                $campos = $daoFinPedido->getMsgRetorno();
+                $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingOne">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionOne" href="#collapseOne"
+                                                        aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                                                <div class="panel-body">
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Licitação:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                        <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Tipo de gasto:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Objeto:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Modalidade:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
+                                                            <div class="col-sm-10"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Contrato:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_contrato"],4) . '</div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }        
+    }
+    
+    public function retornaDadosPedidoAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedido = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaDadosPedidoAccordion($pdo);
+            
+            if ($daoFinPedido->sucesso()) {
+                $campos = $daoFinPedido->getMsgRetorno();
+                $saldoOrdenar = '';
+                if ($campos['id_tipo_solicitacao'] == '2') {
+                    $saldoOrdenar = '<div class="form-group">
+                                        <div class="col-sm-2"><b>Saldo a Ordenar:</b></div>
+                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
+                                    </div>';
+                }
+                $dadosPedido .= '<div class="panel-group" id="dadosPedido">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" href="#infoPedido">
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] .'/'. $campos["ano"] . '</span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+
+                                            <div id="infoPedido" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Descrição:</b></div>
+                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Fonte:</b></div>
+                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Funcional Programática:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . ' - ' . $campos["ds_programa_trabalho"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Elemento de Despesa:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . ' - ' . $campos["ds_despesa_elemento"] . '</div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Sub-Elemento:</b></div>
+                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . ' - ' . $campos["ds_despesa"] . '</div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                    </div>'
+                                                    . $saldoOrdenar.
+                                                    
+                                                '</div>
+                                            </div>
+                                         </div>
+                                    </div>';
+            }
+            return $dadosPedido;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }        
+    }
 
     public function retornaPedidoGdof($pdo) {
         try {
