@@ -74,7 +74,6 @@ class ConPagamentoDoc {
         try {
 
             if (!empty($this->id_documento_fiscal) && !empty($this->id_pagamento) && !empty($this->vl_documento_fiscal) && !empty($this->vl_pagamento_doc_saldo)) {
-
                 $daoConPagamentoDoc = new DaoConPagamentoDoc();
                 $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
                 $daoConPagamentoDoc->setIdDocumentoFiscal($this->id_documento_fiscal);
@@ -117,7 +116,7 @@ class ConPagamentoDoc {
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'], 4) . "</td>"
                             . "<td class='text-center'>
                             <input class='form-control valorRetPagamento' type='text' name='valorRetPagamento[]' id='valorRetPagamento[]' 
-                             value='".Metodos::ConverteValorBr($linha['vl_pagamento_doc'], 4)."' disabled = 'true'>
+                             value='".Metodos::ConverteValorBr($linha['vl_pagamento_doc'], 4)."'>
                             </td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
                             . "<td class='text-center'>"
