@@ -179,7 +179,7 @@ require_once "index.load.php";
                                                                             <th class="text-center">Data Emissão</th>
                                                                             <th class="text-center">Data Atesto</th>
                                                                             <th class="text-center">Valor Total</th>
-                                                                            <th class="text-center">Saldo</th>
+                                                                            <th class="text-center">Saldo a Pagar</th>
                                                                             <th class="text-center">Valor do Pagamento</th>
                                                                             <th class="text-center">Situação</th>
                                                                             <th class="text-center">Ação</th>
@@ -209,7 +209,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Nº do pagamento:</b></div>
+                                                            <div class="col-sm-2"><b>Nº do Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
@@ -220,7 +220,7 @@ require_once "index.load.php";
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <div class="col-sm-2"><b>Data da Pagamento:</b></div>
+                                                            <div class="col-sm-2"><b>Data do Pagamento:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
