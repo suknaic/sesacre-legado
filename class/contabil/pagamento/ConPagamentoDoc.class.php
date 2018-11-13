@@ -114,7 +114,7 @@ class ConPagamentoDoc {
                             . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
                             . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'], 4) . "</td>";
                     if ($edita) {
-                        $tabela .= "<td class='text-center'>" . Metodos::ConverteValorBr($linha['saldoReal'], 4) . "</td>";
+                        $tabela .= "<td class='text-center'>" . Metodos::ConverteValorBr($linha['saldoreal'], 4) . "</td>";
                     } else {
                         $tabela .= "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_pagamento_doc_saldo'], 4) . "</td>";
                     }
