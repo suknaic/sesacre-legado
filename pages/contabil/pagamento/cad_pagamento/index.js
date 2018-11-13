@@ -315,9 +315,11 @@ $(document).ready(function () {
                         if (response.tipoExibicao === "console") {
                             console.log('Console Mensagem');
                             func.modalAlert(func.msgErroPadrao);
+                            $this.prop("disabled", false);
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
+                            $this.prop("disabled", false);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
