@@ -49,24 +49,82 @@ require_once "index.load.php";
                     <div id="page-title">
                         <h1 class="page-header text-overflow">Cadastro do Empenho</h1> 
                     </div>
-                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                    <!--End page title-->
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/empenho/pesquisa_empenho/">Voltar</a></li>                        
                     </ol>
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!--Modal pedidos content-->
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalPedido" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Busca de Pedido</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group mar-btm">
+                                        <input type="text" id="codPedidoPesquisa" placeholder="Número do Pedido" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="button" id="btn-pesquisa">
+                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
+                                            </button>
+                                        </span>
+                                    </div>
 
+                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="tabelaPedidos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Pedido</th>
+                                                            <th>Descrição</th>
+                                                            <th>Tipo de gasto</th>
+                                                            <th>Fonte</th>
+                                                            <th>Despesa</th>
+                                                            <th>Valor</th>
+                                                            <th>Ata</th>
+                                                            <th>Contrato</th>
+                                                            <th>Modalidade</th>
+                                                            <th>Projeto/Atividade</th>
+                                                            <th>Situação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-
-                        
-                        <form class="form-horizontal">
-                            <div class="panel">
+                        <form class="form-horizontal" id="form-documento" role="form">
+                            <input type="hidden" value="<?php echo $pedido; ?>" id="pedido_get" />
+                            <div class="panel">                                
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <div class="panel-body">
+                                            Pesquisa Pedido:<span class="text-danger">*</span>
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
+                                                <input class="form-control" type="text" name="pedido" id="pedido" disabled />
+                                                <span class="input-group-btn pesquisaItem" data-target="#modalPedido" data-toggle="modal">
+                                                    <button type="button" class="btn btn-primary" ><i class="fa fa-search" aria-hidden="true"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-                                            <?php echo $dadosDoContrato; ?>
+
                                         </div>
                                     </div>
                                 </div>
@@ -74,8 +132,7 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-                                            <?php echo $dadosDoPedido; ?>
-                                            <?php echo $dadosDaDiaria; ?>
+
                                         </div>
                                     </div>
                                 </div>
@@ -83,28 +140,27 @@ require_once "index.load.php";
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body itens-pedido">
-                                            <?php echo $itensDoPedido; ?>
+                                            
                                         </div>
                                     </div>
                                 </div>
-                                 
+
+                                
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-                                            <div class="panel-group"">
+                                            <div class="panel-group">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" >
                                                         <h4 class="panel-title">Dados do Empenho</h4>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <input type="hidden" id="id_empenho" value="<?php echo $dadosDoEmpenho['id_empenho']; ?>">
-                                                        <input type="hidden" id="id_pedido" value="<?php echo $dadosDoEmpenho['id_pedido']; ?>">
                                                         <div class="form-group">
                                                             <div class="col-sm-2"><b>Nº do Empenho:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="nr_empenho" id="nr_empenho" value="<?php echo $dadosDoEmpenho['nr_empenho']; ?>" />
+                                                                    <input class="form-control" type="text" name="nr_empenho" id="nr_empenho" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -116,7 +172,7 @@ require_once "index.load.php";
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
                                                                     <select class="form-control select" name="id_tipo_empenho" id="id_tipo_empenho">
-                                                                        <?php echo $empenho->retornaOptionsTipoEmpenho(); ?>
+                                                                       <?php echo $empenho->retornaOptionsTipoEmpenho(); ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -128,7 +184,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-calendar" style="margin-bottom: -4px"></p></span>
-                                                                    <input class="form-control" type="text" name="dt_empenho" id="dt_empenho" value="<?php echo $dadosDoEmpenho['dt_empenho_safira']; ?>" />
+                                                                    <input class="form-control" type="text" name="dt_empenho" id="dt_empenho"  />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -139,7 +195,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo Metodos::ConverteValorBr($dadosDoEmpenho['vl_pedido'],4); ?>" disabled />
+                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -150,7 +206,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-file-text-o" style="margin-bottom: -4px"></p></span>
-                                                                    <textarea class="form-control" type="text" name="ds_empenho" id="ds_empenho"><?php echo $dadosDoEmpenho['ds_empenho']; ?></textarea>
+                                                                    <textarea class="form-control" type="text" name="ds_empenho" id="ds_empenho"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -161,36 +217,66 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- CAMPO DO REMETENTE -->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body">
+                                        <div class="panel-body remetente">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Anotações
-                                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            </button>
-                                                        </h4>
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Remetente</h4>
                                                     </div>
-
                                                     <div class="panel-body">
-                                                        <textarea class="form-control anotacoes" rows="7" readonly><?php echo $anotacoes; ?></textarea>
+                                                        <div class="row">
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente">
+                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- FIM CAMPO REMETENTE-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab">
+                                                        <h4 class="panel-title">Anotações</h4>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <textarea class="form-control" rows="7" id="anotacoes"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <div  class="col-sm-12">
                                         <div class="panel-body">
-                                            <button class="btn btn-success btn-salvar btn-rounded" type="button">
-                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar Edição
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
                                             </button>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
