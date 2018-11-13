@@ -338,7 +338,13 @@ class Liquidacao {
         }
     }
 
-    function verificaDocumentosDiferenteDeALiquidar(PDO $pdo = null) {
+    /**
+     * 
+     * @param type $idsDocFiscaisParaVerificar
+     * @param PDO $pdo
+     * @return type
+     */
+    function verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, PDO $pdo = null) {
         $this->sucesso = false;
         try {
             if (!empty($pdo)) {
@@ -347,8 +353,8 @@ class Liquidacao {
 
                 $arrayAux = array();
 
-                if ($this->getDocumentos()) {
-                    foreach ($this->getDocumentos() as $documento) {
+                if ($idsDocFiscaisParaVerificar) {
+                    foreach ($idsDocFiscaisParaVerificar as $documento) {
                         $arrayAux[] = $documento['id_documento_fiscal'];
                     }
                 }
@@ -463,7 +469,8 @@ class Liquidacao {
                 //Se cadastro da liquidação possuir documentos fiscais, 
                 //verifica se os mesmos encontram-se na situação de 'A Liquidar'
                 if ($this->getDocumentos()) {
-                    if ($this->verificaDocumentosDiferenteDeALiquidar($pdo)) {
+                    $idsDocFiscaisParaVerificar = $this->getDocumentos();
+                    if ($this->verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, $pdo)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Há documentos com situação diferente de 'A Liquidar'.");
                     }
@@ -627,14 +634,14 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
 
-                if ($this->getDocumentos()) {
+                if ($this->getDocumentos()) {                                                                                                                     
                     //Atualiza os Documentos Fiscais na Liquidação
                     if (!$this->atualizaDocumentosLiquidacao($pdo)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                     }
                 }
-
+                               
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
             } else {
@@ -686,8 +693,28 @@ class Liquidacao {
                 $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
 
 
-                if ($this->getDocumentos()) {
-
+                if ($this->getDocumentos()) {                                       
+                    /*
+                     * Verifica se o Documento Fiscal que está sendo incluído está na diferente 
+                     * da situação a Liquidar
+                     */                                        
+                    if(!empty($arrayInsert)){
+                        $idsDocFiscaisParaVerificar = array();
+                        foreach ($arrayInsert as $key => $value) {
+                            $kI = array_search($value, array_column($this->getDocumentos(), "id_documento_fiscal"));
+                            if ($kI === false) {
+                                continue;
+                            }
+                            $idsDocFiscaisParaVerificar[] = $this->getDocumentos()[$kI];                                                
+                        }
+                        
+                        if ($this->verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, $pdo)) {                        
+                            $this->sucesso = false;
+                            $this->mensagens = "Há documentos com situação diferente de 'A Liquidar'.";
+                            return false;                            
+                        }                                                                        
+                    }
+                                      
                     foreach ($this->getDocumentos() as $documento) {
                         $liquidacaoDoc->setIdDocumentoFiscal($documento['id_documento_fiscal']);
                         $liquidacaoDoc->setVlLiquidacaoDoc($documento['vl_liquidacao_doc']);
