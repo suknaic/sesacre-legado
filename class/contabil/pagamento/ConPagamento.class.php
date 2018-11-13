@@ -230,6 +230,12 @@ class ConPagamento {
                         return Metodos::retornoAjax("Erro", "alert", "Verifique os valore(s) do(s) documento(s) fiscais.");
                     }
 
+                    if (round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4) == 0) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax("Erro", "alert", "Valor do documento tem que ser maior que 0");
+                    }
+
+
                     $conPagamentoDoc = new ConPagamentoDoc();
                     $conPagamentoDoc->setIdPagamento($this->id_pagamento);
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
@@ -490,7 +496,7 @@ class ConPagamento {
             }
 
             if (!empty($this->docs_pagamento)) {
-                
+
                 foreach ($this->docs_pagamento as $dados) {
                     $daoConPagamento->retornaSaldoDocumentoFiscalEdicao($pdo, $dados["id_documento_fiscal"]);
                     $saldo = $daoConPagamento->getMsgRetorno()["saldo"];
@@ -498,12 +504,12 @@ class ConPagamento {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna o saldo do documento fiscal.");
                     }
-                    
-                    if(round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4) == 0){
+
+                    if (round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4) == 0) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Valor do documento tem que ser maior que 0");
                     }
-                    
+
                     if (round($saldo, 4) < round(Metodos::ConverteValorIng($dados["vl_pagamento_doc"]), 4)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente verifique os valore(s) do(s) documento(s) fiscais.");
@@ -512,7 +518,7 @@ class ConPagamento {
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
                     $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
                     $conPagamentoDoc->setVlPagamentoDocSaldo(Metodos::ConverteValorBr($saldo, 4));
-                    
+
                     $conPagamentoDoc->salvaDocPagamento($pdo);
 
                     if (!$conPagamentoDoc->Sucesso()) {
