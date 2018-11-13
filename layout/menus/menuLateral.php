@@ -54,10 +54,10 @@
                                             <a href="/pages/sistema/vinculo/index.php">Vínculo</a>
                                         </li>
 
-<!--                                        <li>-->
-<!--                                            <a href="/pages/sistema/servidores/index.php">Servidores</a>-->
-<!--                                        </li>-->
-         
+                                        <!--                                        <li>-->
+                                        <!--                                            <a href="/pages/sistema/servidores/index.php">Servidores</a>-->
+                                        <!--                                        </li>-->
+
                                     </ul>
                                     <ul class="collapse">
                                         <li>
@@ -299,7 +299,28 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/autorizacoes/index.php">
+                                    <a href="#">
+                                        <span class="menu-title">Gerenciar Ordem</span>
+                                        <i class="arrow"></i>
+                                    </a>
+
+                                    <ul class="collapse">
+                                        <li>
+                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Ordem</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="/pages/financeiro/reativacao_ordem/pesquisa_reativacao/index.php">Reativação da Ordem</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">Autorização da Reativação da Ordem</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#">
                                         <span class="menu-title">GDOF</span>
                                         <i class="arrow"></i>
                                     </a>
@@ -367,8 +388,8 @@
                                 </li>
                             </ul>
                         </li>
-                        
-                         <!--Menu list Finaceiro-->
+
+                        <!--Menu list Finaceiro-->
                         <li>
                             <a href="#">
                                 <i class="fa fa-money" aria-hidden="true"></i>
@@ -397,17 +418,17 @@
                                         </li>                                                                                  
                                     </ul>
                                 </li>
-                                
+
                                 <li>
                                     <a href="/pages/contabil/liquidacao/pesquisa_liquidacao/">Liquidação</a>
                                 </li>
-                                
+
                                 <li>
                                     <a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Pagamento</a>
                                 </li>
-                                
-                               
-                                
+
+
+
                                 <li>
                                     <a href="#">
                                         <span class="menu-title">Administração</span>
@@ -457,11 +478,11 @@
                                 <li>
                                     <a href="/pages/compras/produto/lista_produto/index.php">Banco de Produto</a>
                                 </li>
-                                
-<!--                                <li>
-                                    <a href="/pages/compras/gestao_contratos/cad_item.php?&id=1">itens</a>
-                                </li>-->
-                                
+
+                                <!--                                <li>
+                                                                    <a href="/pages/compras/gestao_contratos/cad_item.php?&id=1">itens</a>
+                                                                </li>-->
+
                                 <li>
                                     <a href="/pages/compras/gestao_contratos/perfil/index.php">Perfil Contratos</a>
                                 </li>

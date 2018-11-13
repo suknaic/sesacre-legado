@@ -293,8 +293,8 @@ $(document).ready(function () {
                     "dados": dados
                 },
                 "success": function (response) {
-                    console.log(response);
                     $this.prop("disabled", false);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -303,8 +303,8 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
                         console.log("Parse JSON");
+                        func.modalAlert(func.msgErroPadrao);
                         return false;
                     }
 
@@ -314,6 +314,7 @@ $(document).ready(function () {
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         } else if (response.tipoExibicao === "alert") {
+                            $this.prop("disabled", false);
                             func.modalAlert(response.msg);
                             return false;
                         }
