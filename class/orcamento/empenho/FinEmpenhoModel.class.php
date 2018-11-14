@@ -405,6 +405,16 @@ class FinEmpenhoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
+            
+            //Só pode Editar o empenho quem possui a Tramitação de Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->id_pessoa);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Empenho.");
+            }
+            
             $sucesso = false;
             $daoFinEmpenho = new DaoFinEmpenho();
             //removendo barra do numero do empenho
