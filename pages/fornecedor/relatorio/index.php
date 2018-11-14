@@ -80,51 +80,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 juridica">
-                                        <div class="panel-body">Razão Social:
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-file-text-o inputPFa"></p>
-                                                </span>
-                                                <input type="text" class="form-control" name="rz_social" id="rz_social" required="true">
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-sm-4 fisica">
-                                        <div class="panel-body">Nome da Pessoa:
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-file-text-o inputPFa"></p>
-                                                </span>
-                                                <input type="text" class="form-control" name="nm_pessoa" id="nm_pessoa" required="true">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4 fisica">
-                                        <div class="panel-body">CPF:
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
-                                                </span>
-                                                <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" required="true" placeholder="___.___.___-__">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4 juridica">
-                                        <div class="panel-body">CNPJ:
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
-                                                </span>
-                                                <input type="text" class="form-control" name="nr_cnpj" id="nr_cnpj" required="true"  placeholder="__.___.___/____-__">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <div class="col-sm-4">
                                         <div class="panel-body">Medicamentos:
                                             <div class="medicamentosCampos">
@@ -139,7 +95,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-sm-4">
                                         <div class="panel-body">Serviços:
                                             <div class="servicoCampos">
@@ -179,6 +134,49 @@
                                                         <!--                                                        <option value="0">Selecione o tipo material permanente</option>-->
                                                     </select>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 juridica">
+                                        <div class="panel-body">Razão Social:
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                </span>
+                                                <input type="text" class="form-control" name="rz_social" id="rz_social" required="true">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 fisica">
+                                        <div class="panel-body">Nome da Pessoa:
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                </span>
+                                                <input type="text" class="form-control" name="nm_pessoa" id="nm_pessoa" required="true">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 fisica">
+                                        <div class="panel-body">CPF:
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                </span>
+                                                <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" required="true" placeholder="___.___.___-__">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 juridica">
+                                        <div class="panel-body">CNPJ:
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                </span>
+                                                <input type="text" class="form-control" name="nr_cnpj" id="nr_cnpj" required="true"  placeholder="__.___.___/____-__">
                                             </div>
                                         </div>
                                     </div>
