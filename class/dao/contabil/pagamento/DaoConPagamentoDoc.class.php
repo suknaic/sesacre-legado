@@ -55,8 +55,11 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
                         inner join fin_documento_situacao as situacao
                         on situacao.id_documento_situacao = documento.id_documento_situacao
                         left join (select sum(vl_pagamento_doc) as saldo, id_documento_fiscal 
-                                           from con_pagamento_doc 
-                                           group by id_documento_fiscal) 
+                                   from con_pagamento as pag
+                                   inner join con_pagamento_doc as pagDoc
+                                   on pag.id_pagamento = pagDoc.id_pagamento
+                                   where pag.id_pagamento_situacao = 1 
+                                   group by id_documento_fiscal) 
                         as somaDocs
                         on somaDocs.id_documento_fiscal = documento.id_documento_fiscal
                         where pagamento.id_pagamento = :pagamento";
