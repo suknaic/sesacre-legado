@@ -447,6 +447,9 @@
                                     <a href="/pages/compras/fornecedores/">Fornecedores</a>
                                 </li>
                                 <li>
+                                    <a href="/pages/fornecedor/relatorio/">Relatórios de Fornecedores</a>
+                                </li>
+                                <li>
                                     <a href="/pages/compras/gcon/">
                                         <span class="menu-title">Gestão Compras</span>
                                     </a>
