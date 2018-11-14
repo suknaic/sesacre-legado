@@ -81,74 +81,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4">
-                                        <div class="panel-body">Medicamentos:
-                                            <div class="medicamentosCampos">
-                                                <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-list inputPFa"></p>
-                                                        </span>
-                                                    <select id="id_medicamentos" class="form-control select selectMedicamentos" title="Selecione o tipo de Medicamento" multiple name="medicamento[]">
-                                                        <!--                                                        <option value="0">Selecione o tipo de Medicamento</option>-->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="panel-body">Serviços:
-                                            <div class="servicoCampos">
-                                                <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-list inputPFa"></p>
-                                                        </span>
-                                                    <select id="id_servicos" class="form-control select selectServico" multiple title="Selecione o tipo de Serviço" name="servico[]">
-                                                        <!--                                                        <option value="0">Selecione o tipo de Serviço</option>-->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="panel-body">Material de Consumo:
-                                            <div class="consumoCampos">
-                                                <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-list inputPFa"></p>
-                                                        </span>
-                                                    <select id="id_material_consumo" class="form-control select selectConsumo" multiple title="Selecione o tipo de Material de Consumo" name="materialConsumo[]">
-                                                        <!--                                                        <option value="0">Selecione o tipo de Material de Consumo</option>-->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="panel-body">Material Permanente:
-                                            <div class="permanenteCampos">
-                                                <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <p class="fa fa-list inputPFa"></p>
-                                                        </span>
-                                                    <select id="id_material_permanente" class="form-control select selectPermanente" multiple title="Selecione o tipo de material permanente" name="materialPermanente[]">
-                                                        <!--                                                        <option value="0">Selecione o tipo material permanente</option>-->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4 juridica">
-                                        <div class="panel-body">Razão Social:
-                                            <div class="input-group">
-                                                <span class="input-group-addon">
-                                                    <p class="fa fa-file-text-o inputPFa"></p>
-                                                </span>
-                                                <input type="text" class="form-control" name="rz_social" id="rz_social" required="true">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="col-sm-4 fisica">
                                         <div class="panel-body">Nome da Pessoa:
                                             <div class="input-group">
@@ -170,6 +102,18 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4 juridica">
+                                        <div class="panel-body">Razão Social:
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                </span>
+                                                <input type="text" class="form-control" name="rz_social" id="rz_social" required="true">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-sm-4 juridica">
                                         <div class="panel-body">CNPJ:
                                             <div class="input-group">
@@ -177,6 +121,66 @@
                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                 </span>
                                                 <input type="text" class="form-control" name="nr_cnpj" id="nr_cnpj" required="true"  placeholder="__.___.___/____-__">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="panel-body">Medicamentos:
+                                            <div class="medicamentosCampos">
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                    <select id="id_medicamentos" class="form-control select selectMedicamentos" title="Selecione o tipo de Medicamento" multiple name="medicamento[]">
+                                                        <!--                                                        <option value="0">Selecione o tipo de Medicamento</option>-->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="panel-body">Serviços:
+                                            <div class="servicoCampos">
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                    <select id="id_servicos" class="form-control select selectServico" multiple title="Selecione o tipo de Serviço" name="servico[]">
+                                                        <!--                                                        <option value="0">Selecione o tipo de Serviço</option>-->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="panel-body">Material de Consumo:
+                                            <div class="consumoCampos">
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                    <select id="id_material_consumo" class="form-control select selectConsumo" multiple title="Selecione o tipo de Material de Consumo" name="materialConsumo[]">
+                                                        <!--                                                        <option value="0">Selecione o tipo de Material de Consumo</option>-->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="panel-body">Material Permanente:
+                                            <div class="permanenteCampos">
+                                                <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <p class="fa fa-list inputPFa"></p>
+                                                        </span>
+                                                    <select id="id_material_permanente" class="form-control select selectPermanente" multiple title="Selecione o tipo de material permanente" name="materialPermanente[]">
+                                                        <!--                                                        <option value="0">Selecione o tipo material permanente</option>-->
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
