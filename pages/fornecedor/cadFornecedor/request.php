@@ -15,7 +15,6 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/cidade/Cidade.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Metodos.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/Fornecedor.class.php";
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoaJuridica/PessoaJuridica.class.php";
     $session = new Session('ajaxSemAcesso');
 
     switch ($_REQUEST['acao']) {
