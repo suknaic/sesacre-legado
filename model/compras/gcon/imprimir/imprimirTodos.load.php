@@ -46,7 +46,7 @@ if (!$session->vPCompras()) {
                         .direita{float:left; width:70%; text-align: left;}
                         .matricula{float:right; width:30%; text-align: right;}
                         .nome{float: left; width:50%;}
-                        td{padding: 1%;ont-size: 9pt;text-align: center;border: 1px solid black;}
+                        td{padding: 1%;font-size: 9pt;text-align: center;border: 1px solid black;}
                         .table {margin-top: 2%;border-collapse: collapse;width: 100%;}
                         @page land {size: landscape;}
                         #landscape {page: land;}       
