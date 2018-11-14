@@ -426,7 +426,7 @@ class DaoFinPedido extends FinPedidoTb {
             } else {
                 $this->sucesso = false;
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
@@ -459,9 +459,69 @@ class DaoFinPedido extends FinPedidoTb {
                     $this->sucesso = false;
                 }
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaPedidoSemEmpenho(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    pedido.id_pedido,
+                    pedido.nr_pedido,
+                    pedido.ds_pedido,
+                    tpGasto.nm_tipo_gasto,
+                    fonte.nr_fonte,
+                    (despesa.cd_despesa_elemento || ' - ' || despesa.ds_despesa_elemento) as ds_despesa_elemento,
+                    pedido.vl_pedido,
+                    contrato.tp_contrato,
+                    contrato.nr_contrato,
+                    (programa_trabalho.cd_programa_trabalho || ' - ' || programa_trabalho.ds_programa_trabalho) as ds_programa_trabalho,
+                    modalidade.nm_modalidade,
+                    pedido_situacao.nm_pedido_situacao
+                from
+                    fin_pedido pedido
+                inner join pla_tipo_gasto tpGasto on
+                    tpGasto.id_tipo_gasto = pedido.id_tipo_gasto
+                inner join fin_fonte fonte on
+                    fonte.id_fonte = pedido.id_fonte
+                inner join view_despesa_elemento despesa on
+                    despesa.id_despesa_elemento = pedido.id_despesa_elemento
+                inner join fin_programa_trabalho programa_trabalho on
+                    programa_trabalho.id_programa_trabalho = pedido.id_programa_trabalho
+                inner join fin_pedido_situacao pedido_situacao on
+                    pedido_situacao.id_pedido_situacao = pedido.id_pedido_situacao
+                left join fin_fornecedor fornecedor on
+                    fornecedor.id_fornecedor = pedido.id_fornecedor
+                left join fin_contrato contrato on
+                    contrato.id_contrato = fornecedor.id_contrato
+                left join gco_processo gcon on
+                    gcon.id_processo = contrato.id_processo
+                left join gco_modalidade modalidade on
+                    modalidade.id_modalidade = gcon.id_modalidade
+                left join fin_empenho empenho on
+                    empenho.id_pedido = pedido.id_pedido
+                where  pedido.id_pedido_situacao <> 10 --Diferente de cancelado
+                and empenho.id_empenho is null
+                and pedido.nr_pedido = :pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getNrPedido(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = 'Nenhum pedido encontrado.';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados.';
+            }
+        } catch (PDOException $exc) {
+             $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -1237,4 +1297,141 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
+    public function retornaDadosPedidoContratoAccordion(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    cont.nr_contrato,
+                    cont.nr_contrato,
+                    processo.cd_pregao,
+                    tp.nm_tipo_gasto,
+                    obj.nm_objeto,
+                    central.nm_lotacao,
+                    cont.id_contrato,
+                    mod.nm_modalidade,
+                    p.nm_pessoa,
+                    cont_itens.vl_contrato,
+                    case
+                            when pf.nr_cpf is not null then pf.nr_cpf
+                            when pf.nr_cpf is null then pj.nr_cnpj
+                    end as cpfCnpj
+                from
+                    fin_pedido as pedido 
+                inner join fin_fornecedor as f on
+                    f.id_fornecedor = pedido.id_fornecedor
+                inner join fin_contrato as cont on
+                    cont.id_contrato = f.id_contrato
+                inner join fin_cont_central as cont_central on
+                    cont_central.id_contrato = cont.id_contrato
+                left join ses_lotacao as central on
+                    central.id_lotacao = cont_central.id_lotacao
+                inner join (
+                    select
+                        id_fornecedor,
+                        round(sum(qt_itens * vl_itens), 4) as vl_contrato
+                    from
+                        fin_cont_itens
+                    group by
+                        id_fornecedor) as cont_itens on
+                    cont_itens.id_fornecedor = f.id_fornecedor
+                inner join gco_processo as processo on
+                    processo.id_processo = cont.id_processo
+                inner join gco_objeto as obj on
+                    obj.id_objeto = processo.id_objeto
+                inner join pla_tipo_gasto as tp on
+                    tp.id_tipo_gasto = cont.id_tipo_gasto
+                inner join gco_modalidade as mod on
+                    mod.id_modalidade = processo.id_modalidade
+                inner join ses_pessoa as p on
+                    p.id_pessoa = f.id_pessoa
+                left join ses_pessoa_fisica as pf on
+                    pf.id_pessoa = p.id_pessoa
+                left join ses_pessoa_juridica as pj on
+                    pj.id_pessoa = p.id_pessoa
+                where
+                    pedido.id_pedido = :pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDadosPedidoAccordion(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    p.nr_pedido,
+                    p.id_lotacao,
+                    central.nm_lotacao ,
+                    p.ds_pedido,
+                    f.nr_fonte,
+                    p.id_tipo_solicitacao,
+                    p.id_pedido,
+                    programa.cd_programa_trabalho,
+                    programa.ds_programa_trabalho,
+                    despesa.cd_despesa,
+                    despesa.ds_despesa,
+                    tpSol.nm_tipo_solicitacao,
+                    despesa_elemento.cd_despesa_elemento,
+                    despesa_elemento.ds_despesa_elemento,
+                    p.vl_pedido,
+                    to_char(p.dt_pedido,
+                    'yyyy') as ano,
+                    pedido_saldo.saldo
+                from
+                    fin_pedido as p
+                inner join fin_fonte as f on
+                    f.id_fonte = p.id_fonte
+                inner join view_programa_trabalho as programa on
+                    programa.id_programa_trabalho = p.id_programa_trabalho
+                inner join ses_lotacao as central on
+                    central.id_lotacao = p.id_lotacao
+                inner join view_despesa as despesa on
+                    despesa.id_despesa = p.id_despesa
+                inner join view_despesa_elemento as despesa_elemento on
+                    despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
+                left join (
+                    select
+                        id_pedido,
+                        sum(saldo) as saldo
+                    from
+                        view_pedido_saldo
+                    group by
+                        id_pedido ) as pedido_saldo on
+                    pedido_saldo.id_pedido = p.id_pedido
+                left join fin_tipo_solicitacao as tpSol on
+                    tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
+                where
+                    p.id_pedido = :pedido";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 }

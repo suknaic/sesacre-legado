@@ -47,7 +47,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Detalhes Pagamento</h1> 
+                        <h1 class="page-header text-overflow">Detalhes do Pagamento</h1> 
                     </div>
                     <ol class="breadcrumb">
                         <li><a href="/pages/contabil/pagamento/pesquisa_pagamento/index.php">Voltar</a></li>                        
