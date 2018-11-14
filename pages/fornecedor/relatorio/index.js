@@ -30,18 +30,9 @@ $(document).ready(function () {
                 };
             }
 
-            if ($("#id_tipo_fornecedor").val() == 1) {
-                if (PessoaFisica.cpf == '' && PessoaFisica.nmPessoaFisica == ''){
-                    func.modalAlert(func.msgPreencherCampos);
-                    return false;
-                }
-            }
-
-            if ($("#id_tipo_fornecedor").val() == 2) {
-                if (PessoaJuridica.nmRazaoSoc == '' && PessoaJuridica.cnpj == ''){
-                    func.modalAlert(func.msgPreencherCampos);
-                    return false;
-                }
+            if ($('#id_tipo_fornecedor').val() == '0'){
+                func.modalAlert(func.msgPreencherCampos);
+                return false;
             }
 
             var MaterialServico = {

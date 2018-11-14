@@ -112,6 +112,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-4 juridica">
                                         <div class="panel-body">CNPJ:
                                             <div class="input-group">
@@ -122,6 +123,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-sm-4">
                                         <div class="panel-body">Medicamentos:
                                             <div class="medicamentosCampos">
@@ -136,6 +139,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-4">
                                         <div class="panel-body">Serviços:
                                             <div class="servicoCampos">

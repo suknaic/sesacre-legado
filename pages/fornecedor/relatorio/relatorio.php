@@ -96,7 +96,7 @@ foreach ($busca as $linhas) {
         $html .= "          <td></td>";
     }
 
-    if ($linhas['tipo_pessoa'] == 'pf') {
+    if ($linhas['tipo_pessoa'] == '1') {
         $html .= "          <td>Pessoa Física</td>";
     } else {
         $html .= "          <td>Pessoa Jurídica</td>";
