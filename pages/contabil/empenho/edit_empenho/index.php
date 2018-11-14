@@ -62,31 +62,12 @@ require_once "index.load.php";
                         
                         <form class="form-horizontal">
                             <div class="panel">
-                                <!--Form dos dados do contrato-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body contratos">
-                                            <?php echo $dadosDoContrato; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body pedido">
-                                            <?php echo $dadosDoPedido; ?>
-                                            <?php echo $dadosDaDiaria; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados dos itens do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body itens-pedido">
-                                            <?php echo $itensDoPedido; ?>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                <?php echo $dadosDoContrato; ?>
+                                <?php echo $dadosDoPedido; ?>
+                                <?php echo $dadosDaDiaria; ?>
+                                <?php echo $itensDoPedido; ?>
+
                                  
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">

@@ -45,7 +45,7 @@ switch ($_REQUEST['acao']) {
             $empenhoAnotacao->setIdEmpenho($dados['idEmpenho']);
             $empenhoAnotacao->setIdPessoa($session->getIdUser());
             $empenhoAnotacao->setDsEmpenhoAnotacao($dados['anotacao']);
-            echo $empenhoAnotacao->salvaAnotacao();
+            echo $empenhoAnotacao->salvaAnotacaoComRetorno();
             return;
             break;
             

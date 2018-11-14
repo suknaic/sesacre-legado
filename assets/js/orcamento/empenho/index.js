@@ -2,6 +2,14 @@ $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
     
+    $('body').find('select').select2({
+        width: "100%"
+    });
+    
+    $('select').change( function (){
+        $(this).select2();
+    });
+    
     $("body").on("click", ".btn-pesquisar", function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {

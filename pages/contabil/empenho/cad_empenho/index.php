@@ -120,32 +120,11 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
-                                <!--Form dos dados do contrato-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body contratos">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body pedido">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados dos itens do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body itens-pedido">
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-
                                 
+                                <div id="dadosGerais">
+                                    
+                                </div>
+                               
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
@@ -229,7 +208,7 @@ require_once "index.load.php";
                                                     </div>
                                                     <div class="panel-body">
                                                         <div class="row">
-                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b> <span class="text-danger">*</span></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>

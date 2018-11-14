@@ -62,44 +62,17 @@ require_once "index.load.php";
                         
                         <form class="form-horizontal">
                             <div class="panel">
-                                <!--Form dos dados do contrato-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body contratos">
-                                            <?php echo $dadosDoContrato; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body pedido">
-                                            <?php echo $dadosDoPedido; ?>
-                                            <?php echo $dadosDaDiaria; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Form dos dados dos itens do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body itens-pedido">
-                                            <?php echo $itensDoPedido; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                 <!--Form dos dados dos itens anulados do pedido de necessidade-->
-                                <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                        <div class="panel-body itens-anulados">
-                                            <?php echo $itensAnuladosDoPedido; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                 
+        
+                                <?php echo $dadosDoContrato; ?>
+                                <?php echo $dadosDoPedido; ?>
+                                <?php echo $itensDoPedido; ?>
+                                <?php echo $itensAnuladosDoPedido; ?>
+                                
+                                
                                  <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-                                            <div class="panel-group"">
+                                            <div class="panel-group">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" >
                                                         <h4 class="panel-title">Dados do Empenho</h4>
@@ -176,7 +149,7 @@ require_once "index.load.php";
                                                     </div>
 
                                                     <div class="panel-body">
-                                                        <textarea class="form-control anotacoes" rows="7" readonly disabled></textarea>
+                                                        <textarea class="form-control anotacoes" rows="7" readonly disabled><?php echo $anotacoes; ?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

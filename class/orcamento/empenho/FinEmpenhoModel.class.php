@@ -15,6 +15,7 @@ class FinEmpenhoModel {
     private $vl_empenho = null;
     private $ds_empenho = null;
     private $sit_empenho = null;
+    private $anotacoes = null;
     private $id_empenho_status = null;
     private $sit_cadastrado = 1;
     private $sit_liquidado_parcial = 2;
@@ -27,7 +28,6 @@ class FinEmpenhoModel {
     private $statusAguardandoPagamento = 3;
     private $statusAguardandoFinalizarPagamento = 4;
     private $statusFinalizado = 5;
-    private $msg_erros = null;
     private $sucesso = null;
     private $msgRetorno = null;
 
@@ -37,6 +37,15 @@ class FinEmpenhoModel {
 
     public function getMsgRetorno() {
         return $this->msgRetorno;
+    }
+    
+    function getAnotacoes() {
+        return $this->anotacoes;
+    }
+
+    function setAnotacoes($anotacoes) {
+        $this->anotacoes = $anotacoes;
+        return $this;
     }
 
     public function getStatusAguardandoLiquidacao() {
@@ -57,10 +66,6 @@ class FinEmpenhoModel {
 
     public function getStatusFinalizado() {
         return $this->statusFinalizado;
-    }
-
-    function getMsgErros() {
-        return $this->msg_erros;
     }
 
     function getSitCadastrado() {
@@ -430,6 +435,22 @@ class FinEmpenhoModel {
                 $sucesso = false;
                 return Metodos::retornoAjax("Erro1", "alert", STR_ERROR);
             }
+            
+            //Inserção de anotações, se houver
+            if(!empty($this->anotacoes)){
+                $finEmpenhoAnotacao = new FinEmpenhoAnotacao();
+                $finEmpenhoAnotacao->setIdEmpenho($daoFinEmpenho->getIdEmpenho());
+                $finEmpenhoAnotacao->setDsEmpenhoAnotacao($this->anotacoes);
+                $finEmpenhoAnotacao->setIdPessoa($this->id_pessoa);
+                $finEmpenhoAnotacao->salvaAnotacao($pdo);
+                if(!$finEmpenhoAnotacao->getSucesso()){
+                    $pdo->rollBack();
+                    $sucesso = false;
+                    return Metodos::retornoAjax("Erro7", "alert", $finEmpenhoAnotacao->getMsgRetorno());
+                }
+            }
+            //-------------------------------------------------
+            
             $pedido = 0;
             //retorno os dados do pedido 
             $daoFinEmpenho->retornaInfPedidoEmpenho($pdo);
@@ -1191,42 +1212,6 @@ class FinEmpenhoModel {
         }
     }
 
-    public function atualizaSituacaoStatusEmpenho(PDO $pdo) {
-
-        try {
-
-            $daoFinEmpenho = new DaoFinEmpenho();
-            $daoFinEmpenho->setIdEmpenho($this->getIdEmpenho());
-            $daoFinEmpenho->setSitEmpenho($this->getSitEmpenho());
-            $daoFinEmpenho->setIdEmpenhoStatus($this->getIdEmpenhoStatus());
-
-            $daoFinEmpenho->retornaDadosEmpenho($pdo);
-            if (!$daoFinEmpenho->sucesso()) {
-                $this->msg_erros = "Não foi possível localizar os Dados do Empenho. ";
-                return false;
-            }
-
-            $busca = $daoFinEmpenho->getMsgRetorno();
-
-            //Atualiza a Situação e Status do Empenho
-            $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
-            if (!$daoFinEmpenho->sucesso()) {
-                $this->msg_erros = "Erro ao atualizar a situação e status do Empenho. ";
-                return false;
-            }
-
-            if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
-                $this->msg_erros = "Erro ao registrar a operação de atualização da situação do Empenho no LOG.";
-                return false;
-            }
-
-            return $daoFinEmpenho->sucesso();
-        } catch (Exception $exc) {
-            $this->msg_erros = $exc->getMessage();
-            return false;
-        }
-    }
-
     public function retornaTotalLiquidadoDoEmpenho($pdo) {
         try {
             if (empty($pdo)) {
@@ -1365,67 +1350,72 @@ class FinEmpenhoModel {
                                         <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo"], 4) . '</div>
                                     </div>';
                 }
-                $dadosPedido .= '<div class="panel-group" id="accordionTwo" role="tablist" aria-multiselectable="true">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading" role="tab" id="headingTwo">
-                                                <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordionTwo" href="#collapseTwo"
-                                                        aria-expanded="false" aria-controls="collapseTwo" class="collapsed">
-                                                        <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] .'/'. $campos["ano"] . '</span>
-                                                    </a>
-                                                </h4>
+                $dadosPedido .= '<div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="pedido">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a role="button" data-toggle="collapse" data-parent="#pedido" href="#pedidoDetalhes">
+                                                                <i class="glyphicon glyphicon-chevron-down"></i>
+                                                                <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] .'/'. $campos["ano"] . '</span>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div id="pedidoDetalhes" class="panel-collapse collapse" >
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Descrição:</b></div>
+                                                                <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Fonte:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Funcional Programática:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . ' - ' . $campos["ds_programa_trabalho"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Elemento de Despesa:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . ' - ' . $campos["ds_despesa_elemento"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Sub-Elemento:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_despesa"] . ' - ' . $campos["ds_despesa"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                            </div>'
+                                                            . $saldoOrdenar.
+                                                            '<div class="form-group">
+                                                                <div class="col-sm-2"><b>Saldo a Liquidar:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_liquidar"], 4) . '</div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Saldo a Pagar:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_pagar"], 4) . '</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                 </div>
                                             </div>
-
-                                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
-                                                <div class="panel-body">
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Descrição:</b></div>
-                                                        <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fonte:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Funcional Programática:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . ' - ' . $campos["ds_programa_trabalho"] . '</div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Elemento de Despesa:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . ' - ' . $campos["ds_despesa_elemento"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Sub-Elemento:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_despesa"] . ' - ' . $campos["ds_despesa"] . '</div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Pedido:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
-                                                    </div>'
-                                                    . $saldoOrdenar.
-                                                    '<div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo a Liquidar:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_liquidar"], 4) . '</div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Saldo a Pagar:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_pagar"], 4) . '</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                         </div>
-                                    </div>';
+                                        </div>
+                                    </div>
+                                </div>';
             }
             return $dadosPedido;
         } catch (Exception $ex) {
@@ -1459,70 +1449,76 @@ class FinEmpenhoModel {
                 }
                 
                 if (!empty($destinos)) {
-                    $dadosPedidoDiaria .= "<div class='panel-group' id='diaria'>"
-                                            . "<div class='panel panel-default'>"
-                                                . "<div class='panel-heading'>"
-                                                    . "<h4 class='panel-title'>"
-                                                        . '<a role="button" data-toggle="collapse" data-parent="#diaria" href="#destinos">'
-                                                            . '<i class="glyphicon glyphicon-chevron-down"></i> '
-                                                            . '<b>Dados da Diária: <span style="color:#758697"> Nº ' . $dadosGerais["id_diaria"] .'/'. $dadosGerais["nr_protocolo"] . '</span></b>'
-                                                        . '</a>'
-                                                    . "</h4>"
+                    $dadosPedidoDiaria .= "<div class='form-group'>"
+                                            ."<div class='col-sm-12' style='margin-bottom: -4%;'>"
+                                                ."<div class='panel-body'>"
+                                                    ."<div class='panel-group' id='diaria'>"
+                                                        . "<div class='panel panel-default'>"
+                                                            . "<div class='panel-heading'>"
+                                                                . "<h4 class='panel-title'>"
+                                                                    . '<a role="button" data-toggle="collapse" data-parent="#diaria" href="#destinos">'
+                                                                        . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                                        . '<b>Dados da Diária: <span style="color:#758697"> Nº ' . $dadosGerais["id_diaria"] .'/'. $dadosGerais["nr_protocolo"] . '</span></b>'
+                                                                    . '</a>'
+                                                                . "</h4>"
+                                                            . "</div>"
+                                                            . '<div id="destinos" class="panel-collapse collapse">'
+                                                                . '<div class="panel-body">'
+                                                                    . '<div class="row">'
+                                                                        . '<div class="col-sm-6">'
+                                                                            . '<div class="rpw">'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["nm_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Lotação Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["lt_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Função Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["fn_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                            . '</div>'
+                                                                        . '</div>'
+                                                                        . '<div class="col-sm-6">'
+                                                                            . '<div class="rpw">'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["nm_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Lotação Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["lt_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Função Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["fn_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                            . '</div>'
+                                                                        . '</div>'
+                                                                    . '</div>'
+                                                                    . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                        . '<thead>'
+                                                                            . '<tr>'
+                                                                                . '<th class="text-center">Origem</th>'
+                                                                                . '<th class="text-center">Destino</th>'
+                                                                                . '<th class="text-center">Horário Partida</th>'
+                                                                                . '<th class="text-center">Horário Chegada</th>'
+                                                                                . '<th class="text-center">Qtd. Diárias</th>'
+                                                                                . '<th class="text-center">Valor Unitário</th>'
+                                                                                . '<th class="text-center">Valor Total</th>'
+                                                                            . '</tr>'
+                                                                        . '</thead>'
+                                                                        . '<tbody>'
+                                                                        . $destinos
+                                                                        . '</tbody>'
+                                                                    . '</table>'   
+                                                                . '</div>'                                    
+                                                            . '</div>'
+                                                        . "</div>"
+                                                    . "</div>"
                                                 . "</div>"
-                                                . '<div id="destinos" class="panel-collapse collapse">'
-                                                    . '<div class="panel-body">'
-                                                        . '<div class="row">'
-                                                            . '<div class="col-sm-6">'
-                                                                . '<div class="rpw">'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Proponente:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["nm_proponente"] . '</div>'
-                                                                    .'</div>'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Lotação Proponente:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["lt_proponente"] . '</div>'
-                                                                    .'</div>'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Função Proponente:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["fn_proponente"] . '</div>'
-                                                                    .'</div>'
-                                                                . '</div>'
-                                                            . '</div>'
-                                                            . '<div class="col-sm-6">'
-                                                                . '<div class="rpw">'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Proposto:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["nm_proposto"] . '</div>'
-                                                                    .'</div>'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Lotação Proposto:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["lt_proposto"] . '</div>'
-                                                                    .'</div>'
-                                                                    .'<div class="form-group">'
-                                                                        .'<div class="col-sm-2"><b>Função Proposto:</b></div>'
-                                                                        .'<div class="col-sm-10">' . $dadosGerais["fn_proposto"] . '</div>'
-                                                                    .'</div>'
-                                                                . '</div>'
-                                                            . '</div>'
-                                                        . '</div>'
-                                                        . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
-                                                            . '<thead>'
-                                                                . '<tr>'
-                                                                    . '<th class="text-center">Origem</th>'
-                                                                    . '<th class="text-center">Destino</th>'
-                                                                    . '<th class="text-center">Horário Partida</th>'
-                                                                    . '<th class="text-center">Horário Chegada</th>'
-                                                                    . '<th class="text-center">Qtd. Diárias</th>'
-                                                                    . '<th class="text-center">Valor Unitário</th>'
-                                                                    . '<th class="text-center">Valor Total</th>'
-                                                                . '</tr>'
-                                                            . '</thead>'
-                                                            . '<tbody>'
-                                                            . $destinos
-                                                            . '</tbody>'
-                                                        . '</table>'   
-                                                    . '</div>'                                    
-                                                . '</div>'
                                             . "</div>"
                                         . "</div>";
                 }
@@ -1560,41 +1556,47 @@ class FinEmpenhoModel {
                                 . '</td>';
                 }
                 if (empty($dadosPedidoItens)) {
-                        $dadosPedidoItens = '<div class="panel-group" id="itensAccordion" aria-multiselectable="true">'
-                                    . '<div class="panel panel-default">'
-                                            . '<div class="panel-heading">'
-                                                . '<h4 class="panel-title">'
-                                                    . '<a role="button" data-toggle="collapse" data-parent="#itensAccordion" href="#expandeItens">'
-                                                        . '<i class="glyphicon glyphicon-chevron-up"></i> '
-                                                        . '<b>Dados dos Itens do Pedido de Necessidade</b>'
-                                                    . '</a>'
-                                                . '</h4>'
-                                            . '</div>'
-                                            . '<div id="expandeItens" class="panel-collapse collapse in" >'
-                                                . '<div class="panel-body">'
-                                                    . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
-                                                        . '<thead>'
-                                                            . '<tr>'
-                                                                . '<th class="text-center">Nº</th>'
-                                                                . '<th class="text-center">Item</th>'
-                                                                . '<th class="text-center">Descrição</th>'
-                                                                . '<th class="text-center">Tipo</th>'
-                                                                . '<th class="text-center">Qtd.</th>'
-                                                                . '<th class="text-center">Valor Unitário</th>'
-                                                                . '<th class="text-center">Valor Total</th>'
-                                                                . '<th class="text-center">Qtd. Utilizada</th>'
-                                                                . '<th class="text-center">Valor Utilizado</th>'
-                                                                . '<th class="text-center">Saldo a Ordenar</th>'
-                                                            . '</tr>'
-                                                        . '</thead>'
-                                                        . '<tbody>'
-                                                        . $linhaItens
-                                                        . '</tbody>'
-                                                    . '</table>'
-                                                . '</div>'                                    
-                                            . '</div>'
-                                    . '</div>'
-                                . '</div>';
+                        $dadosPedidoItens = "<div class='form-group'>"
+                                                ."<div class='col-sm-12' style='margin-bottom: -4%;'>"
+                                                    ."<div class='panel-body'>"
+                                                        .'<div class="panel-group" id="itensAccordion">'
+                                                            . '<div class="panel panel-default">'
+                                                                    . '<div class="panel-heading">'
+                                                                        . '<h4 class="panel-title">'
+                                                                            . '<a role="button" data-toggle="collapse" data-parent="#itensAccordion" href="#expandeItens">'
+                                                                                . '<i class="glyphicon glyphicon-chevron-up"></i> '
+                                                                                . '<b>Dados dos Itens do Pedido de Necessidade</b>'
+                                                                            . '</a>'
+                                                                        . '</h4>'
+                                                                    . '</div>'
+                                                                    . '<div id="expandeItens" class="panel-collapse collapse in" >'
+                                                                        . '<div class="panel-body">'
+                                                                            . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                                . '<thead>'
+                                                                                    . '<tr>'
+                                                                                        . '<th class="text-center">Nº</th>'
+                                                                                        . '<th class="text-center">Item</th>'
+                                                                                        . '<th class="text-center">Descrição</th>'
+                                                                                        . '<th class="text-center">Tipo</th>'
+                                                                                        . '<th class="text-center">Qtd.</th>'
+                                                                                        . '<th class="text-center">Valor Unitário</th>'
+                                                                                        . '<th class="text-center">Valor Total</th>'
+                                                                                        . '<th class="text-center">Qtd. Utilizada</th>'
+                                                                                        . '<th class="text-center">Valor Utilizado</th>'
+                                                                                        . '<th class="text-center">Saldo a Ordenar</th>'
+                                                                                    . '</tr>'
+                                                                                . '</thead>'
+                                                                                . '<tbody>'
+                                                                                . $linhaItens
+                                                                                . '</tbody>'
+                                                                            . '</table>'
+                                                                        . '</div>'                                    
+                                                                    . '</div>'
+                                                            . '</div>'
+                                                        . '</div>'
+                                                    . '</div>'
+                                                . '</div>'
+                                            . '</div>';
                     }
             }
             return $dadosPedidoItens;
@@ -1616,7 +1618,6 @@ class FinEmpenhoModel {
             if ($daoFinEmpenho->sucesso()) {
                 $linhaItens = '';
                 $nr_anulacao = '';
-                $dadosPedidoItensAnulados .= '<div class="panel-group" id="itens_anulados">';
                 foreach ($daoFinEmpenho->getMsgRetorno() as $linha) {
                     if ($nr_anulacao != $linha['id_empenho_anulacao']) {
                         
@@ -1626,38 +1627,46 @@ class FinEmpenhoModel {
                                                     . '</table>'
                                                 . '</div>'
                                             . '</div>'
-                                    . '</div>';
+                                        . '</div>'
+                                    . '</div>'
+                                . '</div>'
+                            . '</div>'
+                        . '</div>';
                         }
                         
                         $nr_anulacao = $linha['id_empenho_anulacao'];
-                        $dadosPedidoItensAnulados .= '<div class="panel panel-default">'
-                                                        . '<div class="panel-heading">'
-                                                            . '<h4 class="panel-title">'
-                                                                . '<a class="accordion-toggle" data-toggle="collapse" href="#anulacao'.$linha['id_empenho_anulacao'].'">'
-                                                                    . '<i class="glyphicon glyphicon-chevron-down"></i> '
-                                                                    . '<b>Dados dos Itens Anulados do Pedido de Necessidade:</b> <span style="color:#758697"> Nº '.$linha['nr_empenho_anulacao'].'</span>'
-                                                                . '</a>'
-                                                            . '</h4>'
-                                                        . '</div>'
-                                                        . '<div id="anulacao'.$linha['id_empenho_anulacao'].'" class="panel-collapse collapse">'
-                                                            . '<div class="panel-body">'
-                                                                . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
-                                                                    . '<thead>'
-                                                                        . '<tr>'
-                                                                            . '<th class="text-center">Nº</th>'
-                                                                            . '<th class="text-center">Item</th>'
-                                                                            . '<th class="text-center">Descrição</th>'
-                                                                            . '<th class="text-center">Tipo</th>'
-                                                                            . '<th class="text-center">Qtd.</th>'
-                                                                            . '<th class="text-center">Valor Unitário</th>'
-                                                                            . '<th class="text-center">Valor Total</th>'
-                                                                            . '<th class="text-center">Qtd. Utilizado</th>'
-                                                                            . '<th class="text-center">Valor Utilizado</th>'
-                                                                            . '<th class="text-center">Qtd. Anulado</th>'
-                                                                            . '<th class="text-center">Valor Anulado</th>'
-                                                                        . '</tr>'
-                                                                    . '</thead>'
-                                                                    . '<tbody>';
+                        $dadosPedidoItensAnulados .= "<div class='form-group'>"
+                                                        ."<div class='col-sm-12' style='margin-bottom: -4%;'>"
+                                                            ."<div class='panel-body'>"
+                                                                .'<div class="panel-group" id="itens_anulados'.$linha['id_empenho_anulacao'].'">'
+                                                                    .'<div class="panel panel-default">'
+                                                                        . '<div class="panel-heading">'
+                                                                            . '<h4 class="panel-title">'
+                                                                                . '<a class="accordion-toggle" data-toggle="collapse" href="#anulacao'.$linha['id_empenho_anulacao'].'">'
+                                                                                    . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                                                    . '<b>Dados dos Itens Anulados do Pedido de Necessidade:</b> <span style="color:#758697">Anulação Nº '.$linha['nr_empenho_anulacao'].'</span>'
+                                                                                . '</a>'
+                                                                            . '</h4>'
+                                                                        . '</div>'
+                                                                        . '<div id="anulacao'.$linha['id_empenho_anulacao'].'" class="panel-collapse collapse">'
+                                                                            . '<div class="panel-body">'
+                                                                                . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                                    . '<thead>'
+                                                                                        . '<tr>'
+                                                                                            . '<th class="text-center">Nº</th>'
+                                                                                            . '<th class="text-center">Item</th>'
+                                                                                            . '<th class="text-center">Descrição</th>'
+                                                                                            . '<th class="text-center">Tipo</th>'
+                                                                                            . '<th class="text-center">Qtd.</th>'
+                                                                                            . '<th class="text-center">Valor Unitário</th>'
+                                                                                            . '<th class="text-center">Valor Total</th>'
+                                                                                            . '<th class="text-center">Qtd. Utilizado</th>'
+                                                                                            . '<th class="text-center">Valor Utilizado</th>'
+                                                                                            . '<th class="text-center">Qtd. Anulado</th>'
+                                                                                            . '<th class="text-center">Valor Anulado</th>'
+                                                                                        . '</tr>'
+                                                                                    . '</thead>'
+                                                                                    . '<tbody>';
                     }
                     $dadosPedidoItensAnulados .= '<tr>'
                                     . '<td class="text-center">'.$linha['nr_item'].'</td>'
@@ -1678,7 +1687,10 @@ class FinEmpenhoModel {
                                         . '</div>'
                                     . '</div>'
                                 . '</div>'
-                            . '</div>';
+                            . '</div>'
+                        . '</div>'
+                    . '</div>'
+                . '</div>';
             }
             return $dadosPedidoItensAnulados;
         } catch (Exception $ex) {
@@ -1699,70 +1711,74 @@ class FinEmpenhoModel {
             
             if ($daoFinEmpenho->sucesso()) {
                 $campos = $daoFinEmpenho->getMsgRetorno();
-                $dadosContrato .= '<div class="panel-group" id="accordionOne" role="tablist" aria-multiselectable="true">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading" role="tab" id="headingOne">
-                                                <h4 class="panel-title">
-                                                    <a role="button" data-toggle="collapse" data-parent="#accordionOne" href="#collapseOne"
-                                                        aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                        <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span>
-                                                    </a>
-                                                </h4>
-                                            </div>
-
-                                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-                                                <div class="panel-body">
-
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Licitação:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                        <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                $dadosContrato .= '<div class="form-group">
+                                        <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                            <div class="panel-body"><div class="panel-group" id="contrato">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a role="button" data-toggle="collapse" data-parent="#contrato" href="#contratoDetalhes">
+                                                                <i class="glyphicon glyphicon-chevron-down"></i>
+                                                                <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span>
+                                                            </a>
+                                                        </h4>
                                                     </div>
 
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Tipo de gasto:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
-                                                    </div>
+                                                    <div id="contratoDetalhes" class="panel-collapse collapse" >
+                                                        <div class="panel-body">
 
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Objeto:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
-                                                    </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Licitação:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
+                                                            </div>
 
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Modalidade:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
-                                                    </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                                                            </div>
 
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Fornecedor:</b></div>
-                                                        <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
-                                                    </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Tipo de gasto:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                            </div>
 
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
-                                                        <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
-                                                    </div>
-                                                    
-                                                    <div class="row">
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
-                                                            <div class="col-sm-10"></div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Objeto:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Modalidade:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
+                                                                    <div class="col-sm-10"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Valor do Contrato:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_contrato"],4) . '</div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-sm-2"><b>Valor do Contrato:</b></div>
-                                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_contrato"],4) . '</div>
-                                                    </div>
-                                                    
+                                                 </div>
                                                 </div>
                                             </div>
-                                         </div>
+                                        </div>
                                     </div>';
             }
             return $dadosContrato;

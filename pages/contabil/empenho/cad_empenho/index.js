@@ -8,6 +8,7 @@ $(document).ready(function (){
     });
 
     $('.collapse').on('shown.bs.collapse', function(){
+        console.log('teste');
         $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
     }).on('hidden.bs.collapse', function(){
         $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
@@ -28,6 +29,8 @@ $(document).ready(function (){
     
     $("#nr_empenho").mask("9999999999/9999");
     
+    $('#dt_empenho').mask("99/99/9999");
+    
     carregaRemetente();
     
     $('body').on('click', '#btn-pesquisa', function (e) {
@@ -38,6 +41,86 @@ $(document).ready(function (){
         var pedido = $(this).data('pedido');
         carregaDadosParaPedido(pedido);
         $('#modalPedido').modal('hide');
+    });
+    
+    
+    $("body").on("click", ".btn-salvar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            
+            var dados = {
+                "idPedido": $("#id_pedido").val(),
+                "nrEmpenho": $("#nr_empenho").val(),
+                "tpEmpenho": $("#id_tipo_empenho").val(),
+                "dtEmpenho": $("#dt_empenho").val(),
+                "vlEmpenho": $("#vl_empenho").val(),
+                "dsEmpenho": $("#ds_empenho").val(),
+                "anotacoes": $("#anotacoes").val()
+            }
+            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho || !dados.vlEmpenho || dados.vlEmpenho == '0,0000') {
+                func.modalAlert("Por favor preencha as informações obrigatórias.");
+                $this.prop("disabled", false);
+                return false;
+            }
+            
+            console.log(dados);
+
+            $.ajax({
+                "url": "request.php",
+                "method": "POST",
+                "dataType": "html",
+                "data": {
+                    "acao": "cadastraEmpenho",
+                    "dados": dados
+                },
+                "success": function (response) {
+                    console.log(response);
+                    $this.prop("disabled", false);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            location.reload();
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+        }
     });
     
     function carregaRemetente(){
@@ -70,6 +153,7 @@ $(document).ready(function (){
     }
 
     function carregaDadosParaPedido(dados){
+        $("#dadosGerais").html("");
         
         /**
          * retornaContratosPedido
@@ -83,8 +167,7 @@ $(document).ready(function (){
 
             },
             "success": function (response) {
-                $(".contratos").html("");
-                $(".contratos").append(response);
+                $("#dadosGerais").append(response);
             }
         });
         /**
@@ -94,20 +177,45 @@ $(document).ready(function (){
             "url": url,
             "dataType": 'html',
             "data": {
-                "acao": "retornaDadosDoPedido",
+                "acao": "retornaDadosPedido",
                 "dados": dados
 
             },
             "success": function (response) {
-                $(".pedido").html("");
-                $(".pedido").append(response);
-                
+                $("#dadosGerais").append(response);
+                $("#vl_empenho").val($("#vl_pedido").val());
+            }
+        });
+        
+        /***
+         *  retornaDadosDiaria
+         */
+        $.ajax({
+            "url": url,
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaDadosDiaria",
+                "dados": dados
+            },
+            "success": function (response){
+                $("#dadosGerais").append(response);
             }
         });
         
         /**
          * retornaItensDoPedido
          */
+        $.ajax({
+            "url": url,
+            "dataType": 'html',
+            "data": {
+                "acao": "retornaItensPedido",
+                "dados": dados
+            },
+            "success": function (response) {
+                $("#dadosGerais").append(response);
+            }
+        });
 
     }
 });
