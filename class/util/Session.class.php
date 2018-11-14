@@ -9,12 +9,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Log.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/sistema/DaoSesPerfilPessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/ErroExcept.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoa.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/RecursoUtil.class.php";
 
-class Session {
+class Session extends RecursoUtil{
 
     private $logado = FALSE;
     private $idUser = null;
     private $perfis = Array();
+    private $opcao = null;
 
     public function getIdUser() {
         return $this->idUser;
@@ -41,8 +43,18 @@ class Session {
     function setPerfis($perfis) {
         $this->perfis = $perfis;
     }
+    
+    public function getOpcao() {
+        return $this->opcao;
+    }
+    public function setOpcao($opcao) {
+        $this->opcao = $opcao;
+        return $this;
+    }
 
+    
     public function __construct($opcao = null) {
+        $this->opcao = $opcao;
         switch ($opcao) {
             //Default, Situação normal do Sistema, verifica se está logado, caso não esteja irá mandar para tela de login
             case null:
@@ -187,6 +199,27 @@ class Session {
         } catch (Exception $ex) {
             
         }
+    }
+    
+    /**
+     * 
+     */
+    public function recurso(PDO $pdo = null){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect(); 
+            }
+            
+            $this->setIdPessoa($this->idUser);            
+            $this->validaRecursoUsuario($pdo);
+            
+                        
+        } catch (Exception $ex) {
+            print_r($ex->getMessage());
+            return false;
+        }                
     }
 
     /**
