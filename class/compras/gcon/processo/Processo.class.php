@@ -554,7 +554,7 @@ class Processo {
                                     }
                                 } else {
                                     $pdo->rollBack();
-                                    return Metodos::retornoAjax('Erro', 'console', $detetaArea);
+                                    return Metodos::retornoAjax('Erro', 'console', $detetaCentral);
                                 }
                             }
                         }

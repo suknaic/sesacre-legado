@@ -193,7 +193,7 @@ require_once "index.load.php";
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">Nº Empenho</th>
-                                                    <th class="text-center">Nº Pedido</th>
+                                                    <th class="text-center">Nº Pedido/Exercício</th>
                                                     <th class="text-center">CPF/CNPJ do Fornecedor</th>
                                                     <th class="text-center">Tipo do Empenho</th>
                                                     <th class="text-center">Data do Empenho</th>

@@ -2,6 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/fornecedor/DaoFornecedor.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoaJuridica/PessoaJuridica.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorMedicamento.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorServico.class.php";
     require_once $_SERVER['DOCUMENT_ROOT'] . "/class/fornecedor/FornecedorMaterialConsumo.class.php";
@@ -354,6 +355,78 @@ class Fornecedor {
             }
         } catch (Exception $ex) {
             return Metodos::retornoAjax($ex->getMessage());
+        }
+    }
+
+    public function relatorioFornecedor($tipoFornecedor) {
+        try {
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $fornecedores = new DaoFornecedor();
+
+            $condicoes = array();
+            if (!empty($tipoFornecedor)) {
+                if ($tipoFornecedor == 1) {
+                    $condicoes[] = "PF.id_pessoa IS NOT NULL";
+                } else {
+                    $condicoes[] = "PJ.id_pessoa IS NOT NULL";
+                }
+            }
+
+            if (!empty($this->pessoaFisica['cpf'])) {
+                if (!Metodos::validaCPF($this->pessoaFisica['cpf'])) {
+                    return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
+                }
+                $condicoes[] = "PF.nr_cpf ='".Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf'])."'";
+            }
+
+            if (!empty($this->pessoaJuridica['cnpj'])) {
+                if (!Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+                    return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+                }
+                $condicoes[] = "PJ.nr_cnpj ='".Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj'])."'";
+            }
+
+            if (!empty($this->pessoaFisica['nmPessoaFisica'])) {
+                $condicoes[] = "unaccent(PE.nm_pessoa) ilike '%".$this->pessoaFisica['nmPessoaFisica']."%'";
+            }
+
+            if (!empty($this->pessoaJuridica['nmRazaoSoc'])) {
+                $condicoes[] = "unaccent(PE.nm_pessoa) ilike '%".$this->pessoaJuridica['nmRazaoSoc']."%'";
+            }
+
+            if (!empty($this->medicamento)) {
+                $condicoes[] = count($this->medicamento) > 1 ? "MED.id_medicamento IN (" . implode(',', $this->medicamento) . ")" : "MED.id_medicamento IN (" . $this->medicamento[0] . ")";
+            }
+
+            if (!empty($this->servico)) {
+                $condicoes[] = count($this->servico) > 1 ? "SE.id_servico IN (" . implode(',', $this->servico) . ")" : "SE.id_servico IN (" . $this->servico[0] . ")";
+            }
+
+            if (!empty($this->materialConsumo)) {
+                $condicoes[] = count($this->materialConsumo) > 1 ? "MATCON.id_material_consumo IN (" . implode(',', $this->materialConsumo) . ")" : "MATCON.id_material_consumo IN (" . $this->materialConsumo[0] . ")";
+            }
+
+            if (!empty($this->materialPermanente)) {
+                $condicoes[] = count($this->materialPermanente) > 1 ? "MATPERM.id_material_permanente IN (" . implode(',', $this->materialPermanente) . ")" : "MATPERM.id_material_permanente IN (" . $this->materialPermanente[0] . ")";
+            }
+
+            if (count($condicoes) > 0) {
+                $filtro = "AND " . implode(' AND ', $condicoes);
+            } else {
+                return FALSE;
+            }
+
+            $busca = $fornecedores->retornaFornecedores($pdo, $filtro);
+            if (empty($busca)) {
+                return null;
+            } else {
+                return $busca;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
         }
     }
 }

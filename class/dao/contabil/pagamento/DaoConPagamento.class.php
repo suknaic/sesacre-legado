@@ -383,6 +383,9 @@ class DaoConPagamento extends ConPagamentoTb {
                 $stmt->bindValue(":documento", $documento, PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Erro validaçoes";
             }
         } catch (PDOException $e) {
             $this->sucesso = false;

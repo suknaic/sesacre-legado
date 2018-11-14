@@ -8,6 +8,8 @@ $(document).ready(function (){
     
     $("#nr_empenho").mask("9999999999/9999");
     
+    $('#dt_empenho').mask("99/99/9999");
+    
     $('.collapse').on('shown.bs.collapse', function(){
         $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
     }).on('hidden.bs.collapse', function(){

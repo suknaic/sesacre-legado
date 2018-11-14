@@ -665,6 +665,403 @@ class Pedido {
             return;
         }
     }
+    
+    public function retornaPedidoAtivoSemEmpenho($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $retorno = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setNrPedido($this->getNrPedido());
+            $daoFinPedido->retornaPedidoSemEmpenho($pdo);
+            
+            if($daoFinPedido->Sucesso()){
+                echo 'teste';
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $retorno .= '<tr class="seleciona-pedido" data-pedido='.$linha['id_pedido'].' style="cursor:pointer;">'
+                                . '<td>'.$linha['nr_pedido'].'</td>'
+                                . '<td>'.$linha['ds_pedido'].'</td>'
+                                . '<td>'.$linha['nm_tipo_gasto'].'</td>'
+                                . '<td>'.$linha['nr_fonte'].'</td>'
+                                . '<td>'.$linha['ds_despesa_elemento'].'</td>'
+                                . '<td>'.Metodos::ConverteValorBr($linha['vl_pedido'],4).'</td>'
+                                . '<td>'.$linha['tp_contrato'].'</td>'
+                                . '<td>'.$linha['nr_contrato'].'</td>'
+                                . '<td>'.$linha['nm_modalidade'].'</td>'
+                                . '<td>'.$linha['ds_programa_trabalho'].'</td>'
+                                . '<td>'.$linha['nm_pedido_situacao'].'</td>'
+                            . '</tr>';
+                }
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    public function retornaPedidoContratoAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosContrato = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaDadosPedidoContratoAccordion($pdo);
+            
+            if ($daoFinPedido->sucesso()) {
+                $campos = $daoFinPedido->getMsgRetorno();
+                $dadosContrato .= '<div class="form-group">
+                                        <div class="col-sm-12" style="margin-bottom: -4%;">
+                                            <div class="panel-body">
+                                                <div class="panel-group" id="contrato">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a role="button" data-toggle="collapse" data-parent="#contrato" href="#contratoDetalhes">
+                                                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                                                    <b>Dados do Contrato: </b><span style="color:#758697"> Nº ' . $campos["nr_contrato"] . '</span>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+
+                                                        <div id="contratoDetalhes" class="panel-collapse collapse">
+                                                            <div class="panel-body">
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Licitação:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                    <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Tipo de gasto:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Objeto:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["nm_objeto"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Modalidade:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["nm_modalidade"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Fornecedor:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["nm_pessoa"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>CPF/CNPJ do Fornecedor:</b></div>
+                                                                    <div class="col-sm-10">' . $campos["cpfcnpj"] . '</div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="form-group">
+                                                                        <div class="col-sm-2"><b>Processo Administrativo da Despesa Publica:</b></div>
+                                                                        <div class="col-sm-10"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Valor do Contrato:</b></div>
+                                                                    <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_contrato"],4) . '</div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>';
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }        
+    }
+    
+    public function retornaDadosPedidoAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedido = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaDadosPedidoAccordion($pdo);
+            
+            if ($daoFinPedido->sucesso()) {
+                $campos = $daoFinPedido->getMsgRetorno();
+                $saldoOrdenar = '';
+                if ($campos['id_tipo_solicitacao'] == '2') {
+                    $saldoOrdenar = '<div class="form-group">
+                                        <div class="col-sm-2"><b>Saldo a Ordenar:</b></div>
+                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                    </div>';
+                }
+                
+                $dadosPedido .= '<div class="form-group">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="pedido">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 class="panel-title">
+                                                            <a role="button" data-toggle="collapse" data-parent="#pedido" href="#pedidoDetalhes">
+                                                                <i class="glyphicon glyphicon-chevron-down"></i>
+                                                                <b>Dados do Pedido de Necessidade: </b><span style="color:#758697"> Nº ' . $campos["nr_pedido"] .'/'. $campos["ano"] . '</span>
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div id="pedidoDetalhes" class="panel-collapse collapse">
+                                                        <input type="hidden" id="id_pedido" value='.$campos['id_pedido'].' />
+                                                        <input type="hidden" id="vl_pedido" value="'.Metodos::ConverteValorBr($campos['vl_pedido'],4).'" />
+                                                        <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Descrição:</b></div>
+                                                                <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Fonte:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nr_fonte"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Funcional Programática:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_programa_trabalho"] . ' - ' . $campos["ds_programa_trabalho"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Elemento de Despesa:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_despesa_elemento"] . ' - ' . $campos["ds_despesa_elemento"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Sub-Elemento:</b></div>
+                                                                <div class="col-sm-10">' . $campos["cd_despesa"] . ' - ' . $campos["ds_despesa"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                            </div>'
+                                                            . $saldoOrdenar.
+                                                            '<div class="form-group">
+                                                                <div class="col-sm-2"><b>Saldo a Liquidar:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Saldo a Pagar:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>';
+            }
+            return $dadosPedido;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }        
+    }
+    
+    public function retornaDadosPedidoItensAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedidoItens = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaPedidoItens($pdo);
+            if ($daoFinPedido->sucesso()) {
+                $linhaItens = '';
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $linhaItens .= '<tr>'
+                                    . '<td class="text-center">'.$linha['nr_item'].'</td>'
+                                    . '<td class="text-center">'.$linha['nm_material'].'</td>'
+                                    . '<td class="text-center">'.$linha['cd_desc_material']. ' - ' . $linha['nm_desc_material'].'</td>'
+                                    . '<td class="text-center">'.$linha['tp_material'].'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_itens_pre'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['vl_itens_pre'],4).'</td>'
+                                    . '<td class="text-center">'.Metodos::ConverteValorBr($linha['qt_itens_pre'] * $linha['vl_itens_pre'],4).'</td>'
+                                . '</td>';
+                }
+                if (empty($dadosPedidoItens)) {
+                        $dadosPedidoItens = '<div class="form-group">'
+                                                .'<div class="col-sm-12" style="margin-bottom: -4%;">'
+                                                    .'<div class="panel-body">'
+                                                        .'<div class="panel-group" id="pedidoItens">'
+                                                            . '<div class="panel panel-default">'
+                                                                    . '<div class="panel-heading">'
+                                                                        . '<h4 class="panel-title">'
+                                                                            . '<a role="button" data-toggle="collapse" data-parent="#pedidoItens" href="#pedidoItensDetalhes">'
+                                                                                . '<i class="glyphicon glyphicon-chevron-up"></i> '
+                                                                                . '<b>Dados dos Itens do Pedido de Necessidade</b>'
+                                                                            . '</a>'
+                                                                        . '</h4>'
+                                                                    . '</div>'
+                                                                    . '<div id="pedidoItensDetalhes" class="panel-collapse collapse in" >'
+                                                                        . '<div class="panel-body">'
+                                                                            . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                                . '<thead>'
+                                                                                    . '<tr>'
+                                                                                        . '<th class="text-center">Nº</th>'
+                                                                                        . '<th class="text-center">Item</th>'
+                                                                                        . '<th class="text-center">Descrição</th>'
+                                                                                        . '<th class="text-center">Tipo</th>'
+                                                                                        . '<th class="text-center">Qtd.</th>'
+                                                                                        . '<th class="text-center">Valor Unitário</th>'
+                                                                                        . '<th class="text-center">Valor Total</th>'
+                                                                                    . '</tr>'
+                                                                                . '</thead>'
+                                                                                . '<tbody>'
+                                                                                . $linhaItens
+                                                                                . '</tbody>'
+                                                                            . '</table>'
+                                                                        . '</div>'                                    
+                                                                    . '</div>'
+                                                            . '</div>'
+                                                        . '</div>'                                    
+                                                    . '</div>'
+                                                . '</div>'
+                                            . '</div>';
+                    }
+            }
+            return $dadosPedidoItens;
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
+    
+    public function retornaDadosPedidoDiariaAccordion($pdo){
+        try {
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+            $dadosPedidoDiaria = '';
+            $daoFinPedido = new DaoFinPedido();
+            $daoFinPedido->setIdPedido($this->getIdPedido());
+            $daoFinPedido->retornaDadosPedidoDiariaAccordion($pdo);
+            if ($daoFinPedido->sucesso()) {
+                $destinos = '';
+                $dadosGerais = $daoFinPedido->getMsgRetorno()[0];
+                foreach ($daoFinPedido->getMsgRetorno() as $linha) {
+                    $destinos .= "<tr>"
+                                    . "<td class='text-center'>".$linha['nm_cidade_origem']. " - " . $linha['uf_cidade_origem'] ."</td>"
+                                    . "<td class='text-center'>".$linha['nm_cidade_destino']. " - " . $linha['uf_cidade_destino'] ."</td>"
+                                    . "<td class='text-center'>".$linha["dh_inicio"]."</td>"
+                                    . "<td class='text-center'>".$linha["dh_fim"]."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["qt_diaria_destino"],2)."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["vl_diaria_destino"],2)."</td>"
+                                    . "<td class='text-center'>".Metodos::ConverteValorBr($linha["qt_diaria_destino"] * $linha["vl_diaria_destino"],2)."</td>"
+                                . "</tr>";
+                }
+                
+                if (!empty($destinos)) {
+                    $dadosPedidoDiaria .= '<div class="form-group">'
+                                            .'<div class="col-sm-12" style="margin-bottom: -4%;">'
+                                                .'<div class="panel-body">'
+                                                    ."<div class='panel-group' id='diaria' >"
+                                                        . "<div class='panel panel-default'>"
+                                                            . "<div class='panel-heading'>"
+                                                                . "<h4 class='panel-title'>"
+                                                                    . '<a role="button" data-toggle="collapse" data-parent="#diaria" href="#diariaDetalhes">'
+                                                                        . '<i class="glyphicon glyphicon-chevron-down"></i> '
+                                                                        . '<b>Dados da Diária: <span style="color:#758697"> Nº ' . $dadosGerais["id_diaria"] .'/'. $dadosGerais["nr_protocolo"] . '</span></b>'
+                                                                    . '</a>'
+                                                                . "</h4>"
+                                                            . "</div>"
+                                                            . '<div id="diariaDetalhes" class="panel-collapse collapse">'
+                                                                . '<div class="panel-body">'
+                                                                    . '<div class="row">'
+                                                                        . '<div class="col-sm-6">'
+                                                                            . '<div class="rpw">'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["nm_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Lotação Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["lt_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Função Proponente:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["fn_proponente"] . '</div>'
+                                                                                .'</div>'
+                                                                            . '</div>'
+                                                                        . '</div>'
+                                                                        . '<div class="col-sm-6">'
+                                                                            . '<div class="rpw">'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["nm_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Lotação Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["lt_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                                .'<div class="form-group">'
+                                                                                    .'<div class="col-sm-2"><b>Função Proposto:</b></div>'
+                                                                                    .'<div class="col-sm-10">' . $dadosGerais["fn_proposto"] . '</div>'
+                                                                                .'</div>'
+                                                                            . '</div>'
+                                                                        . '</div>'
+                                                                    . '</div>'
+                                                                    . '<table class="table table-striped table-bordered" cellspacing="0" widht="100%">'
+                                                                        . '<thead>'
+                                                                            . '<tr>'
+                                                                                . '<th class="text-center">Origem</th>'
+                                                                                . '<th class="text-center">Destino</th>'
+                                                                                . '<th class="text-center">Horário Partida</th>'
+                                                                                . '<th class="text-center">Horário Chegada</th>'
+                                                                                . '<th class="text-center">Qtd. Diárias</th>'
+                                                                                . '<th class="text-center">Valor Unitário</th>'
+                                                                                . '<th class="text-center">Valor Total</th>'
+                                                                            . '</tr>'
+                                                                        . '</thead>'
+                                                                        . '<tbody>'
+                                                                        . $destinos
+                                                                        . '</tbody>'
+                                                                    . '</table>'   
+                                                                . '</div>'                                    
+                                                            . '</div>'
+                                                        . "</div>"
+                                                    . "</div>"
+                                                . "</div>"
+                                            . "</div>"
+                                        . "</div>";
+                }
+            }
+            return $dadosPedidoDiaria;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+        }
+    }
 
     public function retornaPedidoGdof($pdo) {
         try {
