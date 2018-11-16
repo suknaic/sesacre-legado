@@ -376,7 +376,7 @@ function valorComMascara(valor) {
 }
 
 function habilitaDocumentosFiscais(){
-    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');    
+    var tipo_solicitacao = $("#id_pedido").data("tipo-solicitacao");    
     var qtdDocs = $("#selectDocumentoFiscal option").size();    
 //    if(qtdDocs > 1){
 //        $('.docFis').show();
@@ -390,6 +390,7 @@ function habilitaDocumentosFiscais(){
 //            $("#vl_liquidacao").prop("disabled",false);
 //        }
 //    }
+    console.log(tipo_solicitacao + ' - ' + qtdDocs);
     if ((tipo_solicitacao == 1 && qtdDocs == 1) || tipo_solicitacao > 2 ) {
         $('.docFis').hide();
         $("#vl_liquidacao").prop("disabled",false);

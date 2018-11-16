@@ -161,7 +161,6 @@ class LiquidacaoPesquisa {
             if($tramitacao->Sucesso()){
                 $flVisualizaBotoes = true;
             }
-            var_dump($flVisualizaBotoes);
             
             $daoConLiquidacao = new DaoConLiquidacao();
 
