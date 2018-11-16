@@ -116,7 +116,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho']; ?>" disabled />
+                                                                    <input type="text" class="form-control" name="vl_empenho" id="vl_empenho" value="<?php echo $dadosDoEmpenho['vl_empenho_cm']; ?>" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>

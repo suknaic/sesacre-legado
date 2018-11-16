@@ -23,8 +23,6 @@ switch ($_REQUEST['acao']) {
             $liquidacao = new Liquidacao();
             $liquidacao->setIdLiquidacao($dados['idLiquidacao'])
                        ->setUsuario($session->getIdUser())
-//                       ->setIdLotacao(128)
-//                       ->setIdDocTipoLotacao(2)
                        ->setNrLiquidacao($dados['nrLiquidacao'])
                        ->setVlLiquidacao($dados['vlLiquidacao'])
                        ->setDtLiquidacao($dados['dtLiquidacao'])

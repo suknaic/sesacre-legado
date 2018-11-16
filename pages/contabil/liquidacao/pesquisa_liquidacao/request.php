@@ -10,6 +10,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoD
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/contabil/liquidacao/LiquidacaoHistorico.class.php";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/gdof/FinDocumentoFiscal.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session('ajax');
 
@@ -41,7 +42,8 @@ switch ($_REQUEST['acao']) {
                        ->setNrContrato($dados['contrato'])
                        ->setNrDocumentoFiscal($dados['nrDoc'])
                        ->setTipoGasto($dados['tpGasto'])
-                       ->setSituacao($dados['situacao']);
+                       ->setSituacao($dados['situacao'])
+                       ->setUsuario($session->getIdUser());
             echo $liquidacao->retornaLiquidacoes();
             return;
             break;

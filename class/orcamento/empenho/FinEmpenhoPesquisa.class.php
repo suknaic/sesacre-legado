@@ -265,7 +265,7 @@ class FinEmpenhoPesquisa {
                     'pdo_param' => PDO::PARAM_INT);
             }
             
-            if (!$this->usuario->vPGeral() or !$filtraCentrais) {
+            if (!$this->usuario->vPGeral() and !$filtraCentrais) {
                 $and_ou_where = empty($array_filtro) ? " where " : " and ";
                 $array_filtro[] = array(
                     'sql' => $and_ou_where . "(central.id_lotacao) in (select distinct id_lotacao from fin_central_responsavel where id_pessoa = :usuario)",
