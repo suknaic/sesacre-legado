@@ -49,7 +49,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Empenho</h1>                       
+                        <h1 class="page-header text-overflow">Recurso</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -59,6 +59,14 @@ require_once "index.load.php";
                     <div id="page-content">
 
                         <div class="panel">
+                            <?php if($session->recursoPodeCadastrar()){ ?>
+                            <div class="panel-heading">                                
+                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/recurso/recurso/cadastrar/" role="button">
+                                    <i class="fa fa-plus-circle fa-1x inputPFa"></i>
+                                    Cadastrar Recurso
+                                </a>                                
+                            </div>
+                            <?php } ?>
                             <form>
                                 <div class="panel-body">
                                     <br>
@@ -183,7 +191,7 @@ require_once "index.load.php";
 
                     <div class="panel">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Lista de Empenhos</h3>
+                            <h3 class="panel-title">Lista de Recursos</h3>
                         </div>
                         <div class="panel-body">
                             <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
@@ -192,15 +200,11 @@ require_once "index.load.php";
                                         <table id="tabela" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">Nº Empenho</th>
-                                                    <th class="text-center">Nº Pedido</th>
-                                                    <th class="text-center">CPF/CNPJ do Fornecedor</th>
-                                                    <th class="text-center">Tipo do Empenho</th>
-                                                    <th class="text-center">Data do Empenho</th>
-                                                    <th class="text-center">Tipo de Gasto</th>
-                                                    <th class="text-center">Central de Demanda</th>
-                                                    <th class="text-center">Valor</th>
-                                                    <th class="text-center">Situação</th>
+                                                    <th class="text-center">Recurso</th>
+                                                    <th class="text-center">Descrição</th>
+                                                    <th class="text-center">Sistema</th>
+                                                    <th class="text-center">Link</th>
+                                                    <th class="text-center">Uso</th>
                                                     <th class="text-center">Ações</th> 
                                                 </tr>
                                             </thead>
@@ -274,8 +278,7 @@ require_once "index.load.php";
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="index.js"></script>
         <!-- select2 -->
-        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-        <script src="/assets/lib/template/plugins/priceformat/Jquery.Price_Fromat.js"></script>
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>        
 
         <!-- END JAVASCRIPT -->
 

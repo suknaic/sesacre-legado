@@ -143,7 +143,7 @@ function lista(dados) {
         "url": "request.php",
         "dataType": 'html',
         "data": {
-            "acao": "retornaEmpenhos",
+            "acao": "retornaRecursos",
             "dados": dados
         },
         "success": function (response) {
