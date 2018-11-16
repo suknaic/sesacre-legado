@@ -17,6 +17,16 @@ class LiquidacaoPesquisa {
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
+    private $usuario = null;
+    
+    function getUsuario() {
+        return $this->usuario;
+    }
+
+    function setUsuario($usuario) {
+        $this->usuario = $usuario;
+        return $this;
+    }
     
     function getSitLiquidado() {
         return $this->sitLiquidado;
@@ -142,6 +152,17 @@ class LiquidacaoPesquisa {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             
+            //Só pode visualziar os botões de Edição ou Cancelar Empenho quem tiver Tramitação Empenhar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->usuario);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            $flVisualizaBotoes = false;
+            if($tramitacao->Sucesso()){
+                $flVisualizaBotoes = true;
+            }
+            var_dump($flVisualizaBotoes);
+            
             $daoConLiquidacao = new DaoConLiquidacao();
 
             $daoConLiquidacao->retornaLiquidacoes($pdo, $this->montaFiltroSql());
@@ -162,7 +183,7 @@ class LiquidacaoPesquisa {
                                     . "<button type='button' title='Ver Liquidação' class='ver-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
                                     . "</button>";
-                    if ($linha['id_liquidacao_situacao'] == $this->getSitLiquidado()) {
+                    if ($linha['id_liquidacao_situacao'] == $this->getSitLiquidado() and $flVisualizaBotoes) {
                         $retorno .= "<button type='button' title='Editar Liquidação' class='editar-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
                                     . "</button>"
