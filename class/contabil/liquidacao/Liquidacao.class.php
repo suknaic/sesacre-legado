@@ -324,7 +324,7 @@ class Liquidacao {
                 $daoConLiquidacao->setIdLiquidacao(0);
             }
 
-            $daoConLiquidacao->retornaDocumentosPorLiquidacao($pdo);
+            $daoConLiquidacao->retornaDocumentosPorLiquidacaoPagamento($pdo);
 
             if ($daoConLiquidacao->Sucesso()) {
                 foreach ($daoConLiquidacao->getMsgRetorno() as $linha) {
@@ -927,6 +927,7 @@ class Liquidacao {
                                                 <div class="panel-body">
                                                 <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
                                                 <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" /> 
+                                                <input id="id_liquidacao_situacao" type="hidden" value="' . $campos['id_liquidacao_situacao'] . '" />    
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                     <thead>
                                                         <tr>
@@ -942,7 +943,7 @@ class Liquidacao {
                                                             <td class="text-center">' . $campos["dt_liquidacao"] . '</td>
                                                             <td class="text-center">' . $campos["vl_liquidacao"] . '</td>
                                                             <td class="text-center">' . $campos["saldo"] . '</td>
-                                                            <td class="text-center">' . $campos["status"] . '</td>
+                                                            <td class="text-center">' . $campos["situacao"] . '</td>
                                                             <td class="text-center">
                                                                 <button type="button" title="Ver Liquidação" class="ver-liquidacao" value="' . $campos['id_liquidacao'] . '">
                                                                 <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>

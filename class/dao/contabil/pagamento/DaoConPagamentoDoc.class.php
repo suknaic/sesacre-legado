@@ -18,11 +18,12 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
     public function salvaDocPagamento(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "INSERT INTO con_pagamento_doc (id_pagamento, id_documento_fiscal, vl_pagamento_doc, vl_pagamento_doc_saldo) "
-                        . "values (:pagamento, :documento, :valor, :valorSaldo)";
+                $sql = "INSERT INTO con_pagamento_doc (id_pagamento, id_documento_fiscal, id_documento_situacao, vl_pagamento_doc, vl_pagamento_doc_saldo) "
+                        . "values (:pagamento, :documento, :situacao, :valor, :valorSaldo)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
                 $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+                $stmt->bindValue(":situacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":valor", $this->getVlDocumentoFiscal(), PDO::PARAM_STR);
                 $stmt->bindValue(":valorSaldo", $this->getVlPagamentoDocSaldo(), PDO::PARAM_STR);
                 $stmt->execute();

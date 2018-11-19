@@ -247,6 +247,56 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+        function retornaDocumentosPorLiquidacaoPagamento($pdo) {
+        $this->sucesso = false;
+        $sql = "select distinct empenho.nr_empenho, liqDoc.id_liquidacao_doc, docFis.id_documento_fiscal,
+                docFis.nr_documento_fiscal, tpDoc.nm_tipo_documento, liqDoc.id_liquidacao_doc,
+                (trim(to_char(docFis.mm_competencia, '09')) || '/' || trim(to_char(docFis.aa_competencia, '9999')) 
+                )as competencia, to_char(docFis.dt_emissao, 'dd/mm/yyyy') as dt_emissao,    
+                to_char(docFis.dt_atesto, 'dd/mm/yyyy') as dt_atesto, 
+                trim(to_char(vl_documento,'999G999G990D0999')) as vl_documento, vl_documento as vl_doc_sem_mascara,
+                coalesce(pagamento.valorPagamento,'0.0000') as pagamento,
+                to_char((vl_documento -	coalesce(pagamento.valorPagamento,'0.0000')),'999G999G990D0999') as saldo,
+                docFis.id_documento_situacao, docSit.nm_situacao 
+
+                from con_liquidacao as liq 
+                inner join fin_empenho as empenho
+                on empenho.id_empenho = liq.id_empenho
+                inner join con_liquidacao_doc as liqDoc
+                on liqDoc.id_liquidacao = liq.id_liquidacao
+                inner join fin_documento_fiscal as docFis 
+                on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
+                inner join fin_tipo_documento as tpDoc 
+                on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
+                left join fin_documento_situacao as docSit 
+                on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                left join (select sum(pagDoc.vl_pagamento_doc) as valorPagamento, pag.id_liquidacao , pagDoc.id_documento_fiscal 
+		   from con_pagamento as pag
+		   inner join con_pagamento_doc as pagDoc
+		   on pagDoc.id_pagamento = pag.id_pagamento
+                   where id_pagamento_situacao = '1' 
+                   group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
+                on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
+                where liq.id_liquidacao = :id_liquidacao
+                and (docFis.id_documento_situacao = 4 or docFis.id_documento_situacao = 5)
+                order by  docFis.nr_documento_fiscal";
+        try {
+            $result = $pdo->prepare($sql);
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
 
     function retornaLiquidacoes($pdo, string $filtros = "") {
         $this->sucesso = false;
@@ -402,14 +452,14 @@ class DaoConLiquidacao extends ConLiquidacao {
                     to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
                     to_char(liquidacao.vl_liquidacao, '999G999G990D9999') as vl_liquidacao, 
                     to_char((liquidacao.vl_liquidacao - coalesce(pagamento.vl_pagamento , '0.0000')), '999G999G990D9999') as saldo,
-                    status.nm_liquidacao_status as status
+                    situacao.id_liquidacao_situacao, situacao.nm_liquidacao_situacao as situacao
                     from con_liquidacao as liquidacao
                     inner join fin_empenho as empenho
                     on empenho.id_empenho = liquidacao.id_empenho
                     inner join fin_pedido as pedido
                     on pedido.id_pedido = empenho.id_pedido
-                    inner join con_liquidacao_status as status
-                    on status.id_liquidacao_status = liquidacao.id_liquidacao_status
+                    inner join con_liquidacao_situacao as situacao
+                    on situacao.id_liquidacao_situacao = liquidacao.id_liquidacao_situacao
                     left join (select sum(vl_pagamento) as vl_pagamento, id_liquidacao from con_pagamento where id_pagamento_situacao = '1' group by id_liquidacao) as pagamento
                     on pagamento.id_liquidacao = liquidacao.id_liquidacao
                     where liquidacao.nr_liquidacao = :numero";
