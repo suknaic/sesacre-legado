@@ -15,7 +15,7 @@ $(document).ready(function () {
         $("." + campoPrincipal).find('.' + select).select2('destroy');
         html = $("." + campoSelect).clone();
         html.find('.select2-selection--single').remove();
-        $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-5"><div class="panel-body">' + html.html() +
+        $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-4"></div><div class="col-sm-4"><div class="panel-body">' + html.html() +
             '</div></div><div class="col-sm-3"><div class="panel-body"><button href="#" class="btn-' + classeremove + ' btn btn-danger"><i class="fa fa-remove" aria-hidden="true"></i></button></div></div></div>');
         gerarSelect2(select);
     }
@@ -119,8 +119,8 @@ $(document).ready(function () {
     });
 
 //******************************************************************************************
-    $('body').find("select").select2({});
-    $('body').find("selectTipoPessoa").select2({});
+    $("body").find("select").select2({width: " 100%"});
+    $('body').find("id_tipo_fornecedor").select2({});
     $(".nr").mask("99");
     $("#nr_cpf").mask("999.999.999-99");
     $("#nr_cnpj").mask("99.999.999/9999-99");
@@ -162,6 +162,8 @@ $(document).ready(function () {
                 cidade: $("#id_cidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 bairro: $("#ds_bairro").val(),
+                numero: $("#nr_numero").val(),
+                complemento: $("#ds_complemento").val(),
                 cep: cep,
                 email: $("#nm_email").val(),
                 tl_residencial: $("#nr_telefone_residencial").val()
@@ -240,13 +242,22 @@ $(document).ready(function () {
                 return false;
             }
 
+            if (empDist == '1') {
+                var nmEmpresa = $('#ds_emp_dist').val();
+                if (nmEmpresa == '') {
+                    func.modalAlert(func.msgPreencherCampos);
+                    return false;
+                }
+            }
+
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
                 pessoaJuridica: PessoaJuridica,
                 pessoa: Pessoa,
                 materialServico: MaterialServico,
                 empExc: empExc,
-                empDist: empDist
+                empDist: empDist,
+                nmEmpresa: nmEmpresa
             };
             
             $.ajax({
@@ -302,13 +313,14 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.btn-limpar', function (e) {
-        $('#form_fornecedor').reset();
+        $('.formFornecedores').reset();
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {
         $("#nome").focus();
     });
-    $('body').on('keypress', '.formRhFuncionario', function (e) {
+
+    $('body').on('keypress', '.formFornecedores', function (e) {
         var key = e.which;
         if (key == 13) {
             $(".btn-salvar").trigger('click');
@@ -504,31 +516,34 @@ $(document).ready(function () {
             $('.juridica').hide();
             $('.fisica').show();
             $('.resto').show();
-            $('#form_fornecedor input').val("");
+            $('.formFornecedores input').val("");
             $('input[type=checkbox]').attr('checked', false);
             $('.select').val(0).trigger('change.select2');
         } else if ($('#id_tipo_fornecedor').val() == 2) {
             $('.juridica').show();
             $('.fisica').hide();
             $('.resto').show();
-            $('#form_fornecedor input').val("");
+            $('.formFornecedores input').val("");
             $('input[type=checkbox]').attr('checked', false);
             $('.select').val(0).trigger('change.select2');
         } else {
             $('.juridica').hide();
             $('.fisica').hide();
             $('.resto').hide();
-            $('#form_fornecedor').reset();
+            $('.formFornecedores ').reset();
             $('input[type=checkbox]').attr('checked', false);
             $('.select').val(0).trigger('change.select2');
         }
     });
 
+    $('.empDist').hide();
     $('body').on("change", "#empDistS", function(){
         if ($('#empDistS').is(":checked")) {
             $('#empDistN').prop('disabled', true);
+            $('.empDist').show();
         } else {
             $('#empDistN').prop('disabled', false);
+            $('.empDist').hide();
         }
     });
 
@@ -593,4 +608,21 @@ $(document).ready(function () {
         listaCidade(estado, 0);
     });
     //******************************************************************************************
+    var tab = 1;
+    $('body').on('click', '.anterior', function (e) {
+        if (tab >= 1 || tab <= 6) {
+            --tab;
+            $('body').find(".tab"+tab).trigger('click');
+        }
+    });
+
+    $('body').on('click', '.proximo', function (e) {
+        if (tab <= 6) {
+            if (tab == 1 || tab == 0) {
+                ++tab;
+            }
+            $('body').find(".tab"+tab).trigger('click');
+            ++tab;
+        }
+    });
 });

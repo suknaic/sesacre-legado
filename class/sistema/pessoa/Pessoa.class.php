@@ -11,6 +11,7 @@ class Pessoa {
     private $ds_bairro = null;
     private $ds_complemento = null;
     private $nr_cep = null;
+    private $nr_numero = null;
     private $id_cidade = null;
     private $nr_elefone_residencial = null;
     private $nr_telefone_celular = null;
@@ -67,6 +68,22 @@ class Pessoa {
 
     function getNr_cep() {
         return $this->nr_cep;
+    }
+
+    /**
+     * @return null
+     */
+    public function getNrNumero()
+    {
+        return $this->nr_numero;
+    }
+
+    /**
+     * @param null $nr_numero
+     */
+    public function setNrNumero($nr_numero)
+    {
+        $this->nr_numero = $nr_numero;
     }
 
     function getId_cidade() {
@@ -182,6 +199,7 @@ class Pessoa {
             $pessoa->setNmEmail($this->nm_email);
             $pessoa->setNmPessoa(ucwords(strtolower($this->nm_pessoa)));
             $pessoa->setNrCep($this->nr_cep);
+            $pessoa->setNrNumero($this->nr_numero);
             $pessoa->setNrTelefoneCelular($this->nr_telefone_celular);
             $pessoa->setNrTelefoneResidencial($this->nr_elefone_residencial);
             $pessoa->setNmSenha($this->nm_senha);

@@ -30,11 +30,6 @@ $(document).ready(function () {
                 };
             }
 
-            if ($('#id_tipo_fornecedor').val() == '0'){
-                func.modalAlert(func.msgPreencherCampos);
-                return false;
-            }
-
             var MaterialServico = {
                 medicamento: $('#id_medicamentos').val(),
                 servico: $('#id_servicos').val(),
@@ -48,6 +43,13 @@ $(document).ready(function () {
                 materialServico: MaterialServico,
                 tipoFornecedor: $("#id_tipo_fornecedor").val()
             };
+
+            if ($('#id_tipo_fornecedor').val() == 0 && ($('#nr_cpf').val() == '' && $('#nm_pessoa').val() == '' && $('#rz_social').val() == '' &&
+                $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, "") == '' && MaterialServico.servico == null &&
+                MaterialServico.medicamento == null && MaterialServico.materialConsumo == null && MaterialServico.materialPermanente == null)){
+                func.modalAlert(func.msgPreencherCampos);
+                return false;
+            }
 
             top.location.href = '/pages/fornecedor/relatorio/relatorio.php?token='+btoa(JSON.stringify(Fornecedor));
         }
