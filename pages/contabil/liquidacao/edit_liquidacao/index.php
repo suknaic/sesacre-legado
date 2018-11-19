@@ -114,52 +114,51 @@ require_once "index.load.php";
                                     </div>
                                 </div>
 
-                                <?php if ($tem_documentos) { ?>
-                                    <!--Form das entrega-->
-                                    <div class="form-group">
-                                        <div  class="col-sm-12" style="margin-bottom: -4%;">
-                                            <div class="panel-body docFis">
-                                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">Dados do Documento Fiscal</h4>
-                                                        </div>
-                                                        <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
-                                                                <div class="col-sm-3">
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                        <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
-                                                                            <?php echo $optionsDocumentosFiscais; ?>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
-                                                                <div class="col-sm-6"></div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="col-sm-12">
-                                                                    <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th class="text-center">Nº Documento Fiscal</th>
-                                                                                <th class="text-center">Tipo Documento Fiscal</th>
-                                                                                <th class="text-center">Competência</th>
-                                                                                <th class="text-center">Data Emissão</th>
-                                                                                <th class="text-center">Data Atesto</th>
-                                                                                <th class="text-center">Valor Total</th>
-                                                                                <th class="text-center">Saldo a Liquidar</th>
-                                                                                <th class="text-center">Situação</th>
-                                                                                <th class="text-center">Ação</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <?php echo $tabelaDocumentosFiscais; ?>
-                                                                        </tbody>
 
-                                                                    </table>
+                                <!--Form das entrega-->
+                                <div class="form-group" id="documentosFiscais">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body docFis">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados do Documento Fiscal</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2"><b>Nº do Documento Fiscal:</b></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="selectDocumentoFiscal" id="selectDocumentoFiscal">
+                                                                        <?php echo $optionsDocumentosFiscais; ?>
+                                                                    </select>
                                                                 </div>
+                                                            </div>
+                                                            <div class="col-sm-1"><a class="addDocumento btn btn-info">+</a></div>
+                                                            <div class="col-sm-6"></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <table id="tabelaDocumentos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center">Nº Documento Fiscal</th>
+                                                                            <th class="text-center">Tipo Documento Fiscal</th>
+                                                                            <th class="text-center">Competência</th>
+                                                                            <th class="text-center">Data Emissão</th>
+                                                                            <th class="text-center">Data Atesto</th>
+                                                                            <th class="text-center">Valor Total</th>
+                                                                            <th class="text-center">Saldo a Liquidar</th>
+                                                                            <th class="text-center">Situação</th>
+                                                                            <th class="text-center">Ação</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <?php echo $tabelaDocumentosFiscais; ?>
+                                                                    </tbody>
+
+                                                                </table>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -167,7 +166,8 @@ require_once "index.load.php";
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>    
+                                </div>
+
                                 <!--form processo administratio da despesa publica-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
@@ -195,7 +195,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-usd" style="margin-bottom: -4px"></p></span>
-                                                                    <input type="text" class="form-control" name="vl_liquidacao" id="vl_liquidacao" value="<?php echo $dadosLiquidacao['vl_liquidacao']?>" <?php echo $desabilita_campo_valor; ?> />
+                                                                    <input type="text" class="form-control" name="vl_liquidacao" id="vl_liquidacao" value="<?php echo $dadosLiquidacao['vl_liquidacao']?>"/>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>

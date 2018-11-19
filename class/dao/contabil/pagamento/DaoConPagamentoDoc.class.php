@@ -18,11 +18,12 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
     public function salvaDocPagamento(PDO $pdo) {
         try {
             if (!empty($pdo)) {
-                $sql = "INSERT INTO con_pagamento_doc (id_pagamento, id_documento_fiscal, vl_pagamento_doc, vl_pagamento_doc_saldo) "
-                        . "values (:pagamento, :documento, :valor, :valorSaldo)";
+                $sql = "INSERT INTO con_pagamento_doc (id_pagamento, id_documento_fiscal, id_documento_situacao, vl_pagamento_doc, vl_pagamento_doc_saldo) "
+                        . "values (:pagamento, :documento, :situacao, :valor, :valorSaldo)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
                 $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+                $stmt->bindValue(":situacao", $this->getIdDocumentoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":valor", $this->getVlDocumentoFiscal(), PDO::PARAM_STR);
                 $stmt->bindValue(":valorSaldo", $this->getVlPagamentoDocSaldo(), PDO::PARAM_STR);
                 $stmt->execute();
@@ -55,8 +56,11 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
                         inner join fin_documento_situacao as situacao
                         on situacao.id_documento_situacao = documento.id_documento_situacao
                         left join (select sum(vl_pagamento_doc) as saldo, id_documento_fiscal 
-                                           from con_pagamento_doc 
-                                           group by id_documento_fiscal) 
+                                   from con_pagamento as pag
+                                   inner join con_pagamento_doc as pagDoc
+                                   on pag.id_pagamento = pagDoc.id_pagamento
+                                   where pag.id_pagamento_situacao = 1 
+                                   group by id_documento_fiscal) 
                         as somaDocs
                         on somaDocs.id_documento_fiscal = documento.id_documento_fiscal
                         where pagamento.id_pagamento = :pagamento";

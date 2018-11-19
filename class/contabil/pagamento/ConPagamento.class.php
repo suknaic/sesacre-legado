@@ -211,6 +211,7 @@ class ConPagamento {
             $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
             $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
+            $daoConPagamento->setIdLiquidacaoSituacao(1);
             $daoConPagamento->setIdLotacao($this->id_lotacao);
             $daoConPagamento->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
             $daoConPagamento->setNrPagamento($this->nr_pagamento);
@@ -239,6 +240,7 @@ class ConPagamento {
                     $conPagamentoDoc = new ConPagamentoDoc();
                     $conPagamentoDoc->setIdPagamento($this->id_pagamento);
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
+                    $conPagamentoDoc->setIdDocumentoSituacao(1);
                     $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
                     $conPagamentoDoc->setVlPagamentoDocSaldo($dados["vl_pagamento_doc_saldo"]);
                     $conPagamentoDoc->salvaDocPagamento($pdo);

@@ -7,18 +7,11 @@ class ConPagamentoDoc {
     private $id_pagamento_doc = null;
     private $id_pagamento = null;
     private $id_documento_fiscal = null;
+    private $id_documento_situacao = null;
     private $vl_documento_fiscal = null;
     private $vl_pagamento_doc_saldo = null;
     private $sucesso = null;
     private $msgRetorno = null;
-
-    function getMsgRetorno() {
-        return $this->msgRetorno;
-    }
-
-    function Sucesso() {
-        return $this->sucesso;
-    }
 
     public function getIdPagamentoDoc() {
         return $this->id_pagamento_doc;
@@ -50,6 +43,16 @@ class ConPagamentoDoc {
         return $this;
     }
 
+    public function getIdDocumentoSituacao() {
+        return $this->id_documento_situacao;
+    }
+
+    public function setIdDocumentoSituacao($id_documento_situacao) {
+        $this->id_documento_situacao = $id_documento_situacao;
+
+        return $this;
+    }
+
     public function getVlDocumentoFiscal() {
         return $this->vl_documento_fiscal;
     }
@@ -70,6 +73,14 @@ class ConPagamentoDoc {
         return $this;
     }
 
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+
+    function Sucesso() {
+        return $this->sucesso;
+    }
+
     public function salvaDocPagamento(PDO $pdo) {
         try {
 
@@ -77,6 +88,7 @@ class ConPagamentoDoc {
                 $daoConPagamentoDoc = new DaoConPagamentoDoc();
                 $daoConPagamentoDoc->setIdPagamento($this->id_pagamento);
                 $daoConPagamentoDoc->setIdDocumentoFiscal($this->id_documento_fiscal);
+                $daoConPagamentoDoc->setIdDocumentoSituacao($this->id_documento_situacao);
                 $daoConPagamentoDoc->setVlDocumentoFiscal(Metodos::ConverteValorIng($this->vl_documento_fiscal));
                 $daoConPagamentoDoc->setVlPagamentoDocSaldo(Metodos::ConverteValorIng($this->vl_pagamento_doc_saldo));
                 $daoConPagamentoDoc->salvaDocPagamento($pdo);

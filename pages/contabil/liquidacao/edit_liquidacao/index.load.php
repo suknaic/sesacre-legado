@@ -19,6 +19,21 @@ if (empty($id)) {
     header("Location: /pages/index.php");
 }
 
+if(!$session->vPContabilLiquidacao()){
+    header("Location: /pages/index.php"); 
+}
+
+/*
+ * Só pode Editar a Liquidação quem tiver Tramitação Liquidar
+ */
+$tramitacao = new VincularTramitacao();
+$tramitacao->setIdPessoa($session->getIdUser());
+$tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
+$tramitacao->verificaPessoaTramitacao();
+if(!$tramitacao->Sucesso()){
+    header("Location: /pages/index.php");
+}
+
 $liquidacao = new Liquidacao();
 $liquidacao->setIdLiquidacao($id);
 
@@ -31,15 +46,9 @@ $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 $tem_documentos = false;
 $optionsDocumentosFiscais = null;
 $tabelaDocumentosFiscais = null;
-$desabilita_campo_valor = "";
 
-if ($dadosLiquidacao['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
-    $tem_documentos = true;
-    $desabilita_campo_valor = "disabled";
-    $optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
-    $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();    
-}
-
+$optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
+$tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();    
 
 $historico = $liquidacao->retornaHistorico();
 

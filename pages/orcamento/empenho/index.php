@@ -19,6 +19,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/index.load";
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">  
         <!-- ion icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
+        <!--Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <!--DataTables [ OPT ]-->
         <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
@@ -191,7 +193,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/index.load";
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
-        
+        <!--Select2-->
+        <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>

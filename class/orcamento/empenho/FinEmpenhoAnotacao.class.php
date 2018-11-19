@@ -11,6 +11,17 @@ class FinEmpenhoAnotacao {
     private $idPessoa = null;
     private $idEmpenho = null;
     
+    private $sucesso = false;
+    private $msgRetorno = null;
+    
+    function getSucesso() {
+        return $this->sucesso;
+    }
+
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+    
     function getIdEmpenhoAnotacao() {
         return $this->idEmpenhoAnotacao;
     }
@@ -80,7 +91,7 @@ class FinEmpenhoAnotacao {
         }
     }
 
-    public function salvaAnotacao(){
+    public function salvaAnotacaoComRetorno(){
         try {
             $retorno = "";
             
@@ -92,7 +103,6 @@ class FinEmpenhoAnotacao {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
             
-            
             //Só pode Editar o empenho quem possui a Tramitação de Empenhar
             $tramitacao = new VincularTramitacao();
             $tramitacao->setIdPessoa($this->idPessoa);
@@ -102,6 +112,31 @@ class FinEmpenhoAnotacao {
                 return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
             }
             
+            $this->salvaAnotacao($pdo);
+            if ($this->getSucesso()) {
+                $pdo->commit();
+                $retorno = Metodos::retornoAjax("ok","html",$this->getMsgRetorno());
+            } else {
+                $pdo->rollBack();
+                $retorno = Metodos::retornoAjax("Erro","console", $this->getMsgRetorno());
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+    
+    
+    public function salvaAnotacao(PDO $pdo = null){
+        $this->sucesso = false;
+        $this->msgRetorno = null;            
+        try {
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $pdo->beginTransaction();
+            }
+                        
             $daoFinEmpenhoAnotacao = new DaoFinEmpenhoAnotacao();
             $daoFinEmpenhoAnotacao->setIdEmpenho($this->getIdEmpenho())
                                  ->setDsEmpenhoAnotacao($this->getDsEmpenhoAnotacao())
@@ -111,20 +146,19 @@ class FinEmpenhoAnotacao {
             if ($daoFinEmpenhoAnotacao->getSucesso()) {
                 $idEmpenhoAnotacao = $pdo->lastInsertId('fin_empenho_anotacao_id_empenho_anotacao_seq');
                 if (!Log::SalvaLogI('fin_empenho_anotacao', $idEmpenhoAnotacao, $pdo)) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                    $this->sucesso = false;
+                    $this->msgRetorno = "Erro no Log da Anotação";
+                    return;
                 }
-                $this->setIdEmpenhoAnotacao($idEmpenhoAnotacao);
-                
-                $pdo->commit();
-                $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+                $this->sucesso = true;
+                $this->msgRetorno = "Anotação Salva com Sucesso." ;                
             } else {
-                $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinEmpenhoAnotacao->getMsgRetorno());
-            }
-            return $retorno;
+                $this->sucesso = false;
+                $this->msgRetorno = "Não foi possível salvar uma Anotação no Pedido.";                
+            }            
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();            
         }
     }
 

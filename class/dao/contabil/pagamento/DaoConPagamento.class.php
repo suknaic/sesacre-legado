@@ -20,14 +20,15 @@ class DaoConPagamento extends ConPagamentoTb {
             $this->sucesso = false;
             if (!empty($pdo)) {
 
-                $sql = "INSERT INTO con_pagamento (id_pagamento_situacao, id_pagamento_status, id_liquidacao, id_lotacao, id_doc_tipo_lotacao, "
-                        . " nr_pagamento, dt_pagamento, vl_pagamento, vl_pagamento_saldo) values (:situacao, :status, :liquidacao, :lotacao, :tipoLotacao,"
+                $sql = "INSERT INTO con_pagamento (id_pagamento_situacao, id_pagamento_status, id_liquidacao, id_liquidacao_situacao, id_lotacao, id_doc_tipo_lotacao, "
+                        . " nr_pagamento, dt_pagamento, vl_pagamento, vl_pagamento_saldo) values (:situacao, :status, :liquidacao, :liqSituacao, :lotacao, :tipoLotacao,"
                         . " :nr_pagamento, :dt_pagamento, :vl_pagamento, :saldo)";
                 $stmt = $pdo->prepare($sql);
 
                 $stmt->bindValue(":situacao", $this->getIdPagamentoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":status", $this->getIdPagamentoStatus(), PDO::PARAM_INT);
                 $stmt->bindValue(":liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":liqSituacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":tipoLotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":nr_pagamento", $this->getNrPagamento(), PDO::PARAM_STR);
