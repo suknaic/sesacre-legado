@@ -9,6 +9,8 @@ $(document).ready(function () {
     
     $('#dt_liquidacao').mask("99/99/9999");
     
+    $("#nr_liquidacao").mask("9999999999/9999");
+    
         //Masca para valor
     $("body").on("focus", "#vl_liquidacao", function () {
         $(this).priceFormat({
@@ -18,6 +20,8 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    habilitaDocumentosFiscais();
     
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
@@ -321,4 +325,30 @@ function listaAnotacoes() {
             return false;
         }
     });
+}
+
+function habilitaDocumentosFiscais(){
+    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');    
+    var qtdDocs = $("#selectDocumentoFiscal option").size();    
+//    if(qtdDocs > 1){
+//        $('.docFis').show();
+//        $("#vl_liquidacao").prop("disabled",true);
+//        $("#selectDocumentoFiscal").focus();
+//    }else{
+//        $('.docFis').hide();
+//        if(tipo_solicitacao == 2){
+//            $("#vl_liquidacao").prop("disabled",true);            
+//        }else{
+//            $("#vl_liquidacao").prop("disabled",false);
+//        }
+//    }
+    
+    if ((tipo_solicitacao == 1 && qtdDocs == 1) || tipo_solicitacao > 2) {
+        $('#documentosFiscais').hide();
+        $("#vl_liquidacao").prop("disabled",false);
+    } else if( (tipo_solicitacao == 1 && qtdDocs > 1) || tipo_solicitacao == 2) {
+        $('#documentosFiscais').show();
+        $("#vl_liquidacao").prop("disabled",true);
+        $("#selectDocumentoFiscal").focus();
+    }
 }

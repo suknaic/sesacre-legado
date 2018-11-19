@@ -205,19 +205,25 @@ class Session extends RecursoUtil{
      * 
      */
     public function recurso(PDO $pdo = null){
-        try{
-            
+        try{          
             if(empty($pdo)){
                 $conexao = new Conexao();
                 $pdo = $conexao->connect(); 
-            }
-            
+            }            
             $this->setIdPessoa($this->idUser);            
-            $this->validaRecursoUsuario($pdo);
-            
-                        
-        } catch (Exception $ex) {
-            print_r($ex->getMessage());
+            $resultado = $this->validaRecursoUsuario($pdo);
+            if(!$resultado){
+                echo "Resultado false";
+                if($this->opcao == "ajax"){
+                    echo "SessaoExpirada";
+                    exit;
+                }else{
+                    header("location:" . "/pages/index.php?permi=1");
+                    exit;
+                }
+            }                                                
+            return true;                                    
+        } catch (Exception $ex) {            
             return false;
         }                
     }

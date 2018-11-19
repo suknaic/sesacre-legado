@@ -552,10 +552,8 @@ class FinEmpenhoModel {
             $tramitacao->setIdTramitacao($tramitacao->getTramitacaoEmpenhar());
             $tramitacao->verificaPessoaTramitacao($pdo);
             if(!$tramitacao->Sucesso()){
-                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cancelar Empenho.");
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Editar o Empenho.");
             }
-            
-            
             
             $daoFinEmpenho = new DaoFinEmpenho();
             //removendo barra do numero do empenho
@@ -945,6 +943,10 @@ class FinEmpenhoModel {
     public function trEmpenhoBuscaLiquidacao() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
+        
+        //removendo barra do numero do empenho
+        $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
+        
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaLiquidacao($pdo);

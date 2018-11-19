@@ -384,6 +384,15 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
+            
+            //Só pode Cadastrar a Liquidação quem possui a Tramitação de Liquidar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->usuario);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
+            }
 
             /*
              * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
@@ -571,6 +580,15 @@ class Liquidacao {
 
             if (empty($this->getIdLiquidacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getNrLiquidacao()) || empty($this->getVlLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
+            //Só pode Editar a Liquidação quem possui a Tramitação de Liquidar
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($this->usuario);
+            $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
+            $tramitacao->verificaPessoaTramitacao($pdo);
+            if(!$tramitacao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
             }
 
             $conexao = new Conexao();

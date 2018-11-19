@@ -6,6 +6,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/SesPessoaJuridic
 
 $session = new Session();
 
+if(!$session->vPContabilLiquidacao()){
+    header("Location: /pages/index.php"); 
+}
+
 $tipoGasto = new TipoGasto();
 
 $tipoGastoOptions = $tipoGasto->retornaOption();

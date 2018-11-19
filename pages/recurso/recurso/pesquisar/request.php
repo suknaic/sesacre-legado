@@ -11,29 +11,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/Qdd.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/fin/QddValor.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
-$session = new Session('ajax');
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/recurso/Recurso.class.php";
 
-if(!$session->vPContabilEmpenho()){
-    echo "SessionEXpirada";
-    return;
-}
+$session = new Session('ajax');
+$session->recurso();
+
 
 switch ($_REQUEST['acao']) {
 
-    CASE 'retornaEmpenhos':
+    CASE 'retornaRecursos':
         try {
+        
             $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);
-            $empenhoPesquisa = new FinEmpenhoPesquisa();
-            $empenhoPesquisa->setAnoExercicio($dados['ano_exercicio'])
-                            ->setNrEmpenho($dados['nr_empenho'])
-                            ->setFornecedor($dados['fornecedor'])
-                            ->setNrContrato($dados['nr_contrato'])
-                            ->setNrPedido($dados['nr_pedido'])
-                            ->setTipoGasto($dados['tipo_gasto'])
-                            ->setSituacao($dados['situacao'])
-                            ->setCentral($dados['central'])
-                            ->setUsuario($session);
-            echo $empenhoPesquisa->retornaEmpenhos();
+            $recurso = new Recurso();            
+            echo $recurso->retornaTrRecursos($session);
             return;
             break;
         } catch (Error $e) {
