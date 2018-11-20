@@ -10,9 +10,13 @@ $session = new Session();
 $session->recurso();
 
 
-if(!$session->vPContabilEmpenho()){
-    header("Location: /pages/index.php"); 
-}
+$recurso = new RecursoUtil();
+$recurso->setIdPessoa($session->getIdUser());
+$recurso->setLinkRecurso("/pages/recurso/recurso");
+$recurso->carregaRecursoUsuario();
+
+
+
 $tipoGasto = new TipoGasto();
 $pessoaJuridicaOptions = SesPessoaJuridicaModel::optionPessoaJuridica();
 

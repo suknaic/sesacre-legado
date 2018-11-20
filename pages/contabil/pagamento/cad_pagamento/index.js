@@ -3,9 +3,9 @@ $(document).ready(function () {
     func = new Funcoes();
 
     var url = "request.php";
-    
+
     $("#nr_pagamento").mask("9999999999/9999");
-    
+
     //select2
     $('body').find('select').select2({
         width: '100%'
@@ -55,7 +55,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
     $.ajax({
         "url": url,
@@ -130,7 +129,6 @@ $(document).ready(function () {
                 $(".empenho").append(response);
             }
         });
-
         /**
          * retornaDadosLiquidacao
          */
@@ -147,12 +145,9 @@ $(document).ready(function () {
                 $(".dadosLiquidacao").append(response);
             }
         });
-
         /**
          * retornaDocumentosEmpenho
          */
-
-
         $.ajax({
             "url": url,
             "dataType": 'html',
@@ -241,10 +236,10 @@ $(document).ready(function () {
             var documentos = [];
 
             $(".documentoFiscal").each(function () {
-                
+
                 var linha = $(this).data('objeto');
 
-                var vl_documento_pagamento =  $(this).find(".valorRetPagamento").val();
+                var vl_documento_pagamento = $(this).find(".valorRetPagamento").val();
 
                 var vl_documento_pagamento_saldo = linha.saldo;
 
@@ -257,11 +252,11 @@ $(document).ready(function () {
 
 
             });
-           
-            if(documentos.length == 0){
+
+            if (documentos.length == 0) {
                 documentos = [];
             }
-            
+
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
                 "id_pedido": $("#id_pedido").val(),

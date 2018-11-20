@@ -6,8 +6,8 @@ class DaoSesPessoa extends SesPessoa {
 
     function insert($pdo) {
         try {
-            $sql = "INSERT INTO ses_pessoa (nm_pessoa, id_naturalidade, ds_logradouro, ds_bairro, ds_complemento, nr_cep, id_cidade, nr_telefone_residencial, nr_telefone_celular, nm_email, nm_senha, ds_observacao) 
-                    VALUES (:nm_pessoa, :id_naturalidade, :ds_logradouro, :ds_bairro, :ds_complemento, :nr_cep, :id_cidade, :nr_telefone_residencial, :nr_telefone_celular, :nm_email, :nm_senha, :ds_observacao)";
+            $sql = "INSERT INTO ses_pessoa (nm_pessoa, id_naturalidade, ds_logradouro, ds_bairro, ds_complemento, nr_cep, id_cidade, nr_telefone_residencial, nr_telefone_celular, nm_email, nm_senha, ds_observacao, nr_numero) 
+                    VALUES (:nm_pessoa, :id_naturalidade, :ds_logradouro, :ds_bairro, :ds_complemento, :nr_cep, :id_cidade, :nr_telefone_residencial, :nr_telefone_celular, :nm_email, :nm_senha, :ds_observacao, :nr_numero)";
             $result = $pdo->prepare($sql);
             $result->bindValue(":nm_pessoa", $this->getNmPessoa() === '' ? null : $this->getNmPessoa(), PDO::PARAM_STR);
             $result->bindValue(":id_naturalidade", $this->getIdNaturalidade(), PDO::PARAM_INT);
@@ -15,6 +15,7 @@ class DaoSesPessoa extends SesPessoa {
             $result->bindValue(":ds_bairro", $this->getDsBairro() === '' ? null : $this->getDsBairro(), PDO::PARAM_STR);
             $result->bindValue(":ds_complemento", $this->getDsComplemento() === '' ? null : $this->getDsComplemento(), PDO::PARAM_STR);
             $result->bindValue(":nr_cep", $this->getNrCep() === '' ? null : $this->getNrCep(), PDO::PARAM_STR);
+            $result->bindValue(":nr_numero", $this->getNrNumero(), PDO::PARAM_INT);
             $result->bindValue(":id_cidade", $this->getIdCidade(), PDO::PARAM_INT);
             $result->bindValue(":nr_telefone_residencial", $this->getNrTelefoneResidencial() === '' ? null : $this->getNrTelefoneResidencial(), PDO::PARAM_STR);
             $result->bindValue(":nr_telefone_celular", $this->getNrTelefoneCelular() === '' ? null : $this->getNrTelefoneCelular(), PDO::PARAM_STR);

@@ -137,14 +137,53 @@ class DaoRecRecurso extends RecRecurso {
                 . " SELECT R.id_recurso, GPR.fl_cadastrar, GPR.fl_editar, GPR.fl_excluir"
                 . " FROM rec_recurso R"
                 . " INNER JOIN rec_grupo_pessoa_recurso GPR ON GPR.id_recurso = R.id_recurso"
-                . " INNER JOIN rec_pessoa_grupo_pessoa PGP ON PGP.id_pessoa = id_pessoa"
+                . " INNER JOIN rec_pessoa_grupo_pessoa PGP ON PGP.id_pessoa = :id_pessoa"
                     . " AND PGP.id_grupo_pessoa = GPR.id_grupo_pessoa"
-                . " WHERE R.id_recurso = :id_recurso AND R.st_ativo = '1'";
-                
+                . " WHERE R.id_recurso = :id_recurso AND R.st_ativo = '1'"
+                . " UNION ALL"
+                . " SELECT R.id_recurso, RGR.fl_cadastrar, RGR.fl_editar, RGR.fl_excluir"
+                . " FROM rec_recurso R"
+                . " INNER JOIN rec_recurso_grupo_recurso RGR ON RGR.id_recurso = R.id_recurso"
+                . " INNER JOIN rec_pessoa_grupo_recurso PGR ON PGR.id_grupo_recurso = RGR.id_grupo_recurso"
+                . " AND PGR.id_pessoa = :id_pessoa"
+                . " WHERE R.id_recurso = :id_recurso AND R.st_ativo = '1' "
+                . " UNION ALL"
+                . " SELECT R.id_recurso, RGR.fl_cadastrar, RGR.fl_editar, RGR.fl_excluir"
+                . " FROM rec_recurso R"
+                . " INNER JOIN rec_recurso_grupo_recurso RGR ON RGR.id_recurso = R.id_recurso"
+                . " INNER JOIN rec_pessoa_grupo_pessoa PGP ON PGP.id_pessoa = :id_pessoa"
+                . " INNER JOIN rec_grupo_pessoa_grupo_recurso GPGR ON GPGR.id_grupo_pessoa = RGR.id_grupo_recurso"
+                . " AND GPGR.id_grupo_pessoa = PGP.id_grupo_pessoa"
+                . " WHERE R.id_recurso = :id_pessoa AND R.st_ativo = '1' ";
+
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_recurso", $this->getIdRecurso(), PDO::PARAM_INT);
             $result->bindValue(":id_pessoa", $idPessoa, PDO::PARAM_INT);
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
+    function retornaTodosRecurso($pdo) {
+        $this->sucesso = false;
+        
+        $sql = "SELECT R.id_recurso, R.id_sistema, R.nm_recurso, R.lk_recurso, R.ds_recurso, R.st_ativo"
+                . " , S.nm_sistema"
+                . " FROM rec_recurso R"
+                . " LEFT JOIN ses_sistema S ON S.id_sistema = R.id_sistema"
+                . " ORDER BY S.nm_sistema, R.lk_recurso, R.nm_recurso";                
+        try {
+            $result = $pdo->prepare($sql);            
             $result->execute();
             if ($result->rowCount() >= 1) {
                 $this->sucesso = true;

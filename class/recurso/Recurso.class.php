@@ -105,13 +105,11 @@ class Recurso{
 
     public function retornaRecursoPessoa(PDO $pdo = null){
         
-        try{
-            
+        try{            
             if(empty($pdo)){
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();                
-            }
-            
+            }            
             $dao = new DaoRecRecurso();
             $dao->setLkRecurso($this->lkRecurso);
             $dao->retornaPorLkRecurso($pdo);
@@ -119,30 +117,23 @@ class Recurso{
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi Possível Localizar o Recurso.";
                 return;
-            }
-            
-            $dadosRecurso = $this->retornaRecursoSetado($dao->getMsgRetorno());
-            
+            }            
+            $dadosRecurso = $this->retornaRecursoSetado($dao->getMsgRetorno());            
             $dao->setIdRecurso($dadosRecurso->getIdRecurso());
-            $dao->retornaTudoPorUsuarioRecurso((int) $this->getIdPessoa(), $pdo);
-            
+            $dao->retornaTudoPorUsuarioRecurso((int) $this->getIdPessoa(), $pdo);            
             if(!$dao->Sucesso()){                    
                 $this->sucesso = false;
                 $this->msgRetorno = "Usuário não possui acesso a esse Recurso.";
                 return;
-            }
-            
+            }            
             /*
              * Contém todos os Dados de todos os lugares onde o usuário possivel
              */
-            $dadosRetorno = $dao->getMsgRetorno();
-            
-            $permissoes = $this->ajustaRetornoDasPermissoesAcoes($dadosRetorno);
-            
+            $dadosRetorno = $dao->getMsgRetorno();                                 
+            $permissoes = $this->ajustaRetornoDasPermissoesAcoes($dadosRetorno);            
             $this->sucesso = true;
             $this->msgRetorno = $permissoes;
-            return;                                               
-            
+            return;            
         } catch (Exception $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
@@ -150,6 +141,54 @@ class Recurso{
     }
     
     
+    function retornaTrRecursos(Session $session){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $tabela = '';
+                                                
+            $dao = new DaoRecRecurso();
+            $dao->retornaTodosRecurso($pdo);
+            
+            if ($dao->sucesso()) {
+                foreach ($dao->getMsgRetorno() as $linha) {                    
+                    $tabela .= '<tr>'
+                                . '<td class="text-center">'.$linha['nm_recurso'].'</td>'
+                                . '<td class="text-center">'.$linha['ds_recurso'].'</td>'
+                                . '<td class="text-center">'.$linha['nm_sistema'].'</td>'
+                                . '<td class="text-center">'.$linha['lk_recurso'].'</td>'
+                                . '<td class="text-center">Quantidade de Uso(A FAZER)</td>'                                
+                                . '<td class="text-center">'
+                                    . ' <button type="button" title="Ver Recurso" class="ver-recurso" value='.$linha['id_recurso'].'>'
+                                        . '<i class="fa fa-file-text-o text-info" aria-hidden="true"></i>'
+                                    . '</button> ';                    
+                    if($session->recursoPodeEditar()){
+                        $tabela .=  ' <button type="button" title="Editar Recurso" class="editar-recurso" value='.$linha['id_recurso'].'>'
+                                        . '<i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>'
+                                    . '</button> ';                                    
+                    }
+                    if($session->recursoPodeExcluir()){
+                        $tabela .= ' <button type="button" title="Excluir Recurso" class="cancelar-recurso" value='.$linha['id_recurso'].'>'
+                                        . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
+                                    . '</button> ';
+                    }
+                    
+                    //Situação Cadastrado ou Liquidado Parcial Pode Liquidar. Obs.: Tipo de administração por licitação deve existir documento fiscal a liquidar
+//                    if ($linha['liquida'] == 'S' and $flBotaoLiquidar) {
+//                        $tabela .= '<button title="Cadastrar Liquidação" type="button" class="enviar-liquidacao" value="' . $linha['empenho_sm'] . '">'
+//                                    . '<i class="fa fa-calculator text-purple" aria-hidden="true"></i>'
+//                                . '</button>';
+//                    }
+
+                    $tabela .= '</td>'
+                            . '</tr>';                    
+                }
+            } 
+            return $tabela;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "alert", STR_ERROR );
+        }
+    }
     
     
     

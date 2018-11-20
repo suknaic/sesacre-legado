@@ -5,6 +5,7 @@ class ConPagamentoDocTb {
     private $id_pagamento_doc = null;
     private $id_pagamento = null;
     private $id_documento_fiscal = null;
+    private $id_documento_situacao = null;
     private $vl_documento_fiscal = null;
     private $vl_pagamento_doc_saldo = null;
 
@@ -34,6 +35,16 @@ class ConPagamentoDocTb {
 
     public function setIdDocumentoFiscal($id_documento_fiscal) {
         $this->id_documento_fiscal = $id_documento_fiscal;
+
+        return $this;
+    }
+
+    public function getIdDocumentoSituacao() {
+        return $this->id_documento_situacao;
+    }
+
+    public function setIdDocumentoSituacao($id_documento_situacao) {
+        $this->id_documento_situacao = $id_documento_situacao;
 
         return $this;
     }

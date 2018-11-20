@@ -3,8 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/recurso/Recurso.class.php";
 
 class RecursoUtil{
-    
-    
+        
     private $idPessoa = null;
     private $flCadastrar = null;
     private $flEditar = null;
@@ -12,8 +11,17 @@ class RecursoUtil{
     private $lkRecurso = null;
     private $arquivo = null;
     private $acao = null;
+    private $linkRecurso = null;
     
-    
+    public function getLinkRecurso() {
+        return $this->linkRecurso;
+    }
+
+    public function setLinkRecurso($linkRecurso) {
+        $this->linkRecurso = $linkRecurso;
+        return $this;
+    }
+            
     public function getIdPessoa() {
         return $this->idPessoa;
     }
@@ -79,9 +87,20 @@ class RecursoUtil{
     public function getAcoesLivres() {
         return array("pesquisar", "visualizar");
     }
-
     
-        
+    public function recursoPodeCadastrar() : bool{
+        return $this->flCadastrar;
+    }
+    
+    public function recursoPodeEditar() : bool{
+        return $this->flEditar;
+    }
+    
+    public function recursoPodeExcluir() : bool{
+        return $this->flExcluir;
+    }
+
+            
     /**
      * Irá procurar e setar os Campos necessários para a utilização do Recurso
      * Caminho da url para ser buscado no Banco de Dados
@@ -150,36 +169,144 @@ class RecursoUtil{
             return false;
         }
     }
+    
+    private function validaUsodaAcao(array $permissoes, string $acao){
+        return $permissoes[$acao];        
+    }
         
     
     public function validaRecursoUsuario(PDO $pdo = null){
         try{
+                         
             
-            $this->setaCamposPrincipais();  
+            /*
+             * Irá fazer a Busca da URL e organizar para ser utilizada 
+             * durante a execução do código
+             */
+            $this->setaCamposPrincipais();
             
+            /*
+             * Verifica se a Ação é alguma das Ações validas no sistema
+             * Em Geral é o nome da pasta
+             */
             if(!$this->acaoValida()){
                 return false;
-            }      
+            }
                         
             $recurso = new Recurso();
             $recurso->setIdPessoa($this->idPessoa);
             $recurso->setLkRecurso($this->getLkRecurso());
             
+            /*
+             * Verifica se o usuário possui permissão para esse recurso e também retorna 
+             * as permissoes que ele possui para esse recurso
+             */
             $recurso->retornaRecursoPessoa($pdo);
-            if(!$recurso->sucesso()){
+            
+            /*
+             * Se for false, então significa que o usuário não possui permissão para tal recurso
+             */
+            if(!$recurso->sucesso()){                    
                 return false;
             }
             
             $permissoes = $recurso->getMsgRetorno();
+            if(!is_array($permissoes)){
+                return false;
+            }
             
-//            echo "<pre>";
-//            print_r($permissoes);
-//            echo "</pre>";
+            $this->flCadastrar = $permissoes['cadastrar'];
+            $this->flEditar = $permissoes['editar'];
+            $this->flExcluir = $permissoes['excluir'];    
+            
+            /*
+             * Se a Ação que está sendo utilizado não é livre para acesso exclusivamente do recurso
+             * Ou seja, é necessário que o usuário tenha acesso a alguma permissão especifica
+             * Então é preciso fazer essa validação
+             */
+            if(!$this->acaoLivre()){
+                /*
+                 * Se o usuário não possui permissão para essa ação
+                 * então ele não deve ter acesso a essa página
+                 */
+                if(!$this->validaUsodaAcao($permissoes, $this->getAcao())){                    
+                    return false;
+                }                                
+            }                        
+                                    
+            return true;            
+        } catch (Exception $ex) {            
+            return false;
+        }                
+    }
+    
+    public function carregaRecursoUsuario(PDO $pdo = null){
+        try{
             
             
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();                
+            } 
             
-        } catch (Exception $ex) {
-            print_r($ex->getMessage());
+            /*
+             * Irá fazer a Busca da URL e organizar para ser utilizada 
+             * durante a execução do código
+             */
+            $this->setaCamposPrincipais();
+            
+            /*
+             * Verifica se a Ação é alguma das Ações validas no sistema
+             * Em Geral é o nome da pasta
+             */
+            if(!$this->acaoValida()){
+                return false;
+            }
+                        
+            $recurso = new Recurso();
+            $recurso->setIdPessoa($this->idPessoa);
+            $recurso->setLkRecurso($this->getLkRecurso());
+            
+            /*
+             * Verifica se o usuário possui permissão para esse recurso e também retorna 
+             * as permissoes que ele possui para esse recurso
+             */
+            $recurso->retornaRecursoPessoa($pdo);
+            
+            /*
+             * Se for false, então significa que o usuário não possui permissão para tal recurso
+             */
+            if(!$recurso->sucesso()){                    
+                return false;
+            }
+            
+            $permissoes = $recurso->getMsgRetorno();
+            if(!is_array($permissoes)){
+                return false;
+            }
+            
+            $this->flCadastrar = $permissoes['cadastrar'];
+            $this->flEditar = $permissoes['editar'];
+            $this->flExcluir = $permissoes['excluir'];    
+            
+            /*
+             * Se a Ação que está sendo utilizado não é livre para acesso exclusivamente do recurso
+             * Ou seja, é necessário que o usuário tenha acesso a alguma permissão especifica
+             * Então é preciso fazer essa validação
+             */
+            if(!$this->acaoLivre()){
+                /*
+                 * Se o usuário não possui permissão para essa ação
+                 * então ele não deve ter acesso a essa página
+                 */
+                if(!$this->validaUsodaAcao($permissoes, $this->getAcao())){                    
+                    return false;
+                }                                
+            }                        
+                                    
+            return true;            
+        } catch (Exception $ex) {            
+            return false;
         }                
     }
     

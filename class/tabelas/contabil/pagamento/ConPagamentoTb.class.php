@@ -6,6 +6,7 @@ class ConPagamentoTb {
     private $id_pagamento_situacao = null;
     private $id_pagamento_status = null;
     private $id_liquidacao = null;
+    private $id_liquidacao_situacao = null;
     private $id_lotacao = null;
     private $id_doc_tipo_lotacao = null;
     private $nr_pagamento = null;
@@ -52,6 +53,16 @@ class ConPagamentoTb {
 
     public function setIdLiquidacao($id_liquidacao) {
         $this->id_liquidacao = $id_liquidacao;
+
+        return $this;
+    }
+
+    public function getIdLiquidacaoSituacao() {
+        return $this->id_liquidacao_situacao;
+    }
+
+    public function setIdLiquidacaoSituacao($id_liquidacao_situacao) {
+        $this->id_liquidacao_situacao = $id_liquidacao_situacao;
 
         return $this;
     }
@@ -138,6 +149,12 @@ class ConPagamentoTb {
 
     public function getDocsPagamento() {
         return $this->docs_pagamento;
+    }
+
+    public function setDocsPagamento($docs_pagamento) {
+        $this->docs_pagamento = $docs_pagamento;
+
+        return $this;
     }
 
 }
