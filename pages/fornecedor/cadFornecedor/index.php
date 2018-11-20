@@ -77,7 +77,7 @@
                                                 </a>
                                             </li>
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab2" class="add-tooltip tab2" data-original-title="Dados do Cadastrais" aria-expanded="false">
+                                                <a data-toggle="tab" href="#demo-bv-tab2" class="add-tooltip tab2" data-original-title="Dados Cadastrais" aria-expanded="false">
                                                     <div class="text-warning">
                                                         <i class="wz-icon fa fa-file-text fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
