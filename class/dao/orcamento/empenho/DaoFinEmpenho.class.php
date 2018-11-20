@@ -452,6 +452,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             emp.id_empenho,
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
+                            p.id_tipo_solicitacao,
                             emp.vl_empenho,
                             (emp.vl_empenho - (
                                select
@@ -464,12 +465,15 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             ))
                             as saldo_empenho_liquidacao 
                          from
-                            fin_empenho as emp 
+                            fin_empenho as emp
+                            inner join
+			       fin_pedido p
+			       on p.id_pedido = emp.id_pedido
                             inner join
                                fin_tipo_empenho as tpEmp 
                                on tpEmp.id_tipo_empenho = emp.id_tipo_empenho 
                          where
-                            id_pedido = :pedido and emp.sit_empenho <> '6'";
+                            emp.id_pedido = :pedido and emp.sit_empenho <> '6'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->execute();
