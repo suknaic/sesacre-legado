@@ -353,7 +353,7 @@
                                                 <div id="demo-bv-tab4" class="tab-pane fade">
                                                     <div class="form-group resto">
                                                         <div class="col-sm-4 juridica">
-                                                            <div class="panel-body">Telefone da Empresa: <span class="text-danger">*</span>
+                                                            <div class="panel-body">Telefone Comercial: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>

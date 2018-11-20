@@ -263,8 +263,7 @@ class Fornecedor {
                     return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
                 }
             }
-//            var_dump($cadastraPessoa);
-//            return;
+
             if ($cadastraPessoa) {
                 $pessoa->setNm_pessoa(empty($this->pessoaFisica['nmPessoaFisica']) ? trim($this->pessoaJuridica['nmRazaoSoc']):trim($this->pessoaFisica['nmPessoaFisica']));
                 $pessoa->setId_cidade($this->pessoa['cidade']);
