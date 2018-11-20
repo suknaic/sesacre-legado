@@ -21,7 +21,7 @@ $(document).ready(function () {
         });
     });
     
-    habilitaDocumentosFiscais();
+//    habilitaDocumentosFiscais();
     
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
@@ -91,22 +91,19 @@ $(document).ready(function () {
             $(".documentoFiscal").each(function () {
                 var linha = $(this).data('objeto');
                 
+                var vl_documento_liquidacao = linha.vl_doc_sm;
                 
-                var vl_documento_liquidacao = linha.vl_doc_sem_mascara;
-                
-                var vl_documento_liquidacao_saldo = linha.vl_doc_sem_mascara;
+                var vl_documento_liquidacao_saldo = linha.vl_doc_sm;
                 
                 var documento = {
                     id_liquidacao_doc: linha.id_liquidacao_doc,
                     id_documento_fiscal: linha.id_documento_fiscal,
                     vl_liquidacao_doc: vl_documento_liquidacao_saldo,
-                    vl_liquidacao_doc_saldo: vl_documento_liquidacao
+                    vl_liquidacao_doc_saldo: vl_documento_liquidacao,
+                    id_documento_situacao: linha.situacao
                 }
                 documentos.push(documento);
             });
-            
-//            console.log(documentos);
-//            return false;
 
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
@@ -325,30 +322,4 @@ function listaAnotacoes() {
             return false;
         }
     });
-}
-
-function habilitaDocumentosFiscais(){
-    var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');    
-    var qtdDocs = $("#selectDocumentoFiscal option").size();    
-//    if(qtdDocs > 1){
-//        $('.docFis').show();
-//        $("#vl_liquidacao").prop("disabled",true);
-//        $("#selectDocumentoFiscal").focus();
-//    }else{
-//        $('.docFis').hide();
-//        if(tipo_solicitacao == 2){
-//            $("#vl_liquidacao").prop("disabled",true);            
-//        }else{
-//            $("#vl_liquidacao").prop("disabled",false);
-//        }
-//    }
-    
-    if ((tipo_solicitacao == 1 && qtdDocs == 1) || tipo_solicitacao > 2) {
-        $('#documentosFiscais').hide();
-        $("#vl_liquidacao").prop("disabled",false);
-    } else if( (tipo_solicitacao == 1 && qtdDocs > 1) || tipo_solicitacao == 2) {
-        $('#documentosFiscais').show();
-        $("#vl_liquidacao").prop("disabled",true);
-        $("#selectDocumentoFiscal").focus();
-    }
 }

@@ -182,7 +182,7 @@ class LiquidacaoPesquisa {
                                     . "<button type='button' title='Ver Liquidação' class='ver-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
                                     . "</button>";
-                    if ($linha['id_liquidacao_situacao'] == $this->getSitLiquidado() and $flVisualizaBotoes) {
+                    if ($linha['id_liquidacao_situacao'] == $this->getSitLiquidado() and $flVisualizaBotoes and $linha['pagamento'] == 0) {
                         $retorno .= "<button type='button' title='Editar Liquidação' class='editar-liquidacao' value=".$linha['id_liquidacao'].">"
                                         . "<i class='fa fa-pencil-square-o text-primary' aria-hidden='true'></i>"
                                     . "</button>"

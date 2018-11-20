@@ -28,8 +28,6 @@ $(document).ready(function () {
         });
     });
     
-    //$('.docFis').hide();
-    
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
@@ -150,7 +148,14 @@ $(document).ready(function () {
                 $('body').find('select').select2({
                     width: '100%'
                 });
-//                habilitaDocumentosFiscais();
+                
+                var docOpcoes = $('#selectDocumentoFiscal > option').length; 
+                
+                if(docOpcoes > 1){
+                    $("#vl_liquidacao").prop("disabled", true);
+                } else {
+                    $("#vl_liquidacao").prop("disabled", false);
+                }
             }
         });
         
@@ -359,22 +364,6 @@ $(document).ready(function () {
     
 });
 
-//function habilitaDocumentosFiscais(){
-//    var tipo_solicitacao = $("#id_pedido").data("tipo-solicitacao");    
-//    var qtdDocs = $("#selectDocumentoFiscal option").size();    
-//
-//    console.log(tipo_solicitacao);
-//    console.log(qtdDocs);
-//
-//    if ((tipo_solicitacao == 1 && qtdDocs == 1) || tipo_solicitacao > 2 ) {
-//        $(".docFis").hide();
-//        $("#vl_liquidacao").prop("disabled",false);
-//    } else if( (tipo_solicitacao == 1 && qtdDocs >= 2) || tipo_solicitacao == 2) {
-//        $(".docFis").show();
-//        $("#vl_liquidacao").prop("disabled",true);
-//        $("#selectDocumentoFiscal").focus();
-//    }
-//}
 
 function atualizaValorLiquidacao(){
     var vl_liquidacao = 0;

@@ -35,7 +35,7 @@ if(!$tramitacao->Sucesso()){
 }
 
 $liquidacao = new Liquidacao();
-$liquidacao->setIdLiquidacao($id);
+$liquidacao->setIdLiquidacao((int)$id);
 
 //DADOS DA LIQUIDAÇÃO
 $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
@@ -47,8 +47,7 @@ $tem_documentos = false;
 $optionsDocumentosFiscais = null;
 $tabelaDocumentosFiscais = null;
 
-$optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
-$tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();    
+$optionsDocumentosFiscais = $liquidacao->retornaOptiosDocumentosLiquidacaoEdicao();
 
 $historico = $liquidacao->retornaHistorico();
 

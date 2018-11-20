@@ -30,7 +30,7 @@ $historico = $liquidacao->retornaHistorico();
 
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
-if ($dadosLiquidacao['id_tipo_solicitacao'] == 2) { // ESTE TIPO DE SOLICITAÇÃO OBRIGA A VINCULAÇÃO DA LIQUIDAÇÃO COM DOCUMENTOS FISCAIS
+if ($dadosLiquidacao['qtd_doc'] > 0) { // Lista documentos da liquidação, se houver documentos associado
     $tem_documentos = true;
     $tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao(false);
 }

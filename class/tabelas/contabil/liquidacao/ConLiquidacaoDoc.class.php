@@ -7,6 +7,16 @@ class ConLiquidacaoDoc {
     private $id_documento_fiscal = null; 
     private $vl_liquidacao_doc = null;
     private $vl_liquidacao_doc_saldo = null;
+    private $id_documento_situacao = null;
+    
+    function getIdDocumentoSituacao() {
+        return $this->id_documento_situacao;
+    }
+
+    function setIdDocumentoSituacao($id_documento_situacao) {
+        $this->id_documento_situacao = $id_documento_situacao;
+        return $this;
+    }
     
     function getVlLiquidacaoDoc() {
         return $this->vl_liquidacao_doc;

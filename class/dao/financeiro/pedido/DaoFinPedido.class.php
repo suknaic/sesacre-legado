@@ -503,7 +503,7 @@ class DaoFinPedido extends FinPedidoTb {
                     modalidade.id_modalidade = gcon.id_modalidade
                 left join fin_empenho empenho on
                     empenho.id_pedido = pedido.id_pedido
-                where (pedido.id_pedido_situacao <> 10 /*Diferente de cancelado*/ or pedido.id_pedido_situacao is null)
+                where pedido.st_pedido = '15' /*Aguardando Empenho*/
                 and empenho.id_empenho is null
                 and pedido.nr_pedido = :pedido";
         try {
