@@ -231,9 +231,10 @@ class DaoConPagamento extends ConPagamentoTb {
             $this->sucesso = false;
             if (!empty($pdo)) {
                 $sql = "UPDATE con_pagamento 
-                        SET nr_pagamento = :numero, dt_pagamento = :data,  vl_pagamento = :valor, vl_pagamento_saldo = :saldo
+                        SET id_liquidacao_situacao = :sitLiquidacao, nr_pagamento = :numero, dt_pagamento = :data,  vl_pagamento = :valor, vl_pagamento_saldo = :saldo
                         WHERE id_pagamento = :pagamento";
                 $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":sitLiquidacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":numero", $this->getNrPagamento(), PDO::PARAM_STR);
                 $stmt->bindValue(":data", $this->getDtPagamento(), PDO::PARAM_STR);
                 $stmt->bindValue(":valor", $this->getVlPagamento(), PDO::PARAM_STR);
@@ -492,6 +493,45 @@ class DaoConPagamento extends ConPagamentoTb {
                 $this->sucesso = true;
             }
         } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
+    /**
+     * Esse metodo retorna a liquidacao por id pagamento mais o saldo da liquidacao
+     * e o saldo do momento que o pagamento foi cadastrado
+     * @param PDO $pdo
+     */
+    public function retornaLiquidacaoPorIdPagamento(PDO $pdo) {
+        try {
+            $sql = "select empenho.id_empenho, empenho.id_pedido, pedido.nr_pedido, liquidacao.id_liquidacao,
+                    concat(substr(liquidacao.nr_liquidacao, 1, ((LENGTH(liquidacao.nr_liquidacao)-4)) ), '/',  substring(liquidacao.nr_liquidacao FROM '....$')) as nr_liquidacao,
+                    to_char(liquidacao.dt_liquidacao,'DD/MM/YYYY') as dt_liquidacao,
+                    to_char(liquidacao.vl_liquidacao, '999G999G990D9999') as vl_liquidacao, 
+                    to_char(pagamento.vl_pagamento_saldo, '999G999G990D9999') as saldo,
+                    situacao.id_liquidacao_situacao, situacao.nm_liquidacao_situacao as situacao
+                    from con_liquidacao as liquidacao
+                    inner join fin_empenho as empenho
+                    on empenho.id_empenho = liquidacao.id_empenho
+                    inner join fin_pedido as pedido
+                    on pedido.id_pedido = empenho.id_pedido
+                    inner join con_pagamento as pagamento
+                    on pagamento.id_liquidacao = liquidacao.id_liquidacao
+                    inner join con_liquidacao_situacao as situacao
+                    on situacao.id_liquidacao_situacao = pagamento.id_liquidacao_situacao
+                    where pagamento.id_pagamento = :pagamento";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":pagamento", $this->getIdPagamento(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (Exception $e) {
             $this->sucesso = false;
             $this->msgRetorno = $e->getMessage();
         }

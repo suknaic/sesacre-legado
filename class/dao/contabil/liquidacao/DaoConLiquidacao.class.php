@@ -247,8 +247,8 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-        function retornaDocumentosPorLiquidacaoPagamento($pdo) {
+
+    function retornaDocumentosPorLiquidacaoPagamento($pdo) {
         $this->sucesso = false;
         $sql = "select distinct empenho.nr_empenho, liqDoc.id_liquidacao_doc, docFis.id_documento_fiscal,
                 docFis.nr_documento_fiscal, tpDoc.nm_tipo_documento, liqDoc.id_liquidacao_doc,
@@ -427,7 +427,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     and 
                     (
                        docFis.id_documento_situacao <> 2 		--diferente de 'A Liquidar'
-                    )";        
+                    )";
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
@@ -478,7 +478,8 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
+
     public function retornaEmpenhoLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
@@ -529,8 +530,8 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    public function retornaPedidoLiquidacao(PDO $pdo){
+
+    public function retornaPedidoLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select p.nr_pedido, p.id_lotacao, p.ds_pedido, f.nr_fonte, p.id_tipo_solicitacao, p.id_pedido,
@@ -560,7 +561,6 @@ class DaoConLiquidacao extends ConLiquidacao {
                 } else {
                     $this->sucesso = false;
                 }
-
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -570,8 +570,8 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    public function retornaSaldoEmpenhoEdicaoLiquidacao(PDO $pdo){
+
+    public function retornaSaldoEmpenhoEdicaoLiquidacao(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select
@@ -615,5 +615,5 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
 }

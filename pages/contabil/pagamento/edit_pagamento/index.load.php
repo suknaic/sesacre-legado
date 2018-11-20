@@ -35,9 +35,7 @@ $empenho = new FinEmpenhoModel();
 $empenho->setIdPedido($dadosPagamento["id_pedido"]);
 $dadosEmpenho = $empenho->retornaEmpenhoPagamento(null);
 //DADOS DA LIQUIDACAO
-$liquidacao = new Liquidacao();
-$liquidacao->setNrLiquidacao($dadosPagamento["nr_liquidacao"]);
-$dadosLiquidacao = $liquidacao->retornaLiquidacaoParaPagamento(null);
+$dadosLiquidacao = $pagamento->retornaLiquidacaoVerEditarPagamento(null);
 //DADOS DO DOCUMENTOS FISCAIS
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;
