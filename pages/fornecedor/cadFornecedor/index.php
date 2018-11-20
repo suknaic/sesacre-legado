@@ -38,10 +38,10 @@
             }
             .cep {
                 white-space: pre-line;
-                /*margin: 28px ;*/
+                margin: 14px ;
             }
             .adicionar {
-                margin: 15px;
+                margin: 18px;
                 margin-left: 0;
             }
 
@@ -134,7 +134,7 @@
                                                     <div class="form-group">
                                                         <div class="col-lg-4"></div>
                                                         <div class="col-lg-4">
-                                                            Tipo de Pessoa:
+                                                            Tipo de Pessoa: <span class="text-danger">*</span>
                                                             <select class="form-control" id="id_tipo_fornecedor" name="id_tipo_fornecedor">
                                                                 <option value="0">Selecione Tipo de Pessoa</option>
                                                                 <option value="1">Pessoa Física</option>
@@ -251,7 +251,7 @@
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_pais" class="form-control select">
-                                                                        <option value="0">Selecione um País</option>
+                                                                        <option value="0">Selecione o País</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -264,7 +264,7 @@
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_estado" class="form-control select">
-                                                                        <option value="0">Selecione um Estado</option>
+                                                                        <option value="0">Selecione o Estado</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -277,7 +277,7 @@
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_cidade" class="form-control select">
-                                                                        <option value="0">Selecione uma Cidade</option>
+                                                                        <option value="0">Selecione a Cidade</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -307,7 +307,7 @@
                                                         </div>
 
                                                         <div class="col-sm-2">
-                                                            <div class="panel-body">CEP: <span class="text-danger">*</span>
+                                                            <div class="panel-body">CEP:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -319,7 +319,7 @@
 
                                                         <div class="col-sm-1">
                                                             <div class="panel-group cep">
-                                                                <button class="btn btn-info btn-rounded" type="button">
+                                                                <button class="btn btn-primary btn-rounded" type="button">
                                                                     <i class="fa fa-search" aria-hidden="true"></i> CEP
                                                                 </button>
                                                             </div>
@@ -353,12 +353,12 @@
                                                 <div id="demo-bv-tab4" class="tab-pane fade">
                                                     <div class="form-group resto">
                                                         <div class="col-sm-4 juridica">
-                                                            <div class="panel-body">Telefone Comercial: <span class="text-danger">*</span>
+                                                            <div class="panel-body">Telefone da Empresa: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_empresa" required="true" placeholder="(   ) _ ____-____">
+                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_empresa" required="true" placeholder="(__) _ ____-____">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -369,18 +369,18 @@
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_celular" required="true" placeholder="(   ) _ ____-____">
+                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_celular" required="true" placeholder="(__) _ ____-____">
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class="col-sm-4">
-                                                            <div class="panel-body">Telefone Residêncial:
+                                                            <div class="panel-body">Telefone Comercial:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_residencial" required="true" placeholder="(   ) ____-____">
+                                                                    <input type="text" class="form-control" name="telefone" id="nr_telefone_residencial" required="true" placeholder="(__) ____-____">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -391,7 +391,7 @@
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
                                                                     </span>
-                                                                    <input type="email" class="form-control" name="email" id="nm_email" required="true" placeholder="Ex.: sesacre@ac.gov.com">
+                                                                    <input type="email" class="form-control" name="email" id="nm_email" required="true" placeholder="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -448,7 +448,7 @@
                                                         <div class="form-group resto">
                                                             <div class="col-sm-4"></div>
                                                             <div class="col-sm-4">
-                                                                <div class="panel-body">Medicamentos: <span class="text-danger">*</span>
+                                                                <div class="panel-body">Medicamentos: <!--<span class="text-danger">*</span>-->
                                                                     <div class="medicamentosCampos">
                                                                         <div class="input-group">
                                                                             <span class="input-group-addon">
@@ -461,24 +461,31 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group resto">
-                                                        <div class="col-sm-4"></div>
-                                                        <div class="col-sm-3">
-                                                            <div class="panel-body">
-                                                                <button  type="button" class="btn btn-primary adicionar addMedicamentos">
-                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                </button>
+                                                            <div class="col-sm-3">
+                                                                <div class="panel-body">
+                                                                    <button  type="button" class="btn btn-primary adicionar addMedicamentos">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+<!--                                                    <div class="form-group resto">-->
+<!--                                                        <div class="col-sm-4"></div>-->
+<!--                                                        <div class="col-sm-3">-->
+<!--                                                            <div class="panel-body">-->
+<!--                                                                <button  type="button" class="btn btn-primary adicionar addMedicamentos">-->
+<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                                                                </button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
 
                                                     <div class="servicos">
                                                         <div class="form-group resto">
                                                             <div class="col-sm-4"></div>
                                                             <div class="col-sm-4">
-                                                                <div class="panel-body">Serviços: <span class="text-danger">*</span>
+                                                                <div class="panel-body">Serviços: <!--<span class="text-danger">*</span>-->
                                                                     <div class="servicoCampos">
                                                                         <div class="input-group">
                                                                             <span class="input-group-addon">
@@ -491,24 +498,31 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group resto">
-                                                        <div class="col-sm-4"></div>
-                                                        <div class="col-sm-3">
-                                                            <div class="panel-body">
-                                                                <button  type="button" class="btn btn-primary adicionar addServico">
-                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                </button>
+                                                            <div class="col-sm-3">
+                                                                <div class="panel-body">
+                                                                    <button  type="button" class="btn btn-primary adicionar addServico">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+<!--                                                    <div class="form-group resto">-->
+<!--                                                        <div class="col-sm-4"></div>-->
+<!--                                                        <div class="col-sm-3">-->
+<!--                                                            <div class="panel-body">-->
+<!--                                                                <button  type="button" class="btn btn-primary adicionar addServico">-->
+<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                                                                </button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
 
                                                     <div class="consumo">
                                                         <div class="form-group resto">
                                                             <div class="col-sm-4"></div>
                                                             <div class="col-sm-4">
-                                                                <div class="panel-body">Material de Consumo: <span class="text-danger">*</span>
+                                                                <div class="panel-body">Material de Consumo: <!--<span class="text-danger">*</span>-->
                                                                     <div class="consumoCampos">
                                                                         <div class="input-group">
                                                                             <span class="input-group-addon">
@@ -521,24 +535,31 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group resto">
-                                                        <div class="col-sm-4"></div>
-                                                        <div class="col-sm-3">
-                                                            <div class="panel-body">
-                                                                <button  type="button" class="btn btn-primary adicionar addConsumo">
-                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                </button>
+                                                            <div class="col-sm-3">
+                                                                <div class="panel-body">
+                                                                    <button  type="button" class="btn btn-primary adicionar addConsumo">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+<!--                                                    <div class="form-group resto">-->
+<!--                                                        <div class="col-sm-4"></div>-->
+<!--                                                        <div class="col-sm-3">-->
+<!--                                                            <div class="panel-body">-->
+<!--                                                                <button  type="button" class="btn btn-primary adicionar addConsumo">-->
+<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                                                                </button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
 
                                                     <div class="permanente">
                                                         <div class="form-group resto">
                                                             <div class="col-sm-4"></div>
                                                             <div class="col-sm-4">
-                                                                <div class="panel-body">Material Permanente: <span class="text-danger">*</span>
+                                                                <div class="panel-body">Material Permanente: <!--<span class="text-danger">*</span>-->
                                                                     <div class="permanenteCampos">
                                                                         <div class="input-group">
                                                                             <span class="input-group-addon">
@@ -551,30 +572,36 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group resto">
-                                                        <div class="col-sm-4"></div>
-                                                        <div class="col-sm-3">
-                                                            <div class="panel-body">
-                                                                <button  type="button" class="btn btn-primary adicionar addPermanente">
-                                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                </button>
+                                                            <div class="col-sm-3">
+                                                                <div class="panel-body">
+                                                                    <button  type="button" class="btn btn-primary adicionar addPermanente">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+<!--                                                    <div class="form-group resto">-->
+<!--                                                        <div class="col-sm-4"></div>-->
+<!--                                                        <div class="col-sm-3">-->
+<!--                                                            <div class="panel-body">-->
+<!--                                                                <button  type="button" class="btn btn-primary adicionar addPermanente">-->
+<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
+<!--                                                                </button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
                                                 </div>
                                             </div>
-                                            <div class="form-group"><hr><br>
-                                                <div class="col-sm-4"></div>
-                                                <div class="col-sm-1">
-                                                    <button type="button" class="anterior btn btn-primary btn-rounded btn-block">Anterior</button>
-                                                </div>
+                                            <div class="form-group"><hr>
+                                                <div class="col-sm-5"></div>
                                                 <div class="col-sm-2">
-                                                    <button type="button" class="btn btn-success btn-rounded btn-block btn-salvar">Salvar</button>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <button type="button" class="proximo btn btn-primary btn-rounded btn-block">Próximo</button>
+                                                    <button type="button" class="btn btn-default btn-rounded btn-limpar">
+                                                        Limpar
+                                                    </button>
+                                                    <button type="button" class="btn btn-success btn-rounded btn-salvar">
+                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

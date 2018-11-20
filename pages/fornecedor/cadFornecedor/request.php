@@ -22,7 +22,7 @@
             try {
                 $pais = new Pais();
 
-                echo "<option value ='0'>Selecione um País</option>";
+                echo "<option value ='0'>Selecione o País</option>";
                 echo $pais->retornaOptionPaises();
                 return;
             } catch (Exception $e) {
@@ -37,7 +37,7 @@
 
                 $estado = new Estado();
 
-                echo "<option value ='0'>Selecione um Estado</option>";
+                echo "<option value ='0'>Selecione o Estado</option>";
                 echo $estado->retornaOptionEstado($pais, $idEstado);
                 return;
             } catch (Exception $e) {

@@ -300,7 +300,7 @@ class Fornecedor {
                     $pessoaFisica->cadastrarPessoaFisica($pdo);
                     if (!$pessoaFisica->getSuccess()) {
                         if ($pessoaFisica->getMsg() == STR_CPF_EXISTE) {
-                            return Metodos::retornoAjax('Erro', 'alert', $pessoaFisica->getMsg());
+                            return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado já está vinculado a um fornecedor.');
                         } else {
                             return Metodos::retornoAjax('Erro', 'console', $pessoaFisica->getMsg());
                         }
@@ -325,7 +325,7 @@ class Fornecedor {
                     $pessoaJuridica->cadastrarPessoaJuridica($pdo);
                     if (!$pessoaJuridica->getSuccess()) {
                         if ($pessoaJuridica->getMsg() == STR_CNPJ_EXISTE) {
-                            return Metodos::retornoAjax('Erro', 'alert', $pessoaJuridica->getMsg());
+                            return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado já está vinculado a um fornecedor.');
                         } else {
                             return Metodos::retornoAjax('Erro', 'console', $pessoaJuridica->getMsg());
                         }
