@@ -253,6 +253,7 @@ $(document).ready(function () {
                 var vl_documento_pagamento_saldo = linha.saldo;
                 var documento = {
                     id_documento_fiscal: linha.id_documento_fiscal,
+                    id_documento_situacao: linha.id_documento_situacao,
                     vl_pagamento_doc: vl_documento_pagamento,
                     vl_pagamento_doc_saldo: vl_documento_pagamento_saldo
                 }
@@ -261,6 +262,7 @@ $(document).ready(function () {
 
             var dados = {
                 "idLiquidacao": $("#id_liquidacao").val(),
+                "idLiquidacaoSituacao": $("#id_liquidacao_situacao").val(),
                 "id_pagamento": $("#id_pagamento").val(),
                 "idEmpenho": $("#id_empenho").val(),
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),

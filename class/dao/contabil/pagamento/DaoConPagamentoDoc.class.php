@@ -43,7 +43,7 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
             if (!empty($pdo)) {
                 $sql = "select pagDoc.id_pagamento_doc, documento.id_documento_fiscal, documento.nr_documento_fiscal, tpDocumento.nm_tipo_documento, 
                         documento.mm_competencia, documento.aa_competencia, to_char(documento.dt_emissao, 'DD/MM/YYYY') as dt_emissao,
-                        to_char(documento.dt_atesto, 'DD/MM/YYYY') as dt_atesto, documento.vl_documento, 
+                        to_char(documento.dt_atesto, 'DD/MM/YYYY') as dt_atesto, documento.vl_documento, pagDoc.id_documento_situacao,
                         pagDoc.vl_pagamento_doc, pagDoc.vl_pagamento_doc_saldo, situacao.nm_situacao , 
                         (documento.vl_documento - coalesce(somaDocs.saldo, '0.0000')) as saldoReal
                         from con_pagamento as pagamento
@@ -54,7 +54,7 @@ class DaoConPagamentoDoc extends ConPagamentoDocTb {
                         inner join fin_tipo_documento as tpDocumento
                         on tpDocumento.id_tipo_documento = documento.id_tipo_documento
                         inner join fin_documento_situacao as situacao
-                        on situacao.id_documento_situacao = documento.id_documento_situacao
+                        on situacao.id_documento_situacao = pagDoc.id_documento_situacao
                         left join (select sum(vl_pagamento_doc) as saldo, id_documento_fiscal 
                                    from con_pagamento as pag
                                    inner join con_pagamento_doc as pagDoc

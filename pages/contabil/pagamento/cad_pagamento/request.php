@@ -129,6 +129,7 @@ switch ($_REQUEST['acao']) {
 
             $pagamento = new ConPagamento();
             $pagamento->setIdLiquidacao($dados["idLiquidacao"]);
+            $pagamento->setIdLiquidacaoSituacao($dados["idLiquidacaoSituacao"]);
             $pagamento->setIdEmpenho($dados["idEmpenho"]);
             $pagamento->setIdLotacao($dados["idLotacao"]);
             $pagamento->setIdDocTipoLotacao($dados["idDocTipoLotacao"]);
