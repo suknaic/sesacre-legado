@@ -234,7 +234,7 @@ $(document).ready(function () {
                     return false;
                 }
                 if (PessoaFisica.tl_celular == ''){
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefome Celular</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone Celular</strong>");
                     return false;
                 }
             }
@@ -661,24 +661,16 @@ $(document).ready(function () {
         listaCidade(estado, 0);
     });
     //******************************************************************************************
-    $('body').on('click', '.btn-limpar', function (e) {
-        location.reload();
+    // $('body').on('click', '.btn-limpar', function (e) {
+    //     location.reload();
+    // });
+
+    // função do botão Próximo
+    $(".proximo").click(function () {
+        $('.nav > .active').next('li').find('a').trigger('click');
     });
-    // var tab = 1;
-    // $('body').on('click', '.anterior', function (e) {
-    //     if (tab >= 1 || tab <= 6) {
-    //         --tab;
-    //         $('body').find(".tab"+tab).trigger('click');
-    //     }
-    // });
-    //
-    // $('body').on('click', '.proximo', function (e) {
-    //     if (tab <= 6) {
-    //         if (tab == 1 || tab == 0) {
-    //             ++tab;
-    //         }
-    //         $('body').find(".tab"+tab).trigger('click');
-    //         ++tab;
-    //     }
-    // });
+    // função do botão anterior
+    $(".anterior").click(function () {
+        $('.nav > .active').prev('li').find('a').trigger('click');
+    });
 });

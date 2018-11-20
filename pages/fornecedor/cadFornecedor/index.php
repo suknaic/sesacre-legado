@@ -67,9 +67,9 @@
                             <div class="panel">
                                 <div id="demo-bv-wz">
                                     <div class="wz-heading pad-top">
-                                        <ul class="row wz-nav-off  wz-icon-bw mar-top wz-steps wz-step">
+                                        <ul class="nav row wz-nav-off  wz-icon-bw mar-top wz-steps wz-step">
                                             <li class="col-xs-2 bv-tab-success active">
-                                                <a data-toggle="tab" href="#demo-bv-tab1" class="add-tooltip tab1" data-original-title="Tipo de Pessoa" aria-expanded="true">
+                                                <a data-toggle="tab" href="#tab1" class="add-tooltip" data-original-title="Tipo de Pessoa" aria-expanded="true">
                                                     <span class="text-danger">
                                                         <i class="wz-icon fa fa-user fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -77,7 +77,7 @@
                                                 </a>
                                             </li>
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab2" class="add-tooltip tab2" data-original-title="Dados Cadastrais" aria-expanded="false">
+                                                <a data-toggle="tab" href="#tab2" class="add-tooltip" data-original-title="Dados Cadastrais" aria-expanded="false">
                                                     <div class="text-warning">
                                                         <i class="wz-icon fa fa-file-text fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -85,7 +85,7 @@
                                                 </a>
                                             </li>
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab3" class="add-tooltip tab3" data-original-title="Endereço" aria-expanded="false">
+                                                <a data-toggle="tab" href="#tab3" class="add-tooltip" data-original-title="Endereço" aria-expanded="false">
                                                     <div class="text-info">
                                                         <i class="wz-icon fa fa-home fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -94,7 +94,7 @@
                                             </li>
 
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab4" class="add-tooltip tab4" data-original-title="Contato" aria-expanded="false">
+                                                <a data-toggle="tab" href="#tab4" class="add-tooltip" data-original-title="Contato" aria-expanded="false">
                                                     <div class="text-success">
                                                         <i class="wz-icon fa fa-phone fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -103,7 +103,7 @@
                                             </li>
 
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab5" class="add-tooltip tab5" data-original-title="Informações da Empresa" aria-expanded="false">
+                                                <a data-toggle="tab" href="#tab5" class="add-tooltip" data-original-title="Informações da Empresa" aria-expanded="false">
                                                     <div class="text-primary">
                                                         <i class="wz-icon fa fa-list-alt fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -112,7 +112,7 @@
                                             </li>
 
                                             <li class="col-xs-2">
-                                                <a data-toggle="tab" href="#demo-bv-tab6" class="add-tooltip tab6" data-original-title="Objeto Social" aria-expanded="false">
+                                                <a data-toggle="tab" href="#tab6" class="add-tooltip" data-original-title="Objeto Social" aria-expanded="false">
                                                     <div class="text-success">
                                                         <i class="wz-icon fa fa-list-ul fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
@@ -130,7 +130,7 @@
                                         <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;" disabled="disabled"></button>
                                         <div class="panel-body">
                                             <div class="tab-content">
-                                                <div id="demo-bv-tab1" class="tab-pane active">
+                                                <div id="tab1" class="tab-pane active">
                                                     <div class="form-group">
                                                         <div class="col-lg-4"></div>
                                                         <div class="col-lg-4">
@@ -144,7 +144,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div id="demo-bv-tab2" class="tab-pane fade">
+                                                <div id="tab2" class="tab-pane">
                                                     <div class="form-group">
                                                         <div class="col-sm-4 juridica">
                                                             <div class="panel-body">Razão Social:  <span class="text-danger">*</span>
@@ -242,7 +242,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div id="demo-bv-tab3" class="tab-pane fade">
+                                                <div id="tab3" class="tab-pane">
                                                     <div class="form-group resto">
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">País: <span class="text-danger">*</span>
@@ -350,7 +350,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div id="demo-bv-tab4" class="tab-pane fade">
+                                                <div id="tab4" class="tab-pane">
                                                     <div class="form-group resto">
                                                         <div class="col-sm-4 juridica">
                                                             <div class="panel-body">Telefone da Empresa: <span class="text-danger">*</span>
@@ -397,7 +397,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="demo-bv-tab5" class="tab-pane fade">
+                                                <div id="tab5" class="tab-pane">
                                                     <div class="form-group resto">
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-5">
@@ -437,7 +437,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div id="demo-bv-tab6" class="tab-pane mar-btm">
+                                                <div id="tab6" class="tab-pane">
                                                     <div class="form-group resto">
                                                         <div class="panel-heading text-center">
                                                             <h5 class="panel-title">Tipos de Produtos ou Serviços que a Empresa Fornece</h5>
@@ -595,12 +595,15 @@
                                             </div>
                                             <div class="form-group"><hr>
                                                 <div class="col-sm-5"></div>
-                                                <div class="col-sm-2">
-                                                    <button type="button" class="btn btn-default btn-rounded btn-limpar">
-                                                        Limpar
+                                                <div class="col-sm-3">
+                                                    <button type="button" class="btn btn-primary btn-rounded anterior">
+                                                        <i class="fa fa-backward" aria-hidden="true"></i> Anterior
                                                     </button>
                                                     <button type="button" class="btn btn-success btn-rounded btn-salvar">
                                                         <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary btn-rounded proximo">
+                                                        Próximo <i class="fa fa-forward" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                             </div>
