@@ -22,7 +22,7 @@
             try {
                 $pais = new Pais();
 
-                echo "<option value ='0'>Selecione um País</option>";
+                echo "<option value ='0'>Selecione o País</option>";
                 echo $pais->retornaOptionPaises();
                 return;
             } catch (Exception $e) {
@@ -37,7 +37,7 @@
 
                 $estado = new Estado();
 
-                echo "<option value ='0'>Selecione um Estado</option>";
+                echo "<option value ='0'>Selecione o Estado</option>";
                 echo $estado->retornaOptionEstado($pais, $idEstado);
                 return;
             } catch (Exception $e) {
@@ -134,8 +134,7 @@
         case 'cadastrarFornecedor':
             try {
                 $dados = filter_input(INPUT_POST, 'dadosFornecedor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//                print_r($dados);
-//                return;
+
                 $fornecedor = new Fornecedor();
                 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
                 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);

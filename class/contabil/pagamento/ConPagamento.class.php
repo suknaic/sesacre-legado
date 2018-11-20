@@ -8,6 +8,7 @@ class ConPagamento {
     private $id_pagamento_situacao = null;
     private $id_pagamento_status = null;
     private $id_liquidacao = null;
+    private $id_liquidacao_situacao = null;
     private $id_empenho = null;
     private $id_lotacao = null;
     private $id_doc_tipo_lotacao = null;
@@ -59,6 +60,16 @@ class ConPagamento {
 
     public function setIdLiquidacao($id_liquidacao) {
         $this->id_liquidacao = $id_liquidacao;
+
+        return $this;
+    }
+
+    public function getIdLiquidacaoSituacao() {
+        return $this->id_liquidacao_situacao;
+    }
+
+    public function setIdLiquidacaoSituacao($id_liquidacao_situacao) {
+        $this->id_liquidacao_situacao = $id_liquidacao_situacao;
 
         return $this;
     }
@@ -211,7 +222,7 @@ class ConPagamento {
             $daoConPagamento->setIdPagamentoSituacao($this->sitCadastrado);
             $daoConPagamento->setIdPagamentoStatus(1);
             $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
-            $daoConPagamento->setIdLiquidacaoSituacao(1);
+            $daoConPagamento->setIdLiquidacaoSituacao($this->id_liquidacao_situacao);
             $daoConPagamento->setIdLotacao($this->id_lotacao);
             $daoConPagamento->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
             $daoConPagamento->setNrPagamento($this->nr_pagamento);
@@ -240,7 +251,7 @@ class ConPagamento {
                     $conPagamentoDoc = new ConPagamentoDoc();
                     $conPagamentoDoc->setIdPagamento($this->id_pagamento);
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
-                    $conPagamentoDoc->setIdDocumentoSituacao(1);
+                    $conPagamentoDoc->setIdDocumentoSituacao($dados["id_documento_situacao"]);
                     $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
                     $conPagamentoDoc->setVlPagamentoDocSaldo($dados["vl_pagamento_doc_saldo"]);
                     $conPagamentoDoc->salvaDocPagamento($pdo);
@@ -518,6 +529,7 @@ class ConPagamento {
                     }
 
                     $conPagamentoDoc->setIdDocumentoFiscal($dados["id_documento_fiscal"]);
+                    $conPagamentoDoc->setIdDocumentoSituacao($dados["id_documento_situacao"]);
                     $conPagamentoDoc->setVlDocumentoFiscal($dados["vl_pagamento_doc"]);
                     $conPagamentoDoc->setVlPagamentoDocSaldo(Metodos::ConverteValorBr($saldo, 4));
 
@@ -542,6 +554,7 @@ class ConPagamento {
             $daoConPagamento->setDtPagamento(Metodos::ConverteDataING($this->dt_pagamento));
             $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
             $daoConPagamento->setIdLiquidacao($this->id_liquidacao);
+            $daoConPagamento->setIdLiquidacaoSituacao($this->id_liquidacao_situacao);
             $daoConPagamento->retornaSaldoLiquidacaoPagamentoEdicao($pdo);
 
             if (!$daoConPagamento->Sucesso()) {
@@ -651,6 +664,77 @@ class ConPagamento {
             return true;
         } catch (Exception $ex) {
             return false;
+        }
+    }
+
+    public function retornaLiquidacaoVerEditarPagamento($pdo) {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $dadosContrato = '';
+            $daoConPagamento = new DaoConPagamento();
+            $daoConPagamento->setIdPagamento($this->id_pagamento);
+            $daoConPagamento->retornaLiquidacaoPorIdPagamento($pdo);
+
+            if ($daoConPagamento->sucesso()) {
+                $campos = $daoConPagamento->getMsgRetorno();
+
+                $dadosContrato .= '<div class="panel-group" id="accordionFor" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingFor">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
+                                                        aria-expanded="true" aria-controls="collapseFor" >
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados da Liquidação: </b><span style="color:#758697"> Nº ' . $campos["nr_liquidacao"] . '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        
+                                            <div id="collapseFor" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFor" aria-expanded="true">
+                                                <div class="panel-body">
+                                                <input id="id_liquidacao" type="hidden" value="' . $campos['id_liquidacao'] . '" />
+                                                <input id="saldoLiquidacao" type="hidden" value="' . $campos['saldo'] . '" /> 
+                                                <input id="id_liquidacao_situacao" type="hidden" value="' . $campos['id_liquidacao_situacao'] . '" />    
+                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Data da Liquidação</th>
+                                                            <th class="text-center">Valor da Liquidação</th>
+                                                            <th class="text-center">Saldo da liquidação</th>
+                                                            <th class="text-center">Situação</th>
+                                                            <th class="text-center">Ação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center">' . $campos["dt_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["vl_liquidacao"] . '</td>
+                                                            <td class="text-center">' . $campos["saldo"] . '</td>
+                                                            <td class="text-center">' . $campos["situacao"] . '</td>
+                                                            <td class="text-center">
+                                                                <button type="button" title="Ver Liquidação" class="ver-liquidacao" value="' . $campos['id_liquidacao'] . '">
+                                                                <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>    
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosContrato;
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
         }
     }
 

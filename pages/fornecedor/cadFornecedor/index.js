@@ -157,6 +157,11 @@ $(document).ready(function () {
                 };
             }
 
+            if ($('#id_tipo_fornecedor').val() == 0 || $('#id_tipo_fornecedor').val() == '') {
+                func.modalAlert(func.msgPreencherCampos + " <strong>Tipo de Pessoa - Tipo de Pessoa</strong>");
+                return false;
+            }
+
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
             var Pessoa = {
                 cidade: $("#id_cidade").val(),
@@ -219,36 +224,88 @@ $(document).ready(function () {
             }
 
             if ($("#id_tipo_fornecedor").val() == 1) {
-                if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0) || PessoaFisica.cpf == '' || PessoaFisica.tl_celular == ''){
-                    func.modalAlert(func.msgPreencherCampos);
+                if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0)) {
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Sexo</strong>");
+                    return false;
+                }
+
+                if (PessoaFisica.cpf == ''){
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - CPF</strong>");
+                    return false;
+                }
+                if (PessoaFisica.tl_celular == ''){
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone Celular</strong>");
                     return false;
                 }
             }
 
             if ($("#id_tipo_fornecedor").val() == 2) {
-                if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '') || PessoaJuridica.nmRazaoSoc == '' || PessoaJuridica.nmFantasia == '' || PessoaJuridica.cnpj == '' || PessoaJuridica.tl_empresa == ''){
-                    func.modalAlert(func.msgPreencherCampos);
+                if (PessoaJuridica.nmRazaoSoc == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Razão Social</strong>");
+                    return false;
+                }
+                if (PessoaJuridica.nmFantasia == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Nome Fantasia</strong>");
+                    return false;
+                }
+                if (PessoaJuridica.cnpj == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - CNPJ</strong>");
+                    return false;
+                }
+                if (PessoaJuridica.tl_empresa == ''){
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone da Empresa</strong>");
                     return false;
                 }
             }
 
-            if (Pessoa.cep == '' || (Pessoa.cidade == '' || Pessoa.cidade == 0) || (Pessoa.estado == '' || Pessoa.estado == 0) || (Pessoa.pais == '' || Pessoa.pais == 0) || Pessoa.bairro == '' || empDist == '' || empExc == '' || Pessoa.logradouro == ''){
-                func.modalAlert(func.msgPreencherCampos);
+            if ((Pessoa.cidade == '' || Pessoa.cidade == 0)) {
+                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Cidade</strong>");
+                return false;
+            }
+            if ((Pessoa.estado == '' || Pessoa.estado == 0)) {
+                func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço - Estado</strong>");
+                return false;
+            }
+            if ((Pessoa.pais == '' || Pessoa.pais == 0)) {
+                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - País</strong>");
+                return false;
+            }
+            if (Pessoa.bairro == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Bairro</strong>");
+                return false;
+            }
+            if (Pessoa.logradouro == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Logradouro</strong>");
                 return false;
             }
 
-            if ((MaterialServico.materialPermanente == '' || MaterialServico.materialPermanente == 0) || (MaterialServico.materialConsumo == '' || MaterialServico.materialConsumo == 0) || (MaterialServico.medicamento == '' || MaterialServico.medicamento == 0) || (MaterialServico.servico == '' || MaterialServico.servico == 0)) {
-                func.modalAlert(func.msgPreencherCampos);
+            if (Pessoa.numero == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Número</strong>");
+                return false;
+            }
+
+            if (empExc == ''){
+                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Exclusividade</strong>");
+                return false;
+            }
+
+            if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '')){
+                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Natureza</strong>");
                 return false;
             }
 
             if (empDist == '1') {
                 var nmEmpresa = $('#ds_emp_dist').val();
                 if (nmEmpresa == '') {
-                    func.modalAlert(func.msgPreencherCampos);
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Distribuidora</strong>");
                     return false;
                 }
             }
+
+            // if ((MaterialServico.materialPermanente == '' || MaterialServico.materialPermanente == 0) || (MaterialServico.materialConsumo == '' || MaterialServico.materialConsumo == 0) || (MaterialServico.medicamento == '' || MaterialServico.medicamento == 0) || (MaterialServico.servico == '' || MaterialServico.servico == 0)) {
+            //     func.modalAlert(func.msgPreencherCampos);
+            //     return false;
+            // }
 
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
@@ -269,7 +326,7 @@ $(document).ready(function () {
                     "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
-                    console.log(response);
+                    // console.log(response);
                     // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -310,10 +367,6 @@ $(document).ready(function () {
             });
             $this.prop("disabled", false);
         }
-    });
-
-    $('body').on('click', '.btn-limpar', function (e) {
-        $('.formFornecedores').reset();
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {
@@ -608,21 +661,16 @@ $(document).ready(function () {
         listaCidade(estado, 0);
     });
     //******************************************************************************************
-    var tab = 1;
-    $('body').on('click', '.anterior', function (e) {
-        if (tab >= 1 || tab <= 6) {
-            --tab;
-            $('body').find(".tab"+tab).trigger('click');
-        }
-    });
+    // $('body').on('click', '.btn-limpar', function (e) {
+    //     location.reload();
+    // });
 
-    $('body').on('click', '.proximo', function (e) {
-        if (tab <= 6) {
-            if (tab == 1 || tab == 0) {
-                ++tab;
-            }
-            $('body').find(".tab"+tab).trigger('click');
-            ++tab;
-        }
+    // função do botão Próximo
+    $(".proximo").click(function () {
+        $('.nav > .active').next('li').find('a').trigger('click');
+    });
+    // função do botão anterior
+    $(".anterior").click(function () {
+        $('.nav > .active').prev('li').find('a').trigger('click');
     });
 });

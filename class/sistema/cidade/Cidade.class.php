@@ -285,7 +285,7 @@ class Cidade {
     }
 
     public function retornaOptionCidadeUf($idEstado, $uf) {
-        $retorno = "<option value = '0'>Selecione uma Cidade</option>";
+        $retorno = "<option value = '0'>Selecione a Cidade</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -391,7 +391,7 @@ class Cidade {
     }
 
     public function retornaOptionTodasCidades($idCidade = 0) {
-        $retorno = "<option value = '0'>Selecione uma Cidade</option>";
+        $retorno = "<option value = '0'>Selecione a Cidade</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();

@@ -1149,6 +1149,8 @@ class Liquidacao {
             return;
         }
     }
+    
+     
 
     public function retornaEmpenhoLiquidacao(PDO $pdo = null, int $opcao = 1 /* 1 - Visualização; 2 - Edição */) {
         try {
