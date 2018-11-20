@@ -67,7 +67,7 @@
                             <div class="panel">
                                 <div class="form-group">
                                     <div class="col-sm-4">
-                                        <div class="panel-body">Tipo de Pessoa: <span class="text-danger">*</span>
+                                        <div class="panel-body">Tipo de Pessoa:
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <p class="fa fa-list inputPFa"></p>

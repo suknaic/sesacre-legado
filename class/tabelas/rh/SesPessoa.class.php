@@ -9,6 +9,7 @@ class SesPessoa{
     private $ds_bairro = null;
     private $ds_complemento = null;
     private $nr_cep = null;
+    private $nr_numero;
     private $id_cidade = null;
     private $nr_telefone_residencial = null;
     private $nr_telefone_celular = null;
@@ -44,6 +45,22 @@ class SesPessoa{
 
     function getNrCep() {
         return $this->nr_cep;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNrNumero()
+    {
+        return $this->nr_numero;
+    }
+
+    /**
+     * @param mixed $nr_numero
+     */
+    public function setNrNumero($nr_numero)
+    {
+        $this->nr_numero = $nr_numero;
     }
 
     function getIdCidade() {

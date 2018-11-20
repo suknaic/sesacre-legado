@@ -11,10 +11,11 @@ class DaoFornecedor extends ForFornecedor {
     public function cadastrarFornecedor($pdo) {
         try {
             $sql = $pdo->prepare("INSERT 
-                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo)
-                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo)");
+                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo, nm_empresa)
+                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo, :nmEmpresa)");
 
             $sql->bindValue(":flDistribuidora", $this->getFlDistribuidora()  === '' ? NULL : $this->getFlDistribuidora(), PDO::PARAM_STR);
+            $sql->bindValue(":nmEmpresa", $this->getNmEmpresa()  === '' ? NULL : $this->getNmEmpresa(), PDO::PARAM_STR);
             $sql->bindValue(":flExclusivo", $this->getFlExclusiva() === '' ? NULL : $this->getFlExclusiva(), PDO::PARAM_STR);
             $sql->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $sql->execute();
@@ -67,6 +68,42 @@ class DaoFornecedor extends ForFornecedor {
             $sql->execute();
             if ($sql->rowCount() >= 0) {
                 return $sql->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (PDOException $e) {
+            return Metodos::retornoAjax('Erro', 'console', $e->getMessage());
+        }
+    }
+
+    public function verificaPfCPF ($pdo, $cpf) {
+        try {
+            $sql = $pdo->prepare("SELECT PE.id_pessoa
+                                  FROM ses_pessoa_fisica PF
+                                      INNER JOIN ses_pessoa PE ON PE.id_pessoa = PF.id_pessoa
+                                          WHERE PE.st_ativo = '1' AND PF.nr_cpf = :nrCpf");
+            $sql->bindValue(':nrCpf', $cpf, PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            return Metodos::retornoAjax('Erro', 'console', $e->getMessage());
+        }
+    }
+
+    public function verificaPJCNPJ ($pdo, $cnpj) {
+        try {
+            $sql = $pdo->prepare("SELECT PE.id_pessoa
+                                  FROM ses_pessoa_juridica PJ
+                                      INNER JOIN ses_pessoa PE ON PE.id_pessoa = PJ.id_pessoa
+                                          WHERE PE.st_ativo = '1' AND PJ.nr_cnpj = :nrCnpj");
+            $sql->bindValue(':nrCnpj', $cnpj, PDO::PARAM_STR);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return $sql->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return null;
             }
         } catch (PDOException $e) {
             return Metodos::retornoAjax('Erro', 'console', $e->getMessage());

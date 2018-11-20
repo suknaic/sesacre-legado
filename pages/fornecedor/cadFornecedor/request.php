@@ -143,6 +143,7 @@
                 $fornecedor->setServico(array_unique($dados['materialServico']['servico']));
                 $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['materialConsumo']));
                 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
+                $fornecedor->setNmEmpresa($dados['nmEmpresa']);
                 $fornecedor->setFlDistribuidora($dados['empDist']);
                 $fornecedor->setFlExclusiva($dados['empExc']);
 

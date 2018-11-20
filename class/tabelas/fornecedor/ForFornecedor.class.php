@@ -9,6 +9,7 @@
 class ForFornecedor {
     private $idFornecedor = null;
     private $idPessoa = null;
+    private $nmEmpresa = null;
     private $medicamento = null;
     private $servico = null;
     private $materialConsumo = null;
@@ -46,6 +47,22 @@ class ForFornecedor {
     public function setIdPessoa($idPessoa)
     {
         $this->idPessoa = $idPessoa;
+    }
+
+    /**
+     * @return null
+     */
+    public function getNmEmpresa()
+    {
+        return $this->nmEmpresa;
+    }
+
+    /**
+     * @param null $nmEmpresa
+     */
+    public function setNmEmpresa($nmEmpresa)
+    {
+        $this->nmEmpresa = $nmEmpresa;
     }
 
     /**
