@@ -1193,7 +1193,7 @@ class Liquidacao {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
                                                         aria-expanded="false" aria-controls="collapseThree" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho_sm"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>

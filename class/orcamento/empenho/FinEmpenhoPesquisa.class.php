@@ -122,6 +122,10 @@ class FinEmpenhoPesquisa {
             $pdo = $conexao->connect();
             $tabela = '';
             
+            //removendo barra do numero do empenho
+            $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
+            //----------------------------------------------------------
+            
             //Só pode visualziar os botões de Edição ou Cancelar Empenho quem tiver Tramitação Empenhar
             $tramitacao = new VincularTramitacao();
             $tramitacao->setIdPessoa($this->usuario->getIdUser());

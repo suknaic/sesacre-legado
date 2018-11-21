@@ -385,60 +385,61 @@ class DaoConLiquidacao extends ConLiquidacao {
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
-                    (substr(replace(liq.nr_liquidacao,'/',''),1,10) || '/' || (substr(replace(liq.nr_liquidacao,'/',''),11,4))) as nr_liquidacao,
+                    (substr(replace(liq.nr_liquidacao,
+                    '/',
+                    ''),
+                    1,
+                    10) || '/' || (substr(replace(liq.nr_liquidacao,
+                    '/',
+                    ''),
+                    11,
+                    4))) as nr_liquidacao,
                     ped.nr_pedido,
-                    (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
+                    (to_char(ped.dt_pedido,'YYYY')) as ano_pedido,
+                    (substr(emp.nr_empenho,
+                    1,
+                    10) || '/' || substr(emp.nr_empenho,
+                    11,
+                    4)) as nr_empenho,
                     pj.nr_cnpj,
                     pj.nm_fantasia,
-                    to_char(liq.dt_liquidacao,'dd/mm/yyyy') as dt_liquidacao,
-                    to_char(liq.vl_liquidacao,'999G999G990D0999') as vl_liquidacao,
-                    liqSit.nm_liquidacao_situacao,
-                    string_agg(docFis.nr_documento_fiscal, ', ') as documentos_fiscais,
+                    to_char(liq.dt_liquidacao,
+                    'dd/mm/yyyy') as dt_liquidacao,
+                    to_char(liq.vl_liquidacao,
+                    '999G999G990D0999') as vl_liquidacao,
                     liq.id_liquidacao_situacao,
-                    count(pgto.*) as pagamento
-                 from
-                    con_liquidacao as liq 
-                    inner join
-                       con_liquidacao_situacao as liqSit 
-                       on liqSit.id_liquidacao_situacao = liq.id_liquidacao_situacao 
-                    inner join
-                       fin_empenho as emp 
-                       on emp.id_empenho = liq.id_empenho 
-                    inner join
-                       fin_pedido as ped 
-                       on ped.id_pedido = emp.id_pedido 
-                    left join
-                       pla_tipo_gasto tpGasto
-                       on tpGasto.id_tipo_gasto = ped.id_tipo_gasto
-                    left join
-                       con_liquidacao_doc as liqDoc 
-                       on liqDoc.id_liquidacao = liq.id_liquidacao 
-                    left join
-                       fin_fornecedor as fornec 
-                       on fornec.id_fornecedor = ped.id_fornecedor 
-                    left join
-                       fin_contrato as contrato
-                       on contrato.id_contrato = fornec.id_contrato
-                    left join
-                       ses_pessoa_juridica as pj 
-                       on pj.id_pessoa = fornec.id_pessoa 
-                    left join
-                       fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal
-                    left join 
-	               con_pagamento as pgto
-	               on pgto.id_liquidacao = liq.id_liquidacao "
+                    liqSit.nm_liquidacao_situacao,
+                    liq.id_liquidacao_situacao,
+                    trim(liqDoc.documentos_fiscais) as documentos_fiscais
+                from
+                    con_liquidacao as liq
+                inner join con_liquidacao_situacao as liqSit on
+                    liqSit.id_liquidacao_situacao = liq.id_liquidacao_situacao
+                inner join fin_empenho as emp on
+                    emp.id_empenho = liq.id_empenho
+                inner join fin_pedido as ped on
+                    ped.id_pedido = emp.id_pedido
+                left join pla_tipo_gasto tpGasto on
+                    tpGasto.id_tipo_gasto = ped.id_tipo_gasto
+                left join fin_fornecedor as fornec on
+                    fornec.id_fornecedor = ped.id_fornecedor
+                left join fin_contrato as contrato on
+                    contrato.id_contrato = fornec.id_contrato
+                left join ses_pessoa_juridica as pj on
+                    pj.id_pessoa = fornec.id_pessoa
+                left join (
+                        select
+                            liqDoc.id_liquidacao,
+                            string_agg(fisDoc.nr_documento_fiscal, ', ') as documentos_fiscais
+                        from
+                            fin_documento_fiscal fisDoc
+                        inner join con_liquidacao_doc liqDoc on
+                            fisDoc.id_documento_fiscal = liqDoc.id_documento_fiscal
+                        group by
+                            liqDoc.id_liquidacao) as liqDoc on
+                        liqDoc.id_liquidacao = liq.id_liquidacao "
                 . $filtros .
-                " group by
-                    liq.id_liquidacao,
-                    liq.nr_liquidacao,
-                    ped.nr_pedido,
-                    emp.nr_empenho,
-                    pj.nr_cnpj,
-                    pj.nm_fantasia,
-                    liq.dt_liquidacao,
-                    liq.vl_liquidacao,
-                    liqSit.nm_liquidacao_situacao";
+                " order by liq.nr_liquidacao";
 
         try {
             $result = $pdo->prepare($sql);
@@ -573,6 +574,7 @@ class DaoConLiquidacao extends ConLiquidacao {
             if (!empty($pdo)) {
                 $sql = "select
                             emp.nr_empenho,
+                            concat(substr(nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho_sm,
                             emp.id_empenho,
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
