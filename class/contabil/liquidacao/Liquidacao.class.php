@@ -674,6 +674,7 @@ class Liquidacao {
                         $liquidacaoDoc->setIdDocumentoFiscal($documento['id_documento_fiscal']);
                         $liquidacaoDoc->setVlLiquidacaoDoc($documento['vl_liquidacao_doc']);
                         $liquidacaoDoc->setVlLiquidacaoDocSaldo($documento['vl_liquidacao_doc_saldo']);
+                        $liquidacaoDoc->setIdDocumentoSituacao(2); //A Liquidar
                         $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
 
                         if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
