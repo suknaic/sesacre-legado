@@ -291,7 +291,6 @@ class Liquidacao {
             $pdo = $conexao->connect();
 
             $daoConLiquidacao = new DaoConLiquidacao();
-            $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho());
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
             $daoConLiquidacao->retornaLiquidacaoDocumentosEdicao($pdo);
 
@@ -736,6 +735,17 @@ class Liquidacao {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             
+            /*
+             * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
+             * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
+             * Se o tipo de solicitação for administrativo por licitação, é necessário ter documento fiscal
+             */
+            if ($this->getTipoSolicitacao() == '1' && (int) $this->getQtdDocumentosDisponiveis() > 1 && count($this->getDocumentos()) < 1) {
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            } elseif ($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1) {
+                return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
+            }
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -864,7 +874,6 @@ class Liquidacao {
                 $arrayRemove = array_diff($arrayAux, $arrayAux2);
                 $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
 
-
                 if ($this->getDocumentos()) {                                       
                     /*
                      * Verifica se o Documento Fiscal que está sendo incluído está na diferente 
@@ -882,7 +891,7 @@ class Liquidacao {
                         
                         if ($this->verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, $pdo)) {    
                             $this->sucesso = false;
-                            $this->mensagens = "Há documentos com situação diferente de 'A Liquidar'.";
+                            $this->mensagens = "Há documentos com situação diferente de 'A Liquidar'." ;
                             return false;                            
                         }                                                                        
                     }
@@ -894,7 +903,7 @@ class Liquidacao {
 
                         //DOCMENTOS QUE SERÃO INSERIDOS
                         if (in_array($documento['id_documento_fiscal'], $arrayInsert)) {
-                            $liquidacaoDoc->setIdDocumentoSituacao($documento['id_documento_situacao']);
+                            $liquidacaoDoc->setIdDocumentoSituacao(2);
                             $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
                             
                             if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal

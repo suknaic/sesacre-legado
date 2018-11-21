@@ -251,89 +251,63 @@ class DaoConLiquidacao extends ConLiquidacao {
         $this->msgRetorno = null;
         $sql = "select
                     documentos.*,
-                    coalesce(pagamento.valorPagamento, '0.0000') as pagamento,
-                    to_char((vl_doc_sm - coalesce(pagamento.valorPagamento, '0.0000')), '999G999G990D0999') as saldo 
-                 from
-                    con_liquidacao liq 
-                    inner join
-                       fin_empenho emp 
-                       on emp.id_empenho = liq.id_empenho 
-                    inner join
-                       fin_pedido ped 
-                       on ped.id_pedido = emp.id_pedido 
-                    left join
-                       (
-                          select
-                             doc.id_pedido,
-                             doc.id_documento_fiscal,
-                             doc.nr_documento_fiscal,
-                             tpDoc.nm_tipo_documento,
-                             liqDoc.id_liquidacao_doc,
-                             (
-                                trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999')) 
-                             )
-                             as competencia,
-                             to_char(doc.dt_emissao, 'dd/mm/yyyy') as dt_emissao,
-                             to_char(doc.dt_atesto, 'dd/mm/yyyy') as dt_atesto,
-                             trim(to_char(vl_documento, '999G999G999D9999')) as vl_documento,
-                             vl_documento as vl_doc_sm,
-                             doc.id_documento_situacao,
-                             case when id_liquidacao_doc is null then
-				docSit.id_documento_situacao 
-		             else 
-		                liqDoc.id_documento_situacao 
-		             end as situacao,
-		             case when id_liquidacao_doc is null then
-				docSit.nm_situacao 
-		             else 
-		                liqDocSit.nm_situacao 
-		             end as nm_situacao
-                          from
-                             fin_documento_fiscal doc 
-                             inner join
-                                fin_pedido ped 
-                                on ped.id_pedido = doc.id_pedido 
-                             inner join
-                                fin_tipo_documento tpDoc 
-                                on tpDoc.id_tipo_documento = doc.id_tipo_documento 
-                             inner join
-                                fin_documento_situacao docSit 
-                                on docSit.id_documento_situacao = doc.id_documento_situacao 
-                             left join
-                                con_liquidacao_doc liqDoc 
-                                on liqDoc.id_documento_fiscal = doc.id_documento_fiscal 
-                             left join
-                                fin_documento_situacao liqDocSit 
-                                on liqDocSit.id_documento_situacao = liqDoc.id_documento_situacao 
-                       )
-                       documentos 
-                       on documentos.id_pedido = ped.id_pedido 
-                       and 
-                       (
-                          documentos.id_documento_situacao = 2 /*Somente A Liquidar*/
-                          or documentos.id_liquidacao_doc is not null 
-                       )
-                    left join
-                       (
-                          select
-                             sum(pagDoc.vl_pagamento_doc) as valorPagamento,
-                             pag.id_liquidacao,
-                             pagDoc.id_documento_fiscal 
-                          from
-                             con_pagamento as pag 
-                             inner join
-                                con_pagamento_doc as pagDoc 
-                                on pagDoc.id_pagamento = pag.id_pagamento 
-                          where
-                             id_pagamento_situacao = '1' 
-                          group by
-                             id_liquidacao,
-                             pagDoc.id_documento_fiscal 
-                       )
-                       as pagamento 
-                       on pagamento.id_liquidacao = liq.id_liquidacao 
-                       and documentos.id_documento_fiscal = pagamento.id_documento_fiscal 
-                 where
+                    'A Liquidar'::bpchar as nm_situacao,
+                    coalesce(pagamento.valorPagamento,
+                    '0.0000') as pagamento,
+                    to_char((documentos.vl_doc_sm - coalesce(pagamento.valorPagamento,
+                    '0.0000')),
+                    '999G999G990D0999') as saldo
+                from
+                    con_liquidacao liq
+                inner join fin_empenho emp on
+                    emp.id_empenho = liq.id_empenho
+                inner join fin_pedido ped on
+                    ped.id_pedido = emp.id_pedido
+                inner join (
+                    select
+                        doc.id_pedido,
+                        doc.id_documento_fiscal,
+                        doc.nr_documento_fiscal,
+                        doc.id_documento_situacao,
+                        doc.vl_documento as vl_doc_sm,
+                        trim(to_char(doc.vl_documento, '999G999G999D9999')) as vl_documento,
+                        ( trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999')) ) as competencia,
+                        to_char(doc.dt_emissao,
+                        'dd/mm/yyyy') as dt_emissao,
+                        to_char(doc.dt_atesto,
+                        'dd/mm/yyyy') as dt_atesto,
+                        tpDoc.nm_tipo_documento,
+                        liqDoc.id_liquidacao,
+                        liqDoc.id_liquidacao_doc,
+                        liqDoc.id_documento_situacao as id_documento_situacao_edicao
+                    from
+                        fin_documento_fiscal doc
+                    inner join fin_tipo_documento tpDoc on
+                        tpDoc.id_tipo_documento = doc.id_tipo_documento
+                    left join con_liquidacao_doc liqDoc on
+                        liqDoc.id_documento_fiscal = doc.id_documento_fiscal
+                        and liqDoc.id_liquidacao = :id_liquidacao) documentos on
+                    documentos.id_pedido = emp.id_pedido
+                    and ((documentos.id_liquidacao is null
+                    and documentos.id_documento_situacao = 2)
+                    or documentos.id_liquidacao = liq.id_liquidacao)
+                left join (
+                    select
+                        sum(pagDoc.vl_pagamento_doc) as valorPagamento,
+                        pag.id_liquidacao,
+                        pagDoc.id_documento_fiscal
+                    from
+                        con_pagamento as pag
+                    inner join con_pagamento_doc as pagDoc on
+                        pagDoc.id_pagamento = pag.id_pagamento
+                    where
+                        id_pagamento_situacao = '1'
+                    group by
+                        id_liquidacao,
+                        pagDoc.id_documento_fiscal ) as pagamento on
+                    pagamento.id_liquidacao = liq.id_liquidacao
+                    and documentos.id_documento_fiscal = pagamento.id_documento_fiscal
+                where
                     liq.id_liquidacao = :id_liquidacao
                     order by documentos.nr_documento_fiscal";
         try {

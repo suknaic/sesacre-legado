@@ -36,17 +36,14 @@ if(!$tramitacao->Sucesso() and !$session->vPGeral()){
 
 $liquidacao = new Liquidacao();
 $liquidacao->setIdLiquidacao((int)$id);
-
 //DADOS DA LIQUIDAÇÃO
 $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 
-//OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
-$tem_documentos = false;
 $optionsDocumentosFiscais = null;
-$tabelaDocumentosFiscais = null;
 
+//OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $optionsDocumentosFiscais = $liquidacao->retornaOptiosDocumentosLiquidacaoEdicao();
 
 $historico = $liquidacao->retornaHistorico();
@@ -65,7 +62,6 @@ $dadosContrato = $finContratoModel->retornaContratoGdof(null, $dadosLiquidacao["
 $pedido = new Pedido();
 $pedido->setNrPedido($dadosLiquidacao["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
-
 
 //DADOS DO EMPENHO
 $dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacao(null,2);

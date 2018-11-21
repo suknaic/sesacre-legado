@@ -21,7 +21,12 @@ $(document).ready(function () {
         });
     });
     
-//    habilitaDocumentosFiscais();
+    var qtdArq = $("#selectDocumentoFiscal option").size() - 1;
+    if (qtdArq > 1) {
+        $("#vl_liquidacao").prop("disabled", true);
+    } else {
+        $("#vl_liquidacao").prop("disabled", false);
+    }
     
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();
@@ -100,7 +105,6 @@ $(document).ready(function () {
                     id_documento_fiscal: linha.id_documento_fiscal,
                     vl_liquidacao_doc: vl_documento_liquidacao_saldo,
                     vl_liquidacao_doc_saldo: vl_documento_liquidacao,
-                    id_documento_situacao: linha.situacao
                 }
                 documentos.push(documento);
             });
@@ -110,6 +114,8 @@ $(document).ready(function () {
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
+                "tipoSolicitacao": $("#id_pedido").data('tipo-solicitacao'),
+                "qtdDocumentos": $("#selectDocumentoFiscal option").size() - 1, //Não contar com o valor 'Default'
                 "obsLiquidacao": $("#desc_liquidacao").val(),
                 "docsLiquidacao": documentos
             }
