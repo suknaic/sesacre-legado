@@ -11,7 +11,7 @@ if(!$session->vPContabilEmpenho()){
 }
 
 /*
- * Só pode Editar o Empenho quem tiver Tramitação Empenhar
+ * Só pode Cadastrar o Empenho quem tiver Tramitação Empenhar
  */
 $tramitacao = new VincularTramitacao();
 $tramitacao->setIdPessoa($session->getIdUser());

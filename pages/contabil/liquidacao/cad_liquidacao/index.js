@@ -284,7 +284,7 @@ $(document).ready(function () {
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
                 "tipoSolicitacao": $("#id_pedido").data('tipo-solicitacao'),
-                "qtdDocumentos": $("#selectDocumentoFiscal option").size(),
+                "qtdDocumentos": $("#selectDocumentoFiscal option").size() - 1, //Não contar com o valor 'Default'
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
