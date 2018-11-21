@@ -17,13 +17,14 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
 
     function insert($pdo){
         try {
-            $sql = "INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal, vl_liquidacao_doc, vl_liquidacao_doc_saldo)"                    
-                    . " VALUES (:id_liquidacao, :id_documento_fiscal, :vl_liquidacao_doc, :vl_liquidacao_doc_saldo);";
+            $sql = "INSERT INTO con_liquidacao_doc (id_liquidacao, id_documento_fiscal, vl_liquidacao_doc, vl_liquidacao_doc_saldo, id_documento_situacao)"                    
+                    . " VALUES (:id_liquidacao, :id_documento_fiscal, :vl_liquidacao_doc, :vl_liquidacao_doc_saldo, :id_documento_situacao);";
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->bindValue(":id_documento_fiscal", $this->getIdDocumentoFiscal(), PDO::PARAM_INT); 
             $result->bindValue(":vl_liquidacao_doc", $this->getVlLiquidacaoDoc(), PDO::PARAM_STR);
             $result->bindValue(":vl_liquidacao_doc_saldo", $this->getVlLiquidacaoDocSaldo(), PDO::PARAM_STR);
+            $result->bindValue(":id_documento_situacao", $this->getIdDocumentoSituacao(),PDO::PARAM_INT);
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
@@ -95,13 +96,10 @@ class DaoConLiquidacaoDoc extends ConLiquidacaoDoc{
             $result = $pdo->prepare($sql);            
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->execute();
-//            if ($result->rowCount() >= 1){
-                $this->sucesso = true; 
-                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
-//            } else {
-//                $this->sucesso = false;                
-//                $this->msgRetorno = "Não encontrou Registros";                
-//            }            
+
+            $this->sucesso = true; 
+            $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+
         } catch (PDOException $e) {
             $this->sucesso = false;            
             $this->msgRetorno = $e->getMessage(); 

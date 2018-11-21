@@ -26,6 +26,8 @@ switch ($_REQUEST['acao']) {
                        ->setNrLiquidacao($dados['nrLiquidacao'])
                        ->setVlLiquidacao($dados['vlLiquidacao'])
                        ->setDtLiquidacao($dados['dtLiquidacao'])
+                        ->setTipoSolicitacao($dados['tipoSolicitacao'])
+                       ->setQtdDocumentosDisponiveis($dados['qtdDocumentos'])
                        ->setDocumentos($dados['docsLiquidacao']);
             echo $liquidacao->alterarLiquidacao();
             return;

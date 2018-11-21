@@ -28,8 +28,6 @@ $(document).ready(function () {
         });
     });
     
-    //$('.docFis').hide();
-    
     //função para pesquisa licitacao do gcon
     $('body').on('click', '#btn-pesquisa', function (e) {
         var dados = $("#codItemPesquisa").val();
@@ -75,7 +73,7 @@ $(document).ready(function () {
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
         
-        carregaDadosParaEmpenho(dados)
+        carregaDadosParaEmpenho(dados);
         
         $('#modalItem').modal('hide');
     });
@@ -134,10 +132,8 @@ $(document).ready(function () {
         });
         
         /**
-         * retornaDocumentosEmpenho
-         */
-        
-
+        * retornaDocumentosEmpenho
+        */
         $.ajax({
             "url": url,
             "dataType": 'html',
@@ -146,11 +142,23 @@ $(document).ready(function () {
                 "dados": dados
             },
             "success": function (response){
-                $("#selectDocumentoFiscal").html("");
-                $("#selectDocumentoFiscal").append(response);
-                habilitaDocumentosFiscais();
+                $(".docFis").html("");
+                $(".docFis").append(response);
+                //select2
+                $('body').find('select').select2({
+                    width: '100%'
+                });
+                
+                var docOpcoes = $('#selectDocumentoFiscal > option').length; 
+                
+                if(docOpcoes > 1){
+                    $("#vl_liquidacao").prop("disabled", true);
+                } else {
+                    $("#vl_liquidacao").prop("disabled", false);
+                }
             }
         });
+        
     }
     
     
@@ -173,14 +181,13 @@ $(document).ready(function () {
                 "empenho": $("#empenho_get").val()
             },
             "success": function (response){         
-                console.log(response)
                 
                 var dados = {
                     "nr_pedido": response.msg.nr_pedido,
                     "id_pedido": response.msg.id_pedido,
                     "id_empenho": response.msg.id_empenho,
                 }
-                carregaDadosParaEmpenho(dados)                                        
+                carregaDadosParaEmpenho(dados);
             }
         });                
     }
@@ -277,7 +284,7 @@ $(document).ready(function () {
                 "idLotacao": $("#id_remetente option:selected").data('lotacao'),
                 "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
                 "tipoSolicitacao": $("#id_pedido").data('tipo-solicitacao'),
-                "qtdDocumentos": $("#selectDocumentoFiscal option").size(),
+                "qtdDocumentos": $("#selectDocumentoFiscal option").size() - 1, //Não contar com o valor 'Default'
                 "nrLiquidacao": $("#nr_liquidacao").val(),
                 "vlLiquidacao": $("#vl_liquidacao").val(),
                 "dtLiquidacao": $("#dt_liquidacao").val(),
@@ -354,8 +361,9 @@ $(document).ready(function () {
             });
         }
     });
-
+    
 });
+
 
 function atualizaValorLiquidacao(){
     var vl_liquidacao = 0;
@@ -375,31 +383,6 @@ function valorComMascara(valor) {
     return valorStr.join(',');
 }
 
-function habilitaDocumentosFiscais(){
-    var tipo_solicitacao = $("#id_pedido").data("tipo-solicitacao");    
-    var qtdDocs = $("#selectDocumentoFiscal option").size();    
-//    if(qtdDocs > 1){
-//        $('.docFis').show();
-//        $("#vl_liquidacao").prop("disabled",true);
-//        $("#selectDocumentoFiscal").focus();
-//    }else{
-//        $('.docFis').hide();
-//        if(tipo_solicitacao == 2){
-//            $("#vl_liquidacao").prop("disabled",true);            
-//        }else{
-//            $("#vl_liquidacao").prop("disabled",false);
-//        }
-//    }
-    console.log(tipo_solicitacao + ' - ' + qtdDocs);
-    if ((tipo_solicitacao == 1 && qtdDocs == 1) || tipo_solicitacao > 2 ) {
-        $('.docFis').hide();
-        $("#vl_liquidacao").prop("disabled",false);
-    } else if( (tipo_solicitacao == 1 && qtdDocs >= 2) || tipo_solicitacao == 2) {
-        $('.docFis').show();
-        $("#vl_liquidacao").prop("disabled",true);
-        $("#selectDocumentoFiscal").focus();
-    }
-}
 
 //COMO AS INFORMAÇÕES NÃO ESTÃO DENTRO DE UM 'FORM' FOI NECESSÁRIO LIMPAR OS CAMPOS MANUALMENTE
 function limpaCampos(){

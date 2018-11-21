@@ -17,6 +17,6 @@ $tramitacao = new VincularTramitacao();
 $tramitacao->setIdPessoa($session->getIdUser());
 $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
 $tramitacao->verificaPessoaTramitacao();
-if(!$tramitacao->Sucesso()){
+if(!$tramitacao->Sucesso() and !$session->vPGeral()){
     header("Location: /pages/index.php");
 }

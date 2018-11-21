@@ -124,7 +124,7 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
+    
     function retornaDocumentosPorEmpenho($pdo) {
         $this->sucesso = false;
         $sql = "select distinct
@@ -173,9 +173,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                        and liqDoc.id_liquidacao = liq.id_liquidacao
                  where
                     (docFis.id_documento_situacao = 2 /*Somente 'A Liquidar'*/ 
-                    or liqDoc.id_liquidacao = :id_liquidacao
-                    or docFis.id_documento_situacao = 1)
-                 
+                    or liqDoc.id_liquidacao = :id_liquidacao)              
                  and
                     empenho.id_empenho = :id_empenho
                  order by
@@ -220,8 +218,8 @@ class DaoConLiquidacao extends ConLiquidacao {
                 on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
                 inner join fin_tipo_documento as tpDoc 
                 on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
-                left join fin_documento_situacao as docSit 
-                on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                inner join fin_documento_situacao as docSit 
+                on docSit.id_documento_situacao = liqDoc.id_documento_situacao 
                 left join (select sum(pagDoc.vl_pagamento_doc) as valorPagamento, pag.id_liquidacao , pagDoc.id_documento_fiscal 
 		   from con_pagamento as pag
 		   inner join con_pagamento_doc as pagDoc
@@ -247,6 +245,91 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
+    
+    function retornaLiquidacaoDocumentosEdicao(PDO $pdo = null){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    documentos.*,
+                    'A Liquidar'::bpchar as nm_situacao,
+                    coalesce(pagamento.valorPagamento,
+                    '0.0000') as pagamento,
+                    to_char((documentos.vl_doc_sm - coalesce(pagamento.valorPagamento,
+                    '0.0000')),
+                    '999G999G990D0999') as saldo
+                from
+                    con_liquidacao liq
+                inner join fin_empenho emp on
+                    emp.id_empenho = liq.id_empenho
+                inner join fin_pedido ped on
+                    ped.id_pedido = emp.id_pedido
+                inner join (
+                    select
+                        doc.id_pedido,
+                        doc.id_documento_fiscal,
+                        doc.nr_documento_fiscal,
+                        doc.id_documento_situacao,
+                        doc.vl_documento as vl_doc_sm,
+                        trim(to_char(doc.vl_documento, '999G999G999D9999')) as vl_documento,
+                        ( trim(to_char(doc.mm_competencia, '09')) || '/' || trim(to_char(doc.aa_competencia, '9999')) ) as competencia,
+                        to_char(doc.dt_emissao,
+                        'dd/mm/yyyy') as dt_emissao,
+                        to_char(doc.dt_atesto,
+                        'dd/mm/yyyy') as dt_atesto,
+                        tpDoc.nm_tipo_documento,
+                        liqDoc.id_liquidacao,
+                        liqDoc.id_liquidacao_doc,
+                        liqDoc.id_documento_situacao as id_documento_situacao_edicao
+                    from
+                        fin_documento_fiscal doc
+                    inner join fin_tipo_documento tpDoc on
+                        tpDoc.id_tipo_documento = doc.id_tipo_documento
+                    left join con_liquidacao_doc liqDoc on
+                        liqDoc.id_documento_fiscal = doc.id_documento_fiscal
+                        and liqDoc.id_liquidacao = :id_liquidacao) documentos on
+                    documentos.id_pedido = emp.id_pedido
+                    and ((documentos.id_liquidacao is null
+                    and documentos.id_documento_situacao = 2)
+                    or documentos.id_liquidacao = liq.id_liquidacao)
+                left join (
+                    select
+                        sum(pagDoc.vl_pagamento_doc) as valorPagamento,
+                        pag.id_liquidacao,
+                        pagDoc.id_documento_fiscal
+                    from
+                        con_pagamento as pag
+                    inner join con_pagamento_doc as pagDoc on
+                        pagDoc.id_pagamento = pag.id_pagamento
+                    where
+                        id_pagamento_situacao = '1'
+                    group by
+                        id_liquidacao,
+                        pagDoc.id_documento_fiscal ) as pagamento on
+                    pagamento.id_liquidacao = liq.id_liquidacao
+                    and documentos.id_documento_fiscal = pagamento.id_documento_fiscal
+                where
+                    liq.id_liquidacao = :id_liquidacao
+                    order by documentos.nr_documento_fiscal";
+        try {
+            if (!empty($pdo)){
+                $result = $pdo->prepare($sql);
+                $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+                $result->execute();
+                if ($result->rowCount() >= 1) {
+                    $this->sucesso = true;
+                    $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+                } else {
+                    $this->msgRetorno = "Não encontrou Registros";
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados.';
+            }
+            
+        } catch (PDOException $e) {
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+    
 
     function retornaDocumentosPorLiquidacaoPagamento($pdo) {
         $this->sucesso = false;
@@ -311,7 +394,8 @@ class DaoConLiquidacao extends ConLiquidacao {
                     to_char(liq.vl_liquidacao,'999G999G990D0999') as vl_liquidacao,
                     liqSit.nm_liquidacao_situacao,
                     string_agg(docFis.nr_documento_fiscal, ', ') as documentos_fiscais,
-                    liq.id_liquidacao_situacao 
+                    liq.id_liquidacao_situacao,
+                    count(pgto.*) as pagamento
                  from
                     con_liquidacao as liq 
                     inner join
@@ -340,7 +424,10 @@ class DaoConLiquidacao extends ConLiquidacao {
                        on pj.id_pessoa = fornec.id_pessoa 
                     left join
                        fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal "
+                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal
+                    left join 
+	               con_pagamento as pgto
+	               on pgto.id_liquidacao = liq.id_liquidacao "
                 . $filtros .
                 " group by
                     liq.id_liquidacao,
@@ -382,7 +469,8 @@ class DaoConLiquidacao extends ConLiquidacao {
                     to_char(liq.dt_liquidacao, 'dd/mm/yyyy') as dt_liquidacao,
                     trim(to_char(liq.vl_liquidacao, '999G999G999D0999')) as vl_liquidacao,
                     ped.id_pedido,
-                    ped.nr_pedido 
+                    ped.nr_pedido,
+                    (select count(*) from con_liquidacao_doc liqDoc where liqDoc.id_liquidacao = liq.id_liquidacao) as qtd_doc 
                  from
                     con_liquidacao as liq 
                     inner join

@@ -8,9 +8,19 @@ class LiquidacaoDoc {
     private $idDocumentoFiscal = null;
     private $vlLiquidacaoDoc = null;
     private $vlLiquidacaoDocSaldo = null;
+    private $idDocumentoSituacao = null;
     
     private $mensagens = null;
     private $sucesso = null;
+    
+    function getIdDocumentoSituacao() {
+        return $this->idDocumentoSituacao;
+    }
+
+    function setIdDocumentoSituacao($idDocumentoSituacao) {
+        $this->idDocumentoSituacao = $idDocumentoSituacao;
+        return $this;
+    }
     
     function getMensagens() {
         return $this->mensagens;
@@ -75,8 +85,8 @@ class LiquidacaoDoc {
                 $daoConLiquidacaoDoc->setIdLiquidacao($this->getIdLiquidacao())
                                     ->setIdDocumentoFiscal($this->getIdDocumentoFiscal())
                                     ->setVlLiquidacaoDoc($this->getVlLiquidacaoDoc())
-                                    ->setVlLiquidacaoDocSaldo($this->getVlLiquidacaoDocSaldo());
-                
+                                    ->setVlLiquidacaoDocSaldo($this->getVlLiquidacaoDocSaldo())
+                                    ->setIdDocumentoSituacao($this->getIdDocumentoSituacao());
                 $daoConLiquidacaoDoc->insert($pdo);
                 
                 if ($daoConLiquidacaoDoc->Sucesso()) {

@@ -30,25 +30,21 @@ $tramitacao = new VincularTramitacao();
 $tramitacao->setIdPessoa($session->getIdUser());
 $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
 $tramitacao->verificaPessoaTramitacao();
-if(!$tramitacao->Sucesso()){
+if(!$tramitacao->Sucesso() and !$session->vPGeral()){
     header("Location: /pages/index.php");
 }
 
 $liquidacao = new Liquidacao();
-$liquidacao->setIdLiquidacao($id);
-
+$liquidacao->setIdLiquidacao((int)$id);
 //DADOS DA LIQUIDAÇÃO
 $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 
-//OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
-$tem_documentos = false;
 $optionsDocumentosFiscais = null;
-$tabelaDocumentosFiscais = null;
 
-$optionsDocumentosFiscais = $liquidacao->retornaOptionsDocsEmpenho();
-$tabelaDocumentosFiscais = $liquidacao->montaTabelaDocumentosLiquidacao();    
+//OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
+$optionsDocumentosFiscais = $liquidacao->retornaOptiosDocumentosLiquidacaoEdicao();
 
 $historico = $liquidacao->retornaHistorico();
 
@@ -66,7 +62,6 @@ $dadosContrato = $finContratoModel->retornaContratoGdof(null, $dadosLiquidacao["
 $pedido = new Pedido();
 $pedido->setNrPedido($dadosLiquidacao["nr_pedido"]);
 $dadosPedido = $pedido->retornaPedidoGdof(null);
-
 
 //DADOS DO EMPENHO
 $dadosEmpenho = $liquidacao->retornaEmpenhoLiquidacao(null,2);
