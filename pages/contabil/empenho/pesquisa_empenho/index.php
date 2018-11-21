@@ -32,7 +32,7 @@ require_once "index.load.php";
     <!--TIPS-->
 
     <body>
-        <div id="container" class="effect aside-float aside-bright mainnav-sm">
+        <div id="container" class="effect aside-float aside-bright mainnav-lg">
 
             <?php
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
@@ -59,6 +59,13 @@ require_once "index.load.php";
                     <div id="page-content">
 
                         <div class="panel">
+                            <div class="panel-heading">
+
+                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/contabil/empenho/cad_empenho/" role="button">
+                                    <i class="fa fa-plus-circle fa-1x inputPFa"></i>
+                                    Cadastrar Empenho
+                                </a>
+                            </div>
                             <form>
                                 <div class="panel-body">
                                     <br>
