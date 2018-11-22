@@ -104,7 +104,7 @@
 
                                             <li class="col-xs-2">
                                                 <a data-toggle="tab" href="#tab5" class="add-tooltip" data-original-title="Informações da Empresa" aria-expanded="false">
-                                                    <div class="text-primary">
+                                                    <div class="text-purple">
                                                         <i class="wz-icon fa fa-list-alt fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
                                                     </div>
@@ -113,7 +113,7 @@
 
                                             <li class="col-xs-2">
                                                 <a data-toggle="tab" href="#tab6" class="add-tooltip" data-original-title="Objeto Social" aria-expanded="false">
-                                                    <div class="text-success">
+                                                    <div class="text-dark">
                                                         <i class="wz-icon fa fa-list-ul fa-2x"></i>
                                                         <i class="wz-icon-done fa fa-thumbs-o-up fa-2x"></i>
                                                     </div>
@@ -127,7 +127,6 @@
                                     </div>
 
                                     <form id="demo-bv-wz-form" class="form-horizontal bv-form formFornecedores" novalidate="novalidate">
-                                        <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;" disabled="disabled"></button>
                                         <div class="panel-body">
                                             <div class="tab-content">
                                                 <div id="tab1" class="tab-pane active">
@@ -424,7 +423,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <div class="panel-body">Natureza: <span class="text-danger">*</span>
+                                                            <div class="panel-body juridica">Natureza: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                         <span class="input-group-addon">
                                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -440,173 +439,94 @@
                                                 <div id="tab6" class="tab-pane">
                                                     <div class="form-group resto">
                                                         <div class="panel-heading text-center">
-                                                            <h5 class="panel-title">Tipos de Produtos ou Serviços que a Empresa Fornece</h5>
+                                                            <h3 class="panel-title">Tipos de Produtos ou Serviços que a Empresa Fornece</h3>
                                                         </div>
                                                     </div>
-
-                                                    <div class="medicamentos">
-                                                        <div class="form-group resto">
-                                                            <div class="col-sm-4"></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="panel-body">Medicamentos: <!--<span class="text-danger">*</span>-->
-                                                                    <div class="medicamentosCampos">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <p class="fa fa-list inputPFa"></p>
-                                                                            </span>
-                                                                            <select id="id_medicamentos" class="form-control select selectMedicamentos" name="medicamento[]">
-                                                                                <option value="0">Selecione o tipo de Medicamento</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
+                                                    <div class="form-group resto">
+                                                        <div class="col-sm-2"></div>
+                                                        <div class="col-sm-4">
+                                                            <div class="panel-body">
+                                                                <div class="panel-heading text-left">
+                                                                    <h4 class="panel-title">Medicamentos:</h4>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-sm-3">
-                                                                <div class="panel-body">
-                                                                    <button  type="button" class="btn btn-primary adicionar addMedicamentos">
-                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                    </button>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <p class="fa fa-list inputPFa"></p>
+                                                                    </span>
+                                                                    <select id="id_medicamentos" class="form-control select" multiple name="medicamento">
+<!--                                                                            <option value="0">Selecione o tipo de Medicamento</option>-->
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-<!--                                                    <div class="form-group resto">-->
-<!--                                                        <div class="col-sm-4"></div>-->
-<!--                                                        <div class="col-sm-3">-->
-<!--                                                            <div class="panel-body">-->
-<!--                                                                <button  type="button" class="btn btn-primary adicionar addMedicamentos">-->
-<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                                                                </button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-                                                    <div class="servicos">
-                                                        <div class="form-group resto">
-                                                            <div class="col-sm-4"></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="panel-body">Serviços: <!--<span class="text-danger">*</span>-->
-                                                                    <div class="servicoCampos">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <p class="fa fa-list inputPFa"></p>
-                                                                            </span>
-                                                                            <select id="id_servicos" class="form-control select selectServico" name="servico[]">
-                                                                                <option value="0">Selecione o tipo de Serviço</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="panel-body">
+                                                                <div class="panel-heading text-left">
+                                                                    <h4 class="panel-title">Serviços:</h4>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-sm-3">
-                                                                <div class="panel-body">
-                                                                    <button  type="button" class="btn btn-primary adicionar addServico">
-                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                    </button>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <p class="fa fa-list inputPFa"></p>
+                                                                    </span>
+                                                                    <select id="id_servicos" class="form-control select" multiple name="servico">
+<!--                                                                            <option value="0">Selecione o tipo de Serviço</option>-->
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-<!--                                                    <div class="form-group resto">-->
-<!--                                                        <div class="col-sm-4"></div>-->
-<!--                                                        <div class="col-sm-3">-->
-<!--                                                            <div class="panel-body">-->
-<!--                                                                <button  type="button" class="btn btn-primary adicionar addServico">-->
-<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                                                                </button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
 
-                                                    <div class="consumo">
-                                                        <div class="form-group resto">
-                                                            <div class="col-sm-4"></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="panel-body">Material de Consumo: <!--<span class="text-danger">*</span>-->
-                                                                    <div class="consumoCampos">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <p class="fa fa-list inputPFa"></p>
-                                                                            </span>
-                                                                            <select id="id_material_consumo" class="form-control select selectConsumo" name="materialConsumo[]">
-                                                                                <option value="0">Selecione o tipo de Material de Consumo</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
+                                                    <div class="form-group resto">
+                                                        <div class="col-sm-2"></div>
+                                                        <div class="col-sm-4">
+                                                            <div class="panel-body">
+                                                                <div class="panel-heading text-left">
+                                                                    <h4 class="panel-title">Material de Consumo:</h4>
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <p class="fa fa-list inputPFa"></p>
+                                                                    </span>
+                                                                    <select id="id_material_consumo" class="form-control select" multiple name="materialConsumo">
+<!--                                                                            <option value="0">Selecione o tipo de Material de Consumo</option>-->
+                                                                    </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <div class="panel-body">
-                                                                    <button  type="button" class="btn btn-primary adicionar addConsumo">
-                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                    </button>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="panel-body">
+                                                                <div class="panel-heading text-left">
+                                                                    <h4 class="panel-title">Material Permanente:</h4>
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                        <p class="fa fa-list inputPFa"></p>
+                                                                    </span>
+                                                                    <select id="id_material_permanente" class="form-control" multiple name="materialPermanente">
+<!--                                                                            <option value="0">Selecione o tipo material permanente</option>-->
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-<!--                                                    <div class="form-group resto">-->
-<!--                                                        <div class="col-sm-4"></div>-->
-<!--                                                        <div class="col-sm-3">-->
-<!--                                                            <div class="panel-body">-->
-<!--                                                                <button  type="button" class="btn btn-primary adicionar addConsumo">-->
-<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                                                                </button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-
-                                                    <div class="permanente">
-                                                        <div class="form-group resto">
-                                                            <div class="col-sm-4"></div>
-                                                            <div class="col-sm-4">
-                                                                <div class="panel-body">Material Permanente: <!--<span class="text-danger">*</span>-->
-                                                                    <div class="permanenteCampos">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <p class="fa fa-list inputPFa"></p>
-                                                                            </span>
-                                                                            <select id="id_material_permanente" class="form-control select selectPermanente" name="materialPermanente[]">
-                                                                                <option value="0">Selecione o tipo material permanente</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-3">
-                                                                <div class="panel-body">
-                                                                    <button  type="button" class="btn btn-primary adicionar addPermanente">
-                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-<!--                                                    <div class="form-group resto">-->
-<!--                                                        <div class="col-sm-4"></div>-->
-<!--                                                        <div class="col-sm-3">-->
-<!--                                                            <div class="panel-body">-->
-<!--                                                                <button  type="button" class="btn btn-primary adicionar addPermanente">-->
-<!--                                                                    <i class="fa fa-plus" aria-hidden="true"></i>-->
-<!--                                                                </button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
                                                 </div>
+                                            </div><br>
+                                            <div class="text-center">
+                                                <button type="button" class="btn btn-primary btn-rounded anterior">
+                                                    <i class="fa fa-backward" aria-hidden="true"></i> Anterior
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn-rounded proximo">
+                                                    Próximo <i class="fa fa-forward" aria-hidden="true"></i>
+                                                </button>
                                             </div>
-                                            <div class="form-group"><hr>
-                                                <div class="col-sm-5"></div>
-                                                <div class="col-sm-3">
-                                                    <button type="button" class="btn btn-primary btn-rounded anterior">
-                                                        <i class="fa fa-backward" aria-hidden="true"></i> Anterior
-                                                    </button>
-                                                    <button type="button" class="btn btn-success btn-rounded btn-salvar">
-                                                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary btn-rounded proximo">
-                                                        Próximo <i class="fa fa-forward" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        </div>
+                                        <div class="panel-footer text-right">
+                                            <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
+                                                Limpar
+                                            </button>
+                                            <button class="btn btn-success btn-rounded btn-salvar" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
                                         </div>
                                     </form>
                                 </div>

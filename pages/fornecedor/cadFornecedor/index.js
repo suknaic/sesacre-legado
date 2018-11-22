@@ -174,33 +174,13 @@ $(document).ready(function () {
                 tl_residencial: $("#nr_telefone_residencial").val()
             };
 
-            var medicamento = [];
-            $("select[name=medicamento\\[\\]]").each(function () {
-                if ($(this).val() != '' && $(this).val() != 0) {
-                    medicamento.push($(this).val());
-                }
-            });
+            var medicamento = $('#id_medicamentos').val();
 
-            var servico = [];
-            $("select[name=servico\\[\\]]").each(function () {
-                if ($(this).val() != '' && $(this).val() != 0) {
-                    servico.push($(this).val());
-                }
-            });
+            var servico = $('#id_servicos').val();
 
-            var materialConsumo = [];
-            $("select[name=materialConsumo\\[\\]]").each(function () {
-                if ($(this).val() != '' && $(this).val() != 0) {
-                    materialConsumo.push($(this).val());
-                }
-            });
+            var materialConsumo = $('#id_material_consumo').val();
 
-            var materialPermanente = [];
-            $("select[name=materialPermanente\\[\\]]").each(function () {
-                if ($(this).val() != '' && $(this).val() != 0) {
-                    materialPermanente.push($(this).val());
-                }
-            });
+            var materialPermanente = $('#id_material_permanente').val();
 
             var MaterialServico = {
                 medicamento: medicamento,
@@ -210,6 +190,7 @@ $(document).ready(function () {
             };
 
             var empDist = null;
+            // console.log($('#empDistS').is(":checked"));
             if ($('#empDistS').is(":checked")) {
                 empDist = '1';
             } else {
@@ -217,12 +198,13 @@ $(document).ready(function () {
             }
 
             var empExc = null;
+            // console.log($('#empExcS').is(":checked"));
             if ($('#empExcS').is(":checked")) {
                 empExc = '1';
             } else {
                 empExc = "0";
             }
-
+// return false;
             if ($("#id_tipo_fornecedor").val() == 1) {
                 if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0)) {
                     func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Sexo</strong>");
@@ -256,6 +238,10 @@ $(document).ready(function () {
                     func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone da Empresa</strong>");
                     return false;
                 }
+                if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '')){
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Natureza</strong>");
+                    return false;                                                                                    
+                }
             }
 
             if ((Pessoa.cidade == '' || Pessoa.cidade == 0)) {
@@ -284,20 +270,20 @@ $(document).ready(function () {
                 return false;
             }
 
-            if (empExc == ''){
-                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Exclusividade</strong>");
+            if ($('#empDistS').is(":checked") == false && $('#empDistN').is(":checked") == false){
+                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Distribuidora</strong>");
                 return false;
             }
 
-            if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '')){
-                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Natureza</strong>");
+            if ($('#empExcS').is(":checked") == false && $('#empExcN').is(":checked") == false){
+                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Exclusividade</strong>");
                 return false;
             }
 
             if (empDist == '1') {
                 var nmEmpresa = $('#ds_emp_dist').val();
                 if (nmEmpresa == '') {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Distribuidora</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Nome da Empresa Distribuidora</strong>");
                     return false;
                 }
             }
@@ -326,8 +312,6 @@ $(document).ready(function () {
                     "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
-                    // console.log(response);
-                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -537,9 +521,6 @@ $(document).ready(function () {
                                     $('#id_pais').val(response[0].id_pais).trigger('change.select2');
                                     listaEstado(response[0].id_pais, response[0]['id_estado']);
                                     listaCidade(response[0]['id_estado'], cidade);
-                                    // console.log(response);
-                                    // $('#id_estado').val(response[0].id_estado).trigger('change.select2');
-                                    // $('#id_cidade').val($('option:contains("'+cidade+'")').val()).trigger('change.select2');
                                 } catch (e) {
                                     console.log(response);
                                     return false;
@@ -661,9 +642,9 @@ $(document).ready(function () {
         listaCidade(estado, 0);
     });
     //******************************************************************************************
-    // $('body').on('click', '.btn-limpar', function (e) {
-    //     location.reload();
-    // });
+    $('body').on('click', '.btn-limpar', function (e) {
+        location.reload();
+    });
 
     // função do botão Próximo
     $(".proximo").click(function () {
