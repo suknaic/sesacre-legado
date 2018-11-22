@@ -32,6 +32,8 @@
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+        <!--checkbox-circle-primary -->
+        <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -385,7 +387,7 @@
                                                         </div>
 
                                                         <div class="col-sm-4">
-                                                            <div class="panel-body">E-mail:
+                                                            <div class="panel-body">E-mail: </strong><span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -400,20 +402,28 @@
                                                     <div class="form-group resto">
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-5">
-                                                            <label>A Empresa é Distribuidora? <span class="text-danger">*</span></label>
-                                                            <input type="checkbox" name="emp_dist" id="empDistS" value="1"> Sim
-                                                            <input type="checkbox" name="emp_dist" id="empDistN" value="0"> Não
+                                                            <label for="dist">A Empresa é Distribuidora? <span class="text-danger">*</span></label>
+                                                            <div class="checkbox checkbox-info checkbox-circle" id="dist">
+                                                                <input type="checkbox" name="emp_dist" id="empDistS" value="1"><label for="empDistS"> Sim</label>
+                                                            </div>
+                                                            <div class="checkbox checkbox-info checkbox-circle" id="dist">
+                                                                <input type="checkbox" name="emp_dist" id="empDistN" value="0"><label for="empDistN"> Não</label>
+                                                            </div>
                                                         </div>
                                                         <div class="col-sm-5">
-                                                            <label>A Empresa possui Exclusividade? <span class="text-danger">*</span></label>
-                                                            <input type="checkbox" name="emp_exc[]" id="empExcS" value="1"> Sim
-                                                            <input type="checkbox" name="emp_exc[]" id="empExcN" value="0"> Não
+                                                            <label for="empExcS">A Empresa possui Exclusividade? <span class="text-danger">*</span></label>
+                                                            <div class="checkbox checkbox-info checkbox-circle" id="dist">
+                                                                <input type="checkbox" name="emp_exc" id="empExcS" value="1"><label for="empExcS"> Sim</label>
+                                                            </div>
+                                                            <div class="checkbox checkbox-info checkbox-circle" id="dist">
+                                                                <input type="checkbox" name="emp_exc" id="empExcN" value="0"><label for="empExcN"> Não</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group resto">
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4 empDist">
-                                                            <div class="panel-body">Nome da empresa que presta serviço: <span class="text-danger">*</span>
+                                                            <div class="panel-body"style="margin-left: -20px;">Nome da empresa que presta serviço: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -423,7 +433,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <div class="panel-body juridica">Natureza: <span class="text-danger">*</span>
+                                                            <div class="panel-body juridica" style="margin-left: -20px;">Natureza: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                         <span class="input-group-addon">
                                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -447,14 +457,14 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Medicamentos:</h4>
+                                                                    <h4 class="panel-title">Medicamentos: </strong><span class="text-danger">*</span></h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_medicamentos" class="form-control select" multiple name="medicamento">
-<!--                                                                            <option value="0">Selecione o tipo de Medicamento</option>-->
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -462,14 +472,14 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Serviços:</h4>
+                                                                    <h4 class="panel-title">Serviços: </strong><span class="text-danger">*</span></h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_servicos" class="form-control select" multiple name="servico">
-<!--                                                                            <option value="0">Selecione o tipo de Serviço</option>-->
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -481,14 +491,14 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Material de Consumo:</h4>
+                                                                    <h4 class="panel-title">Material de Consumo: </strong><span class="text-danger">*</span></h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_material_consumo" class="form-control select" multiple name="materialConsumo">
-<!--                                                                            <option value="0">Selecione o tipo de Material de Consumo</option>-->
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -496,14 +506,14 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Material Permanente:</h4>
+                                                                    <h4 class="panel-title">Material Permanente: </strong><span class="text-danger">*</span></h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_material_permanente" class="form-control" multiple name="materialPermanente">
-<!--                                                                            <option value="0">Selecione o tipo material permanente</option>-->
+
                                                                     </select>
                                                                 </div>
                                                             </div>

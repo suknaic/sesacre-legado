@@ -175,11 +175,8 @@ $(document).ready(function () {
             };
 
             var medicamento = $('#id_medicamentos').val();
-
             var servico = $('#id_servicos').val();
-
             var materialConsumo = $('#id_material_consumo').val();
-
             var materialPermanente = $('#id_material_permanente').val();
 
             var MaterialServico = {
@@ -190,7 +187,6 @@ $(document).ready(function () {
             };
 
             var empDist = null;
-            // console.log($('#empDistS').is(":checked"));
             if ($('#empDistS').is(":checked")) {
                 empDist = '1';
             } else {
@@ -198,100 +194,149 @@ $(document).ready(function () {
             }
 
             var empExc = null;
-            // console.log($('#empExcS').is(":checked"));
             if ($('#empExcS').is(":checked")) {
                 empExc = '1';
             } else {
                 empExc = "0";
             }
-// return false;
+
+            //*********************************************** Pessoa Física ********************************************
             if ($("#id_tipo_fornecedor").val() == 1) {
-                if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0)) {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Sexo</strong>");
+                if (PessoaFisica.nmPessoaFisica == ''){
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - Nome da Pessoa</strong>");
                     return false;
                 }
 
                 if (PessoaFisica.cpf == ''){
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - CPF</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - CPF</strong>");
                     return false;
                 }
+
+                if ((PessoaFisica.sexo == '' || PessoaFisica.sexo == 0)) {
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - Sexo</strong>");
+                    return false;
+                }
+            }
+            //**********************************************************************************************************
+
+            //************************************************ Pessoa Jurídica *****************************************
+            if ($("#id_tipo_fornecedor").val() == 2) {
+                if (PessoaJuridica.nmRazaoSoc == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - Razão Social</strong>");
+                    return false;
+                }
+                if (PessoaJuridica.nmFantasia == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - Nome Fantasia</strong>");
+                    return false;
+                }
+                if (PessoaJuridica.cnpj == '') {
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Dados Cadastrais - CNPJ</strong>");
+                    return false;
+                }
+            }
+            //**********************************************************************************************************
+
+            //********************************************** Endereço **************************************************
+            if (($('#id_pais').val() == '' || $('#id_pais').val() == 0)) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Endereço - País</strong>");
+                return false;
+            }
+
+            if (($('#id_estado').val() == '' || $('#id_estado').val() == 0)) {
+                func.modalAlert(func.msgPreencherCampos + " - <strong> Endereço - Estado</strong>");
+                return false;
+            }
+
+            if ((Pessoa.cidade == '' || Pessoa.cidade == 0)) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Endereço - Cidade</strong>");
+                return false;
+            }
+
+            if (Pessoa.logradouro == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Endereço - Logradouro</strong>");
+                return false;
+            }
+
+            if (Pessoa.bairro == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Endereço - Bairro</strong>");
+                return false;
+            }
+
+            if (Pessoa.numero == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Endereço - Número</strong>");
+                return false;
+            }
+            //**********************************************************************************************************
+
+            //********************************************** Contatos **************************************************
+            if ($("#id_tipo_fornecedor").val() == 1) {
                 if (PessoaFisica.tl_celular == ''){
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone Celular</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Contato - Telefone Celular</strong>");
                     return false;
                 }
             }
 
             if ($("#id_tipo_fornecedor").val() == 2) {
-                if (PessoaJuridica.nmRazaoSoc == '') {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Razão Social</strong>");
-                    return false;
-                }
-                if (PessoaJuridica.nmFantasia == '') {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - Nome Fantasia</strong>");
-                    return false;
-                }
-                if (PessoaJuridica.cnpj == '') {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Dados Cadastrais - CNPJ</strong>");
-                    return false;
-                }
                 if (PessoaJuridica.tl_empresa == ''){
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Contato - Telefone da Empresa</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Contato - Telefone da Empresa</strong>");
                     return false;
                 }
-                if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '')){
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Natureza</strong>");
-                    return false;                                                                                    
-                }
             }
 
-            if ((Pessoa.cidade == '' || Pessoa.cidade == 0)) {
-                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Cidade</strong>");
+            if (Pessoa.email == '') {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Contato - E-mail</strong>");
                 return false;
             }
-            if ((Pessoa.estado == '' || Pessoa.estado == 0)) {
-                func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço - Estado</strong>");
-                return false;
-            }
-            if ((Pessoa.pais == '' || Pessoa.pais == 0)) {
-                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - País</strong>");
-                return false;
-            }
-            if (Pessoa.bairro == '') {
-                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Bairro</strong>");
-                return false;
-            }
-            if (Pessoa.logradouro == '') {
-                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Logradouro</strong>");
-                return false;
-            }
+            //**********************************************************************************************************
 
-            if (Pessoa.numero == '') {
-                func.modalAlert(func.msgPreencherCampos + "<strong>Endereço - Número</strong>");
-                return false;
-            }
-
+            //***************************************** Informações da Empresa *****************************************
             if ($('#empDistS').is(":checked") == false && $('#empDistN').is(":checked") == false){
-                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Distribuidora</strong>");
+                func.modalAlert(func.msgPreencherCampos + "<strong> Informações da Empresa - A Empresa é Distribuidora?</strong>");
                 return false;
             }
 
             if ($('#empExcS').is(":checked") == false && $('#empExcN').is(":checked") == false){
-                func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Exclusividade</strong>");
+                func.modalAlert(func.msgPreencherCampos + "<strong> Informações da Empresa - A Empresa possui Exclusividade?</strong>");
                 return false;
             }
 
             if (empDist == '1') {
                 var nmEmpresa = $('#ds_emp_dist').val();
                 if (nmEmpresa == '') {
-                    func.modalAlert(func.msgPreencherCampos + "<strong>Informações da Empresa - Nome da Empresa Distribuidora</strong>");
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Informações da Empresa - Nome da Empresa Distribuidora</strong>");
                     return false;
                 }
             }
 
-            // if ((MaterialServico.materialPermanente == '' || MaterialServico.materialPermanente == 0) || (MaterialServico.materialConsumo == '' || MaterialServico.materialConsumo == 0) || (MaterialServico.medicamento == '' || MaterialServico.medicamento == 0) || (MaterialServico.servico == '' || MaterialServico.servico == 0)) {
-            //     func.modalAlert(func.msgPreencherCampos);
-            //     return false;
-            // }
+            if ($("#id_tipo_fornecedor").val() == 2) {
+                if ((PessoaJuridica.natureza == '0' || PessoaJuridica.natureza == '')){
+                    func.modalAlert(func.msgPreencherCampos + "<strong> Informações da Empresa - Natureza</strong>");
+                    return false;
+                }
+            }
+            //**********************************************************************************************************
+
+            //*********************************************** Objeto Social ********************************************
+            if (MaterialServico.medicamento == null) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Medicamentos</strong>");
+                return false;
+            }
+
+            if (MaterialServico.servico == null) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Serviços</strong>");
+                return false;
+            }
+
+            if (MaterialServico.materialConsumo == null) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Material Consumo</strong>");
+                return false;
+            }
+
+            if (MaterialServico.materialPermanente == null) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Material Permanente</strong>");
+                return false;
+            }
+            //**********************************************************************************************************
 
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
@@ -607,6 +652,17 @@ $(document).ready(function () {
 
     $("#id_estado").attr('disabled', true);
     $("#id_cidade").attr('disabled', true);
+
+    $("body").on("change", "#id_pais", function () {
+        var texto = $(this).val();
+        if (texto == 0) {
+            $('#id_estado').val(0).trigger('change.select2');
+            $("#id_cidade").val(0).trigger('change.select2');
+            $('#id_estado').prop('disabled', true);
+            $("#id_cidade").prop('disabled', true);
+        }
+    });
+
     $("body").on("change", "#id_pais", function () {
         var texto = $(this).val();
         if (texto != 0) {
@@ -621,6 +677,7 @@ $(document).ready(function () {
         if (texto != 0) {
             $("#id_cidade").prop('disabled', false);
         } else {
+            $("#id_cidade").val(0).trigger('change.select2');
             $("#id_cidade").prop('disabled', true);
         }
     });

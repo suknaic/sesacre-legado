@@ -134,8 +134,8 @@
         case 'cadastrarFornecedor':
             try {
                 $dados = filter_input(INPUT_POST, 'dadosFornecedor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-                print_r($dados);
-                return;
+//                print_r($dados);
+//                return;
                 $fornecedor = new Fornecedor();
                 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
                 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);
