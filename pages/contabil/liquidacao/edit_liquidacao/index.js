@@ -22,7 +22,7 @@ $(document).ready(function () {
     });
     
     var qtdArq = $("#selectDocumentoFiscal option").size() - 1;
-    if (qtdArq > 1) {
+    if (qtdArq > 0) {
         $("#vl_liquidacao").prop("disabled", true);
     } else {
         $("#vl_liquidacao").prop("disabled", false);

@@ -581,6 +581,10 @@ class Liquidacao {
             $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
             $saldo_empenho = round($saldo_empenho, 4);
             //***********************************************************************************************
+            
+            //removendo barra do numero da Liquidação
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+            $this->nrLiquidacao = (int) $this->nrLiquidacao;
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
@@ -758,6 +762,10 @@ class Liquidacao {
             if(!$tramitacao->Sucesso()){
                 return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
             }
+            
+            //removendo barra do numero da Liquidação
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+            $this->nrLiquidacao = (int) $this->nrLiquidacao;
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
@@ -1053,7 +1061,7 @@ class Liquidacao {
                 $pdo = $conexao->connect();
             }
 
-            //removendo barra do numero do pagamento
+            //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
 
             $daoConLiquidacao = new DaoConLiquidacao();
@@ -1073,9 +1081,6 @@ class Liquidacao {
                 <td>' . $dados["saldo"] . '</td>        
      
                 </tr>';
-            }
-            if (empty($retorno)) {
-                return "Nenhum liquidacao encontrada";
             }
             return $retorno;
         } catch (Exception $ex) {
@@ -1193,7 +1198,7 @@ class Liquidacao {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree" 
                                                         aria-expanded="false" aria-controls="collapseThree" class="collapsed">
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho"] . '</span> 
+                                                        <b>Dados do Empenho: </b><span style="color:#758697"> Nº ' . $campos["nr_empenho_sm"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
@@ -1406,6 +1411,21 @@ class Liquidacao {
             $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
         }
+    }
+    
+    public function buscaLiquidacaoParaPagamento() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoConLiquidacao = new DaoConLiquidacao();
+        $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
+        $daoConLiquidacao->buscaLiquidacaoPesquisaPagamento($pdo);
+
+        if ($daoConLiquidacao->sucesso()) {
+            foreach ($daoConLiquidacao->getMsgRetorno() as $dados) {
+                return Metodos::retornoAjax("ok", "ok", $dados);
+            }
+        }
+        return Metodos::retornoAjax("no", "no", array());
     }
 
 }

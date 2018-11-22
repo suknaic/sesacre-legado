@@ -1,5 +1,7 @@
 
 $(document).ready(function () {
+    
+    $("#nr_liquidacao").mask("9999999999/9999");
      
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();

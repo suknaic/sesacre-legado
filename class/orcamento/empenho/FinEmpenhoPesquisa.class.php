@@ -179,7 +179,7 @@ class FinEmpenhoPesquisa {
                     $tabela .= '</td>'
                             . '</tr>';                    
                 }
-            } 
+            }
             return $tabela;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "alert", STR_ERROR );
@@ -194,6 +194,9 @@ class FinEmpenhoPesquisa {
         try {
             
             if (!empty($this->getNrEmpenho())) {
+                //removendo barra do numero do empenho
+                $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
+                //----------------------------------------------------------
                 $and_ou_where = empty($array_filtro) ? " where " : " and ";
                 $array_filtro[] = array(
                     'sql' => $and_ou_where . "emp.nr_empenho ilike :nr_empenho", 

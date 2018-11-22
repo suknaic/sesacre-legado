@@ -381,67 +381,71 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
 
-    function retornaLiquidacoes($pdo, string $filtros = "") {
+    function retornaLiquidacoes(PDO $pdo = null, array $filtroSql = []) {
+        
+        $str_filtro = '';
+        if (!empty($filtroSql)) {
+            foreach ($filtroSql as $filtro) {
+                $str_filtro .= $filtro['sql'];
+            }
+        }
+        
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
-                    (substr(replace(liq.nr_liquidacao,'/',''),1,10) || '/' || (substr(replace(liq.nr_liquidacao,'/',''),11,4))) as nr_liquidacao,
+                    concat(substr(liq.nr_liquidacao, 1, ((LENGTH(liq.nr_liquidacao)-4)) ), '/',  substring(liq.nr_liquidacao FROM '....$')) as nr_liquidacao,
                     ped.nr_pedido,
-                    (substr(emp.nr_empenho,1,10) || '/' || substr(emp.nr_empenho,11,4))  as nr_empenho,
+                    (to_char(ped.dt_pedido,'YYYY')) as ano_pedido,
+                    concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho,
+                    liq.nr_liquidacao as nr_liquidacao_sm,
                     pj.nr_cnpj,
                     pj.nm_fantasia,
-                    to_char(liq.dt_liquidacao,'dd/mm/yyyy') as dt_liquidacao,
-                    to_char(liq.vl_liquidacao,'999G999G990D0999') as vl_liquidacao,
-                    liqSit.nm_liquidacao_situacao,
-                    string_agg(docFis.nr_documento_fiscal, ', ') as documentos_fiscais,
+                    to_char(liq.dt_liquidacao,
+                    'dd/mm/yyyy') as dt_liquidacao,
+                    to_char(liq.vl_liquidacao,
+                    '999G999G990D0999') as vl_liquidacao,
                     liq.id_liquidacao_situacao,
-                    count(pgto.*) as pagamento
-                 from
-                    con_liquidacao as liq 
-                    inner join
-                       con_liquidacao_situacao as liqSit 
-                       on liqSit.id_liquidacao_situacao = liq.id_liquidacao_situacao 
-                    inner join
-                       fin_empenho as emp 
-                       on emp.id_empenho = liq.id_empenho 
-                    inner join
-                       fin_pedido as ped 
-                       on ped.id_pedido = emp.id_pedido 
-                    left join
-                       pla_tipo_gasto tpGasto
-                       on tpGasto.id_tipo_gasto = ped.id_tipo_gasto
-                    left join
-                       con_liquidacao_doc as liqDoc 
-                       on liqDoc.id_liquidacao = liq.id_liquidacao 
-                    left join
-                       fin_fornecedor as fornec 
-                       on fornec.id_fornecedor = ped.id_fornecedor 
-                    left join
-                       fin_contrato as contrato
-                       on contrato.id_contrato = fornec.id_contrato
-                    left join
-                       ses_pessoa_juridica as pj 
-                       on pj.id_pessoa = fornec.id_pessoa 
-                    left join
-                       fin_documento_fiscal as docFis 
-                       on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal
-                    left join 
-	               con_pagamento as pgto
-	               on pgto.id_liquidacao = liq.id_liquidacao "
-                . $filtros .
-                " group by
-                    liq.id_liquidacao,
-                    liq.nr_liquidacao,
-                    ped.nr_pedido,
-                    emp.nr_empenho,
-                    pj.nr_cnpj,
-                    pj.nm_fantasia,
-                    liq.dt_liquidacao,
-                    liq.vl_liquidacao,
-                    liqSit.nm_liquidacao_situacao";
-
+                    liqSit.nm_liquidacao_situacao,
+                    liq.id_liquidacao_situacao,
+                    trim(liqDoc.documentos_fiscais) as documentos_fiscais
+                from
+                    con_liquidacao as liq
+                inner join con_liquidacao_situacao as liqSit on
+                    liqSit.id_liquidacao_situacao = liq.id_liquidacao_situacao
+                inner join fin_empenho as emp on
+                    emp.id_empenho = liq.id_empenho
+                inner join fin_pedido as ped on
+                    ped.id_pedido = emp.id_pedido
+                left join pla_tipo_gasto tpGasto on
+                    tpGasto.id_tipo_gasto = ped.id_tipo_gasto
+                left join fin_fornecedor as fornec on
+                    fornec.id_fornecedor = ped.id_fornecedor
+                left join fin_contrato as contrato on
+                    contrato.id_contrato = fornec.id_contrato
+                left join ses_pessoa_juridica as pj on
+                    pj.id_pessoa = fornec.id_pessoa
+                left join (
+                        select
+                            liqDoc.id_liquidacao,
+                            string_agg(fisDoc.nr_documento_fiscal, ', ') as documentos_fiscais
+                        from
+                            fin_documento_fiscal fisDoc
+                        inner join con_liquidacao_doc liqDoc on
+                            fisDoc.id_documento_fiscal = liqDoc.id_documento_fiscal
+                        group by
+                            liqDoc.id_liquidacao) as liqDoc on
+                        liqDoc.id_liquidacao = liq.id_liquidacao "
+                . $str_filtro .
+                " order by liq.nr_liquidacao";
         try {
             $result = $pdo->prepare($sql);
+            
+            if (!empty($filtroSql)) {
+                foreach ($filtroSql as $filtro) {
+                    $result->bindValue($filtro['bind'], $filtro['valor'], $filtro['pdo_param']);
+                }
+            }
+            
             $result->execute();
             if ($result->rowCount() >= 1) {
                 $this->sucesso = true;
@@ -462,6 +466,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.id_empenho,
                     liq.id_liquidacao,
                     liq.nr_liquidacao,
+                    concat(substr(lpad(nr_liquidacao,14,'0'), 1, ((LENGTH(lpad(nr_liquidacao,14,'0'))-4)) ), '/',  substring(lpad(nr_liquidacao,14,'0') FROM '....$')) as nr_liquidacao_cm,
                     liq.id_lotacao,
                     liq.id_doc_tipo_lotacao,
                     ped.id_tipo_solicitacao,
@@ -561,7 +566,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não encontrou Registros";
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $e->getMessage();
         }
@@ -573,6 +578,7 @@ class DaoConLiquidacao extends ConLiquidacao {
             if (!empty($pdo)) {
                 $sql = "select
                             emp.nr_empenho,
+                            concat(substr(nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/',  substring(emp.nr_empenho FROM '....$')) as nr_empenho_sm,
                             emp.id_empenho,
                             to_char(emp.dt_empenho_safira, 'DD/MM/YYYY') as dataEmpenho,
                             tpEmp.nm_tipo_empenho,
@@ -613,7 +619,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -653,7 +659,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -698,8 +704,44 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function buscaLiquidacaoPesquisaPagamento(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select "
+                    ."ped.nr_pedido,"
+                    ."ped.id_pedido,"
+                    ."liq.id_empenho,"
+                    ."liq.id_liquidacao,"
+                    ."liq.nr_liquidacao"
+                ." from"
+                    ." con_liquidacao liq"
+                ." inner join fin_empenho emp on"
+                    ." emp.id_empenho = liq.id_empenho"
+                ." inner join fin_pedido ped on"
+                    ." ped.id_pedido = emp.id_pedido"
+                ." where"
+                    ." liq.nr_liquidacao = :liquidacao";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
         }
     }

@@ -665,10 +665,23 @@ class Session extends RecursoUtil{
         RETURN FALSE;
     }
     
-    
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - EMPENHO
     public function vPContabilEmpenho() {
         if (!$this->verificaPermissao(PERFIL_TI)                 
                 && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO)
+                && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+    
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - EMPENHO
+    public function vPContabilPagamento() {
+        if (!$this->verificaPermissao(PERFIL_TI)                 
+                && !$this->verificaPermissao(PERFIL_CONTABIL_PAGAMENTO)
                 && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
 
             RETURN FALSE;

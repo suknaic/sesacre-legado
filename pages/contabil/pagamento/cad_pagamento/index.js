@@ -36,6 +36,14 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
+    
+    $('body').on('keypress', '#codItemPesquisa', function (e) {
+        let key = e.which;
+        if (key == 13){
+            $("#btn-pesquisa").trigger('click');
+            return false;
+        }
+    });
 
     $('.docFis').hide();
 
@@ -69,7 +77,6 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.selecionaItem', function (e) {
-        var $this = $(this);
         var dados = {
             "nr_pedido": $("body").find(".selecionaItem").attr("nrpedido"),
             "id_pedido": $("body").find(".selecionaItem").attr("pedido"),
@@ -78,6 +85,46 @@ $(document).ready(function () {
             "nr_liquidacao": $("#codItemPesquisa").val()
         }
 
+        carregaDadosParaPagamento(dados);
+
+        $('#modalItem').modal('hide');
+    });
+
+    
+    if($("#liquidacao_get").val() != 0){
+        carregaPagamentoPesquisa();
+    }
+    
+    //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
+    function carregaPagamentoPesquisa(){
+        if($("#liquidacao_get").val() == 0){
+            return false;
+        }
+
+        $.ajax({
+            "url": url,
+            "dataType": 'json',
+            "method": "get",
+            "data": {
+                "acao": "buscaLiquidacao",
+                "liquidacao": $("#liquidacao_get").val()
+            },
+            "success": function (response){     
+                var dados = {
+                    "nr_pedido": response.msg.nr_pedido,
+                    "id_pedido": response.msg.id_pedido,
+                    "id_empenho": response.msg.id_empenho,
+                    "id_liquidacao": response.msg.id_liquidacao,
+                    "nr_liquidacao": response.msg.nr_liquidacao
+                }
+                
+                carregaDadosParaPagamento(dados);
+            }
+        });                
+    }
+    
+    function carregaDadosParaPagamento(dados){
+        
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -160,9 +207,7 @@ $(document).ready(function () {
                 $("#selectDocumentoFiscal").append(response);
             }
         });
-
-        $('#modalItem').modal('hide');
-    });
+    }
 
     $('body').on('click', '.ver-documento', function (e) {
         var id = $(this).val();

@@ -73,12 +73,12 @@ $(document).ready(function () {
             "id_empenho": $("body").find(".selecionaItem").attr("idEmpenho"),
         }
         
-        carregaDadosParaEmpenho(dados);
+        carregaDadosParaLiquidacao(dados);
         
         $('#modalItem').modal('hide');
     });
     
-    function carregaDadosParaEmpenho(dados){
+    function carregaDadosParaLiquidacao(dados){
         
         limpaCampos();
         /**
@@ -187,7 +187,7 @@ $(document).ready(function () {
                     "id_pedido": response.msg.id_pedido,
                     "id_empenho": response.msg.id_empenho,
                 }
-                carregaDadosParaEmpenho(dados);
+                carregaDadosParaLiquidacao(dados);
             }
         });                
     }

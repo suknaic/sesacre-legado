@@ -154,5 +154,19 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    CASE 'buscaLiquidacao':
+        try {
+            $dados = filter_input(INPUT_GET, 'liquidacao', FILTER_DEFAULT);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setNrLiquidacao($dados);
+            echo $liquidacao->buscaLiquidacaoParaPagamento();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 }
 
