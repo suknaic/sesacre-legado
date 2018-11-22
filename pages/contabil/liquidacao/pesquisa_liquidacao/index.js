@@ -23,6 +23,11 @@ $(document).ready(function () {
         var id = $(this).val();
         window.open("/pages/contabil/liquidacao/edit_liquidacao/index.php?&id=" + id);
     });
+    
+    $('body').on('click', '.incluir-pagamento', function (e) {
+        var token = $(this).val();
+        window.open("/pages/contabil/pagamento/cad_pagamento/index.php?&token=" + token);
+    });
 
 
     $('body').on('click', '.excluir-liquidacao', function (e) {

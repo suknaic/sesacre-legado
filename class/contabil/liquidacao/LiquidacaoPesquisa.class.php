@@ -191,7 +191,7 @@ class LiquidacaoPesquisa {
                                         . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
                                     . "</button>";
                     if ($flVisualizaBtnPagamento and $linha['id_liquidacao_situacao'] <= 2){
-                        $retorno .=  '<button type="button" title="Fazer Pagamento" class="incluir-pagamento">'
+                        $retorno .=  '<button type="button" title="Fazer Pagamento" class="incluir-pagamento" value="'.$linha['nr_liquidacao_sm'].'">'
                                         . '<i class="fa fa-credit-card texto-pagamento" aria-hidden="true"></i>'
                                     . '</button>';
                     }
@@ -205,6 +205,7 @@ class LiquidacaoPesquisa {
                     }
                     $retorno .= "</td></tr>";
                 }
+               
             }
             
             return $retorno;
@@ -215,48 +216,104 @@ class LiquidacaoPesquisa {
 
 
     private function montaFiltroSql(){
-        $filtro = "";
- 
-       
-        if ($this->getNrLiquidacao()) {
-            
-            $filtro .= (empty($filtro)) ? " where liq.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " : " and liq.nr_liquidacao ilike '%".$this->getNrLiquidacao()."%' " ; 
-        }
-        
-        if ($this->getAnoLiquidacao()) {
-            $filtro .= (empty($filtro)) ? " where extract(year from liq.dt_liquidacao) = ".$this->getAnoLiquidacao() : "and extract(year from liq.dt_liquidacao) = ".$this->getAnoLiquidacao();
-        }
-        
-        if ($this->getContratado()) {
-            $filtro .= (empty($filtro)) ? " where pj.id_pessoa = ".$this->getContratado() : " and pj.id_pessoa = ".$this->getContratado(); 
-        }
-        
-        if($this->getSituacao()){
-            $filtro .= (empty($filtro)) ? " where liq.id_liquidacao_situacao = ".$this->getSituacao() : " and liq.id_liquidacao_situacao = ".$this->getSituacao(); 
-        }
-        
-        if ($this->getTipoGasto()) {
-            $filtro .= (empty($filtro)) ? " where tpGasto.id_tipo_gasto = ".$this->getTipoGasto() : " and tpGasto.id_tipo_gasto = ".$this->getTipoGasto();
-        }
-        
 
-        if ($this->getNrContrato()) {
-            $filtro .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " : " and contrato.nr_contrato ilike '%".$this->getNrContrato()."%' " ; 
-        }
+        $array_filtro = array();
+        $and_ou_where = '';
         
-        if ($this->getNrPedido()) {
-            $filtro .= (empty($filtro)) ? " where ped.nr_pedido ilike '%".$this->getNrPedido()."%' " : " and ped.nr_pedido ilike '%".$this->getNrPedido()."%' " ; 
+        try {
+            
+            if (!empty($this->getNrDocumentoFiscal())){
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "liqDoc.documentos_fiscais ilike :documento", 
+                    'bind' => ':documento',
+                    'valor' => $this->getNrDocumentoFiscal() .'%',
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getNrLiquidacao())) {
+                //removendo barra do numero da Liquidação
+                $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+                //----------------------------------------------------------
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "liq.nr_liquidacao ilike :nr_liquidacao", 
+                    'bind' => ':nr_liquidacao',
+                    'valor' => '%'. $this->getNrLiquidacao() .'%',
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getNrEmpenho())) {
+                //removendo barra do numero do empenho
+                $this->nrEmpenho = str_replace("/", "", $this->nrEmpenho);
+                //----------------------------------------------------------
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "emp.nr_empenho ilike :nr_empenho", 
+                    'bind' => ':nr_empenho',
+                    'valor' => '%'. $this->getNrEmpenho() .'%',
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getAnoLiquidacao())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "to_char(liq.dt_liquidacao,'YYYY') = :ano_liquidacao",
+                    'bind' => ':ano_liquidacao',
+                    'valor' => $this->getAnoLiquidacao(),
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getContratado())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "pj.id_pessoa = :contratado",
+                    'bind' => ':contratado',
+                    'valor' => $this->getContratado(),
+                    'pdo_param' => PDO::PARAM_INT);
+            }
+            
+            if (!empty($this->getNrContrato())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "contrato.nr_contrato ilike :nr_contrato", 
+                    'bind' => ':nr_contrato',
+                    'valor' => '%'. $this->getNrContrato() .'%',
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getNrPedido())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "ped.nr_pedido ilike :nr_pedido", 
+                    'bind' => ':nr_pedido',
+                    'valor' => '%'. $this->getNrPedido() .'%',
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            if (!empty($this->getTipoGasto())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "tpGasto.id_tipo_gasto = :tipo_gasto",
+                    'bind' => ':tipo_gasto',
+                    'valor' => $this->getTipoGasto(),
+                    'pdo_param' => PDO::PARAM_INT);
+            }
+            
+            if (!empty($this->getSituacao())) {
+                $and_ou_where = empty($array_filtro) ? " where " : " and ";
+                $array_filtro[] = array(
+                    'sql' => $and_ou_where . "liq.id_liquidacao_situacao = :situacao",
+                    'bind' => ':situacao',
+                    'valor' => $this->getSituacao(),
+                    'pdo_param' => PDO::PARAM_STR);
+            }
+            
+            return $array_filtro;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
         }
-        
-        if ($this->getNrEmpenho()) {
-            $filtro .= (empty($filtro)) ? " where emp.nr_empenho ilike '%".$this->getNrEmpenho()."%' " : " and emp.nr_empenho ilike '%".$this->getNrEmpenho()."%' " ; 
-        }
-        
-        if ($this->getNrDocumentoFiscal()) {
-            $filtro .= (empty($filtro)) ? " where docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " : " and docFis.nr_documento_fiscal ilike '%".$this->getNrDocumentoFiscal()."%' " ; 
-        }
-        
-        return $filtro;
     }
+    
 }
 

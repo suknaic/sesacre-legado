@@ -581,6 +581,9 @@ class Liquidacao {
             $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
             $saldo_empenho = round($saldo_empenho, 4);
             //***********************************************************************************************
+            
+            //removendo barra do numero da Liquidação
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
@@ -758,6 +761,9 @@ class Liquidacao {
             if(!$tramitacao->Sucesso()){
                 return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
             }
+            
+            //removendo barra do numero da Liquidação
+            $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
@@ -1053,7 +1059,7 @@ class Liquidacao {
                 $pdo = $conexao->connect();
             }
 
-            //removendo barra do numero do pagamento
+            //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
 
             $daoConLiquidacao = new DaoConLiquidacao();
@@ -1073,9 +1079,6 @@ class Liquidacao {
                 <td>' . $dados["saldo"] . '</td>        
      
                 </tr>';
-            }
-            if (empty($retorno)) {
-                return "Nenhum liquidacao encontrada";
             }
             return $retorno;
         } catch (Exception $ex) {
@@ -1406,6 +1409,21 @@ class Liquidacao {
             $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
         }
+    }
+    
+    public function buscaLiquidacaoParaPagamento() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoConLiquidacao = new DaoConLiquidacao();
+        $daoConLiquidacao->setNrLiquidacao($this->nrLiquidacao);
+        $daoConLiquidacao->buscaLiquidacaoPesquisaPagamento($pdo);
+
+        if ($daoConLiquidacao->sucesso()) {
+            foreach ($daoConLiquidacao->getMsgRetorno() as $dados) {
+                return Metodos::retornoAjax("ok", "ok", $dados);
+            }
+        }
+        return Metodos::retornoAjax("no", "no", array());
     }
 
 }

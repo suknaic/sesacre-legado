@@ -381,7 +381,15 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
 
-    function retornaLiquidacoes($pdo, string $filtros = "") {
+    function retornaLiquidacoes(PDO $pdo = null, array $filtroSql = []) {
+        
+        $str_filtro = '';
+        if (!empty($filtroSql)) {
+            foreach ($filtroSql as $filtro) {
+                $str_filtro .= $filtro['sql'];
+            }
+        }
+        
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
@@ -401,6 +409,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     10) || '/' || substr(emp.nr_empenho,
                     11,
                     4)) as nr_empenho,
+                    liq.nr_liquidacao as nr_liquidacao_sm,
                     pj.nr_cnpj,
                     pj.nm_fantasia,
                     to_char(liq.dt_liquidacao,
@@ -438,11 +447,17 @@ class DaoConLiquidacao extends ConLiquidacao {
                         group by
                             liqDoc.id_liquidacao) as liqDoc on
                         liqDoc.id_liquidacao = liq.id_liquidacao "
-                . $filtros .
+                . $str_filtro .
                 " order by liq.nr_liquidacao";
-
         try {
             $result = $pdo->prepare($sql);
+            
+            if (!empty($filtroSql)) {
+                foreach ($filtroSql as $filtro) {
+                    $result->bindValue($filtro['bind'], $filtro['valor'], $filtro['pdo_param']);
+                }
+            }
+            
             $result->execute();
             if ($result->rowCount() >= 1) {
                 $this->sucesso = true;
@@ -562,7 +577,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não encontrou Registros";
             }
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             $this->sucesso = false;
             $this->msgRetorno = $e->getMessage();
         }
@@ -615,7 +630,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -655,7 +670,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
@@ -700,8 +715,44 @@ class DaoConLiquidacao extends ConLiquidacao {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-        } catch (Exception $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+    
+    public function buscaLiquidacaoPesquisaPagamento(PDO $pdo) {
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select "
+                    ."ped.nr_pedido,"
+                    ."ped.id_pedido,"
+                    ."liq.id_empenho,"
+                    ."liq.id_liquidacao,"
+                    ."liq.nr_liquidacao"
+                ." from"
+                    ." con_liquidacao liq"
+                ." inner join fin_empenho emp on"
+                    ." emp.id_empenho = liq.id_empenho"
+                ." inner join fin_pedido ped on"
+                    ." ped.id_pedido = emp.id_pedido"
+                ." where"
+                    ." liq.nr_liquidacao = :liquidacao";
+        try {
+            if (!empty($pdo)) {
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":liquidacao", $this->getNrLiquidacao(), PDO::PARAM_STR);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = 'Nenhum registro encontrado';
+                }
+            } else {
+                $this->msgRetorno = 'Sem conexão com o banco de dados';
+            }
+        } catch (PDOException $exc) {
             $this->msgRetorno = $exc->getMessage();
         }
     }

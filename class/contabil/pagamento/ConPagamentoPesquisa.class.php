@@ -173,10 +173,16 @@ class ConPagamentoPesquisa {
         }
 
         if ($this->getNumero_empenho()) {
+            //removendo barra do numero do empenho
+            $this->numero_empenho = str_replace("/", "", $this->numero_empenho);
+            //----------------------------------------------------------
             $filtro .= (empty($filtro)) ? " where empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' " : " and empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' ";
         }
 
         if ($this->getNumero_liquidacao()) {
+            //removendo barra do numero da liquidação
+            $this->numero_liquidacao = str_replace("/", "", $this->numero_liquidacao);
+            //----------------------------------------------------------
             $filtro .= (empty($filtro)) ? " where liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' " : " and liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' ";
         }
 

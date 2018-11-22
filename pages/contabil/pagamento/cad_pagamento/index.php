@@ -98,6 +98,7 @@ require_once "index.load.php";
                     <!--===================================================-->
                     <div id="page-content">
                         <form class="form-horizontal" id="form-documento" role="form">
+                            <input type="hidden" value="<?php echo $liquidacao; ?>" id="liquidacao_get" />
                             <div class="panel">                                
                                 <div class="form-group">
                                     <div class="col-sm-3">
