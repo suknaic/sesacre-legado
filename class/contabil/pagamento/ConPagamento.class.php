@@ -232,9 +232,6 @@ class ConPagamento {
             $daoConPagamento->setVlPagamentoSaldo(Metodos::ConverteValorIng($this->vl_pagamento_saldo));
             $daoConPagamento->salvaPagamento($pdo);
             
-            echo '<pre>';
-            echo $daoConPagamento->getMsgRetorno();
-            echo '</pre>';
             
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
 
