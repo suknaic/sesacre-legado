@@ -144,7 +144,9 @@ class ConPagamentoPesquisa {
 
 
         if ($this->getNumero_pagamento()) {
-
+            //removendo barra do numero do pagamento
+            $this->numero_pagamento = str_replace("/", "", $this->numero_pagamento);
+            //----------------------------------------------------------
             $filtro .= (empty($filtro)) ? " where pagamento.nr_pagamento ilike '%" . $this->getNumero_pagamento() . "%' " : " and pagamento.nr_pagamento '%" . $this->getNumero_pagamento() . "%' ";
         }
 
