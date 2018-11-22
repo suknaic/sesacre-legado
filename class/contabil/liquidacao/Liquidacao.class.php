@@ -584,6 +584,7 @@ class Liquidacao {
             
             //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+            $this->nrLiquidacao = (int) $this->nrLiquidacao;
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
@@ -764,6 +765,7 @@ class Liquidacao {
             
             //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
+            $this->nrLiquidacao = (int) $this->nrLiquidacao;
 
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao())
