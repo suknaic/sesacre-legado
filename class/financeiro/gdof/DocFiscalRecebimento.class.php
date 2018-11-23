@@ -276,7 +276,7 @@ class DocFiscalRecebimento {
         }
 
         if ($this->getAnoDocFiscal()) {
-            $filtroSql .= " and doc.aa_competencia = " . $this->getAnoDocFiscal();
+            $filtroSql .= " and to_char(doc.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
         }
 
         if ($this->getContratado()) {

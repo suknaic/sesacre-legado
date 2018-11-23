@@ -222,10 +222,6 @@ class DocFiscalPesquisa {
             $pdo = $conexao->connect();
 
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            
-//            var_dump($this->montaFiltroSQL());
-//            return;
-
             $daoFinDocumentoFiscal->retornaTrDocumentosFiscais($pdo, $this->montaFiltroSQL());
             if ($daoFinDocumentoFiscal->sucesso()) {
 
@@ -265,7 +261,7 @@ class DocFiscalPesquisa {
         }
 
         if ($this->getAnoDocFiscal()) {
-            $filtroSql .= " and doc.aa_competencia = " . $this->getAnoDocFiscal();
+            $filtroSql .= " and to_char(doc.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
         }
 
         if ($this->getContratado()) {
