@@ -152,8 +152,10 @@ $(document).ready(function (){
     }
 
     function carregaDadosParaEmpenho(dados){
-        $("#dadosGerais").html("");
-        
+        $("#dadosContrato").html("");
+        $("#dadosPedido").html("");
+        $("#dadosItens").html("");
+        $("#dadosDiarias").html("");
         /**
          * retornaContratosPedido
          */
@@ -166,7 +168,7 @@ $(document).ready(function (){
 
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosContrato").append(response);
             }
         });
         /**
@@ -181,7 +183,7 @@ $(document).ready(function (){
 
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosPedido").append(response);
                 $("#vl_empenho").val($("#vl_pedido").val());
             }
         });
@@ -197,7 +199,7 @@ $(document).ready(function (){
                 "dados": dados
             },
             "success": function (response){
-                $("#dadosGerais").append(response);
+                $("#dadosDiarias").append(response);
             }
         });
         
@@ -212,7 +214,7 @@ $(document).ready(function (){
                 "dados": dados
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosItens").append(response);
             }
         });
 
