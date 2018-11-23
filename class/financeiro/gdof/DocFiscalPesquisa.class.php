@@ -289,7 +289,7 @@ class DocFiscalPesquisa {
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and situacao.id_documento_situacao = " . $this->getSitDocFiscal();
         }
 
         if ($this->getTramitacao()) {

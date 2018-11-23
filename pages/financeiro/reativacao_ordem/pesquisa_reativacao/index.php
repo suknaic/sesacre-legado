@@ -61,7 +61,7 @@ require_once "index.load.php";
                         <div class="panel">
                             <div class="panel-heading">
 
-                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/contabil/pagamento/cad_pagamento/index.php" role="button">
+                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/reativacao_ordem/cad_reativacao/index.php" role="button">
                                     <i class="fa fa-plus-circle fa-1x inputPFa"></i>
                                     Solicitar Reativação da Ordem
                                 </a>
