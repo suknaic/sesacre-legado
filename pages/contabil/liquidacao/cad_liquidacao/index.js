@@ -163,11 +163,11 @@ $(document).ready(function () {
     
     
     if($("#empenho_get").val() != 0){
-        carregaLiquidacaoPesquisa();
+        carregaEmpenhoPesquisa();
     }
     
     //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
-    function carregaLiquidacaoPesquisa(){
+    function carregaEmpenhoPesquisa(){
         if($("#empenho_get").val() == 0){
             return false;
         }
@@ -369,18 +369,10 @@ function atualizaValorLiquidacao(){
     var vl_liquidacao = 0;
     $("tr.documentoFiscal").each(function() {
         let documento = $(this).data('objeto'); 
-        vl_liquidacao = func.converteValorIngFloat(documento.vl_documento) + vl_liquidacao;
+        vl_liquidacao = parseFloat(documento.vl_doc_sem_mascara) + vl_liquidacao;
     });
     
-    $("#vl_liquidacao").val(valorComMascara(vl_liquidacao));
-}
-
-function valorComMascara(valor) { 
-    var valor = Number(valor).toFixed(4);
-    var valorStr = valor.toString();
-    valorStr = valorStr.split('.');
-    valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
-    return valorStr.join(',');
+    $("#vl_liquidacao").val(func.converteValorBrDecimal(vl_liquidacao,4));
 }
 
 

@@ -260,59 +260,8 @@ class DaoFinPedido extends FinPedidoTb {
         }
     }
 
-    public function retornaPedidoPesquisa(PDO $pdo, $filter) {
-        try {
-            if (!empty($pdo)) {
-                $sql = "select p.id_pedido, l.id_lotacao, p.nr_pedido, to_char(p.dt_pedido, 'YYYY') as ano, tipo.nm_tipo_solicitacao, font.nr_fonte,
-                        desp.cd_despesa, desp.ds_despesa_elemento, tpGasto.nm_tipo_gasto, l.nm_lotacao, pessoa.nm_pessoa, p.vl_pedido, p.ds_pedido,
-                        pt.cd_programa_trabalho, pt.ds_programa_trabalho, 
-                        case
-                         when p.st_pedido  = '9' THEN 'Aguardando finaliza a pre-ordem'
-                         when p.st_pedido  = '10' THEN 'Aguardando autorização do responsável imediato' 
-                         when p.st_pedido  = '11' THEN 'Aguardando autorização do responsável da central'
-                         when p.st_pedido  = '12' THEN 'Aguardando autorização de orçamentário'
-                         when p.st_pedido  = '13' THEN 'Aguardando autorização financeiro'
-                         when p.st_pedido  = '14' THEN 'Aguardando autorização ordenador de despesa'
-                         when p.st_pedido  = '15' THEN 'Aguardando empenho'
-                         when p.st_pedido  = '16' THEN 'Aguardando ordem'
-                        end as status
-                        from fin_pedido as p
-                        inner join fin_tipo_solicitacao as tipo
-                        on tipo.id_tipo_solicitacao = p.id_tipo_solicitacao
-                        inner join view_despesa as desp
-                        on desp.id_despesa  = p.id_despesa
-                        inner join pla_tipo_gasto as tpGasto
-                        on tpGasto.id_tipo_gasto = p.id_tipo_gasto
-                        inner join ses_lotacao as l
-                        on l.id_lotacao = p.id_lotacao
-                        inner join fin_fonte as font
-                        on font.id_fonte = p.id_fonte
-                        inner join view_programa_trabalho as pt
-                        on pt.id_programa_trabalho = p.id_programa_trabalho
-                        left join fin_fornecedor as f
-                        on f.id_fornecedor = p.id_fornecedor
-                        left join ses_pessoa as pessoa
-                        on pessoa.id_pessoa = f.id_pessoa
-                        where p.st_pedido > '0' " . $filter . " order by p.id_pedido desc";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute();
-                if ($stmt->rowCount() > 0) {
-                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $this->sucesso = true;
-                } else {
-                    $this->sucesso = false;
-                }
-            } else {
-                $this->sucesso = false;
-                $this->msgRetorno = 'Sem conexão';
-            }
-        } catch (PDOException $e) {
-            $this->sucesso = false;
-            $this->msgRetorno = $e->getMessage();
-        }
-    }
 
-    public function retornaPedidoPesquisaComOrdens(PDO $pdo, $filter) {
+    public function retornaPedidoPesquisa(PDO $pdo, $filter) {
         try {
             if (!empty($pdo)) {
                 $sql = "select distinct on (p.id_pedido)

@@ -405,24 +405,6 @@ $("body").on("keyup", ".valorRetPagamento", function (e) {
     calculaValorPagamento();
 });
 
-function atualizaValorPagamento() {
-    var vl_pagamento = 0;
-    $("tr.documentoFiscal").each(function () {
-        let documento = $(this).data('objeto');
-        vl_pagamento = func.converteValorIngFloat(documento.vl_documento) + vl_pagamento;
-    });
-
-    $("#vl_pagamento").val(valorComMascara(vl_pagamento));
-}
-
-function valorComMascara(valor) {
-    var valor = Number(valor).toFixed(4);
-    var valorStr = valor.toString();
-    valorStr = valorStr.split('.');
-    valorStr[0] = valorStr[0].split(/(?=(?:...)*$)/).join('.');
-    return valorStr.join(',');
-}
-
 function habilitaDocumentosFiscais() {
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
 
