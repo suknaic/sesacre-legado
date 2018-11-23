@@ -591,7 +591,7 @@ class FinDocumentoFiscal {
             $daoFinDocumentoFiscal->cadasTraDocumentoFiscal($pdo);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao salvar o documento fiscal");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salvar o Documento Fiscal");
             }
 
             $this->id_documento_fiscal = ($pdo->lastInsertId('fin_documento_fiscal_id_documento_fiscal_seq'));
