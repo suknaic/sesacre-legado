@@ -39,7 +39,7 @@ $(document).ready(function (){
     
     $('body').on('click', '.seleciona-pedido', function (e) {
         var pedido = $(this).data('pedido');
-        carregaDadosParaPedido(pedido);
+        carregaDadosParaEmpenho(pedido);
         $('#modalPedido').modal('hide');
     });
     
@@ -67,7 +67,6 @@ $(document).ready(function (){
                 return false;
             }
             
-            console.log(dados);
 
             $.ajax({
                 "url": "request.php",
@@ -152,7 +151,7 @@ $(document).ready(function (){
         });
     }
 
-    function carregaDadosParaPedido(dados){
+    function carregaDadosParaEmpenho(dados){
         $("#dadosGerais").html("");
         
         /**
@@ -217,6 +216,19 @@ $(document).ready(function (){
             }
         });
 
+    }
+    
+    if($("#pedido_get").val() != 0){
+        carregaPedidoPesquisa();
+    }
+    
+    //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
+    function carregaPedidoPesquisa(){
+        if($("#pedido_get").val() == 0){
+            return false;
+        }
+        var pedido = $("#pedido_get").val();
+        carregaDadosParaEmpenho(pedido);       
     }
 });
 

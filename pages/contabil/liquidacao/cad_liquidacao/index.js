@@ -163,11 +163,11 @@ $(document).ready(function () {
     
     
     if($("#empenho_get").val() != 0){
-        carregaLiquidacaoPesquisa();
+        carregaEmpenhoPesquisa();
     }
     
     //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
-    function carregaLiquidacaoPesquisa(){
+    function carregaEmpenhoPesquisa(){
         if($("#empenho_get").val() == 0){
             return false;
         }

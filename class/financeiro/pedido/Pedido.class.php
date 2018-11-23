@@ -559,7 +559,7 @@ class Pedido {
                                     . 'title = "Cadastrar Empenho" '
                                     . 'href="/pages/contabil/empenho/cad_empenho/index.php?token=' . $dados['nr_pedido'] . '"'
                                     . 'class = "enviarEmpenho" >'
-                                        . '<i class="fa fa-gbp fa-lg text-empenho" aria-hidden="true"></i>'
+                                        . '<i class="fa fa-gbp fa-lg texto-empenho" aria-hidden="true"></i>'
                                     . '</a >';
                     }
                     if(!empty($dados['nr_empenho']) && $dados['id_tipo_solicitacao'] != '2'
