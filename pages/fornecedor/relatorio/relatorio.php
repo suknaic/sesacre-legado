@@ -9,7 +9,7 @@ if (empty($_REQUEST['token'])) {
 }
 
 $dados  = json_decode(base64_decode($_REQUEST['token']), true);
-//print_r($dados['tipoFornecedor']);
+//print_r($dados);
 //return;
 $fornecedor = new Fornecedor();
 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
@@ -20,7 +20,7 @@ $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['material
 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
 
 $busca = $fornecedor->relatorioFornecedor($dados['tipoFornecedor']);
-//print_r($busca);
+//var_dump($busca);
 //return;
 $html = "<html>
             <head>
@@ -69,57 +69,98 @@ $html = "<html>
                             <td class='tudo'><b>Tipo de Fornecedor</b></td>
                             <td class='tudo'><b>Fornecedor Exclusivo</b></td>
                             <td class='tudo'><b>Fornecedor Distribuidora</b></td>
-                            <td class='tudo'><b>Medicamentos</b></td>
-                            <td class='tudo'><b>Serviços</b></td>
-                            <td class='tudo'><b>Materiais de Consumo</b></td>
-                            <td class='tudo'><b>Materiais Permanentes</b></td>
-                        </tr>";
+                            <td class='tudo'><b>Distribuidora</b></td>";
+//    if ($dados['tipoFornecedor'] == '2') {
+//        $html .= "          <td class='tudo'><b>Distribuidora</b></td>";
+//    }
+
+    if ($fornecedor->getMedicamento() != null) {
+        $html .= "          <td class='tudo'><b>Medicamentos</b></td>";
+    }
+
+    if ($fornecedor->getServico() != null) {
+        $html .= "          <td class='tudo'><b>Serviços</b></td>";
+    }
+
+    if ($fornecedor->getMaterialConsumo() != null) {
+        $html .= "          <td class='tudo'><b>Materiais de Consumo</b></td>";
+    }
+
+    if ($fornecedor->getMaterialPermanente() != null) {
+        $html .= "          <td class='tudo'><b>Materiais Permanentes</b></td>";
+    }
+
+$html .= "               </tr>";
 $i = 1;
-foreach ($busca as $linhas) {
-    $html .= "           <tr>
-                            <td>".$i."</td>
-                            <td>".$linhas['nm_pessoa']."</td>";
-    if ($linhas['tipo_pessoa'] == 'pf') {
-        $html .= "          <td>". Metodos::formataCpf($linhas['cpf_cnpj'])."</td>";
-    } else {
-        $html .= "          <td>". Metodos::formataCnpj($linhas['cpf_cnpj'])."</td>";
-    }
-    $html .= "              <td>".Metodos::formataCelular($linhas['nr_telefone_celular'])."</td>";
-    if ($linhas['nr_telefone_residencial'] != null) {
-        $html .= "          <td>".Metodos::formataTelefone($linhas['nr_telefone_residencial'])."</td>";
-    } else {
-        $html .= "          <td></td>";
-    }
-    if ($linhas['nm_email'] != null) {
-        $html .= "          <td>".$linhas['nm_email']."</td>";
-    } else {
-        $html .= "          <td></td>";
-    }
+if ($busca != null) {
+    foreach ($busca as $linhas) {
+        $html .= "       <tr>
+                            <td>" . $i . "</td>
+                            <td>" . $linhas['nm_pessoa'] . "</td>";
+        if ($linhas['tipo_pessoa'] == '1') {
+            $html .= "          <td>" . Metodos::formataCpf($linhas['cpf_cnpj']) . "</td>";
+        } else {
+            $html .= "          <td>" . Metodos::formataCnpj($linhas['cpf_cnpj']) . "</td>";
+        }
+        $html .= "              <td>" . Metodos::formataCelular($linhas['nr_telefone_celular']) . "</td>";
+        if ($linhas['nr_telefone_residencial'] != null) {
+            $html .= "          <td>" . Metodos::formataTelefone($linhas['nr_telefone_residencial']) . "</td>";
+        } else {
+            $html .= "          <td></td>";
+        }
+        if ($linhas['nm_email'] != null) {
+            $html .= "          <td>" . $linhas['nm_email'] . "</td>";
+        } else {
+            $html .= "          <td></td>";
+        }
 
-    if ($linhas['tipo_pessoa'] == '1') {
-        $html .= "          <td>Pessoa Física</td>";
-    } else {
-        $html .= "          <td>Pessoa Jurídica</td>";
-    }
+        if ($linhas['tipo_pessoa'] == '1') {
+            $html .= "          <td>Pessoa Física</td>";
+        } else {
+            $html .= "          <td>Pessoa Jurídica</td>";
+        }
 
-    if ($linhas['fornecedor_exclusivo'] == 's') {
-        $html .= "          <td>Sim</td>";
-    } else {
-        $html .= "          <td>Não</td>";
-    }
+        if ($linhas['fornecedor_exclusivo'] == 's') {
+            $html .= "          <td>Sim</td>";
+        } else {
+            $html .= "          <td>Não</td>";
+        }
 
-    if ($linhas['fornecedor_distribuidora'] == 's') {
-        $html .= "          <td>Sim</td>";
-    } else {
-        $html .= "          <td>Não</td>";
-    }
+        if ($linhas['fornecedor_distribuidora'] == 's') {
+            $html .= "          <td>Sim</td>";
+        } else {
+            $html .= "          <td>Não</td>";
+        }
 
-    $html .= "              <td class='justificar'>".$linhas['medicamento']."</td>
-                            <td class='justificar'>".$linhas['servico']."</td>
-                            <td class='justificar'>".$linhas['material_consumo']."</td>
-                            <td class='justificar'>".$linhas['material_permanente']."</td>
-                        </tr>";
-    $i++;
+        if ($linhas['fornecedor_distribuidora'] == 's') {
+            $html .= "          <td class='justificar'>" . $linhas['dist_empresa'] . "</td>";
+        } else {
+            $html .= "          <td></td>";
+        }
+
+        if ($fornecedor->getMedicamento() != null) {
+            $html .= "           <td class='justificar'>" . $linhas['medicamento'] . "</td>";
+        }
+
+        if ($fornecedor->getServico() != null) {
+            $html .= "           <td class='justificar'>" . $linhas['servico'] . "</td>";
+        }
+
+        if ($fornecedor->getMaterialConsumo() != null) {
+            $html .= "           <td class='justificar'>" . $linhas['material_consumo'] . "</td>";
+        }
+
+        if ($fornecedor->getMaterialPermanente() != null) {
+            $html .= "           <td class='justificar'>" . $linhas['material_permanente'] . "</td>";
+        }
+
+        $html .= "           </tr>";
+        $i++;
+    }
+} else {
+    $html .= "      <tr>
+                        <td colspan='9'>Nenhum Resultado Encontrado.</td>
+                    </tr>";
 }
 $html.="            </table>
                 </div>

@@ -44,12 +44,18 @@ class DaoFornecedor extends ForFornecedor {
                                      END AS tipo_pessoa,
                                      CASE
                                          WHEN FORN.fl_exclusivo = '1' THEN 's'
-                                         ELSE 'n'
+                                         WHEN FORN.fl_exclusivo = '0' THEN 'n'
+                                         ELSE NULL 
                                      END AS fornecedor_exclusivo,
                                      CASE
                                          WHEN FORN.fl_distribuidora = '1' THEN 's'
-                                         ELSE 'n'
-                                     END AS fornecedor_distribuidora
+                                         WHEN FORN.fl_distribuidora = '0' THEN 'n'
+                                         ELSE NULL 
+                                     END AS fornecedor_distribuidora,
+                                     CASE 
+                                         WHEN FORN.nm_empresa IS NOT NULL THEN FORN.nm_empresa
+                                         ELSE NULL
+                                     END AS dist_empresa
                                   FROM for_fornecedor FORN
                                       INNER JOIN ses_pessoa PE ON PE.id_pessoa = FORN.id_pessoa
                                       LEFT JOIN ses_pessoa_fisica PF ON PE.id_pessoa = PF.id_pessoa
@@ -104,6 +110,31 @@ class DaoFornecedor extends ForFornecedor {
                 return $sql->fetch(PDO::FETCH_ASSOC);
             } else {
                 return null;
+            }
+        } catch (PDOException $e) {
+            return Metodos::retornoAjax('Erro', 'console', $e->getMessage());
+        }
+    }
+
+    public function verificaFornecedor($pdo, $idPessoa = null, $idFornecedor = null) {
+        try {
+            if (!empty($idPessoa)) {
+                $id = $idPessoa;
+                $coluna = 'FORN.id_pessoa';
+            } else if (!empty($idFornecedor)) {
+                $id = $idFornecedor;
+                $coluna = 'FORN.id_fornecedor';
+            }
+
+            $sql = $pdo->prepare("SELECT ".$coluna." 
+                                    FROM for_fornecedor FORN
+                                      WHERE FORN.st_ativo = '1' AND ".$coluna." = :id");
+            $sql->bindValue(':id', $id, PDO::PARAM_INT);
+            $sql->execute();
+            if ($sql->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
             }
         } catch (PDOException $e) {
             return Metodos::retornoAjax('Erro', 'console', $e->getMessage());

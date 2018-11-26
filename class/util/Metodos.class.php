@@ -502,6 +502,14 @@ class Metodos {
         }
     }
 
+    public static function validaEmail($email = null) {
+        if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $email)) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
 
 ?>
