@@ -10,11 +10,21 @@ class LiquidacaoHistorico {
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
     private $idLiquidacaoSituacao = null;
+    private $idLiquidacaoStatus = null;
     private $dhLiquidacaoHistorico = null;
     private $dsLiquidacao = null;
     
     private $mensagens = null;
     private $sucesso = null;
+    
+    function getIdLiquidacaoStatus() {
+        return $this->idLiquidacaoStatus;
+    }
+
+    function setIdLiquidacaoStatus($idLiquidacaoStatus) {
+        $this->idLiquidacaoStatus = $idLiquidacaoStatus;
+        return $this;
+    }
     
     function getIdLiquidacao() {
         return $this->idLiquidacao;
@@ -107,6 +117,7 @@ class LiquidacaoHistorico {
                                           ->setIdLotacao($this->getIdLotacao())
                                           ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                                           ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao())
+                                          ->setIdLiquidacaoStatus($this->getIdLiquidacaoStatus())
                                           ->setDsLiquidacao($this->getDsLiquidacao());
                 
                 $daoConLiquidacaoHistorico->insert($pdo);

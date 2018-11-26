@@ -8,6 +8,7 @@ class Liquidacao {
     private $nrLiquidacao = null;
     private $idEmpenho = null;
     private $idLiquidacaoSituacao = null;
+    private $idLiquidacaoStatus = null;
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
     private $dtLiquidacao = null;
@@ -23,11 +24,32 @@ class Liquidacao {
     private $anotacoes = null;
     private $tipoSolicitacao = null;
     private $qtdDocumentosDisponiveis = null;
+    /**
+     *
+     * Situações da Liquidação
+     */
     private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
+    
+    /**
+     *
+     * Status da Liquidação
+     */
+    private $stAguardandoPagamento = 1;
+    private $stAguardandoFinalizarPagamento = 2;
+    private $stFinalizado = 3;
 
+    function getIdLiquidacaoStatus() {
+        return $this->idLiquidacaoStatus;
+    }
+
+    function setIdLiquidacaoStatus($idLiquidacaoStatus) {
+        $this->idLiquidacaoStatus = $idLiquidacaoStatus;
+        return $this;
+    }
+    
     function getTipoSolicitacao() {
         return $this->tipoSolicitacao;
     }
@@ -78,6 +100,18 @@ class Liquidacao {
 
     function getSitCancelado() {
         return $this->sitCancelado;
+    }
+    
+    function getStAguardandoPagamento() {
+        return $this->stAguardandoPagamento;
+    }
+
+    function getStAguardandoFinalizarPagamento() {
+        return $this->stAguardandoFinalizarPagamento;
+    }
+
+    function getStFinalizado() {
+        return $this->stFinalizado;
     }
 
     function getMensagens() {
@@ -589,7 +623,7 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
                     ->setIdLiquidacaoSituacao($this->getSitCadastrado())
-                    ->setIdLiquidacaoStatus(1)
+                    ->setIdLiquidacaoStatus($this->getStAguardandoPagamento())
                     ->setIdLotacao($this->getIdLotacao())
                     ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                     ->setNrLiquidacao($this->getNrLiquidacao())
@@ -648,7 +682,7 @@ class Liquidacao {
                 }
 
                 //Salva Historico da Liquidacao
-                if (!$this->salvarLiquidacaoHistorico($pdo)) {
+                if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCadastrado(), $this->getStAguardandoPagamento())) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                 }
@@ -701,7 +735,7 @@ class Liquidacao {
         }
     }
 
-    function salvarLiquidacaoHistorico(PDO $pdo = null) {
+    function salvarLiquidacaoHistorico(PDO $pdo = null, int $situacao, int $status) {
         try {
             $this->sucesso = true;
             if (!empty($pdo)) {
@@ -710,7 +744,8 @@ class Liquidacao {
                         ->setIdLiquidacao($this->getIdLiquidacao())
                         ->setIdPessoa($this->getUsuario())
                         ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
-                        ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao());
+                        ->setIdLiquidacaoSituacao($situacao)
+                        ->setIdLiquidacaoStatus($status);
 
                 $liquidacaoHistorico->salvarLiquidacaoHistorico($pdo);
 
@@ -1026,7 +1061,7 @@ class Liquidacao {
             }
 
             //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo)) {
+            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado())) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };

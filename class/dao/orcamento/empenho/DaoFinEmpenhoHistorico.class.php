@@ -1,8 +1,8 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/contabil/liquidacao/ConLiquidacaoHistorico.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/orcamento/empenho/FinEmpenhoHistoricoTb.class.php";
 
-class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
+class DaoFinEmpenhoHistorico extends FinEmpenhoHistoricoTb{
     
     private $sucesso = null;
     private $msgRetorno = null;    
@@ -20,15 +20,14 @@ class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
         $this->sucesso = false;
         $this->msgRetorno = null;
         try {                      
-            $result = $pdo->prepare("INSERT INTO con_liquidacao_historico (id_liquidacao ,id_pessoa, id_lotacao, id_doc_tipo_lotacao, id_liquidacao_status ,id_liquidacao_situacao, ds_liquidacao)"                    
-                    . " VALUES (:id_liquidacao,:id_pessoa, :id_lotacao, :id_doc_tipo_lotacao, :id_liquidacao_status ,:id_liquidacao_situacao, :ds_liquidacao);");                                                            
-            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result = $pdo->prepare("INSERT INTO fin_empenho_historico (id_empenho ,id_pessoa, id_lotacao, id_doc_tipo_lotacao, id_empenho_situacao, ds_empenho)"                    
+                    . " VALUES (:id_empenho,:id_pessoa, :id_lotacao, :id_doc_tipo_lotacao, :id_empenho_situacao, :ds_empenho);");                                                            
+            $result->bindValue(":id_empenho", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);            
             $result->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);            
-            $result->bindValue(":id_liquidacao_status", $this->getIdLiquidacaoStatus(), PDO::PARAM_INT);
-            $result->bindValue(":id_liquidacao_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
-            $result->bindValue(":ds_liquidacao", $this->getDsLiquidacao(), PDO::PARAM_STR);    
+            $result->bindValue(":id_empenho_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
+            $result->bindValue(":ds_empenho", $this->getDsLiquidacao(), PDO::PARAM_STR);    
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
@@ -40,13 +39,13 @@ class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
-                (to_char(dh_liquidacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pes.nm_pessoa || ': ' || 
-                liqSit.nm_liquidacao_situacao || ' pelo(a) ' || lot.nm_lotacao || '.') as historico 
+                (to_char(dh_empenho_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pes.nm_pessoa || ': ' || 
+                liqSit.nm_empenho_situacao || ' pelo(a) ' || lot.nm_lotacao || '.') as historico 
                 from
-                   con_liquidacao as liq 
+                   fin_empenho as liq 
                    inner join
-                      con_liquidacao_historico as hst 
-                      on hst.id_liquidacao = liq.id_liquidacao 
+                      fin_empenho_historico as hst 
+                      on hst.id_empenho = liq.id_empenho 
                    inner join
                       ses_pessoa as pes 
                       on pes.id_pessoa = hst.id_pessoa 
@@ -57,12 +56,12 @@ class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
                       fin_doc_tipo_lotacao as tipoLot 
                       on tipoLot.id_doc_tipo_lotacao = hst.id_doc_tipo_lotacao 
                    inner join
-                      con_liquidacao_situacao as liqSit 
-                      on liqSit.id_liquidacao_situacao = hst.id_liquidacao_situacao
-                where liq.id_liquidacao = :id_liquidacao";
+                      fin_empenho_situacao as liqSit 
+                      on liqSit.id_empenho_situacao = hst.id_empenho_situacao
+                where liq.id_empenho = :id_empenho";
         try {
             $result = $pdo->prepare($sql);
-            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_empenho", $this->getIdLiquidacao(), PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
