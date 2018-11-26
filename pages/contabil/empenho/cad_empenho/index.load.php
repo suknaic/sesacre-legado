@@ -6,6 +6,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/Vin
 
 $session = new Session();
 
+$pedido = (int)filter_input(INPUT_GET, 'token', FILTER_DEFAULT);
+
 if(!$session->vPContabilEmpenho()){
     header("Location: /pages/index.php"); 
 }

@@ -121,8 +121,13 @@ require_once "index.load.php";
                                     </div>
                                 </div>
                                 
-                                <div id="dadosGerais">
-                                    
+                                <div id="dadosContrato">
+                                </div>
+                                <div id="dadosPedido">
+                                </div>
+                                <div id="dadosItens">
+                                </div>
+                                <div id="dadosDiarias">
                                 </div>
                                
                                 <div class="form-group">

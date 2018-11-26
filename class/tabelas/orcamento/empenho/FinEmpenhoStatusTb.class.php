@@ -1,6 +1,6 @@
 <?php
 
-class FinEmpenhoStatus {
+class FinEmpenhoStatusTb {
 
     private $id_empenho_status = null;
     private $nm_empenho_status = null;
@@ -32,7 +32,4 @@ class FinEmpenhoStatus {
         $this->st_ativo = $st_ativo;
         return $this;
     }
-
-
-
 }

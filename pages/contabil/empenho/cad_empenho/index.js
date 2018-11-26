@@ -39,7 +39,7 @@ $(document).ready(function (){
     
     $('body').on('click', '.seleciona-pedido', function (e) {
         var pedido = $(this).data('pedido');
-        carregaDadosParaPedido(pedido);
+        carregaDadosParaEmpenho(pedido);
         $('#modalPedido').modal('hide');
     });
     
@@ -67,7 +67,6 @@ $(document).ready(function (){
                 return false;
             }
             
-            console.log(dados);
 
             $.ajax({
                 "url": "request.php",
@@ -152,9 +151,11 @@ $(document).ready(function (){
         });
     }
 
-    function carregaDadosParaPedido(dados){
-        $("#dadosGerais").html("");
-        
+    function carregaDadosParaEmpenho(dados){
+        $("#dadosContrato").html("");
+        $("#dadosPedido").html("");
+        $("#dadosItens").html("");
+        $("#dadosDiarias").html("");
         /**
          * retornaContratosPedido
          */
@@ -167,7 +168,7 @@ $(document).ready(function (){
 
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosContrato").append(response);
             }
         });
         /**
@@ -182,7 +183,7 @@ $(document).ready(function (){
 
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosPedido").append(response);
                 $("#vl_empenho").val($("#vl_pedido").val());
             }
         });
@@ -198,7 +199,7 @@ $(document).ready(function (){
                 "dados": dados
             },
             "success": function (response){
-                $("#dadosGerais").append(response);
+                $("#dadosDiarias").append(response);
             }
         });
         
@@ -213,10 +214,23 @@ $(document).ready(function (){
                 "dados": dados
             },
             "success": function (response) {
-                $("#dadosGerais").append(response);
+                $("#dadosItens").append(response);
             }
         });
 
+    }
+    
+    if($("#pedido_get").val() != 0){
+        carregaPedidoPesquisa();
+    }
+    
+    //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
+    function carregaPedidoPesquisa(){
+        if($("#pedido_get").val() == 0){
+            return false;
+        }
+        var pedido = $("#pedido_get").val();
+        carregaDadosParaEmpenho(pedido);       
     }
 });
 

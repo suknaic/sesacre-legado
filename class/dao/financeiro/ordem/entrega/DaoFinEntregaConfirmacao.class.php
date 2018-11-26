@@ -518,6 +518,7 @@ where orItens.id_ordem = :ordem";
     public function retornaDadosOptionGdof(PDO $pdo, $idOrdens, $idDocumentoFiscal ) {
         try {
 //            $sqlDocumentoFiscal = " AND (tramitacao.id_documento_situacao = :idDocumentoSituacao)";
+            $sqlDocumentoFiscal = '';
             if (!empty($idDocumentoFiscal)) {;
                 $sqlDocumentoFiscal = " AND documento.id_documento_fiscal <> " . $idDocumentoFiscal;
             }

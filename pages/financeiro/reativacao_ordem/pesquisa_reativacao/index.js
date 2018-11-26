@@ -154,7 +154,7 @@ function lista() {
         "url": "request.php",
         "dataType": 'html',
         "data": {
-            "acao": "retornaPagamentos",
+            "acao": "#",
             "dados": dados
         },
         "success": function (response) {

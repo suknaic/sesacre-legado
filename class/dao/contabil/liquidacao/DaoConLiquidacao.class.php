@@ -254,9 +254,9 @@ class DaoConLiquidacao extends ConLiquidacao {
                     'A Liquidar'::bpchar as nm_situacao,
                     coalesce(pagamento.valorPagamento,
                     '0.0000') as pagamento,
-                    to_char((documentos.vl_doc_sm - coalesce(pagamento.valorPagamento,
+                    trim(to_char((documentos.vl_doc_sm - coalesce(pagamento.valorPagamento,
                     '0.0000')),
-                    '999G999G990D0999') as saldo
+                    '999G999G990D0999')) as saldo
                 from
                     con_liquidacao liq
                 inner join fin_empenho emp on
