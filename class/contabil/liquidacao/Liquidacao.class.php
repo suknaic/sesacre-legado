@@ -735,7 +735,7 @@ class Liquidacao {
         }
     }
 
-    function salvarLiquidacaoHistorico(PDO $pdo = null, int $situacao, int $status) {
+    function salvarLiquidacaoHistorico(PDO $pdo = null, int $situacao, int $status, string $descricao = '') {
         try {
             $this->sucesso = true;
             if (!empty($pdo)) {
@@ -745,7 +745,8 @@ class Liquidacao {
                         ->setIdPessoa($this->getUsuario())
                         ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                         ->setIdLiquidacaoSituacao($situacao)
-                        ->setIdLiquidacaoStatus($status);
+                        ->setIdLiquidacaoStatus($status)
+                        ->setDsLiquidacao($descricao);
 
                 $liquidacaoHistorico->salvarLiquidacaoHistorico($pdo);
 
@@ -1061,7 +1062,7 @@ class Liquidacao {
             }
 
             //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado())) {
+            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento())) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };

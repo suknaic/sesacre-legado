@@ -40,8 +40,16 @@ class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
-                (to_char(dh_liquidacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pes.nm_pessoa || ': ' || 
-                liqSit.nm_liquidacao_situacao || ' pelo(a) ' || lot.nm_lotacao || '.') as historico 
+                (to_char(dh_liquidacao_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pes.nm_pessoa || ': ' || liqSit.nm_liquidacao_situacao || ' pelo(a) ' || lot.nm_lotacao || '. ' || 
+                   case
+                      when
+                         (hst.ds_liquidacao is null or hst.ds_liquidacao = '')
+                      then
+                         '' 
+                      else
+                         'Justificativa: ' || hst.ds_liquidacao 
+                   end
+                ) as historico 
                 from
                    con_liquidacao as liq 
                    inner join
@@ -58,8 +66,9 @@ class DaoConLiquidacaoHistorico extends ConLiquidacaoHistorico{
                       on tipoLot.id_doc_tipo_lotacao = hst.id_doc_tipo_lotacao 
                    inner join
                       con_liquidacao_situacao as liqSit 
-                      on liqSit.id_liquidacao_situacao = hst.id_liquidacao_situacao
-                where liq.id_liquidacao = :id_liquidacao";
+                      on liqSit.id_liquidacao_situacao = hst.id_liquidacao_situacao 
+                where
+                   liq.id_liquidacao = :id_liquidacao";
         try {
             $result = $pdo->prepare($sql);
             $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
