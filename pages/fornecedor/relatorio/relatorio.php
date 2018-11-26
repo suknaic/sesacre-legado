@@ -133,7 +133,7 @@ if ($busca != null) {
         }
 
         if ($linhas['fornecedor_distribuidora'] == 's') {
-            $html .= "          <td class='justificar'>" . $linhas['dist_empresa'] . "</td>";
+            $html .= "          <td>" . $linhas['dist_empresa'] . "</td>";
         } else {
             $html .= "          <td></td>";
         }
@@ -159,7 +159,7 @@ if ($busca != null) {
     }
 } else {
     $html .= "      <tr>
-                        <td colspan='9'>Nenhum Resultado Encontrado.</td>
+                        <td colspan='14'>Nenhum Resultado Encontrado.</td>
                     </tr>";
 }
 $html.="            </table>
