@@ -324,8 +324,6 @@ class VincularTramitacao {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
                     $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao']." selected>".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
                 }
-            } else {
-                $opcoes .= "<option>Teste</option>";
             }
             return $opcoes;
         } catch (Exception $exc) {

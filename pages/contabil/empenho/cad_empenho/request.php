@@ -99,10 +99,11 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $empenho = new FinEmpenhoModel();
             $empenho->setIdPedido((int)$dados['idPedido']);
+            $empenho->setIdLotacao((int)$dados['idLotacao']);
+            $empenho->setIdDocTipoLotacao((int)$dados['idDocTipoLotacao']);
             $empenho->setNrEmpenho($dados['nrEmpenho']);
             $empenho->setIdTipoEmpenho((int)$dados['tpEmpenho']);
             $empenho->setDtEmpenhoSafira($dados['dtEmpenho']);
-            $empenho->setDsEmpenho($dados['dsEmpenho']);
             $empenho->setVlEmpenho($dados['vlEmpenho']);
             $empenho->setAnotacoes($dados['anotacoes']);
             $empenho->setIdPessoa($session->getIdUser());
