@@ -245,7 +245,7 @@ class Fornecedor {
                     } else {
                         $verificaFornecedor = $fornedor->verificaFornecedor($pdo, $pf['id_pessoa']);
                         if ($verificaFornecedor) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'Você já é um fornecedor.');
+                            return Metodos::retornoAjax('Erro', 'alert', 'Você já é um fornecedor no sistema.');
                         } else {
                             $pessoa->setId_pessoa($pf['id_pessoa']);
                         }
@@ -280,7 +280,7 @@ class Fornecedor {
                     $pessoa->setNm_email(null);
                 } else {
                     if (!Metodos::validaEmail($this->pessoa['email'])) {
-                        return Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
+                        return Metodos::retornoAjax("Erro", "alert", "O E-mail Informado é Inválido.");
                     } else {
                         $pessoa->setNm_email($this->pessoa['email']);
                     }
