@@ -126,12 +126,30 @@ require_once "index.load.php";
                                                             <div class="col-sm-7"></div>
                                                         </div>
                                                         
-                                                        <div class="form-group">
-                                                            <div class="col-sm-2"><b>Observação:</b></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                  <!-- CAMPO DO REMETENTE -->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body remetente">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b></div>
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
-                                                                    <span class="input-group-addon"><p class="fa fa-file-text-o" style="margin-bottom: -4px"></p></span>
-                                                                    <textarea class="form-control" type="text" name="ds_empenho" id="ds_empenho"><?php echo $dadosDoEmpenho['ds_empenho']; ?></textarea>
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente" disabled>
+                                                                        <?php echo $selectRemetente; ?>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-7"></div>
@@ -142,6 +160,7 @@ require_once "index.load.php";
                                         </div>
                                     </div>
                                 </div>
+                                <!-- FIM CAMPO REMETENTE-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
@@ -157,6 +176,22 @@ require_once "index.load.php";
 
                                                     <div class="panel-body">
                                                         <textarea class="form-control anotacoes" rows="7" readonly><?php echo $anotacoes; ?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Histórico</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <textarea class="form-control" rows="7" readonly="true"><?php echo $historico;?></textarea>
                                                     </div>
                                                 </div>
                                             </div>

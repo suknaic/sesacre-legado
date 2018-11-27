@@ -270,7 +270,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         try {
             if (!empty($pdo)) {
                 $sql = "insert into fin_empenho (id_pedido, id_pessoa, id_tipo_empenho, nr_empenho, dt_empenho_safira,
-                        vl_empenho, ds_empenho) values (:pedido, :pessoa, :tpEmp, :nrEmp, :dtEmp, :vlEmp, :dsEmp)";
+                        vl_empenho, ds_empenho, id_lotacao, id_doc_tipo_lotacao, id_empenho_status) values (:pedido, :pessoa, :tpEmp, :nrEmp, :dtEmp, :vlEmp, :dsEmp, :idLotacao, :idDocTipoLotacao, :idEmpenhoStatus)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
@@ -279,6 +279,9 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $stmt->bindValue(":dtEmp", $this->getDtEmpenhoSafira(), PDO::PARAM_STR);
                 $stmt->bindValue(":vlEmp", $this->getVlEmpenho(), PDO::PARAM_STR);
                 $stmt->bindValue(":dsEmp", $this->getDsEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":idDocTipoLotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":idEmpenhoStatus", $this->getIdEmpenhoStatus(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -635,6 +638,9 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             emp.id_pedido,
                             emp.id_tipo_empenho,
                             emp.sit_empenho,
+                            emp.id_empenho_status,
+                            emp.id_lotacao,
+                            emp.id_doc_tipo_lotacao,
                             to_char(emp.dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
                             trim(to_char(emp.vl_empenho, '999G999G999G990D9999')) as vl_empenho_cm,
                             emp.vl_empenho,

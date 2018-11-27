@@ -20,14 +20,15 @@ class DaoFinEmpenhoHistorico extends FinEmpenhoHistoricoTb{
         $this->sucesso = false;
         $this->msgRetorno = null;
         try {                      
-            $result = $pdo->prepare("INSERT INTO fin_empenho_historico (id_empenho ,id_pessoa, id_lotacao, id_doc_tipo_lotacao, id_empenho_situacao, ds_empenho)"                    
-                    . " VALUES (:id_empenho,:id_pessoa, :id_lotacao, :id_doc_tipo_lotacao, :id_empenho_situacao, :ds_empenho);");                                                            
-            $result->bindValue(":id_empenho", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result = $pdo->prepare("INSERT INTO fin_empenho_historico (id_empenho ,id_pessoa, id_lotacao, id_doc_tipo_lotacao, id_empenho_situacao, id_empenho_status, ds_empenho_historico)"                    
+                    . " VALUES (:id_empenho,:id_pessoa, :id_lotacao, :id_doc_tipo_lotacao, :id_empenho_situacao, :id_empenho_status, :ds_empenho_historico);");                                                            
+            $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
             $result->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $result->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);            
             $result->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);            
-            $result->bindValue(":id_empenho_situacao", $this->getIdLiquidacaoSituacao(), PDO::PARAM_INT);            
-            $result->bindValue(":ds_empenho", $this->getDsLiquidacao(), PDO::PARAM_STR);    
+            $result->bindValue(":id_empenho_situacao", $this->getIdEmpenhoSituacao(), PDO::PARAM_INT);      
+            $result->bindValue(":id_empenho_status", $this->getIdEmpenhoStatus(), PDO::PARAM_INT);
+            $result->bindValue(":ds_empenho_historico", $this->getDsEmpenhoHistorico(), PDO::PARAM_STR);    
             $result->execute();
             $this->sucesso = true;            
         } catch (PDOException $e) {
@@ -40,12 +41,20 @@ class DaoFinEmpenhoHistorico extends FinEmpenhoHistoricoTb{
         $this->msgRetorno = null;
         $sql = "select
                 (to_char(dh_empenho_historico, 'dd/mm/yyyy hh24:mi:ss') || ' - ' || pes.nm_pessoa || ': ' || 
-                liqSit.nm_empenho_situacao || ' pelo(a) ' || lot.nm_lotacao || '.') as historico 
+                empSit.nm_empenho_situacao || ' pelo(a) ' || lot.nm_lotacao || '. ' || 
+                   case
+                      when
+                         (hst.ds_empenho_historico is null or hst.ds_empenho_historico = '')
+                      then
+                         '' 
+                      else
+                         'Justificativa: ' || hst.ds_empenho_historico 
+                   end) as historico 
                 from
-                   fin_empenho as liq 
+                   fin_empenho as emp 
                    inner join
                       fin_empenho_historico as hst 
-                      on hst.id_empenho = liq.id_empenho 
+                      on hst.id_empenho = emp.id_empenho 
                    inner join
                       ses_pessoa as pes 
                       on pes.id_pessoa = hst.id_pessoa 
@@ -56,18 +65,18 @@ class DaoFinEmpenhoHistorico extends FinEmpenhoHistoricoTb{
                       fin_doc_tipo_lotacao as tipoLot 
                       on tipoLot.id_doc_tipo_lotacao = hst.id_doc_tipo_lotacao 
                    inner join
-                      fin_empenho_situacao as liqSit 
-                      on liqSit.id_empenho_situacao = hst.id_empenho_situacao
-                where liq.id_empenho = :id_empenho";
+                      fin_empenho_situacao as empSit 
+                      on empSit.id_empenho_situacao = hst.id_empenho_situacao
+                where emp.id_empenho = :id_empenho";
         try {
             $result = $pdo->prepare($sql);
-            $result->bindValue(":id_empenho", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
             $result->execute();
             if ($result->rowCount() >= 1){
                 $this->sucesso = true; 
                 $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
             } else {            
-                $this->msgRetorno = "Não encontrou Registros";                
+                $this->msgRetorno = "Nenhum histórico registrado.";                
             }            
         } catch (PDOException $e) {
             $this->msgRetorno = $e->getMessage(); 

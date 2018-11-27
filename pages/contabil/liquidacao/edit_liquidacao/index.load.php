@@ -46,7 +46,9 @@ $optionsDocumentosFiscais = null;
 //OPTIONS PARA ESCOLHER OS DOCUMENTOS FISCAIS
 $optionsDocumentosFiscais = $liquidacao->retornaOptiosDocumentosLiquidacaoEdicao();
 
-$historico = $liquidacao->retornaHistorico();
+$liquidacaoHistorico = new LiquidacaoHistorico();
+$liquidacaoHistorico->setIdLiquidacao($dadosLiquidacao['id_liquidacao']);
+$historico = $liquidacaoHistorico->retornaHistorico();
 
 $vincTramitacao = new VincularTramitacao();
 $vincTramitacao->setIdDocTipoLotacao($dadosLiquidacao['id_doc_tipo_lotacao']);

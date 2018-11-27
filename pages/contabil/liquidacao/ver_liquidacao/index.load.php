@@ -26,7 +26,9 @@ $dadosLiquidacao = $liquidacao->retornaDadosLiquidacao();
 
 $liquidacao->setIdEmpenho($dadosLiquidacao['id_empenho']);
 
-$historico = $liquidacao->retornaHistorico();
+$liquidacaoHistorico = new LiquidacaoHistorico();
+$liquidacaoHistorico->setIdLiquidacao($dadosLiquidacao['id_liquidacao']);
+$historico = $liquidacaoHistorico->retornaHistorico();
 
 $tabelaDocumentosFiscais = null;
 $tem_documentos = false;

@@ -252,30 +252,6 @@ class Liquidacao {
         }
     }
 
-    function retornaHistorico() {
-        $retorno = "";
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $daoConLiquidacaoHistorico = new DaoConLiquidacaoHistorico();
-            $daoConLiquidacaoHistorico->setIdLiquidacao($this->getIdLiquidacao());
-
-            $daoConLiquidacaoHistorico->historico($pdo);
-
-            if ($daoConLiquidacaoHistorico->Sucesso()) {
-                foreach ($daoConLiquidacaoHistorico->getMsgRetorno() as $linha) {
-                    $retorno .= $linha['historico'] . "\n";
-                }
-            } else {
-                $retorno = $daoConLiquidacaoHistorico->getMsgRetorno();
-            }
-            return $retorno;
-        } catch (Exception $exc) {
-            $retorno = "";
-        }
-    }
-
     public function montaTabelaDocumentosLiquidacao(bool $edita = true) {
         try {
             $tabela = '';
@@ -736,8 +712,9 @@ class Liquidacao {
     }
 
     function salvarLiquidacaoHistorico(PDO $pdo = null, int $situacao, int $status, string $descricao = '') {
+        $this->sucesso = false;
+        $this->mensagens = null;
         try {
-            $this->sucesso = true;
             if (!empty($pdo)) {
                 $liquidacaoHistorico = new LiquidacaoHistorico();
                 $liquidacaoHistorico->setIdLotacao($this->getIdLotacao())
@@ -751,19 +728,17 @@ class Liquidacao {
                 $liquidacaoHistorico->salvarLiquidacaoHistorico($pdo);
 
                 if (!$liquidacaoHistorico->getSucesso()) {
-                    $this->sucesso = false;
                     $this->mensagens = $liquidacaoHistorico->getMensagens();
                     return false;
                 }
-
+                $this->sucesso = true;
+                
                 return $this->sucesso;
             } else {
                 $this->mensagens = "Sem conexão com o banco de dados";
-                $this->sucesso = false;
             }
         } catch (Exception $exc) {
             //Se der algum erro, registra o erro no objeto
-            $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
         }
     }
