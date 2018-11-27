@@ -17,7 +17,7 @@ define("STR_REMOCAO_SUCESSO", "Registro Removido com Sucesso.");
 define("STR_DESATIVADO_SUCESSO", "Registro Desativado com Sucesso.");
 define("STR_ATIVADO_SUCESSO", "Registro Ativado com Sucesso.");
 define("STR_DATA_INICIO_FIM", "Data Início tem que ser Menor que a Data Fim");
-define("STR_EMAIL_EXISTE", "email informado já existe, tente com outro email");
+define("STR_EMAIL_EXISTE", "E-mail informado já existe, tente com outro E-mail.");
 define("STR_CPF_EXISTE", "CPF informado já existe... ");
 define("STR_CNPJ_EXISTE", "CNPJ informado já existe... ");
 define("STR_REGISTRO_EXISTE", "Registro já Existe no Sistema. ");
