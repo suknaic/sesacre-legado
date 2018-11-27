@@ -468,6 +468,7 @@ class FinEmpenhoModel {
             
             if ($daoFinEmpenho->sucesso()) {
                 $daoFinEmpenho->setIdEmpenho((is_numeric($pdo->lastInsertId('fin_empenho_id_empenho_seq'))) ? $pdo->lastInsertId('fin_empenho_id_empenho_seq') : null);
+                $this->id_empenho = $daoFinEmpenho->getIdEmpenho();
                 $sucesso = true;
                 if (!Log::SalvaLogI('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $pdo)) {
                     $sucesso = false;
@@ -481,7 +482,7 @@ class FinEmpenhoModel {
             //Inserção de anotações, se houver
             if(!empty($this->anotacoes)){
                 $finEmpenhoAnotacao = new FinEmpenhoAnotacao();
-                $finEmpenhoAnotacao->setIdEmpenho($daoFinEmpenho->getIdEmpenho());
+                $finEmpenhoAnotacao->setIdEmpenho($this->id_empenho);
                 $finEmpenhoAnotacao->setDsEmpenhoAnotacao($this->anotacoes);
                 $finEmpenhoAnotacao->setIdPessoa($this->id_pessoa);
                 $finEmpenhoAnotacao->salvaAnotacao($pdo);
@@ -603,7 +604,7 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
             $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
             $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
-            $daoFinEmpenho->setDsEmpenho($this->ds_empenho);
+            $daoFinEmpenho->setDsEmpenho($this->ds_empenho ?? '');
             
             //verificar se o empenho ja está cadastrado
             $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
@@ -1156,7 +1157,7 @@ class FinEmpenhoModel {
             }
             
             //Salva Historico do Empenho
-            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitCancelado(), $this->getStatusFinalizado())) {
+            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitCancelado(), $this->getStatusFinalizado(), $justificativa)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
             }

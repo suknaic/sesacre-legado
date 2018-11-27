@@ -154,7 +154,7 @@ class FinEmpenhoHistorico {
             $daoFinEmpenhoHistorico->historico($pdo);
 
             if ($daoFinEmpenhoHistorico->Sucesso()) {
-                foreach ($daoConLiquidacaoHistorico->getMsgRetorno() as $linha) {
+                foreach ($daoFinEmpenhoHistorico->getMsgRetorno() as $linha) {
                     $retorno .= $linha['historico'] . "\n";
                 }
             } else {

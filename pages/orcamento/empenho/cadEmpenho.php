@@ -269,6 +269,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/orcamento/empenho/cadEmpenho.lo
                                     </div>
 
                                 </div>
+                                
+    
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <div class="panel-body">
+                                            Remetente:<span class="text-danger">*</span>
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                <select id="remetente" class="form-control">
+                                                    <?php echo $selectRemetente;?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-6"></div>
+                                </div>
+           
 
                                 <div class="form-group">
                                     <div class="col-sm-6">

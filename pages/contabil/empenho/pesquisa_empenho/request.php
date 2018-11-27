@@ -42,7 +42,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-                           
+        
+    CASE 'retornaLotacaoTipo':
+        try {
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($session->getIdUser());
+            echo $tramitacao->listaLotacaoTipoPorUsuarioEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
     CASE 'cancelarEmpenho':
         try {
                             
@@ -50,6 +63,8 @@ switch ($_REQUEST['acao']) {
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($dados['id']);   
             $empenho->setIdPessoa($session->getIdUser());
+            $empenho->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
+            $empenho->setIdLotacao($dados['idLotacao']);
             echo $empenho->cancelarEmpenho(trim($dados['justificativa']));
             return;
             break;

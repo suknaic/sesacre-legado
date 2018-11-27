@@ -39,6 +39,7 @@ $dadosDaDiaria = $empenho->retornaEmpenhoPedidoDiariaAccordion(null);
 $dadosDoPedido = $empenho->retornaEmpenhoPedidoAccordion(null);
 $dadosDoContrato = $empenho->retornaEmpenhoContratoAccordion(null);
 $itensDoPedido = $empenho->retornaEmpenhoPedidoItensAccordion(null);
+$itensAnuladosDoPedido = $empenho->retornaEmpenhoPedidoItensAnuladosAccordion(null);
 
 $empenhoHistorico = new FinEmpenhoHistorico();
 $empenhoHistorico->setIdEmpenho($id);

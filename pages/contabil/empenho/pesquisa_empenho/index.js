@@ -33,89 +33,113 @@ $(document).ready(function () {
 
         var $this = $(this);
         var id = $this.val();
-        var item = $this.closest('tr').find('td:first').text();        
-        bootbox.confirm({
-            title: 'Cancelamento do Empenho',
-            //message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
-            message: 'Você tem Certeza que deseja continuar com o \n\
-                Cancelamento do Empenho <span class="text-danger">' + item + '</span>?\n\
-                <br> \n\
-                <div class="form-group"> \n\
-                    <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label> \n\
-                    <div class="input-group"> \n\
-                        <span class="input-group-addon"> \n\
-                            <p class="fa fa-list inputPFa"></p> \n\
-                        </span> \n\
-                        <textarea id="rem_justificativa" class="form-control"></textarea>\n\
-                    </div> \n\
-                </div>',  
-            buttons: {
-                'cancel': {
-                    label: 'Fechar',
-                    className: 'btn-default btn-rounded'
-                },
-                'confirm': {
-                    label: 'Sim',
-                    className: 'btn-primary btn-rounded'
-                }
+        var item = $this.closest('tr').find('td:first').text();
+        
+        $.ajax({
+            "url": url,
+            "dataType": "html",
+            "data": {
+                "acao": "retornaLotacaoTipo"
             },
-            callback: function (result) {
-                if (result) {
-                    var Dados = {
-                        id: id,
-                        justificativa: $("#rem_justificativa").val()
-                    }
-
-                    if (id == "") {
-                        func.modalAlert(func.msgPreencherCampos);
-                        $this.prop("disabled", false);
-                        return false;
-                    }
-                    
-                    $.ajax({
-                        "url": url,
-                        "dataType": "html",
-                        "method": "post",
-                        "data": {
-                            "acao": "cancelarEmpenho",
-                            "dados": Dados
+            "success": function (response) {  
+                bootbox.confirm({
+                    title: 'Cancelamento do Empenho',
+                    //message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
+                    message: `Você tem Certeza que deseja continuar com o 
+                        Cancelamento do Empenho <span class="text-danger">${item}</span>?
+                        <br><br>  
+                        <div class="form-group">
+                            <label for="remetente">Remetente: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <p class="fa fa-list" style="margin-bottom: -4px"></p>
+                                </span>
+                                <select id="remetente" class="form-control">
+                                ${response}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"> 
+                            <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <p class="fa fa-list inputPFa"></p>
+                                </span>
+                                <textarea id="rem_justificativa" class="form-control"></textarea>
+                            </div> 
+                        </div>`,  
+                    buttons: {
+                        'cancel': {
+                            label: 'Fechar',
+                            className: 'btn-default btn-rounded'
                         },
-                        "success": function (response) {     
+                        'confirm': {
+                            label: 'Sim',
+                            className: 'btn-primary btn-rounded'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            var Dados = {
+                                id: id,
+                                idLotacao: $("#remetente option:selected").data('lotacao'),
+                                idDocTipoLotacao: $("#remetente option:selected").data('tipo-lotacao'),
+                                justificativa: $("#rem_justificativa").val()
+                            }
                             
-                            console.log(response)
-                            if (response.trim() == "SessaoExpirada") {
-                                func.modalAlert(func.msgSemPermissao);
+                            if (!Dados.id || !Dados.justificativa || !Dados.idLotacao || !Dados.idDocTipoLotacao) {
+                                bootbox.hideAll();
+                                func.modalAlert(func.msgPreencherCampos);
+                                $this.prop("disabled", false);
                                 return false;
                             }
-                            try {
-                                response = JSON.parse(response);
-                            } catch (e) {
-                                func.modalAlert(func.msgErroPadrao);                                
-                                return false;
-                            }
-                            if (response.tipoMsg === "Erro") {
-                                if (response.tipoExibicao === "console") {                                    
+
+                            $.ajax({
+                                "url": url,
+                                "dataType": "html",
+                                "method": "post",
+                                "data": {
+                                    "acao": "cancelarEmpenho",
+                                    "dados": Dados
+                                },
+                                "success": function (response) {     
+
+                                    console.log(response)
+                                    if (response.trim() == "SessaoExpirada") {
+                                        func.modalAlert(func.msgSemPermissao);
+                                        return false;
+                                    }
+                                    try {
+                                        response = JSON.parse(response);
+                                    } catch (e) {
+                                        func.modalAlert(func.msgErroPadrao);                                
+                                        return false;
+                                    }
+                                    if (response.tipoMsg === "Erro") {
+                                        if (response.tipoExibicao === "console") {                                    
+                                            func.modalAlert(func.msgErroPadrao);
+                                            return false;
+                                        } else if (response.tipoExibicao === "alert") {
+                                            func.modalAlert(response.msg);
+                                            return false;
+                                        }
+                                    } else if (response.tipoMsg === "ok") {
+                                        func.modalAlert(response.msg, 'success');
+                                        func.fechaModalReload();
+                                        return false;
+                                    } else {                                
+                                        func.modalAlert(func.msgErroPadrao);
+                                        return false;
+                                    }
+                                },
+                                "error": function (response) {                            
                                     func.modalAlert(func.msgErroPadrao);
                                     return false;
-                                } else if (response.tipoExibicao === "alert") {
-                                    func.modalAlert(response.msg);
-                                    return false;
                                 }
-                            } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'success');
-                                func.fechaModalReload();
-                                return false;
-                            } else {                                
-                                func.modalAlert(func.msgErroPadrao);
-                                return false;
-                            }
-                        },
-                        "error": function (response) {                            
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
+                            });
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     });
