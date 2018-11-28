@@ -318,7 +318,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {
-            $this->msgRetorno = $ex->getMessage();
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -849,7 +849,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     case
                         when ( sit_emp.id_liquidacao is null
                         and sit_emp.id_ordem is null
-                        and sit_emp.id_documento_fiscal is null ) then 'S'
+                        and sit_emp.id_documento_fiscal is null
+                        and sit_empenho = '1') then 'S'
                         else 'N'
                     end as edita,
                     case

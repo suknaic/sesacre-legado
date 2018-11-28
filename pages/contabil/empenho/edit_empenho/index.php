@@ -67,6 +67,7 @@ require_once "index.load.php";
                                 <?php echo $dadosDoPedido; ?>
                                 <?php echo $dadosDaDiaria; ?>
                                 <?php echo $itensDoPedido; ?>
+                                <?php echo $itensAnuladosDoPedido; ?>
 
                                  
                                 <div class="form-group">

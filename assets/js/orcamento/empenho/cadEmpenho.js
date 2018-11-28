@@ -61,11 +61,14 @@ $(document).ready(function () {
                 "tpEmpenho": $("#tpEmpenho").val(),
                 "vlEmpenho": $("#vlEmpenho").val(),
                 "dtEmpenho": $("#dtEmpenho").val(),
-                "obsEmpenho": $("#obsEmpenho").val()
+                "obsEmpenho": $("#obsEmpenho").val(),
+                "idLotacao": $("#remetente option:selected").data("lotacao"),
+                "idDocTipoLotacao": $("#remetente option:selected").data("tipo-lotacao") 
             }
             $.ajax({
                 "url": "/model/orcamento/empenho/request.php",
                 "dataType": 'html',
+                "method": 'post',
                 "data": {
                     "acao": "salvaEmpenho",
                     "empenho": empenho

@@ -973,7 +973,7 @@ class Liquidacao {
         }
     }
 
-    function cancelarLiquidacao() {
+    function cancelarLiquidacao(string $justificativa) {
         try {
             if (empty($this->getIdLiquidacao()) || empty($this->getMotivoCancelamento())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
@@ -1037,7 +1037,7 @@ class Liquidacao {
             }
 
             //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento())) {
+            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento(),$justificativa)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };
