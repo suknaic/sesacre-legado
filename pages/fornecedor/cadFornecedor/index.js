@@ -596,7 +596,7 @@ $(document).ready(function () {
             $('.juridica').hide();
             $('.fisica').hide();
             $('.resto').hide();
-            $('.formFornecedores ').reset();
+            $('.formFornecedores input').val("");
             $('input[type=checkbox]').attr('checked', false);
             $('.select').val(0).trigger('change.select2');
         }

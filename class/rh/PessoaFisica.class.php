@@ -385,6 +385,23 @@ class pessoaFisica {
         }
     }
 
+    public function verificaPf($pdo) {
+
+        try {
+
+            $pessoaFisica = new DaoSesPessoaFisica();
+            $pessoaFisica->setId_pessoa($this->id_pessoa);
+
+            $rs = $pessoaFisica->verificaPf($pdo);
+            if ($rs != FALSE) {
+                return true;
+            }
+            return FALSE;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
     public function editarPessoaFisica($pdo) {
         try {
             $sucesso = false;
