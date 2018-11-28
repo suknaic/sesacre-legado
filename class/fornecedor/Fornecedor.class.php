@@ -245,7 +245,7 @@ class Fornecedor {
                     } else {
                         $verificaFornecedor = $fornedor->verificaFornecedor($pdo, $pf['id_pessoa']);
                         if ($verificaFornecedor) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'Você já é um fornecedor no sistema.');
+                            return Metodos::retornoAjax('Erro', 'alert', 'Fornecedor com o mesmo CPF já está cadastrado no sistema.');
                         } else {
                             $continua = true;
                             $cadastraPessoa = false;
@@ -257,7 +257,7 @@ class Fornecedor {
 
             if (!empty($this->pessoaJuridica)) {
                 if (!Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                    return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+                    return Metodos::retornoAjax('Erro', 'alert', ' Fornecedor com o mesmo CNPJ já está cadastrado no sistema.');
                 } else {
                     $pj = $fornedor->verificaPJCNPJ($pdo, Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                     if ($pj == null) {
