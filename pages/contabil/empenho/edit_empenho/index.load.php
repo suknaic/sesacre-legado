@@ -49,8 +49,18 @@ $empenhoAnotacao = new FinEmpenhoAnotacao();
 $empenhoAnotacao->setIdEmpenho($id);
 $anotacoes = $empenhoAnotacao->retornaAnotacoes();
 
-$vincTramitacao = new VincularTramitacao();
-$vincTramitacao->setIdDocTipoLotacao($dadosDoEmpenho['id_doc_tipo_lotacao']);
-$vincTramitacao->setIdLotacao($dadosDoEmpenho['id_lotacao']);
 
-$selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo();
+$vincTramitacao = new VincularTramitacao();
+//Variável para definir se o campo do remetente será editável ou não.
+//A informação do Remetente foi adicionar posteriormente, desta forma a edição possibilitará a atualização do legado
+if (empty($dadosDoEmpenho['id_doc_tipo_lotacao']) || empty($dadosDoEmpenho['id_lotacao'])) {
+    $desativa = "";
+    $vincTramitacao->setIdPessoa($session->getIdUser());
+    $selectRemetente = $vincTramitacao->listaLotacaoTipoPorUsuarioEmpenho();
+} else {
+    $desativa = "disabled";
+    $vincTramitacao->setIdDocTipoLotacao($dadosDoEmpenho['id_doc_tipo_lotacao']);
+    $vincTramitacao->setIdLotacao($dadosDoEmpenho['id_lotacao']);
+    $selectRemetente = $vincTramitacao->listaLotacaoTipoPorLotacaoETipo();
+}
+

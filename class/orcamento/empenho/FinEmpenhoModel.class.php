@@ -577,7 +577,8 @@ class FinEmpenhoModel {
     
     public function atualizaEmpenho(){
         try {
-            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)) {
+            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)
+                    || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             $conexao = new Conexao();
@@ -605,6 +606,8 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
             $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
             $daoFinEmpenho->setDsEmpenho($this->ds_empenho ?? '');
+            $daoFinEmpenho->setIdLotacao($this->id_lotacao);
+            $daoFinEmpenho->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
             
             //verificar se o empenho ja está cadastrado
             $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
@@ -1427,15 +1430,15 @@ class FinEmpenhoModel {
                                                                 <div class="col-sm-2"><b>Tipo do Pedido de Necessidade:</b></div>
                                                                 <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
                                                             </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                            </div>
 
                                                             <div class="form-group">
                                                                 <div class="col-sm-2"><b>Descrição:</b></div>
                                                                 <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                                <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
                                                             </div>
 
                                                             <div class="form-group">
@@ -1459,7 +1462,7 @@ class FinEmpenhoModel {
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                                <div class="col-sm-2"><b>Valor do Pedido de Necessidade:</b></div>
                                                                 <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
                                                             </div>'
                                                             . $saldoOrdenar.
@@ -1793,15 +1796,15 @@ class FinEmpenhoModel {
                                                                 <div class="col-sm-2"><b>Licitação:</b></div>
                                                                 <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
                                                             </div>
+                                                            
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                            </div>
 
                                                             <div class="form-group">
                                                                 <div class="col-sm-2"><b>Central de Demanda:</b></div>
                                                                 <div class="col-sm-10">' . mb_strtoupper($campos["nm_lotacao"],'UTF-8') . '</div>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
-                                                                <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
                                                             </div>
 
                                                             <div class="form-group">

@@ -148,7 +148,7 @@ require_once "index.load.php";
                                                             <div class="col-sm-3">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
-                                                                    <select class="form-control select" name="id_remetente" id="id_remetente" disabled>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente" <?php echo $desativa;?> >
                                                                         <?php echo $selectRemetente; ?>
                                                                     </select>
                                                                 </div>
