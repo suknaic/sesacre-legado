@@ -60,14 +60,14 @@ class DaoFornecedor extends ForFornecedor {
                                       INNER JOIN ses_pessoa PE ON PE.id_pessoa = FORN.id_pessoa
                                       LEFT JOIN ses_pessoa_fisica PF ON PE.id_pessoa = PF.id_pessoa
                                       LEFT JOIN ses_pessoa_juridica PJ ON PE.id_pessoa = PJ.id_pessoa
-                                      INNER JOIN for_fornecedor_medicamento FORNMED ON FORNMED.id_fornecedor = FORN.id_fornecedor
-                                      INNER JOIN for_medicamento MED ON MED.id_medicamento = FORNMED.id_medicamento
-                                      INNER JOIN for_fornecedor_servico FORNSE ON FORNSE.id_fornecedor = FORN.id_fornecedor
-                                      INNER JOIN for_servico SE ON SE.id_servico = FORNSE.id_servico
-                                      INNER JOIN for_fornecedor_material_consumo FORNMATCON ON FORNMATCON.id_fornecedor = FORN.id_fornecedor
-                                      INNER JOIN for_material_consumo MATCON ON MATCON.id_material_consumo = FORNMATCON.id_material_consumo
-                                      INNER JOIN for_fornecedor_material_permanente FORNMATPERM ON FORNMATPERM.id_fornecedor = FORN.id_fornecedor
-                                      INNER JOIN for_material_permanente MATPERM ON MATPERM.id_material_permanente = FORNMATPERM.id_material_permanente
+                                      LEFT JOIN for_fornecedor_medicamento FORNMED ON FORNMED.id_fornecedor = FORN.id_fornecedor
+                                      LEFT JOIN for_medicamento MED ON MED.id_medicamento = FORNMED.id_medicamento
+                                      LEFT JOIN for_fornecedor_servico FORNSE ON FORNSE.id_fornecedor = FORN.id_fornecedor
+                                      LEFT JOIN for_servico SE ON SE.id_servico = FORNSE.id_servico
+                                      LEFT JOIN for_fornecedor_material_consumo FORNMATCON ON FORNMATCON.id_fornecedor = FORN.id_fornecedor
+                                      LEFT JOIN for_material_consumo MATCON ON MATCON.id_material_consumo = FORNMATCON.id_material_consumo
+                                      LEFT JOIN for_fornecedor_material_permanente FORNMATPERM ON FORNMATPERM.id_fornecedor = FORN.id_fornecedor
+                                      LEFT JOIN for_material_permanente MATPERM ON MATPERM.id_material_permanente = FORNMATPERM.id_material_permanente
                                           WHERE PE.st_ativo = '1' ".$filtro." 
                                               GROUP BY PE.id_pessoa,PF.tp_sexo,
                                                       PF.nm_civil, PF.id_pessoa, PF.nr_cpf, PJ.id_pessoa, PJ.nr_cnpj, FORN.id_fornecedor");

@@ -245,8 +245,10 @@ class Fornecedor {
                     } else {
                         $verificaFornecedor = $fornedor->verificaFornecedor($pdo, $pf['id_pessoa']);
                         if ($verificaFornecedor) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'Você já é um fornecedor no sistema.');
+                            return Metodos::retornoAjax('Erro', 'alert', 'Fornecedor com o mesmo CPF já está cadastrado no sistema.');
                         } else {
+                            $continua = true;
+                            $cadastraPessoa = false;
                             $pessoa->setId_pessoa($pf['id_pessoa']);
                         }
                     }
@@ -254,18 +256,27 @@ class Fornecedor {
             }
 
             if (!empty($this->pessoaJuridica)) {
-                if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+                if (!Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+                    return Metodos::retornoAjax('Erro', 'alert', ' Fornecedor com o mesmo CNPJ já está cadastrado no sistema.');
+                } else {
                     $pj = $fornedor->verificaPJCNPJ($pdo, Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                     if ($pj == null) {
                         $cadastraPessoa = true;
                     } else {
-                        $pessoa->setId_pessoa($pj['id_pessoa']);
+                        $verificaFornecedor = $fornedor->verificaFornecedor($pdo, $pj['id_pessoa']);
+                        if ($verificaFornecedor) {
+                            return Metodos::retornoAjax('Erro', 'alert', 'Você já é um fornecedor no sistema.');
+                        } else {
+                            $continua = true;
+                            $cadastraPessoa = false;
+                            $pessoa->setId_pessoa($pj['id_pessoa']);
+                        }
                     }
-                } else {
-                    return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
                 }
             }
-
+//            var_dump($continua);
+//            var_dump($cadastraPessoa);
+//            return;
             if ($cadastraPessoa) {
                 $pessoa->setNm_pessoa(empty($this->pessoaFisica['nmPessoaFisica']) ? trim($this->pessoaJuridica['nmRazaoSoc']):trim($this->pessoaFisica['nmPessoaFisica']));
                 $pessoa->setId_cidade($this->pessoa['cidade']);
@@ -300,48 +311,59 @@ class Fornecedor {
 
             if ($continua) {
                 if (!empty($this->pessoaFisica)) {
+
                     $pessoaFisica = new pessoaFisica();
 
                     $pessoaFisica->setId_pessoa($pessoa->getId_pessoa());
-                    $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
+                    $verificaPf = $pessoaFisica->verificaPf($pdo);
 
-                    if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
-                        $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
-                    } else {
-                        return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
-                    }
+                    if ($verificaPf == false) {
+                        $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
 
-                    $pessoaFisica->cadastrarPessoaFisica($pdo);
-                    if (!$pessoaFisica->getSuccess()) {
-                        if ($pessoaFisica->getMsg() == STR_CPF_EXISTE) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado já está vinculado a um fornecedor.');
+                        if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
+                            $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
                         } else {
-                            return Metodos::retornoAjax('Erro', 'console', $pessoaFisica->getMsg());
+                            return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
+                        }
+
+                        $pessoaFisica->cadastrarPessoaFisica($pdo);
+                        if (!$pessoaFisica->getSuccess()) {
+                            if ($pessoaFisica->getMsg() == STR_CPF_EXISTE) {
+                                return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado já está cadastrado.');
+                            } else {
+                                return Metodos::retornoAjax('Erro', 'console', $pessoaFisica->getMsg());
+                            }
                         }
                     }
                 }
 
                 if (!empty($this->pessoaJuridica)) {
+
                     $pessoaJuridica = new pessoaJuridica();
+
                     $pessoaJuridica->setId_pessoa($pessoa->getId_pessoa());
-                    $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
+                    $verificaPj = $pessoaJuridica->retornaPJ($pdo);
 
-                    if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                        $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
-                    } else {
-                        return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
-                    }
+                    if ($verificaPj == false) {
+                        $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
 
-                    $pessoaJuridica->setDs_insc_estadual(empty($this->pessoaJuridica['nrEstudal']) ? null:trim($this->pessoaJuridica['nrEstudal']));
-                    $pessoaJuridica->setDs_insc_municipal(empty($this->pessoaJuridica['nrMunicipal']) ? null:trim($this->pessoaJuridica['nrMunicipal']));
-                    $pessoaJuridica->setId_natureza($this->pessoaJuridica['natureza']);
-
-                    $pessoaJuridica->cadastrarPessoaJuridica($pdo);
-                    if (!$pessoaJuridica->getSuccess()) {
-                        if ($pessoaJuridica->getMsg() == STR_CNPJ_EXISTE) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado já está vinculado a um fornecedor.');
+                        if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+                            $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                         } else {
-                            return Metodos::retornoAjax('Erro', 'console', $pessoaJuridica->getMsg());
+                            return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+                        }
+
+                        $pessoaJuridica->setDs_insc_estadual(empty($this->pessoaJuridica['nrEstudal']) ? null:trim($this->pessoaJuridica['nrEstudal']));
+                        $pessoaJuridica->setDs_insc_municipal(empty($this->pessoaJuridica['nrMunicipal']) ? null:trim($this->pessoaJuridica['nrMunicipal']));
+                        $pessoaJuridica->setId_natureza($this->pessoaJuridica['natureza']);
+
+                        $pessoaJuridica->cadastrarPessoaJuridica($pdo);
+                        if (!$pessoaJuridica->getSuccess()) {
+                            if ($pessoaJuridica->getMsg() == STR_CNPJ_EXISTE) {
+                                return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado já está vinculado a um fornecedor.');
+                            } else {
+                                return Metodos::retornoAjax('Erro', 'console', $pessoaJuridica->getMsg());
+                            }
                         }
                     }
                 }

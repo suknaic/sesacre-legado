@@ -9,8 +9,7 @@ if (empty($_REQUEST['token'])) {
 }
 
 $dados  = json_decode(base64_decode($_REQUEST['token']), true);
-//print_r($dados);
-//return;
+
 $fornecedor = new Fornecedor();
 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);
@@ -20,8 +19,6 @@ $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['material
 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
 
 $busca = $fornecedor->relatorioFornecedor($dados['tipoFornecedor']);
-//var_dump($busca);
-//return;
 $html = "<html>
             <head>
                 <style type='text/css' media='print'>
@@ -70,9 +67,6 @@ $html = "<html>
                             <td class='tudo'><b>Fornecedor Exclusivo</b></td>
                             <td class='tudo'><b>Fornecedor Distribuidora</b></td>
                             <td class='tudo'><b>Distribuidora</b></td>";
-//    if ($dados['tipoFornecedor'] == '2') {
-//        $html .= "          <td class='tudo'><b>Distribuidora</b></td>";
-//    }
 
     if ($fornecedor->getMedicamento() != null) {
         $html .= "          <td class='tudo'><b>Medicamentos</b></td>";

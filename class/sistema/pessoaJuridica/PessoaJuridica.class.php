@@ -234,6 +234,21 @@ class pessoaJuridica {
         }
     }
 
+    public function retornaPJ($pdo) {
+        try {
+            $pessoaJuridica = new DaoSesPessoaJuridica();
+            $pessoaJuridica->setId_pessoa($this->id_pessoa);
+
+            $rs = $pessoaJuridica->retornaPJ($pdo);
+            if ($rs != FALSE) {
+                return true;
+            }
+            return FALSE;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
     public function editarPessoaJuridica($pdo) {
         try {
             $sucesso = false;
