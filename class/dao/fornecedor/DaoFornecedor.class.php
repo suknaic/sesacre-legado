@@ -55,11 +55,16 @@ class DaoFornecedor extends ForFornecedor {
                                      CASE 
                                          WHEN FORN.nm_empresa IS NOT NULL THEN FORN.nm_empresa
                                          ELSE NULL
-                                     END AS dist_empresa
+                                     END AS dist_empresa,
+                                     CASE
+                                         WHEN PJ.id_pessoa IS NOT NULL THEN NA.ds_natureza
+                                         ELSE NULL
+                                     END AS natureza
                                   FROM for_fornecedor FORN
                                       INNER JOIN ses_pessoa PE ON PE.id_pessoa = FORN.id_pessoa
                                       LEFT JOIN ses_pessoa_fisica PF ON PE.id_pessoa = PF.id_pessoa
                                       LEFT JOIN ses_pessoa_juridica PJ ON PE.id_pessoa = PJ.id_pessoa
+                                      LEFT JOIN ses_natureza NA ON PJ.id_natureza = NA.id_natureza
                                       LEFT JOIN for_fornecedor_medicamento FORNMED ON FORNMED.id_fornecedor = FORN.id_fornecedor
                                       LEFT JOIN for_medicamento MED ON MED.id_medicamento = FORNMED.id_medicamento
                                       LEFT JOIN for_fornecedor_servico FORNSE ON FORNSE.id_fornecedor = FORN.id_fornecedor
@@ -69,8 +74,8 @@ class DaoFornecedor extends ForFornecedor {
                                       LEFT JOIN for_fornecedor_material_permanente FORNMATPERM ON FORNMATPERM.id_fornecedor = FORN.id_fornecedor
                                       LEFT JOIN for_material_permanente MATPERM ON MATPERM.id_material_permanente = FORNMATPERM.id_material_permanente
                                           WHERE PE.st_ativo = '1' ".$filtro." 
-                                              GROUP BY PE.id_pessoa,PF.tp_sexo,
-                                                      PF.nm_civil, PF.id_pessoa, PF.nr_cpf, PJ.id_pessoa, PJ.nr_cnpj, FORN.id_fornecedor");
+                                              GROUP BY PE.id_pessoa,PF.tp_sexo, NA.ds_natureza, PF.nm_civil, 
+                                                      PF.id_pessoa, PF.nr_cpf, PJ.id_pessoa, PJ.nr_cnpj, FORN.id_fornecedor");
             $sql->execute();
             if ($sql->rowCount() >= 0) {
                 return $sql->fetchAll(PDO::FETCH_ASSOC);

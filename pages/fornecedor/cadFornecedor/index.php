@@ -464,7 +464,7 @@
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_medicamentos" class="form-control select" multiple name="medicamento">
-
+                                                                        
                                                                     </select>
                                                                 </div>
                                                             </div>

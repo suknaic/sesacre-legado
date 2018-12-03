@@ -36,7 +36,8 @@ $(document).ready(function () {
                 materialConsumo: $('#id_material_consumo').val(),
                 materialPermanente: $('#id_material_permanente').val()
             };
-
+            // console.log(MaterialServico);
+            // return false;
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
                 pessoaJuridica: PessoaJuridica,
@@ -62,7 +63,8 @@ $(document).ready(function () {
     $('.modal-alert').on('shown.bs.modal', function (e) {
         $("#nome").focus();
     });
-    $('body').on('keypress', '.formRhFuncionario', function (e) {
+
+    $('body').on('keypress', '#form_fornecedor', function (e) {
         var key = e.which;
         if (key == 13) {
             $(".btn-salvar").trigger('click');
