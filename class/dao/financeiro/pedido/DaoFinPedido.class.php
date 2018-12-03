@@ -236,6 +236,7 @@ class DaoFinPedido extends FinPedidoTb {
                         on pt.id_programa_trabalho  = p.id_programa_trabalho
                         inner join fin_empenho as emp
                         on emp.id_pedido = p.id_pedido
+                        and emp.sit_empenho <> '6' --DIFERENTE DE CANCELADOS
                         left join gco_processo as gcon
                         on gcon.id_processo = cont.id_processo
                         left join gco_modalidade as modalidade
@@ -423,38 +424,85 @@ class DaoFinPedido extends FinPedidoTb {
                     pedido.ds_pedido,
                     tpGasto.nm_tipo_gasto,
                     fonte.nr_fonte,
-                    (despesa.cd_despesa_elemento || ' - ' || despesa.ds_despesa_elemento) as ds_despesa_elemento,
+                    (
+                       despesa.cd_despesa_elemento || ' - ' || despesa.ds_despesa_elemento
+                    )
+                    as ds_despesa_elemento,
                     pedido.vl_pedido,
                     contrato.tp_contrato,
                     contrato.nr_contrato,
-                    (programa_trabalho.cd_programa_trabalho || ' - ' || programa_trabalho.ds_programa_trabalho) as ds_programa_trabalho,
+                    (
+                       programa_trabalho.cd_programa_trabalho || ' - ' || programa_trabalho.ds_programa_trabalho
+                    )
+                    as ds_programa_trabalho,
                     modalidade.nm_modalidade,
-                    pedido_situacao.nm_pedido_situacao
-                from
-                    fin_pedido pedido
-                inner join pla_tipo_gasto tpGasto on
-                    tpGasto.id_tipo_gasto = pedido.id_tipo_gasto
-                inner join fin_fonte fonte on
-                    fonte.id_fonte = pedido.id_fonte
-                inner join view_despesa_elemento despesa on
-                    despesa.id_despesa_elemento = pedido.id_despesa_elemento
-                inner join fin_programa_trabalho programa_trabalho on
-                    programa_trabalho.id_programa_trabalho = pedido.id_programa_trabalho
-                left join fin_pedido_situacao pedido_situacao on
-                    pedido_situacao.id_pedido_situacao = pedido.id_pedido_situacao
-                left join fin_fornecedor fornecedor on
-                    fornecedor.id_fornecedor = pedido.id_fornecedor
-                left join fin_contrato contrato on
-                    contrato.id_contrato = fornecedor.id_contrato
-                left join gco_processo gcon on
-                    gcon.id_processo = contrato.id_processo
-                left join gco_modalidade modalidade on
-                    modalidade.id_modalidade = gcon.id_modalidade
-                left join fin_empenho empenho on
-                    empenho.id_pedido = pedido.id_pedido
-                where pedido.st_pedido = '15' /*Aguardando Empenho*/
-                and empenho.id_empenho is null
-                and pedido.nr_pedido = :pedido";
+                    pedido_situacao.nm_pedido_situacao 
+                 from
+                    fin_pedido pedido 
+                    inner join
+                       pla_tipo_gasto tpGasto 
+                       on tpGasto.id_tipo_gasto = pedido.id_tipo_gasto 
+                    inner join
+                       fin_fonte fonte 
+                       on fonte.id_fonte = pedido.id_fonte 
+                    inner join
+                       view_despesa_elemento despesa 
+                       on despesa.id_despesa_elemento = pedido.id_despesa_elemento 
+                    inner join
+                       fin_programa_trabalho programa_trabalho 
+                       on programa_trabalho.id_programa_trabalho = pedido.id_programa_trabalho 
+                    left join
+                       fin_pedido_situacao pedido_situacao 
+                       on pedido_situacao.id_pedido_situacao = pedido.id_pedido_situacao 
+                    left join
+                       fin_fornecedor fornecedor 
+                       on fornecedor.id_fornecedor = pedido.id_fornecedor 
+                    left join
+                       fin_contrato contrato 
+                       on contrato.id_contrato = fornecedor.id_contrato 
+                    left join
+                       gco_processo gcon 
+                       on gcon.id_processo = contrato.id_processo 
+                    left join
+                       gco_modalidade modalidade 
+                       on modalidade.id_modalidade = gcon.id_modalidade 
+                    left join
+                       fin_empenho empenho 
+                       on empenho.id_pedido = pedido.id_pedido 
+                    left join
+                       (
+                          select distinct
+                             O.id_pedido 
+                          from
+                             fin_ordem O 
+                          where
+                             O.sit_ordem <> '0' 
+                       )
+                       ordens 
+                       on ordens.id_pedido = pedido.id_pedido 
+                    left join
+                       (
+                          select distinct
+                             DF.id_pedido 
+                          from
+                             fin_documento_fiscal DF 
+                          where
+                             df.id_documento_situacao <> 7 
+                       )
+                       documento 
+                       on documento.id_pedido = pedido.id_pedido 
+                 where
+                    pedido.st_pedido = '15' 	/*Aguardando Empenho*/
+                    and pedido.id_pedido_situacao = 2 	/*Autorizado*/
+                    and empenho.id_empenho is null 	/*Sem Empenho e Sem Liquidação e Sem Pagamento*/
+                    and 
+                    (
+                 (documento.id_pedido is null 
+                       and ordens.id_pedido is null 
+                       and pedido.id_tipo_solicitacao <= 2) 
+                       or pedido.id_tipo_solicitacao > 2
+                    )
+                    and pedido.nr_pedido = :pedido";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
@@ -499,6 +547,7 @@ class DaoFinPedido extends FinPedidoTb {
                         on pt.id_programa_trabalho  = p.id_programa_trabalho
                         inner join fin_empenho as emp
                         on emp.id_pedido = p.id_pedido
+                        and emp.sit_empenho <> '6' --NÃO INCLUIR OS EMPENHOS CANCELADOS
                         left join gco_processo as gcon
                         on gcon.id_processo = cont.id_processo
                         left join gco_modalidade as modalidade
@@ -1328,6 +1377,7 @@ class DaoFinPedido extends FinPedidoTb {
                     p.ds_pedido,
                     f.nr_fonte,
                     p.id_tipo_solicitacao,
+                    tpSol.nm_tipo_solicitacao,
                     p.id_pedido,
                     programa.cd_programa_trabalho,
                     programa.ds_programa_trabalho,
@@ -1339,7 +1389,7 @@ class DaoFinPedido extends FinPedidoTb {
                     p.vl_pedido,
                     to_char(p.dt_pedido,
                     'yyyy') as ano,
-                    pedido_saldo.saldo
+                    (coalesce(p.vl_pedido,0) - coalesce(empenhado.vl_empenhado,0)) as saldo_empenho
                 from
                     fin_pedido as p
                 inner join fin_fonte as f on
@@ -1352,17 +1402,18 @@ class DaoFinPedido extends FinPedidoTb {
                     despesa.id_despesa = p.id_despesa
                 inner join view_despesa_elemento as despesa_elemento on
                     despesa_elemento.id_despesa_elemento = p.id_despesa_elemento
-                left join (
-                    select
-                        id_pedido,
-                        sum(saldo) as saldo
-                    from
-                        view_pedido_saldo
-                    group by
-                        id_pedido ) as pedido_saldo on
-                    pedido_saldo.id_pedido = p.id_pedido
                 left join fin_tipo_solicitacao as tpSol on
                     tpSol.id_tipo_solicitacao = p.id_tipo_solicitacao
+                left join (
+                    select 
+                        E.id_pedido, sum(coalesce(e.vl_empenho,0)) as vl_empenhado 
+                    from
+                        fin_empenho E
+                    where
+                        E.sit_empenho <> '6'
+                    group by
+                        E.id_pedido) as empenhado on
+                    empenhado.id_pedido = p.id_pedido
                 where
                     p.id_pedido = :pedido";
         try {
