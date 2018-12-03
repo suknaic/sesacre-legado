@@ -69,7 +69,7 @@ require_once "index.load.php";
                                         {{lkRecurso}}
                                         {{dsRecurso}}
                                     </pre>
-                                    <campo-select nome="id_sistema" descricao="Sistema" v-model="idSistema" v-bind:opcoes="sistemasIds" requerido></campo-select>
+                                    <campo-select v-bind:options="sistemasIds"></campo-select>
                                     <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="nmRecurso" requerido></campo-texto>
                                     <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="lkRecurso" requerido></campo-texto>
                                     <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="dsRecurso"></campo-texto-grande>
@@ -128,6 +128,7 @@ require_once "index.load.php";
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+        <script src="https://unpkg.com/vue-select@latest"></script>
         <script src="index.js"></script> 
     </body>
 </html>

@@ -237,12 +237,13 @@ class DocFiscalEncaminhamento {
                 $finDoc = new FinDocumentoFiscal();
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
                     
+                    $fornecedor = '-';
                     if (!empty($linha['nr_cnpj']) and !empty($linha['nm_fantasia'])){
                         $fornecedor = Metodos::formataCnpj($linha['nr_cnpj']) .' - '. $linha['nm_fantasia'];
-                    } else {
+                    } else if(!empty($linha['nr_cpf']) and !empty($linha['nm_civil'])){
                         $fornecedor = Metodos::formataCnpj($linha['nr_cpf']) .' - '. $linha['nm_civil'];
                     }
-
+                    
                     $retorno .= "<tr data-objeto='" . json_encode($linha,JSON_HEX_APOS) . "'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
