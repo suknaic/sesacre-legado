@@ -236,17 +236,23 @@ class DocFiscalEncaminhamento {
                 //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
                 $finDoc = new FinDocumentoFiscal();
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
+                    
+                    if (!empty($linha['nr_cnpj']) and !empty($linha['nm_fantasia'])){
+                        $fornecedor = Metodos::formataCnpj($linha['nr_cnpj']) .' - '. $linha['nm_fantasia'];
+                    } else {
+                        $fornecedor = Metodos::formataCnpj($linha['nr_cpf']) .' - '. $linha['nm_civil'];
+                    }
 
                     $retorno .= "<tr data-objeto='" . json_encode($linha,JSON_HEX_APOS) . "'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
-                            . "<td class='text-center'>" . $linha['cpf_cnpj_fornecedor'] . "</td>"
+                            . "<td class='text-center'>" . $fornecedor . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
-                            . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'],4) . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
                             . "<td class='text-center'>
@@ -259,7 +265,7 @@ class DocFiscalEncaminhamento {
                                     <i class='fa fa-share-square fa-lg text-warning' aria-hidden='true'></i>
                                     </button>";  
                                      
-                    if($linha['doc_situacao'] == $finDoc->getDocSitALiquidar()){
+                    if($linha['id_documento_situacao'] == $finDoc->getDocSitALiquidar()){
                         $retorno .= " <button title='Cadastrar Liquidação' type='button' class='enviarLiquidacao' value='" . $linha['empenho_sm'] . "'>
                                         <i class='fa fa-calculator fa-lg text-purple' aria-hidden='true'></i>
                                     </button>";
@@ -291,43 +297,43 @@ class DocFiscalEncaminhamento {
 
         $filtroSql = "";
         if ($this->getNrDocFiscal()) {
-            $filtroSql .= " and  doc.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
+            $filtroSql .= " and  DF.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
         }
 
         if ($this->getAnoDocFiscal()) {
-           $filtroSql .= " and to_char(doc.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
+           $filtroSql .= " and to_char(DF.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
         }
 
         if ($this->getContratado()) {
-            $filtroSql .= " and fornecedor.id_pessoa = " . $this->getContratado();
+            $filtroSql .= " and F.id_pessoa = " . $this->getContratado();
         }
 
         if ($this->getNrProtocolo()) {
-            $filtroSql .= " and  doc.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
+            $filtroSql .= " and  DF.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
         }
 
         if ($this->getNrContrato()) {
-            $filtroSql .= " and contrato.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
+            $filtroSql .= " and C.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
         }
 
         if ($this->getNrPedido()) {
-            $filtroSql .= " and pedido.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
+            $filtroSql .= " and P.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
         }
 
         if ($this->getNrEmpenho()) {
-            $filtroSql .= " and emp.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
+            $filtroSql .= " and E.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
         }
 
         if ($this->getTpGasto()) {
-            $filtroSql .= " and tipoGasto.id_tipo_gasto = " . $this->getTpGasto();
+            $filtroSql .= " and P.id_tipo_gasto = " . $this->getTpGasto();
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and DF.id_documento_situacao = " . $this->getSitDocFiscal();
         }
         
         if ($this->getRemetente()) {
-            $filtroSql .= " and lotacaoOrigem.id_lotacao = ". $this->getRemetente() ;
+            $filtroSql .= " and LOT.id_lotacao = ". $this->getRemetente() ;
         }
 
         return $filtroSql;
