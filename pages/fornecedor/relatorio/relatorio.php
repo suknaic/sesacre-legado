@@ -19,6 +19,8 @@ $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['material
 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
 
 $busca = $fornecedor->relatorioFornecedor($dados['tipoFornecedor']);
+//var_dump($busca);
+//return;
 $html = "<html>
             <head>
                 <style type='text/css' media='print'>
@@ -57,16 +59,24 @@ $html = "<html>
                     </div>
                     <table class='table'>
                         <tr class='tudo'>
-                            <td class='tudo'><b>Item</b></td>
                             <td class='tudo'><b>Fornecedor</b></td>
                             <td class='tudo'><b>CPF/CNPJ</b></td>
-                            <td class='tudo'><b>Telefone Celular/Empresa</b></td>
-                            <td class='tudo'><b>Telefone Residêncial</b></td>
-                            <td class='tudo'><b>E-mail</b></td>
+                            <td class='tudo'><b>Telefone Celular</b></td>";
+    if ($dados['tipoFornecedor'] == '1') {
+        $html .= "               <td class='tudo'><b>Telefone Residêncial</b></td>";
+    } else {
+        $html .= "               <td class='tudo'><b>Telefone Comercial</b></td>";
+    }
+
+$html .= "                  <td class='tudo'><b>E-mail</b></td>
                             <td class='tudo'><b>Tipo de Fornecedor</b></td>
                             <td class='tudo'><b>Fornecedor Exclusivo</b></td>
                             <td class='tudo'><b>Fornecedor Distribuidora</b></td>
-                            <td class='tudo'><b>Distribuidora</b></td>";
+                            <td class='tudo'><b>Empresa Contratante</b></td>";
+
+    if ($dados['tipoFornecedor'] == '2') {
+        $html .= "          <td class='tudo'><b>Natureza da Empresa</b></td>";
+    }
 
     if ($fornecedor->getMedicamento() != null) {
         $html .= "          <td class='tudo'><b>Medicamentos</b></td>";
@@ -85,11 +95,9 @@ $html = "<html>
     }
 
 $html .= "               </tr>";
-$i = 1;
 if ($busca != null) {
     foreach ($busca as $linhas) {
         $html .= "       <tr>
-                            <td>" . $i . "</td>
                             <td>" . $linhas['nm_pessoa'] . "</td>";
         if ($linhas['tipo_pessoa'] == '1') {
             $html .= "          <td>" . Metodos::formataCpf($linhas['cpf_cnpj']) . "</td>";
@@ -132,6 +140,10 @@ if ($busca != null) {
             $html .= "          <td></td>";
         }
 
+        if ($dados['tipoFornecedor'] == '2') {
+            $html .= "          <td class='justificar'>" . $linhas['natureza'] . "</td>";
+        }
+
         if ($fornecedor->getMedicamento() != null) {
             $html .= "           <td class='justificar'>" . $linhas['medicamento'] . "</td>";
         }
@@ -149,7 +161,6 @@ if ($busca != null) {
         }
 
         $html .= "           </tr>";
-        $i++;
     }
 } else {
     $html .= "      <tr>

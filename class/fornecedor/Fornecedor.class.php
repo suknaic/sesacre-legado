@@ -257,7 +257,7 @@ class Fornecedor {
 
             if (!empty($this->pessoaJuridica)) {
                 if (!Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                    return Metodos::retornoAjax('Erro', 'alert', ' Fornecedor com o mesmo CNPJ já está cadastrado no sistema.');
+                    return Metodos::retornoAjax('Erro', 'alert', 'Fornecedor com o mesmo CNPJ já está cadastrado no sistema.');
                 } else {
                     $pj = $fornedor->verificaPJCNPJ($pdo, Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
                     if ($pj == null) {
@@ -486,19 +486,19 @@ class Fornecedor {
             }
 
             if (!empty($this->medicamento)) {
-                $condicoes[] = count($this->medicamento) > 1 ? "MED.id_medicamento IN (" . implode(',', $this->medicamento) . ")" : "MED.id_medicamento IN (" . $this->medicamento[0] . ")";
+                $condicoes[] = count($this->medicamento) > 1 ? "MED.id_medicamento IN (" . implode(',', $this->medicamento) . ")" : $this->medicamento[0] == 'todos' ? "MED.id_medicamento IN (SELECT for_medicamento.id_medicamento FROM for_medicamento)":"MED.id_medicamento IN (" . $this->medicamento[0] . ")";
             }
 
             if (!empty($this->servico)) {
-                $condicoes[] = count($this->servico) > 1 ? "SE.id_servico IN (" . implode(',', $this->servico) . ")" : "SE.id_servico IN (" . $this->servico[0] . ")";
+                $condicoes[] = count($this->servico) > 1 ? "SE.id_servico IN (" . implode(',', $this->servico) . ")" : $this->servico[0] == 'todos' ? "SE.id_servico IN (SELECT id_servico FROM for_servico)":"SE.id_servico IN (" . $this->servico[0] . ")";
             }
 
             if (!empty($this->materialConsumo)) {
-                $condicoes[] = count($this->materialConsumo) > 1 ? "MATCON.id_material_consumo IN (" . implode(',', $this->materialConsumo) . ")" : "MATCON.id_material_consumo IN (" . $this->materialConsumo[0] . ")";
+                $condicoes[] = count($this->materialConsumo) > 1 ? "MATCON.id_material_consumo IN (" . implode(',', $this->materialConsumo) . ")" : $this->materialConsumo[0] == 'todos' ? "MATCON.id_material_consumo IN (SELECT for_material_consumo.id_material_consumo FROM for_material_consumo)":"MATCON.id_material_consumo IN (" . $this->materialConsumo[0] . ")";
             }
 
             if (!empty($this->materialPermanente)) {
-                $condicoes[] = count($this->materialPermanente) > 1 ? "MATPERM.id_material_permanente IN (" . implode(',', $this->materialPermanente) . ")" : "MATPERM.id_material_permanente IN (" . $this->materialPermanente[0] . ")";
+                $condicoes[] = count($this->materialPermanente) > 1 ? "MATPERM.id_material_permanente IN (" . implode(',', $this->materialPermanente) . ")" : $this->materialPermanente[0] == "todos" ? "MATPERM.id_material_permanente IN (SELECT for_material_permanente.id_material_permanente FROM for_material_permanente)":"MATPERM.id_material_permanente IN (" . $this->materialPermanente[0] . ")";
             }
 
             if (count($condicoes) > 0) {
@@ -506,7 +506,8 @@ class Fornecedor {
             } else {
                 return FALSE;
             }
-
+//            var_dump($filtro);
+//            return;
             $busca = $fornecedores->retornaFornecedores($pdo, $filtro);
             if (empty($busca)) {
                 return null;
