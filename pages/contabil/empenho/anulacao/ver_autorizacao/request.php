@@ -36,6 +36,7 @@ switch ($_REQUEST['acao']) {
             $empenhoAnulacao = new EmpenhoAnulacao();
             $empenhoAnulacao->setIdEmpenhoAnulacao($dados["pagamento"]);
             $empenhoAnulacao->setIdPedido($dados["id_pedido"]);
+            $empenhoAnulacao->setIdEmpenho($dados["id_empenho"]);
             $empenhoAnulacao->setIdPessoa($session->getIdUser());
             $empenhoAnulacao->setIdEmpenhoAnulacaoSituacao($dados["deferir"]);
             $empenhoAnulacao->setNrAnulacao($dados['nr_anulacao']);

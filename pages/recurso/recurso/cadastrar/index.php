@@ -57,27 +57,24 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form id="cadRecurso">
-                            
+                        <form id="cadRecurso" class="form-horizontal">
                             <div class="panel">
-                               <div class="panel-heading  text-center">
-                                   <h2 class="panel-title">Dados do Recurso</h2>
-                               </div>
-                               <div class="panel-body">
-                                   <div class="row">
-                                       <div class="col-sm-6">
-                                           <div class="form-group">
-                                               <label for="idSistema">Sistema: <span class="text-danger">*</span></label>
-                                               <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                       <p class="fa fa-file-text-o inputPFa"></p>
-                                                   </span>
-                                                   <input type="text" id="nr_protocolo" class="form-control" value="<?php echo $nr_protocolo;?>"/>
-                                                </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
+                                <div class="panel-heading">
+                                    <h2 class="panel-title">Dados do Recurso</h2>
+                                </div>
+                                <div class="panel-body">
+                                    <pre>
+                                        {{idSistema}}
+                                        {{nmRecurso}}
+                                        {{lkRecurso}}
+                                        {{dsRecurso}}
+                                    </pre>
+                                    <campo-select v-bind:options="sistemasIds"></campo-select>
+                                    <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="nmRecurso" requerido></campo-texto>
+                                    <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="lkRecurso" requerido></campo-texto>
+                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="dsRecurso"></campo-texto-grande>
+                                </div>
+                            </div>
                         </form>                    
                     </div>
                 </div>
@@ -129,6 +126,9 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+        <script src="https://unpkg.com/vue-select@latest"></script>
         <script src="index.js"></script> 
     </body>
 </html>

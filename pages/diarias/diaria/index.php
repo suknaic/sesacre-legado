@@ -359,7 +359,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     <label for="qt_diaria_destino">Quantidades de diária: <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                            <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                         </span>
                                                         <input type="text" id="qt_diaria_destino" class="form-control decimal" value="<?php echo $qt_diaria_destino; ?>"/>
                                                     </div>
@@ -370,7 +370,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/diarias/diaria/index.load.php";
                                                     <label for="vl_diaria_destino">Valor unitário da diária: <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
-                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                            <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                         </span>
                                                         <input type="text" id="vl_diaria_destino" class="form-control decimal" value="<?php echo $vl_diaria_destino; ?>" readonly />
                                                     </div>

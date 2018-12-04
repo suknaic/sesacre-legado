@@ -228,7 +228,7 @@ class EmpenhoAnulacao {
             $finEmpenho->setIdEmpenho($this->idEmpenho);
             $dadosEmpenho = $finEmpenho->retornaDadosEmpenho($pdo);
 
-            if (empty($dadosEmpenho)){
+            if (empty($dadosEmpenho)) {
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível localizar o Empenho.");
             }
 
@@ -246,7 +246,6 @@ class EmpenhoAnulacao {
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
 
-
             if (!$perfilTI) {
                 $CentralResponsavel = new CentralResponsavel();
                 $CentralResponsavel->setIdPessoa($this->idPessoa);
@@ -258,10 +257,7 @@ class EmpenhoAnulacao {
                 }
             }
 
-
             //Verifica o Valor do Saldo do Empenho no momento da anulação
-
-
 
             $daoEmpenhoAnulacao = new DaoConEmpenhoAnulacao();
             $daoEmpenhoAnulacao->setIdPedido($this->idPedido);
@@ -285,14 +281,6 @@ class EmpenhoAnulacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar a Anulação no LOG. Operação Cadastro.");
             }
-
-
-//            echo "<pre>";
-//            print_r($this->itens);
-//            echo "</pre>";
-//            
-            
-
             /*
              * Verifica os Itens da Pre Ordem que o usuário deseja anular
              * Irá retornar os Valores de Cada Item e o Saldo do Pedido
@@ -309,12 +297,6 @@ class EmpenhoAnulacao {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi possível Localizar os Itens do Pedido de Necessidade.");
             }
-//            echo "<pre>";
-//            print_r($ItensPreOrdem);
-//            echo "</pre>";
-//            $pdo->rollBack();
-//            return;
-
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -329,40 +311,31 @@ class EmpenhoAnulacao {
 
                 //Vamos do Items da Pre Ordem
                 $valorUnitario = $value['vl_itens_pre'];
-                
+
                 //Quantidade/Valor Informado pelo usuário
                 $quantidadeInformado = round($this->itens[$kI]['quantidade'], 4);
                 /*
                  * Se o Item for Consumo ou Permanente(e não for fl_valor_variavel = 1)
                  * Então esse também será o valor para Anular
                  */
-                $valorTotalParaAnular = $quantidadeInformado;                
-                
+                $valorTotalParaAnular = $quantidadeInformado;
+
                 $valorAnulado = $quantidadeInformado;
                 /*
                  * Se o Item for de Serviço ou fl_valor_variavel = 1
                  * , então a "quantidade" que o usuário informou era o valor da anulação 
                  * para o item. Então é necessário calcular o valor da nova quantidade.
                  */
-                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {                    
-                    $quantidadeInformado = round(($quantidadeInformado/$value['vl_itens_pre']), 4);
-                }else{
+                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
+                    $quantidadeInformado = round(($quantidadeInformado / $value['vl_itens_pre']), 4);
+                } else {
                     /*
                      * Se não era de serviço nem valor variavel
                      * então o Valor Para Anular, será a Quantidade do Item * o Valor Unitário
                      */
                     //$valorTotalParaAnular = round(($valorUnitario*$quantidadeInformado),4);
-                    $valorAnulado = round(($valorUnitario*$quantidadeInformado),4);
+                    $valorAnulado = round(($valorUnitario * $quantidadeInformado), 4);
                 }
-                
-
-//                if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
-//                    $valorTotalParaAnular = round(($valorInformado * $quantidadeInformado), 4);
-//                }
-//                $pdo->rollBack();
-//                echo " \n ".$valorAnulado." - ".$quantidadeInformado." - ".$valorTotalParaAnular." \n";
-//                return;
-
 
                 if (round($value['saldo'], 4) < $valorTotalParaAnular) {
                     $pdo->rollBack();
@@ -385,13 +358,8 @@ class EmpenhoAnulacao {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível fazer a Anulação do Item "
                                     . "de Número " . $value['nr_item'] . "" . STR_ERROR);
                 }
-                //echo round($value['saldo'], 4)." ".round($this->itens[$kI][''])
             }
 
-
-//            echo " \n E";
-//            $pdo->rollBack();
-//                    return;
             //Salva o Histórico da Anulação
             $daoEmpenhoAnulacaoHistorico = new DaoConEmpenhoAnulacaoHistorico();
             $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -496,7 +464,7 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";
                 return;
             }
-                       
+
 
             $daoEmpenhoAnulacaoItens = new DaoConEmpenhoAnulacaoItem();
             $daoEmpenhoAnulacaoItens->setIdEmpenhoAnulacao($this->idEmpenhoAnulacao);
@@ -508,10 +476,10 @@ class EmpenhoAnulacao {
                     $this->msgRetorno = "Não foi possível fazer a Anulação do Item de Número " . $value['nr_item'] . " " . STR_ERROR;
                     return;
                 }
-                
+
                 $valorInformado = $value['vl_itens_pre'];
                 $quantidadeInformado = round($itensAnulacao[$kI]['qt_anulado'], 4);
-                $vlTotal = round(($valorInformado * $quantidadeInformado),4);
+                $vlTotal = round(($valorInformado * $quantidadeInformado), 4);
                 $valorTotalParaAnular = $quantidadeInformado;
 
                 if ($value['tp_material'] == "S" || $value['fl_valor_variavel'] == 1) {
@@ -519,7 +487,7 @@ class EmpenhoAnulacao {
                     $vlTotal = $valorTotalParaAnular;
                 }
 
-                                
+
                 /*
                  * o value contem o saldo, se for consumo ele retorna quantidade
                  * se for serviço será o valor
@@ -543,7 +511,7 @@ class EmpenhoAnulacao {
                             . "ficará zerado";
                     return;
                 }
-                
+
                 /*
                  * o vl_total da pre ordem, tem q ser ajustado.
                  * Então será subtraido do valor que o usuário deseja anular.
@@ -556,7 +524,7 @@ class EmpenhoAnulacao {
                             . "ficará zerado";
                     return;
                 }
-            
+
                 /*
                  * o qt_itens_pre da pre ordem, tem que ser ajustado
                  * Então será subtraido do valor que o usuário deseja anular
@@ -571,12 +539,12 @@ class EmpenhoAnulacao {
                     return;
                 }
 
-                
-                
+
+
                 $preOrdem = new PreOrdem();
                 $preOrdem->setIdPreOrdem($value['id_pre_ordem']);
                 //$preOrdem->setVlItensPre($valorInformado);
-                $preOrdem->setQtItensPre($quantidadeNovo);      
+                $preOrdem->setQtItensPre($quantidadeNovo);
                 $preOrdem->setVlTotal($vlTotalNovo);
                 $preOrdem->editarPreOrdemAnulacaoEmpenho($pdo);
                 if (!$preOrdem->Sucesso()) {
@@ -597,10 +565,6 @@ class EmpenhoAnulacao {
             }
 
             $valorPedidoEmpenhoAntigo = $dadosPedido['vl_pedido'];
-//
-//            echo "<pre>";
-//            print_r($dadosPedido);
-//            echo "</pre>";
 
             $empenho = new FinEmpenhoModel();
             $empenho->setIdPedido($dadosPedido['id_pedido']);
@@ -610,11 +574,6 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível Localizar o Empenho.";
                 return;
             }
-
-//            echo "<pre>";
-//            print_r($dadosEmpenho);
-//            echo "</pre>";
-
 
             $preOrdem = new PreOrdem();
             $preOrdem->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
@@ -628,10 +587,6 @@ class EmpenhoAnulacao {
             $pedidoAux->setIdPedido($dadosEmpenhoAnulacao['id_pedido']);
             $dadosPedido = $pedidoAux->retornaDadosPedido($pdo);
 
-//            echo "<pre>";
-//            print_r($dadosPedido);
-//            echo "</pre>";
-                       
             $empenho->setVlEmpenho($dadosPedido['vl_pedido']);
             $empenho->setIdEmpenho($dadosEmpenho['id_empenho']);
 
@@ -641,30 +596,6 @@ class EmpenhoAnulacao {
                 $this->msgRetorno = "Não foi possível atualizar o Valor do Empenho e nem o QDD.";
                 return;
             }
-
-
-//            $dadosEmpenho = $empenho->retornaDadosEmpenhoPorPedido($pdo);
-//            if(!is_array($dadosEmpenho)){
-//                $this->sucesso = false;
-//                $this->msgRetorno = "Não foi possível Localizar o Empenho.";       
-//                return; 
-//            }
-//            echo "<pre>";
-//            print_r($dadosEmpenho);
-//            echo "</pre>";
-//            $finOrdemModel = new FinOrdemModel();
-//            $ItensPreOrdem = $finOrdemModel->retornaItensParaAnulacaoEmpenhoPorItens($itensArray, $pdo);
-//            if(!$ItensPreOrdem){
-//                $this->sucesso = false;
-//                $this->msgRetorno = "Não foi possível Localizar os Itens do Pedido de Necessidade.";       
-//                return;
-//            }
-//            echo "<pre>";
-//            print_r($ItensPreOrdem);
-//            echo "</pre>";
-//            echo " \n E";
-//            $pdo->commit();
-//            return;
 
             $this->sucesso = true;
             $this->msgRetorno = "Atualização do Empenho/QDD Realizado com Sucesso";
@@ -719,6 +650,7 @@ class EmpenhoAnulacao {
                                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
                                                 <div class="panel-body">
                                                     <input id="numero_empenho" type="hidden" value="' . $campos["nr_empenho"] . '" />
+                                                    <input id="id_empenho" type="hidden" value="' . $campos["id_empenho"] . '" />    
                                                     <div class="form-group">
                                                         <div class="col-sm-2"><b>Data do Empenho:</b></div>
                                                         <div class="col-sm-3">' . $campos["dt_empenho"] . '</div>
@@ -922,11 +854,11 @@ class EmpenhoAnulacao {
 //                    if($linha['fl_valor_variavel'] == 1 || $linha['tp_material'] == "S"){
 //                        $total_anulado = $linha['vl_anulado'];
 //                    }
-                    
+
                     $total_geral = $linha['qt_item'] * $linha['vl_item'];
                     $tabela .= '<tr>
                                     <td class="text-center">' . $linha["nr_item"] . '</td>
-                                    <td class="text-center">' . $linha["cd_desc_material"]." - ".$linha["nm_material"] . '</td>
+                                    <td class="text-center">' . $linha["cd_desc_material"] . " - " . $linha["nm_material"] . '</td>
                                     <td class="text-center">' . $linha["nm_desc_material"] . '</td>                                                                                                                        
                                     <td class="text-center tpMaterial">' . $linha["tp_material"] . '</td>
                                     <td class="text-center">' . $linha["nr_lote"] . '</td>
@@ -1041,14 +973,20 @@ class EmpenhoAnulacao {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
                 }
-                
+
                 $pedido = new Pedido();
                 $pedido->setIdPedido($this->idPedido);
                 $pedido->atualizaStatusSituacaoOficialPedido($pdo);
-                
-                 if (!$pedido->sucesso()) {
+
+                if (!$pedido->sucesso()) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
+                }
+
+                $daoConEmpenhoAnulacao->atualizaStatusSituacaoEmpenhoAnulacao($pdo);
+
+                if (!$daoConEmpenhoAnulacao->getSucesso()) {
+                    return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação e status");
                 }
                 
             } else if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoIndeferido) {
@@ -1060,15 +998,18 @@ class EmpenhoAnulacao {
                 return Metodos::retornoAjax("Erro", "alert", "Erro no deferimento");
             }
 
-            $daoConEmpenhoAnulacao->atualizaStatusSituacaoEmpenhoAnulacao($pdo);
-
-            if (!$daoConEmpenhoAnulacao->getSucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação e status");
-            }
 
             if (!Log::SalvaLogU('con_empenho_anulacao', $this->idEmpenhoAnulacao, $dadosEmpenhoAnulacao, $pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+            }
+
+            $finEmpenhoModel = new FinEmpenhoModel();
+            $finEmpenhoModel->setIdEmpenho($this->idEmpenho);
+            $finEmpenhoModel->atualizaStatusSituacaoOficialEmpenho($pdo);
+            if (!$finEmpenhoModel->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o status e situação do empenho");
             }
 
             //Salva o Histórico da Anulação

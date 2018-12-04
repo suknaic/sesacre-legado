@@ -11,129 +11,74 @@ class FinEntregaConfirmacaoModel {
     private $dt_entrega = null;
     private $dh_cadastramento = null;
     private $sit_entrega = null;
+    private $id_pedido =  null;
     private $sucesso = false;
     private $msgRetorno = null;
 
-    /**
-     * @return mixed
-     */
     public function getIdEntregaConfirmacao() {
         return $this->id_entrega_confirmacao;
     }
 
-    /**
-     * @param mixed $id_entrega_confirmacao
-     *
-     * @return self
-     */
     public function setIdEntregaConfirmacao($id_entrega_confirmacao) {
         $this->id_entrega_confirmacao = $id_entrega_confirmacao;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIdOrdem() {
         return $this->id_ordem;
     }
 
-    /**
-     * @param mixed $id_ordem
-     *
-     * @return self
-     */
     public function setIdOrdem($id_ordem) {
         $this->id_ordem = $id_ordem;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getIdProtocolo() {
         return $this->id_protocolo;
     }
 
-    /**
-     * @param mixed $id_protocolo
-     *
-     * @return self
-     */
     public function setIdProtocolo($id_protocolo) {
         $this->id_protocolo = $id_protocolo;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getNrEntregaConfirmacao() {
         return $this->nr_entrega_confirmacao;
     }
 
-    /**
-     * @param mixed $nr_entrega_confirmacao
-     *
-     * @return self
-     */
     public function setNrEntregaConfirmacao($nr_entrega_confirmacao) {
         $this->nr_entrega_confirmacao = $nr_entrega_confirmacao;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDtEntrega() {
         return $this->dt_entrega;
     }
 
-    /**
-     * @param mixed $dt_entrega
-     *
-     * @return self
-     */
     public function setDtEntrega($dt_entrega) {
         $this->dt_entrega = $dt_entrega;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDhCadastramento() {
         return $this->dh_cadastramento;
     }
 
-    /**
-     * @param mixed $dh_cadastramento
-     *
-     * @return self
-     */
     public function setDhCadastramento($dh_cadastramento) {
         $this->dh_cadastramento = $dh_cadastramento;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSitEntrega() {
         return $this->sit_entrega;
     }
 
-    /**
-     * @param mixed $sit_entrega
-     *
-     * @return self
-     */
     public function setSitEntrega($sit_entrega) {
         $this->sit_entrega = $sit_entrega;
 
@@ -143,10 +88,17 @@ class FinEntregaConfirmacaoModel {
     public function sucesso() {
         return $this->sucesso;
     }
+    
+    public function getIdPedido() {
+        return $this->id_pedido;
+    }
 
-    /**
-     * @return mixed
-     */
+    public function setIdPedido($id_pedido) {
+        $this->id_pedido = $id_pedido;
+
+        return $this;
+    }
+
     public function getMsgRetorno() {
         return $this->msgRetorno;
     }
@@ -319,7 +271,7 @@ class FinEntregaConfirmacaoModel {
 
             if ($dados[0]->tipoEntrega == 2) {
                 $finOrdemModel->setIdOrdem($dados[0]->idOrdem);
-                
+
                 if (!$finOrdemModel->finalizaOrdem($pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
@@ -610,11 +562,11 @@ class FinEntregaConfirmacaoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $arrayIdOrdens = array();
-            $idDocumentoFiscal = $dados['documento'] ?? ""; 
+            $idDocumentoFiscal = $dados['documento'] ?? "";
             $idOrdens = implode(' , ', $dados['ordens']);
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->retornaDadosOptionGdof($pdo, $idOrdens, $idDocumentoFiscal /*
-                    , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado()*/);
+                      , $sqlDocumentoExiste, $idDocumentoFiscal, $finDocumentoFiscal->getDocSitCancelado() */);
             $options = '<option value = "0" selected = "true">Selecione uma Entrega ou Execução/Serviço</option>';
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
@@ -650,11 +602,11 @@ class FinEntregaConfirmacaoModel {
             $tabela = '';
 
             if ($daoFinEntregaConfirmacao->sucesso()) {
-                
+
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $campos) {
                     $saldo = $campos["saldo"];
-                    
-                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-saldo="'.$saldo.'">
+
+                    $tabela .= '<tr id= "ent' . $campos["id_entrega_confirmacao"] . '" ordem = "' . $campos["id_ordem"] . '" class = "trEntregas" idEntrega = "' . $campos["id_entrega_confirmacao"] . '" data-saldo="' . $saldo . '">
                                  <td class = "text-center">' . $campos["nr_entrega_confirmacao"] . '</td>
                                  <td class = "text-center">' . $campos["ordem"] . '</td>
                                  <td class = "text-center">' . $campos["dataaviso"] . '</td>
@@ -669,7 +621,7 @@ class FinEntregaConfirmacaoModel {
                                  <button type="button" title="Excluir ordem" class="excluirEntrega text-danger" value="' . $campos["id_entrega_confirmacao"] . '">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
-                                <button type="button" title="Ver Itens da Entrega" class="ver-entrega" value='.$campos['id_entrega_confirmacao'].'>
+                                <button type="button" title="Ver Itens da Entrega" class="ver-entrega" value=' . $campos['id_entrega_confirmacao'] . '>
                                     <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
                                 </button>
                                 </td>
@@ -682,39 +634,39 @@ class FinEntregaConfirmacaoModel {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    public function retornaItensDaEntrega(){
+
+    public function retornaItensDaEntrega() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $tabela = '';
-            
+
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->getIdEntregaConfirmacao());
             $daoFinEntregaConfirmacao->retornaItensEntregaConfirmacao($pdo);
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $linha) {
                     $tabela .= '<tr>'
-                                . '<td class="text-center">'.$linha['nr_item'].'</td>'
-                                . '<td class="text-center">'.$linha["cd_desc_material"] . ' - ' . $linha["nm_material"].'</td>'
-                                . '<td class="text-center">'.$linha['descricao'].'</td>'
-                                . '<td class="text-center">'.$linha['cd_despesa'].'</td>'
-                                . '<td class="text-center">'.$linha['tp_material'].'</td>'
-                                . '<td class="text-center">'.$linha['nr_lote'].'</td>'
-                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["qt_itens_entrega"], 4).'</td>'
-                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["vl_itens_entrega"], 4).'</td>'
-                                . '<td class="text-center">'.Metodos::ConverteValorBr($linha["entregue"], 4).'</td>'
+                            . '<td class="text-center">' . $linha['nr_item'] . '</td>'
+                            . '<td class="text-center">' . $linha["cd_desc_material"] . ' - ' . $linha["nm_material"] . '</td>'
+                            . '<td class="text-center">' . $linha['descricao'] . '</td>'
+                            . '<td class="text-center">' . $linha['cd_despesa'] . '</td>'
+                            . '<td class="text-center">' . $linha['tp_material'] . '</td>'
+                            . '<td class="text-center">' . $linha['nr_lote'] . '</td>'
+                            . '<td class="text-center">' . Metodos::ConverteValorBr($linha["qt_itens_entrega"], 4) . '</td>'
+                            . '<td class="text-center">' . Metodos::ConverteValorBr($linha["vl_itens_entrega"], 4) . '</td>'
+                            . '<td class="text-center">' . Metodos::ConverteValorBr($linha["entregue"], 4) . '</td>'
                             . '</tr>';
                 }
             } else {
-                 return Metodos::retornoAjax("Erro", "console", $daoFinEntregaConfirmacao->getMsgRetorno());
+                return Metodos::retornoAjax("Erro", "console", $daoFinEntregaConfirmacao->getMsgRetorno());
             }
             return $tabela;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
+
     public function retornaDadosEntregaConfirmacao() {
         try {
             $conexao = new Conexao();
@@ -798,14 +750,18 @@ class FinEntregaConfirmacaoModel {
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
             }
 
+            $pedido = new Pedido();
+            $pedido->setIdPedido($ordem[0]->idPedido);
+            $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");
         } catch (Exception $ex) {
             
         }
     }
-    
-       public function finalizaEntregaPorDescumprimento() {
+
+    public function finalizaEntregaPorDescumprimento() {
         try {
             //conexao com o banco
             $conexao = new Conexao();
@@ -850,8 +806,8 @@ class FinEntregaConfirmacaoModel {
             return false;
         }
     }
-    
-    public function retornaDadosDaEntrega(PDO $pdo = null){
+
+    public function retornaDadosDaEntrega(PDO $pdo = null) {
         try {
             if (empty($pdo)) {
                 $conexao = new Conexao();
@@ -861,7 +817,7 @@ class FinEntregaConfirmacaoModel {
             $daoFinEntregaConfirmacao = new DaoFinEntregaConfirmacao();
             $daoFinEntregaConfirmacao->setIdEntregaConfirmacao($this->id_entrega_confirmacao);
             $daoFinEntregaConfirmacao->retornaDadosDaEntrega($pdo);
-            
+
             if ($daoFinEntregaConfirmacao->sucesso()) {
                 foreach ($daoFinEntregaConfirmacao->getMsgRetorno() as $indice => $linha) {
                     if (empty($dados)) {

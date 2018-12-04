@@ -423,6 +423,7 @@ $(document).ready(function () {
     $('body').on('click', '.btn-finaliza-supresao', function (e) {
         var $this = $(this);
         var id = $("#idOrdem").val();
+        var idPedido = $("#idPedido").val();
 
 
         bootbox.confirm({
@@ -441,7 +442,8 @@ $(document).ready(function () {
             callback: function (result) {
                 if (result) {
                     var dados = {
-                        "idOrdem": id
+                        "idOrdem": id,
+                        "idPedido": idPedido
                     }
 
                     if (id == "") {
