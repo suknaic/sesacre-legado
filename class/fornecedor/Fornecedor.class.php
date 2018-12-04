@@ -274,9 +274,7 @@ class Fornecedor {
                     }
                 }
             }
-//            var_dump($continua);
-//            var_dump($cadastraPessoa);
-//            return;
+
             if ($cadastraPessoa) {
                 $pessoa->setNm_pessoa(empty($this->pessoaFisica['nmPessoaFisica']) ? trim($this->pessoaJuridica['nmRazaoSoc']):trim($this->pessoaFisica['nmPessoaFisica']));
                 $pessoa->setId_cidade($this->pessoa['cidade']);
@@ -370,7 +368,7 @@ class Fornecedor {
             }
 
             $fornedor->setIdPessoa($pessoa->getId_pessoa());
-            $fornedor->setNmEmpresa(empty($this->nmEmpresa) ? null:trim($this->nmEmpresa));
+            $fornedor->setNmEmpresa(json_encode($this->nmEmpresa));
             $fornedor->setFlDistribuidora($this->flDistribuidora);
             $fornedor->setFlExclusiva($this->flExclusiva);
 
@@ -506,8 +504,7 @@ class Fornecedor {
             } else {
                 return FALSE;
             }
-//            var_dump($filtro);
-//            return;
+
             $busca = $fornecedores->retornaFornecedores($pdo, $filtro);
             if (empty($busca)) {
                 return null;
