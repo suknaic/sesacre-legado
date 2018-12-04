@@ -202,7 +202,7 @@ class Session extends RecursoUtil{
     }
     
     /**
-     * 
+     * Faz o negocio acontecer
      */
     public function recurso(PDO $pdo = null){
         try{          
