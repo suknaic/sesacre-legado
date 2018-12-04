@@ -43,10 +43,13 @@
                 margin: 14px ;
             }
             .adicionar {
-                margin: 18px;
+                margin: 32px;
                 margin-left: 0;
             }
-
+            .remover {
+                margin: 19px;
+                margin-left: 0;
+            }
         </style>
     </head>
     <!--TIPS-->
@@ -423,14 +426,19 @@
                                                     <div class="form-group resto">
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4 empDist">
-                                                            <div class="panel-body"style="margin-left: -20px;">Nome da empresa que presta serviço: <span class="text-danger">*</span>
+                                                            <div class="panel-body" style="margin-left: -20px;">Nome da empresa que presta serviço: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="ds_emp_dist" id="ds_emp_dist" required="true" placeholder="Nome da Empresa">
+                                                                    <input type="text" class="form-control" name="ds_emp_dist[]" id="ds_emp_dist" required="true" placeholder="Nome da Empresa">
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="col-sm-1 empDist">
+                                                            <button class="btn btn-primary adicionar">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="panel-body juridica" style="margin-left: -20px;">Natureza: <span class="text-danger">*</span>
@@ -444,6 +452,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group resto empresas">
+
                                                     </div>
                                                 </div>
                                                 <div id="tab6" class="tab-pane">

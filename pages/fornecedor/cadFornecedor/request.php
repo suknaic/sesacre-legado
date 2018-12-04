@@ -135,6 +135,13 @@
             try {
                 $dados = filter_input(INPUT_POST, 'dadosFornecedor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+                $empresas = array();
+                $i = 0;
+                foreach ($dados['nmEmpresa'] as $emp) {
+                    $empresas['empresa'.$i] = $emp;
+                    $i++;
+                }
+
                 $fornecedor = new Fornecedor();
                 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
                 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);
@@ -143,7 +150,7 @@
                 $fornecedor->setServico(array_unique($dados['materialServico']['servico']));
                 $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['materialConsumo']));
                 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
-                $fornecedor->setNmEmpresa($dados['nmEmpresa']);
+                $fornecedor->setNmEmpresa($empresas);
                 $fornecedor->setFlDistribuidora($dados['empDist']);
                 $fornecedor->setFlExclusiva($dados['empExc']);
 
