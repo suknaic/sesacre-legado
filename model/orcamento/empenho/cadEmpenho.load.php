@@ -3,6 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/PedidoAnotacao.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/vincular_tramitacao/VincularTramitacao.class.php";
 
 $session = new Session();
 
@@ -42,3 +43,7 @@ $tabela .= '<tr>
                 <td>'.$total.'</td>
             </tr>';
 }
+
+$vincTramitacao = new VincularTramitacao();
+$vincTramitacao->setIdPessoa($session->getIdUser());
+$selectRemetente = $vincTramitacao->listaLotacaoTipoPorUsuarioEmpenho();

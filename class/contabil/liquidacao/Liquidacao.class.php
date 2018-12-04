@@ -8,6 +8,7 @@ class Liquidacao {
     private $nrLiquidacao = null;
     private $idEmpenho = null;
     private $idLiquidacaoSituacao = null;
+    private $idLiquidacaoStatus = null;
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
     private $dtLiquidacao = null;
@@ -23,11 +24,32 @@ class Liquidacao {
     private $anotacoes = null;
     private $tipoSolicitacao = null;
     private $qtdDocumentosDisponiveis = null;
+    /**
+     *
+     * Situações da Liquidação
+     */
     private $sitCadastrado = 1;
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
+    
+    /**
+     *
+     * Status da Liquidação
+     */
+    private $stAguardandoPagamento = 1;
+    private $stAguardandoFinalizarPagamento = 2;
+    private $stFinalizado = 3;
 
+    function getIdLiquidacaoStatus() {
+        return $this->idLiquidacaoStatus;
+    }
+
+    function setIdLiquidacaoStatus($idLiquidacaoStatus) {
+        $this->idLiquidacaoStatus = $idLiquidacaoStatus;
+        return $this;
+    }
+    
     function getTipoSolicitacao() {
         return $this->tipoSolicitacao;
     }
@@ -78,6 +100,18 @@ class Liquidacao {
 
     function getSitCancelado() {
         return $this->sitCancelado;
+    }
+    
+    function getStAguardandoPagamento() {
+        return $this->stAguardandoPagamento;
+    }
+
+    function getStAguardandoFinalizarPagamento() {
+        return $this->stAguardandoFinalizarPagamento;
+    }
+
+    function getStFinalizado() {
+        return $this->stFinalizado;
     }
 
     function getMensagens() {
@@ -215,30 +249,6 @@ class Liquidacao {
             return $daoConLiquidacao->getMsgRetorno();
         } catch (Exception $ex) {
             return $ex->getMessage();
-        }
-    }
-
-    function retornaHistorico() {
-        $retorno = "";
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-
-            $daoConLiquidacaoHistorico = new DaoConLiquidacaoHistorico();
-            $daoConLiquidacaoHistorico->setIdLiquidacao($this->getIdLiquidacao());
-
-            $daoConLiquidacaoHistorico->historico($pdo);
-
-            if ($daoConLiquidacaoHistorico->Sucesso()) {
-                foreach ($daoConLiquidacaoHistorico->getMsgRetorno() as $linha) {
-                    $retorno .= $linha['historico'] . "\n";
-                }
-            } else {
-                $retorno = $daoConLiquidacaoHistorico->getMsgRetorno();
-            }
-            return $retorno;
-        } catch (Exception $exc) {
-            $retorno = "";
         }
     }
 
@@ -589,7 +599,7 @@ class Liquidacao {
             $daoConLiquidacao = new DaoConLiquidacao();
             $daoConLiquidacao->setIdEmpenho($this->getIdEmpenho())
                     ->setIdLiquidacaoSituacao($this->getSitCadastrado())
-                    ->setIdLiquidacaoStatus(1)
+                    ->setIdLiquidacaoStatus($this->getStAguardandoPagamento())
                     ->setIdLotacao($this->getIdLotacao())
                     ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                     ->setNrLiquidacao($this->getNrLiquidacao())
@@ -648,7 +658,7 @@ class Liquidacao {
                 }
 
                 //Salva Historico da Liquidacao
-                if (!$this->salvarLiquidacaoHistorico($pdo)) {
+                if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCadastrado(), $this->getStAguardandoPagamento())) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                 }
@@ -701,33 +711,34 @@ class Liquidacao {
         }
     }
 
-    function salvarLiquidacaoHistorico(PDO $pdo = null) {
+    function salvarLiquidacaoHistorico(PDO $pdo = null, int $situacao, int $status, string $descricao = '') {
+        $this->sucesso = false;
+        $this->mensagens = null;
         try {
-            $this->sucesso = true;
             if (!empty($pdo)) {
                 $liquidacaoHistorico = new LiquidacaoHistorico();
                 $liquidacaoHistorico->setIdLotacao($this->getIdLotacao())
                         ->setIdLiquidacao($this->getIdLiquidacao())
                         ->setIdPessoa($this->getUsuario())
                         ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
-                        ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao());
+                        ->setIdLiquidacaoSituacao($situacao)
+                        ->setIdLiquidacaoStatus($status)
+                        ->setDsLiquidacao($descricao);
 
                 $liquidacaoHistorico->salvarLiquidacaoHistorico($pdo);
 
                 if (!$liquidacaoHistorico->getSucesso()) {
-                    $this->sucesso = false;
                     $this->mensagens = $liquidacaoHistorico->getMensagens();
                     return false;
                 }
-
+                $this->sucesso = true;
+                
                 return $this->sucesso;
             } else {
                 $this->mensagens = "Sem conexão com o banco de dados";
-                $this->sucesso = false;
             }
         } catch (Exception $exc) {
             //Se der algum erro, registra o erro no objeto
-            $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
         }
     }
@@ -962,7 +973,7 @@ class Liquidacao {
         }
     }
 
-    function cancelarLiquidacao() {
+    function cancelarLiquidacao(string $justificativa) {
         try {
             if (empty($this->getIdLiquidacao()) || empty($this->getMotivoCancelamento())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
@@ -1026,7 +1037,7 @@ class Liquidacao {
             }
 
             //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo)) {
+            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento(),$justificativa)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };

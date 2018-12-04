@@ -3,6 +3,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoPesquisa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoHistorico.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/autorizacoes/FinAutorizacao.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/diarias/Diaria.class.php";
@@ -41,7 +42,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-                           
+        
+    CASE 'retornaLotacaoTipo':
+        try {
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($session->getIdUser());
+            echo $tramitacao->listaLotacaoTipoPorUsuarioEmpenho();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
     CASE 'cancelarEmpenho':
         try {
                             
@@ -49,6 +63,8 @@ switch ($_REQUEST['acao']) {
             $empenho = new FinEmpenhoModel();
             $empenho->setIdEmpenho($dados['id']);   
             $empenho->setIdPessoa($session->getIdUser());
+            $empenho->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
+            $empenho->setIdLotacao($dados['idLotacao']);
             echo $empenho->cancelarEmpenho(trim($dados['justificativa']));
             return;
             break;

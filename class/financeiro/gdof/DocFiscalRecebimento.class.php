@@ -235,16 +235,23 @@ class DocFiscalRecebimento {
             if ($daoFinDocumentoFiscal->sucesso()) {
 
                 foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $linha) {
+                    $fornecedor = '-';
+                    if (!empty($linha['nr_cnpj']) and !empty($linha['nm_fantasia'])){
+                        $fornecedor = Metodos::formataCnpj($linha['nr_cnpj']) .' - '. $linha['nm_fantasia'];
+                    } else if(!empty($linha['nr_cpf']) and !empty($linha['nm_civil'])){
+                        $fornecedor = Metodos::formataCnpj($linha['nr_cpf']) .' - '. $linha['nm_civil'];
+                    }
+                    
                     $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"
                             . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_pedido'] . "</td>"
                             . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
-                            . "<td class='text-center'>" . $linha['cpf_cnpj_fornecedor'] . "</td>"
+                            . "<td class='text-center'>" . $fornecedor . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
                             . "<td class='text-center'>" . $linha['competencia'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
-                            . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
+                            . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['vl_documento'],4) . "</td>"
                             . "<td class='text-center'>" . $linha['nm_tipo_tramitacao'] . "</td>"
                             . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
                             . "<td class='text-center'>
@@ -272,43 +279,43 @@ class DocFiscalRecebimento {
 
          $filtroSql = "";
         if ($this->getNrDocFiscal()) {
-            $filtroSql .= " and  doc.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
+            $filtroSql .= " and  DF.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
         }
 
         if ($this->getAnoDocFiscal()) {
-            $filtroSql .= " and to_char(doc.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
+            $filtroSql .= " and to_char(DF.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
         }
 
         if ($this->getContratado()) {
-            $filtroSql .= " and fornecedor.id_pessoa = " . $this->getContratado();
+            $filtroSql .= " and F.id_pessoa = " . $this->getContratado();
         }
 
         if ($this->getNrProtocolo()) {
-            $filtroSql .= " and  doc.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
+            $filtroSql .= " and  DF.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
         }
 
         if ($this->getNrContrato()) {
-            $filtroSql .= " and contrato.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
+            $filtroSql .= " and C.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
         }
 
         if ($this->getNrPedido()) {
-            $filtroSql .= " and pedido.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
+            $filtroSql .= " and P.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
         }
 
         if ($this->getNrEmpenho()) {
-            $filtroSql .= " and emp.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
+            $filtroSql .= " and E.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
         }
 
         if ($this->getTpGasto()) {
-            $filtroSql .= " and tipoGasto.id_tipo_gasto = " . $this->getTpGasto();
+            $filtroSql .= " and p.id_tipo_gasto = " . $this->getTpGasto();
         }
 
         if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and tramitacao.id_documento_situacao = " . $this->getSitDocFiscal();
+            $filtroSql .= " and DF.id_documento_situacao = " . $this->getSitDocFiscal();
         }
         
         if ($this->getDestinatario()) {
-            $filtroSql .= " and lotacaoOrigem.id_lotacao = ". $this->getDestinatario();
+            $filtroSql .= " and LOT.id_lotacao = ". $this->getDestinatario();
         }
 
         return $filtroSql;

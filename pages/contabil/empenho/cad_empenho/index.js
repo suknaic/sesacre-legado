@@ -54,19 +54,20 @@ $(document).ready(function (){
             
             var dados = {
                 "idPedido": $("#id_pedido").val(),
+                "idLotacao": $("#id_remetente option:selected").data('lotacao'),
+                "idDocTipoLotacao": $("#id_remetente option:selected").data('tipo-lotacao'),
                 "nrEmpenho": $("#nr_empenho").val(),
                 "tpEmpenho": $("#id_tipo_empenho").val(),
                 "dtEmpenho": $("#dt_empenho").val(),
                 "vlEmpenho": $("#vl_empenho").val(),
-                "dsEmpenho": $("#ds_empenho").val(),
                 "anotacoes": $("#anotacoes").val()
             }
-            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho || !dados.vlEmpenho || dados.vlEmpenho == '0,0000') {
+            
+            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho || !dados.vlEmpenho || dados.vlEmpenho == '0,0000' || !dados.idLotacao || !dados.idDocTipoLotacao) {
                 func.modalAlert("Por favor preencha as informações obrigatórias.");
                 $this.prop("disabled", false);
                 return false;
             }
-            
 
             $.ajax({
                 "url": "request.php",

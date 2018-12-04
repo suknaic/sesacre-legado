@@ -149,7 +149,7 @@ $(document).ready(function () {
                 var PessoaJuridica = {
                     nmRazaoSoc: $('#rz_social').val(),
                     nmFantasia: $('#nm_fantasia').val(),
-                    cnpj: $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, ""),
+                    cnpj: $("#nr_cnpj").val(),
                     nrEstudal: $('#nr_estadual').val(),
                     nrMunicipal: $('#nr_municipal').val(),
                     tl_empresa: $("#nr_telefone_empresa").val(),
@@ -317,23 +317,8 @@ $(document).ready(function () {
             //**********************************************************************************************************
 
             //*********************************************** Objeto Social ********************************************
-            if (MaterialServico.medicamento == null) {
-                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Medicamentos</strong>");
-                return false;
-            }
-
-            if (MaterialServico.servico == null) {
-                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Serviços</strong>");
-                return false;
-            }
-
-            if (MaterialServico.materialConsumo == null) {
-                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Material Consumo</strong>");
-                return false;
-            }
-
-            if (MaterialServico.materialPermanente == null) {
-                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social - Material Permanente</strong>");
+            if (MaterialServico.medicamento == null && MaterialServico.servico == null && MaterialServico.materialConsumo == null && MaterialServico.materialPermanente == null) {
+                func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social </strong>");
                 return false;
             }
             //**********************************************************************************************************
@@ -357,6 +342,8 @@ $(document).ready(function () {
                     "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
+                    // console.log(response);
+                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -389,7 +376,7 @@ $(document).ready(function () {
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    // console.log(response);
+                    console.log(response);
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
@@ -609,7 +596,7 @@ $(document).ready(function () {
             $('.juridica').hide();
             $('.fisica').hide();
             $('.resto').hide();
-            $('.formFornecedores ').reset();
+            $('.formFornecedores input').val("");
             $('input[type=checkbox]').attr('checked', false);
             $('.select').val(0).trigger('change.select2');
         }

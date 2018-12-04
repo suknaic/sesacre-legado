@@ -270,7 +270,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
         try {
             if (!empty($pdo)) {
                 $sql = "insert into fin_empenho (id_pedido, id_pessoa, id_tipo_empenho, nr_empenho, dt_empenho_safira,
-                        vl_empenho, ds_empenho) values (:pedido, :pessoa, :tpEmp, :nrEmp, :dtEmp, :vlEmp, :dsEmp)";
+                        vl_empenho, ds_empenho, id_lotacao, id_doc_tipo_lotacao, id_empenho_status) values (:pedido, :pessoa, :tpEmp, :nrEmp, :dtEmp, :vlEmp, :dsEmp, :idLotacao, :idDocTipoLotacao, :idEmpenhoStatus)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":pedido", $this->getIdPedido(), PDO::PARAM_INT);
                 $stmt->bindValue(":pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
@@ -279,6 +279,9 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $stmt->bindValue(":dtEmp", $this->getDtEmpenhoSafira(), PDO::PARAM_STR);
                 $stmt->bindValue(":vlEmp", $this->getVlEmpenho(), PDO::PARAM_STR);
                 $stmt->bindValue(":dsEmp", $this->getDsEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":idLotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":idDocTipoLotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":idEmpenhoStatus", $this->getIdEmpenhoStatus(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             } else {
@@ -293,12 +296,14 @@ class DaoFinEmpenho extends FinEmpenhoTb {
     public function updateEmpenho(PDO $pdo = null) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "update
-                    fin_empenho 
-                 set
-                    id_pessoa = :id_pessoa, id_tipo_empenho = :id_tipo_empenho, nr_empenho = :nr_empenho, dt_empenho_safira = :dt_empenho_safira, vl_empenho = :vl_empenho ,ds_empenho = :ds_empenho 
-                 where
-                    id_empenho = :id_empenho";
+        $sql = "update"
+                ." fin_empenho"
+            ." set"
+                ." id_pessoa = :id_pessoa, id_tipo_empenho = :id_tipo_empenho, nr_empenho = :nr_empenho,"
+                . " dt_empenho_safira = :dt_empenho_safira, vl_empenho = :vl_empenho ,ds_empenho = :ds_empenho,"
+                . " id_lotacao = :id_lotacao, id_doc_tipo_lotacao = :id_doc_tipo_lotacao"
+            ." where"
+                ." id_empenho = :id_empenho";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);
@@ -308,6 +313,8 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $stmt->bindValue(":dt_empenho_safira", $this->getDtEmpenhoSafira(), PDO::PARAM_STR);
                 $stmt->bindValue(":vl_empenho", $this->getVlEmpenho(), PDO::PARAM_STR);
                 $stmt->bindValue(":ds_empenho", $this->getDsEmpenho(), PDO::PARAM_STR);
+                $stmt->bindValue(":id_lotacao", $this->getIdLotacao(), PDO::PARAM_INT);
+                $stmt->bindValue(":id_doc_tipo_lotacao", $this->getIdDocTipoLotacao(), PDO::PARAM_INT);
                 $stmt->bindValue(":id_empenho", $this->getIdEmpenho(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
@@ -315,7 +322,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
         } catch (PDOException $exc) {
-            $this->msgRetorno = $ex->getMessage();
+            $this->msgRetorno = $exc->getMessage();
         }
     }
 
@@ -635,6 +642,9 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                             emp.id_pedido,
                             emp.id_tipo_empenho,
                             emp.sit_empenho,
+                            emp.id_empenho_status,
+                            emp.id_lotacao,
+                            emp.id_doc_tipo_lotacao,
                             to_char(emp.dt_empenho_safira, 'dd/mm/yyyy') as dt_empenho_safira,
                             trim(to_char(emp.vl_empenho, '999G999G999G990D9999')) as vl_empenho_cm,
                             emp.vl_empenho,
@@ -843,14 +853,16 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     case
                         when ( sit_emp.id_liquidacao is null
                         and sit_emp.id_ordem is null
-                        and sit_emp.id_documento_fiscal is null ) then 'S'
+                        and sit_emp.id_documento_fiscal is null
+                        and sit_empenho = '1') then 'S'
                         else 'N'
                     end as edita,
                     case
-                    when (emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) > 0
+                    when ((emp.vl_empenho - coalesce(liqPag.vl_liquidacao,0)) > 0
                         and (ped.id_tipo_solicitacao <> 2
                         or (ped.id_tipo_solicitacao = 2
-                        and sit_emp.id_documento_situacao = 2 )) then 'S'
+                        and sit_emp.id_documento_situacao = 2 ))
+                        and sit_empenho <> '6') then 'S'
                         else 'N'
                     end as liquida
                 from
@@ -895,7 +907,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         and O.sit_ordem <> '0'
                     left join fin_documento_fiscal DF on
                         DF.id_pedido = E.id_pedido
-                        and DF.id_documento_situacao <> 7
+                        and DF.id_documento_situacao = 2
                     left join con_liquidacao L on
                         L.id_empenho = E.id_empenho
                         and L.id_liquidacao_situacao <> 4

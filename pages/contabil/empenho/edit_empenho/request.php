@@ -27,7 +27,8 @@ switch ($_REQUEST['acao']) {
             $empenho->setDtEmpenhoSafira($dados['dtEmpenho']);
             $empenho->setIdPessoa($session->getIdUser());
             $empenho->setVlEmpenho($dados['vlEmpenho']);
-            $empenho->setDsEmpenho($dados['dsEmpenho']);
+            $empenho->setIdLotacao($dados['idLotacao']);
+            $empenho->setIdDocTipoLotacao($dados['idDocTipoLotacao']);
             echo $empenho->atualizaEmpenho();
             return;
             break;

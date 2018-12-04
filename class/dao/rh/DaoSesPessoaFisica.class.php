@@ -226,7 +226,28 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
-            return $retorno;
+            return;
+        }
+    }
+
+    function verificaPf($pdo) {
+        try {
+
+            $sql = "select id_pessoa_fisica
+                      FROM ses_pessoa_fisica 
+                        WHERE id_pessoa  = :id";
+
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":id", $this->getId_pessoa(), PDO::PARAM_INT);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return FALSE;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return;
         }
     }
 

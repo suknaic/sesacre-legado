@@ -10,11 +10,21 @@ class LiquidacaoHistorico {
     private $idLotacao = null;
     private $idDocTipoLotacao = null;
     private $idLiquidacaoSituacao = null;
+    private $idLiquidacaoStatus = null;
     private $dhLiquidacaoHistorico = null;
     private $dsLiquidacao = null;
     
     private $mensagens = null;
     private $sucesso = null;
+    
+    function getIdLiquidacaoStatus() {
+        return $this->idLiquidacaoStatus;
+    }
+
+    function setIdLiquidacaoStatus($idLiquidacaoStatus) {
+        $this->idLiquidacaoStatus = $idLiquidacaoStatus;
+        return $this;
+    }
     
     function getIdLiquidacao() {
         return $this->idLiquidacao;
@@ -98,6 +108,8 @@ class LiquidacaoHistorico {
 
 
     function salvarLiquidacaoHistorico(PDO $pdo = null){
+        $this->sucesso = false;
+        $this->mensagens = null;
         try {
             if (!empty($pdo)) {
                 
@@ -107,6 +119,7 @@ class LiquidacaoHistorico {
                                           ->setIdLotacao($this->getIdLotacao())
                                           ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
                                           ->setIdLiquidacaoSituacao($this->getIdLiquidacaoSituacao())
+                                          ->setIdLiquidacaoStatus($this->getIdLiquidacaoStatus())
                                           ->setDsLiquidacao($this->getDsLiquidacao());
                 
                 $daoConLiquidacaoHistorico->insert($pdo);
@@ -115,6 +128,7 @@ class LiquidacaoHistorico {
                     $idLiquidacaoHistorico = $pdo->lastInsertId('con_liquidacao_historico_id_liquidacao_historico_seq');
                     if (!Log::SalvaLogI('con_liquidacao_historico', $idLiquidacaoHistorico, $pdo)) {
                         $this->mensagens = "Erro ao salvar o Histórico da Liquidação no LOG. Operação Cadastro.";
+                        return false;
                     }
                     $this->sucesso = true;
                 } else {
@@ -125,8 +139,31 @@ class LiquidacaoHistorico {
                 $this->mensagens = "Sem conexão com o banco de dados";
             }
         } catch (Exception $exc) {
-            $this->sucesso = false;
             $this->mensagens = $exc->getMessage();
+        }
+    }
+    
+    function retornaHistorico() {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoConLiquidacaoHistorico = new DaoConLiquidacaoHistorico();
+            $daoConLiquidacaoHistorico->setIdLiquidacao($this->getIdLiquidacao());
+
+            $daoConLiquidacaoHistorico->historico($pdo);
+
+            if ($daoConLiquidacaoHistorico->Sucesso()) {
+                foreach ($daoConLiquidacaoHistorico->getMsgRetorno() as $linha) {
+                    $retorno .= $linha['historico'] . "\n";
+                }
+            } else {
+                $retorno = $daoConLiquidacaoHistorico->getMsgRetorno();
+            }
+            return $retorno;
+        } catch (Exception $exc) {
+            $retorno = "";
         }
     }
 

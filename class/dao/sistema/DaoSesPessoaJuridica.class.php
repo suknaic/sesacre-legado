@@ -314,4 +314,26 @@ class DaoSesPessoaJuridica extends SesPessoaJuridica {
         }
     }
 
+    function retornaPJ($pdo) {
+        $retorno = FALSE;
+        try {
+            $sql = "select id_pessoa_juridica
+                     FROM ses_pessoa_juridica 
+                      WHERE id_pessoa  = :id";
+
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(":id", $this->getId_pessoa(), PDO::PARAM_INT);
+
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return $retorno;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return $retorno;
+        }
+    }
+
 }

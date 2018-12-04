@@ -457,14 +457,14 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Medicamentos: </strong><span class="text-danger">*</span></h4>
+                                                                    <h4 class="panel-title">Medicamentos: </h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_medicamentos" class="form-control select" multiple name="medicamento">
-
+                                                                        
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -472,7 +472,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Serviços: </strong><span class="text-danger">*</span></h4>
+                                                                    <h4 class="panel-title">Serviços: </h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -491,7 +491,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Material de Consumo: </strong><span class="text-danger">*</span></h4>
+                                                                    <h4 class="panel-title">Material de Consumo: </h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -506,7 +506,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">
                                                                 <div class="panel-heading text-left">
-                                                                    <h4 class="panel-title">Material Permanente: </strong><span class="text-danger">*</span></h4>
+                                                                    <h4 class="panel-title">Material Permanente: </h4>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">

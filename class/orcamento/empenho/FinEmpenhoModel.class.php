@@ -28,6 +28,10 @@ class FinEmpenhoModel {
     private $statusAguardandoPagamento = 3;
     private $statusAguardandoFinalizarPagamento = 4;
     private $statusFinalizado = 5;
+    
+    private $id_lotacao = null;
+    private $id_doc_tipo_lotacao = null;
+    
     private $sucesso = null;
     private $msgRetorno = null;
 
@@ -37,6 +41,24 @@ class FinEmpenhoModel {
 
     public function getMsgRetorno() {
         return $this->msgRetorno;
+    }
+    
+    function getIdLotacao() {
+        return $this->id_lotacao;
+    }
+
+    function getIdDocTipoLotacao() {
+        return $this->id_doc_tipo_lotacao;
+    }
+
+    function setIdLotacao($id_lotacao) {
+        $this->id_lotacao = $id_lotacao;
+        return $this;
+    }
+
+    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+        return $this;
     }
     
     function getAnotacoes() {
@@ -402,6 +424,11 @@ class FinEmpenhoModel {
 
     public function salvaEmpenho() {
         try {
+            
+            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -426,16 +453,22 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
             $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
             $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
-            $daoFinEmpenho->setDsEmpenho($this->ds_empenho);
+            $daoFinEmpenho->setDsEmpenho($this->ds_empenho ?? '');
+            
+            $daoFinEmpenho->setIdLotacao($this->getIdLotacao());
+            $daoFinEmpenho->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+            $daoFinEmpenho->setIdEmpenhoStatus($this->getStatusAguardandoLiquidacao());
             //verificar ser o empenho ja estar cadastrado
             $daoFinEmpenho->verificarEmpenhoPeloNumero($pdo);
             if ($daoFinEmpenho->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Empenho já foi cadastrado!");
             }
-
+            
             $daoFinEmpenho->insertEmpenho($pdo);
-            $daoFinEmpenho->setIdEmpenho((is_numeric($pdo->lastInsertId('fin_empenho_id_empenho_seq'))) ? $pdo->lastInsertId('fin_empenho_id_empenho_seq') : null);
+            
             if ($daoFinEmpenho->sucesso()) {
+                $daoFinEmpenho->setIdEmpenho((is_numeric($pdo->lastInsertId('fin_empenho_id_empenho_seq'))) ? $pdo->lastInsertId('fin_empenho_id_empenho_seq') : null);
+                $this->id_empenho = $daoFinEmpenho->getIdEmpenho();
                 $sucesso = true;
                 if (!Log::SalvaLogI('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $pdo)) {
                     $sucesso = false;
@@ -443,13 +476,13 @@ class FinEmpenhoModel {
             } else {
                 $pdo->rollBack();
                 $sucesso = false;
-                return Metodos::retornoAjax("Erro1", "alert", STR_ERROR);
+                return Metodos::retornoAjax("Erro1", "alert", STR_ERROR );
             }
             
             //Inserção de anotações, se houver
             if(!empty($this->anotacoes)){
                 $finEmpenhoAnotacao = new FinEmpenhoAnotacao();
-                $finEmpenhoAnotacao->setIdEmpenho($daoFinEmpenho->getIdEmpenho());
+                $finEmpenhoAnotacao->setIdEmpenho($this->id_empenho);
                 $finEmpenhoAnotacao->setDsEmpenhoAnotacao($this->anotacoes);
                 $finEmpenhoAnotacao->setIdPessoa($this->id_pessoa);
                 $finEmpenhoAnotacao->salvaAnotacao($pdo);
@@ -460,6 +493,11 @@ class FinEmpenhoModel {
                 }
             }
             //-------------------------------------------------
+            //Salva Historico do Empenho
+            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitCadastrado(), $this->getStatusAguardandoLiquidacao())) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
+            }
             
             $pedido = 0;
             //retorno os dados do pedido 
@@ -539,7 +577,8 @@ class FinEmpenhoModel {
     
     public function atualizaEmpenho(){
         try {
-            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)) {
+            if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)
+                    || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             $conexao = new Conexao();
@@ -566,7 +605,9 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
             $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
             $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
-            $daoFinEmpenho->setDsEmpenho($this->ds_empenho);
+            $daoFinEmpenho->setDsEmpenho($this->ds_empenho ?? '');
+            $daoFinEmpenho->setIdLotacao($this->id_lotacao);
+            $daoFinEmpenho->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
             
             //verificar se o empenho ja está cadastrado
             $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
@@ -1117,6 +1158,12 @@ class FinEmpenhoModel {
                 $msg = implode(",", $msgArray);
                 return Metodos::retornoAjax("Erro", "alert", "O Empenho Não pode ser Cancelado, pois possui as Seguintes Restrições: " . $msg);
             }
+            
+            //Salva Historico do Empenho
+            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitCancelado(), $this->getStatusFinalizado(), $justificativa)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
+            }
 
             //Muda Status e Situação do Empenho            
             $daoFinEmpenho->setSitEmpenho($this->sit_cancelado);
@@ -1377,14 +1424,20 @@ class FinEmpenhoModel {
 
                                                     <div id="pedidoDetalhes" class="panel-collapse collapse" >
                                                         <div class="panel-body">
-                                                            <div class="form-group">
-                                                                <div class="col-sm-2"><b>Descrição:</b></div>
-                                                                <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
-                                                            </div>
 
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Tipo do Pedido de Necessidade:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
+                                                            </div>
+                                                            
                                                             <div class="form-group">
                                                                 <div class="col-sm-2"><b>Central de Demanda:</b></div>
                                                                 <div class="col-sm-10">' . $campos["nm_lotacao"] . '</div>
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Descrição:</b></div>
+                                                                <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
                                                             </div>
 
                                                             <div class="form-group">
@@ -1408,7 +1461,7 @@ class FinEmpenhoModel {
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Valor do Pedido:</b></div>
+                                                                <div class="col-sm-2"><b>Valor do Pedido de Necessidade:</b></div>
                                                                 <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
                                                             </div>'
                                                             . $saldoOrdenar.
@@ -1737,20 +1790,20 @@ class FinEmpenhoModel {
 
                                                     <div id="contratoDetalhes" class="panel-collapse collapse" >
                                                         <div class="panel-body">
-
+                                                            
                                                             <div class="form-group">
                                                                 <div class="col-sm-2"><b>Licitação:</b></div>
                                                                 <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
                                                             </div>
-
+                                                            
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                                <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
+                                                                <div class="col-sm-2"><b>Tipo de Gasto:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Tipo de gasto:</b></div>
-                                                                <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                                <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                <div class="col-sm-10">' . mb_strtoupper($campos["nm_lotacao"],'UTF-8') . '</div>
                                                             </div>
 
                                                             <div class="form-group">
@@ -1866,6 +1919,40 @@ class FinEmpenhoModel {
         } catch (Exception $exc) {
             $this->msgRetorno = $exc->getMessage();
             $this->sucesso = false;            
+        }
+    }
+    
+    function salvarEmpenhoHistorico(PDO $pdo = null, int $situacao, int $status, string $descricao = '') {
+        try {
+            $this->sucesso = true;
+            $this->msgRetorno = null;
+            if (!empty($pdo)) {
+                $empenhoHistorico = new FinEmpenhoHistorico();
+                $empenhoHistorico->setIdLotacao($this->getIdLotacao())
+                        ->setIdEmpenho($this->getIdEmpenho())
+                        ->setIdPessoa($this->getIdPessoa())
+                        ->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
+                        ->setIdEmpenhoSituacao($situacao)
+                        ->setIdEmpenhoStatus($status)
+                        ->setDsEmpenhoHistorico($descricao);
+
+                $empenhoHistorico->salvarEmpenhoHistorico($pdo);
+
+                if (!$empenhoHistorico->getSucesso()) {
+                    $this->sucesso = false;
+                    $this->msgRetorno = $empenhoHistorico->getMsgRetorno();
+                    return false;
+                }
+
+                return $this->sucesso;
+            } else {
+                $this->msgRetorno = "Sem conexão com o banco de dados";
+                $this->sucesso = false;
+            }
+        } catch (Exception $exc) {
+            //Se der algum erro, registra o erro no objeto
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
         }
     }
     

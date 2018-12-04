@@ -52,6 +52,19 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+    
+    CASE 'retornaLotacaoTipo':
+        try {
+            $tramitacao = new VincularTramitacao();
+            $tramitacao->setIdPessoa($session->getIdUser());
+            echo $tramitacao->listaLotacaoTipoPorUsuarioLiquidacao();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
         
     CASE 'cancelarLiquidacao':
         $dados = filter_input(INPUT_POST,'dados',FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -60,8 +73,10 @@ switch ($_REQUEST['acao']) {
             $liquidacao = new Liquidacao();
             $liquidacao->setIdLiquidacao($dados['id'])
                        ->setUsuario($session->getIdUser())
-                       ->setMotivoCancelamento($dados['justificativa']);
-            echo $liquidacao->cancelarLiquidacao();
+                       ->setMotivoCancelamento($dados['justificativa'])
+                       ->setIdDocTipoLotacao($dados['idDocTipoLotacao'])
+                       ->setIdLotacao($dados['idLotacao']);
+            echo $liquidacao->cancelarLiquidacao(trim($dados['justificativa']));
             return;
             break;
             

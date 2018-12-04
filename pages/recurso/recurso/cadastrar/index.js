@@ -1,223 +1,110 @@
-func = new Funcoes();
-url = "request.php";
-
-$(document).ready(function (){
-    
-    $('body').find('select').select2({
-        width: '100%'
-    });
-
-    $('.collapse').on('shown.bs.collapse', function(){
-        console.log('teste');
-        $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
-    }); 
-    
-    //busca pedido
-    $('#modalPedido').on('shown.bs.modal', function () {
-        $('#codPedidoPesquisa').focus();
-    });
-    
-    $('body').on('keypress', '#codPedidoPesquisa', function (e) {
-        let key = e.which;
-        if (key == 13){
-            $("#btn-pesquisa").trigger('click');
-            return false;
+Vue.component('campo-texto',{
+    props: {
+        nome: String,
+        descricao: String,
+        sugestao: String,
+        requerido: {
+            default: false,
+            type: Boolean
+        },
+        valor: String
+    },
+    methods: {
+        atualiza: function (valor){
+            this.$emit('input',valor)
         }
-    });
-    
-    $("#nr_empenho").mask("9999999999/9999");
-    
-    $('#dt_empenho').mask("99/99/9999");
-    
-    carregaRemetente();
-    
-    $('body').on('click', '#btn-pesquisa', function (e) {
-        carregaTabelaPedidos();
-    });
-    
-    $('body').on('click', '.seleciona-pedido', function (e) {
-        var pedido = $(this).data('pedido');
-        carregaDadosParaPedido(pedido);
-        $('#modalPedido').modal('hide');
-    });
-    
-    
-    $("body").on("click", ".btn-salvar", function (e) {
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-        } else {
-            e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-            
-            var dados = {
-                "idPedido": $("#id_pedido").val(),
-                "nrEmpenho": $("#nr_empenho").val(),
-                "tpEmpenho": $("#id_tipo_empenho").val(),
-                "dtEmpenho": $("#dt_empenho").val(),
-                "vlEmpenho": $("#vl_empenho").val(),
-                "dsEmpenho": $("#ds_empenho").val(),
-                "anotacoes": $("#anotacoes").val()
-            }
-            if (!dados.nrEmpenho || !dados.tpEmpenho || !dados.dtEmpenho || !dados.vlEmpenho || dados.vlEmpenho == '0,0000') {
-                func.modalAlert("Por favor preencha as informações obrigatórias.");
-                $this.prop("disabled", false);
-                return false;
-            }
-            
-            console.log(dados);
+    },
+    template: `<div class="form-group">
+                    <label class="col-sm-2 control-label text-left">{{ descricao }}: <span v-if="requerido" class="text-danger">*</span> </label>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <p class="fa fa-file-text-o inputPFa"></p>
+                            </span>
+                            <input type="text" class="form-control" v-bind:class="nome" v-bind:value="valor" v-on:input="atualiza($event.target.value)">
+                        </div>                                                    
+                    </div>
+                </div>`
+})
 
-            $.ajax({
-                "url": "request.php",
-                "method": "POST",
-                "dataType": "html",
-                "data": {
-                    "acao": "cadastraEmpenho",
-                    "dados": dados
-                },
-                "success": function (response) {
-                    console.log(response);
-                    $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        return false;
-                    }
-
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            func.modalAlert(func.msgErroPadrao);
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        $('.modal-alert').on('hidden.bs.modal', function (e) {
-                            location.reload();
-                        });
-                        return false;
-                    } else {
-                        console.log('Ultimo else');
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao);
-                    return false;
-                }
-            });
+Vue.component('campo-numerico',{
+    props: {
+        nome: String,
+        descricao: String,
+        sugestao: String,
+        requerido: {
+            default: false,
+            type: Boolean
+        },
+        valor: String
+    },
+    methods: {
+        atualiza: function (valor){
+            this.$emit('input',valor)
         }
-    });
-    
-    function carregaRemetente(){
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaTipoRemetenteERemetente"
-            },
-            "success": function(response){
-                $("#id_remetente").html("");
-                $("#id_remetente").append(response);
+    },
+    template: `<div class="form-group">
+                    <label class="col-sm-2 control-label text-left">{{ descricao }}: <span v-if="requerido" class="text-danger">*</span></label>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                            </span>
+                            <input class="form-control" type="text" v-bind:class="nome" v-bind:value="valor" v-on:input="atualiza($event.target.value)">
+                        </div>                                                                                                 
+                    </div>
+                </div>`
+})
+
+Vue.component('campo-select',VueSelect.VueSelect);
+
+Vue.component('campo-texto-grande',{
+    props: {
+        nome: String,
+        descricao: String,
+        valor: String
+    },
+    methods: {
+        atualiza: function (valor){
+            this.$emit('input',valor)
+        }
+    },
+    template: `<div class="form-group">
+                    <label class="col-sm-2 control-label text-left">{{descricao}}: </label>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <p class="fa fa-file-text-o inputPFa"></p>
+                            </span>
+                            <textarea class="form-control" rows="4" cols="50" v-bind:class="nome"  v-on:input="atualiza($event.target.value)" ></textarea>                                                        
+                        </div>                                                  
+                    </div>
+                </div>`
+})
+
+var app = new Vue({ 
+    el: '#cadRecurso' ,
+    data: function (){
+        return {
+            idSistema: 0,
+            nmRecurso: '',
+            lkRecurso: '',
+            dsRecurso: '',
+            sistemasIds: [] 
+        }
+    },
+    mounted: function(){
+        axios({ 
+            url: 'request.php',
+            method: 'get',
+            params: {
+                acao: 'listaSistemas'
             }
-        });
+        }).then(response => {
+            var info = response.data
+            for( idx in info){        
+                this.sistemasIds.push({label: info[idx].nm_sistema, key: info[idx].id_sistema})
+            }             
+        })
     }
-
-    function carregaTabelaPedidos(){
-        var dados = $("#codPedidoPesquisa").val();
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaPedido",
-                "dados": dados
-            },
-            "success": function (response) {
-                func.carregaTabelaPadrao('tabelaPedidos', response, [], true);
-            }
-        });
-    }
-
-    function carregaDadosParaPedido(dados){
-        $("#dadosGerais").html("");
-        
-        /**
-         * retornaContratosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaContrato",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $("#dadosGerais").append(response);
-            }
-        });
-        /**
-         * retornaDadosPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaDadosPedido",
-                "dados": dados
-
-            },
-            "success": function (response) {
-                $("#dadosGerais").append(response);
-                $("#vl_empenho").val($("#vl_pedido").val());
-            }
-        });
-        
-        /***
-         *  retornaDadosDiaria
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaDadosDiaria",
-                "dados": dados
-            },
-            "success": function (response){
-                $("#dadosGerais").append(response);
-            }
-        });
-        
-        /**
-         * retornaItensDoPedido
-         */
-        $.ajax({
-            "url": url,
-            "dataType": 'html',
-            "data": {
-                "acao": "retornaItensPedido",
-                "dados": dados
-            },
-            "success": function (response) {
-                $("#dadosGerais").append(response);
-            }
-        });
-
-    }
-});
-
-
+})

@@ -14,6 +14,26 @@ class FinEmpenhoTb {
     private $sit_empenho = null;
     
     private $id_empenho_status = null;
+    private $id_doc_tipo_lotacao = null;
+    private $id_lotacao = null;
+    
+    function getIdDocTipoLotacao() {
+        return $this->id_doc_tipo_lotacao;
+    }
+
+    function getIdLotacao() {
+        return $this->id_lotacao;
+    }
+
+    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
+        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+        return $this;
+    }
+
+    function setIdLotacao($id_lotacao) {
+        $this->id_lotacao = $id_lotacao;
+        return $this;
+    }
     
     function getIdEmpenhoStatus() {
         return $this->id_empenho_status;

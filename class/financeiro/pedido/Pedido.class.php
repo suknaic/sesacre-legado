@@ -751,15 +751,15 @@ class Pedido {
                                                                     <div class="col-sm-2"><b>Licitação:</b></div>
                                                                     <div class="col-sm-10">' . $campos["cd_pregao"] . '</div>
                                                                 </div>
-
-                                                                <div class="form-group">
-                                                                    <div class="col-sm-2"><b>Central de Demanda:</b></div>
-                                                                    <div class="col-sm-10">' . strtoupper($campos["nm_lotacao"]) . '</div>
-                                                                </div>
-
+                                                                
                                                                 <div class="form-group">
                                                                     <div class="col-sm-2"><b>Tipo de gasto:</b></div>
                                                                     <div class="col-sm-10">' . $campos["nm_tipo_gasto"] . '</div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <div class="col-sm-2"><b>Central de Demanda:</b></div>
+                                                                    <div class="col-sm-10">' . mb_strtoupper($campos["nm_lotacao"],'UTF-8') . '</div>
                                                                 </div>
 
                                                                 <div class="form-group">
@@ -820,13 +820,6 @@ class Pedido {
             
             if ($daoFinPedido->sucesso()) {
                 $campos = $daoFinPedido->getMsgRetorno();
-                $saldoOrdenar = '';
-                if ($campos['id_tipo_solicitacao'] == '2') {
-                    $saldoOrdenar = '<div class="form-group">
-                                        <div class="col-sm-2"><b>Saldo a Ordenar:</b></div>
-                                        <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
-                                    </div>';
-                }
                 
                 $dadosPedido .= '<div class="form-group">
                                     <div class="col-sm-12" style="margin-bottom: -4%;">
@@ -846,6 +839,11 @@ class Pedido {
                                                         <input type="hidden" id="id_pedido" value='.$campos['id_pedido'].' />
                                                         <input type="hidden" id="vl_pedido" value="'.Metodos::ConverteValorBr($campos['vl_pedido'],4).'" />
                                                         <div class="panel-body">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2"><b>Tipo do Pedido de Necessidade:</b></div>
+                                                                <div class="col-sm-10">' . $campos["nm_tipo_solicitacao"] . '</div>
+                                                            </div>
+
                                                             <div class="form-group">
                                                                 <div class="col-sm-2"><b>Descrição:</b></div>
                                                                 <div class="col-sm-10">' . $campos["ds_pedido"] . '</div>
@@ -877,17 +875,12 @@ class Pedido {
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Valor do Pedido:</b></div>
-                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
-                                                            </div>'
-                                                            . $saldoOrdenar.
-                                                            '<div class="form-group">
-                                                                <div class="col-sm-2"><b>Saldo a Liquidar:</b></div>
+                                                                <div class="col-sm-2"><b>Valor do Pedido de Necessidade:</b></div>
                                                                 <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
                                                             </div>
                                                             <div class="form-group">
-                                                                <div class="col-sm-2"><b>Saldo a Pagar:</b></div>
-                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["vl_pedido"], 4) . '</div>
+                                                                <div class="col-sm-2"><b>Saldo a Empenhar:</b></div>
+                                                                <div class="col-sm-10">' . Metodos::ConverteValorBr($campos["saldo_empenho"], 4) . '</div>
                                                             </div>
                                                         </div>
                                                     </div>
