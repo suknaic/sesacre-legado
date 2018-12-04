@@ -1286,7 +1286,6 @@ class FinEmpenhoModel {
                 return;
             }
 
-            //echo "\n".$valorPedidoEmpenhoAntigo." - ".$this->vl_empenho."\n";
             //Atualiza o QDD pelo Empenho
             $qdd = new Qdd();
             $data = new DateTime($dadosEmpenho['dt_empenho_safira']);

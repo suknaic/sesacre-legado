@@ -30,7 +30,7 @@ class DaoFinProtocolo extends FinProtocoloTb {
         try {
             if ($pdo != null) {
 
-                $sql = "select ordem.id_ordem, ordem.nr_ordem, p.nr_pedido, centalLotacao.nm_lotacao, pFornecedor.nm_pessoa, 
+                $sql = "select ordem.id_ordem, ordem.nr_ordem, p.nr_pedido, p.id_pedido, centalLotacao.nm_lotacao, pFornecedor.nm_pessoa, 
                         modalidade.nm_modalidade, processo.cd_pregao as licitacao,emp.nr_empenho, tpEmpenho.nm_tipo_empenho, 
                         emp.id_tipo_empenho, tpGasto.nm_tipo_gasto, cont.nr_contrato, cont.tp_contrato, font.nr_fonte,
                         cont.dt_ini_vigencia_contrato, cont.dt_fim_vigencia_contrato, pt.cd_programa_trabalho, p.ds_pedido,

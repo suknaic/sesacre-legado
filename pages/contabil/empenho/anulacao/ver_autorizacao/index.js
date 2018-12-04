@@ -28,6 +28,7 @@ $(document).ready(function () {
         var dados = {
             "deferir": $this.val(),
             "id_pedido": $("#id_pedido").val(),
+            "id_empenho": $("#id_empenho").val(),
             "pagamento": $("#pagamento").val(),
             "nr_anulacao": $("#nr_empenho_anulacao").val(),
             "dt_anulacao": $("#dt_empenho_anulacao").val(),
