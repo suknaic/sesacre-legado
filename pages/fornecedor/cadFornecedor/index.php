@@ -423,6 +423,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group resto empresas">
+
+                                                    </div>
                                                     <div class="form-group resto">
                                                         <div class="col-sm-2"></div>
                                                         <div class="col-sm-4 empDist">
@@ -452,9 +455,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-group resto empresas">
-
                                                     </div>
                                                 </div>
                                                 <div id="tab6" class="tab-pane">

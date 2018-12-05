@@ -298,7 +298,7 @@ $(document).ready(function () {
         $(".empresas").append('<div class = "form-group">' +
             '                       <div class="col-sm-2" ></div>' +
             '                       <div class="col-sm-4">' +
-            '                           <div class="panel-body" style=\"margin-left: -10px;\">' +
+            '                           <div class="panel-body" style=\"margin-left: -10px;\">Nome da empresa que presta serviço:' +
             '                               <div class="input-group">' +
             '                                   <span class="input-group-addon">' +
             '                                       <p class="fa fa-file-text-o inputPFa"></p>' +
@@ -308,7 +308,7 @@ $(document).ready(function () {
             '                       </div>'+
             '                       <div class="col-sm-1">' +
             '                           <div class="panel-body" >' +
-            '                               <button class="remove btn btn-danger" style=\"margin-left: -20px;\"><i class="fa fa-remove"></i></button>' +
+            '                               <button class="remove btn btn-danger" style=\"margin: 17px; margin-left: -20px;\"><i class="fa fa-remove"></i></button>' +
             '                           </div>' +
             '                       </div>' +
             '                   </div>');
@@ -468,8 +468,8 @@ $(document).ready(function () {
                                 try {
                                     response = JSON.parse(response);
                                     $('#id_pais').val(response[0].id_pais).trigger('change.select2');
-                                    listaEstado(response[0].id_pais, response[0]['id_estado']);
-                                    listaCidade(response[0]['id_estado'], cidade);
+                                    listaEstado(response[0].id_pais, response[0].id_estado);
+                                    listaCidade(response[0].id_estado, cidade);
                                 } catch (e) {
                                     console.log(response);
                                     return false;
