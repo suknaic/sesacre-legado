@@ -95,6 +95,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/entrega/cadEnt
                                     <div class="panel-body">
                                         <input type="hidden" id="id_protocolo" value="<?php echo $id; ?>" />
                                         <input type="hidden" id="idOrdem" value="<?php echo $ordem; ?>" />
+                                        <input type="hidden" id="idPedido" value="<?php echo $dados["id_pedido"]; ?>" />
                                         <p><strong>Pedido:</strong> <?php echo $dados["nr_pedido"]; ?></p>
                                         <p><strong>Descrição:</strong> <?php echo $dados["ds_pedido"]; ?></p>
                                         <?php

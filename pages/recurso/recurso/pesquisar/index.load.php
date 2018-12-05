@@ -10,13 +10,6 @@ $session = new Session();
 $session->recurso();
 
 
-$recurso = new RecursoUtil();
-$recurso->setIdPessoa($session->getIdUser());
-$recurso->setLinkRecurso("/pages/recurso/recurso");
-$recurso->carregaRecursoUsuario();
-
-
-
 $tipoGasto = new TipoGasto();
 $pessoaJuridicaOptions = SesPessoaJuridicaModel::optionPessoaJuridica();
 

@@ -20,7 +20,6 @@ class FinOrdemModel {
     private $nr_Pedido = null;
     private $central = null;
     private $ano = null;
-    
     private $sit_cancelado = 0;
     private $sit_cadastrado = 1;
     private $sit_requisitado = 2;
@@ -31,7 +30,7 @@ class FinOrdemModel {
     private $sit_liquidado_total = 7;
     private $sit_pago_parcial = 8;
     private $sit_pago_total = 9;
-    
+
     /**
      * @return mixed
      */
@@ -309,22 +308,22 @@ class FinOrdemModel {
         );
         return $arr_tipo;
     }
-    
+
     public function cadastrarOrdem($ordem) {
         try {
             if (empty($ordem) || empty($ordem[0]->tipoOrdem) || empty($ordem[0]->local)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+
             //validação se os tipos dos itens correspodem ao tipo da ordem
             $tp_ordem = $ordem[0]->tipoOrdem;
-            foreach ($ordem as $item) {       
+            foreach ($ordem as $item) {
                 if (($tp_ordem == 2 && $item->tp != 'S') || ($tp_ordem != 2 && $item->tp == 'S')) { //Execução ou Serviço e item diferente do tipo 'S' ou Vice-versa
                     return Metodos::retornoAjax("Erro", "alert", "Tipo da ordem não corresponde aos itens selecionados");
                     break;
                 }
             }
-            
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
@@ -426,23 +425,12 @@ class FinOrdemModel {
             }
 
             $pedido = new Pedido();
-            $pedido->setIdPedido($ordem[0]->idPedido);            
+            $pedido->setIdPedido($ordem[0]->idPedido);
             $pedido->atualizaStatusSituacaoOficialPedido($pdo);
-            if(!$pedido->sucesso()){
+            if (!$pedido->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido."); 
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido.");
             }
-//            if ($ordem[0]->tipoOrdem == '1') {
-//                $pedido->setStPedido("17");
-//            } else if ($ordem[0]->tipoOrdem == '2') {
-//                $pedido->setStPedido("19");
-//            }
-//
-//
-//            if (!$pedido->VerificarMaiorTramitacao($pdo)) {
-//                $pedido->atualizaTramitacaoPedido($pdo);
-//            }
-
 
             if (!$erro) {
                 $pdo->commit();
@@ -470,7 +458,7 @@ class FinOrdemModel {
                 $retorno = '';
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
-                        $retorno .= '<tr data-tp-material='.$linha["tp_material"].' data-id-pre-ordem='.$linha["id_pre_ordem"].' data-id-pedido='.$linha["id_pedido"].' data-fl-valor-variavel='.$linha["fl_valor_variavel"].' class="itens">
+                        $retorno .= '<tr data-tp-material=' . $linha["tp_material"] . ' data-id-pre-ordem=' . $linha["id_pre_ordem"] . ' data-id-pedido=' . $linha["id_pedido"] . ' data-fl-valor-variavel=' . $linha["fl_valor_variavel"] . ' class="itens">
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
                                         <td class="text-center">' . $linha["nm_desc_material"] . '</td>
@@ -546,14 +534,14 @@ class FinOrdemModel {
                                 <button type = 'button' title = 'entrega' class = 'entrega' value = '" . $linha['id_ordem'] . "'>
                                 <i class='fa fa-truck text-success' aria-hidden='true'></i></i>
                                 </button >";
-                                
+
                 if ($linha['sit_ordem'] == '1') { //A situação '1' indica que ainda não há protocolo de aviso ao fornecedor, apenas as ordens nesta situação(1 - Cadastrado) poderão ser canceladas
                     $tabela .= " <button type='button' title='Excluir ordem' class='excluir text-danger' value='" . $linha['id_ordem'] . "' >
                                 <i class='fa fa-trash' aria-hidden='true'></i>
                                 </button>";
                 }
-                                
-                $tabela .=      "</td>
+
+                $tabela .= "</td>
                             </tr>";
             }
             return Metodos::retornoAjax("ok", "html", $tabela);
@@ -602,19 +590,19 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $pdo->beginTransaction();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
-            
+
             //verifica se a Ordem já possui protocolo de aviso ao fornecedor, se possuir, aborta a operação
             $daoFinOrdem->ordemProtocolo($pdo);
             if ($daoFinOrdem->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser cancelada, pois existe um protocolo de aviso ao fornecedor para a mesma.");
             }
-            
+
             //verifica se a Ordem já possui entrega, se possuir, aborta a operação
             $daoFinOrdem->retornaEntregasOrdem($pdo);
             if ($daoFinOrdem->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "A Ordem não pode ser cancelada, pois existe entrega(s) para a mesma.");
             }
-            
+
             $daoFinOrdem->deleteOrdem($pdo);
             $busca = "";
             if (!$daoFinOrdem->Sucesso()) {
@@ -629,13 +617,13 @@ class FinOrdemModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
-            
+
             $pedido = new Pedido();
-            $pedido->setIdPedido($busca['id_pedido']);            
+            $pedido->setIdPedido($busca['id_pedido']);
             $pedido->atualizaStatusSituacaoOficialPedido($pdo);
-            if(!$pedido->sucesso()){
+            if (!$pedido->sucesso()) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido."); 
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o Status do Pedido.");
             }
 
             $pdo->commit();
@@ -713,18 +701,18 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->setSitOrdem('3');
-            
+
             $daoFinOrdem->atualizaSituacaoOrden($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
-            
+
             return true;
         } catch (Exception $ex) {
             return false;
         }
     }
-    
+
     public function finalizaPorSupressao(PDO $pdo) {
         try {
 
@@ -736,25 +724,25 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->setSitOrdem('4');
-            
+
             //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
             $daoFinOrdem->retornaEntregasOrdem($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
-            
+
             $daoFinOrdem->atualizaSituacaoOrden($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
-            
+
             return true;
         } catch (Exception $ex) {
             return false;
         }
     }
-    
-     public function finalizaPorDescuprimento(PDO $pdo) {
+
+    public function finalizaPorDescuprimento(PDO $pdo) {
         try {
 
             if (empty($pdo)) {
@@ -765,40 +753,36 @@ class FinOrdemModel {
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->setSitOrdem('5');
-            
+
             //verifica se a Ordem já possui entrega, se NÃO possuir, aborta a operação 
             $daoFinOrdem->retornaEntregasOrdem($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
-            
+
             $daoFinOrdem->atualizaSituacaoOrden($pdo);
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
-            
+
             return true;
         } catch (Exception $ex) {
             return false;
         }
     }
-    
-    
-    
-    
-    public function retornaSePodeFinalizarAEntrega(){
+
+    public function retornaSePodeFinalizarAEntrega() {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
-            
+
             //verifica se a Ordem já possui entrega, se NÃO possuir, não permite a finalização da entrega 
             $daoFinOrdem->retornaEntregasOrdem($pdo);
 
             return $daoFinOrdem->Sucesso();
-            
         } catch (Exception $exc) {
             return false;
         }
@@ -811,11 +795,11 @@ class FinOrdemModel {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            
+
             $daoFinOrdem = new DaoFinOrdem();
             $daoFinOrdem->setIdOrdem($this->id_ordem);
             $daoFinOrdem->retornaSituacaoOrdem($pdo);
-            
+
             if (!$daoFinOrdem->Sucesso()) {
                 return false;
             }
@@ -824,7 +808,7 @@ class FinOrdemModel {
             return false;
         }
     }
-    
+
     public function retornaItensParaAnulacaoEmpenho() {
         if (!empty($this->id_pedido)) {
             if (!empty($this->id_pedido) && !empty($this->id_ordem)) {
@@ -839,7 +823,7 @@ class FinOrdemModel {
                 if ($daoFinOrdem->Sucesso()) {
                     foreach ($daoFinOrdem->getMsgRetorno() as $linha) {
 
-                        $retorno .= '<tr data-tipo-material='.$linha['tp_material'].' data-fl-valor-variavel='.$linha['fl_valor_variavel'].'>
+                        $retorno .= '<tr data-tipo-material=' . $linha['tp_material'] . ' data-fl-valor-variavel=' . $linha['fl_valor_variavel'] . '>
                                         <td class="text-center">' . $linha["nr_item"] . '</td>
                                         <td class="text-center">' . $linha["nm_material"] . '</td>
                                         <td class="text-center">' . wordwrap($linha["nm_desc_material"], 20, "<br />\n") . '</td>                                                                                                                        
@@ -852,32 +836,24 @@ class FinOrdemModel {
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["qt_utilizado"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["vl_utilizado"], 4) . '</td>
                                         <td class="text-center">' . Metodos::ConverteValorBr($linha["saldo"], 4) . '</td>';
-                        
+
                         $label = "Quantidade";
-//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
-//                            $label = "Vlr. Unitário";
-//                        }
+
                         $inputAnulacao = '<td class="text-right itens"><input type="text" name="qtd" idPedido="' . $linha["id_pedido"] . '"
                                             idPreOrdem="' . $linha["id_pre_ordem"] . '" tp="' . $linha["tp_material"] . '" 
                                             quantidade="' . $linha["qt_itens_pre"] . '" valor_unitario="' . $linha["vl_itens_pre"] . '"
-                                            fl_valor_variavel="'.$linha['fl_valor_variavel'].'"
+                                            fl_valor_variavel="' . $linha['fl_valor_variavel'] . '"
                                             quantidade="' . $linha["saldo"] . '"
                                             class="form-control input-sm qtd_anulacao" ></td>';
-                        
-                        $tdValorAnulacao = '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td>';
-                        
-                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
-                            $retorno .= $tdValorAnulacao.$inputAnulacao;
-                        }else{
-                            $retorno .= $inputAnulacao.$tdValorAnulacao;
-                        }
-                        
-                        
 
-//                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
-//                            $retorno .= 'Vlr. Unitário<input type="text" name="vl" idPedido="' . $linha["id_pedido"] . '"
-//					tp="' . $linha["tp_material"] . '" class="form-control input-sm vl_anulacao">';
-//                        }
+                        $tdValorAnulacao = '<td class="text-center valor_total_itens">' . Metodos::ConverteValorBr(0.0000, 4) . '</td>';
+
+                        if ($linha["tp_material"] == 'S' || $linha['fl_valor_variavel'] == '1') {
+                            $retorno .= $tdValorAnulacao . $inputAnulacao;
+                        } else {
+                            $retorno .= $inputAnulacao . $tdValorAnulacao;
+                        }
+
                         $retorno .= '</tr>';
                     }
                 }
@@ -888,25 +864,138 @@ class FinOrdemModel {
             }
         }
     }
-    
-    public function retornaItensParaAnulacaoEmpenhoPorItens(array $itens, PDO $pdo = null){
-        if (!empty($itens)){
-            if(empty($pdo)){
+
+    public function retornaItensParaAnulacaoEmpenhoPorItens(array $itens, PDO $pdo = null) {
+        if (!empty($itens)) {
+            if (empty($pdo)) {
                 $conexao = new Conexao();
-                $pdo = $conexao->connect();            
+                $pdo = $conexao->connect();
             }
-                        
+
             $itens = implode(",", $itens);
-            
-            $daoFinOrdem = new DaoFinOrdem();            
-            $daoFinOrdem->listaItensPreOrdemPorPreOrdem($itens, $pdo);            
+
+            $daoFinOrdem = new DaoFinOrdem();
+            $daoFinOrdem->listaItensPreOrdemPorPreOrdem($itens, $pdo);
             if ($daoFinOrdem->Sucesso()) {
-                return $daoFinOrdem->getMsgRetorno();                
-            }else{
+                return $daoFinOrdem->getMsgRetorno();
+            } else {
                 return false;
             }
         }
         return false;
     }
-    
+
+    public function retornaPesquisaOrdemAdministracao() {
+        try {
+            if (!empty($this->nr_ordem)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+                $daoFinOrdem = new DaoFinOrdem();
+
+                $this->nr_ordem = explode("/", $this->nr_ordem);
+
+                $daoFinOrdem->setNrOrdem($this->nr_ordem[0]);
+                $daoFinOrdem->setAaOrdem($this->nr_ordem[1]);
+                $daoFinOrdem->retornaDadosPesquisaAdministracao($pdo);
+                $retorno = '';
+                if ($daoFinOrdem->Sucesso()) {
+                    $dados = $daoFinOrdem->getMsgRetorno();
+                    $retorno .= '<tr class="selecionaItem" pedido="' . $dados["id_pedido"] . '" nrpedido = "' . $dados["nr_pedido"] . '" 
+                                  style="cursor:pointer;">
+                <td class="text-center">' . $dados["nr_ordem"] . '/' . $dados["aa_ordem"] . '</td>
+                <td class="text-center">' . $dados["nr_pedido"] . '</td>
+                <td class="text-center">' . $dados["tipo_ordem"] . '</td>
+                <td class="text-center">' . $dados["nm_pessoa"] . '</td>    
+                <td class="text-center">' . $dados["nm_tipo_gasto"] . '</td>
+                <td class="text-center">' . $dados["nm_lotacao"] . '</td>    
+                <td class="text-center">' . Metodos::ConverteValorBr($dados["valor"], 4) . '</td>    
+                </tr>';
+                }
+                return $retorno;
+            } else {
+                return Metodos::retornoAjax("Erro", "alert", "Número da ordem inválido.");
+            }
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    public function retornaTabelaOrdemAdministracao() {
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $dadosOrdem = '';
+            $daoFinOrdem = new DaoFinOrdem();
+            $this->nr_ordem = explode("/", $this->nr_ordem);
+
+            $daoFinOrdem->setNrOrdem($this->nr_ordem[0]);
+            $daoFinOrdem->setAaOrdem($this->nr_ordem[1]);
+            $daoFinOrdem->retornaDadosPesquisaAdministracao($pdo);
+            
+            
+            if ($daoFinOrdem->Sucesso()) {
+                $campos = $daoFinOrdem->getMsgRetorno();
+
+                $dadosOrdem .= '<div class="panel-group" id="accordionFor" role="tablist" aria-multiselectable="true">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="headingFor">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
+                                                        aria-expanded="true" aria-controls="collapseFor" >
+                                                        <i class="glyphicon glyphicon-chevron-down"></i>
+                                                        <b>Dados da Ordem: </b><span style="color:#758697"> Nº ' . $campos["nr_ordem"] .'/'.$campos["aa_ordem"]. '</span> 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                             <input type="hidden" id="id_ordem" value="' . $campos['id_pedido'] .'"/>
+                                            <div id="collapseFor" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFor" aria-expanded="true">
+                                                <div class="panel-body">
+                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center">Ordem</th>
+                                                            <th class="text-center">Pedido</th>
+                                                            <th class="text-center">Tipo de Ordem</th>
+                                                            <th class="text-center">Fornecedor</th>
+                                                            <th class="text-center">Tipo de Gasto</th>
+                                                            <th class="text-center">Central de Demanda</th>
+                                                            <th class="text-center">Valor Total</th>
+                                                            <th class="text-center">Ação</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center">' . $campos["nr_ordem"] .'/'.$campos["aa_ordem"]. '</td>
+                                                            <td class="text-center">' . $campos["nr_pedido"] . '</td>
+                                                            <td class="text-center">' . $campos["tipo_ordem"] . '</td>
+                                                            <td class="text-center">' . $campos["cpf_cnpj"] .' - '.$campos["nm_pessoa"] . '</td>  
+                                                            <td class="text-center">' . $campos["nm_tipo_gasto"] . '</td>    
+                                                            <td class="text-center">' . $campos["nm_lotacao"] . '</td>
+                                                            <td class="text-center">' . Metodos::ConverteValorBr($campos["valor"],4) . '</td>    
+                                                            <td class="text-center">
+                                                                <button type="button" title="Ver Ordem" class="ver-ordem" value="' . $campos['id_ordem'] . '">
+                                                                <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>    
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>';
+                return $dadosOrdem;
+            }
+            return $dadosContrato;
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+            return;
+        }
+    }
+
 }

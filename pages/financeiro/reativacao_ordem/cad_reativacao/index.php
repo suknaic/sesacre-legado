@@ -47,7 +47,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Nova Ordem</h1> 
+                        <h1 class="page-header text-overflow">Reativação da Ordem</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -59,11 +59,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Busca de Pedido</h4>
+                                    <h4 class="modal-title">Busca da Ordem</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número do pedido" class="form-control">
+                                        <input type="text" id="codItemPesquisa" placeholder="Número da Ordem" class="form-control">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button" id="btn-pesquisa">
                                                 <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
@@ -77,17 +77,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                     <thead>
                                                         <tr>
+                                                            <th>Ordem</th>
                                                             <th>Pedido</th>
-                                                            <th>Descrição</th>
-                                                            <th>Tipo de gasto</th>
-                                                            <th>Fonte</th>
-                                                            <th>Despesa</th>
-                                                            <th>Valor</th>
-                                                            <th>Ata</th>
-                                                            <th>Contrato</th>
-                                                            <th>Modalidade</th>
-                                                            <th>Projeto/Atividade</th>
-                                                            <th>Empenho</th>
+                                                            <th>Tipo de Ordem</th>
+                                                            <th>Fornecedor</th>
+                                                            <th>Tipo de Gasto</th>
+                                                            <th>Central de Demanda</th>
+                                                            <th>Valor Total</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -112,7 +108,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div class="col-sm-3">
                                         <div class="panel-body">
-                                            Pesquisa Pedido:<span class="text-danger">*</span>
+                                            Pesquisa Ordem:<span class="text-danger">*</span>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
                                                 <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
@@ -124,102 +120,74 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                     </div>
                                 </div>
 
-                                <div class="panel panel-bordered-success">
-                                    <div class="panel-body">
-                                        <input type="hidden" id="id_pedido" value="" />
-                                        <p><strong>Pedido:</strong> <span id="pedido"> </span></p>
-                                        <p><strong>Descrição:</strong> <span id="desc_pedido"> </span></p>
-                                        <p><strong>Tipo de gasto:</strong> <span id="tipo_gasto"> </span></p>
-                                        <p><strong>Fonte:</strong> <span id="fonte"> </span></p>
-                                        <p><strong>Elemento Despesa:</strong> <span id="despesa"> </span></p>
-                                        <p><strong>Valor:</strong> <span id="valor"> </span></p>
-                                        <p><strong>Ata:</strong> <span id="ata"> </span></p>
-                                        <p><strong>Contrato:</strong> <span id="contrato"> </span></p>
-                                        <p><strong>Modalidade:</strong> <span id="modalidade"> </span></p>
-                                        <p><strong>Projeto/Atividade:</strong> <span id="projeto"> </span></p>
-                                        <p><strong>Empenho:</strong> <span id="empenho"> </span></p>
+
+                                <!--Form dos dados do contrato-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body contratos">
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <!--Form dos dados do pedido de necessidade-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body pedido">
 
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="panel-body">
-                                                <label for="tipoOrdem">
-                                                    Tipo ordem: <span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="tipoOrdem" class="form-control">    
-                                                        <option value="0">Selecione um tipo</option>
-                                                        <option value="1">Entrega</option>
-                                                        <option value="2">Execução/Serviço</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 hidden divPrazo">
-                                            <div class="panel-body">
-                                                <label for="prazo">
-                                                    Prazo de entrega: <span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                    <input class="form-control" type="text" name="prazo" id="prazo" required="true" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 pergunta hidden">
-                                            <div class="panel-body">
-                                                <label for="prazo">
-                                                   Essa ordem é de Produto ?<span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="radio">
-                                                    <label><input type="radio" name="optradio" id="radioSim" value="1">Sim</label>
-                                                    <label><input type="radio" name="optradio" id="radioNao"value="2" checked="true">Não</label>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                <!--Form dos dados do empenho-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body empenho">
 
-                                    <div class="row">
-                                        <div class="col-md-6" >
-                                            <div class="panel-body">
-                                                <label for="id_lotacao">
-                                                    Local de entrega ou Execução/Serviço: <span class="text-danger">*</span>
-                                                </label>                                                        
-                                                <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <p class="fa fa-list inputPFa"></p>
-                                                    </span>
-                                                    <select id="id_lotacao" class="form-control">    
-                                                        <option value="0">Selecione uma Lotação</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
-                                        <div class="periodoConsumo hidden">
-                                            <div class="col-md-3" >
-                                                <div class="panel-body">
-                                                    <label for="id_lotacao">
-                                                        Data estimada de consumo inicial: <span class="text-danger">*</span>
-                                                    </label>                                                        
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                        <input class="form-control data" type="text" name="vig_inicial" id="vig_inicial" required="true" />
+                                    </div>
+                                </div>
+
+                                <!--Form dos dados da ordem-->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body ordem">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                    <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body">
+                                            <div class="panel-group" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Dados dos Itens do Pedido de Necessidade</h4>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3" >
-                                                <div class="panel-body">
-                                                    <label for="id_lotacao">
-                                                        Data estimada de consumo final: <span class="text-danger">*</span>
-                                                    </label>                                                        
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                        <input class="form-control data" type="text" name="vig_final" id="vig_final" required="true" />
+                                                    <div class="panel-body">                                                        
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                                                <table id="tabela01" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                       <th class="text-center">Nº</th>
+                                                                            <th class="text-center">Item</th>
+                                                                            <th class="text-center">Descrição</th>
+                                                                            <th class="text-center">Elemento de Despesa</th>
+                                                                            <th class="text-center">Tipo</th>
+                                                                            <th class="text-center">Lote</th>
+                                                                            <th class="text-center">QTD</th>
+                                                                            <th class="text-center">Valor unit</th>
+                                                                            <th class="text-center">Entregue</th>
+                                                                            <th class="text-center">Aguardando Entrega</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -227,47 +195,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                     </div>
                                 </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">Itens Cadastrados</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <table class="table table-striped table-bordered" id="tabela">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-center">Nº</th>
-                                                                <th class="text-center">Item</th>
-                                                                <th class="text-center">Descrição</th>
-                                                                <th class="text-center">Grupo</th>
-                                                                <th class="text-center">Sub Grupo</th>
-                                                                <th class="text-center">Unid</th>
-                                                                <th class="text-center">Elemento de Despesa</th>
-                                                                <th class="text-center">Tipo</th>
-                                                                <th class="text-center">Lote</th>
-                                                                <th class="text-center">QTD</th>
-                                                                <th class="text-center">Valor unit</th>
-                                                                <th class="text-center">Total</th>
-                                                                <th class="text-center">Utilizado</th>
-                                                                <th class="text-center">Saldo</th>
-                                                                <th class="text-center"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
-                                            <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </form>
                     </div>

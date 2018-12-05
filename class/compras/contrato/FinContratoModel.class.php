@@ -1892,9 +1892,8 @@ class FinContratoModel {
                     $tabela .= $l["nm_lotacao"] . "<br/>";
                 }
                 $tabela .= '</td>';
-
-
-                if (!empty($linha['total_geral'])) { //Para evitar divisão por '0'
+                
+                if (!empty($linha['total_geral']) && $linha['total_geral'] != '0.0000') { //Para evitar divisão por '0'
                     $percentualUtilizado = ($linha['total_utilizado'] * 100) / $linha['total_geral'];
                 } else {
                     $percentualUtilizado = 0;

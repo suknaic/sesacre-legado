@@ -36,8 +36,7 @@ $(document).ready(function () {
                 materialConsumo: $('#id_material_consumo').val(),
                 materialPermanente: $('#id_material_permanente').val()
             };
-            // console.log(MaterialServico);
-            // return false;
+
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
                 pessoaJuridica: PessoaJuridica,

@@ -134,7 +134,7 @@ class DaoFinOrdem extends FinOrdemTb {
     public function retornaDadosTrPesquisa(PDO $pdo, string $condicao, int $ano) {
         try {
             if (!empty($pdo)) {
-                
+
                 $sql = "select ordem.id_ordem, p.id_pedido, concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),to_char(p.dt_pedido, 'yyyy')) as pedido,
                         p.ds_pedido, tg.nm_tipo_gasto, f.nr_fonte, desp.cd_despesa_elemento, desp.ds_despesa_elemento, ordem.nr_ordem, ordem.tp_ordem, ordem.sit_ordem,
                         valorOrdem.valor,
@@ -171,7 +171,7 @@ class DaoFinOrdem extends FinOrdemTb {
                         on valorOrdem.id_ordem = ordem.id_ordem
 
                         where ordem.sit_ordem > '0' and ordem.aa_ordem = :ano " . $condicao . " order by ordem.nr_ordem";
-                
+
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":ano", $ano, PDO::PARAM_INT);
                 $stmt->execute();
@@ -395,7 +395,7 @@ class DaoFinOrdem extends FinOrdemTb {
                 $stmt->bindValue(":ordem", $this->getIdOrdem(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
-            }else{
+            } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "erro conexao";
             }
@@ -428,8 +428,8 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    public function retornaEntregasOrdem(PDO $pdo){
+
+    public function retornaEntregasOrdem(PDO $pdo) {
         try {
             if (!empty($pdo)) {
                 $sql = "select
@@ -458,7 +458,6 @@ class DaoFinOrdem extends FinOrdemTb {
                     $this->sucesso = false;
                     $this->msgRetorno = "Nenhum registro encontrado";
                 }
-                
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = 'Sem conexão';
@@ -468,7 +467,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
     public function ordemProtocolo(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
@@ -491,6 +490,7 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $e->getMessage();
         }
     }
+
     /**
      * 
      * @param type $itens
@@ -501,9 +501,9 @@ class DaoFinOrdem extends FinOrdemTb {
             if (!empty($pdo)) {
 
                 $sql = "select * from view_pedido_saldo
-                        where id_pre_ordem in ( ".$itens." )";                        
+                        where id_pre_ordem in ( " . $itens . " )";
 
-                $stmt = $pdo->prepare($sql);                
+                $stmt = $pdo->prepare($sql);
                 $stmt->execute();
                 if ($stmt->rowCount() > 0) {
                     $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -520,6 +520,58 @@ class DaoFinOrdem extends FinOrdemTb {
             $this->msgRetorno = $ex->getMessage();
         }
     }
-    
+
+    public function retornaDadosPesquisaAdministracao(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
+                $sql = "select ordem.nr_ordem, ordem.aa_ordem, pedido.nr_pedido, pessoa.nm_pessoa,  pedido.id_pedido,
+                        case 
+                                when tp_ordem = '1' then 'Entrega' 
+                                when tp_ordem = '2' then 'Execução/Serviço'
+                        end tipo_ordem,
+                        case 
+                                when pf.nr_cpf is not null then pf.nr_cpf
+                                when pj.nr_cnpj is not null then pj.nr_cnpj
+                        end cpf_cnpj,
+                        tipoGasto.nm_tipo_gasto, lotacao.nm_lotacao , totalOrdem.valor, ordem.id_ordem
+                        from fin_ordem as ordem
+                        inner join fin_pedido as pedido
+                        on pedido.id_pedido = ordem.id_pedido
+                        inner join pla_tipo_gasto as tipoGasto
+                        on tipoGasto.id_tipo_gasto = pedido.id_tipo_gasto
+                        inner join ses_lotacao as lotacao
+                        on lotacao.id_lotacao = pedido.id_lotacao
+                        inner join fin_fornecedor as fornecedor
+                        on fornecedor.id_fornecedor = pedido.id_fornecedor
+                        inner join ses_pessoa as pessoa
+                        on pessoa.id_pessoa = fornecedor.id_pessoa
+                        inner join (select sum((qt_itens_ordem * vl_itens_ordem)) as valor, id_ordem
+                                    from fin_ordem_itens 
+                                    group by id_ordem
+                                   ) as totalOrdem
+                        on totalOrdem.id_ordem = ordem.id_ordem		   
+                        left join ses_pessoa_fisica as pf
+                        on pf.id_pessoa = pessoa.id_pessoa
+                        left join ses_pessoa_juridica as pj 
+                        on pj.id_pessoa = pessoa.id_pessoa
+                        where ordem.sit_ordem > '0' 
+                        and ordem.nr_ordem = :numero 
+                        and ordem.aa_ordem = :ano";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":numero", $this->getNrOrdem(), PDO::PARAM_INT);
+                $stmt->bindValue(":ano", $this->getAaOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
 
 }

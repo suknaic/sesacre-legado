@@ -98,7 +98,7 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
     function retornaDadosEmpenhoDaAnulacao(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
-        $sql = "select 
+        $sql = "select emp.id_empenho,
                 concat(substr(nr_empenho, 1, ((LENGTH(nr_empenho)-4)) ), '/',  substring(nr_empenho FROM '....$')) as nr_empenho,
                 to_char(dt_empenho_safira,'dd/mm/yyyy') as dt_empenho ,
                 tpEmp.nm_tipo_empenho,
