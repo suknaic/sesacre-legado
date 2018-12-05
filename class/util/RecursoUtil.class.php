@@ -5,24 +5,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/recurso/Recurso.class.php";
 class RecursoUtil{
         
     private $idPessoa = null;
-    private $flCadastrar = null;
-    private $flEditar = null;
-    private $flExcluir = null;
+    private $flAcessar = false;
+    private $flCadastrar = false;    
+    private $flEditar = false;
+    private $flExcluir = false;
     private $lkRecurso = null;
     private $arquivo = null;
     private $acao = null;
-    private $linkRecurso = null;
-    
-    public function getLinkRecurso() {
-        return $this->linkRecurso;
-    }
-
-    public function setLinkRecurso($linkRecurso) {
-        $this->linkRecurso = $linkRecurso;
-        return $this;
-    }
-            
-    public function getIdPessoa() {
+                    
+    private function getIdPessoa() {
         return $this->idPessoa;
     }
 
@@ -62,7 +53,7 @@ class RecursoUtil{
         return $this;
     }
 
-    private function setLkRecurso($lkRecurso) {
+    public function setLkRecurso($lkRecurso) {
         $this->lkRecurso = $lkRecurso;
         return $this;
     }
@@ -84,8 +75,12 @@ class RecursoUtil{
         return $this;
     }
     
-    public function getAcoesLivres() {
+    private function getAcoesLivres() {
         return array("pesquisar", "visualizar");
+    }
+    
+    public function recursoPodeAcessar() : bool{
+        return $this->flAcessar;
     }
     
     public function recursoPodeCadastrar() : bool{
@@ -214,7 +209,9 @@ class RecursoUtil{
             if(!is_array($permissoes)){
                 return false;
             }
-            
+            /*
+             * Seta as Permissões do Recurso que o usuário possui
+             */
             $this->flCadastrar = $permissoes['cadastrar'];
             $this->flEditar = $permissoes['editar'];
             $this->flExcluir = $permissoes['excluir'];    
@@ -240,6 +237,11 @@ class RecursoUtil{
         }                
     }
     
+    /**
+     * É Necessário Setar o Id da Pessoa e o Link do Recurso
+     * @param PDO $pdo
+     * @return boolean
+     */
     public function carregaRecursoUsuario(PDO $pdo = null){
         try{
             
@@ -248,21 +250,7 @@ class RecursoUtil{
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();                
             } 
-            
-            /*
-             * Irá fazer a Busca da URL e organizar para ser utilizada 
-             * durante a execução do código
-             */
-            $this->setaCamposPrincipais();
-            
-            /*
-             * Verifica se a Ação é alguma das Ações validas no sistema
-             * Em Geral é o nome da pasta
-             */
-            if(!$this->acaoValida()){
-                return false;
-            }
-                        
+                                   
             $recurso = new Recurso();
             $recurso->setIdPessoa($this->idPessoa);
             $recurso->setLkRecurso($this->getLkRecurso());
@@ -277,32 +265,22 @@ class RecursoUtil{
              * Se for false, então significa que o usuário não possui permissão para tal recurso
              */
             if(!$recurso->sucesso()){                    
+                $this->flAcessar = false;
                 return false;
             }
+            $this->flAcessar = true;
             
             $permissoes = $recurso->getMsgRetorno();
             if(!is_array($permissoes)){
                 return false;
             }
             
+            /*
+             * Seta as Permissões do Recurso que o usuário possui
+             */
             $this->flCadastrar = $permissoes['cadastrar'];
             $this->flEditar = $permissoes['editar'];
-            $this->flExcluir = $permissoes['excluir'];    
-            
-            /*
-             * Se a Ação que está sendo utilizado não é livre para acesso exclusivamente do recurso
-             * Ou seja, é necessário que o usuário tenha acesso a alguma permissão especifica
-             * Então é preciso fazer essa validação
-             */
-            if(!$this->acaoLivre()){
-                /*
-                 * Se o usuário não possui permissão para essa ação
-                 * então ele não deve ter acesso a essa página
-                 */
-                if(!$this->validaUsodaAcao($permissoes, $this->getAcao())){                    
-                    return false;
-                }                                
-            }                        
+            $this->flExcluir = $permissoes['excluir'];                                              
                                     
             return true;            
         } catch (Exception $ex) {            
