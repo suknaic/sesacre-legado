@@ -190,7 +190,49 @@ class Recurso{
         }
     }
     
-    
+   
+    function cadastrarRecurso(Session $session){
+        try {
+            
+            if(!$session->recursoPodeCadastrar()){
+                return Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+            }
+            
+            if (empty($this->getIdSistema()) || empty($this->getNmRecurso()) || empty($this->getLkRecurso())) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoRecRecurso = new DaoRecRecurso();
+            $daoRecRecurso->setIdSistema($this->getIdSistema());
+            $daoRecRecurso->setNmRecurso($this->getNmRecurso());
+            $daoRecRecurso->setLkRecurso($this->getLkRecurso());
+            $daoRecRecurso->setDsRecurso($this->getDsRecurso());
+            
+            $daoRecRecurso->insert($pdo);
+            
+            if($daoRecRecurso->Sucesso()){
+                $idRecurso = $pdo->lastInsertId('rec_recurso_id_recurso_seq');
+                if (!Log::SalvaLogI('rec_recurso', $idRecurso, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+            }
+            
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage() );
+        }
+    }
     
 }
 
