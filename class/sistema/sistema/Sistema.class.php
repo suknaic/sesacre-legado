@@ -75,8 +75,13 @@ class Sistema {
             
             $daoSesSistema = new DaoSesSistema();
             $daoSesSistema->retornaTodos($pdo);
+            
+            $opcoes = [];
             if ($daoSesSistema->getSucesso()) {
-                return json_encode($daoSesSistema->getMsgRetorno());
+                foreach ($daoSesSistema->getMsgRetorno() as $linha) {
+                    $opcoes[] = (object) array('id' => $linha['id_sistema'], 'nome' => $linha['nm_sistema']);
+                }
+                return json_encode($opcoes);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

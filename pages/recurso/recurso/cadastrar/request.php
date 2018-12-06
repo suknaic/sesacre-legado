@@ -21,14 +21,13 @@ switch ($_REQUEST['acao']) {
         }
     CASE 'cadastrarRecurso':
         try {
-            
-            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $dados = filter_input(INPUT_POST, 'dados',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);    
             $recurso = new Recurso();
             $recurso->setIdSistema((int)$dados['idSistema']);
             $recurso->setNmRecurso($dados['nmRecurso']);
             $recurso->setLkRecurso($dados['lkRecurso']);
             $recurso->setDsRecurso($dados['dsRecurso']);
-            $recurso->cadastrarRecurso($session);
+            echo $recurso->cadastrarRecurso($session);
             return;
             break;
         } catch (Error $e) {
