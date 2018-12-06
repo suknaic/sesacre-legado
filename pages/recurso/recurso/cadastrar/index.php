@@ -57,22 +57,21 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form id="cadRecurso" class="form-horizontal" v-on:submit.prevent="cadastrar">
+                        <form id="cadRecurso" class="form-horizontal">
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h2 class="panel-title">Dados do Recurso</h2>
                                 </div>
                                 <div class="panel-body">
                                     
-                                    
-                                    <campo-select nome="id_sistema" descricao="Sistema do Recurso" v-model="idSistema" requerido v-bind:opcoes="sistemas"></campo-select>
-                                    <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="nmRecurso" requerido></campo-texto>
-                                    <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="lkRecurso" requerido></campo-texto>
-                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="dsRecurso"></campo-texto-grande>
+                                    <campo-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" requerido v-bind:opcoes="sistemasOptions"></campo-select>
+                                    <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></campo-texto>
+                                    <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></campo-texto>
+                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="novoRecurso.dsRecurso"></campo-texto-grande>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
-                                    <button type="submit" class="btn btn-success btn-salvar btn-rounded">
+                                    <button type="submit" v-on:click.prevent="cadastrar" class="btn btn-success btn-salvar btn-rounded">
                                         <i class="fa fa-floppy-o fa-1x"></i> Salvar Recurso
                                     </button>                                    
                                 </div>
@@ -129,8 +128,9 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+        <!--Vue.JS-->
+        <script src="/assets/lib/template/js/vue.min.js"></script>
+        <script src="/assets/lib/template/js/vue-resource.min.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>

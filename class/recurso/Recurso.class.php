@@ -206,7 +206,7 @@ class Recurso{
             $daoRecRecurso->setDsRecurso($this->getDsRecurso());
             
             $daoRecRecurso->insert($pdo);
-            
+
             if($daoRecRecurso->Sucesso()){
                 $idRecurso = $pdo->lastInsertId('rec_recurso_id_recurso_seq');
                 if (!Log::SalvaLogI('rec_recurso', $idRecurso, $pdo)) {
@@ -218,7 +218,7 @@ class Recurso{
                 return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "console", $daoDiaDiaria->getMsgRetorno());
+                return Metodos::retornoAjax("Erro", "console", $daoRecRecurso->getMsgRetorno());
             }
             
             

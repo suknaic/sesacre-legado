@@ -68,7 +68,7 @@ Vue.component('campo-select',{
     mounted: function() {
         var vm = this
         $('.' + this.nome).select2().on('change', function(){
-            vm.$emit('input',this.value)
+            vm.$emit('input',this.value) // 'this.value' aqui se refere ao elemento capturado pelo Jquery
         })     
     },
     template: `<div class="form-group">
@@ -80,7 +80,7 @@ Vue.component('campo-select',{
                                     <p class="fa fa-list inputPFa"></p>
                                 </span>
                             <select class="form-control" v-bind:class="nome" >
-                                <option value="0">Selecione p {{descricao}}</option>
+                                <option value="0">Selecione o {{descricao}}</option>
                                 <option v-for="opcao in opcoes" :key="opcao.id" v-bind:value="opcao.id">{{ opcao.nome }}</option>
                             </select>                                                                
                         </div>                                                   
@@ -94,67 +94,52 @@ var app = new Vue({
     el: '#cadRecurso' ,
     data: function (){
         return {
-            idSistema: 0,
-            nmRecurso: '',
-            lkRecurso: '',
-            dsRecurso: '',   
-            sistemas: [],
+            sistemasOptions: [],
+            novoRecurso: {idSistema: 0,nmRecurso: '',lkRecurso: '',dsRecurso: ''},
             erros: []
         }
     },
     mounted: function(){
-        axios({ 
-            url: 'request.php',
-            method: 'get',
-            params: {
-                acao: 'listaSistemas'
-            }
-        }).then(response => {
-            var info = response.data;
-            for(let indice in info){       
-                this.sistemas.push({id: info[indice].id_sistema, nome: info[indice].nm_sistema});
-            }             
-        }).catch(erro => {
-            console.log(erro);
-        })
-
+        this.listaSistemasOptions();
     },
     methods: {
         cadastrar: function (){
             
-            if(!this.idSistema || !this.nmRecurso || !this.lkRecurso){
-                func.modalAlert("Por favor preencha as informações obrigatórias.");
-                return false;
+            var recurso = this.novoRecurso;
+            
+            if (!recurso.idSistema || !recurso.nmRecurso || !recurso.lkRecurso) {
+                
             }
             
-            var dados = {
-                idSistema: this.idSistema,
-                nmRecurso: this.nmRecurso,
-                lkRecurso: this.lkRecurso,
-                dsRecurso: this.dsRecurso
-            }
-
-            axios({
-                url: 'request.php',
-                method: 'post',
+            this.$http.post('request.php', {
+                        dados: recurso,
+                        acao: 'cadastrarRecurso'
+                    },{ emulateJSON: true }
+            ).then(response => {
+//                console.log(response.body);
+                var respostaBody = response.body;
+                if(respostaBody.tipoMsg === "ok"){
+                    func.modalAlert(respostaBody.msg, 'success');
+                    func.fechaModalReload();
+                } else {
+                    func.modalAlert(respostaBody.msg)
+                }
+            }, erro => {
+                console.log(erro);
+            });
+        },
+        listaSistemasOptions: function(){
+            this.$http.get('request.php',{
                 params: {
-                    acao: 'cadastrarRecurso',
-                    dados: dados
+                    acao: 'listaSistemas'
                 }
             }).then(response => {
-                console.log(response);
-                if (response.data.tipoMsg == 'ok') {
-                    func.modalAlert(response.data.msg,'success');
-                } else {
-                    func.modalAlert(response.data.msg);
-                }
-                
-            }).catch(erro => {
+                this.sistemasOptions = response.body;
+            },erro => {
                 console.log(erro);
-                func.modalAlert(func.msgErroPadrao);
-            }) 
-        
+            });
         }
+
     }
 })
         
