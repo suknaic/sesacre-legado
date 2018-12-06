@@ -338,10 +338,6 @@ $(document).ready(function () {
         if ($("[name=campo]").is( ":visible" ) == true) {
             $('.adicionar').hide();
         }
-
-        // if ($("[name=up]").is( ":visible" ) == true) {
-        //     $('.adicionar').hide();
-        // }
     });
 
     function listaNatureza() {
