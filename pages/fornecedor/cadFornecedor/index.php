@@ -42,12 +42,16 @@
                 white-space: pre-line;
                 margin: 14px ;
             }
+            #adicionar {
+                margin: 32px;
+                margin-left: 0;
+            }
             .adicionar {
                 margin: 32px;
                 margin-left: 0;
             }
-            .remover {
-                margin: 19px;
+            #remover {
+                margin: 32px;
                 margin-left: 0;
             }
         </style>
@@ -436,8 +440,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-1 empDist">
-                                                            <button class="btn btn-primary adicionar">
+                                                            <button class="btn btn-primary " id="adicionar">
                                                                 <i class="fa fa-plus"></i>
+                                                            </button>
+                                                            <button class="btn btn-primary adicionar hidden">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                            <button class="btn btn-danger" id="remover">
+                                                                <i class="fa fa-remove"></i>
                                                             </button>
                                                         </div>
                                                         <div class="col-sm-4">

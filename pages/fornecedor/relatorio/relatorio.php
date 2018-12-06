@@ -72,7 +72,7 @@ $html .= "                  <td class='tudo'><b>E-mail</b></td>
                             <td class='tudo'><b>Tipo de Fornecedor</b></td>
                             <td class='tudo'><b>Fornecedor Exclusivo</b></td>
                             <td class='tudo'><b>Fornecedor Distribuidora</b></td>
-                            <td class='tudo'><b>Empresa(s) Contratante</b></td>";
+                            <td class='tudo'><b>Empresa(s) Contratante(s)</b></td>";
 
     if ($dados['tipoFornecedor'] == '2') {
         $html .= "          <td class='tudo'><b>Natureza da Empresa</b></td>";

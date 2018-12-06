@@ -292,13 +292,29 @@ $(document).ready(function () {
         $this.closest(".form-group").remove();
     });
 
-    $('body').on('click', '.adicionar', function (e) {
+    $('body').on('click', '#remover', function (e) {
         e.preventDefault();
-        var html = "<input type=\"text\" class=\"form-control\" name=\"ds_emp_dist[]\" id=\"ds_emp_dist\" required=\"true\" placeholder=\"Nome da Empresa\">";
+        $('#ds_emp_dist').val('');
+        $('#remover').hide();
+        $('#adicionar').show();
+    });
+
+    $('body').on('click', '#adicionar', function (e) {
+        e.preventDefault();
+        $('#adicionar').hide();
+        $('#remover').show();
+        adicionarEmpresa();
+        if ($("[name=campo]").is( ":visible" ) == true) {
+            $('.adicionar').hide();
+        }
+    });
+
+    function adicionarEmpresa() {
+        var html = "<input type=\"text\" class=\"form-control\" name=\"ds_emp_dist[]\" id=\"ds_emp_dist\" campo=\"novo\" required=\"true\" placeholder=\"Nome da Empresa\">";
         $(".empresas").append('<div class = "form-group">' +
             '                       <div class="col-sm-2" ></div>' +
             '                       <div class="col-sm-4">' +
-            '                           <div class="panel-body" style=\"margin-left: -10px;\">' +
+            '                           <div class="panel-body" style=\"margin-left: -10px;\">Nome da empresa que presta serviço: <span class="text-danger">*</span>' +
             '                               <div class="input-group">' +
             '                                   <span class="input-group-addon">' +
             '                                       <p class="fa fa-file-text-o inputPFa"></p>' +
@@ -306,12 +322,26 @@ $(document).ready(function () {
             '                               </div>' +
             '                           </div>'+
             '                       </div>'+
-            '                       <div class="col-sm-1">' +
+            '                       <div class="col-sm-2">' +
             '                           <div class="panel-body" >' +
-            '                               <button class="remove btn btn-danger" style=\"margin-left: -20px;\"><i class="fa fa-remove"></i></button>' +
+            '                               <button class="adicionar btn btn-primary" style=\"margin: 17px; margin-left: -20px;\"><i class="fa fa-plus"></i></button>' +
+            '                               <button class="remove btn btn-danger" style=\"margin: 17px; margin-left: -18px\"><i class="fa fa-remove"></i></button>' +
             '                           </div>' +
             '                       </div>' +
             '                   </div>');
+    }
+
+    $('body').on('click', '.adicionar', function (e) {
+        e.preventDefault();
+        $(this).hide();
+        adicionarEmpresa();
+        if ($("[name=campo]").is( ":visible" ) == true) {
+            $('.adicionar').hide();
+        }
+
+        // if ($("[name=up]").is( ":visible" ) == true) {
+        //     $('.adicionar').hide();
+        // }
     });
 
     function listaNatureza() {
@@ -468,8 +498,8 @@ $(document).ready(function () {
                                 try {
                                     response = JSON.parse(response);
                                     $('#id_pais').val(response[0].id_pais).trigger('change.select2');
-                                    listaEstado(response[0].id_pais, response[0]['id_estado']);
-                                    listaCidade(response[0]['id_estado'], cidade);
+                                    listaEstado(response[0].id_pais, response[0].id_estado);
+                                    listaCidade(response[0].id_estado, cidade);
                                 } catch (e) {
                                     console.log(response);
                                     return false;
@@ -615,4 +645,6 @@ $(document).ready(function () {
     $(".anterior").click(function () {
         $('.nav > .active').prev('li').find('a').trigger('click');
     });
+
+    $('#remover').hide();
 });
