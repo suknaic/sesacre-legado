@@ -1,4 +1,4 @@
-Vue.component('campo-texto',{
+Vue.component('campo-texto', {
     props: {
         nome: String,
         descricao: String,
@@ -9,8 +9,8 @@ Vue.component('campo-texto',{
         valor: String
     },
     methods: {
-        atualiza: function (valor){
-            this.$emit('input',valor)
+        atualiza: function (valor) {
+            this.$emit('input', valor)
         }
     },
     template: `<div class="form-group">
@@ -26,7 +26,7 @@ Vue.component('campo-texto',{
                 </div>`
 })
 
-Vue.component('campo-texto-grande',{
+Vue.component('campo-texto-grande', {
     props: {
         nome: String,
         descricao: String,
@@ -37,8 +37,8 @@ Vue.component('campo-texto-grande',{
         },
     },
     methods: {
-        atualiza: function (valor){
-            this.$emit('input',valor)
+        atualiza: function (valor) {
+            this.$emit('input', valor)
         }
     },
     template: `<div class="form-group">
@@ -54,7 +54,7 @@ Vue.component('campo-texto-grande',{
                 </div>`
 })
 
-Vue.component('campo-select',{
+Vue.component('campo-select', {
     props: {
         nome: String,
         descricao: String,
@@ -65,11 +65,11 @@ Vue.component('campo-select',{
             type: Boolean
         }
     },
-    mounted: function() {
+    mounted: function () {
         var vm = this
-        $('.' + this.nome).select2().on('change', function(){
-            vm.$emit('input',this.value) // 'this.value' aqui se refere ao elemento capturado pelo Jquery
-        })     
+        $('.' + this.nome).select2().on('change', function () {
+            vm.$emit('input', this.value) // 'this.value' aqui se refere ao elemento capturado pelo Jquery
+        })
     },
     template: `<div class="form-group">
                     <label class="col-sm-2 control-label text-left">
@@ -90,58 +90,55 @@ Vue.component('campo-select',{
 
 func = new Funcoes();
 
-var app = new Vue({ 
-    el: '#cadRecurso' ,
-    data: function (){
+var app = new Vue({
+    el: '#cadRecurso',
+    data: function () {
         return {
             sistemasOptions: [],
-            novoRecurso: {idSistema: 0,nmRecurso: '',lkRecurso: '',dsRecurso: ''},
-            erros: []
+            novoRecurso: {idSistema: 0, nmRecurso: '', lkRecurso: '', dsRecurso: ''}
         }
     },
-    mounted: function(){
+    mounted: function () {
         this.listaSistemasOptions();
     },
     methods: {
-        cadastrar: function (){
+        cadastrar: function () {
+
+            var recurso = JSON.stringify(this.novoRecurso);
             
-            var recurso = this.novoRecurso;
-            
-            if (!recurso.idSistema || !recurso.nmRecurso || !recurso.lkRecurso) {
-                
-            }
-            
-            this.$http.post('request.php', {
-                        dados: recurso,
-                        acao: 'cadastrarRecurso'
-                    },{ emulateJSON: true }
-            ).then(response => {
-//                console.log(response.body);
-                var respostaBody = response.body;
-                if(respostaBody.tipoMsg === "ok"){
-                    func.modalAlert(respostaBody.msg, 'success');
-                    func.fechaModalReload();
-                } else {
-                    func.modalAlert(respostaBody.msg)
-                }
-            }, erro => {
-                console.log(erro);
+            axios({
+              url: 'request.php',
+              method: 'POST',
+              headers: {
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+              },
+              params: {
+                  acao: 'cadastrarRecurso'
+              },
+              data: {
+                  dados: recurso
+              }
+            }).then(function(response){            
+                console.log(response.data);
             });
         },
-        listaSistemasOptions: function(){
-            this.$http.get('request.php',{
+        listaSistemasOptions: function () {
+            var vm = this;
+            axios({
+                url: 'request.php',
+                method: 'GET',
                 params: {
-                    acao: 'listaSistemas'
+                  acao: 'listaSistemas'
                 }
-            }).then(response => {
-                this.sistemasOptions = response.body;
-            },erro => {
-                console.log(erro);
+            }).then(function(response) {                
+                vm.sistemasOptions = response.data;        
             });
+            
         }
 
     }
 })
-        
+
 
 

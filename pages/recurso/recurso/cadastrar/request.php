@@ -9,7 +9,7 @@ $session->recurso();
 switch ($_REQUEST['acao']) {
 
     CASE 'listaSistemas':
-        try {
+        try {        
             $sistema = new Sistema();
             echo $sistema->retornaOptionSistemas();
             return;
@@ -21,7 +21,7 @@ switch ($_REQUEST['acao']) {
         }
     CASE 'cadastrarRecurso':
         try {
-            $dados = filter_input(INPUT_POST, 'dados',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY);    
+            $dados = filter_input(INPUT_POST, 'dados',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY); 
             $recurso = new Recurso();
             $recurso->setIdSistema((int)$dados['idSistema']);
             $recurso->setNmRecurso($dados['nmRecurso']);
