@@ -554,7 +554,7 @@ $(document).ready(function () {
 
         var competenciaId = $("#id_competencia").val();
         if (competenciaId == 0) {
-            alert("informe Competência");
+            func.modalAlert('Informe a Competência.');
             $("#id_competencia").focus();
             return;
         }
@@ -564,7 +564,7 @@ $(document).ready(function () {
             $("#tabela tbody tr").each(function () {
                 if (competenciaId == $(this).find(".escolaridade").attr("idEscolaridadeFormacao")) {
                     flag = 1;
-                    func.modalAlert(" O Item já Existe!!!");
+                    func.modalAlert(" O Item já Existe.");
                 }
             });
         }

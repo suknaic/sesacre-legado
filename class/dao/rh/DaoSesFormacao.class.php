@@ -74,9 +74,10 @@ class DaoSesFormacao extends SesFormacao {
     function retornaFormacao($pdo) {
 
         $retorno = FALSE;
-        $sql = "SELECT *
-                 FROM ses_escolaridade_formacao
-                 WHERE id_escolaridade_formacao = :idFormacao";
+        $sql = "SELECT FORM.id_escolaridade_formacao, FORM.nm_escolaridade_formacao, ESC.id_escolaridade, ESC.nm_escolaridade
+                 FROM ses_escolaridade_formacao FORM
+                  INNER JOIN ses_escolaridade ESC ON ESC.id_escolaridade = FORM.id_escolaridade
+                 WHERE FORM.id_escolaridade_formacao = :idFormacao";
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":idFormacao", $this->getId_escolaridade_formacao(), PDO::PARAM_INT);

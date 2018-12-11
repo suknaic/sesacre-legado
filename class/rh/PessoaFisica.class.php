@@ -264,7 +264,7 @@ class pessoaFisica {
      * @param $pdo
      * @return type|void
      */
-    public function cadastrarCompetencia($pdo, $escolaridade = null) {
+    public function cadastrarCompetencia($pdo, $idEscolaridade) {
         try {
 
             $pessoaFisica = new DaoSesPessoaFisica();
@@ -273,14 +273,70 @@ class pessoaFisica {
 
             $formacao = new Formacao();
             $formacao->setId_formacao($this->id_escolaridade_formacao_competencia);
-            $resultado = $formacao->retornarFormacao($pdo);
+            $buscaFormacao = $formacao->retornarFormacao($pdo);
 
-            if ($resultado['id_escolaridade'] != $escolaridade){
+            $escolaridade = new Escolaridade();
+            $escolaridade->setIdEscolaridade($idEscolaridade);
+            $buscaEscolaridade = $escolaridade->retornaEscolaridade();
+
+            $nivelFormaçao = 0;
+            if ($buscaFormacao['nm_escolaridade'] == 'Analfabeto') {
+                $nivelFormaçao = 1;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Ensino Fundamental') {
+                $nivelFormaçao = 2;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Ensino Médio') {
+                $nivelFormaçao = 3;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Ensino Superior' || $buscaFormacao['nm_escoçaridade'] == 'Tecnólogo') {
+                $nivelFormaçao = 4;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Pós-Graduação' || $buscaFormacao['nm_escoçaridade'] == 'Especialização') {
+                $nivelFormaçao = 5;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Mestrado') {
+                $nivelFormaçao = 6;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Doutorado') {
+                $nivelFormaçao = 7;
+            }
+            if ($buscaFormacao['nm_escolaridade'] == 'Pós-Doutorado ') {
+                $nivelFormaçao = 8;
+            }
+
+            $nivelEscolaridade = 0;
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Analfabeto') {
+                $nivelEscolaridade = 1;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Ensino Fundamental') {
+                $nivelEscolaridade = 2;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Ensino Médio') {
+                $nivelEscolaridade = 3;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Ensino Superior' || $buscaEscolaridade['nm_escolaridade'] == 'Tecnólogo') {
+                $nivelEscolaridade = 4;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Pós-Graduação' || $buscaEscolaridade['nm_escolaridade'] == 'Especialização') {
+                $nivelEscolaridade = 5;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Mestrado') {
+                $nivelEscolaridade = 6;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Doutorado') {
+                $nivelEscolaridade = 7;
+            }
+            if ($buscaEscolaridade['nm_escolaridade'] == 'Pós-Doutorado ') {
+                $nivelEscolaridade = 8;
+            }
+
+            if ($nivelFormaçao > $nivelEscolaridade){
                 return Metodos::retornoAjax('Erro', 'alert', 'Curso Não Corresponde ao Nível de Escolaridade.');
             }
-//          ****************************************************************************
+            //****************************************************************************
             $result = $pessoaFisica->insertCompetencia($pdo);
-//          ****************************************************************************
+            //****************************************************************************
             if ($result != "Sucesso") {
                 $sucesso = false;
                 $retorno = Metodos::retornoAjax("Erro", "console", $result);
@@ -405,7 +461,7 @@ class pessoaFisica {
     public function editarPessoaFisica($pdo) {
         try {
             $sucesso = false;
-//**************************************
+            //**************************************
             $pessoaFisica = new DaoSesPessoaFisica();
             $pessoaFisica->setId_pessoa_fisica($this->id_pessoa_fisica);
             $pessoaFisica->setDs_habilidade($this->ds_habilidade);
@@ -423,16 +479,16 @@ class pessoaFisica {
             $pessoaFisica->setNr_rg($this->nr_rg);
             $pessoaFisica->setTp_sexo($this->tp_sexo);
 
-//***********************************************************************
+            //***********************************************************************
             $validaCpf = $pessoaFisica->validarCpf($pdo, $this->nr_cpf);
-//******************************************
+            //******************************************
             if ($validaCpf) {
                 $this->setSuccess(false);
                 $this->setMsg(STR_CPF_EXISTE);
                 $pdo->rollBack();
                 return;
             }
-//************************************************************************
+            //************************************************************************
             $dtNascimento = strtotime($this->dt_nascimento);
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtNascimento >= $dtAtual) {
@@ -441,7 +497,7 @@ class pessoaFisica {
                 $pdo->rollBack();
                 return;
             }
-//*************************************************************************
+            //*************************************************************************
             $busca = $pessoaFisica->retornaPessoaFisica($pdo);
 //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
             if (!$busca) {
@@ -451,9 +507,9 @@ class pessoaFisica {
                 $pdo->rollBack();
                 return;
             }
-//*****************************************
+            //*****************************************
             $result = $pessoaFisica->update($pdo);
-//*****************************************
+            //*****************************************
             if ($result != "Sucesso") {
                 $this->setSuccess(false);
                 $this->setMsg($result);
@@ -478,23 +534,23 @@ class pessoaFisica {
     public function removerCompetencia($idCompetencia) {
         try {
             $retorno = "";
-//***********************************************************************************
+            //***********************************************************************************
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pessoaFisica = new DaoSesPessoaFisica();
             $pessoaFisica->setId_competencia($idCompetencia);
-//************************************************************************************
+            //************************************************************************************
             $busca = $pessoaFisica->buscaCompetencia($pdo);
             if ($busca != FALSE) {
                 if (!Log::SalvaLogD('ses_competencia', $pessoaFisica->getId_competencia(), $pdo)) {
                     $retorno = retornoAjax("Erro", "alert", STR_ERROR);
                 }
             }
-//************************************************************************************
+            //************************************************************************************
             $rs = $pessoaFisica->removerCompetencia($pdo);
 
             return $retorno;
-//***********************************************************************************
+            //***********************************************************************************
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
