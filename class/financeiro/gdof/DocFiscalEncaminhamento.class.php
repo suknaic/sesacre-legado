@@ -370,81 +370,72 @@ class DocFiscalEncaminhamento {
     }
 
     public function cadastrarEncaminhamento($dados) {
-        $conexao = new Conexao();
-        $pdo = $conexao->connect();
-        $pdo->beginTransaction();
-        $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
-        
-//        $daoFinDocumentoFiscal->retornaUltimaOrigemDocumento($pdo);
-        
-        //Aqui irá retornar o último tipo do remetente
-        $daoFinDocumentoFiscal->retornaUltimoTipoRemetenteTramitacao($pdo);
-       
-        if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao retornar o tipo de Remetente da última tramitação.");
-        }
-        $tipo_remetente = $daoFinDocumentoFiscal->getMsgRetorno()["tipo_remetente"];
-        
-        $origem = $daoFinDocumentoFiscal->getMsgRetorno()["id_doc_origem"];
-        
-        //verifica se usuário pode efetuar o encaminhamento deste documento 
-        $daoFinDocumentoFiscal->verificaPermissaoEncaminhar($pdo, $this->getIdUsuario(),$origem);
-        if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Usuário não possui permissão para tramitar este documento.");
-        }
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
 
-//        $daoFinDocumentoFiscal->retornaSituacaoDoParametro($pdo, $origem, $dados["tipoDestinatario"]);
-        $daoFinDocumentoFiscal->retornaSituacaoDocumentoParametro($pdo,$tipo_remetente, $dados["tipoDestinatario"], '1'); //Ultimo parametro indica que é um encaminhamento
-        if (!$daoFinDocumentoFiscal->sucesso()) {
-            return Metodos::retornoAjax("Erro", "alert", "Esta tramitação não está cadastrada nos parâmetros da Vinculação da Tramitação");
-        }
+            $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
 
-        $situacao = $daoFinDocumentoFiscal->getMsgRetorno()["id_documento_situacao"];
-        
-        
-        //-------------Atualiza a situação do Documento Fiscal--------------------------------
-        $daoFinDocumentoFiscal->setIdDocumentoSituacao($situacao);
-        $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
-        
-        
-        if (!$daoFinDocumentoFiscal->sucesso()) {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Documento Fiscal, por favor entre em contato com o Administrador do sistema.");
-        }
-        //-------------FIM Atualiza a situação do Documento Fiscal----------------------------
-        
+            //Aqui irá retornar a ultima tramitação do documento para registrar o Encaminhamento
+            $daoFinDocumentoFiscal->retornaNovaSituacaoEncaminhamentoDocumentoFiscal($pdo,(int)$dados["destinatario"]);
+            if (!$daoFinDocumentoFiscal->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro retornar os dados da última tramitação.");
+            }
+            $tramitacao = $daoFinDocumentoFiscal->getMsgRetorno();
 
-        //codigo abaixo cadastra a tramitacao encaminhado
-        $docTramitacao = new DocTramitacao();
-        $docTramitacao->setIdPessoa($this->id_usuario);
-        $docTramitacao->setIdDocOrigem($origem);
-        $docTramitacao->setIdDocDestino($dados["destinatario"]);
-        $docTramitacao->setIdDocumentoSituacao($situacao);
-        $docTramitacao->setDsDocTramitacao($dados["motivo"]);
-        $docTramitacao->setIdTipoTramitacao(3);
-        $docTramitacao->setIdDocumentoFiscal($dados["id"]);
-        $docTramitacao->setFlPesquisa(1);
-        if (!$docTramitacao->cadastraTramitacao($pdo)) {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
-        }
+            //verifica se usuário pode efetuar o encaminhamento deste documento 
+            $daoFinDocumentoFiscal->verificaPermissaoEncaminhar($pdo, $this->getIdUsuario(),$tramitacao['tipo_remetente']);
+            if (!$daoFinDocumentoFiscal->sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Usuário não possui permissão para tramitar este documento.");
+            }
 
-        //codigo abaixo cadastra a tramitacao aguardando recebimento
-        $docTramitacao->setFlPesquisa(0);
-        $docTramitacao->setIdTipoTramitacao(4);
-        
-        //Ao ser encaminhado, a origem do documento passa a ser o local para onde foi enviado
-        $docTramitacao->setIdDocOrigem($dados["destinatario"]);
-        $docTramitacao->setDsDocTramitacao(null);
-        $docTramitacao->setIdDocDestino(null);
-        if (!$docTramitacao->cadastraTramitacao($pdo)) {
-            $pdo->rollBack();
-            return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
-        }
+            if ($tramitacao['situacao_atual'] != $tramitacao['situacao_nova']) {
+                //-------------Atualiza a situação do Documento Fiscal--------------------------------
+                $daoFinDocumentoFiscal->setIdDocumentoSituacao($tramitacao['situacao_nova']);
+                $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
 
-        $pdo->commit();
-        return Metodos::retornoAjax("ok", "html", "Documento encaminhado com sucesso");
+                if (!$daoFinDocumentoFiscal->sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Documento Fiscal, por favor entre em contato com o Administrador do sistema.");
+                }
+                //-------------FIM Atualiza a situação do Documento Fiscal----------------------------
+            }
+
+            //codigo abaixo cadastra a tramitacao encaminhado
+            $docTramitacao = new DocTramitacao();
+            $docTramitacao->setIdPessoa($this->id_usuario);
+            $docTramitacao->setIdDocOrigem($tramitacao['remetente']);
+            $docTramitacao->setIdDocDestino($dados["destinatario"]);
+            $docTramitacao->setIdDocumentoSituacao($tramitacao['situacao_nova']);
+            $docTramitacao->setDsDocTramitacao($dados["motivo"]);
+            $docTramitacao->setIdTipoTramitacao(3);
+            $docTramitacao->setIdDocumentoFiscal($dados["id"]);
+            $docTramitacao->setFlPesquisa(1);
+            if (!$docTramitacao->cadastraTramitacao($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
+            }
+
+            //codigo abaixo cadastra a tramitacao aguardando recebimento
+            $docTramitacao->setFlPesquisa(0);
+            $docTramitacao->setIdTipoTramitacao(4);
+
+            //Ao ser encaminhado, a origem do documento passa a ser o local para onde foi enviado
+            $docTramitacao->setIdDocOrigem($dados["destinatario"]);
+            $docTramitacao->setDsDocTramitacao(null);
+            $docTramitacao->setIdDocDestino(null);
+            if (!$docTramitacao->cadastraTramitacao($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", "Documento encaminhado com sucesso");
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
     }
 
 }

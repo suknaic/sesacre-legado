@@ -923,12 +923,16 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
 
     public function retornaUltimoTipoRemetenteTramitacao(PDO $pdo) {
         try {
-            $sql = "select id_doc_origem,id_doc_tipo_lotacao as tipo_remetente
-                    from fin_doc_tramitacao
-                    inner join fin_doc_lotacao tipoLot
-                    on tipoLot.id_doc_lotacao = id_doc_origem 
-                    where id_documento_fiscal = :documento
-                    order by id_doc_tramitacao desc 
+            $sql = "select TRM.id_doc_origem,
+                           TL.id_doc_tipo_lotacao as tipo_remetente, 
+                           DF.id_documento_situacao as situacao_documento
+                    from fin_doc_tramitacao TRM
+                    inner join fin_doc_lotacao TL
+                    on TL.id_doc_lotacao = TRM.id_doc_origem 
+                    inner join fin_documento_fiscal DF
+                    on DF.id_documento_fiscal = TRM.id_documento_fiscal
+                    where TRM.id_documento_fiscal = :documento
+                    order by TRM.id_doc_tramitacao desc 
                     limit 1";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -968,8 +972,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
     }
     
     
-    //select * from fin_doc_tramitacao where id_documento_fiscal = 3 order by dh_doc_tramitacao desc limit 1
-    
     public function verificaPermissaoEncaminhar(PDO $pdo, int $idPessoa = 0, int $tipoRemetente = 0){
         try {
             $sql = "select count(*) from fin_doc_vinc_encaminhamento as encaminhar
@@ -994,18 +996,215 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-    public function retornaOrigemDestinoUltimaTramitacao(PDO $pdo){
+    public function verificaPermissaoReceber(PDO $pdo, int $idPessoa, int $tipoDestinatario = 0){
         try {
-            $sql = "select id_doc_origem,tipoOrigem.id_doc_tipo_lotacao as tipo_remetente ,id_doc_destino, tipoDestino.id_doc_tipo_lotacao as tipo_destinatario  from fin_doc_tramitacao as tramitacao
-                    inner join fin_doc_lotacao as tipoOrigem
-                    on tipoOrigem.id_doc_lotacao = tramitacao.id_doc_origem
-                    inner join fin_doc_lotacao as tipoDestino
-                    on tipoDestino.id_doc_lotacao = tramitacao.id_doc_destino
-                    where id_documento_fiscal = :documento
-                    and id_doc_origem is not null
-                    and id_doc_destino is not null
-                    order by id_doc_tramitacao desc
-                    limit 1";
+            $sql = "select count(*) from fin_doc_vinc_recebimento as receber
+                    inner join fin_doc_lotacao as tipoLotacao
+                    on receber.id_doc_lotacao = tipoLotacao.id_doc_lotacao
+                    Where tipoLotacao.id_doc_tipo_lotacao = :tipo_destinatario
+                    and receber.id_pessoa = :pessoa";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+            $stmt->bindValue(':tipo_destinatario', $tipoDestinatario, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem permissão para Receber.";
+                $this->sucesso = false;
+            }
+        } catch (PDOException $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaNovaSituacaoEncaminhamentoDocumentoFiscal(PDO $pdo, int $destino = 0){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    DF.id_documento_situacao as situacao_atual,
+                    case
+                       when
+                          (
+                             (
+                                 DF.id_documento_situacao = 3 
+                                 or DF.id_documento_situacao = 5 
+                                 or DF.id_documento_situacao = 6
+                             ) 
+                             and PARM.id_documento_situacao < DF.id_documento_situacao 
+                             and 
+                             (
+                                P.id_documento_fiscal is not null 
+                                or L.id_documento_fiscal is not null 
+                             )
+                          )
+                       then
+                          DF.id_documento_situacao 
+                       else
+                          PARM.id_documento_situacao 
+                    end
+                    as situacao_nova, 
+                    TRM.id_doc_origem as remetente, 
+                    TPLO.id_doc_tipo_lotacao as tipo_remetente, 
+                    TPLD.id_doc_lotacao as destinatario, 
+                    TPLD.id_doc_tipo_lotacao as tipo_destinatario 
+                 from
+                    fin_documento_fiscal DF 
+                    inner join
+                       (
+                          select
+                             id_documento_fiscal,
+                             max(id_doc_tramitacao) as id_doc_tramitacao 
+                          from
+                             fin_doc_tramitacao 
+                          where
+                             id_tipo_tramitacao = 2 				/*AGUARDANDO ENCAMINHAMENTO*/
+                          group by
+                             id_documento_fiscal 
+                       )
+                       UT 
+                       on UT.id_documento_fiscal = DF.id_documento_fiscal 
+                    inner join
+                       fin_doc_tramitacao TRM 
+                       on TRM.id_documento_fiscal = UT.id_documento_fiscal 
+                       and TRM.id_doc_tramitacao = UT.id_doc_tramitacao 
+                    inner join
+                       fin_doc_lotacao TPLO 
+                       on TPLO.id_doc_lotacao = TRM.id_doc_origem 
+                    inner join
+                       fin_doc_lotacao TPLD 
+                       on TPLD.id_doc_lotacao = :destino 
+                    inner join
+                       fin_doc_parm_tramitacao PARM 
+                       on PARM.id_doc_tipo_remetente = TPLO.id_doc_tipo_lotacao 
+                       and PARM.id_doc_tipo_destinatario = TPLD.id_doc_tipo_lotacao 
+                       and PARM.tp_doc_parm_tramitacao = '1' 
+                    left join
+                       (
+                          select distinct
+                             LD.id_documento_fiscal 
+                          from
+                             con_liquidacao L,
+                             con_liquidacao_doc LD 
+                          where
+                             L.id_liquidacao = LD.id_liquidacao 
+                             and L.st_ativo = '1' 
+                             and L.id_liquidacao_situacao <> 4 
+                       )
+                       L 
+                       on L.id_documento_fiscal = DF.id_documento_fiscal 
+                    left join
+                       (
+                          select distinct
+                             PD.id_documento_fiscal 
+                          from
+                             con_pagamento P,
+                             con_pagamento_doc PD 
+                          where
+                             P.id_pagamento = PD.id_pagamento 
+                             and P.st_ativo = '1' 
+                             and P.id_pagamento_situacao <> 2 
+                       )
+                       P 
+                       on P.id_documento_fiscal = DF.id_documento_fiscal 
+                 where
+                    DF.id_documento_fiscal = :documento";
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
+            $stmt->bindValue(":destino", $destino, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->msgRetorno = "Sem permissão para encaminhar.";
+            }
+        } catch (PDOException $ex) {
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaNovaSituacaoRecebimentoDocumentoFiscal(PDO $pdo){
+        $this->sucesso = false;
+        $this->msgRetorno = null;
+        $sql = "select
+                    DF.id_documento_situacao as situacao_atual,
+                    case
+                       when
+                          (
+                             (DF.id_documento_situacao = 3 
+                             or DF.id_documento_situacao = 5 
+                             or DF.id_documento_situacao = 6) 
+                             and PARM.id_documento_situacao < DF.id_documento_situacao 
+                             and 
+                             (
+                                P.id_documento_fiscal is not null 
+                                or L.id_documento_fiscal is not null
+                             )
+                          )
+                       then
+                          DF.id_documento_situacao 
+                       else
+                          PARM.id_documento_situacao 
+                    end
+                    as situacao_nova,
+                    TRM.id_doc_origem as remetente,
+                    TPLO.id_doc_tipo_lotacao as tipo_remetente,
+                    TRM.id_doc_destino as destinatario,
+                    TPLD.id_doc_tipo_lotacao as tipo_destinatario
+                 from
+                    fin_doc_tramitacao TRM 
+                    inner join
+                       fin_documento_fiscal DF 
+                       on DF.id_documento_fiscal = TRM.id_documento_fiscal 
+                    inner join
+                       fin_doc_lotacao TPLO 
+                       on TPLO.id_doc_lotacao = TRM.id_doc_origem 
+                    inner join
+                       fin_doc_lotacao TPLD 
+                       on TPLD.id_doc_lotacao = TRM.id_doc_destino 
+                    inner join
+                       fin_doc_parm_tramitacao PARM 
+                       on PARM.id_doc_tipo_remetente = TPLD.id_doc_tipo_lotacao 
+                       and PARM.id_doc_tipo_destinatario = TPLO.id_doc_tipo_lotacao 
+                       and PARM.tp_doc_parm_tramitacao = '2' 
+                    left join
+                       (
+                          select distinct
+                             LD.id_documento_fiscal 
+                          from
+                             con_liquidacao L,
+                             con_liquidacao_doc LD 
+                          where
+                             L.id_liquidacao = LD.id_liquidacao 
+                             and L.st_ativo = '1' 
+                             and L.id_liquidacao_situacao <> 4 
+                       )
+                       L 
+                       on L.id_documento_fiscal = DF.id_documento_fiscal 
+                    left join
+                       (
+                          select distinct
+                             PD.id_documento_fiscal 
+                          from
+                             con_pagamento P,
+                             con_pagamento_doc PD 
+                          where
+                             P.id_pagamento = PD.id_pagamento 
+                             and P.st_ativo = '1' 
+                             and P.id_pagamento_situacao <> 2 
+                       )
+                       P 
+                       on P.id_documento_fiscal = DF.id_documento_fiscal 
+                 Where
+                    TRM.id_tipo_tramitacao = 3 /*ENCAMINHADO*/
+                    and DF.id_documento_fiscal = :documento 
+                 order by
+                    TRM.id_doc_tramitacao DESC limit 1";
+        try {
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
             $stmt->execute();
@@ -1014,67 +1213,12 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $this->sucesso = true;
             } else {
                 $this->msgRetorno = "Sem permissão para encaminhar.";
-                $this->sucesso = false;
             }
         } catch (PDOException $ex) {
-            $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
     }
-    
-    public function retornaUltimaOrigemDocumento(PDO $pdo) {
-        try {
-            $sql = "select id_doc_origem from fin_doc_tramitacao 
-                    where id_documento_fiscal = :documento
-                    order by id_doc_tramitacao desc 
-                    limit 1";
-
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
-                $this->sucesso = true;
-            } else {
-                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
-                $this->sucesso = false;
-            }
-        } catch (PDOException $ex) {
-            $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
-        }
-    }
-    
-    public function retornaSituacaoDoParametro(PDO $pdo, int $lotacaoOrigem=0, int $tipo=0){
-        try {
-            $sql = "select parmametro.id_documento_situacao
-                    from fin_doc_lotacao as docLotacao
-
-                    inner join fin_doc_tipo_lotacao as tpLotacao
-                    on tpLotacao.id_doc_tipo_lotacao = docLotacao.id_doc_tipo_lotacao
-
-                    inner join fin_doc_parm_tramitacao as parmametro
-                    on parmametro.id_doc_tipo_remetente = tpLotacao.id_doc_tipo_lotacao
-
-                    where docLotacao.id_doc_lotacao = :lotacaoOrigem
-                    and parmametro.id_doc_tipo_destinatario = :tipo
-                    limit 1";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":lotacaoOrigem", $lotacaoOrigem, PDO::PARAM_INT);
-            $stmt->bindValue(":tipo", $tipo, PDO::PARAM_INT);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
-                $this->sucesso = true;
-            } else {
-                $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
-                $this->sucesso = false;
-            }
-        } catch (PDOException $ex) {
-            $this->sucesso = false;
-            $this->msgRetorno = $ex->getMessage();
-        }
-    }
+        
     
     public function retornaSituacaoDocumentoParametro(PDO $pdo,int $tipo_remetente=0,int $tipo_destinatario =0, string $encaminhar_receber=""){
         try {

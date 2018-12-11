@@ -80,13 +80,38 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
+
     CASE 'retornaItensEntrega':
         try {
             $dados = filter_input(INPUT_GET, 'ordem', FILTER_DEFAULT);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $finEntregaConfirmacaoModel->setIdOrdem($dados);
             echo json_encode($finEntregaConfirmacaoModel->retornaItensCadEntrega());
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'retornaTipoRemetenteERemetente':
+        try {
+            $vincTramitacao = new VincularTramitacao();
+            $vincTramitacao->setIdPessoa($session->getIdUser());
+            echo $vincTramitacao->listaLotacaoTipoPorUsuarioReativacaoOrdem();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
+
+    CASE 'cadastraReativacao':
+        try {
+            $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            var_dump($dados);
             return;
             break;
         } catch (Error $e) {

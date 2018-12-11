@@ -4,20 +4,19 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/tabelas/sistema/SesVincularTram
 
 class DaoSesVincularTramitacao extends SesVincularTramitacao {
 
-   private $sucesso = false;
-   private $msgRetorno = null;
-   
-   function getSucesso() {
-       return $this->sucesso;
-   }
+    private $sucesso = false;
+    private $msgRetorno = null;
 
-   function getMsgRetorno() {
-       return $this->msgRetorno;
-   }
+    function getSucesso() {
+        return $this->sucesso;
+    }
 
-      
-   function insert(PDO $pdo = null){
-       try {
+    function getMsgRetorno() {
+        return $this->msgRetorno;
+    }
+
+    function insert(PDO $pdo = null) {
+        try {
             if (!empty($pdo)) {
                 $sql = "insert into ses_vincular_tramitacao (id_tramitacao,id_pessoa, id_lotacao, id_doc_tipo_lotacao) values (:id_tramitacao,:id_pessoa, :id_lotacao, :id_doc_tipo_lotacao)";
                 $stmt = $pdo->prepare($sql);
@@ -34,15 +33,15 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
-   }
+    }
 
-   function delete(PDO $pdo = null){
-       try {
+    function delete(PDO $pdo = null) {
+        try {
             if (!empty($pdo)) {
                 $sql = "delete from ses_vincular_tramitacao where id_vincular_tramitacao = :id_vincular_tramitacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_vincular_tramitacao", $this->getIdVincularTramitacao(), PDO::PARAM_INT);
-                
+
                 $this->sucesso = $stmt->execute();
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
@@ -51,11 +50,11 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
         }
-   }
-   
-   function selectParaLog(PDO $pdo = null){
-       try {
-           if (!empty($pdo)) {
+    }
+
+    function selectParaLog(PDO $pdo = null) {
+        try {
+            if (!empty($pdo)) {
                 $sql = "select * from ses_vincular_tramitacao where id_vincular_tramitacao = :id_vincular_tramitacao";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":id_vincular_tramitacao", $this->getIdVincularTramitacao(), PDO::PARAM_INT);
@@ -66,19 +65,18 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
                 } else {
                     $this->sucesso = false;
                 }
-                
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-       } catch (PDOException $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
-       }
+        }
     }
-    
-    function selectComDescritivos(PDO $pdo = null){
+
+    function selectComDescritivos(PDO $pdo = null) {
         try {
-           if (!empty($pdo)) {
+            if (!empty($pdo)) {
                 $sql = "select
                             svt.id_vincular_tramitacao,
                             tramitacao.id_tramitacao,
@@ -114,19 +112,18 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
                 } else {
                     $this->sucesso = false;
                 }
-                
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-       } catch (PDOException $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
-       }
+        }
     }
-   
-   function selectTodosComDescritivos(PDO $pdo = null){
+
+    function selectTodosComDescritivos(PDO $pdo = null) {
         try {
-           if (!empty($pdo)) {
+            if (!empty($pdo)) {
                 $sql = "select
                             svt.id_vincular_tramitacao,
                             tramitacao.id_tramitacao,
@@ -159,17 +156,16 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
                 } else {
                     $this->sucesso = false;
                 }
-                
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
-       } catch (PDOException $exc) {
+        } catch (PDOException $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
-       }
+        }
     }
-    
-    function retornaLotacaoTipoEmpenhoPorUsuario (PDO $pdo = null){
+
+    function retornaLotacaoTipoEmpenhoPorUsuario(PDO $pdo = null) {
         try {
             $sql = "select distinct
                         svt.id_lotacao,
@@ -200,8 +196,8 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaLotacaoTipoLiquidacaoPorUsuario (PDO $pdo = null){
+
+    function retornaLotacaoTipoLiquidacaoPorUsuario(PDO $pdo = null) {
         try {
             $sql = "select distinct
                         svt.id_lotacao,
@@ -232,8 +228,8 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaLotacaoTipoPagamentoPorUsuario (PDO $pdo = null){
+
+    function retornaLotacaoTipoPagamentoPorUsuario(PDO $pdo = null) {
         try {
             $sql = "select distinct
                         svt.id_lotacao,
@@ -264,8 +260,40 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaLotacaoTipoLiquidacaoPorTipoELotacao(PDO $pdo = null){
+
+    function retornaLotacaoTipoReativacaoOrdemPorUsuario(PDO $pdo = null) {
+        try {
+            $sql = "select distinct
+                        svt.id_lotacao,
+                        svt.id_doc_tipo_lotacao,
+                        nm_lotacao,
+                        nm_doc_tipo_lotacao 
+                     from
+                        ses_vincular_tramitacao as svt 
+                        inner join
+                           ses_lotacao as lot 
+                           on lot.id_lotacao = svt.id_lotacao 
+                        inner join
+                           fin_doc_tipo_lotacao as tipoLot 
+                           on tipoLot.id_doc_tipo_lotacao = svt.id_doc_tipo_lotacao 
+                     where svt.id_pessoa = :id_pessoa
+                     and svt.id_tramitacao = 6 --Pagamento";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $this->sucesso = true;
+            } else {
+                $this->sucesso = false;
+            }
+        } catch (PDOException $exc) {
+            $this->sucesso = false;
+            $this->msgRetorno = $exc->getMessage();
+        }
+    }
+
+    function retornaLotacaoTipoLiquidacaoPorTipoELotacao(PDO $pdo = null) {
         try {
             if (!empty($pdo)) {
                 $sql = "select distinct
@@ -293,7 +321,6 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
                 } else {
                     $this->sucesso = false;
                 }
-                
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados';
             }
@@ -302,8 +329,8 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaLotacaoTipoAnulacaoEmpenhoPorUsuario (PDO $pdo = null){
+
+    function retornaLotacaoTipoAnulacaoEmpenhoPorUsuario(PDO $pdo = null) {
         try {
             $sql = "select distinct
                         svt.id_lotacao,
@@ -334,8 +361,8 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function retornaLotacaoTipoAutorizacaoAnulacaoEmpenhoPorUsuario (PDO $pdo = null){
+
+    function retornaLotacaoTipoAutorizacaoAnulacaoEmpenhoPorUsuario(PDO $pdo = null) {
         try {
             $sql = "select distinct
                         svt.id_lotacao,
@@ -366,8 +393,8 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-    function verificaTramitacaoPessoa (PDO $pdo = null){
+
+    function verificaTramitacaoPessoa(PDO $pdo = null) {
         try {
             $sql = "SELECT id_tramitacao"
                     . " FROM ses_vincular_tramitacao"
@@ -376,7 +403,7 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $stmt->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $stmt->bindValue(":id_tramitacao", $this->getIdTramitacao(), PDO::PARAM_INT);
             $stmt->execute();
-            if ($stmt->rowCount() > 0) {                
+            if ($stmt->rowCount() > 0) {
                 $this->sucesso = true;
             } else {
                 $this->sucesso = false;
@@ -386,6 +413,5 @@ class DaoSesVincularTramitacao extends SesVincularTramitacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
-}
 
+}

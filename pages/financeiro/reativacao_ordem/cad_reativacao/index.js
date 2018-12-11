@@ -22,6 +22,18 @@ $(document).ready(function () {
             }
         });
     });
+    //retorna remetente
+    $.ajax({
+        "url": "request.php",
+        "dataType": 'html',
+        "data": {
+            "acao": "retornaTipoRemetenteERemetente"
+        },
+        "success": function (response) {
+            $("#id_remetente").html("");
+            $("#id_remetente").append(response);
+        }
+    });
 
     $('body').on('click', '.selecionaItem', function (e) {
         var $this = $(this);
@@ -157,13 +169,80 @@ $(document).ready(function () {
 
             }
         });
-
-
-
         $('#modalItem').modal('hide');
     });
 
+    $('body').on('click', '.ver-ordem', function (e) {
+        var id = $(this).val();
+        window.open("/pages/financeiro/ordem/pdfBemProduto.php?&id=" + id);
+    });
 
 
+    $("body").on("click", ".btn-salvar", function (e) {
+        e.stopPropagation();
+        if (e.isDefaultPrevented()) {
+        } else {
+            e.preventDefault();
+            var $this = $(this);
+            $this.prop("disabled", true);
+            
+            var dados = {
+                "id_ordem" : $("#id_ordem").val(),
+                "id_protocolo" : $("#id_protocolo").val()
+            }
+
+            $.ajax({
+                "url": "request.php",
+                "method": "POST",
+                "dataType": "html",
+                "data": {
+                    "acao": "cadastraReativacao",
+                    "dados": dados
+                },
+                "success": function (response) {
+                    $this.prop("disabled", false);
+                    console.log(response);
+                    if (response.trim() == "SessaoExpirada") {
+                        func.modalAlert(func.msgSemPermissao);
+                        return false;
+                    }
+
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        func.modalAlert(func.msgErroPadrao);
+                        console.log("Parse JSON");
+                        return false;
+                    }
+
+                    if (response.tipoMsg === "Erro") {
+                        if (response.tipoExibicao === "console") {
+                            console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao);
+                            return false;
+                        } else if (response.tipoExibicao === "alert") {
+                            func.modalAlert(response.msg);
+                            return false;
+                        }
+                    } else if (response.tipoMsg === "ok") {
+                        func.modalAlert(response.msg, 'success');
+                        $('.modal-alert').on('hidden.bs.modal', function (e) {
+                            location.reload();
+                        });
+                        return false;
+                    } else {
+                        console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    }
+                },
+                "error": function (response) {
+                    $this.prop("disabled", false);
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
+            });
+        }
+    });
 
 });
