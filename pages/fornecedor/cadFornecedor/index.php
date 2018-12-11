@@ -360,6 +360,7 @@
 
                                                 <div id="tab4" class="tab-pane">
                                                     <div class="form-group resto">
+                                                        <div class="col-sm-2"></div>
                                                         <div class="col-sm-4 juridica">
                                                             <div class="panel-body">Telefone da Empresa: <span class="text-danger">*</span>
                                                                 <div class="input-group">
@@ -392,7 +393,9 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
+                                                    </div>
+                                                    <div class="form-group resto">
+                                                        <div class="col-sm-4"></div>
                                                         <div class="col-sm-4">
                                                             <div class="panel-body">E-mail: </strong><span class="text-danger">*</span>
                                                                 <div class="input-group">
@@ -402,6 +405,11 @@
                                                                     <input type="email" class="form-control" name="email" id="nm_email" required="true" placeholder="">
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="col-sm-1">
+                                                            <button class="btn btn-primary adicionarEmail">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -136,11 +136,11 @@ class Contrato {
                 return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
             }
 
-//            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
-//            if ($email != 'ac.gov.br') {
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
-//            }
+            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
+            if ($email != 'ac.gov.br') {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
+            }
             //********************************************************************************************************
 
             //**************************** Pessoa ********************************************************************
@@ -166,9 +166,10 @@ class Contrato {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
                 return $retorno;
             }
-            //**************************** Pessoa Fisica********************************************************************
+
+            //************************************************* Pessoa Fisica*******************************************
             $pessoaFisica = new pessoaFisica();
-            $pessoaFisica->setId_pessoa($idPessoa);
+            $pessoaFisica->setId_pessoa(1);
             $pessoaFisica->setTp_sexo(trim($dadosPessoaFisica['tpSexo']));
             $pessoaFisica->setNm_civil(trim($dadosPessoaFisica['nomeCivil']));
             $pessoaFisica->setNr_cpf(trim($dadosPessoaFisica['cpf']));
@@ -189,11 +190,13 @@ class Contrato {
                 $retorno = Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
                 return $retorno;
             }
-            //********************************Competencias****************************************************************
+            //**********************************************************************************************************
+
+            //***********************************************Competencias***********************************************
             if (count($dadosCompetencia) > 0) {
                 foreach ($dadosCompetencia as $linha => $v) {
                     $pessoaFisica->setId_escolaridade_formacao_competencia($v['id_escolaridade_formacao']);
-                    $rs = $pessoaFisica->cadastrarCompetencia($pdo);
+                    $rs = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
                     if ($rs != "Sucesso") {
                         $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                         $pdo->rollBack();
@@ -201,7 +204,9 @@ class Contrato {
                     }
                 }
             }
-            //*************************contratos***********************************************************************
+            //**********************************************************************************************************
+
+            //************************************************contratos*************************************************
             $contrato = new DaoSesContrato();
             $contrato->setSt_ativo('1');
             //********************************************
@@ -215,6 +220,7 @@ class Contrato {
                 }
             }
             //*********************************************
+
             $contrato->setDt_admissao($dadosContrato['dtAdmissao']);
             $contrato->setDt_demissao($dadosContrato['dtDemissao']);
             $contrato->setId_cargo($dadosContrato['idCargo']);
