@@ -6,6 +6,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoMod
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemAdministracaoModel.class.php";
+
 $session = new Session('ajax');
 
 switch ($_REQUEST['acao']) {
@@ -111,7 +113,12 @@ switch ($_REQUEST['acao']) {
     CASE 'cadastraReativacao':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            var_dump($dados);
+            $finOrdemAdministracaoModel = new FinOrdemAdministracaoModel();
+            $finOrdemAdministracaoModel->setIdOrdem($dados["id_ordem"]);
+            $finOrdemAdministracaoModel->setIdProtocolo($dados["id_protocolo"]);
+            $finOrdemAdministracaoModel->setIdSolicitante($session->getIdUser());
+            $finOrdemAdministracaoModel->setIdLotacaoSolicitante($dados["id_remetente"]);
+            echo $finOrdemAdministracaoModel->reativacaoOrdem();
             return;
             break;
         } catch (Error $e) {
