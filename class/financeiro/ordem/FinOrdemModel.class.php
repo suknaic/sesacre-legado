@@ -935,8 +935,8 @@ class FinOrdemModel {
             $daoFinOrdem->setNrOrdem($this->nr_ordem[0]);
             $daoFinOrdem->setAaOrdem($this->nr_ordem[1]);
             $daoFinOrdem->retornaDadosPesquisaAdministracao($pdo);
-            
-            
+
+
             if ($daoFinOrdem->Sucesso()) {
                 $campos = $daoFinOrdem->getMsgRetorno();
 
@@ -947,12 +947,12 @@ class FinOrdemModel {
                                                     <a role="button" data-toggle="collapse" data-parent="#accordionFor" href="#collapseFor" 
                                                         aria-expanded="true" aria-controls="collapseFor" >
                                                         <i class="glyphicon glyphicon-chevron-down"></i>
-                                                        <b>Dados da Ordem: </b><span style="color:#758697"> Nº ' . $campos["nr_ordem"] .'/'.$campos["aa_ordem"]. '</span> 
+                                                        <b>Dados da Ordem: </b><span style="color:#758697"> Nº ' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</span> 
                                                     </a>
                                                 </h4>
                                             </div>
-                                             <input type="hidden" id="id_ordem" value="' . $campos['id_ordem'] .'"/>
-                                             <input type="hidden" id="id_protocolo" value="' . $campos['id_protocolo'] .'"/>    
+                                             <input type="hidden" id="id_ordem" value="' . $campos['id_ordem'] . '"/>
+                                             <input type="hidden" id="id_protocolo" value="' . $campos['id_protocolo'] . '"/>    
                                             <div id="collapseFor" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFor" aria-expanded="true">
                                                 <div class="panel-body">
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -970,13 +970,13 @@ class FinOrdemModel {
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="text-center">' . $campos["nr_ordem"] .'/'.$campos["aa_ordem"]. '</td>
+                                                            <td class="text-center">' . $campos["nr_ordem"] . '/' . $campos["aa_ordem"] . '</td>
                                                             <td class="text-center">' . $campos["nr_pedido"] . '</td>
                                                             <td class="text-center">' . $campos["tipo_ordem"] . '</td>
-                                                            <td class="text-center">' . $campos["cpf_cnpj"] .' - '.$campos["nm_pessoa"] . '</td>  
+                                                            <td class="text-center">' . $campos["cpf_cnpj"] . ' - ' . $campos["nm_pessoa"] . '</td>  
                                                             <td class="text-center">' . $campos["nm_tipo_gasto"] . '</td>    
                                                             <td class="text-center">' . $campos["nm_lotacao"] . '</td>
-                                                            <td class="text-center">' . Metodos::ConverteValorBr($campos["valor"],4) . '</td>    
+                                                            <td class="text-center">' . Metodos::ConverteValorBr($campos["valor"], 4) . '</td>    
                                                             <td class="text-center">
                                                                 <button type="button" title="Ver Ordem" class="ver-ordem" value="' . $campos['id_ordem'] . '">
                                                                 <i class="fa fa-file-text-o text-info" aria-hidden="true"></i>
@@ -996,6 +996,17 @@ class FinOrdemModel {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
             return;
+        }
+    }
+
+    public function cadastrarReativacaoOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            $daoFinOrdem = new DaoFinOrdem();
+        } catch (Exception $ex) {
+            
         }
     }
 
