@@ -150,8 +150,8 @@ class Recurso{
             $dao = new DaoRecRecurso();
             $dao->retornaTodosRecurso($pdo);
             
-            if ($dao->sucesso()) {
-                foreach ($dao->getMsgRetorno() as $linha) {                    
+            if ($dao->sucesso()) {                                                                              
+                foreach ($dao->getMsgRetorno() as $linha) {                   
                     $tabela .= '<tr>'
                                 . '<td class="text-center">'.$linha['nm_recurso'].'</td>'
                                 . '<td class="text-center">'.$linha['ds_recurso'].'</td>'
@@ -166,20 +166,13 @@ class Recurso{
                         $tabela .=  ' <button type="button" title="Editar Recurso" class="editar-recurso" value='.$linha['id_recurso'].'>'
                                         . '<i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>'
                                     . '</button> ';                                    
-                    }
+                    }                                                          
                     if($session->recursoPodeExcluir()){
                         $tabela .= ' <button type="button" title="Excluir Recurso" class="cancelar-recurso" value='.$linha['id_recurso'].'>'
                                         . '<i class="fa fa-trash text-danger" aria-hidden="true"></i>'
                                     . '</button> ';
                     }
                     
-                    //Situação Cadastrado ou Liquidado Parcial Pode Liquidar. Obs.: Tipo de administração por licitação deve existir documento fiscal a liquidar
-//                    if ($linha['liquida'] == 'S' and $flBotaoLiquidar) {
-//                        $tabela .= '<button title="Cadastrar Liquidação" type="button" class="enviar-liquidacao" value="' . $linha['empenho_sm'] . '">'
-//                                    . '<i class="fa fa-calculator text-purple" aria-hidden="true"></i>'
-//                                . '</button>';
-//                    }
-
                     $tabela .= '</td>'
                             . '</tr>';                    
                 }
@@ -190,7 +183,49 @@ class Recurso{
         }
     }
     
-    
+   
+    function cadastrarRecurso(Session $session){
+        try {
+            
+            if(!$session->recursoPodeCadastrar()){
+                return Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+            }
+            
+            if (empty($this->getIdSistema()) || empty($this->getNmRecurso()) || empty($this->getLkRecurso())) {
+                return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
+            }
+            
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoRecRecurso = new DaoRecRecurso();
+            $daoRecRecurso->setIdSistema($this->getIdSistema());
+            $daoRecRecurso->setNmRecurso($this->getNmRecurso());
+            $daoRecRecurso->setLkRecurso($this->getLkRecurso());
+            $daoRecRecurso->setDsRecurso($this->getDsRecurso());
+            
+            $daoRecRecurso->insert($pdo);
+
+            if($daoRecRecurso->Sucesso()){
+                $idRecurso = $pdo->lastInsertId('rec_recurso_id_recurso_seq');
+                if (!Log::SalvaLogI('rec_recurso', $idRecurso, $pdo)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
+                }
+                
+                $pdo->commit();
+                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+            } else {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "console", $daoRecRecurso->getMsgRetorno());
+            }
+            
+            
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage() );
+        }
+    }
     
 }
 

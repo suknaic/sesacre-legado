@@ -2,122 +2,6 @@ $(document).ready(function () {
 
     func = new Funcoes();
 
-
-    function gerarSelect2(classe) {
-        $("." + classe).select2({
-            width: " 100%"
-        });
-    }
-
-
-    function gerarCloneSelect(campoPrincipal, campoSelect, select, classeremove) {
-        var html = '';
-        $("." + campoPrincipal).find('.' + select).select2('destroy');
-        html = $("." + campoSelect).clone();
-        html.find('.select2-selection--single').remove();
-        $("." + campoPrincipal).append('<div class = "form-group"><div class="col-sm-4"></div><div class="col-sm-4"><div class="panel-body">' + html.html() +
-            '</div></div><div class="col-sm-3"><div class="panel-body"><button href="#" class="btn-' + classeremove + ' btn btn-danger"><i class="fa fa-remove" aria-hidden="true"></i></button></div></div></div>');
-        gerarSelect2(select);
-    }
-
-    $("body").on("click", ".addMedicamentos", function (e) {
-        $("select[name=medicamento\\[\\]]").each(function () {
-            if ($(this).val() == 0 || $(this).val() == '') {
-                clone = false;
-            } else {
-                clone = true;
-            }
-        });
-        if (clone == true) {
-            e.preventDefault();
-            gerarCloneSelect("medicamentos", "medicamentosCampos", "selectMedicamentos", "removeMedicamento");
-        } else {
-            e.preventDefault();
-            $('.selectMedicamentos').focus();
-            func.modalAlert('Selecione um tipo de medicamento.');
-        }
-    });
-
-    $("body").on('click', '.btn-removeMedicamento', function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        $this.closest(".form-group").remove();
-    });
-
-
-    $("body").on("click", ".addServico", function (e) {
-        $("select[name=servico\\[\\]]").each(function () {
-            if ($(this).val() == 0 || $(this).val() == '') {
-                clone = false;
-            } else {
-                clone = true;
-            }
-        });
-        if (clone == true) {
-            e.preventDefault();
-            gerarCloneSelect("servicos", "servicoCampos", "selectServico", "removeServico");
-        } else {
-            e.preventDefault();
-            $('.selectMedicamentos').focus();
-            func.modalAlert('Selecione um tipo de serviço.');
-        }
-    });
-
-    $("body").on('click', '.btn-removeServico', function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        $this.closest(".form-group").remove();
-    });
-
-
-    $("body").on("click", ".addConsumo", function (e) {
-        $("select[name=materialConsumo\\[\\]]").each(function () {
-            if ($(this).val() == 0 || $(this).val() == '') {
-                clone = false;
-            } else {
-                clone = true;
-            }
-        });
-        if (clone == true) {
-            e.preventDefault();
-            gerarCloneSelect("consumo", "consumoCampos", "selectConsumo", "removeMaterialConsumo");
-        } else {
-            e.preventDefault();
-            $('.selectMedicamentos').focus();
-            func.modalAlert('Selecione um tipo de material de consumo.');
-        }
-    });
-
-    $("body").on('click', '.btn-removeMaterialConsumo', function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        $this.closest(".form-group").remove();
-    });
-
-    $("body").on("click", ".addPermanente", function (e) {
-        $("select[name=materialPermanente\\[\\]]").each(function () {
-            if ($(this).val() == 0 || $(this).val() == '') {
-                clone = false;
-            } else {
-                clone = true;
-            }
-        });
-        if (clone == true) {
-            e.preventDefault();
-            gerarCloneSelect("permanente", "permanenteCampos", "selectPermanente", "removePermanente");
-        } else {
-            e.preventDefault();
-            $('.selectMedicamentos').focus();
-            func.modalAlert('Selecione um tipo de material permanente.');
-        }
-    });
-
-    $("body").on('click', '.btn-removePermanente', function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        $this.closest(".form-group").remove();
-    });
-
 //******************************************************************************************
     $("body").find("select").select2({width: " 100%"});
     $('body').find("id_tipo_fornecedor").select2({});
@@ -305,6 +189,13 @@ $(document).ready(function () {
                 if (nmEmpresa == '') {
                     func.modalAlert(func.msgPreencherCampos + "<strong> Informações da Empresa - Nome da Empresa Distribuidora</strong>");
                     return false;
+                } else {
+                    var empresas = [];
+                    $("input[name=ds_emp_dist\\[\\]]").each(function () {
+                        if ($(this).val() != '' && $(this).val() != 0) {
+                            empresas.push($(this).val());
+                        }
+                    });
                 }
             }
 
@@ -314,14 +205,14 @@ $(document).ready(function () {
                     return false;
                 }
             }
-            //**********************************************************************************************************
+            // **********************************************************************************************************
 
-            //*********************************************** Objeto Social ********************************************
+            // *********************************************** Objeto Social ********************************************
             if (MaterialServico.medicamento == null && MaterialServico.servico == null && MaterialServico.materialConsumo == null && MaterialServico.materialPermanente == null) {
                 func.modalAlert(func.msgPreencherCampos + "<strong> Objeto Social </strong>");
                 return false;
             }
-            //**********************************************************************************************************
+            // **********************************************************************************************************
 
             var Fornecedor = {
                 pessoaFisica: PessoaFisica,
@@ -330,7 +221,7 @@ $(document).ready(function () {
                 materialServico: MaterialServico,
                 empExc: empExc,
                 empDist: empDist,
-                nmEmpresa: nmEmpresa
+                nmEmpresa: empresas
             };
             
             $.ajax({
@@ -342,8 +233,6 @@ $(document).ready(function () {
                     "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
-                    // console.log(response);
-                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -394,6 +283,60 @@ $(document).ready(function () {
         if (key == 13) {
             $(".btn-salvar").trigger('click');
             return false;
+        }
+    });
+
+    $('body').on('click', '.remove', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".form-group").remove();
+    });
+
+    $('body').on('click', '#remover', function (e) {
+        e.preventDefault();
+        $('#ds_emp_dist').val('');
+        $('#remover').hide();
+        $('#adicionar').show();
+    });
+
+    $('body').on('click', '#adicionar', function (e) {
+        e.preventDefault();
+        $('#adicionar').hide();
+        $('#remover').show();
+        adicionarEmpresa();
+        if ($("[name=campo]").is( ":visible" ) == true) {
+            $('.adicionar').hide();
+        }
+    });
+
+    function adicionarEmpresa() {
+        var html = "<input type=\"text\" class=\"form-control\" name=\"ds_emp_dist[]\" id=\"ds_emp_dist\" campo=\"novo\" required=\"true\" placeholder=\"Nome da Empresa\">";
+        $(".empresas").append('<div class = "form-group">' +
+            '                       <div class="col-sm-2" ></div>' +
+            '                       <div class="col-sm-4">' +
+            '                           <div class="panel-body" style=\"margin-left: -10px;\">Nome da empresa que presta serviço: <span class="text-danger">*</span>' +
+            '                               <div class="input-group">' +
+            '                                   <span class="input-group-addon">' +
+            '                                       <p class="fa fa-file-text-o inputPFa"></p>' +
+            '                                   </span>' + html + '' +
+            '                               </div>' +
+            '                           </div>'+
+            '                       </div>'+
+            '                       <div class="col-sm-2">' +
+            '                           <div class="panel-body" >' +
+            '                               <button class="adicionar btn btn-primary" style=\"margin: 17px; margin-left: -20px;\"><i class="fa fa-plus"></i></button>' +
+            '                               <button class="remove btn btn-danger" style=\"margin: 17px; margin-left: -18px\"><i class="fa fa-remove"></i></button>' +
+            '                           </div>' +
+            '                       </div>' +
+            '                   </div>');
+    }
+
+    $('body').on('click', '.adicionar', function (e) {
+        e.preventDefault();
+        $(this).hide();
+        adicionarEmpresa();
+        if ($("[name=campo]").is( ":visible" ) == true) {
+            $('.adicionar').hide();
         }
     });
 
@@ -551,8 +494,8 @@ $(document).ready(function () {
                                 try {
                                     response = JSON.parse(response);
                                     $('#id_pais').val(response[0].id_pais).trigger('change.select2');
-                                    listaEstado(response[0].id_pais, response[0]['id_estado']);
-                                    listaCidade(response[0]['id_estado'], cidade);
+                                    listaEstado(response[0].id_pais, response[0].id_estado);
+                                    listaCidade(response[0].id_estado, cidade);
                                 } catch (e) {
                                     console.log(response);
                                     return false;
@@ -698,4 +641,6 @@ $(document).ready(function () {
     $(".anterior").click(function () {
         $('.nav > .active').prev('li').find('a').trigger('click');
     });
+
+    $('#remover').hide();
 });

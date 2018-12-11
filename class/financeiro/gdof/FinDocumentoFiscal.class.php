@@ -1363,17 +1363,6 @@ class FinDocumentoFiscal {
         return $daoFinDocumentoFiscal->getMsgRetorno();
     }
 
-    public function retornaPrimeiraTramitacao(PDO $pdo = null) {
-        if (empty($pdo)) {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-        }
-        $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->id_documento_fiscal);
-        $daoFinDocumentoFiscal->retornaPrimeiroTipoRemetenteTramitacao($pdo);
-        return $daoFinDocumentoFiscal->getMsgRetorno();
-    }
-
     public function atualizaSituacaoDocumentoGDOF(PDO $pdo) {
         try {
 

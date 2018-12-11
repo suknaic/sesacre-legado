@@ -124,7 +124,7 @@ class VincularTramitacao {
                 $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
                 $pdo->rollBack();
-                $retorno = Metodos::retornoAjax("Erro", "console", $daoFinDocVincEncaminhamento->getMsgRetorno());
+                $retorno = Metodos::retornoAjax("Erro", "console", $daoSesVincularTramitacao->getMsgRetorno());
             }
 
             return $retorno;

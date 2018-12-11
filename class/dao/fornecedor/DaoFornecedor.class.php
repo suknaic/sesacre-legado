@@ -11,11 +11,11 @@ class DaoFornecedor extends ForFornecedor {
     public function cadastrarFornecedor($pdo) {
         try {
             $sql = $pdo->prepare("INSERT 
-                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo, nm_empresa)
-                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo, :nmEmpresa)");
+                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo, ds_empresa)
+                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo, :dsEmpresa)");
 
             $sql->bindValue(":flDistribuidora", $this->getFlDistribuidora()  === '' ? NULL : $this->getFlDistribuidora(), PDO::PARAM_STR);
-            $sql->bindValue(":nmEmpresa", $this->getNmEmpresa()  === '' ? NULL : $this->getNmEmpresa(), PDO::PARAM_STR);
+            $sql->bindValue(":dsEmpresa", $this->getNmEmpresa()  === '' ? NULL : $this->getNmEmpresa(), PDO::PARAM_STR);
             $sql->bindValue(":flExclusivo", $this->getFlExclusiva() === '' ? NULL : $this->getFlExclusiva(), PDO::PARAM_STR);
             $sql->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $sql->execute();
@@ -53,7 +53,7 @@ class DaoFornecedor extends ForFornecedor {
                                          ELSE NULL 
                                      END AS fornecedor_distribuidora,
                                      CASE 
-                                         WHEN FORN.nm_empresa IS NOT NULL THEN FORN.nm_empresa
+                                         WHEN FORN.ds_empresa IS NOT NULL THEN FORN.ds_empresa
                                          ELSE NULL
                                      END AS dist_empresa,
                                      CASE

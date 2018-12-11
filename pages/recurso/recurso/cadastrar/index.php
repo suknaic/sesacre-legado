@@ -63,16 +63,17 @@ require_once "index.load.php";
                                     <h2 class="panel-title">Dados do Recurso</h2>
                                 </div>
                                 <div class="panel-body">
-                                    <pre>
-                                        {{idSistema}}
-                                        {{nmRecurso}}
-                                        {{lkRecurso}}
-                                        {{dsRecurso}}
-                                    </pre>
-                                    <campo-select v-bind:options="sistemasIds"></campo-select>
-                                    <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="nmRecurso" requerido></campo-texto>
-                                    <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="lkRecurso" requerido></campo-texto>
-                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="dsRecurso"></campo-texto-grande>
+
+                                    <campo-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" requerido v-bind:opcoes="sistemasOptions"></campo-select>
+                                    <campo-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></campo-texto>
+                                    <campo-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></campo-texto>
+                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="novoRecurso.dsRecurso"></campo-texto-grande>
+                                    
+                                </div>
+                                <div class="panel-footer text-right">                                   
+                                    <button type="submit" v-on:click.prevent="cadastrar" class="btn btn-success btn-salvar btn-rounded">
+                                        <i class="fa fa-floppy-o fa-1x"></i> Salvar Recurso
+                                    </button>                                    
                                 </div>
                             </div>
                         </form>                    
@@ -100,6 +101,7 @@ require_once "index.load.php";
             </button>
             <!--===================================================-->
         </div>
+
         <!--===================================================-->
         <!-- END OF CONTAINER -->
         <!-- /.login-box -->
@@ -126,9 +128,11 @@ require_once "index.load.php";
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
-        <script src="https://unpkg.com/vue-select@latest"></script>
+        <!--Vue.JS-->
+        <script src="/assets/lib/template/js/vue.min.js"></script>
+<!--        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
+        <script src="/assets/lib/template/js/axios.min.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>

@@ -19,7 +19,7 @@ $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['material
 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
 
 $busca = $fornecedor->relatorioFornecedor($dados['tipoFornecedor']);
-//var_dump($busca);
+//var_dump(json_decode($busca[0]['dist_empresa'], true));
 //return;
 $html = "<html>
             <head>
@@ -72,7 +72,7 @@ $html .= "                  <td class='tudo'><b>E-mail</b></td>
                             <td class='tudo'><b>Tipo de Fornecedor</b></td>
                             <td class='tudo'><b>Fornecedor Exclusivo</b></td>
                             <td class='tudo'><b>Fornecedor Distribuidora</b></td>
-                            <td class='tudo'><b>Empresa Contratante</b></td>";
+                            <td class='tudo'><b>Empresa(s) Contratante(s)</b></td>";
 
     if ($dados['tipoFornecedor'] == '2') {
         $html .= "          <td class='tudo'><b>Natureza da Empresa</b></td>";
@@ -135,7 +135,12 @@ if ($busca != null) {
         }
 
         if ($linhas['fornecedor_distribuidora'] == 's') {
-            $html .= "          <td>" . $linhas['dist_empresa'] . "</td>";
+            $empresas = json_decode($linhas['dist_empresa'], true);
+            if (count($empresas) > 1) {
+                $html .= "      <td>" . implode(", ",$empresas) . "</td>";
+            } else {
+                $html .= "      <td>" . $empresas['empresa0'] . "</td>";
+            }
         } else {
             $html .= "          <td></td>";
         }
