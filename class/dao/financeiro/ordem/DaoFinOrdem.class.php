@@ -533,7 +533,7 @@ class DaoFinOrdem extends FinOrdemTb {
                                 when pf.nr_cpf is not null then pf.nr_cpf
                                 when pj.nr_cnpj is not null then pj.nr_cnpj
                         end cpf_cnpj,
-                        tipoGasto.nm_tipo_gasto, lotacao.nm_lotacao , totalOrdem.valor, ordem.id_ordem
+                        tipoGasto.nm_tipo_gasto, lotacao.nm_lotacao , totalOrdem.valor, ordem.id_ordem, protocolo.id_protocolo
                         from fin_ordem as ordem
                         inner join fin_pedido as pedido
                         on pedido.id_pedido = ordem.id_pedido
@@ -549,12 +549,14 @@ class DaoFinOrdem extends FinOrdemTb {
                                     from fin_ordem_itens 
                                     group by id_ordem
                                    ) as totalOrdem
-                        on totalOrdem.id_ordem = ordem.id_ordem		   
+                        on totalOrdem.id_ordem = ordem.id_ordem
+                        inner join fin_protocolo as protocolo
+                        on protocolo.id_ordem =  ordem.id_ordem
                         left join ses_pessoa_fisica as pf
                         on pf.id_pessoa = pessoa.id_pessoa
                         left join ses_pessoa_juridica as pj 
                         on pj.id_pessoa = pessoa.id_pessoa
-                        where ordem.sit_ordem > '0' 
+                        where ordem.sit_ordem in ('3','4','5') 
                         and ordem.nr_ordem = :numero 
                         and ordem.aa_ordem = :ano";
                 $stmt = $pdo->prepare($sql);

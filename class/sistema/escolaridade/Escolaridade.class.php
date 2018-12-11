@@ -91,8 +91,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -155,8 +153,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return $retorno;
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -196,8 +192,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Não foi Possível Realizar a Exclusão dessa Escolaridade. Este registro está Vinculado a uma Pessoa.");
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -237,8 +231,6 @@ class Escolaridade {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-
-            return Metodos::retornoAjax("Erro", "console", STR_ERROR);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -390,6 +382,27 @@ class Escolaridade {
                 foreach ($result as $v) {
                     $retorno .= "<option value = '" . $v['id_escolaridade'] . "'>" . $v['nm_escolaridade'] . "</option>";
                 }
+            }
+            return $retorno;
+        } catch (Exception $ex) {
+            $retorno = "";
+        }
+    }
+
+    public function retornaEscolaridade() {
+        $retorno = "";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $esc = new DaoSesEscolaridade();
+            $esc->setIdEscolaridade($this->idEscolaridade);
+
+            $busca = $esc->retornaEscolaridade($pdo);
+
+            if (!$busca) {
+                return $retorno;
+            } else {
+                return $busca;
             }
             return $retorno;
         } catch (Exception $ex) {
