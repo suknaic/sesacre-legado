@@ -57,6 +57,7 @@ switch ($_REQUEST['acao']) {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $prog = new DocFiscalEncaminhamento();
             $prog->setIdUsuario($session->getIdUser());
+            $prog->setIdDocumentoFiscal($dados['id']);
             echo $prog->cadastrarEncaminhamento($dados);
         
             return;
