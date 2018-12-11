@@ -16,7 +16,7 @@ class VincularTramitacao {
     private $tramitacaoPagar = 3;
     private $tramitacaoAnularEmpenho = 4;
     private $tramitacaoAutorizarAnulacaoEmpenho = 5;
-   
+
     function Sucesso() {
         return $this->sucesso;
     }
@@ -24,7 +24,7 @@ class VincularTramitacao {
     function getMsgRetorno() {
         return $this->msgRetorno;
     }
-    
+
     function getIdVincularTramitacao() {
         return $this->idVincularTramitacao;
     }
@@ -69,7 +69,7 @@ class VincularTramitacao {
         $this->idDocTipoLotacao = $idDocTipoLotacao;
         return $this;
     }
-    
+
     public function getTramitacaoEmpenhar() {
         return $this->tramitacaoEmpenhar;
     }
@@ -90,67 +90,65 @@ class VincularTramitacao {
         return $this->tramitacaoAutorizarAnulacaoEmpenho;
     }
 
-    
-    public function cadastrar(){
-        try {  
-            
-            if (empty($this->getIdTramitacao()) or empty($this->getIdPessoa()) or empty($this->getIdLotacao()) or empty($this->getIdDocTipoLotacao())){
+    public function cadastrar() {
+        try {
+
+            if (empty($this->getIdTramitacao()) or empty($this->getIdPessoa()) or empty($this->getIdLotacao()) or empty($this->getIdDocTipoLotacao())) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-           
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdTramitacao($this->getIdTramitacao())
-                                     ->setIdPessoa($this->getIdPessoa())
-                                     ->setIdLotacao($this->getIdLotacao())
-                                     ->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
-            
+                    ->setIdPessoa($this->getIdPessoa())
+                    ->setIdLotacao($this->getIdLotacao())
+                    ->setIdDocTipoLotacao($this->getIdDocTipoLotacao());
+
             $daoSesVincularTramitacao->insert($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
-                
+
                 $idVincularTramitacao = $pdo->lastInsertId('ses_vincular_tramitacao_id_vincular_tramitacao_seq');
                 if (!Log::SalvaLogI('ses_vincular_tramitacao', $idVincularTramitacao, $pdo)) {
                     $pdo->rollBack();
                     return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
-                
+
                 $this->setIdVincularTramitacao($idVincularTramitacao);
                 $pdo->commit();
-                
+
                 $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
             } else {
                 $pdo->rollBack();
                 $retorno = Metodos::retornoAjax("Erro", "console", $daoFinDocVincEncaminhamento->getMsgRetorno());
             }
 
-            return $retorno;                                                                                                        
-        
+            return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }  
+        }
     }
-    
-    function excluir(){
+
+    function excluir() {
         try {
             $retorno = "";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdVincularTramitacao($this->getIdVincularTramitacao());
-            
+
             $idVincularTramitacao = $daoSesVincularTramitacao->getIdVincularTramitacao();
             if (!Log::SalvaLogD('ses_vincular_tramitacao', $idVincularTramitacao, $pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "console", STR_ERROR);
             }
-            
+
             $daoSesVincularTramitacao->delete($pdo);
             if ($daoSesVincularTramitacao->getSucesso()) {
                 $pdo->commit();
@@ -159,58 +157,57 @@ class VincularTramitacao {
                 $retorno = Metodos::retornoAjax("Erro", "console", $daoSesVincularTramitacao->getMsgRetorno());
                 $pdo->rollBack();
             }
-            
+
             return $retorno;
-            
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console",$exc->getMessage());
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaTodos(){
+
+    function listaTodos() {
         $retorno = "";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->selectTodosComDescritivos($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $retorno .= "<tr data-objeto='". json_encode($linha)."'>"
-                                . "<td>".$linha['nm_pessoa']."</td>"
-                                . "<td>".$linha['nm_tramitacao']."</td>"
-                                . "<td>".$linha['nm_lotacao']."</td>"
-                                . "<td>".$linha['nm_doc_tipo_lotacao']."</td>"
-                                . "<td class='text-center'>"
-                                    . "<button type='button' title='Remover Registro' class='remover-vinculo'>"
-                                        . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
-                                    . "</button>"
-                                . "</td>"
-                              . "</tr>";
+                    $retorno .= "<tr data-objeto='" . json_encode($linha) . "'>"
+                            . "<td>" . $linha['nm_pessoa'] . "</td>"
+                            . "<td>" . $linha['nm_tramitacao'] . "</td>"
+                            . "<td>" . $linha['nm_lotacao'] . "</td>"
+                            . "<td>" . $linha['nm_doc_tipo_lotacao'] . "</td>"
+                            . "<td class='text-center'>"
+                            . "<button type='button' title='Remover Registro' class='remover-vinculo'>"
+                            . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
+                            . "</button>"
+                            . "</td>"
+                            . "</tr>";
                 }
-            } 
+            }
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        }  
+        }
     }
-    
-    function listaLotacaoTipoPorUsuario(){
+
+    function listaLotacaoTipoPorUsuario() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
             $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -218,21 +215,21 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaLotacaoTipoPorUsuarioEmpenho(){
+
+    function listaLotacaoTipoPorUsuarioEmpenho() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
             $daoSesVincularTramitacao->retornaLotacaoTipoEmpenhoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -240,21 +237,21 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaLotacaoTipoPorUsuarioLiquidacao(){
+
+    function listaLotacaoTipoPorUsuarioLiquidacao() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
             $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -262,21 +259,21 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaLotacaoTipoPorUsuarioPagamento(){
+
+    function listaLotacaoTipoPorUsuarioPagamento() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
             $daoSesVincularTramitacao->retornaLotacaoTipoPagamentoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -284,21 +281,43 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaLotacaoTipoPorUsuarioAnulacaoEmpenho(){
+
+    function listaLotacaoTipoPorUsuarioReativacaoOrdem() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
+            $daoSesVincularTramitacao->retornaLotacaoTipoReativacaoOrdemPorUsuario($pdo);
+
+            if ($daoSesVincularTramitacao->getSucesso()) {
+                foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
+                }
+            }
+            return $opcoes;
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
+    function listaLotacaoTipoPorUsuarioAnulacaoEmpenho() {
+        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
+            $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
+
             $daoSesVincularTramitacao->retornaLotacaoTipoAnulacaoEmpenhoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -306,21 +325,21 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    function listaLotacaoTipoPorUsuarioAutorizacaoAnulacaoEmpenho(){
+
+    function listaLotacaoTipoPorUsuarioAutorizacaoAnulacaoEmpenho() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdPessoa($this->getIdPessoa());
-            
+
             $daoSesVincularTramitacao->retornaLotacaoTipoAutorizacaoAnulacaoEmpenhoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao'].">".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . ">" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
@@ -328,80 +347,78 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-    
-    
-    function listaLotacaoTipoPorLotacaoETipo(){
-       $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
+
+    function listaLotacaoTipoPorLotacaoETipo() {
+        $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
             $daoSesVincularTramitacao->setIdDocTipoLotacao($this->getIdDocTipoLotacao())
-                                     ->setIdLotacao($this->getIdLotacao());
-            
+                    ->setIdLotacao($this->getIdLotacao());
+
             $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorTipoELotacao($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 foreach ($daoSesVincularTramitacao->getMsgRetorno() as $linha) {
-                    $opcoes .= "<option data-tipo-lotacao=".$linha['id_doc_tipo_lotacao']." data-lotacao=".$linha['id_lotacao']." selected>".$linha['nm_doc_tipo_lotacao']." - ".$linha['nm_lotacao']."</option>";
+                    $opcoes .= "<option data-tipo-lotacao=" . $linha['id_doc_tipo_lotacao'] . " data-lotacao=" . $linha['id_lotacao'] . " selected>" . $linha['nm_doc_tipo_lotacao'] . " - " . $linha['nm_lotacao'] . "</option>";
                 }
             }
             return $opcoes;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
-        } 
+        }
     }
-    
-    public function retornaLiquidacaoPorUsuario(PDO $pdo){
+
+    public function retornaLiquidacaoPorUsuario(PDO $pdo) {
         try {
-            if(empty($pdo)){
+            if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
-            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);                                     
-            
+            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);
+
             $daoSesVincularTramitacao->retornaLotacaoTipoLiquidacaoPorUsuario($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
                 $this->sucesso = true;
                 $this->msgRetorno = $daoSesVincularTramitacao->getMsgRetorno();
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não possui registro";
-            }                                               
+            }
         } catch (Exception $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
-        }  
+        }
     }
-    
-    public function verificaPessoaTramitacao(PDO $pdo = null){
+
+    public function verificaPessoaTramitacao(PDO $pdo = null) {
         try {
-            if(empty($pdo)){
+            if (empty($pdo)) {
                 $conexao = new Conexao();
                 $pdo = $conexao->connect();
             }
-            
+
             $daoSesVincularTramitacao = new DaoSesVincularTramitacao();
-            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);                                     
+            $daoSesVincularTramitacao->setIdPessoa($this->idPessoa);
             $daoSesVincularTramitacao->setIdTramitacao($this->idTramitacao);
-            
+
             $daoSesVincularTramitacao->verificaTramitacaoPessoa($pdo);
-            
+
             if ($daoSesVincularTramitacao->getSucesso()) {
-                $this->sucesso = true;                
+                $this->sucesso = true;
             } else {
                 $this->sucesso = false;
                 $this->msgRetorno = "Não possui registro";
-            }                                               
+            }
         } catch (Exception $exc) {
             $this->sucesso = false;
             $this->msgRetorno = $exc->getMessage();
-        }  
+        }
     }
-   
-}
 
+}

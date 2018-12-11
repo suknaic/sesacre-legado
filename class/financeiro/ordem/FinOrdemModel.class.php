@@ -951,7 +951,8 @@ class FinOrdemModel {
                                                     </a>
                                                 </h4>
                                             </div>
-                                             <input type="hidden" id="id_ordem" value="' . $campos['id_pedido'] .'"/>
+                                             <input type="hidden" id="id_ordem" value="' . $campos['id_ordem'] .'"/>
+                                             <input type="hidden" id="id_protocolo" value="' . $campos['id_protocolo'] .'"/>    
                                             <div id="collapseFor" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFor" aria-expanded="true">
                                                 <div class="panel-body">
                                                 <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">

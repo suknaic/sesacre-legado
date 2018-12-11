@@ -154,8 +154,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                         </div>
                                     </div>
                                 </div>
-                                
-                                    <div class="form-group">
+
+                                <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
                                             <div class="panel-group" role="tablist" aria-multiselectable="true">
@@ -169,7 +169,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                                 <table id="tabela01" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                                                     <thead>
                                                                         <tr>
-                                                                       <th class="text-center">Nº</th>
+                                                                            <th class="text-center">Nº</th>
                                                                             <th class="text-center">Item</th>
                                                                             <th class="text-center">Descrição</th>
                                                                             <th class="text-center">Elemento de Despesa</th>
@@ -191,6 +191,46 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CAMPO DO REMETENTE -->
+                                <div class="form-group">
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                        <div class="panel-body remetente">
+                                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                                        <h4 class="panel-title">Remetente</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-sm-2"><b>Tipo de Remetente/Remetente:</b><span class="text-danger">*</span></div>
+                                                            <div class="col-sm-3">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><p class="fa fa-list" style="margin-bottom: -4px"></p></span>
+                                                                    <select class="form-control select" name="id_remetente" id="id_remetente">
+                                                                        <option value="0" selected="true">Selecione o Tipo de Remetente/Remetente</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-7"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- FIM CAMPO REMETENTE-->
+
+                                <div class="form-group">
+                                    <div class="panel-body ">
+                                        <div  class="col-sm-12" style="margin-bottom: -4%;">
+                                            <button class="btn btn-success btn-salvar btn-rounded btn-finaliza" type="button">
+                                                <i class="fa fa-floppy-o" aria-hidden="true"></i> Salvar
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
