@@ -104,7 +104,11 @@ var app = new Vue({
     methods: {
         cadastrar: function () {
 
-            var recurso = JSON.stringify(this.novoRecurso);
+            //Função do Jquery que converte JSON em QueryString
+            var dados = $.param({
+                acao: 'cadastrarRecurso',
+                dados: this.novoRecurso
+            });  
             
             axios({
               url: 'request.php',
@@ -113,12 +117,7 @@ var app = new Vue({
                   'X-Requested-With': 'XMLHttpRequest',
                   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
               },
-              params: {
-                  acao: 'cadastrarRecurso'
-              },
-              data: {
-                  dados: recurso
-              }
+              data: dados 
             }).then(function(response){            
                 console.log(response.data);
             });
@@ -131,7 +130,7 @@ var app = new Vue({
                 params: {
                   acao: 'listaSistemas'
                 }
-            }).then(function(response) {                
+            }).then(function(response) {     
                 vm.sistemasOptions = response.data;        
             });
             

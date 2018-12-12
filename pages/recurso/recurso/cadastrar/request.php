@@ -9,7 +9,7 @@ $session->recurso();
 switch ($_REQUEST['acao']) {
 
     CASE 'listaSistemas':
-        try {        
+        try {      
             $sistema = new Sistema();
             echo $sistema->retornaOptionSistemas();
             return;

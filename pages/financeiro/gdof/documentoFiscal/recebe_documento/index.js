@@ -59,7 +59,7 @@ $(document).ready(function(){
                     "dados": dados.id_documento_fiscal
                 },
                 "success": function (response) {
-//                    console.log(response);
+                    console.log(response);
                     
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);

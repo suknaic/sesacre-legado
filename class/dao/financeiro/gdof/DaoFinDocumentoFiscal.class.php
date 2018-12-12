@@ -1020,67 +1020,43 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-    public function retornaNovaSituacaoEncaminhamentoDocumentoFiscal(PDO $pdo, int $destino = 0){
+    public function retornaDadosTramitacaoEncaminhar(PDO $pdo, int $destino = 0){
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
+                    O.id_doc_lotacao as origem,
+                    O.id_doc_tipo_lotacao as tipo_origem,
+                    D.id_doc_lotacao as destino,
+                    D.id_doc_tipo_lotacao as tipo_destino,
+                    PARAM.id_documento_situacao as situacao_nova,
                     DF.id_documento_situacao as situacao_atual,
-                    case
-                       when
-                          (
-                             (
-                                 DF.id_documento_situacao = 3 
-                                 or DF.id_documento_situacao = 5 
-                                 or DF.id_documento_situacao = 6
-                             ) 
-                             and PARM.id_documento_situacao < DF.id_documento_situacao 
-                             and 
-                             (
-                                P.id_documento_fiscal is not null 
-                                or L.id_documento_fiscal is not null 
-                             )
-                          )
-                       then
-                          DF.id_documento_situacao 
-                       else
-                          PARM.id_documento_situacao 
-                    end
-                    as situacao_nova, 
-                    TRM.id_doc_origem as remetente, 
-                    TPLO.id_doc_tipo_lotacao as tipo_remetente, 
-                    TPLD.id_doc_lotacao as destinatario, 
-                    TPLD.id_doc_tipo_lotacao as tipo_destinatario 
+                    case when (L.id_documento_fiscal is null) then 'N' else 'S' end as liquidacao,
+                    case when (P.id_documento_fiscal is null) then 'N' else 'S' end as pagamento
                  from
                     fin_documento_fiscal DF 
                     inner join
                        (
-                          select
-                             id_documento_fiscal,
-                             max(id_doc_tramitacao) as id_doc_tramitacao 
-                          from
-                             fin_doc_tramitacao 
-                          where
-                             id_tipo_tramitacao = 2 				/*AGUARDANDO ENCAMINHAMENTO*/
-                          group by
-                             id_documento_fiscal 
-                       )
-                       UT 
-                       on UT.id_documento_fiscal = DF.id_documento_fiscal 
+                         select id_documento_fiscal , 
+                                max(id_doc_tramitacao) as id_doc_tramitacao 
+                         from fin_doc_tramitacao 
+                         where id_tipo_tramitacao = 2 
+                         group by id_documento_fiscal 
+                       ) UT on UT.id_documento_fiscal = DF.id_documento_fiscal
                     inner join
-                       fin_doc_tramitacao TRM 
-                       on TRM.id_documento_fiscal = UT.id_documento_fiscal 
-                       and TRM.id_doc_tramitacao = UT.id_doc_tramitacao 
+                       fin_doc_tramitacao TRM
+                       on TRM.id_documento_fiscal = UT.id_documento_fiscal
+                       and TRM.id_doc_tramitacao = UT.id_doc_tramitacao
                     inner join
-                       fin_doc_lotacao TPLO 
-                       on TPLO.id_doc_lotacao = TRM.id_doc_origem 
+                       fin_doc_lotacao O 
+                       on O.id_doc_lotacao = TRM.id_doc_origem 
                     inner join
-                       fin_doc_lotacao TPLD 
-                       on TPLD.id_doc_lotacao = :destino 
+                       fin_doc_lotacao D 
+                       on D.id_doc_lotacao = :destino
                     inner join
-                       fin_doc_parm_tramitacao PARM 
-                       on PARM.id_doc_tipo_remetente = TPLO.id_doc_tipo_lotacao 
-                       and PARM.id_doc_tipo_destinatario = TPLD.id_doc_tipo_lotacao 
-                       and PARM.tp_doc_parm_tramitacao = '1' 
+                       fin_doc_parm_tramitacao PARAM 
+                       on PARAM.id_doc_tipo_remetente = O.id_doc_tipo_lotacao 
+                       and PARAM.id_doc_tipo_destinatario = D.id_doc_tipo_lotacao 
+                       and PARAM.tp_doc_parm_tramitacao = '1' 
                     left join
                        (
                           select distinct
@@ -1110,7 +1086,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                        P 
                        on P.id_documento_fiscal = DF.id_documento_fiscal 
                  where
-                    DF.id_documento_fiscal = :documento";
+                    TRM.id_documento_fiscal = :documento";
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
@@ -1127,83 +1103,33 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
     
-    public function retornaNovaSituacaoRecebimentoDocumentoFiscal(PDO $pdo){
+    public function retornaDadosTramitacaoReceber(PDO $pdo){
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
-                    DF.id_documento_situacao as situacao_atual,
-                    case
-                       when
-                          (
-                             (DF.id_documento_situacao = 3 
-                             or DF.id_documento_situacao = 5 
-                             or DF.id_documento_situacao = 6) 
-                             and PARM.id_documento_situacao < DF.id_documento_situacao 
-                             and 
-                             (
-                                P.id_documento_fiscal is not null 
-                                or L.id_documento_fiscal is not null
-                             )
-                          )
-                       then
-                          DF.id_documento_situacao 
-                       else
-                          PARM.id_documento_situacao 
-                    end
-                    as situacao_nova,
-                    TRM.id_doc_origem as remetente,
-                    TPLO.id_doc_tipo_lotacao as tipo_remetente,
-                    TRM.id_doc_destino as destinatario,
-                    TPLD.id_doc_tipo_lotacao as tipo_destinatario
+                    TRM.id_doc_destino as origem,
+                    PARAM.id_doc_tipo_remetente as tipo_origem,
+                    TRM.id_doc_origem as destino,
+                    PARAM.id_doc_tipo_destinatario as tipo_destino,
+                    PARAM.id_documento_situacao as situacao_documento 
                  from
                     fin_doc_tramitacao TRM 
                     inner join
-                       fin_documento_fiscal DF 
-                       on DF.id_documento_fiscal = TRM.id_documento_fiscal 
+                       fin_doc_lotacao O 
+                       on O.id_doc_lotacao = TRM.id_doc_origem 
                     inner join
-                       fin_doc_lotacao TPLO 
-                       on TPLO.id_doc_lotacao = TRM.id_doc_origem 
+                       fin_doc_lotacao D 
+                       on D.id_doc_lotacao = TRM.id_doc_destino 
                     inner join
-                       fin_doc_lotacao TPLD 
-                       on TPLD.id_doc_lotacao = TRM.id_doc_destino 
-                    inner join
-                       fin_doc_parm_tramitacao PARM 
-                       on PARM.id_doc_tipo_remetente = TPLD.id_doc_tipo_lotacao 
-                       and PARM.id_doc_tipo_destinatario = TPLO.id_doc_tipo_lotacao 
-                       and PARM.tp_doc_parm_tramitacao = '2' 
-                    left join
-                       (
-                          select distinct
-                             LD.id_documento_fiscal 
-                          from
-                             con_liquidacao L,
-                             con_liquidacao_doc LD 
-                          where
-                             L.id_liquidacao = LD.id_liquidacao 
-                             and L.st_ativo = '1' 
-                             and L.id_liquidacao_situacao <> 4 
-                       )
-                       L 
-                       on L.id_documento_fiscal = DF.id_documento_fiscal 
-                    left join
-                       (
-                          select distinct
-                             PD.id_documento_fiscal 
-                          from
-                             con_pagamento P,
-                             con_pagamento_doc PD 
-                          where
-                             P.id_pagamento = PD.id_pagamento 
-                             and P.st_ativo = '1' 
-                             and P.id_pagamento_situacao <> 2 
-                       )
-                       P 
-                       on P.id_documento_fiscal = DF.id_documento_fiscal 
-                 Where
-                    TRM.id_tipo_tramitacao = 3 /*ENCAMINHADO*/
-                    and DF.id_documento_fiscal = :documento 
+                       fin_doc_parm_tramitacao PARAM 
+                       on PARAM.id_doc_tipo_remetente = D.id_doc_tipo_lotacao 
+                       and PARAM.id_doc_tipo_destinatario = O.id_doc_tipo_lotacao 
+                       and PARAM.tp_doc_parm_tramitacao = '2'	
+                 where
+                    TRM.id_tipo_tramitacao = 3 
+                    and TRM.id_documento_fiscal = :documento 
                  order by
-                    TRM.id_doc_tramitacao DESC limit 1";
+                    TRM.id_doc_tramitacao desc limit 1";
         try {
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":documento", $this->getIdDocumentoFiscal(), PDO::PARAM_INT);
