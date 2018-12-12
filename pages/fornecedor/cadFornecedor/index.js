@@ -171,6 +171,13 @@ $(document).ready(function () {
                 func.modalAlert(func.msgPreencherCampos + "<strong> Contato - E-mail</strong>");
                 return false;
             }
+
+            var emailAdicional = [];
+            $("input[name=emailAdicional\\[\\]]").each(function () {
+                if ($(this).val() != '' && $(this).val() != 0) {
+                    emailAdicional.push($(this).val());
+                }
+            });
             //**********************************************************************************************************
 
             //***************************************** Informações da Empresa *****************************************
@@ -221,7 +228,8 @@ $(document).ready(function () {
                 materialServico: MaterialServico,
                 empExc: empExc,
                 empDist: empDist,
-                nmEmpresa: empresas
+                nmEmpresa: empresas,
+                emailAdicional: emailAdicional
             };
             
             $.ajax({
@@ -233,6 +241,8 @@ $(document).ready(function () {
                     "dadosFornecedor": Fornecedor,
                 },
                 "success": function (response) {
+                    console.log(response);
+                    return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -338,6 +348,43 @@ $(document).ready(function () {
         if ($("[name=campo]").is( ":visible" ) == true) {
             $('.adicionar').hide();
         }
+    });
+
+    function adicionarEmail() {
+        $(".emailAdicional").append('<div class = "form-group">'+
+                              '    <div class="col-sm-4"></div>'+
+                              '    <div class="col-sm-4">'+
+                              '        <div class="panel-body">E-mail Adicional: '+
+                              '            <div class="input-group">'+
+                              '                <span class="input-group-addon">'+
+                              '                    <p class="fa fa-file-text-o inputPFa"></p>'+
+                              '                </span>'+
+                              '                <input type="email" class="form-control" name="emailAdicional[]" required="true" placeholder="">'+
+                              '            </div>'+
+                              '        </div>'+
+                              '    </div>'+
+                              '    <div class="col-sm-1">'+
+                              '        <button class="btn btn-danger removerEmailAdicional">'+
+                              '            <i class="fa fa-remove"></i>'+
+                              '        </button>'+
+                              '    </div>' +
+                              '</div>');
+    }
+
+    $('body').on('click', '.adicionarEmail', function (e) {
+        e.preventDefault();
+        if ($('#nm_email').val() != '') {
+            adicionarEmail();
+        } else {
+            func.modalAlert(func.msgPreencherCampos + "<strong> Contato - E-mail</strong>");
+            return false;
+        }
+    });
+
+    $('body').on('click', '.removerEmailAdicional', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.closest(".form-group").remove();
     });
 
     function listaNatureza() {
