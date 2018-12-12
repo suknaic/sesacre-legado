@@ -509,6 +509,45 @@ class Metodos {
             return false;
         }
     }
+    
+    public static function serializaCondicaoSql($atributo,$tipo,$valor) {
+        if(empty($valor) or empty($tipo) or empty($atributo)){ //Todos parametros são obrigatórios para serialização
+            return array(); 
+        } else {
+            $inicioString = strpos($atributo, '.') ? strpos($atributo, '.') + 1 : 0; //Remove o PREFIXO para evitar erro no BindValue do PDO
+            $bind = ":" . substr($atributo,$inicioString); 
+            $query = "";
+            switch ($tipo) {
+                case "string":
+                    $query = $atributo . " ilike " . $bind;
+                    $valor = "%" . $valor . "%";
+                    $param = PDO::PARAM_STR;
+                    break;
+                case "int":
+                    $query = $atributo . " = " . $bind;
+                    $param = PDO::PARAM_INT;
+                    break;
+
+                case 'ano':
+                    $query = "to_char(".$atributo.",'YYYY') = " . $bind;
+                    $valor = strval($valor);
+                    $param = PDO::PARAM_STR;
+                    break;
+            }
+            return array("sql" => $query, "bind" => $bind, "valor" => $valor, "pdo_param" => $param);
+        }
+    }
+    
+    public static function montaFiltroSQL(array $condicoes = []) {                                       
+        $filtros = array();
+        if (!empty($condicoes)) {
+            foreach ($condicoes as $condicao) {
+                $filtros[] = self::serializaCondicaoSql($condicao[0],$condicao[1],$condicao[2]);
+            }
+        }
+        return array_filter($filtros);
+
+    }
 
 }
 
