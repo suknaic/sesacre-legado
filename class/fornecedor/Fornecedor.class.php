@@ -24,6 +24,7 @@ class Fornecedor {
     private $pessoa = null;
     private $medicamento = null;
     private $servico = null;
+    private $emailAdicional = null;
     private $materialConsumo = null;
     private $materialPermanente = null;
     private $flDistribuidora = null;
@@ -223,6 +224,22 @@ class Fornecedor {
         $this->flExclusiva = $flExclusiva;
     }
 
+    /**
+     * @return null
+     */
+    public function getEmailAdicional()
+    {
+        return $this->emailAdicional;
+    }
+
+    /**
+     * @param null $emailAdicional
+     */
+    public function setEmailAdicional($emailAdicional)
+    {
+        $this->emailAdicional = $emailAdicional;
+    }
+
     public function cadastrarFornecedor() {
         try {
 
@@ -369,6 +386,7 @@ class Fornecedor {
 
             $fornedor->setIdPessoa($pessoa->getId_pessoa());
             $fornedor->setNmEmpresa(json_encode($this->nmEmpresa));
+            $fornedor->setEmailAdicional(json_encode($this->emailAdicional));
             $fornedor->setFlDistribuidora($this->flDistribuidora);
             $fornedor->setFlExclusiva($this->flExclusiva);
 

@@ -11,12 +11,13 @@ class DaoFornecedor extends ForFornecedor {
     public function cadastrarFornecedor($pdo) {
         try {
             $sql = $pdo->prepare("INSERT 
-                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo, ds_empresa)
-                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo, :dsEmpresa)");
+                                    INTO for_fornecedor (id_pessoa, fl_distribuidora, fl_exclusivo, ds_empresa, ds_email_adicional)
+                                      VALUES (:idPessoa, :flDistribuidora, :flExclusivo, :dsEmpresa, :emailAdicional)");
 
             $sql->bindValue(":flDistribuidora", $this->getFlDistribuidora()  === '' ? NULL : $this->getFlDistribuidora(), PDO::PARAM_STR);
             $sql->bindValue(":dsEmpresa", $this->getNmEmpresa()  === '' ? NULL : $this->getNmEmpresa(), PDO::PARAM_STR);
             $sql->bindValue(":flExclusivo", $this->getFlExclusiva() === '' ? NULL : $this->getFlExclusiva(), PDO::PARAM_STR);
+            $sql->bindValue(":emailAdicional", $this->getEmailAdicional() == ''? NULL : $this->getEmailAdicional(), PDO::PARAM_STR);
             $sql->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $sql->execute();
             return TRUE;
