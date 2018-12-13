@@ -989,6 +989,14 @@ class EmpenhoAnulacao {
                     return Metodos::retornoAjax("Erro", "alert", "Erro na atualização da situação e status");
                 }
                 
+                $finEmpenhoModel = new FinEmpenhoModel();
+                $finEmpenhoModel->setIdEmpenho($this->idEmpenho);
+                $finEmpenhoModel->atualizaStatusSituacaoOficialEmpenho($pdo);
+                if (!$finEmpenhoModel->sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o status e situação do empenho");
+                }
+                
             } else if ($this->idEmpenhoAnulacaoSituacao == $this->situacaoIndeferido) {
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoSituacao($this->getSituacaoIndeferido());
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
@@ -1002,14 +1010,6 @@ class EmpenhoAnulacao {
             if (!Log::SalvaLogU('con_empenho_anulacao', $this->idEmpenhoAnulacao, $dadosEmpenhoAnulacao, $pdo)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
-            }
-
-            $finEmpenhoModel = new FinEmpenhoModel();
-            $finEmpenhoModel->setIdEmpenho($this->idEmpenho);
-            $finEmpenhoModel->atualizaStatusSituacaoOficialEmpenho($pdo);
-            if (!$finEmpenhoModel->sucesso()) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível atualizar o status e situação do empenho");
             }
 
             //Salva o Histórico da Anulação
