@@ -23,6 +23,7 @@ class FinEmpenhoModel {
     private $sit_pago_parcial = 4;
     private $sit_pago_total = 5;
     private $sit_cancelado = 6;
+    private $sit_anulado = 7;
     private $statusAguardandoLiquidacao = 1;
     private $statusAguardandoFinalizarLiquidacao = 2;
     private $statusAguardandoPagamento = 3;
@@ -121,18 +122,6 @@ class FinEmpenhoModel {
     function setIdEmpenhoStatus($id_empenho_status) {
         $this->id_empenho_status = $id_empenho_status;
         return $this;
-    }
-
-    private function getSituacoes(): array {
-        $situacoes = array(
-            '1' => 'Cadastrado',
-            '2' => 'Liquidado Parcial',
-            '3' => 'Liquidado Total',
-            '4' => 'Pago Parcial',
-            '5' => 'Pago Total',
-            '6' => 'Cancelado'
-        );
-        return $situacoes;
     }
 
     /**

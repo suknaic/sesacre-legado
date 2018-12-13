@@ -739,8 +739,7 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $this->sucesso = false;
             }
         } catch (PDOException $ex) {
-            $this->sucesso = false;
-            echo $ex->getMessage();
+            $this->sucesso = false;            
             $this->msgRetorno = $ex->getMessage();
         }
     }

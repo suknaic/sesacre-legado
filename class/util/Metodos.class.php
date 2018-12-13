@@ -529,9 +529,8 @@ class Metodos {
                     break;
 
                 case 'ano':
-                    $query = "to_char(".$atributo.",'YYYY') = " . $bind;
-                    $valor = strval($valor);
-                    $param = PDO::PARAM_STR;
+                    $query = "extract(year from ".$atributo.") = " . $bind;
+                    $param = PDO::PARAM_INT;
                     break;
             }
             return array("sql" => $query, "bind" => $bind, "valor" => $valor, "pdo_param" => $param);

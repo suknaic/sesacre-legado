@@ -849,6 +849,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         when '4' then 'Pago Parcial'
                         when '5' then 'Pago Total'
                         when '6' then 'Cancelado'
+                        when '7' then 'Anulado'
                     end as situacao ,
                     case
                         when ( sit_emp.id_liquidacao is null
@@ -1274,13 +1275,14 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     , CASE	
 
                             /*
-                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento
+                             * Pedido Possui Empenho, não possui Liquidação, Pagamento e o valor do Empenho é maior que 0
                              * Deve ser Aguardando Liquidação
                              */
                             WHEN (
                                             PAG.id_pedido IS NULL
                                             AND L.id_pedido IS NULL							
-                                            AND E.id_pedido IS NOT NULL			
+                                            AND E.id_pedido IS NOT NULL
+                                            AND E.vl_empenho > 0
                                     ) THEN 1	
 
                             /*
@@ -1310,12 +1312,13 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                              * Precisa Verificar os Valores da Pagamento desse Pedido 
                              * Pode ser Aguardando Finalizar Pagamento ou Finalizado
                              * O Pedido não tem mais Saldo de Acordo com os Pagamentos então ele é Finalizado
+                             * O valor do Empenho igual a zero(0) pode ter sido realizado a Anulação do Empenho então foi Finalizado
                              */		
                             WHEN (
-                                            PAG.id_pedido IS NOT NULL
+                                            (PAG.id_pedido IS NOT NULL
                                             AND L.id_pedido IS NOT NULL							
                                             AND E.id_pedido IS NOT NULL	
-                                            AND SALPAG.id_pedido IS NULL
+                                            AND SALPAG.id_pedido IS NULL) or (E.vl_empenho = 0.000)
                                     ) THEN 5
                             /*
                              * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Aguardando Finalizar Pagamento
@@ -1335,13 +1338,14 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                      */
                     , CASE
                             /*
-                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento
+                             * Pedido Possui Empenho, não possui Liquidação, Pagamento e o valor do Empenho é maior que 0
                              * Deve ser Cadastrado
                              */
                             WHEN (
                                             PAG.id_pedido IS NULL
                                             AND L.id_pedido IS NULL							
-                                            AND E.id_pedido IS NOT NULL			
+                                            AND E.id_pedido IS NOT NULL
+                                            AND E.vl_empenho > 0
                                     ) THEN 1	
 
                             /*
@@ -1387,7 +1391,10 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                             AND E.id_pedido IS NOT NULL			
                                             AND SALPAG.id_pedido IS NOT NULL
                                     ) THEN 4
-
+                            /*
+			    * O Empenho está com o valor zerado, então houve uma Anulação do Empenho. Pois o sistema não permite cadastrar ou editar empenho com valor zerado
+			    */
+			    WHEN (E.vl_empenho = 0) THEN 7
                             ELSE null
                     END AS situacao_oficial
 

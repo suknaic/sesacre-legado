@@ -254,7 +254,6 @@ class DocFiscalEncaminhamento {
             $retorno = "";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
             $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->condicoes());
             if ($daoFinDocumentoFiscal->sucesso()) {
@@ -311,7 +310,6 @@ class DocFiscalEncaminhamento {
                             . "</tr>";
                 }
             }
-
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
