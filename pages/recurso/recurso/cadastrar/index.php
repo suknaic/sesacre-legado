@@ -131,10 +131,10 @@ require_once "index.load.php";
         <!--Vue.JS-->
         <script src="/assets/lib/template/js/vue.min.js"></script>
         <script src="/assets/lib/template/js/axios.min.js"></script>
+        <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
         <script src="/assets/lib/sesacre/componentes/InputTexto.js"></script>
         <script src="/assets/lib/sesacre/componentes/InputTextoGrande.js"></script>
         <script src="/assets/lib/sesacre/componentes/InputSelect.js"></script>
-        <script src="/assets/lib/sesacre/mixins/Request.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>

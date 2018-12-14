@@ -235,7 +235,7 @@ class Pedido {
             '23' => 'Finalizado',
             '24' => 'Aguardando Finalizar Ordenado',
             '25' => 'Aguardando Finalizar Liquidação',
-            '26' => 'Aguardando Finalizar Pagamento',
+            '26' => 'Aguardando Finalizar Pagamento'
         );
         return $arr_status;
     }

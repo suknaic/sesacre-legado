@@ -1,9 +1,10 @@
-func = new Funcoes();
 
+
+func = new Funcoes();
+req = new Requisicoes();
 
 new Vue({
     el: '#cadRecurso',
-    mixins: [request],
     data: function () {
         return {
             sistemasOptions: [],
@@ -21,21 +22,21 @@ new Vue({
                 acao: 'cadastrarRecurso',
                 dados: this.novoRecurso
             });  
-            ;
-            console.log(vm);
-        },
-        listaSistemasOptions: function () {
-//            var vm = this;
-            axios({
-                url: 'request.php',
-                method: 'GET',
-                params: {
-                  acao: 'listaSistemas'
-                }
-            }).then((response) => {     
-                this.sistemasOptions = response.data;        
+           
+            req.axiosPost('request.php',dados, function(response){
+                console.log(response);
             });
             
+           
+        },
+        listaSistemasOptions: function () {
+            var vm = this;
+            var param = {
+                acao: 'listaSistemas'
+            }; 
+            req.axiosGet('request.php',param,function(response){
+                vm.sistemasOptions = response;
+            })
         }
 
     }
