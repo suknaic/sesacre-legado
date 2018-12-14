@@ -630,10 +630,18 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
         }
     }
 
-    public function retornaDocumentoFiscaisEncaminha(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
+    public function retornaDocumentoFiscaisEncaminha(PDO $pdo, array $condicoes = []) {
         try {
-            $sql = "select
+            $strQuery = "";
+            if (!empty($condicoes)) {
+                foreach ($condicoes as $condicao) {
+                    $filtro[] = $condicao['sql'];
+                }
+                $strQuery = " where " . implode(" and ", $filtro);
+            }
+            $sql = "select distinct
                         DF.id_documento_fiscal,
+                        DF.nr_documento_fiscal,
                         DF.id_documento_situacao,
                         concat(DF.nr_documento_fiscal, '/', to_char(DF.dt_emissao, 'YYYY')) as nr_documento_fiscal,
                         concat(P.nr_pedido, '/', to_char(P.dt_pedido, 'YYYY')) as nr_pedido,
@@ -713,12 +721,15 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on PF.id_pessoa = F.id_pessoa 
                         left join
                            ses_pessoa_juridica PJ 
-                           on pj.id_pessoa = F.id_pessoa 
-                     where
-                        ENC.id_pessoa = :pessoa 
-                        and TRM.id_tipo_tramitacao = 2 " . $filtroSql . " order by DF.nr_documento_fiscal";
+                           on pj.id_pessoa = F.id_pessoa " . $strQuery . " order by DF.nr_documento_fiscal";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+            
+            if (!empty($condicoes)) {
+                foreach ($condicoes as $condicao) {
+                    $stmt->bindValue($condicao['bind'], $condicao['valor'], $condicao['pdo_param']);
+                }
+            }
+            
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -728,16 +739,24 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                 $this->sucesso = false;
             }
         } catch (PDOException $ex) {
-            $this->sucesso = false;
+            $this->sucesso = false;            
             $this->msgRetorno = $ex->getMessage();
         }
     }
     
     
-    public function retornaDocumentoFiscaisRecebe(PDO $pdo, string $filtroSql = "", int $idPessoa = 0) {
+    public function retornaDocumentoFiscaisRecebe(PDO $pdo, array $condicoes = []) {
         try {
-            $sql = "select
+            $strQuery = "";
+            if (!empty($condicoes)) {
+                foreach ($condicoes as $condicao) {
+                    $filtro[] = $condicao['sql'];
+                }
+                $strQuery = " where " . implode(" and ", $filtro);
+            }
+            $sql = "select distinct
                         DF.id_documento_fiscal,
+                        DF.nr_documento_fiscal,
                         DF.id_documento_situacao,
                         concat(DF.nr_documento_fiscal, '/', to_char(DF.dt_emissao, 'YYYY')) as nr_documento_fiscal,
                         concat(P.nr_pedido, '/', to_char(P.dt_pedido, 'YYYY')) as nr_pedido,
@@ -817,12 +836,13 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                            on PF.id_pessoa = F.id_pessoa 
                         left join
                            ses_pessoa_juridica PJ 
-                           on pj.id_pessoa = F.id_pessoa 
-                     where
-                        REC.id_pessoa = :pessoa
-                        and TRM.id_tipo_tramitacao = 4 " . $filtroSql . " order by DF.nr_documento_fiscal";
+                           on pj.id_pessoa = F.id_pessoa " . $strQuery . " order by DF.nr_documento_fiscal";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":pessoa", $idPessoa, PDO::PARAM_INT);
+            if (!empty($condicoes)) {
+                foreach ($condicoes as $condicao) {
+                    $stmt->bindValue($condicao['bind'], $condicao['valor'], $condicao['pdo_param']);
+                }
+            }
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -1029,7 +1049,6 @@ class DaoFinDocumentoFiscal extends FinDocumentoFiscalTb {
                     D.id_doc_lotacao as destino,
                     D.id_doc_tipo_lotacao as tipo_destino,
                     PARAM.id_documento_situacao as situacao_nova,
-                    DF.id_documento_situacao as situacao_atual,
                     case when (L.id_documento_fiscal is null) then 'N' else 'S' end as liquidacao,
                     case when (P.id_documento_fiscal is null) then 'N' else 'S' end as pagamento
                  from

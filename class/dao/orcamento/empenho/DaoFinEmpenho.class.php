@@ -848,7 +848,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         when '3' then 'Liquidado Total'
                         when '4' then 'Pago Parcial'
                         when '5' then 'Pago Total'
-                        when '6' then 'Cancelado'
+                        when '6' then 'Estornado'
                     end as situacao ,
                     case
                         when ( sit_emp.id_liquidacao is null
@@ -1274,13 +1274,23 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     , CASE	
 
                             /*
-                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento
+                            * Pedido Possui Empenho, Anulação Deferida e o valor do empenho está zerado(0)
+                            * Deve ser Cancelado
+                            */
+                            WHEN (
+                                            E.id_pedido IS NOT NULL
+                                            AND A.id_pedido IS NOT NULL
+                                            AND E.vl_empenho = 0
+                                   ) THEN 6
+                            /*
+                             * Pedido Possui Empenho, não possui Liquidação nem Pagamento 
                              * Deve ser Aguardando Liquidação
                              */
                             WHEN (
                                             PAG.id_pedido IS NULL
                                             AND L.id_pedido IS NULL							
-                                            AND E.id_pedido IS NOT NULL			
+                                            AND E.id_pedido IS NOT NULL
+                                            
                                     ) THEN 1	
 
                             /*
@@ -1315,7 +1325,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                             PAG.id_pedido IS NOT NULL
                                             AND L.id_pedido IS NOT NULL							
                                             AND E.id_pedido IS NOT NULL	
-                                            AND SALPAG.id_pedido IS NULL
+                                            AND SALPAG.id_pedido IS NULL 
                                     ) THEN 5
                             /*
                              * O Pedido possui Saldo de Acordo com os Pagamentos então ele é Aguardando Finalizar Pagamento
@@ -1335,13 +1345,22 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                      */
                     , CASE
                             /*
+                            * Pedido Possui Empenho, Anulação Deferida e valor do Empenho zerado(0)
+                            * Deve ser Anulado
+                            */
+                            WHEN (
+                                            E.id_pedido IS NOT NULL
+                                            AND A.id_pedido IS NOT NULL
+                                            AND E.vl_empenho = 0
+                                    ) THEN 7
+                            /*
                              * Pedido Possui Empenho, não possui Liquidação nem Pagamento
                              * Deve ser Cadastrado
                              */
                             WHEN (
                                             PAG.id_pedido IS NULL
                                             AND L.id_pedido IS NULL							
-                                            AND E.id_pedido IS NOT NULL			
+                                            AND E.id_pedido IS NOT NULL
                                     ) THEN 1	
 
                             /*
@@ -1387,7 +1406,6 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                             AND E.id_pedido IS NOT NULL			
                                             AND SALPAG.id_pedido IS NOT NULL
                                     ) THEN 4
-
                             ELSE null
                     END AS situacao_oficial
 
@@ -1408,7 +1426,11 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                                             INNER JOIN con_liquidacao L ON L.id_empenho = E.id_empenho AND L.id_liquidacao_situacao <> 4
                                             INNER JOIN con_pagamento PAG ON PAG.id_liquidacao = L.id_liquidacao AND PAG.id_pagamento_situacao <> 2
                                             ) AS PAG ON PAG.id_pedido = P.id_pedido						
-
+                    LEFT JOIN (
+                                            SELECT distinct on (A.id_pedido) A.id_pedido
+                                            FROM con_empenho_anulacao A
+                                            WHERE A.id_empenho_anulacao_situacao <> 4
+                                            ) as A on A.id_pedido = P.id_pedido
 
                     LEFT JOIN (SELECT * 
                                             FROM (

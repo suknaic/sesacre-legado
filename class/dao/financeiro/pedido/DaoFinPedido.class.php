@@ -995,6 +995,14 @@ class DaoFinPedido extends FinPedidoTb {
                                             E.id_pedido IS NULL				
                                     ) THEN 15
                             /*
+                            * Pedido Possui Empenho e o Valor do Pedido zerado(0)
+                            * Deve ser Cancelado
+                            */
+                            WHEN (
+                                        E.id_pedido IS NOT NULL
+                                        AND P.vl_pedido = 0
+                                ) THEN 0
+                            /*
                              * Pedido Possui Empenho, não possui Ordem e Tipo Administrativo Por Licitação
                              * Deve ser Aguardando Ordem
                              */
@@ -1101,6 +1109,15 @@ class DaoFinPedido extends FinPedidoTb {
                                             E.id_pedido IS NULL				
                                     ) THEN 2
                             /*
+                            * Pedido Possui Empenho, Anulação do Empenho Deferida e valor do pedido zerado (0)
+                            * Deve ser Anulado
+                            */
+                            WHEN (
+                                            E.id_pedido IS NOT NULL
+                                            and A.id_pedido IS NOT NULL
+                                            and P.vl_pedido = 0
+                                    ) THEN 10
+                            /*
                              * Pedido Possui Empenho, não possui Ordem nem Liquidação
                              * Deve ser Empenhado
                              */
@@ -1185,6 +1202,12 @@ class DaoFinPedido extends FinPedidoTb {
 
                     FROM fin_pedido P
                     LEFT JOIN fin_empenho E ON E.id_pedido = P.id_pedido AND E.sit_empenho <> '6'
+                    
+                    LEFT JOIN (
+                                            SELECT distinct on (A.id_pedido) A.id_pedido
+                                            FROM con_empenho_anulacao A
+                                            WHERE A.id_empenho_anulacao_situacao <> 4
+                                            ) as A on A.id_pedido = P.id_pedido
 
                     LEFT JOIN (
                                             SELECT distinct on(id_pedido) id_pedido
