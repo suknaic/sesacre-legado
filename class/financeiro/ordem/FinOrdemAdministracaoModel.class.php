@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/ordem/DaoFinOrdem.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/ordem/DaoFinOrdemAdministracao.php";
 
 class FinOrdemAdministracaoModel {
 
@@ -115,8 +115,32 @@ class FinOrdemAdministracaoModel {
         return $this;
     }
 
+    public function retornaSituacaoOrdemPorTipoAdministracao() {
+        switch ($this->tp_administracao) {
+            case '1':
+                return 2; //2 que significa que a situacao da ordem vai ser Resquisitado
+                break;
+
+            case '2':
+                return 4; //4 que significa que a situacao da ordem vai ser Finalizado por Supressão do Ordenado
+                break;
+
+            case '3':
+                return 5; //5 que significa que a situacao da ordem vai ser Finalizado por Descumprimento da Contratada	
+                break;
+
+            default;
+                return null;
+                break;
+        }
+    }
+
     public function reativacaoOrdem() {
         try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->setIdOrdem($this->id_ordem);
             $daoFinOrdemAdministracao->setIdProtocolo($this->id_protocolo);
@@ -124,12 +148,29 @@ class FinOrdemAdministracaoModel {
             $daoFinOrdemAdministracao->setIdLotacaoSolicitante($this->id_lotacao_solicitante);
             $daoFinOrdemAdministracao->setTpAdministracao(1);
             $daoFinOrdemAdministracao->reativarOrdem($pdo);
-            if ($daoFinOrdemAdministracao->Sucesso()) {
-                $pdo->commit();
-                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return $daoFinOrdemAdministracao->getMsgRetorno();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar a reativação.");
             }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public function listaReativacaoOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            
+        } catch (Exception $ex) {
+            
         }
     }
 

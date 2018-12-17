@@ -88,7 +88,7 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
-                                                    <select id="ano_pagamento" class="form-control">
+                                                    <select id="ano_ordem" class="form-control">
                                                         <?php echo Metodos::retornaAnosSelect(); ?>
                                                     </select>
                                                 </div>

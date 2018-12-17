@@ -379,8 +379,8 @@ class FinOrdemModel {
                         if ($daoFinOrdem->Sucesso()) {
                             $finOrdemItensModel->setVlItensPre($daoFinOrdem->getMsgRetorno()["vl_itens_pre"]);
                         } else {
-                            return Metodos::retornoAjax("Erro", "alert", "O sistema não identificou o valor unitário de algum item");
                             $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro", "alert", "O sistema não identificou o valor unitário de algum item");
                         }
 
                         $finOrdemItensModel->retornaSaldoItemPreOrdem($pdo);
@@ -392,8 +392,8 @@ class FinOrdemModel {
                                 $erro = true;
                             }
                         } else {
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
                             $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
                         }
                     } else if ($linha->tp == "S" || $linha->flVariavel == '1') {
                         $finOrdemItensModel->setIdPedido($ordem[0]->idPedido);
@@ -412,8 +412,8 @@ class FinOrdemModel {
                                 $erro = true;
                             }
                         } else {
-                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
                             $pdo->rollBack();
+                            return Metodos::retornoAjax("Erro", "alert", "Saldo insuficiente por favor verifique os itens!");
                         }
                     } else {
                         $erro = true;
@@ -996,17 +996,6 @@ class FinOrdemModel {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
             return;
-        }
-    }
-
-    public function cadastrarReativacaoOrdem() {
-        try {
-            $conexao = new Conexao();
-            $pdo = $conexao->connect();
-            $pdo->beginTransaction();
-            $daoFinOrdem = new DaoFinOrdem();
-        } catch (Exception $ex) {
-            
         }
     }
 
