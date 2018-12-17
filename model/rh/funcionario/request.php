@@ -406,6 +406,7 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
+            echo "<option value = '0'>Selecione a cidade</option>";
             echo $prog->retornaOptionCidade($idEstado, $idCidade);
             return;
             break;
@@ -423,6 +424,7 @@ switch ($_REQUEST['acao']) {
             $idEstado = filter_input(INPUT_POST, 'idEstado', FILTER_DEFAULT);
             $uf = filter_input(INPUT_POST, 'uf', FILTER_DEFAULT);
             $cidade = new Cidade();
+
             echo $cidade->retornaOptionCidadeUf($idEstado, $uf);
 
             return;
@@ -438,7 +440,7 @@ switch ($_REQUEST['acao']) {
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
 
-            echo "<option value = '0'>Selecione um estado</option>";
+            echo "<option value = '0'>Selecione o estado</option>";
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;

@@ -119,27 +119,33 @@ class Contrato {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
 
-            //************************ Valida Data de Nascimento, se é maior que a Data Atual ***********************
-            $dtNasc = strtotime($dadosContrato['dtNascimento']);
-            $dtAtual = strtotime(date("d-m-Y"));
-            if ($dtNasc > $dtAtual) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Data de Nascimento Não Pode Ser Maior que a Data Atual.');
+            //********************* Valida E-mail e verifica se é institucional *****************
+            if (Metodos::validaEmail($dadosPessoa['email'])){
+                $email = strstr($dadosPessoa['email'], 'ac.gov.br');
+                if ($email != 'ac.gov.br') {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
+                }
+            } else {
+                return Metodos::retornoAjax('Erro', 'alert',"O E-mail Informado é Inválido.");
             }
+            //***********************************************************************************
+
+            //************************ Valida Data de Nascimento, se é maior que a Data Atual ***********************
+//            $dtNasc = strtotime(date(str_replace('/', '-', $dadosPessoaFisica['dtNascimento'])));
+//            $dtAtual = strtotime(date("d-m-Y"));
+//            if ($dtNasc > $dtAtual) {
+//                $pdo->rollBack();
+//                return Metodos::retornoAjax('Erro', 'alert', 'Data de Nascimento Não Pode Ser Maior que a Data Atual.');
+//            }
             //*******************************************************************************************************
 
             //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
-            $dtAdm = strtotime($dadosContrato['dtAdmissao']);
+            $dtAdm = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtAdm > $dtAtual) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
-            }
-
-            $email = strstr($dadosPessoa['email'], 'ac.gov.br');
-            if ($email != 'ac.gov.br') {
-                $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
             }
             //********************************************************************************************************
 
@@ -167,9 +173,9 @@ class Contrato {
                 return $retorno;
             }
 
-            //************************************************* Pessoa Fisica*******************************************
+            //************************************************* Pessoa Fisica *******************************************
             $pessoaFisica = new pessoaFisica();
-            $pessoaFisica->setId_pessoa(1);
+            $pessoaFisica->setId_pessoa($idPessoa);
             $pessoaFisica->setTp_sexo(trim($dadosPessoaFisica['tpSexo']));
             $pessoaFisica->setNm_civil(trim($dadosPessoaFisica['nomeCivil']));
             $pessoaFisica->setNr_cpf(trim($dadosPessoaFisica['cpf']));
@@ -180,7 +186,7 @@ class Contrato {
             $pessoaFisica->setId_estado_civil(($dadosPessoaFisica['estadoCivil']));
             $pessoaFisica->setNm_pai(trim($dadosPessoaFisica['pai']));
             $pessoaFisica->setNm_mae(trim($dadosPessoaFisica['mae']));
-            $pessoaFisica->setDt_nascimento(($dadosPessoaFisica['dtNascimento']));
+            $pessoaFisica->setDt_nascimento($dadosPessoaFisica['dtNascimento']);
             $pessoaFisica->setNr_cns(trim($dadosPessoaFisica['cns']));
             $pessoaFisica->setId_escolaridade_formacao(($dadosPessoaFisica['escolaridade']));
             $pessoaFisica->cadastrarPessoaFisica($pdo);
@@ -221,8 +227,8 @@ class Contrato {
             }
             //*********************************************
 
-            $contrato->setDt_admissao($dadosContrato['dtAdmissao']);
-            $contrato->setDt_demissao($dadosContrato['dtDemissao']);
+            $contrato->setDt_admissao(Metodos::ConverteDataING($dadosContrato['dtAdmissao']));
+            $contrato->setDt_demissao($dadosContrato['dtDemissao'] == '' || $dadosContrato['dtDemissao'] == null ? null:Metodos::ConverteDataING($dadosContrato['dtDemissao']));
             $contrato->setId_cargo($dadosContrato['idCargo']);
             $contrato->setId_pessoa_fisica($idPessoaFisica);
             $contrato->setId_pessoa_juridica($dadosContrato['pessoaJuridica']);

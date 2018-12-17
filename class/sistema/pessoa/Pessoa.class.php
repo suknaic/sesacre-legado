@@ -208,7 +208,7 @@ class Pessoa {
             $validaEmail = $pessoa->validarEmail($pdo, $this->nm_email);
             if ($validaEmail) {
                 $this->setSuccess(false);
-                $this->setMsg(STR_EMAIL_EXISTE);
+                $this->setMsg('E-mail Informado Já Está Sendo Utilizado.');
                 $pdo->rollBack();
                 return;
             }
