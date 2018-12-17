@@ -242,7 +242,7 @@ class EmpenhoAnulacao {
             }
             $this->idPedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
-            if ($dadosEmpenho['sit_empenho'] == $finEmpenho->getSitCancelado()) {
+            if ($dadosEmpenho['sit_empenho'] == $finEmpenho->getSitEstornado()) {
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
 
@@ -958,6 +958,9 @@ class EmpenhoAnulacao {
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
                 $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->getSituacaoDeferido());
                 $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
+                
+                //removendo barra do numero da anulação
+                $this->nrAnulacao = str_replace("/", "", $this->nrAnulacao);
                 //atualiza numero e data da anulaçao
                 $daoConEmpenhoAnulacao->setNrEmpenhoAnulacao($this->nrAnulacao);
                 $daoConEmpenhoAnulacao->setDtEmpenhoAnulacao(Metodos::ConverteDataING($this->dtAnulacao));

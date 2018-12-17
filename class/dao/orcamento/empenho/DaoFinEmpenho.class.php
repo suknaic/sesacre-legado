@@ -849,6 +849,7 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                         when '4' then 'Pago Parcial'
                         when '5' then 'Pago Total'
                         when '6' then 'Estornado'
+                        when '7' then 'Anulado'
                     end as situacao ,
                     case
                         when ( sit_emp.id_liquidacao is null
