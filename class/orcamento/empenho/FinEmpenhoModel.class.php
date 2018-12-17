@@ -1136,7 +1136,7 @@ class FinEmpenhoModel {
             }
             $this->id_pedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
-            if ($dadosEmpenho['sit_empenho'] == $this->sit_cancelado) {
+            if ($dadosEmpenho['sit_empenho'] == $this->sit_estornado) {
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
 

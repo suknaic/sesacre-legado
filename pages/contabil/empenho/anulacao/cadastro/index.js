@@ -226,10 +226,10 @@ $(document).ready(function () {
         $(".valor_total_itens").each(function(index){            
             //let valorInformado = func.converteValorIngFloat($(this).text());     
             if($(this).attr('valor_por_item') != undefined){
-                console.log($(this).attr('valor_por_item'));
+//                console.log($(this).attr('valor_por_item'));
                 let valorInformado = parseFloat($(this).attr('valor_por_item'));            
                 valorTotal = valorTotal + valorInformado;
-                console.log(valorTotal);
+//                console.log(valorTotal);
             }
         });
         $("#vl_anulacao").val(func.arrendondaValorParaQuatroCasas(valorTotal));

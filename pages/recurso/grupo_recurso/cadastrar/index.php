@@ -57,22 +57,17 @@ require_once "index.load.php";
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form id="cadRecurso" class="form-horizontal">
+                        <form id="cadGrupoRecursos" class="form-horizontal">
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h2 class="panel-title">Dados do Grupo de Recursos</h2>
                                 </div>
                                 <div class="panel-body">
-
-                                    <campo-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" requerido v-bind:opcoes="sistemasOptions"></campo-select>
-                                    <campo-texto-componente nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></campo-texto-componente>
-                                    <campo-texto-componente nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></campo-texto-componente>
-                                    <campo-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="novoRecurso.dsRecurso"></campo-texto-grande>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
                                     <button type="submit" v-on:click.prevent="cadastrar" class="btn btn-success btn-salvar btn-rounded">
-                                        <i class="fa fa-floppy-o fa-1x"></i> Salvar Recurso
+                                        <i class="fa fa-floppy-o fa-1x"></i> Salvar Grupo de Recursos
                                     </button>                                    
                                 </div>
                             </div>
@@ -129,8 +124,9 @@ require_once "index.load.php";
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <!--Vue.JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.common.dev.js"></script>
+        <script src="/assets/lib/template/js/vue.min.js"></script>
         <script src="/assets/lib/template/js/axios.min.js"></script>
+        <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>
