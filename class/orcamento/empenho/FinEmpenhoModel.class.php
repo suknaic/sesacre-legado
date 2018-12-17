@@ -1011,6 +1011,10 @@ class FinEmpenhoModel {
     public function trEmpenhoBuscaAnulacaoEmpenho() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();
+        
+        //removendo barra do numero do empenho
+        $this->nr_empenho = str_replace("/", "", $this->nr_empenho);
+        
         $daoFinEmpenho = new DaoFinEmpenho();
         $daoFinEmpenho->setNrEmpenho($this->nr_empenho);
         $daoFinEmpenho->buscaEmpenhoPesquisaAnulacaoEmpenho($pdo);
@@ -1877,13 +1881,13 @@ class FinEmpenhoModel {
                 $this->msgRetorno = "Não existe transação ativa";
                 return;
             }
-            
+
             $retorno = $this->retornaStatusOficialEmpenho($pdo);
             if(empty($retorno)){
                 $this->sucesso = false;
                 $this->msgRetorno = "Não foi possível definir o Status do Empenho";
                 return;
-            }                        
+            }                   
             
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->setIdEmpenho($this->id_empenho);
@@ -1894,9 +1898,8 @@ class FinEmpenhoModel {
                 $this->msgRetorno = "Não foi possível definir o Status do Empenho";
                 return;
             }
-
+            
             $busca = $daoFinEmpenho->getMsgRetorno();          
-
             if (!Log::SalvaLogU('fin_empenho', $daoFinEmpenho->getIdEmpenho(), $busca, $pdo)) {
                 $this->sucesso = false;
                 $this->msgRetorno = "Erro ao registrar a operação de atualização da situação e status do Empenho no LOG.";
