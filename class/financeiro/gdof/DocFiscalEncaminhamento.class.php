@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/gdof/DaoFinDocum
 
 class DocFiscalEncaminhamento {
 
+    private $idDocumentoFiscal = null;
     private $nrDocFiscal = null;
     private $anoDocFiscal = null;
     private $contratado = null;
@@ -14,21 +15,47 @@ class DocFiscalEncaminhamento {
     private $tpGasto = null;
     private $sitDocFiscal = null;
     private $remetente = null;
-    private $id_usuario = null;
+    private $idUsuario = null;
+
+    private function getSitCadastrado(){
+        return 1;
+    }
     
-    private $tramitacao = null;
+    private function getSitALiquidar(){
+        return 2;
+    }
     
-    function getTramitacao() {
-        return $this->tramitacao;
+    private function getSitLiquidado(){
+        return 3;
+    }
+    
+    private function getSitAPagar(){
+        return 4;
+    }
+    
+    private function getSitPagoParcial(){
+        return 5;
+    }
+    
+    private function getSitPago(){
+        return 6;
+    }
+    
+    private function getSitCancelado(){
+        return 7;
+    }
+    
+    function getIdDocumentoFiscal() {
+        return $this->idDocumentoFiscal;
     }
 
-    function setTramitacao($tramitacao) {
-        $this->tramitacao = $tramitacao;
+    function setIdDocumentoFiscal($idDocumentoFiscal) {
+        $this->idDocumentoFiscal = $idDocumentoFiscal;
         return $this;
     }
     
     public function getIdUsuario() {
-        return $this->id_usuario;
+        return $this->idUsuario;
     }
 
     /**
@@ -37,7 +64,7 @@ class DocFiscalEncaminhamento {
      * @return self
      */
     public function setIdUsuario($idUsuario) {
-        $this->id_usuario = $idUsuario;
+        $this->idUsuario = $idUsuario;
 
         return $this;
     }
@@ -221,17 +248,14 @@ class DocFiscalEncaminhamento {
 
         return $this;
     }
-
+    
     function listaTodos() {
         try {
             $retorno = "";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
-
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-
-            $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->montaFiltroSQL(), $this->id_usuario);
-
+            $daoFinDocumentoFiscal->retornaDocumentoFiscaisEncaminha($pdo, $this->condicoes());
             if ($daoFinDocumentoFiscal->sucesso()) {
                 //Verifica se a Situação é Cadastro, para assim mostrar os Botões de Editar e Remover
                 $finDoc = new FinDocumentoFiscal();
@@ -286,58 +310,30 @@ class DocFiscalEncaminhamento {
                             . "</tr>";
                 }
             }
-
             return $retorno;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-
-    private function montaFiltroSQL() {
-        //Verifica os atributos que serão filtrados
-
-        $filtroSql = "";
-        if ($this->getNrDocFiscal()) {
-            $filtroSql .= " and  DF.nr_documento_fiscal ilike '%" . $this->getNrDocFiscal() . "%' ";
+  
+    private function condicoes() {
+        try {                                           
+            $condicoes[] = array('DF.nr_documento_fiscal','string',$this->getNrDocFiscal());
+            $condicoes[] = array('DF.nr_processo_administrativo','string',$this->getNrProtocolo());
+            $condicoes[] = array('DF.dt_emissao','ano',$this->getAnoDocFiscal());
+            $condicoes[] = array('F.id_pessoa','string',$this->getContratado());
+            $condicoes[] = array('C.nr_contratol','string',$this->getNrContrato());
+            $condicoes[] = array('P.nr_pedido', 'string',$this->getNrPedido());
+            $condicoes[] = array('E.nr_empenho', 'string',str_replace("/", "", $this->getNrEmpenho()));
+            $condicoes[] = array('P.id_tipo_gasto', 'int',$this->getTpGasto());
+            $condicoes[] = array('DF.id_documento_situacao', 'int',$this->getSitDocFiscal());
+            $condicoes[] = array('LOT.id_lotacao', 'int',$this->getRemetente());
+            $condicoes[] = array('ENC.id_pessoa','int',$this->getIdUsuario());
+            $condicoes[] = array('TRM.id_tipo_tramitacao','int',2); //Aguardando Encaminhamento
+            return Metodos::montaFiltroSQL($condicoes);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
         }
-
-        if ($this->getAnoDocFiscal()) {
-           $filtroSql .= " and to_char(DF.dt_emissao,'YYYY') = '" . $this->getAnoDocFiscal()."'";
-        }
-
-        if ($this->getContratado()) {
-            $filtroSql .= " and F.id_pessoa = " . $this->getContratado();
-        }
-
-        if ($this->getNrProtocolo()) {
-            $filtroSql .= " and  DF.nr_processo_administrativo ilike '%" . $this->getNrProtocolo() . "%' ";
-        }
-
-        if ($this->getNrContrato()) {
-            $filtroSql .= " and C.nr_contrato ilike '%" . $this->getNrContrato() . "%' ";
-        }
-
-        if ($this->getNrPedido()) {
-            $filtroSql .= " and P.nr_pedido ilike '%" . $this->getNrPedido() . "%' ";
-        }
-
-        if ($this->getNrEmpenho()) {
-            $filtroSql .= " and E.nr_empenho ilike '%" . $this->getNrEmpenho() . "%' ";
-        }
-
-        if ($this->getTpGasto()) {
-            $filtroSql .= " and P.id_tipo_gasto = " . $this->getTpGasto();
-        }
-
-        if ($this->getSitDocFiscal()) {
-            $filtroSql .= " and DF.id_documento_situacao = " . $this->getSitDocFiscal();
-        }
-        
-        if ($this->getRemetente()) {
-            $filtroSql .= " and LOT.id_lotacao = ". $this->getRemetente() ;
-        }
-
-        return $filtroSql;
     }
 
     public function retornaOptionsTipoDestinatarioUsuario() {
@@ -345,7 +341,7 @@ class DocFiscalEncaminhamento {
         $pdo = $conexao->connect();
         $options = '';
         $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-        $daoFinDocumentoFiscal->retornaTipoLotacaoParaEncaminhamento($pdo, $this->id_usuario);
+        $daoFinDocumentoFiscal->retornaTipoLotacaoParaEncaminhamento($pdo, $this->idUsuario);
         if ($daoFinDocumentoFiscal->sucesso()) {
             foreach ($daoFinDocumentoFiscal->getMsgRetorno() as $dados) {
                 $options .= '<option value = "' . $dados["id_doc_tipo_lotacao"] . '">' . $dados["nm_doc_tipo_lotacao"] . '</option>';
@@ -376,46 +372,52 @@ class DocFiscalEncaminhamento {
             $pdo->beginTransaction();
 
             $daoFinDocumentoFiscal = new DaoFinDocumentoFiscal();
-            $daoFinDocumentoFiscal->setIdDocumentoFiscal($dados["id"]);
+            $daoFinDocumentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
 
             //Aqui irá retornar a ultima tramitação do documento para registrar o Encaminhamento
-            $daoFinDocumentoFiscal->retornaNovaSituacaoEncaminhamentoDocumentoFiscal($pdo,(int)$dados["destinatario"]);
+            $daoFinDocumentoFiscal->retornaDadosTramitacaoEncaminhar($pdo,(int)$dados["destinatario"]);
             if (!$daoFinDocumentoFiscal->sucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "Erro retornar os dados da última tramitação.");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao encaminhar o documento fiscal, parâmetro para encaminhar o mesmo não foi encontrado.");
             }
             $tramitacao = $daoFinDocumentoFiscal->getMsgRetorno();
 
             //verifica se usuário pode efetuar o encaminhamento deste documento 
-            $daoFinDocumentoFiscal->verificaPermissaoEncaminhar($pdo, $this->getIdUsuario(),$tramitacao['tipo_remetente']);
+            $daoFinDocumentoFiscal->verificaPermissaoEncaminhar($pdo, $this->getIdUsuario(),$tramitacao['tipo_origem']);
             if (!$daoFinDocumentoFiscal->sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Usuário não possui permissão para tramitar este documento.");
             }
-
-            if ($tramitacao['situacao_atual'] != $tramitacao['situacao_nova']) {
-                //-------------Atualiza a situação do Documento Fiscal--------------------------------
-                $daoFinDocumentoFiscal->setIdDocumentoSituacao($tramitacao['situacao_nova']);
-                $daoFinDocumentoFiscal->atualizaSituacaoDocumentoFiscal($pdo);
-
-                if (!$daoFinDocumentoFiscal->sucesso()) {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a situação do Documento Fiscal, por favor entre em contato com o Administrador do sistema.");
-                }
-                //-------------FIM Atualiza a situação do Documento Fiscal----------------------------
+            
+            //-----------------------------Validação para encaminhar-----------------------------
+            if (($tramitacao['situacao_nova'] < $this->getSitLiquidado() and $tramitacao['liquidacao'] == 'S') or 
+                    ($tramitacao['situacao_nova'] < $this->getSitPagoParcial() and $tramitacao['pagamento'] == 'S')) {
+                return Metodos::retornoAjax("Erro", "alert", "Encaminhamento não permitido para o Destinatário informado pois há Liquidação ou Pagamento para este documento.");
             }
+            //-----------------------------------------------------------------------------------
+
+            //-----------------------Atualiza a situação do Documento Fiscal---------------------
+            $documentoFiscal = new FinDocumentoFiscal();
+            $documentoFiscal->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
+            $documentoFiscal->setIdDocumentoSituacao($tramitacao['situacao_nova']);
+
+            if (!$documentoFiscal->atualizaSituacaoDocumentoGDOF($pdo)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $documentoFiscal->getMsgErros());
+            }
+            //-------------FIM Atualiza a situação do Documento Fiscal---------------------------
 
             //codigo abaixo cadastra a tramitacao encaminhado
             $docTramitacao = new DocTramitacao();
-            $docTramitacao->setIdPessoa($this->id_usuario);
-            $docTramitacao->setIdDocOrigem($tramitacao['remetente']);
+            $docTramitacao->setIdPessoa($this->idUsuario);
+            $docTramitacao->setIdDocOrigem($tramitacao['origem']);
             $docTramitacao->setIdDocDestino($dados["destinatario"]);
             $docTramitacao->setIdDocumentoSituacao($tramitacao['situacao_nova']);
             $docTramitacao->setDsDocTramitacao($dados["motivo"]);
             $docTramitacao->setIdTipoTramitacao(3);
-            $docTramitacao->setIdDocumentoFiscal($dados["id"]);
+            $docTramitacao->setIdDocumentoFiscal($this->getIdDocumentoFiscal());
             $docTramitacao->setFlPesquisa(1);
             if (!$docTramitacao->cadastraTramitacao($pdo)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao salva a tramitaçao.");
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao salvar a tramitaçao.");
             }
 
             //codigo abaixo cadastra a tramitacao aguardando recebimento

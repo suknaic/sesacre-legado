@@ -12,6 +12,7 @@ class ForFornecedor {
     private $nmEmpresa = null;
     private $medicamento = null;
     private $servico = null;
+    private $emailAdicional = null;
     private $materialConsumo = null;
     private $materialPermanente = null;
     private $flDistribuidora = null;
@@ -159,6 +160,22 @@ class ForFornecedor {
     public function setFlExclusiva($flExclusiva)
     {
         $this->flExclusiva = $flExclusiva;
+    }
+
+    /**
+     * @return null
+     */
+    public function getEmailAdicional()
+    {
+        return $this->emailAdicional;
+    }
+
+    /**
+     * @param null $emailAdicional
+     */
+    public function setEmailAdicional($emailAdicional)
+    {
+        $this->emailAdicional = $emailAdicional;
     }
 
 

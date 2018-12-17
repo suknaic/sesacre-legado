@@ -50,7 +50,16 @@
                 margin: 32px;
                 margin-left: 0;
             }
+            .adicionarEmail {
+                margin: 32px;
+                margin-left: 0;
+            }
             #remover {
+                margin: 32px;
+                margin-left: 0;
+            }
+
+            .removerEmailAdicional {
                 margin: 32px;
                 margin-left: 0;
             }
@@ -411,6 +420,9 @@
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>
+                                                    </div>
+                                                    <div class="form-group emailAdicional">
+
                                                     </div>
                                                 </div>
                                                 <div id="tab5" class="tab-pane">

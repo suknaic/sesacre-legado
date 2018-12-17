@@ -103,7 +103,8 @@ class FinEmpenhoPesquisa {
             '3' => 'Liquidado Total',
             '4' => 'Pago Parcial',
             '5' => 'Pago Total',
-            '6' => 'Cancelado'
+            '6' => 'Cancelado',
+            '7' => 'Anulado'
         );
         return $situacoes;
     }

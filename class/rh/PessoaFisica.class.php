@@ -675,7 +675,7 @@ class pessoaFisica {
                 $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
             }
             if (!empty($cpf)) {
-                $filter[] = "PF.nr_cpf = '".Metodos::formataCpf($cpf)."'";
+                $filter[] = "PF.nr_cpf = '".Metodos::limpaCPF_CNPJ($cpf)."'";
             }
             if (count($filter) > 0) {
                 $filtro = " where " . implode(' and ', $filter);

@@ -985,6 +985,21 @@ class DaoSesContrato extends SesContrato {
         }
     }
 
+    public function retornaQtContratoPessoa($pdo, $cpf = null) {
+        try {
+            $sql = $pdo->prepare("SELECT COUNT(id_contrato) as qtContrato
+                                    FROM ses_contrato CON
+                                      INNER JOIN ses_pessoa_fisica PF ON PF.id_pessoa_fisica = CON.id_pessoa_fisica
+                                        WHERE PF.nr_cpf = :cpf");
+            $sql->bindValue(":cpf", $cpf, PDO::PARAM_STR);
+            $sql->execute();
+
+            return $sql->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $erroPdo) {
+            return $erroPdo;
+        }
+    }
+
 }
 
 /* 

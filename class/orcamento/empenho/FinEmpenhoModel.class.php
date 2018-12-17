@@ -22,15 +22,17 @@ class FinEmpenhoModel {
     private $sit_liquidado_total = 3;
     private $sit_pago_parcial = 4;
     private $sit_pago_total = 5;
-    private $sit_cancelado = 6;
+    private $sit_estornado = 6;
+    private $sit_anulado = 7;
     private $statusAguardandoLiquidacao = 1;
     private $statusAguardandoFinalizarLiquidacao = 2;
     private $statusAguardandoPagamento = 3;
     private $statusAguardandoFinalizarPagamento = 4;
     private $statusFinalizado = 5;
+    private $statusCancelado = 6;
     
-    private $id_lotacao = null;
-    private $id_doc_tipo_lotacao = null;
+    private $idLotacao = null;
+    private $idDocTipoLotacao = null;
     
     private $sucesso = null;
     private $msgRetorno = null;
@@ -44,20 +46,20 @@ class FinEmpenhoModel {
     }
     
     function getIdLotacao() {
-        return $this->id_lotacao;
+        return $this->idLotacao;
     }
 
     function getIdDocTipoLotacao() {
-        return $this->id_doc_tipo_lotacao;
+        return $this->idDocTipoLotacao;
     }
 
-    function setIdLotacao($id_lotacao) {
-        $this->id_lotacao = $id_lotacao;
+    function setIdLotacao($idLotacao) {
+        $this->idLotacao = $idLotacao;
         return $this;
     }
 
-    function setIdDocTipoLotacao($id_doc_tipo_lotacao) {
-        $this->id_doc_tipo_lotacao = $id_doc_tipo_lotacao;
+    function setIdDocTipoLotacao($idDocTipoLotacao) {
+        $this->idDocTipoLotacao = $idDocTipoLotacao;
         return $this;
     }
     
@@ -70,24 +72,28 @@ class FinEmpenhoModel {
         return $this;
     }
 
-    public function getStatusAguardandoLiquidacao() {
+    function getStatusAguardandoLiquidacao() {
         return $this->statusAguardandoLiquidacao;
     }
 
-    public function getStatusAguardandoFinalizarLiquidacao() {
+    function getStatusAguardandoFinalizarLiquidacao() {
         return $this->statusAguardandoFinalizarLiquidacao;
     }
 
-    public function getStatusAguardandoPagamento() {
+    function getStatusAguardandoPagamento() {
         return $this->statusAguardandoPagamento;
     }
 
-    public function getStatusAguardandoFinalizarPagamento() {
+    function getStatusAguardandoFinalizarPagamento() {
         return $this->statusAguardandoFinalizarPagamento;
     }
 
-    public function getStatusFinalizado() {
+    function getStatusFinalizado() {
         return $this->statusFinalizado;
+    }
+    
+    function getStatusCancelado() {
+        return $this->statusCancelado;
     }
 
     function getSitCadastrado() {
@@ -110,8 +116,13 @@ class FinEmpenhoModel {
         return $this->sit_pago_total;
     }
 
-    function getSitCancelado() {
-        return $this->sit_cancelado;
+    function getSitEstornado() {
+        return $this->sit_estornado;
+    }
+    
+    function setSit_anulado($sit_anulado) {
+        $this->sit_anulado = $sit_anulado;
+        return $this;
     }
 
     function getIdEmpenhoStatus() {
@@ -121,18 +132,6 @@ class FinEmpenhoModel {
     function setIdEmpenhoStatus($id_empenho_status) {
         $this->id_empenho_status = $id_empenho_status;
         return $this;
-    }
-
-    private function getSituacoes(): array {
-        $situacoes = array(
-            '1' => 'Cadastrado',
-            '2' => 'Liquidado Parcial',
-            '3' => 'Liquidado Total',
-            '4' => 'Pago Parcial',
-            '5' => 'Pago Total',
-            '6' => 'Cancelado'
-        );
-        return $situacoes;
     }
 
     /**
@@ -327,7 +326,7 @@ class FinEmpenhoModel {
         $condicao = '';
 
         if (!empty($dados['central'])) {
-            $condicao .= ' AND p.id_lotacao = ' . $dados['central'];
+            $condicao .= ' AND p.idLotacao = ' . $dados['central'];
         }
 
         if (!empty($dados['numero'])) {
@@ -578,7 +577,7 @@ class FinEmpenhoModel {
     public function atualizaEmpenho(){
         try {
             if (empty($this->dt_empenho_safira) || empty($this->nr_empenho) || empty($this->id_tipo_empenho) || empty($this->vl_empenho)
-                    || empty($this->id_lotacao) || empty($this->id_doc_tipo_lotacao)) {
+                    || empty($this->idLotacao) || empty($this->idDocTipoLotacao)) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
             $conexao = new Conexao();
@@ -606,8 +605,8 @@ class FinEmpenhoModel {
             $daoFinEmpenho->setDtEmpenhoSafira(Metodos::ConverteDataING($this->dt_empenho_safira));
             $daoFinEmpenho->setVlEmpenho(Metodos::ConverteValorIng($this->vl_empenho));
             $daoFinEmpenho->setDsEmpenho($this->ds_empenho ?? '');
-            $daoFinEmpenho->setIdLotacao($this->id_lotacao);
-            $daoFinEmpenho->setIdDocTipoLotacao($this->id_doc_tipo_lotacao);
+            $daoFinEmpenho->setIdLotacao($this->idLotacao);
+            $daoFinEmpenho->setIdDocTipoLotacao($this->idDocTipoLotacao);
             
             //verificar se o empenho ja está cadastrado
             $daoFinEmpenho->verificarEmpenhoPeloNumeroUpdate($pdo);
@@ -1137,7 +1136,7 @@ class FinEmpenhoModel {
             }
             $this->id_pedido = $dadosEmpenho['id_pedido'];
             //Verifica se o Empenho já está cancelado
-            if ($dadosEmpenho['sit_empenho'] == $this->sit_cancelado) {
+            if ($dadosEmpenho['sit_empenho'] == $this->sit_estornado) {
                 return Metodos::retornoAjax("Erro", "alert", "Ação não realizado, pois o Empenho já foi Cancelado.");
             }
 
@@ -1160,14 +1159,14 @@ class FinEmpenhoModel {
             }
             
             //Salva Historico do Empenho
-            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitCancelado(), $this->getStatusFinalizado(), $justificativa)) {
+            if (!$this->salvarEmpenhoHistorico($pdo, $this->getSitEstornado(), $this->getStatusCancelado(), $justificativa)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", $this->getMsgRetorno());
             }
 
             //Muda Status e Situação do Empenho            
-            $daoFinEmpenho->setSitEmpenho($this->sit_cancelado);
-            $daoFinEmpenho->setIdEmpenhoStatus($this->statusFinalizado);
+            $daoFinEmpenho->setSitEmpenho($this->getSitEstornado());
+            $daoFinEmpenho->setIdEmpenhoStatus($this->getStatusCancelado());
             $daoFinEmpenho->atualizaSituacaoStatusEmpenho($pdo);
             if (!$daoFinEmpenho->sucesso()) {
                 $pdo->rollBack();

@@ -45,7 +45,7 @@ function returnContratoEditar() {
             $("#nr_cep").val(response[0]['nr_cep']);
             //********************************************************
             //$("#id_cidade").val(response[0]['id_cidade']).change();
-            $("#id_pais_endereco").val(response[0]['id_pais_endereco']);
+            $("#id_pais_endereco").val(response[0]['id_pais_endereco']).change();
             listaEstadoNaturalidadeCombo(response[0]['id_pais_endereco'], 2, response[0]['id_estado_endereco']);
             listaCidadeCombo(response[0]['id_estado_endereco'], 2, response[0]['id_cidade_endereco']);
             //*************************************************************************

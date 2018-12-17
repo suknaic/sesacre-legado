@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <?php
     require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
-    if (isset($_GET['id'])){
-        $cpf = explode("=", $_GET['id'])[0];
-        $nro = (int)(explode("=", $_GET['id'])[1])+ 1;
-    }
 ?>
 <html lang="pt-br">
     <head>
@@ -62,7 +58,7 @@
                     </div>
                     <div class= "text-center text-bold text-danger" id="contContrato">
                         <?php
-                            echo $nro.'° Contrato';
+                            echo $qtContratoPessoa;
                         ?>
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->

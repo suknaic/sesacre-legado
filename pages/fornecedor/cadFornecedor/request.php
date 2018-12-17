@@ -142,6 +142,17 @@
                     $i++;
                 }
 
+                $emailAdicional = array();
+                $a = 0;
+                foreach ($dados['emailAdicional'] as $email){
+                    if (!Metodos::validaEmail($email)) {
+                        echo Metodos::retornoAjax('Erro', 'alert', 'E-mail adicional é inválido.');
+                        return;
+                    }
+                    $emailAdicional['email_'.$a] = $email;
+                    $a++;
+                }
+
                 $fornecedor = new Fornecedor();
                 $fornecedor->setPessoaFisica(empty($dados['pessoaFisica']) ? null:$dados['pessoaFisica']);
                 $fornecedor->setPessoaJuridica(empty($dados['pessoaJuridica']) ? null:$dados['pessoaJuridica']);
@@ -151,6 +162,7 @@
                 $fornecedor->setMaterialConsumo(array_unique($dados['materialServico']['materialConsumo']));
                 $fornecedor->setMaterialPermanente(array_unique($dados['materialServico']['materialPermanente']));
                 $fornecedor->setNmEmpresa($empresas);
+                $fornecedor->setEmailAdicional($emailAdicional);
                 $fornecedor->setFlDistribuidora($dados['empDist']);
                 $fornecedor->setFlExclusiva($dados['empExc']);
 

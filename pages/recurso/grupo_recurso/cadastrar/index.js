@@ -2,23 +2,23 @@ func = new Funcoes();
 req = new Requisicoes();
 
 new Vue({
-    el: '#cadRecurso',
+    el: '#cadGrupoRecursos',
     data: function () {
         return {
-            sistemasOptions: [],
-            novoRecurso: {idSistema: 0, nmRecurso: '', lkRecurso: '', dsRecurso: ''}
+            gruposOptions: [],
+            novoGrupo: {idGrupo: 0, recursos: []}
         }
     },
     mounted: function () {
-        this.listaSistemasOptions();
+        this.listaGruposOptions();
     },
     methods: {
         cadastrar: function () {
             var vm = this;
             
             var dados = {
-                acao: 'cadastrarRecurso',
-                dados: this.novoRecurso
+                acao: 'cadastrarGrupo',
+                dados: this.novoGrupo
             }
            
             req.axiosPost('request.php',dados, function(response){
@@ -45,18 +45,15 @@ new Vue({
             
            
         },
-        listaSistemasOptions: function () {
+        listaGruposOptions: function () {
             var vm = this;
             var dados = {
-                acao: 'listaSistemas'
+                acao: 'listaGrupos'
             }; 
             req.axiosGet('request.php',dados,function(response){
-                vm.sistemasOptions = response;
+                vm.gruposOptions = response;
             })
         }
 
     }
 })
-
-
-

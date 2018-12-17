@@ -47,32 +47,27 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Cadastro de Recurso</h1> 
+                        <h1 class="page-header text-overflow">Cadastro de Grupo de Recursos</h1> 
                     </div>
                     <ol class="breadcrumb">
-                        <li><a href="/pages/recurso/recurso/pesquisar/">Voltar</a></li>                        
+                        <li><a href="/pages/recurso/grupo_recurso/pesquisar/">Voltar</a></li>                        
                     </ol>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-                        <form id="cadRecurso" class="form-horizontal">
+                        <form id="cadGrupoRecursos" class="form-horizontal">
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <h2 class="panel-title">Dados do Recurso</h2>
+                                    <h2 class="panel-title">Dados do Grupo de Recursos</h2>
                                 </div>
                                 <div class="panel-body">
-
-                                    <input-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" requerido v-bind:opcoes="sistemasOptions"></input-select>
-                                    <input-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></input-texto>
-                                    <input-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></input-texto>
-                                    <input-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="novoRecurso.dsRecurso"></input-texto-grande>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
                                     <button type="submit" v-on:click.prevent="cadastrar" class="btn btn-success btn-salvar btn-rounded">
-                                        <i class="fa fa-floppy-o fa-1x"></i> Salvar Recurso
+                                        <i class="fa fa-floppy-o fa-1x"></i> Salvar Grupo de Recursos
                                     </button>                                    
                                 </div>
                             </div>
@@ -132,9 +127,6 @@ require_once "index.load.php";
         <script src="/assets/lib/template/js/vue.min.js"></script>
         <script src="/assets/lib/template/js/axios.min.js"></script>
         <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputTexto.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputTextoGrande.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputSelect.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>
