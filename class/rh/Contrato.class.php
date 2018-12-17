@@ -479,7 +479,7 @@ class Contrato {
                 //******************************************************************************
                 if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
                     $sucesso = true;
-                    $msg = STR_EDICAO_SUCESSO;
+                    $msg = STR_CADASTRO_SUCESSO;
                 } else {
                     $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
@@ -1647,6 +1647,28 @@ class Contrato {
             return $retorno;
         } catch (Exception $exc) {
             $retorno = "";
+        }
+    }
+
+    public function retornaQtContratoPessoa($cpf = null) {
+        try {
+            if (empty($cpf)) {
+                return;
+            }
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $daoSesContrato = new DaoSesContrato();
+            $qt = $daoSesContrato->retornaQtContratoPessoa($pdo, $cpf);
+
+            if (is_array($qt)) {
+                return $qt['qtcontrato'];
+            } else {
+                return 'Erro';
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex);
         }
     }
 
