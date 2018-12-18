@@ -63,7 +63,23 @@ require_once "index.load.php";
                                     <h2 class="panel-title">Dados do Grupo de Recursos</h2>
                                 </div>
                                 <div class="panel-body">
-                                    
+                                    <input-select v-if="!cadastro" nome="id_grupo_recurso" descricao="Grupo de Recursos" v-model="grupo.idGrupoRecurso" requerido v-bind:opcoes="grupoOptions">
+<!--                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" v-on:click="novoGrupo(true)" type="button">
+                                                <i class="fa fa-plus-circle fa-1x"></i>
+                                            </button>
+                                        </span>-->
+                                    </input-select>
+                                    <input-texto v-if="cadastro" nome="nm_grupo_recurso" descricao="Grupo de Recursos"  v-model="grupo.nmGrupoRecurso" requerido>
+<!--                                        <span class="input-group-btn">
+                                            <button class="btn btn-success" type="button">
+                                                Cadastrar
+                                            </button>
+                                            <button class="btn btn-default" v-on:click="novoGrupo(false)" type="button">
+                                                Cancelar
+                                            </button>
+                                        </span>-->
+                                    </input-texto>
                                 </div>
                                 <div class="panel-footer text-right">                                   
                                     <button type="submit" v-on:click.prevent="cadastrar" class="btn btn-success btn-salvar btn-rounded">
@@ -127,6 +143,8 @@ require_once "index.load.php";
         <script src="/assets/lib/template/js/vue.min.js"></script>
         <script src="/assets/lib/template/js/axios.min.js"></script>
         <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
+        <script src="/assets/lib/sesacre/componentes/InputTexto.js"></script>
+        <script src="/assets/lib/sesacre/componentes/InputSelect.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>

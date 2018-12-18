@@ -14,7 +14,6 @@ new Vue({
     },
     methods: {
         cadastrar: function () {
-            var vm = this;
             
             var dados = {
                 acao: 'cadastrarRecurso',

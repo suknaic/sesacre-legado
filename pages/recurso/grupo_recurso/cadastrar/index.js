@@ -5,16 +5,16 @@ new Vue({
     el: '#cadGrupoRecursos',
     data: function () {
         return {
-            gruposOptions: [],
-            novoGrupo: {idGrupo: 0, recursos: []}
+            grupoOptions: [],
+            grupo: {idGrupoRecurso: 0, nmGrupoRecurso: '', recursos: []},
+            cadastro: false
         }
     },
     mounted: function () {
-        this.listaGruposOptions();
+        this.listaGrupoOptions();
     },
     methods: {
         cadastrar: function () {
-            var vm = this;
             
             var dados = {
                 acao: 'cadastrarGrupo',
@@ -45,14 +45,33 @@ new Vue({
             
            
         },
-        listaGruposOptions: function () {
+        listaGrupoOptions: function () {
             var vm = this;
             var dados = {
                 acao: 'listaGrupos'
             }; 
             req.axiosGet('request.php',dados,function(response){
-                vm.gruposOptions = response;
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        console.log('Console Mensagem');
+                        func.modalAlert(func.msgErroPadrao);
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    vm.grupoOptions = response;
+                    return false;
+                } else {
+                    console.log('Ultimo else');
+                    func.modalAlert(func.msgErroPadrao);
+                    return false;
+                }
             })
+        },
+        novoGrupo: function(parametro){
+            this.cadastro = parametro;
         }
 
     }
