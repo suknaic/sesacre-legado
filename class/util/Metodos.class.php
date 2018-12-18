@@ -510,29 +510,30 @@ class Metodos {
         }
     }
     
-    public static function serializaCondicaoSql($atributo,$tipo,$valor) {
-        if(empty($valor) or empty($tipo) or empty($atributo)){ //Todos parametros são obrigatórios para serialização
+    public static function serializaCondicaoSql($atributo,$operador,$valor, $tipo) {
+        if(empty($valor) or empty($operador) or empty($tipo) or empty($atributo)){ //Todos parametros são obrigatórios para serialização
             return array(); 
         } else {
             $inicioString = strpos($atributo, '.') ? strpos($atributo, '.') + 1 : 0; //Remove o PREFIXO para evitar erro no BindValue do PDO
             $bind = ":" . substr($atributo,$inicioString); 
-            $query = "";
+            $query = $atributo . " " . $operador . " " . $bind;
+            
             switch ($tipo) {
-                case "string":
-                    $query = $atributo . " ilike " . $bind;
-                    $valor = "%" . $valor . "%";
+                case 'string':
+                    if ($operador == 'ilike') {
+                        $valor = "%" . $valor . "%";
+                    }
                     $param = PDO::PARAM_STR;
                     break;
-                case "int":
-                    $query = $atributo . " = " . $bind;
+                case 'int':
                     $param = PDO::PARAM_INT;
                     break;
-
                 case 'ano':
-                    $query = "extract(year from ".$atributo.") = " . $bind;
-                    $param = PDO::PARAM_INT;
+                    $query = "EXTRACT(YEAR FROM ".$atributo.") " . $operador . " " . $bind;
+                    $param = PDO::PARAM_STR;
                     break;
-            }
+                
+            }            
             return array("sql" => $query, "bind" => $bind, "valor" => $valor, "pdo_param" => $param);
         }
     }
@@ -541,7 +542,7 @@ class Metodos {
         $filtros = array();
         if (!empty($condicoes)) {
             foreach ($condicoes as $condicao) {
-                $filtros[] = self::serializaCondicaoSql($condicao[0],$condicao[1],$condicao[2]);
+                $filtros[] = self::serializaCondicaoSql($condicao[0],$condicao[1],$condicao[2],$condicao[3]);
             }
         }
         return array_filter($filtros);

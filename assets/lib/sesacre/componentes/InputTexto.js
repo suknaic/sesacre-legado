@@ -23,5 +23,7 @@ Vue.component('input-texto', {
                             <input type="text" class="form-control" v-bind:class="nome" v-bind:value="valor" v-on:input="atualiza($event.target.value)" >
                         </div>                                                    
                     </div>
+                    <slot>
+                    </slot>
                 </div>`
 })

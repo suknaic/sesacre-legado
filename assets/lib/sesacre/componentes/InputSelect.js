@@ -29,5 +29,7 @@ Vue.component('input-select',{
                             </select>                                                                
                         </div>                                                   
                     </div>
+                    <slot>
+                    </slot>
                 </div>`
 });
