@@ -355,14 +355,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                 left join fin_documento_situacao as docSit 
                 on docSit.id_documento_situacao = docFis.id_documento_situacao 
                 left join (select sum(pagDoc.vl_pagamento_doc) as valorPagamento, pag.id_liquidacao , pagDoc.id_documento_fiscal 
-		   from con_pagamento as pag
-		   inner join con_pagamento_doc as pagDoc
-		   on pagDoc.id_pagamento = pag.id_pagamento
-                   where id_pagamento_situacao = '1' 
-                   group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
+                           from con_pagamento as pag
+                           inner join con_pagamento_doc as pagDoc
+                           on pagDoc.id_pagamento = pag.id_pagamento
+                           where id_pagamento_situacao = '1' 
+                           group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
                 on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
-                where liq.id_liquidacao = :id_liquidacao
-                and (docFis.id_documento_situacao = 4 or docFis.id_documento_situacao = 5)
+                where liq.id_liquidacao = :id_liquidacao  and docFis.id_documento_situacao < 7
                 order by  docFis.nr_documento_fiscal";
         try {
             $result = $pdo->prepare($sql);
