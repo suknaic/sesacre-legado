@@ -1,19 +1,7 @@
 $(document).ready(function () {
     //instacinado fucoes js
     func = new Funcoes();
-    //retorna remetente
-    $.ajax({
-        "url": "request.php",
-        "dataType": 'html',
-        "data": {
-            "acao": "retornaTipoRemetenteERemetente"
-        },
-        "success": function (response) {
-            $("#id_remetente").html("");
-            $("#id_remetente").append(response);
-        }
-    });
-
+    
     $.ajax({
         "url": "request.php",
         "dataType": "json",
@@ -73,11 +61,6 @@ $(document).ready(function () {
                 ]
             });
         }
-    });
-
-    $('body').on('click', '.ver-ordem', function (e) {
-        var id = $(this).val();
-        window.open("/pages/financeiro/ordem/pdfBemProduto.php?&id=" + id);
     });
 
     function listaAnotacoes() {

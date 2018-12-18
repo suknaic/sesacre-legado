@@ -70,20 +70,52 @@ class FinOrdemAdministracaoAnotacaoModel {
         return $this;
     }
 
-    public function cadastrarAnotacao(PDO $pdo) {
-        $this->sucesso = false;
+    public function cadastrarAnotacao(PDO $pdo = null) {
 
-        $daoFinOrdemAdministracaoAnotacao = new DaoFinOrdemAdministracaoAnotacao();
-        $daoFinOrdemAdministracaoAnotacao->setIdOrdemAdministracao($this->id_ordem_administracao);
-        $daoFinOrdemAdministracaoAnotacao->setDsOrdemAdministracaoAnotacao($this->ds_ordem_administracao_anotacao);
-        $daoFinOrdemAdministracaoAnotacao->setIdPessoa($this->id_pessoa);
-        $daoFinOrdemAdministracaoAnotacao->cadastrarAnotacao($pdo);
-        
-        if (!$daoFinOrdemAdministracaoAnotacao->Sucesso()) {
+        $this->sucesso = false;
+        try {
+
+            if (empty($pdo)) {
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }
+
+            $daoFinOrdemAdministracaoAnotacao = new DaoFinOrdemAdministracaoAnotacao();
+            $daoFinOrdemAdministracaoAnotacao->setIdOrdemAdministracao($this->id_ordem_administracao);
+            $daoFinOrdemAdministracaoAnotacao->setDsOrdemAdministracaoAnotacao($this->ds_ordem_administracao_anotacao);
+            $daoFinOrdemAdministracaoAnotacao->setIdPessoa($this->id_pessoa);
+            $daoFinOrdemAdministracaoAnotacao->cadastrarAnotacao($pdo);
+
+            if (!$daoFinOrdemAdministracaoAnotacao->Sucesso()) {
+                $this->sucesso = false;
+                $this->msgRetorno = $daoFinOrdemAdministracaoAnotacao->getMsgRetorno();
+            } else {
+                $this->sucesso = true;
+            }
+        } catch (Exception $ex) {
             $this->sucesso = false;
-            $this->msgRetorno = $daoFinOrdemAdministracaoAnotacao->getMsgRetorno();
-        } else {
-            $this->sucesso = true;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaAnotacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinOrdemAdministracaoAnotacao = new DaoFinOrdemAdministracaoAnotacao();
+            $retorno = '';
+            $daoFinOrdemAdministracaoAnotacao->setIdOrdemAdministracao($this->id_ordem_administracao);
+            
+            $daoFinOrdemAdministracaoAnotacao->retornaAnotacao($pdo);
+
+            if ($daoFinOrdemAdministracaoAnotacao->sucesso()) {
+                foreach ($daoFinOrdemAdministracaoAnotacao->getMsgRetorno() as $linha) {
+                    $retorno .= $linha['dh_ordem_administracao_anotacao'] . " - " . $linha['nm_pessoa'] . ": " . $linha['ds_ordem_administracao_anotacao'] . "\n";
+                }
+            }
+            return Metodos::retornoAjax("ok", "html", $retorno);
+        } catch (Exception $ex) {
+            
         }
     }
 

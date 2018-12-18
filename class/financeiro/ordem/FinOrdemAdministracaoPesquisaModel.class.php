@@ -114,7 +114,7 @@ class FinOrdemAdministracaoPesquisaModel {
             $daoFinOrdemAdministracao->retornaReativacaoAdministracaoOrdem($pdo, $this->condicoes());
 
             if (!$daoFinOrdemAdministracao->Sucesso()) {
-                return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna as ordens.");
+                return "";
             }
 
             foreach ($daoFinOrdemAdministracao->getMsgRetorno() as $linha) {
@@ -130,10 +130,10 @@ class FinOrdemAdministracaoPesquisaModel {
                         . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['valor'], 4) . "</td>"
                         . "<td class='text-center'>" . $linha['situacao'] . "</td>"
                         . "<td class='text-center'>"
-                        . "<button type='button' title='Ver a Reativação' class='ver-reativacao' value=''><i class='fa fa-file-text-o text-info' aria-hidden='true'></i></button>";
+                        . "<button type='button' title='Ver a Reativação' class='ver-reativacao' value='".$linha["id_ordem_administracao"]."'><i class='fa fa-file-text-o text-info' aria-hidden='true'></i></button>";
 
                 if ($linha["st_ordem_administracao"] == 1) {
-                     $retorno .= "<button type='button' title='Excluir a Reativação' class='excluir' value=''><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>";
+                     $retorno .= "<button type='button' title='Excluir a Reativação' class='excluir' value='".$linha["id_ordem_administracao"]."'><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>";
                 }
 
                 

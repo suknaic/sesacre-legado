@@ -23,14 +23,9 @@ $(document).ready(function () {
         lista();
     });
 
-    $('body').on('click', '.ver-pagamento', function (e) {
+    $('body').on('click', '.ver-reativacao', function (e) {
         var id = $(this).val();
-        window.open("/pages/contabil/pagamento/ver_pagamento/index.php?&id=" + id);
-    });
-
-    $('body').on('click', '.editar-pagamento', function (e) {
-        var id = $(this).val();
-        window.open("/pages/contabil/pagamento/edit_pagamento/index.php?&id=" + id);
+        window.open("/pages/financeiro/reativacao_ordem/ver_reativacao/index.php?&id=" + id);
     });
 
 

@@ -555,7 +555,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     on situacao.id_liquidacao_situacao = liquidacao.id_liquidacao_situacao
                     left join (select sum(vl_pagamento) as vl_pagamento, id_liquidacao from con_pagamento where id_pagamento_situacao = '1' group by id_liquidacao) as pagamento
                     on pagamento.id_liquidacao = liquidacao.id_liquidacao
-                    where liquidacao.nr_liquidacao = :numero";
+                    where liquidacao.nr_liquidacao = :numero and situacao.id_liquidacao_situacao < 4";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(":numero", $this->getNrLiquidacao(), PDO::PARAM_INT);
             $stmt->execute();

@@ -37,8 +37,33 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
         }
     }
 
+    public function autorizacaoReativacaoOrdem(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "update fin_ordem_administracao set id_autorizado = :pessoa, id_lotacao_autorizado = :lotacao, dt_autorizacao =  now(), st_ordem_administracao = :status
+                        where id_ordem_administracao = :idOrdemAdm";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":pessoa", $this->getIdAutorizado(), PDO::PARAM_INT);
+                $stmt->bindValue(":lotacao", $this->getIdLotacaoAutorizado(), PDO::PARAM_INT);
+                $stmt->bindValue(":status", 2, PDO::PARAM_INT);
+                 $stmt->bindValue(":idOrdemAdm", $this->getIdOrdemAdministracao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->sucesso = true;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+    
+    public function retornaDataAtual(PDO $pdo){
+        
+    }
+
     public function alterarSituacaoOrdem(PDO $pdo, int $status = null) {
         try {
+            $this->sucesso = false;
             if (!empty($pdo) && !empty($status)) {
                 $sql = "update fin_ordem set sit_ordem = :situacao where id_ordem = :ordem";
                 $stmt = $pdo->prepare($sql);
@@ -65,7 +90,7 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                     $strQuery = " where " . implode(" and ", $filtro);
                 }
 
-                $sql = "select ordem.id_ordem, ordem.nr_ordem, ordem.aa_ordem, pedido.id_pedido,
+                $sql = "select ordem.id_ordem, ordem.nr_ordem, ordem.aa_ordem, pedido.id_pedido, admOrdem.id_ordem_administracao,
                         concat(concat(pedido.nr_pedido,'/'),to_char(pedido.dt_pedido,'YYYY')) as pedido,
                         empenho.nr_empenho,
                         case 

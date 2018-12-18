@@ -71,7 +71,7 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="nr_pagamento" class="form-control" value=""/>
+                                                    <input type="text" id="nr_ordem" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>

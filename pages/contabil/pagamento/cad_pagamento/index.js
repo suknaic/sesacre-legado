@@ -157,7 +157,7 @@ $(document).ready(function () {
                 $(".pedido").html("");
                 $(".pedido").append(response);
 
-                habilitaDocumentosFiscais();
+                
             }
         });
         /**
@@ -203,8 +203,10 @@ $(document).ready(function () {
                 "dados": dados
             },
             "success": function (response) {
+                console.log(response);
                 $("#selectDocumentoFiscal").html("");
                 $("#selectDocumentoFiscal").append(response);
+                habilitaDocumentosFiscais();
             }
         });
     }
@@ -407,8 +409,9 @@ $("body").on("keyup", ".valorRetPagamento", function (e) {
 
 function habilitaDocumentosFiscais() {
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
-
-    if (tipo_solicitacao != 2) {
+    var docOpcoes = $('#selectDocumentoFiscal > option').length; 
+    console.log(docOpcoes);
+    if (tipo_solicitacao != 2 && docOpcoes == 1) {
         $('.docFis').hide();
         $("#vl_pagamento").prop("disabled", false);
     } else {

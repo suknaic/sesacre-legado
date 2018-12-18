@@ -195,13 +195,46 @@ class FinOrdemAdministracaoModel {
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
             $daoFinOrdemAdministracao->retornaDadosReativacaoOrdem($pdo);
-            if(!$daoFinOrdemAdministracao->Sucesso()){
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
                 return false;
             }
-            
+
             return $daoFinOrdemAdministracao->getMsgRetorno();
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public function autorizaReativacaoOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            $daoFinOrdemAdministracao->setIdAutorizado($this->id_autorizado);
+            $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
+            $daoFinOrdemAdministracao->setIdLotacaoAutorizado($this->id_lotacao_autorizado);
+            
+            $daoFinOrdemAdministracao->autorizacaoReativacaoOrdem($pdo);
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar ao reativar a ordem.");
+            }
+
+            $daoFinOrdemAdministracao->setIdOrdem($this->id_ordem);
+            $daoFinOrdemAdministracao->alterarSituacaoOrdem($pdo, 2);
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a ordem.");
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+        } catch (Exception $ex) {
+            
         }
     }
 

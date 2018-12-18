@@ -27,18 +27,6 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'retornaTipoRemetenteERemetente':
-        try {
-            $vincTramitacao = new VincularTramitacao();
-            $vincTramitacao->setIdPessoa($session->getIdUser());
-            echo $vincTramitacao->listaLotacaoTipoPorUsuarioAutorizaReativacaoOrdem();
-            return;
-            break;
-        } catch (Error $e) {
-            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
-            return;
-            break;
-        }
 
     CASE 'autorizaReativacao':
         try {
