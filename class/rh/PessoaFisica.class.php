@@ -202,7 +202,7 @@ class pessoaFisica {
             $pessoaFisica = new DaoSesPessoaFisica();
             $pessoaFisica->setDs_habilidade($this->ds_habilidade);
             $pessoaFisica->setDs_orgao_expedidor($this->ds_orgao_expedidor);
-            $pessoaFisica->setDt_nascimento($this->dt_nascimento);
+            $pessoaFisica->setDt_nascimento(Metodos::ConverteDataING($this->dt_nascimento));
             $pessoaFisica->setId_escolaridade_formacao($this->id_escolaridade_formacao);
             $pessoaFisica->setId_estado_civil($this->id_estado_civil);
             $pessoaFisica->setId_estado_expedidor($this->id_estado_expedidor);
@@ -225,7 +225,7 @@ class pessoaFisica {
 //************************************************************************
 
             if (!empty($this->dt_nascimento)){
-                $dtNascimento = strtotime($this->dt_nascimento);
+                $dtNascimento = strtotime(date(str_replace('/', '-', $this->dt_nascimento)));
                 $dtAtual = strtotime(date("d-m-Y"));
                 if ($dtNascimento > $dtAtual) {
                     $this->setSuccess(false);

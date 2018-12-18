@@ -11,9 +11,6 @@ function listaCargoCombo() {
         "success": function (response) {
             //console.log(response);
             $("#id_cargo").append(response);
-            $("#id_cargo").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -29,9 +26,6 @@ function listaFuncaoCombo() {
         "success": function (response) {
             // console.log(response);
             $("#id_funcao").append(response);
-            $("#id_funcao").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -46,9 +40,6 @@ function listaLotacaoCombo() {
         },
         "success": function (response) {
             $("#id_lotacao").append(response);
-            $("#id_lotacao").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -63,9 +54,6 @@ function listaVinculoCombo() {
         },
         "success": function (response) {
             $("#id_vinculo").append(response);
-            $("#id_vinculo").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -80,14 +68,11 @@ function listaPaisCombo() {
         },
         "success": function (response) {
             $(".pais").append(response);
-            $(".pais").select2({
-                width: " 100%"
-            });
         }
     });
 }
 listaPaisCombo();
-function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
+function listaEstadoNaturalidadeCombo(idPais, sw, estado = 0) {
     $.ajax({
         "url": "/model/rh/funcionario/request.php",
         "dataType": 'html',
@@ -100,17 +85,11 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
             if (sw == 1) {
                 $("#id_estado_naturalidade").empty();
                 $("#id_estado_naturalidade").append(response);
-                $("#id_estado_naturalidade").select2({
-                    width: " 100%"
-                });
                 $("#id_estado_naturalidade").val(estado);
             }
             if (sw == 2) {
                 $("#id_estado_endereco").empty();
                 $("#id_estado_endereco").append(response);
-                $("#id_estado_endereco").select2({
-                    width: " 100%"
-                });
                 $("#id_estado_endereco").val(estado);
             }
         }
@@ -118,7 +97,7 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
 }
 
 //listaEstadoCombo();
-function listaCidadeCombo(idEstado, sw, cidade) {
+function listaCidadeCombo(idEstado, sw, cidade = 0) {
     //alert(cidade);
     $.ajax({
         "url": "/model/rh/funcionario/request.php",
@@ -132,22 +111,13 @@ function listaCidadeCombo(idEstado, sw, cidade) {
             if (sw == 1) {
                 $("#id_naturalidade").empty();
                 $("#id_naturalidade").append(response);
-                $("#id_naturalidade").select2({
-                    width: " 100%"
-                });
-
                 $("#id_naturalidade").val(cidade);
             }
             if (sw == 2) {
                 $("#id_cidade").empty();
                 $("#id_cidade").append(response);
-                $("#id_cidade").select2({
-                    width: " 100%"
-                });
                 $("#id_cidade").val(cidade);
             }
-
-
         }
     });
 }
@@ -164,14 +134,8 @@ function listaCidadeComboUf(idEstado, uf) {
             uf: uf
         },
         "success": function (response) {
-
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
-            $("#id_cidade").select2({
-                width: " 100%"
-            });
-
-
         }
     });
 }
@@ -187,9 +151,6 @@ function listaEstadoCombo() {
         },
         "success": function (response) {
             $("#id_estado_expedidor").append(response);
-            $("#id_estado_expedidor").select2({
-                width: " 100%"
-            });
             returContratoEditar();
         }
     });
@@ -205,9 +166,6 @@ function listaEstadoCivilCombo() {
         },
         "success": function (response) {
             $("#id_estado_civil").append(response);
-            $("#id_estado_civil").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -222,9 +180,6 @@ function listaEscolaridadeFormacaoCombo() {
         },
         "success": function (response) {
             $(".formacao").append(response);
-            $(".formacao").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -239,9 +194,6 @@ function listaEscolaridadeCombo() {
         },
         "success": function (response) {
             $("#id_escolaridade").append(response);
-            $("#id_escolaridade").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -256,9 +208,6 @@ function listaEstadoCombo() {
         },
         "success": function (response) {
             $("#id_estado").append(response);
-            $("#id_estado").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -266,6 +215,8 @@ listaEstadoCombo();
 $(document).ready(function () {
 
     func = new Funcoes();
+
+    $(".select").select2({width: " 100%"});
 //******************************************************************************************
     function listaPjCombo() {
         $.ajax({
@@ -276,9 +227,6 @@ $(document).ready(function () {
             },
             "success": function (response) {
                 $("#id_pessoa_juridica").append(response);
-                $("#id_pessoa_juridica").select2({
-                    width: " 100%"
-                });
             }
         });
     }
@@ -308,7 +256,7 @@ $(document).ready(function () {
         if ($idPais == 0) {
             return;
         }
-        listaEstadoNaturalidadeCombo($idPais, 1);
+        listaEstadoNaturalidadeCombo($idPais, 1, 0);
     });
     //******************************************************************************************
     $("body").on("change.select2", "#id_estado_naturalidade", function (e) {
@@ -317,7 +265,7 @@ $(document).ready(function () {
         if ($idEstado == 0) {
             return;
         }
-        listaCidadeCombo($idEstado, 1, null);
+        listaCidadeCombo($idEstado, 1, 0);
     });
     //******************************************************************************************
     $("body").on("change.select2", "#id_pais_endereco", function (e) {
@@ -727,36 +675,36 @@ $(document).ready(function () {
                 "Cargo": DadosContrato.idCargo
             };
 
-            $campo = 0;
-            $i = 0;
-            $.each(DadosObrigatorio, function (index, value) {
-                $i++;
-                $campo = "";
-                if (value == 0 || value == "" || value == null) {
-                    if ($i <= 12) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-                    } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
-                    }
-                    $campo = 1;
-                    return false;
-                }
-            });
-            if ($campo == 1) {
-                return false;
-            }
-            //***********************************************
-            if (DadosContrato.nrMatricula == "" || DadosContrato.dtAdmissao == "" || DadosContrato.nrCargaHoraria == "" || DadosContrato.vinculo == 0
-                    || DadosContrato.nrCargaHoraria == 0 || DadosContrato.pessoaJuridica == 0 || DadosContrato.id_cargo == 0) {
-                func.modalAlert(func.msgPreencherCampos + " (Dados Funcionais)");
-                return false;
-            }
-            if (x == 0) {
-                func.modalAlert(func.msgPreencherCampos + "<strong>(Lotação e Função)</strong>");
-                return false;
-            }
+            // $campo = 0;
+            // $i = 0;
+            // $.each(DadosObrigatorio, function (index, value) {
+            //     $i++;
+            //     $campo = "";
+            //     if (value == 0 || value == "" || value == null) {
+            //         if ($i <= 12) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
+            //         } else if ($i >= 13 && $i <= 16) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+            //         } else if ($i >= 17 && $i <= 22) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
+            //         }
+            //         $campo = 1;
+            //         return false;
+            //     }
+            // });
+            // if ($campo == 1) {
+            //     return false;
+            // }
+            // //***********************************************
+            // if (DadosContrato.nrMatricula == "" || DadosContrato.dtAdmissao == "" || DadosContrato.nrCargaHoraria == "" || DadosContrato.vinculo == 0
+            //         || DadosContrato.nrCargaHoraria == 0 || DadosContrato.pessoaJuridica == 0 || DadosContrato.id_cargo == 0) {
+            //     func.modalAlert(func.msgPreencherCampos + " (Dados Funcionais)");
+            //     return false;
+            // }
+            // if (x == 0) {
+            //     func.modalAlert(func.msgPreencherCampos + "<strong>(Lotação e Função)</strong>");
+            //     return false;
+            // }
 //***********************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
@@ -771,6 +719,7 @@ $(document).ready(function () {
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -779,12 +728,10 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao, 'danger');
-                        console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log(response);
                             func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
@@ -796,14 +743,12 @@ $(document).ready(function () {
                         func.fechaModalHref('/pages/rh/funcionario/index.php');
                         return false;
                     } else {
-                        console.log(response);
                         func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }

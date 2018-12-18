@@ -5,6 +5,8 @@ $(document).ready(function () {
     var url = "request.php";
 
     $('#dt_empenho_anulacao').mask("99/99/9999");
+    
+    $("#nr_empenho_anulacao").mask("9999999999/9999");
 
     //select2
     $('body').find('select').select2({
@@ -54,6 +56,7 @@ $(document).ready(function () {
                 "dados": dados
             },
             "success": function (response) {
+                console.log(response);
                 $this.prop("disabled", false);
                 if (response.trim() == "SessaoExpirada") {
                     func.modalAlert(func.msgSemPermissao);

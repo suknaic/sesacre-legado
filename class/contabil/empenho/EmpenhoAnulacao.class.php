@@ -958,6 +958,9 @@ class EmpenhoAnulacao {
                 $daoConEmpenhoAnulacao->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
                 $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoSituacao($this->getSituacaoDeferido());
                 $daoEmpenhoAnulacaoHistorico->setIdEmpenhoAnulacaoStatus($this->getStatusFinalizado());
+                
+                //removendo barra do numero da anulação
+                $this->nrAnulacao = str_replace("/", "", $this->nrAnulacao);
                 //atualiza numero e data da anulaçao
                 $daoConEmpenhoAnulacao->setNrEmpenhoAnulacao($this->nrAnulacao);
                 $daoConEmpenhoAnulacao->setDtEmpenhoAnulacao(Metodos::ConverteDataING($this->dtAnulacao));

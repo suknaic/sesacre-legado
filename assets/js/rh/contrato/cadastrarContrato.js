@@ -113,9 +113,6 @@ function listaCargoCombo(idCargo) {
         },
         "success": function (response) {
             $("#id_cargo").append(response);
-            $("#id_cargo").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -130,9 +127,6 @@ function listaFuncaoCombo() {
         },
         "success": function (response) {
             $("#id_funcao").append(response);
-            $("#id_funcao").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -147,9 +141,6 @@ function listaLotacaoCombo() {
         },
         "success": function (response) {
             $("#id_lotacao").append(response);
-            $("#id_lotacao").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -166,10 +157,6 @@ function listaPjCombo(idPj) {
         },
         "success": function (response) {
             $("#id_pessoa_juridica").append(response);
-            $("#id_pessoa_juridica").select2({
-                width: " 100%"
-            });
-
         }
     });
 }
@@ -184,9 +171,6 @@ function listaVinculoCombo() {
         },
         "success": function (response) {
             $("#id_vinculo").append(response);
-            $("#id_vinculo").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -205,9 +189,6 @@ function listaEstadoCivilCombo(id) {
         },
         "success": function (response) {
             $("#id_estado_civil").append(response);
-            $("#id_estado_civil").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -223,9 +204,6 @@ function listaEscolaridadeCombo(id) {
         },
         "success": function (response) {
             $("#id_escolaridade").append(response);
-            $("#id_escolaridade").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -239,9 +217,6 @@ function listaEscolaridadeFormacaoCombo() {
         },
         "success": function (response) {
             $("#id_competencia").append(response);
-            $("#id_competencia").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -258,9 +233,6 @@ function listaPaisCombo() {
         },
         "success": function (response) {
             $(".pais").html(response);
-            $(".pais").select2({
-                width: " 100%"
-            });
             returnContratoEditar();
         }
     });
@@ -282,9 +254,6 @@ function listaCidadeComboUf(idEstado, uf) {
 
             $("#id_cidade").empty();
             $("#id_cidade").append(response);
-            $("#id_cidade").select2({
-                width: " 100%"
-            });
         }
     });
 }
@@ -303,17 +272,11 @@ function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
             if (sw == 1) {
                 $("#id_estado_naturalidade").empty();
                 $("#id_estado_naturalidade").append(response);
-                $("#id_estado_naturalidade").select2({
-                    width: " 100%"
-                });
                 $("#id_estado_naturalidade").val(estado);
             }
             if (sw == 2) {
                 $("#id_estado_endereco").empty();
                 $("#id_estado_endereco").append(response);
-                $("#id_estado_endereco").select2({
-                    width: " 100%"
-                });
                 $("#id_estado_endereco").val(estado);
             }
 
@@ -334,18 +297,11 @@ function listaCidadeCombo(idEstado, sw, cidade) {
             if (sw == 1) {
                 $("#id_naturalidade").empty();
                 $("#id_naturalidade").append(response);
-                $("#id_naturalidade").select2({
-                    width: " 100%"
-                });
-
                 $("#id_naturalidade").val(cidade);
             }
             if (sw == 2) {
                 $("#id_cidade").empty();
                 $("#id_cidade").append(response);
-                $("#id_cidade").select2({
-                    width: " 100%"
-                });
                 $("#id_cidade").val(cidade);
             }
         }
@@ -364,14 +320,15 @@ function listaEstadoCombo(id) {
         },
         "success": function (response) {
             $("#id_estado").append(response);
-            $("#id_estado").select2({
-                width: " 100%"
-            });
         }
     });
 }
 //******************************************************************************************
 $(document).ready(function () {
+
+    //************ Select2 ***********
+    $(".select").select2({width: " 100%"});
+    //********************************
 
     func = new Funcoes();
     //*********************************************************************
@@ -581,8 +538,8 @@ $(document).ready(function () {
         //********************************************************************************
 
         //******************* Verifica se a data de início é maior que a data atual ********************
-        console.log(dataAtual.split("/"));
-        console.log(dataAtual.split("/")[2].toString());
+        // console.log(dataAtual.split("/"));
+        // console.log(dataAtual.split("/")[2].toString());
         var dataAtual2 = new Date(dataAtual.split("/")[2].toString()+"/"+dataAtual.split("/")[1].toString()+"/"+dataAtual.split("/")[0].toString());
         var dataInicio = new Date($("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString());
         var dataAdmissao = new Date($("#dt_admissao").val().split("/")[2].toString() + "/" + $("#dt_admissao").val().split("/")[1].toString() + "/" + $("#dt_admissao").val().split("/")[0].toString());
@@ -624,13 +581,13 @@ $(document).ready(function () {
             $("#dt_fim").val("");
             //***********************************************************************************
             $("#id_lotacao").val(0);
-            $("#id_lotacao").select2({
-                width: " 100%"
-            });
+            // $("#id_lotacao").select2({
+            //     width: " 100%"
+            // });
             $("#id_funcao").val(0);
-            $("#id_funcao").select2({
-                width: " 100%"
-            });
+            // $("#id_funcao").select2({
+            //     width: " 100%"
+            // });
             $(".bloqueia").prop('disabled', false);
         }
 
