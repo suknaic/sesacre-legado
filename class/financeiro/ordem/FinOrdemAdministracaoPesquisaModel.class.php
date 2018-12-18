@@ -111,61 +111,55 @@ class FinOrdemAdministracaoPesquisaModel {
             $pdo = $conexao->connect();
 
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            $daoFinOrdemAdministracao->retornaReativacaoAdministracaoOrdem($pdo, $this->condicoes());
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao retorna as ordens.");
+            }
+
+            foreach ($daoFinOrdemAdministracao->getMsgRetorno() as $linha) {
+                $retorno .= "<tr data-objeto='" . json_encode($linha, JSON_HEX_APOS) . "'>"
+                        . "<td class='text-center'>" . $linha['nr_ordem'] . '/' . $linha['aa_ordem'] . "</td>"
+                        . "<td class='text-center'>" . $linha['pedido'] . "</td>"
+                        . "<td class='text-center'>" . $linha['nr_empenho'] . "</td>"
+                        . "<td class='text-center'>" . $linha['fornecedor'] . "</td>"
+                        . "<td class='text-center'>" . $linha['nm_tipo_gasto'] . "</td>"
+                        . "<td class='text-center'>" . $linha['data_emissao'] . "</td>"
+                        . "<td class='text-center'>" . $linha['nm_tipo_gasto'] . "</td>"
+                        . "<td class='text-center'>" . $linha['nm_lotacao'] . "</td>"
+                        . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['valor'], 4) . "</td>"
+                        . "<td class='text-center'>" . $linha['situacao'] . "</td>"
+                        . "<td class='text-center'>"
+                        . "<button type='button' title='Ver a Reativação' class='ver-reativacao' value=''><i class='fa fa-file-text-o text-info' aria-hidden='true'></i></button>";
+
+                if ($linha["st_ordem_administracao"] == 1) {
+                     $retorno .= "<button type='button' title='Excluir a Reativação' class='excluir' value=''><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>";
+                }
+
+                
+                $retorno .= "</td>";
+            }
+            return $retorno;
         } catch (Exception $ex) {
             
         }
     }
 
-    private function montaFiltroSql() {
-        $filtro = "";
-
-
-        if ($this->getNumero_pagamento()) {
-            //removendo barra do numero do pagamento
-            $this->numero_pagamento = str_replace("/", "", $this->numero_pagamento);
-            //----------------------------------------------------------
-            $filtro .= (empty($filtro)) ? " where pagamento.nr_pagamento ilike '%" . $this->getNumero_pagamento() . "%' " : " and pagamento.nr_pagamento '%" . $this->getNumero_pagamento() . "%' ";
+    private function condicoes() {
+        try {
+            $condicoes[] = array('ordem.nr_ordem', 'string', $this->getNrOrdem());
+            $condicoes[] = array('ordem.aa_ordem', 'int', $this->getAaOrdem());
+            $condicoes[] = array('fornecedor.id_pessoa', 'int', $this->getFornecedor());
+            $condicoes[] = array('contrato.nr_contrato', 'string', $this->getNrContrato());
+            $condicoes[] = array('pedido.nr_pedido', 'string', $this->getNrPedido());
+            $condicoes[] = array('empenho.nr_empenho', 'string', str_replace("/", "", $this->getNrEmpenho()));
+            $condicoes[] = array('pedido.id_tipo_gasto', 'int', $this->getIdTipoGasto());
+            $condicoes[] = array('pedido.id_lotacao', 'int', $this->getCentral());
+            $condicoes[] = array('admOrdem.st_ordem_administracao', 'int', $this->getSituacao());
+            return Metodos::montaFiltroSQL($condicoes);
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
         }
-
-        if ($this->getExecio_pagamento()) {
-            $filtro .= (empty($filtro)) ? " where extract(year from pagamento.dt_pagamento) = " . $this->getExecio_pagamento() : "and extract(year from pagamento.dt_pagamento) = " . $this->getExecio_pagamento();
-        }
-
-        if ($this->getFornecedor()) {
-            $filtro .= (empty($filtro)) ? " where pj.id_pessoa = " . $this->getFornecedor() : " and pj.id_pessoa = " . $this->getFornecedor();
-        }
-
-        if ($this->getSituacao()) {
-            $filtro .= (empty($filtro)) ? " where pagamento.id_pagamento_situacao = " . $this->getSituacao() : " and pagamento.id_pagamento_situacao = " . $this->getSituacao();
-        }
-
-        if ($this->getTipo_gato()) {
-            $filtro .= (empty($filtro)) ? " where tpGasto.id_tipo_gasto = " . $this->getTipoGasto() : " and tpGasto.id_tipo_gasto = " . $this->getTipoGasto();
-        }
-
-        if ($this->getNumero_contrato()) {
-            $filtro .= (empty($filtro)) ? " where contrato.nr_contrato ilike '%" . $this->getNumero_contrato() . "%' " : " and contrato.nr_contrato ilike '%" . $this->getNumero_contrato() . "%' ";
-        }
-
-        if ($this->getNumero_pedido()) {
-            $filtro .= (empty($filtro)) ? " where pedido.nr_pedido ilike '%" . $this->getNumero_pedido() . "%' " : " and pedido.nr_pedido ilike '%" . $this->getNumero_pedido() . "%' ";
-        }
-
-        if ($this->getNumero_empenho()) {
-            //removendo barra do numero do empenho
-            $this->numero_empenho = str_replace("/", "", $this->numero_empenho);
-            //----------------------------------------------------------
-            $filtro .= (empty($filtro)) ? " where empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' " : " and empenho.nr_empenho ilike '%" . $this->getNumero_empenho() . "%' ";
-        }
-
-        if ($this->getNumero_liquidacao()) {
-            //removendo barra do numero da liquidação
-            $this->numero_liquidacao = str_replace("/", "", $this->numero_liquidacao);
-            //----------------------------------------------------------
-            $filtro .= (empty($filtro)) ? " where liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' " : " and liquidacao.nr_liquidacao ilike '%" . $this->getNumero_liquidacao() . "%' ";
-        }
-
-        return $filtro;
     }
 
 }

@@ -52,10 +52,19 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
         }
     }
 
-    public function retornaReativacaoAdministracaoOrdem(PDO $pdo, string $filtros = "") {
+    public function retornaReativacaoAdministracaoOrdem(PDO $pdo, array $condicoes = []) {
         try {
             $this->sucesso = false;
             if (!empty($pdo)) {
+
+                $strQuery = "";
+                if (!empty($condicoes)) {
+                    foreach ($condicoes as $condicao) {
+                        $filtro[] = $condicao['sql'];
+                    }
+                    $strQuery = " where " . implode(" and ", $filtro);
+                }
+
                 $sql = "select ordem.id_ordem, ordem.nr_ordem, ordem.aa_ordem, pedido.id_pedido,
                         concat(concat(pedido.nr_pedido,'/'),to_char(pedido.dt_pedido,'YYYY')) as pedido,
                         empenho.nr_empenho,
@@ -73,14 +82,14 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                                 when admOrdem.st_ordem_administracao = '2' then 'Deferido'
                                 when admOrdem.st_ordem_administracao = '3' then 'Indeferido'
                                 when admOrdem.st_ordem_administracao = '4' then 'Cancelado'
-                        end situacao	
+                        end situacao, admOrdem.st_ordem_administracao
                         from fin_ordem_administracao as admOrdem
                         inner join fin_ordem as ordem
                         on ordem.id_ordem = admOrdem.id_ordem
                         inner join (select sum(qt_itens_ordem * vl_itens_ordem) as valor, id_ordem
-                                                from fin_ordem_itens 
-                                                group by id_ordem
-                                           ) as valor
+                                    from fin_ordem_itens 
+                                    group by id_ordem
+                                   ) as valor
                         on valor.id_ordem = ordem.id_ordem
                         inner join fin_pedido as pedido 
                         on pedido.id_pedido = ordem.id_pedido
@@ -98,8 +107,45 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                         on pf.id_pessoa = pessoa.id_pessoa
                         left join ses_pessoa_juridica as pj
                         on pj.id_pessoa = pessoa.id_pessoa";
+
                 $stmt = $pdo->prepare($sql);
+
+                if (!empty($condicoes)) {
+                    foreach ($condicoes as $condicao) {
+                        $stmt->bindValue($condicao['bind'], $condicao['valor'], $condicao['pdo_param']);
+                    }
+                }
+
                 $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->msgRetorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $this->sucesso = true;
+                } else {
+                    $this->msgRetorno = "Nenhum Documento Fiscal Encontrado";
+                    $this->sucesso = false;
+                }
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function retornaDadosReativacaoOrdem(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select ordem.id_ordem, pedido.id_pedido, pedido.nr_pedido
+                        from fin_ordem_administracao as admin 
+                        inner join fin_ordem as ordem
+                        on ordem.id_ordem = admin.id_ordem
+                        inner join fin_pedido as pedido
+                        on pedido.id_pedido = ordem.id_pedido
+                        where id_ordem_administracao = :idAdminOrdem ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idAdminOrdem", $this->getIdOrdemAdministracao(), PDO::PARAM_INT);
+                $stmt->execute();
+                $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 $this->sucesso = true;
             }
         } catch (Exception $ex) {

@@ -314,7 +314,7 @@
                                         </li>
 
                                         <li>
-                                            <a href="#">Autorização da Reativação da Ordem</a>
+                                            <a href="/pages/financeiro/reativacao_ordem/pesquisa_autorizacao/index.php">Autorização da Reativação da Ordem</a>
                                         </li>
                                     </ul>
                                 </li>

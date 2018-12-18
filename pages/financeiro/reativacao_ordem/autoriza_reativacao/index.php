@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/reativacao_ordem/autoriza_reativacao/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -52,51 +52,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/reativacao_ordem/pesquisa_reativacao/index.php">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/reativacao_ordem/pesquisa_autorizacao/index.php">Voltar</a></li>                        
                     </ol>
-                    <!--Modal itens content-->
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Busca da Ordem</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número da Ordem" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button" id="btn-pesquisa">
-                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
-                                            </button>
-                                        </span>
-                                    </div>
 
-                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Ordem</th>
-                                                            <th>Pedido</th>
-                                                            <th>Tipo de Ordem</th>
-                                                            <th>Fornecedor</th>
-                                                            <th>Tipo de Gasto</th>
-                                                            <th>Central de Demanda</th>
-                                                            <th>Valor Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
@@ -105,27 +63,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações da ordem</h3>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Pesquisa Ordem:<span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
-                                                <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
-                                                    <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-
+                                <input type="hidden" id="id_ordem" value="<?php echo $dados["id_ordem"];?>">
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-
+                                            <?php echo $dadosContratos; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +77,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-
+                                            <?php echo $dadosPedido; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +85,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-
+                                            <?php echo $dadosEmpenho;?>
                                         </div>
                                     </div>
                                 </div>

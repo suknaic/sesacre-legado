@@ -189,7 +189,8 @@ $(document).ready(function () {
             var dados = {
                 "id_ordem" : $("#id_ordem").val(),
                 "id_protocolo" : $("#id_protocolo").val(),
-                "id_remetente" : $("#id_remetente option:selected").data('tipo-lotacao')
+                "id_remetente" : $("#id_remetente option:selected").data('tipo-lotacao'),
+                "anotacoes" : $("#anotacoes").val()
             }
 
             $.ajax({
