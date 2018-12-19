@@ -130,13 +130,13 @@ class FinOrdemAdministracaoPesquisaModel {
                         . "<td class='text-center'>" . Metodos::ConverteValorBr($linha['valor'], 4) . "</td>"
                         . "<td class='text-center'>" . $linha['situacao'] . "</td>"
                         . "<td class='text-center'>"
-                        . "<button type='button' title='Ver a Reativação' class='ver-reativacao' value='".$linha["id_ordem_administracao"]."'><i class='fa fa-file-text-o text-info' aria-hidden='true'></i></button>";
+                        . "<button type='button' title='Ver a Reativação' class='ver-reativacao' value='" . $linha["id_ordem_administracao"] . "'><i class='fa fa-file-text-o text-info' aria-hidden='true'></i></button>";
 
                 if ($linha["st_ordem_administracao"] == 1) {
-                     $retorno .= "<button type='button' title='Excluir a Reativação' class='excluir' value='".$linha["id_ordem_administracao"]."'><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>";
+                    $retorno .= "<button type='button' title='Excluir a Reativação' class='excluir' value='" . $linha["id_ordem_administracao"] . "'><i class='fa fa-trash text-danger' aria-hidden='true'></i></button>";
                 }
 
-                
+
                 $retorno .= "</td>";
             }
             return $retorno;
@@ -147,15 +147,15 @@ class FinOrdemAdministracaoPesquisaModel {
 
     private function condicoes() {
         try {
-            $condicoes[] = array('ordem.nr_ordem', 'string', $this->getNrOrdem());
-            $condicoes[] = array('ordem.aa_ordem', 'int', $this->getAaOrdem());
-            $condicoes[] = array('fornecedor.id_pessoa', 'int', $this->getFornecedor());
-            $condicoes[] = array('contrato.nr_contrato', 'string', $this->getNrContrato());
-            $condicoes[] = array('pedido.nr_pedido', 'string', $this->getNrPedido());
-            $condicoes[] = array('empenho.nr_empenho', 'string', str_replace("/", "", $this->getNrEmpenho()));
-            $condicoes[] = array('pedido.id_tipo_gasto', 'int', $this->getIdTipoGasto());
-            $condicoes[] = array('pedido.id_lotacao', 'int', $this->getCentral());
-            $condicoes[] = array('admOrdem.st_ordem_administracao', 'int', $this->getSituacao());
+            $condicoes[] = array('ordem.nr_ordem', '=', $this->getNrOrdem(), 'string');
+            $condicoes[] = array('ordem.aa_ordem', '=', $this->getAaOrdem(), 'ano');
+            $condicoes[] = array('fornecedor.id_pessoa', '=', $this->getFornecedor(), 'int');
+            $condicoes[] = array('contrato.nr_contrato', '=', $this->getNrContrato(), 'string');
+            $condicoes[] = array('pedido.nr_pedido', '=', $this->getNrPedido(), 'string');
+            $condicoes[] = array('empenho.nr_empenho', '=', str_replace("/", "", $this->getNrEmpenho()), 'string');
+            $condicoes[] = array('pedido.id_tipo_gasto', '=', $this->getIdTipoGasto(), 'int');
+            $condicoes[] = array('pedido.id_lotacao', '=', $this->getCentral(), 'int');
+            $condicoes[] = array('admOrdem.st_ordem_administracao', '=', $this->getSituacao(), 'int');
             return Metodos::montaFiltroSQL($condicoes);
         } catch (Exception $exc) {
             echo $exc->getMessage();

@@ -361,7 +361,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                            where id_pagamento_situacao = '1' 
                            group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
                 on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
-                where liq.id_liquidacao = :id_liquidacao  and docFis.id_documento_situacao < 7
+                where liq.id_liquidacao = :id_liquidacao and docFis.id_documento_situacao < 7
                 order by  docFis.nr_documento_fiscal";
         try {
             $result = $pdo->prepare($sql);
