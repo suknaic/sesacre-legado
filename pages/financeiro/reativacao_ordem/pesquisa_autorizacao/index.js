@@ -25,7 +25,12 @@ $(document).ready(function () {
 
     $('body').on('click', '.ver-reativacao', function (e) {
         var id = $(this).val();
-        window.open("/pages/financeiro/reativacao_ordem/ver_reativacao/index.php?&id=" + id);
+        window.open("/pages/financeiro/reativacao_ordem/autoriza_reativacao/index.php?&id=" + id);
+    });
+
+    $('body').on('click', '.editar-pagamento', function (e) {
+        var id = $(this).val();
+        window.open("/pages/contabil/pagamento/edit_pagamento/index.php?&id=" + id);
     });
 
 
@@ -134,25 +139,27 @@ $(document).ready(function () {
 
 function lista() {
     var dados = {
-        nrPagamento: $("#nr_pagamento").val(),
-        exercicio: $("#ano_pagamento option:selected").val(),
+        nr_ordem: $("#nr_ordem").val(),
+        exercicio: $("#ano_ordem option:selected").val(),
         fornecedor: $("#id_contratado option:selected").val(),
         contrato: $("#nr_contrato").val(),
         pedido: $("#nr_pedido").val(),
         empenho: $("#nr_empenho").val(),
-        nrLiquidacao: $("#nr_liquidacao").val(),
+        central: $("#central").val(),
         tpGasto: $("#tipo_gasto option:selected").val(),
         situacao: $("#situacao option:selected").val()
     }
 
     $.ajax({
         "url": "request.php",
+        "method": "POST",
         "dataType": 'html',
         "data": {
             "acao": "retornaOrdemAdministracao",
             "dados": dados
         },
         "success": function (response) {
+            console.log(response);
             func.carregaTabelaPadrao('tabela', response, [4], true);
         }
     });

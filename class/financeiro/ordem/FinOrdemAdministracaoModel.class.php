@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/ordem/DaoFinOrdem.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/financeiro/ordem/DaoFinOrdemAdministracao.php";
 
 class FinOrdemAdministracaoModel {
 
@@ -14,6 +14,7 @@ class FinOrdemAdministracaoModel {
     private $id_lotacao_autorizado = null;
     private $dt_autorizacao = null;
     private $tp_administracao = null;
+    private $ds_ordem_administracao_anotacao = null;
 
     public function getIdOrdemAdministracao() {
         return $this->id_ordem_administracao;
@@ -115,21 +116,131 @@ class FinOrdemAdministracaoModel {
         return $this;
     }
 
+    public function getDsOrdemAdministracaoAnotacao() {
+        return $this->ds_ordem_administracao_anotacao;
+    }
+
+    public function setDsOrdemAdministracaoAnotacao($ds_ordem_administracao_anotacao) {
+        $this->ds_ordem_administracao_anotacao = $ds_ordem_administracao_anotacao;
+
+        return $this;
+    }
+
+    public function retornaSituacaoOrdemPorTipoAdministracao() {
+        switch ($this->tp_administracao) {
+            case '1':
+                return 2; //2 que significa que a situacao da ordem vai ser Resquisitado
+                break;
+
+            case '2':
+                return 4; //4 que significa que a situacao da ordem vai ser Finalizado por Supressão do Ordenado
+                break;
+
+            case '3':
+                return 5; //5 que significa que a situacao da ordem vai ser Finalizado por Descumprimento da Contratada	
+                break;
+
+            default;
+                return null;
+                break;
+        }
+    }
+
     public function reativacaoOrdem() {
         try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->setIdOrdem($this->id_ordem);
+            
+            $daoFinOrdemAdministracao->verificarSerExisteReativacao($pdo);
+            if($daoFinOrdemAdministracao->Sucesso()){
+                return Metodos::retornoAjax("Erro", "alert", "Já existe uma reativação para essa ordem.");
+            }
+            
             $daoFinOrdemAdministracao->setIdProtocolo($this->id_protocolo);
             $daoFinOrdemAdministracao->setIdSolicitante($this->id_solicitante);
             $daoFinOrdemAdministracao->setIdLotacaoSolicitante($this->id_lotacao_solicitante);
             $daoFinOrdemAdministracao->setTpAdministracao(1);
             $daoFinOrdemAdministracao->reativarOrdem($pdo);
-            if ($daoFinOrdemAdministracao->Sucesso()) {
-                $pdo->commit();
-                return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+             echo $daoFinOrdemAdministracao->getMsgRetorno();
+            $this->id_ordem_administracao = $pdo->lastInsertId('fin_ordem_administracao_id_ordem_administracao_seq');
+           
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar a reativação.");
             }
+            
+            if (!empty($this->ds_ordem_administracao_anotacao)) {
+                $finOrdemAdministracaoAnotacaoModel = new FinOrdemAdministracaoAnotacaoModel();
+                $finOrdemAdministracaoAnotacaoModel->setIdOrdemAdministracao($this->id_ordem_administracao);
+                $finOrdemAdministracaoAnotacaoModel->setDsOrdemAdministracaoAnotacao($this->ds_ordem_administracao_anotacao);
+                $finOrdemAdministracaoAnotacaoModel->setIdPessoa($this->id_solicitante);
+
+                $finOrdemAdministracaoAnotacaoModel->cadastrarAnotacao($pdo);
+
+                if (!$finOrdemAdministracaoAnotacaoModel->Sucesso()) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar a anotação.");
+                }
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public function retornaDadosReativacaoOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
+            $daoFinOrdemAdministracao->retornaDadosReativacaoOrdem($pdo);
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                return false;
+            }
+
+            return $daoFinOrdemAdministracao->getMsgRetorno();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function autorizaReativacaoOrdem() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+            
+            $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            $daoFinOrdemAdministracao->setIdAutorizado($this->id_autorizado);
+            $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
+            $daoFinOrdemAdministracao->setIdLotacaoAutorizado($this->id_lotacao_autorizado);
+            
+            $daoFinOrdemAdministracao->autorizacaoReativacaoOrdem($pdo);
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar ao reativar a ordem.");
+            }
+
+            $daoFinOrdemAdministracao->setIdOrdem($this->id_ordem);
+            $daoFinOrdemAdministracao->alterarSituacaoOrdem($pdo, 2);
+
+            if (!$daoFinOrdemAdministracao->Sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a ordem.");
+            }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+        } catch (Exception $ex) {
+            
         }
     }
 

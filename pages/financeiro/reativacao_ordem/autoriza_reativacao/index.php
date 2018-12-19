@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/financeiro/reativacao_ordem/autoriza_reativacao/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -47,85 +47,58 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Reativação da Ordem</h1> 
+                        <h1 class="page-header text-overflow">Autorização da Reativação da Ordem</h1> 
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
                     <ol class="breadcrumb">
-                        <li><a href="/pages/financeiro/reativacao_ordem/pesquisa_reativacao/index.php">Voltar</a></li>                        
+                        <li><a href="/pages/financeiro/reativacao_ordem/pesquisa_autorizacao/index.php">Voltar</a></li>                        
                     </ol>
-                    <!--Modal itens content-->
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="modalItem" data-keyboard="false">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Busca da Ordem</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="input-group mar-btm">
-                                        <input type="text" id="codItemPesquisa" placeholder="Número da Ordem" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button" id="btn-pesquisa">
-                                                <i class="fa fa-search" aria-hidden="true"></i> Pesquisar
-                                            </button>
-                                        </span>
+
+                    <!--Page content-->
+                    <!--===================================================-->
+                    <div id="page-content">
+                        <!--Modal addAnotacao-->
+                        <div class=" modal fade modal-footer" id="adAnotacao"
+                             tabindex="-1" role="dialog"
+                             aria-labelledby="mySmallModalLabel"
+                             data-keyboard="false" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close"
+                                                data-dismiss="modal"
+                                                aria-label="Fechar"><span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">Anotação</h4>
                                     </div>
-
-                                    <div id="demo-dt-basic_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <table id="tabelaItens" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Ordem</th>
-                                                            <th>Pedido</th>
-                                                            <th>Tipo de Ordem</th>
-                                                            <th>Fornecedor</th>
-                                                            <th>Tipo de Gasto</th>
-                                                            <th>Central de Demanda</th>
-                                                            <th>Valor Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                    <div class="modal-body">
+                                        <form method="GET" enctype="multipart/form-data" id="form-anotacao" name="form-anotacao">
+                                            <input type="hidden" name="id_pedido_anotacao" id="id_processo_anotacao" value="">
+                                            <textarea class="form-control" rows="5" name="anotacao" id="anotacao"></textarea>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default fechar" data-dismiss="modal">Fechar</button>
+                                        <input type="submit" class="btn btn-primary btn-enviarAnotacao" value="Adicionar">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!--Page content-->
-                    <!--===================================================-->
-                    <div id="page-content">
+                        <!--Fim Modal AddAnotacao-->
                         <form data-toggle="validator" class="form-horizontal" id="form-documento" role="form" action="#" method="post">
                             <div class="panel">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Informações da ordem</h3>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <div class="panel-body">
-                                            Pesquisa Ordem:<span class="text-danger">*</span>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><p class="fa fa-sort-numeric-asc" style="margin-bottom: -4px"></p></span>
-                                                <input class="form-control" type="text" name="itemGrp" id="itemGrp" disabled />
-                                                <span class="input-group-btn pesquisaItem" data-target="#modalItem" data-toggle="modal">
-                                                    <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-
+                                <input type="hidden" id="id_ordem" value="<?php echo $dados["id_ordem"]; ?>">
+                                <input type="hidden" id="id_ordem_administracao" value="<?php echo $id; ?>">
                                 <!--Form dos dados do contrato-->
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body contratos">
-
+                                            <?php echo $dadosContratos; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +106,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body pedido">
-
+                                            <?php echo $dadosPedido; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +114,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 <div class="form-group">
                                     <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body empenho">
-
+                                            <?php echo $dadosEmpenho; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -225,18 +198,20 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/financeiro/ordem/index.load.php
                                 </div>
                                 <!-- FIM CAMPO REMETENTE-->
                                 <div class="form-group">
-                                    <div  class="col-sm-12" style="margin-bottom: -4%;" >
+                                    <div  class="col-sm-12" style="margin-bottom: -4%;">
                                         <div class="panel-body">
                                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading" role="tab">
-                                                        <h4 class="panel-title">Anotações</h4>
+                                                        <h4 class="panel-title">Anotações
+                                                            <button  type="button" class="btn btn-primary btn-rounded btn-addAnotacao" title="Adicionar">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+                                                        </h4>
                                                     </div>
 
                                                     <div class="panel-body">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control" rows="7" id="anotacoes"></textarea>
-                                                        </div>
+                                                        <textarea class="form-control anotacoes" rows="7" readonly id="anotacoes"></textarea>
                                                     </div>
                                                 </div>
                                             </div>

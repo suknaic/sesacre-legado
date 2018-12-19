@@ -29,6 +29,15 @@ switch ($_REQUEST['acao']) {
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finOrdemAdministracaoPesquisaModel = new FinOrdemAdministracaoPesquisaModel();
+            $finOrdemAdministracaoPesquisaModel->setNrOrdem($dados["nr_ordem"]);
+            $finOrdemAdministracaoPesquisaModel->setAaOrdem($dados["exercicio"]);
+            $finOrdemAdministracaoPesquisaModel->setFornecedor($dados["fornecedor"]);
+            $finOrdemAdministracaoPesquisaModel->setNrContrato($dados["contrato"]);
+            $finOrdemAdministracaoPesquisaModel->setNrPedido($dados["pedido"]);
+            $finOrdemAdministracaoPesquisaModel->setNrEmpenho($dados["empenho"]);
+            $finOrdemAdministracaoPesquisaModel->setCentral($dados["central"]);
+            $finOrdemAdministracaoPesquisaModel->setIdTipoGasto($dados["tpGasto"]);
+            $finOrdemAdministracaoPesquisaModel->setSituacao($dados["situacao"]);
             echo $finOrdemAdministracaoPesquisaModel->retornaPesquisaOrdemAdministracao();
             return;
             break;

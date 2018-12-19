@@ -2,15 +2,10 @@ Vue.component('input-texto', {
     props: {
         nome: String,
         descricao: String,
+        value: String,
         requerido: {
             default: false,
             type: Boolean
-        },
-        valor: String
-    },
-    methods: {
-        atualiza: function (valor) {
-            this.$emit('input', valor)
         }
     },
     template: `<div class="form-group">
@@ -20,8 +15,10 @@ Vue.component('input-texto', {
                             <span class="input-group-addon">
                                 <p class="fa fa-file-text-o inputPFa"></p>
                             </span>
-                            <input type="text" class="form-control" v-bind:class="nome" v-bind:value="valor" v-on:input="atualiza($event.target.value)" >
+                            <input type="text" class="form-control" v-bind:class="nome" v-bind:value="value" v-on:input="$emit('input',$event.target.value)" >
                         </div>                                                    
                     </div>
+                    <slot>
+                    </slot>
                 </div>`
 })

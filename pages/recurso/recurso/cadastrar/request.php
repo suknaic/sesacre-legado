@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/sistema/Sistema.class.php";
 
 $session = new Session('ajax');
-$session->recurso();
+//$session->recurso();
 
 switch ($_REQUEST['acao']) {
 

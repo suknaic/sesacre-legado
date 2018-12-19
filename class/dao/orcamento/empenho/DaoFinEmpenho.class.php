@@ -1165,12 +1165,12 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     saldo_item.qt_utilizado,
                     saldo_item.vl_utilizado,
                     anulacao.id_empenho_anulacao,
-                    anulacao.nr_empenho_anulacao,
+                    --anulacao.nr_empenho_anulacao,
+                    concat(substr(anulacao.nr_empenho_anulacao, 1, ((LENGTH(anulacao.nr_empenho_anulacao)-4)) ), '/',  substring(anulacao.nr_empenho_anulacao FROM '....$')) as nr_empenho_anulacao,
                     anulacao_item.vl_anulado,
                     anulacao_item.qt_anulado,
                     anulacao_item.vl_item,
                     anulacao_item.qt_item,
-                    anulacao.nr_empenho_anulacao,
                     anulacao_situacao.nm_empenho_anulacao_situacao
                  from
                     con_empenho_anulacao anulacao,

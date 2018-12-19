@@ -6,7 +6,7 @@ new Vue({
     data: function () {
         return {
             sistemasOptions: [],
-            novoRecurso: {idSistema: 0, nmRecurso: '', lkRecurso: '', dsRecurso: ''}
+            novoRecurso: {idSistema: "1", nmRecurso: '', lkRecurso: '', dsRecurso: 'dsadasdsa'}
         }
     },
     mounted: function () {
@@ -14,7 +14,6 @@ new Vue({
     },
     methods: {
         cadastrar: function () {
-            var vm = this;
             
             var dados = {
                 acao: 'cadastrarRecurso',

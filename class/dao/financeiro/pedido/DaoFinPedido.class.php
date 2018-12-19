@@ -493,7 +493,7 @@ class DaoFinPedido extends FinPedidoTb {
                        on documento.id_pedido = pedido.id_pedido 
                  where
                     pedido.st_pedido = '15' 	/*Aguardando Empenho*/
-                    and pedido.id_pedido_situacao = 2 	/*Autorizado*/
+                    --and pedido.id_pedido_situacao = 2 	/*Autorizado*/
                     and empenho.id_empenho is null 	/*Sem Empenho e Sem Liquidação e Sem Pagamento*/
                     and 
                     (

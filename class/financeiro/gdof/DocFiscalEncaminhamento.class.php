@@ -318,18 +318,18 @@ class DocFiscalEncaminhamento {
   
     private function condicoes() {
         try {                                           
-            $condicoes[] = array('DF.nr_documento_fiscal','string',$this->getNrDocFiscal());
-            $condicoes[] = array('DF.nr_processo_administrativo','string',$this->getNrProtocolo());
-            $condicoes[] = array('DF.dt_emissao','ano',$this->getAnoDocFiscal());
-            $condicoes[] = array('F.id_pessoa','string',$this->getContratado());
-            $condicoes[] = array('C.nr_contratol','string',$this->getNrContrato());
-            $condicoes[] = array('P.nr_pedido', 'string',$this->getNrPedido());
-            $condicoes[] = array('E.nr_empenho', 'string',str_replace("/", "", $this->getNrEmpenho()));
-            $condicoes[] = array('P.id_tipo_gasto', 'int',$this->getTpGasto());
-            $condicoes[] = array('DF.id_documento_situacao', 'int',$this->getSitDocFiscal());
-            $condicoes[] = array('LOT.id_lotacao', 'int',$this->getRemetente());
-            $condicoes[] = array('ENC.id_pessoa','int',$this->getIdUsuario());
-            $condicoes[] = array('TRM.id_tipo_tramitacao','int',2); //Aguardando Encaminhamento
+            $condicoes[] = array('DF.nr_documento_fiscal','ilike',$this->getNrDocFiscal(),'string' );
+            $condicoes[] = array('DF.nr_processo_administrativo','ilike',$this->getNrProtocolo(), 'string');
+            $condicoes[] = array('DF.dt_emissao','=',$this->getAnoDocFiscal(),'ano');
+            $condicoes[] = array('F.id_pessoa','=',$this->getContratado(),'int');
+            $condicoes[] = array('C.nr_contrato','ilike',$this->getNrContrato(),'string');
+            $condicoes[] = array('P.nr_pedido', 'ilike',$this->getNrPedido(),'string');
+            $condicoes[] = array('E.nr_empenho', 'ilike',str_replace("/", "", $this->getNrEmpenho()),'string');
+            $condicoes[] = array('P.id_tipo_gasto', '=',$this->getTpGasto(),'int');
+            $condicoes[] = array('DF.id_documento_situacao', '=',$this->getSitDocFiscal(),'int');
+            $condicoes[] = array('LOT.id_lotacao', '=',$this->getRemetente(), 'int');
+            $condicoes[] = array('ENC.id_pessoa','=',$this->getIdUsuario(),'int');
+            $condicoes[] = array('TRM.id_tipo_tramitacao','=',2,'int'); //Aguardando Encaminhamento
             return Metodos::montaFiltroSQL($condicoes);
         } catch (Exception $exc) {
             echo $exc->getMessage();

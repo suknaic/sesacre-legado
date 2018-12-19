@@ -49,7 +49,7 @@ require_once "index.load.php";
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
-                        <h1 class="page-header text-overflow">Reativação da Ordem</h1>                       
+                        <h1 class="page-header text-overflow">Autoriza Reativação da Ordem</h1>                       
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
@@ -59,13 +59,7 @@ require_once "index.load.php";
                     <div id="page-content">
 
                         <div class="panel">
-                            <div class="panel-heading">
-
-                                <a class="btn btn-rounded btn-primary mar-ver" href="/pages/financeiro/reativacao_ordem/cad_reativacao/index.php" role="button">
-                                    <i class="fa fa-plus-circle fa-1x inputPFa"></i>
-                                    Solicitar Reativação da Ordem
-                                </a>
-                            </div>
+                       
                             <form>
                                 <div class="panel-body">
                                     <br>
@@ -77,7 +71,7 @@ require_once "index.load.php";
                                                     <span class="input-group-addon">
                                                         <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                     </span>
-                                                    <input type="text" id="nr_pagamento" class="form-control" value=""/>
+                                                    <input type="text" id="nr_ordem" class="form-control" value=""/>
                                                 </div>
                                             </div>
                                         </div>
@@ -185,11 +179,7 @@ require_once "index.load.php";
                                                         <p class="fa fa-list inputPFa"></p>
                                                     </span>
                                                     <select id="situacao" class="form-control">
-                                                        <option value="0">Selecione uma Situação</option>
-                                                        <option value="1">Cadastrado</option>
-                                                        <option value="2">Deferido</option>
-                                                        <option value="3">Indeferido</option>
-                                                        <option value="4">Cancelado</option>
+                                                        <option value="1" selected="true">Cadastrado</option>
                                                     </select>
                                                 </div>
                                             </div>

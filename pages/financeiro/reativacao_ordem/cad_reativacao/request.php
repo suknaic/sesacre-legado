@@ -7,6 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemAdministracaoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemAdministracaoAnotacaoModel.class.php";
 
 $session = new Session('ajax');
 
@@ -118,6 +119,7 @@ switch ($_REQUEST['acao']) {
             $finOrdemAdministracaoModel->setIdProtocolo($dados["id_protocolo"]);
             $finOrdemAdministracaoModel->setIdSolicitante($session->getIdUser());
             $finOrdemAdministracaoModel->setIdLotacaoSolicitante($dados["id_remetente"]);
+            $finOrdemAdministracaoModel->setDsOrdemAdministracaoAnotacao($dados["anotacoes"]);
             echo $finOrdemAdministracaoModel->reativacaoOrdem();
             return;
             break;

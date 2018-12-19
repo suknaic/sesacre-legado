@@ -284,7 +284,13 @@ class DaoConEmpenhoAnulacao extends ConEmpenhoAnulacao {
 
         $sql = "select
                     anulacaoEmp.id_empenho_anulacao,
-                    anulacaoEmp.nr_empenho_anulacao,
+                    --anulacaoEmp.nr_empenho_anulacao,
+                    CASE 
+                    WHEN nr_empenho_anulacao is not null then 
+                        concat(substr(anulacaoEmp.nr_empenho_anulacao, 1, ((LENGTH(anulacaoEmp.nr_empenho_anulacao)-4)) ), '/', substring(anulacaoEmp.nr_empenho_anulacao from '....$')) 
+                    ELSE
+                        ''
+                    END as nr_empenho_anulacao,
                     --emp.nr_empenho,
                     concat(substr(emp.nr_empenho, 1, ((LENGTH(emp.nr_empenho)-4)) ), '/', substring(emp.nr_empenho from '....$')) as nr_empenho,
                     (
