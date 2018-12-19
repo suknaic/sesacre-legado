@@ -156,6 +156,7 @@ class Contrato {
             $pessoa->setNm_email(trim($dadosPessoa['email']));
             $pessoa->setDs_bairro(trim($dadosPessoa['bairro']));
             $pessoa->setDs_complemento(trim($dadosPessoa['complemento']));
+            $pessoa->setNrNumero(trim($dadosPessoa['numero']));
             $pessoa->setDs_logradouro(trim($dadosPessoa['logradouro']));
             $pessoa->setDs_observacao(trim($dadosPessoa['obs']));
             $pessoa->setId_cidade($dadosPessoa['cidade']);
@@ -187,7 +188,7 @@ class Contrato {
             $pessoaFisica->setNm_pai(trim($dadosPessoaFisica['pai']));
             $pessoaFisica->setNm_mae(trim($dadosPessoaFisica['mae']));
             $pessoaFisica->setDt_nascimento($dadosPessoaFisica['dtNascimento']);
-            $pessoaFisica->setNr_cns(trim($dadosPessoaFisica['cns']));
+            $pessoaFisica->setNr_cns(str_replace(" ", "", trim($dadosPessoaFisica['cns'])));
             $pessoaFisica->setId_escolaridade_formacao(($dadosPessoaFisica['escolaridade']));
             $pessoaFisica->cadastrarPessoaFisica($pdo);
             if ($pessoaFisica->getSuccess()) {
