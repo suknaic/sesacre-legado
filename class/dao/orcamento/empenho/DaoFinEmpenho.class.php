@@ -1171,7 +1171,6 @@ class DaoFinEmpenho extends FinEmpenhoTb {
                     anulacao_item.qt_anulado,
                     anulacao_item.vl_item,
                     anulacao_item.qt_item,
-                    anulacao.nr_empenho_anulacao,
                     anulacao_situacao.nm_empenho_anulacao_situacao
                  from
                     con_empenho_anulacao anulacao,
