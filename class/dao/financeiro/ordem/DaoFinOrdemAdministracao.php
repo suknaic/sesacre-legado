@@ -47,7 +47,7 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                 $stmt->bindValue(":pessoa", $this->getIdAutorizado(), PDO::PARAM_INT);
                 $stmt->bindValue(":lotacao", $this->getIdLotacaoAutorizado(), PDO::PARAM_INT);
                 $stmt->bindValue(":status", 2, PDO::PARAM_INT);
-                 $stmt->bindValue(":idOrdemAdm", $this->getIdOrdemAdministracao(), PDO::PARAM_INT);
+                $stmt->bindValue(":idOrdemAdm", $this->getIdOrdemAdministracao(), PDO::PARAM_INT);
                 $stmt->execute();
                 $this->sucesso = true;
             }
@@ -55,10 +55,6 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
             $this->sucesso = false;
             $this->msgRetorno = $ex->getMessage();
         }
-    }
-    
-    public function retornaDataAtual(PDO $pdo){
-        
     }
 
     public function alterarSituacaoOrdem(PDO $pdo, int $status = null) {
@@ -172,6 +168,26 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                 $stmt->execute();
                 $this->msgRetorno = $stmt->fetch(PDO::FETCH_ASSOC);
                 $this->sucesso = true;
+            }
+        } catch (Exception $ex) {
+            $this->sucesso = false;
+            $this->msgRetorno = $ex->getMessage();
+        }
+    }
+
+    public function verificarSerExisteReativacao(PDO $pdo) {
+        try {
+            $this->sucesso = false;
+            if (!empty($pdo)) {
+                $sql = "select id_ordem from fin_ordem_administracao where id_ordem = :idOrdem and st_ordem_administracao = '1'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":idOrdem", $this->getIdOrdem(), PDO::PARAM_INT);
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $this->sucesso = true;
+                } else {
+                    $this->sucesso = false;
+                }
             }
         } catch (Exception $ex) {
             $this->sucesso = false;
