@@ -6,8 +6,8 @@ new Vue({
     data: function () {
         return {
             grupoOptions: [],
-            grupo: {idGrupoRecurso: 0, nmGrupoRecurso: '', recursos: []},
-            cadastro: false
+            grupo: {idGrupoRecurso: 0, nmGrupoRecurso: 'Teste', recursos: []},
+            inserir: false
         }
     },
     mounted: function () {
@@ -71,7 +71,8 @@ new Vue({
             })
         },
         novoGrupo: function(parametro){
-            this.cadastro = parametro;
+            this.inserir = parametro;
+
         }
 
     }

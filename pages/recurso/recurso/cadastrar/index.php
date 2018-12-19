@@ -63,11 +63,13 @@ require_once "index.load.php";
                                     <h2 class="panel-title">Dados do Recurso</h2>
                                 </div>
                                 <div class="panel-body">
-
-                                    <input-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" requerido v-bind:opcoes="sistemasOptions"></input-select>
+                                    <pre>
+                                        {{ novoRecurso }}
+                                    </pre>
+                                    <custom-select nome="id_sistema" descricao="Sistema do Recurso" v-bind:valor="novoRecurso.idSistema" v-on:input="novoRecurso.idSistema = $event" requerido v-bind:opcoes="sistemasOptions"></custom-select>
                                     <input-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></input-texto>
                                     <input-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></input-texto>
-                                    <input-texto-grande nome="ds_recurso" descricao="Descrição do Recurso" v-model="novoRecurso.dsRecurso"></input-texto-grande>
+                                    <custom-textarea nome="ds_recurso" descricao="Descrição do Recurso" v-bind:valor="novoRecurso.dsRecurso" v-on:input="novoRecurso.dsRecurso = $event"></custom-textarea>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
@@ -133,8 +135,8 @@ require_once "index.load.php";
         <script src="/assets/lib/template/js/axios.min.js"></script>
         <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
         <script src="/assets/lib/sesacre/componentes/InputTexto.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputTextoGrande.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputSelect.js"></script>
+        <script src="/assets/lib/sesacre/componentes/CustomTextarea.js"></script>
+        <script src="/assets/lib/sesacre/componentes/CustomSelect.js"></script>
         <script src="index.js"></script> 
     </body>
 </html>
