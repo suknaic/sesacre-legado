@@ -196,7 +196,6 @@ class Pessoa {
             $pessoa->setDsObservacao($this->ds_observacao);
             $pessoa->setIdCidade($this->id_cidade);
             $pessoa->setIdNaturalidade($this->id_naturalidade);
-            $pessoa->setNmEmail($this->nm_email);
             $pessoa->setNmPessoa(ucwords(strtolower($this->nm_pessoa)));
             $pessoa->setNrCep($this->nr_cep);
             $pessoa->setNrNumero($this->nr_numero);
@@ -204,14 +203,24 @@ class Pessoa {
             $pessoa->setNrTelefoneResidencial($this->nr_elefone_residencial);
             $pessoa->setNmSenha($this->nm_senha);
             //***********************************************************************
-            //print_r($pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS));
-            $validaEmail = $pessoa->validarEmail($pdo, $this->nm_email);
-            if ($validaEmail) {
-                $this->setSuccess(false);
-                $this->setMsg('E-mail Informado Já Está Sendo Utilizado.');
-                $pdo->rollBack();
-                return;
+            if (empty($this->nm_email)) {
+                $pessoa->setNmEmail(null);
+            } else {
+                if (!Metodos::validaEmail($this->nm_email)) {
+                    return Metodos::retornoAjax('Erro', 'alert', 'O E-mail Informado é Inválido.');
+                } else {
+                    $validaEmail = $pessoa->validarEmail($pdo, $this->nm_email);
+                    if ($validaEmail) {
+                        $this->setSuccess(false);
+                        $this->setMsg('E-mail Informado Já Está Sendo Utilizado.');
+                        $pdo->rollBack();
+                        return;
+                    } else {
+                        $pessoa->setNmEmail($this->nm_email);
+                    }
+                }
             }
+
             //*****************************************
             $result = $pessoa->insert($pdo);
             //*****************************************

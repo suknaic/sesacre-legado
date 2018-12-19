@@ -271,8 +271,8 @@ $(document).ready(function () {
     $("body").on("change.select2", "#id_pais_naturalidade", function (e) {
         $("#id_estado_naturalidade").val(0).trigger('change.select2');
         $("#id_naturalidade").val(0).trigger('change.select2');
-        $idPais = $("#id_pais_naturalidade").val();
-        if ($idPais == 0) {
+        idPais = $("#id_pais_naturalidade").val();
+        if (idPais == 0) {
             return;
         }
         listaEstadoNaturalidade(idPais);
@@ -646,16 +646,26 @@ $(document).ready(function () {
                     return;
                 }
             }
-            //*******************************
-            var DadosContrato = {
-                nrMatricula: $("#nr_matricula").val(),
-                dtAdmissao: $("#dt_admissao").val(),
-                dtDemissao: $("#dt_demissao").val(),
-                nrCargaHoraria: $("#nr_carga_horaria").val(),
-                vinculo: $("#id_vinculo").val(),
-                pessoaJuridica: $("#id_pessoa_juridica").val(),
-                idCargo: $("#id_cargo").val()
-            };
+            //********************************************************************************
+
+            //************************* Carga Horaria dos Contratos permitidas são:20,24,30 e 44 *******************
+            ch = parseInt($("#nr_carga_horaria").val());
+            if (ch == 20 || ch == 24 || ch == 30 || ch == 40 || ch == 44) {
+                var DadosContrato = {
+                    nrMatricula: $("#nr_matricula").val(),
+                    dtAdmissao: $("#dt_admissao").val(),
+                    dtDemissao: $("#dt_demissao").val(),
+                    nrCargaHoraria: $("#nr_carga_horaria").val(),
+                    vinculo: $("#id_vinculo").val(),
+                    pessoaJuridica: $("#id_pessoa_juridica").val(),
+                    idCargo: $("#id_cargo").val()
+                };
+            }else {
+                func.modalAlert('As Cargas Horárias Permitidas para Contratos são: 20,24,30,40 e 44.');
+                return false;
+            }
+            //******************************************************************************************************
+
             var x = 0;
             if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
                 x = 1;

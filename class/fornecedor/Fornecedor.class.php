@@ -300,19 +300,7 @@ class Fornecedor {
                 $pessoa->setDs_complemento(empty($this->pessoa['complemento']) ? null:trim($this->pessoa['complemento']));
                 $pessoa->setNr_cep($this->pessoa['cep']);
                 $pessoa->setNrNumero($this->pessoa['numero']);
-
-                //****************** Valida E-mail *****************
-                if (empty($this->pessoa['email'])) {
-                    $pessoa->setNm_email(null);
-                } else {
-                    if (!Metodos::validaEmail($this->pessoa['email'])) {
-                        return Metodos::retornoAjax("Erro", "alert", "O E-mail Informado é Inválido.");
-                    } else {
-                        $pessoa->setNm_email($this->pessoa['email']);
-                    }
-                }
-                //**************************************************
-
+                $pessoa->setNm_email($this->pessoa['email']);
                 $pessoa->setNr_telefone_celular(empty($this->pessoaFisica['tl_celular']) ? Metodos::removeMascaraCel_Tel($this->pessoaJuridica['tl_empresa']):Metodos::removeMascaraCel_Tel($this->pessoaFisica['tl_celular']));
                 $pessoa->setNr_elefone_residencial($this->pessoa['tl_residencial'] == '' ? null:Metodos::removeMascaraCel_Tel($this->pessoa['tl_residencial']));
 

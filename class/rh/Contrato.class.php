@@ -131,15 +131,6 @@ class Contrato {
             }
             //***********************************************************************************
 
-            //************************ Valida Data de Nascimento, se é maior que a Data Atual ***********************
-//            $dtNasc = strtotime(date(str_replace('/', '-', $dadosPessoaFisica['dtNascimento'])));
-//            $dtAtual = strtotime(date("d-m-Y"));
-//            if ($dtNasc > $dtAtual) {
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax('Erro', 'alert', 'Data de Nascimento Não Pode Ser Maior que a Data Atual.');
-//            }
-            //*******************************************************************************************************
-
             //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
             $dtAdm = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
             $dtAtual = strtotime(date("d-m-Y"));
@@ -227,6 +218,28 @@ class Contrato {
                 }
             }
             //*********************************************
+
+            //**************************** Carga Horaria dos Contratos permitidas são:20,24,30 e 44 ********************
+            $ch = $dadosContrato['nrCargaHoraria'];
+            if ($ch == 20 || $ch == 24 || $ch == 30 || $ch == 40 || $ch == 44) {
+                $cadatraContrato = true;
+            } else {
+                $cadatraContrato = false;
+            }
+
+            if (!$cadatraContrato) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'As Cargas Horárias Permitidas para Contratos são: 20,24,30,40 e 44.');
+            }
+            //**********************************************************************************************************
+
+            //******************************** Verifica a existencia do hifen na matricula *****************************
+            $matricula = $dadosContrato['nrCargaHoraria'];
+            if (strpos('-', $matricula) == false) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'A matrícula informada é inválida.');
+            }
+            //**********************************************************************************************************
 
             $contrato->setDt_admissao(Metodos::ConverteDataING($dadosContrato['dtAdmissao']));
             $contrato->setDt_demissao($dadosContrato['dtDemissao'] == '' || $dadosContrato['dtDemissao'] == null ? null:Metodos::ConverteDataING($dadosContrato['dtDemissao']));
