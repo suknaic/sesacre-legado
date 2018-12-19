@@ -6,7 +6,7 @@ new Vue({
     data: function () {
         return {
             sistemasOptions: [],
-            novoRecurso: {idSistema: 0, nmRecurso: '', lkRecurso: '', dsRecurso: ''}
+            novoRecurso: {idSistema: "1", nmRecurso: '', lkRecurso: '', dsRecurso: 'dsadasdsa'}
         }
     },
     mounted: function () {

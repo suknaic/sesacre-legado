@@ -1,4 +1,4 @@
-Vue.component('input-texto-grande',{
+Vue.component('custom-textarea',{
     props: {
         nome: String,
         descricao: String,
@@ -6,13 +6,12 @@ Vue.component('input-texto-grande',{
         requerido: {
             default: false,
             type: Boolean
-        },
-    },
-    methods: {
-        atualiza: function (valor) {
-            this.$emit('input', valor)
         }
     },
+    /*
+     * https://br.vuejs.org/v2/guide/components.html#Usando-v-model-em-Componentes
+     * Para maiores informações com relação ao uso de componentes
+     */
     template: `<div class="form-group">
                     <label class="col-sm-2 control-label text-left">{{descricao}}: <span v-if="requerido" class="text-danger">*</span> </label>
                     <div class="col-sm-6">
@@ -20,7 +19,7 @@ Vue.component('input-texto-grande',{
                             <span class="input-group-addon">
                                 <p class="fa fa-file-text-o inputPFa"></p>
                             </span>
-                            <textarea class="form-control" rows="4" cols="50" v-bind:class="nome"  v-on:input="atualiza($event.target.value)" >{{ valor }}</textarea>                                                        
+                            <textarea class="form-control" rows="4" cols="50" v-bind:class="nome" v-bind:valor="valor" v-on:input="$emit('input',$event.target.value)" >{{ valor }}</textarea>                                                        
                         </div>                                                  
                     </div>
                 </div>`

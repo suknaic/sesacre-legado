@@ -1,4 +1,4 @@
-Vue.component('input-select',{
+Vue.component('custom-select',{
     props: {
         nome: String,
         descricao: String,
@@ -11,7 +11,7 @@ Vue.component('input-select',{
     },
     mounted: function () {
         var vm = this
-        $('.' + this.nome).select2().on('change', function () {
+        $('.' + this.nome).select2("val",this.valor).on('change', function () {
             vm.$emit('input', this.value) // 'this.value' aqui se refere ao elemento capturado pelo Jquery
         })
     },
@@ -23,7 +23,7 @@ Vue.component('input-select',{
                                 <span class="input-group-addon">
                                     <p class="fa fa-list inputPFa"></p>
                                 </span>
-                            <select class="form-control" v-bind:class="nome" >
+                            <select class="form-control" v-bind:class="nome">
                                 <option value="0">Selecione o {{descricao}}</option>
                                 <option v-for="opcao in opcoes" :key="opcao.id" v-bind:value="opcao.id">{{ opcao.nome }}</option>
                             </select>                                                                
