@@ -406,8 +406,14 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
-            echo "<option value = '0'>Selecione a cidade</option>";
-            echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            $nmCidade = $_REQUEST['nmCidade'];
+
+            echo "<option value = '0'>Selecione a Cidade</option>";
+            if (empty($nmCidade)) {
+                echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            } else {
+                echo $prog->retornaOptionCidadeUf($idEstado, $nmCidade);
+            }
             return;
             break;
         } catch (Exception $e) {
@@ -421,11 +427,11 @@ switch ($_REQUEST['acao']) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
-            $idEstado = filter_input(INPUT_POST, 'idEstado', FILTER_DEFAULT);
             $uf = filter_input(INPUT_POST, 'uf', FILTER_DEFAULT);
+
             $cidade = new Cidade();
 
-            echo $cidade->retornaOptionCidadeUf($idEstado, $uf);
+            echo $cidade->retornaCidadeUf($uf);
 
             return;
             break;
@@ -440,7 +446,7 @@ switch ($_REQUEST['acao']) {
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
 
-            echo "<option value = '0'>Selecione o estado</option>";
+            echo "<option value = '0'>Selecione o Estado</option>";
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;
@@ -462,7 +468,6 @@ switch ($_REQUEST['acao']) {
     case 'listaSituacaoOption':
         try {
             $id = $_REQUEST['id'];
-//            print_r($id);
             
             $prog = new Contrato();
             

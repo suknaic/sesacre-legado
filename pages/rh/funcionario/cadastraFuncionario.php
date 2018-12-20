@@ -124,7 +124,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="tp_sexo" class="form-control sexo">
+                                                                <select id="tp_sexo" class="form-control sexo select">
                                                                     <option value="0">Selecione o Sexo</option>
                                                                     <option value="1">Feminino</option>
                                                                     <option value="2">Masculino</option>
@@ -150,7 +150,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_pais_naturalidade" class="form-control pais">
+                                                                <select id="id_pais_naturalidade" class="form-control pais select">
                                                                     <option value="0">Selecione o País</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -164,7 +164,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_estado_naturalidade" class="form-control estado">
+                                                                <select id="id_estado_naturalidade" class="form-control estado select">
                                                                     <option value="0">Selecione o Estado</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -178,8 +178,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_naturalidade" class="form-control idCidade">
-                                                                    <option value="0">Selecione a Naturalidade</option>
+                                                                <select id="id_naturalidade" class="form-control idCidade select">
+                                                                    <option value="0">Selecione a Cidade</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -193,7 +193,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             CPF: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
                                                                 <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" placeholder="___.___.___-__" required="true">
                                                             </div>
@@ -202,7 +202,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             Registro Geral: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
                                                                 <input type="text" class="form-control" name="nr_rg" id="nr_rg" required="true">
                                                             </div>
@@ -223,7 +223,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_estado" class="form-control select">
-                                                                    <option value="0">Selecione o Orgão Expeditor</option>
+                                                                    <option value="0">Selecione o Estado do Órgão Expedidor</option>
                                                                     <?php
                                                                     // echo $lotacoes;
                                                                     ?>
@@ -269,12 +269,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </div>
                                                         </div> 
                                                         <div class="col-md-3">
-                                                            N° Cartão SUS:
+                                                            Número do Cartão do SUS:
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control" name="nr_cns" id="nr_cns">
+                                                                <input type="text" class="form-control" name="nr_cns" id="nr_cns" placeholder="___ ____ ____ ____">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
@@ -327,7 +327,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                         <table class="table table-striped table-bordered table-hover table-condensed" id="tabela">
                                                                             <thead>
                                                                                 <tr>
-                                                                                    <th class="text-capitalize text-center">Formação</th> 
+                                                                                    <th class="text-capitalize text-center">Curso</th>
                                                                                     <th class="text-capitalize text-center">Escolaridade</th>
                                                                                     <th class="text-capitalize text-center">Ação</th>
                                                                                 </tr>
@@ -402,7 +402,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     </div>
                                                     <div class="form-group">    
                                                         <div class="col-md-2"></div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-3">
                                                             Logradouro: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
@@ -420,7 +420,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <input type="text" class="form-control" name="ds_complemento" id="ds_complemento">
                                                             </div>
                                                         </div>
-
+                                                        <div class="col-md-2">
+                                                            N°: <span class="text-danger">*</span>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                                </span>
+                                                                <input type="number" class="form-control" name="nr_endereco" id="nr_endereco" min="0" required="true">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="form-group"> 
                                                         <div class="col-md-2"></div>
@@ -437,9 +445,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             CEP:
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
-                                                                <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                                <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-1">
@@ -457,7 +465,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             Telefone Residencial:
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
                                                                 <input type="text" class="form-control" name="nr_telefone_residencial" id="nr_telefone_residencial" placeholder="(__) ____-____">
                                                             </div>
@@ -466,7 +474,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             Telefone Celular: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
                                                                 <input type="text" class="form-control" name="nr_telefone_celular" id="nr_telefone_celular" required="true" placeholder="(__) _ ____-____" >
                                                             </div>
@@ -524,7 +532,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 Carga Horária: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
-                                                                        <p class="fa fa-file-text-o inputPFa"></p>
+                                                                        <p class="fa fa fa-sort-numeric-asc inputPFa"></p>
                                                                     </span>
                                                                     <input type="text" class="form-control nr" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
                                                                 </div>
@@ -602,7 +610,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     Carga Horária:
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon">
-                                                                            <p class="fa fa-file-text-o inputPFa"></p>
+                                                                            <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                         </span>
                                                                         <input type="text" class="form-control nr" name="nr_carga_horaria2" id="nr_carga_horaria2" required="true">
                                                                     </div>
