@@ -24,6 +24,7 @@ class Liquidacao {
     private $anotacoes = null;
     private $tipoSolicitacao = null;
     private $qtdDocumentosDisponiveis = null;
+
     /**
      *
      * Situações da Liquidação
@@ -32,7 +33,7 @@ class Liquidacao {
     private $sitPagoParcial = 2;
     private $sitPago = 3;
     private $sitCancelado = 4;
-    
+
     /**
      *
      * Status da Liquidação
@@ -49,7 +50,7 @@ class Liquidacao {
         $this->idLiquidacaoStatus = $idLiquidacaoStatus;
         return $this;
     }
-    
+
     function getTipoSolicitacao() {
         return $this->tipoSolicitacao;
     }
@@ -101,7 +102,7 @@ class Liquidacao {
     function getSitCancelado() {
         return $this->sitCancelado;
     }
-    
+
     function getStAguardandoPagamento() {
         return $this->stAguardandoPagamento;
     }
@@ -291,8 +292,8 @@ class Liquidacao {
             return $exc->getMessage();
         }
     }
-    
-    public function retornaOptiosDocumentosLiquidacaoEdicao(){
+
+    public function retornaOptiosDocumentosLiquidacaoEdicao() {
         try {
             $opcoes = '';
             $retorno = '';
@@ -323,7 +324,7 @@ class Liquidacao {
                                                                     <span class='input-group-addon'><p class='fa fa-list' style='margin-bottom: -4px'></p></span>
                                                                     <select class='form-control select' name='selectDocumentoFiscal' id='selectDocumentoFiscal'>
                                                                         <option value='0' selected='true'>Selecione um Documento Fiscal</option>
-                                                                        ".$opcoes."
+                                                                        " . $opcoes . "
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -347,7 +348,7 @@ class Liquidacao {
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                    ".$linhas."
+                                                                    " . $linhas . "
                                                                     </tbody>
 
                                                                 </table>
@@ -362,26 +363,26 @@ class Liquidacao {
             return $ex->getMessage();
         }
     }
-    
-    public function montaTabelaDocumentosLiquidacaoEdicao($documentos = array()){
+
+    public function montaTabelaDocumentosLiquidacaoEdicao($documentos = array()) {
         try {
             $linhas = '';
             if (!empty($documentos)) {
                 foreach ($documentos as $linha) {
                     if (!empty($linha['id_liquidacao_doc'])) {
                         $linhas .= "<tr data-id=" . $linha['id_documento_fiscal'] . " data-objeto='" . json_encode($linha) . "' class='documentoFiscal'>"
-                            . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
-                            . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
-                            . "<td class='text-center'>" . $linha['competencia'] . "</td>"
-                            . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
-                            . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
-                            . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
-                            . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
-                            . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
-                            . "<td class='text-center'>"
-                            . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=" . $linha['id_documento_fiscal'] . ">"
-                            . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
-                            . "</button>";
+                                . "<td class='text-center'>" . $linha['nr_documento_fiscal'] . "</td>"
+                                . "<td class='text-center'>" . $linha['nm_tipo_documento'] . "</td>"
+                                . "<td class='text-center'>" . $linha['competencia'] . "</td>"
+                                . "<td class='text-center'>" . $linha['dt_emissao'] . "</td>"
+                                . "<td class='text-center'>" . $linha['dt_atesto'] . "</td>"
+                                . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
+                                . "<td class='text-center'>" . $linha['vl_documento'] . "</td>"
+                                . "<td class='text-center'>" . $linha['nm_situacao'] . "</td>"
+                                . "<td class='text-center'>"
+                                . "<button type='button' title='Ver Documento Fiscal' class='ver-documento' value=" . $linha['id_documento_fiscal'] . ">"
+                                . "<i class='fa fa-file-text-o text-info' aria-hidden='true'></i>"
+                                . "</button>";
 
                         $linhas .= "<button type='button' title='Remover Documento Fiscal' class='remover-documento'>"
                                 . "<i class='fa fa-trash text-danger' aria-hidden='true'></i>"
@@ -393,7 +394,7 @@ class Liquidacao {
             }
             return $linhas;
         } catch (Exception $exc) {
-             return $exc->getMessage();
+            return $exc->getMessage();
         }
     }
 
@@ -432,7 +433,7 @@ class Liquidacao {
                                                                     <span class='input-group-addon'><p class='fa fa-list' style='margin-bottom: -4px'></p></span>
                                                                     <select class='form-control select' name='selectDocumentoFiscal' id='selectDocumentoFiscal'>
                                                                         <option value='0' selected='true'>Selecione um Documento Fiscal</option>
-                                                                        ".$opcoes."
+                                                                        " . $opcoes . "
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -456,7 +457,7 @@ class Liquidacao {
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                    ".$linhas."
+                                                                    " . $linhas . "
                                                                     </tbody>
 
                                                                 </table>
@@ -481,7 +482,7 @@ class Liquidacao {
 
             $daoConLiquidacao = new DaoConLiquidacao();
 
-            if ($this->getIdLiquidacao()) {
+            if (!empty($this->getIdLiquidacao())) {
                 $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
             } else {
                 $daoConLiquidacao->setIdLiquidacao(0);
@@ -501,6 +502,32 @@ class Liquidacao {
         }
     }
 
+    public function retornaDocsPagamentoDisponiveis() {
+        $conexao = new Conexao();
+        $pdo = $conexao->connect();
+        $daoConLiquidacao = new DaoConLiquidacao();
+
+        if (!empty($this->getIdLiquidacao())) {
+            $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
+        } else {
+            $daoConLiquidacao->setIdLiquidacao(0);
+        }
+
+        $daoConLiquidacao->retornaQtdDocumentosDisponiveisPorLiquidacaoPagamento($pdo);
+        $retorno = "";
+        
+        if ($daoConLiquidacao->Sucesso()) {
+            if ($daoConLiquidacao->getMsgRetorno()['count'] > 0) {
+                $retorno = Metodos::retornoAjax("ok", "sim", $daoConLiquidacao->getMsgRetorno()['count']);
+            } else {
+                $retorno = Metodos::retornoAjax("nao", "nao", $daoConLiquidacao->getMsgRetorno()['count']);
+            }
+        } else {
+            $retorno = Metodos::retornoAjax("nao", "nao", $daoConLiquidacao->getMsgRetorno()['count']);
+        }
+        return $retorno;
+    }
+
     /**
      * 
      * @param type $idsDocFiscaisParaVerificar
@@ -515,7 +542,7 @@ class Liquidacao {
                 $daoConLiquidacao->setIdLiquidacao($this->getIdLiquidacao());
 
                 $arrayAux = array();
-                
+
                 if ($idsDocFiscaisParaVerificar) {
                     foreach ($idsDocFiscaisParaVerificar as $documento) {
                         $arrayAux[] = $documento['id_documento_fiscal'];
@@ -546,7 +573,7 @@ class Liquidacao {
             if (empty($this->getIdEmpenho()) || empty($this->getIdLotacao()) || empty($this->getIdDocTipoLotacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+
             /*
              * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
              * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
@@ -557,17 +584,17 @@ class Liquidacao {
             } elseif ($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1) {
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
             }
-            
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             //Só pode Cadastrar a Liquidação quem possui a Tramitação de Liquidar
             $tramitacao = new VincularTramitacao();
             $tramitacao->setIdPessoa($this->usuario);
             $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
             $tramitacao->verificaPessoaTramitacao($pdo);
-            if(!$tramitacao->Sucesso()){
+            if (!$tramitacao->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
             }
 
@@ -591,7 +618,6 @@ class Liquidacao {
             $saldo_empenho = $dados_empenho['vl_empenho'] - $empenho_total['total_liquidado'];
             $saldo_empenho = round($saldo_empenho, 4);
             //***********************************************************************************************
-            
             //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
             $this->nrLiquidacao = (int) $this->nrLiquidacao;
@@ -732,7 +758,7 @@ class Liquidacao {
                     return false;
                 }
                 $this->sucesso = true;
-                
+
                 return $this->sucesso;
             } else {
                 $this->mensagens = "Sem conexão com o banco de dados";
@@ -749,7 +775,7 @@ class Liquidacao {
             if (empty($this->getIdLiquidacao()) || empty($this->getNrLiquidacao()) || empty($this->getDtLiquidacao()) || empty($this->getNrLiquidacao()) || empty($this->getVlLiquidacao()) || empty($this->getVlLiquidacao())) {
                 return Metodos::retornoAjax("Erro", "alert", STR_PREENCHER_CAMPOS);
             }
-            
+
             /*
              * Se o tipo de solicitação for administrativo, precisa verificar se ele possui documentos disponiveis
              * e caso tenha documentos disponiveis, ele precisa no minimo usar 1
@@ -760,20 +786,20 @@ class Liquidacao {
             } elseif ($this->getTipoSolicitacao() == '2' && count($this->getDocumentos()) < 1) {
                 return Metodos::retornoAjax("Erro", "alert", 'Selecione pelo menos um documento fiscal para efetuar a Liquidação');
             }
-            
+
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             //Só pode Editar a Liquidação quem possui a Tramitação de Liquidar
             $tramitacao = new VincularTramitacao();
             $tramitacao->setIdPessoa($this->usuario);
             $tramitacao->setIdTramitacao($tramitacao->getTramitacaoLiquidar());
             $tramitacao->verificaPessoaTramitacao($pdo);
-            if(!$tramitacao->Sucesso()){
+            if (!$tramitacao->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Usuário Não possui Permissão para Cadastrar Liquidação.");
             }
-            
+
             //removendo barra do numero da Liquidação
             $this->nrLiquidacao = str_replace("/", "", $this->nrLiquidacao);
             $this->nrLiquidacao = (int) $this->nrLiquidacao;
@@ -835,14 +861,14 @@ class Liquidacao {
                     return Metodos::retornoAjax("Erro", "alert", $this->mensagens);
                 }
 
-                if ($this->getDocumentos()) {                                                                                                                     
+                if ($this->getDocumentos()) {
                     //Atualiza os Documentos Fiscais na Liquidação
                     if (!$this->atualizaDocumentosLiquidacao($pdo)) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "alert", $this->getMensagens());
                     }
                 }
-                               
+
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", STR_EDICAO_SUCESSO);
             } else {
@@ -893,28 +919,28 @@ class Liquidacao {
                 $arrayRemove = array_diff($arrayAux, $arrayAux2);
                 $arrayUpdate = array_intersect($arrayAux2, $arrayAux);
 
-                if ($this->getDocumentos()) {                                       
+                if ($this->getDocumentos()) {
                     /*
                      * Verifica se o Documento Fiscal que está sendo incluído está na diferente 
                      * da situação a Liquidar
-                     */                                        
-                    if(!empty($arrayInsert)){
+                     */
+                    if (!empty($arrayInsert)) {
                         $idsDocFiscaisParaVerificar = array();
                         foreach ($arrayInsert as $key => $value) {
                             $kI = array_search($value, array_column($this->getDocumentos(), "id_documento_fiscal"));
                             if ($kI === false) {
                                 continue;
                             }
-                            $idsDocFiscaisParaVerificar[] = $this->getDocumentos()[$kI];                                                
+                            $idsDocFiscaisParaVerificar[] = $this->getDocumentos()[$kI];
                         }
-                        
-                        if ($this->verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, $pdo)) {    
+
+                        if ($this->verificaDocumentosDiferenteDeALiquidar($idsDocFiscaisParaVerificar, $pdo)) {
                             $this->sucesso = false;
-                            $this->mensagens = "Há documentos com situação diferente de 'A Liquidar'." ;
-                            return false;                            
-                        }                                                                        
+                            $this->mensagens = "Há documentos com situação diferente de 'A Liquidar'.";
+                            return false;
+                        }
                     }
-                                    
+
                     foreach ($this->getDocumentos() as $documento) {
                         $liquidacaoDoc->setIdDocumentoFiscal($documento['id_documento_fiscal']);
                         $liquidacaoDoc->setVlLiquidacaoDoc($documento['vl_liquidacao_doc']);
@@ -924,7 +950,7 @@ class Liquidacao {
                         if (in_array($documento['id_documento_fiscal'], $arrayInsert)) {
                             $liquidacaoDoc->setIdDocumentoSituacao(2);
                             $liquidacaoDoc->salvarLiquidacaoDoc($pdo);
-                            
+
                             if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
                                 $this->sucesso = false;
                                 $this->mensagens = $liquidacaoDoc->getMensagens();
@@ -936,7 +962,7 @@ class Liquidacao {
                         if (in_array($documento['id_documento_fiscal'], $arrayUpdate)) {
                             $liquidacaoDoc->setIdLiquidacaoDoc($documento['id_liquidacao_doc']);
                             $liquidacaoDoc->atualizarLiquidacaoDoc($pdo);
-                            
+
                             if (!$liquidacaoDoc->getSucesso()) { //Retorna o erro se der problema ao salvar o documento fiscal
                                 $this->sucesso = false;
                                 $this->mensagens = $liquidacaoDoc->getMensagens();
@@ -1037,7 +1063,7 @@ class Liquidacao {
             }
 
             //Salvar no histórico o cancelamento
-            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento(),$justificativa)) {
+            if (!$this->salvarLiquidacaoHistorico($pdo, $this->getSitCancelado(), $this->getStFinalizado(), $this->getMotivoCancelamento(), $justificativa)) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao verificar os Documentos Fiscais desta Liquidação");
             };
@@ -1175,8 +1201,6 @@ class Liquidacao {
             return;
         }
     }
-    
-     
 
     public function retornaEmpenhoLiquidacao(PDO $pdo = null, int $opcao = 1 /* 1 - Visualização; 2 - Edição */) {
         try {
@@ -1423,7 +1447,7 @@ class Liquidacao {
             $this->mensagens = $exc->getMessage();
         }
     }
-    
+
     public function buscaLiquidacaoParaPagamento() {
         $conexao = new Conexao();
         $pdo = $conexao->connect();

@@ -105,6 +105,20 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
+    CASE 'exiberDocFiscaisPagemento':
+        try {
+            $dados = filter_input(INPUT_GET, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $liquidacao = new Liquidacao();
+            $liquidacao->setIdLiquidacao($dados['id_liquidacao']);
+            $liquidacao->setIdEmpenho($dados['id_empenho']);
+            echo $liquidacao->retornaDocsPagamentoDisponiveis();
+            return;
+            break;
+        } catch (Error $e) {
+            echo Metodos::retornoAjax("Erro", "console", ErrorExcept::getError($e));
+            return;
+            break;
+        }
 
     CASE 'retornaTipoRemetenteERemetente':
         try {
@@ -137,12 +151,13 @@ switch ($_REQUEST['acao']) {
             $pagamento->setDtPagamento($dados["dtPagamento"]);
             $pagamento->setVlPagamento($dados["vlPagamento"]);
             $pagamento->setVlPagamentoSaldo($dados["saldoLiquidacao"]);
+
             if (!empty($dados["docsPagamento"])) {
                 $pagamento->setDocsPagamento($dados["docsPagamento"]);
             } else {
                 $pagamento->setDocsPagamento(null);
             }
-            
+
             $pagamento->setDsAnotacao($dados["anotacoes"]);
             $pagamento->setIdPessoa($session->getIdUser());
             $pagamento->setIdPedido($dados["id_pedido"]);
@@ -154,7 +169,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
-        
+
     CASE 'buscaLiquidacao':
         try {
             $dados = filter_input(INPUT_GET, 'liquidacao', FILTER_DEFAULT);
