@@ -124,7 +124,7 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
+
     function retornaDocumentosPorEmpenho($pdo) {
         $this->sucesso = false;
         $sql = "select distinct
@@ -245,8 +245,8 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
-    function retornaLiquidacaoDocumentosEdicao(PDO $pdo = null){
+
+    function retornaLiquidacaoDocumentosEdicao(PDO $pdo = null) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select
@@ -311,7 +311,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                     liq.id_liquidacao = :id_liquidacao
                     order by documentos.nr_documento_fiscal";
         try {
-            if (!empty($pdo)){
+            if (!empty($pdo)) {
                 $result = $pdo->prepare($sql);
                 $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
                 $result->execute();
@@ -324,12 +324,10 @@ class DaoConLiquidacao extends ConLiquidacao {
             } else {
                 $this->msgRetorno = 'Sem conexão com o banco de dados.';
             }
-            
         } catch (PDOException $e) {
             $this->msgRetorno = $e->getMessage();
         }
     }
-    
 
     function retornaDocumentosPorLiquidacaoPagamento($pdo) {
         $this->sucesso = false;
@@ -361,7 +359,7 @@ class DaoConLiquidacao extends ConLiquidacao {
                            where id_pagamento_situacao = '1' 
                            group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
                 on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
-                where liq.id_liquidacao = :id_liquidacao and docFis.id_documento_situacao < 7
+                where liq.id_liquidacao = :id_liquidacao and (docFis.id_documento_situacao = 4 OR docFis.id_documento_situacao = 5) 
                 order by  docFis.nr_documento_fiscal";
         try {
             $result = $pdo->prepare($sql);
@@ -380,15 +378,48 @@ class DaoConLiquidacao extends ConLiquidacao {
         }
     }
 
+    function retornaQtdDocumentosDisponiveisPorLiquidacaoPagamento($pdo) {
+        $this->sucesso = false;
+        $sql = "select count(*) from con_liquidacao as liq 
+                inner join fin_empenho as empenho
+                on empenho.id_empenho = liq.id_empenho
+                inner join con_liquidacao_doc as liqDoc
+                on liqDoc.id_liquidacao = liq.id_liquidacao
+                inner join fin_documento_fiscal as docFis 
+                on docFis.id_documento_fiscal = liqDoc.id_documento_fiscal 
+                inner join fin_tipo_documento as tpDoc 
+                on tpDoc.id_tipo_documento = docFis.id_tipo_documento 
+                left join fin_documento_situacao as docSit 
+                on docSit.id_documento_situacao = docFis.id_documento_situacao 
+                left join (select sum(pagDoc.vl_pagamento_doc) as valorPagamento, pag.id_liquidacao , pagDoc.id_documento_fiscal 
+                                   from con_pagamento as pag
+                           inner join con_pagamento_doc as pagDoc
+                           on pagDoc.id_pagamento = pag.id_pagamento
+                           where id_pagamento_situacao = '1' 
+                           group by id_liquidacao, pagDoc.id_documento_fiscal) as pagamento
+                on pagamento.id_liquidacao = liq.id_liquidacao and docFis.id_documento_fiscal  = pagamento.id_documento_fiscal
+                where liq.id_liquidacao = :id_liquidacao and docFis.id_documento_situacao < 7";
+        try {
+            $result = $pdo->prepare($sql);
+            $result->bindValue(":id_liquidacao", $this->getIdLiquidacao(), PDO::PARAM_INT);
+            $result->execute();
+            $this->sucesso = true;
+            $this->msgRetorno = $result->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
+
     function retornaLiquidacoes(PDO $pdo = null, array $filtroSql = []) {
-        
+
         $str_filtro = '';
         if (!empty($filtroSql)) {
             foreach ($filtroSql as $filtro) {
                 $str_filtro .= $filtro['sql'];
             }
         }
-        
+
         $this->sucesso = false;
         $sql = "select
                     liq.id_liquidacao,
@@ -438,13 +469,13 @@ class DaoConLiquidacao extends ConLiquidacao {
                 " order by liq.nr_liquidacao";
         try {
             $result = $pdo->prepare($sql);
-            
+
             if (!empty($filtroSql)) {
                 foreach ($filtroSql as $filtro) {
                     $result->bindValue($filtro['bind'], $filtro['valor'], $filtro['pdo_param']);
                 }
             }
-            
+
             $result->execute();
             if ($result->rowCount() >= 1) {
                 $this->sucesso = true;
@@ -570,7 +601,6 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $e->getMessage();
         }
     }
-
 
     public function retornaEmpenhoLiquidacao(PDO $pdo) {
         try {
@@ -708,24 +738,24 @@ class DaoConLiquidacao extends ConLiquidacao {
             $this->msgRetorno = $exc->getMessage();
         }
     }
-    
+
     public function buscaLiquidacaoPesquisaPagamento(PDO $pdo) {
         $this->sucesso = false;
         $this->msgRetorno = null;
         $sql = "select "
-                    ."ped.nr_pedido,"
-                    ."ped.id_pedido,"
-                    ."liq.id_empenho,"
-                    ."liq.id_liquidacao,"
-                    ."liq.nr_liquidacao"
-                ." from"
-                    ." con_liquidacao liq"
-                ." inner join fin_empenho emp on"
-                    ." emp.id_empenho = liq.id_empenho"
-                ." inner join fin_pedido ped on"
-                    ." ped.id_pedido = emp.id_pedido"
-                ." where"
-                    ." liq.nr_liquidacao = :liquidacao";
+                . "ped.nr_pedido,"
+                . "ped.id_pedido,"
+                . "liq.id_empenho,"
+                . "liq.id_liquidacao,"
+                . "liq.nr_liquidacao"
+                . " from"
+                . " con_liquidacao liq"
+                . " inner join fin_empenho emp on"
+                . " emp.id_empenho = liq.id_empenho"
+                . " inner join fin_pedido ped on"
+                . " ped.id_pedido = emp.id_pedido"
+                . " where"
+                . " liq.nr_liquidacao = :liquidacao";
         try {
             if (!empty($pdo)) {
                 $stmt = $pdo->prepare($sql);

@@ -23,6 +23,8 @@ class ConPagamento {
     private $idPedido = null;
     private $sitCadastrado = 1;
     private $sitCancelado = 2;
+    private $tipoSolicitacao = null;
+    private $qtdDocumentosDisponiveis = null;
 
     public function getIdPagamento() {
         return $this->id_pagamento;
@@ -231,8 +233,8 @@ class ConPagamento {
             $daoConPagamento->setVlPagamento(Metodos::ConverteValorIng($this->vl_pagamento));
             $daoConPagamento->setVlPagamentoSaldo(Metodos::ConverteValorIng($this->vl_pagamento_saldo));
             $daoConPagamento->salvaPagamento($pdo);
-            
-            
+
+
             $this->id_pagamento = $pdo->lastInsertId('con_pagamento_id_pagamento_seq');
 
             if (!empty($this->docs_pagamento)) {

@@ -36,10 +36,10 @@ $(document).ready(function () {
             thousandsSeparator: '.',
         });
     });
-    
+
     $('body').on('keypress', '#codItemPesquisa', function (e) {
         let key = e.which;
-        if (key == 13){
+        if (key == 13) {
             $("#btn-pesquisa").trigger('click');
             return false;
         }
@@ -90,14 +90,14 @@ $(document).ready(function () {
         $('#modalItem').modal('hide');
     });
 
-    
-    if($("#liquidacao_get").val() != 0){
+
+    if ($("#liquidacao_get").val() != 0) {
         carregaPagamentoPesquisa();
     }
-    
+
     //Carrega a Parte de Contrato, Dados, Aditivos se já existir um Contrato para ser usado
-    function carregaPagamentoPesquisa(){
-        if($("#liquidacao_get").val() == 0){
+    function carregaPagamentoPesquisa() {
+        if ($("#liquidacao_get").val() == 0) {
             return false;
         }
 
@@ -109,7 +109,7 @@ $(document).ready(function () {
                 "acao": "buscaLiquidacao",
                 "liquidacao": $("#liquidacao_get").val()
             },
-            "success": function (response){     
+            "success": function (response) {
                 var dados = {
                     "nr_pedido": response.msg.nr_pedido,
                     "id_pedido": response.msg.id_pedido,
@@ -117,14 +117,14 @@ $(document).ready(function () {
                     "id_liquidacao": response.msg.id_liquidacao,
                     "nr_liquidacao": response.msg.nr_liquidacao
                 }
-                
+
                 carregaDadosParaPagamento(dados);
             }
-        });                
+        });
     }
-    
-    function carregaDadosParaPagamento(dados){
-        
+
+    function carregaDadosParaPagamento(dados) {
+
         limpaCampos();
         /**
          * retornaContratosPedido
@@ -157,7 +157,7 @@ $(document).ready(function () {
                 $(".pedido").html("");
                 $(".pedido").append(response);
 
-                
+
             }
         });
         /**
@@ -203,10 +203,41 @@ $(document).ready(function () {
                 "dados": dados
             },
             "success": function (response) {
-                console.log(response);
                 $("#selectDocumentoFiscal").html("");
                 $("#selectDocumentoFiscal").append(response);
-                habilitaDocumentosFiscais();
+                
+            }
+        });
+
+        /**
+         * exibir documentos
+         */
+        $.ajax({
+            "url": url,
+            "dataType": 'html',
+            "data": {
+                "acao": "exiberDocFiscaisPagemento",
+                "dados": dados
+            },
+            "success": function (response) {
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    func.modalAlert(func.msgErroPadrao);
+                    console.log("Parse JSON");
+                    return false;
+                }
+
+                if (response.tipoMsg === "ok") {
+                    $('.docFis').show();
+                    $("#vl_pagamento").prop("disabled", true);
+                    $("#selectDocumentoFiscal").focus();
+                    return false;
+                } else {
+                    $('.docFis').hide();
+                    $("#vl_pagamento").prop("disabled", false);
+                    return false;
+                }
             }
         });
     }
@@ -341,7 +372,6 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -409,8 +439,7 @@ $("body").on("keyup", ".valorRetPagamento", function (e) {
 
 function habilitaDocumentosFiscais() {
     var tipo_solicitacao = $("#id_pedido").data('tipo-solicitacao');
-    var docOpcoes = $('#selectDocumentoFiscal > option').length; 
-    console.log(docOpcoes);
+    var docOpcoes = $('#selectDocumentoFiscal > option').length;
     if (tipo_solicitacao != 2 && docOpcoes == 1) {
         $('.docFis').hide();
         $("#vl_pagamento").prop("disabled", false);
