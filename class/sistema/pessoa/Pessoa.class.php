@@ -207,7 +207,10 @@ class Pessoa {
                 $pessoa->setNmEmail(null);
             } else {
                 if (!Metodos::validaEmail($this->nm_email)) {
-                    return Metodos::retornoAjax('Erro', 'alert', 'O E-mail Informado é Inválido.');
+                    $this->setSuccess(false);
+                    $this->setMsg('O E-mail Informado é Inválido.');
+                    $pdo->rollBack();
+                    return;
                 } else {
                     $validaEmail = $pessoa->validarEmail($pdo, $this->nm_email);
                     if ($validaEmail) {

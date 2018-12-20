@@ -211,10 +211,20 @@ class pessoaFisica {
             $pessoaFisica->setNm_mae(ucwords(strtolower($this->nm_mae)));
             $pessoaFisica->setNm_pai(ucwords(strtolower($this->nm_pai)));
             $pessoaFisica->setNr_cns($this->nr_cns);
-            $pessoaFisica->setNr_cpf($this->nr_cpf);
+            $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->nr_cpf));
             $pessoaFisica->setNr_rg($this->nr_rg);
             $pessoaFisica->setTp_sexo($this->tp_sexo);
-//***********************************************************************
+
+            //************************************ Verifica se o cnpj é valido *****************************************
+            if (!Metodos::validaCPF($this->nr_cpf)) {
+                $this->setSuccess(false);
+                $this->setMsg('O CPF informado é inválido.');
+                $pdo->rollBack();
+                return;
+            }
+            //**********************************************************************************************************
+
+            //****************************** Verifica a existencia do cpf na base de dados *****************************
             $validaCpf = $pessoaFisica->validarCpf($pdo, $this->nr_cpf);
             if ($validaCpf) {
                 $this->setSuccess(false);
@@ -222,7 +232,19 @@ class pessoaFisica {
                 $pdo->rollBack();
                 return;
             }
-//************************************************************************
+            //**********************************************************************************************************
+
+            //************************************** Valida data de nascimento *****************************************
+            $dtNasc = explode('/', $this->dt_nascimento);
+            $d = $dtNasc[0];
+            $m = $dtNasc[1];
+            $y = $dtNasc[2];
+            if (!checkdate($m, $d, $y)) {
+                $this->setSuccess(false);
+                $this->setMsg('A data de nascimento informada é inválida.');
+                $pdo->rollBack();
+                return;
+            }
 
             if (!empty($this->dt_nascimento)){
                 $dtNascimento = strtotime(date(str_replace('/', '-', $this->dt_nascimento)));
@@ -234,9 +256,11 @@ class pessoaFisica {
                     return;
                 }
             }
-//*****************************************
+            //**********************************************************************************************************
+
+            //*************************************
             $result = $pessoaFisica->insert($pdo);
-//*****************************************
+            //*************************************
             if ($result != "Sucesso") {
                 $this->setSuccess(false);
                 $this->setMsg($result);
@@ -255,7 +279,6 @@ class pessoaFisica {
                 return;
             }
         } catch (Exception $exc) {
-//return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
             return false;
         }
     }

@@ -161,8 +161,7 @@ class Contrato {
             if ($pessoa->getSuccess()) {
                 $idPessoa = $pessoa->getId_pessoa();
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
             }
 
             //************************************************* Pessoa Fisica *******************************************
@@ -185,8 +184,7 @@ class Contrato {
             if ($pessoaFisica->getSuccess()) {
                 $idPessoaFisica = $pessoaFisica->getId_pessoa_fisica();
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
             }
             //**********************************************************************************************************
 
@@ -196,9 +194,8 @@ class Contrato {
                     $pessoaFisica->setId_escolaridade_formacao_competencia($v['id_escolaridade_formacao']);
                     $rs = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
                     if ($rs != "Sucesso") {
-                        $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                         $pdo->rollBack();
-                        return $retorno;
+                        return Metodos::retornoAjax("Erro", "console", $rs);
                     }
                 }
             }
@@ -234,10 +231,32 @@ class Contrato {
             //**********************************************************************************************************
 
             //******************************** Verifica a existencia do hifen na matricula *****************************
-            $matricula = $dadosContrato['nrCargaHoraria'];
-            if (strpos('-', $matricula) == false) {
+            $matricula = $dadosContrato['nrMatricula'];
+            if (strpos($matricula, '-') == false) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'A matrícula informada é inválida.');
+                return Metodos::retornoAjax('Erro', 'alert', 'A matrícula informada é inválida.');
+            }
+            //**********************************************************************************************************
+
+            //*********************************** Valida data de admissão e demissão ***********************************
+            $dtAd = explode('/', $dadosContrato['dtAdmissao']);
+            $dAd = $dtAd[0];
+            $mAd = $dtAd[1];
+            $yAd = $dtAd[2];
+            if (!checkdate($mAd, $dAd, $yAd)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'A data de admissão informada é inválida.');
+            }
+
+            if (!empty($dadosContrato['dtDemissao'])) {
+                $dtDm = explode('/', $dadosContrato['dtDemissao']);
+                $dDm = $dtDm[0];
+                $mDm = $dtDm[1];
+                $yDm = $dtDm[2];
+                if (!checkdate($mDm, $dDm, $yDm)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'alert', 'A data de demissão informada é inválida.');
+                }
             }
             //**********************************************************************************************************
 
@@ -254,9 +273,8 @@ class Contrato {
 
             if ($rs != "Sucesso") {
                 $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
             //*********************************Contrato / Lotação*************************************************
@@ -269,18 +287,36 @@ class Contrato {
                     $contrato->setDt_inicio($v['dt_inicio']);
                     $contrato->setDt_fim($v['dt_fim']);
 
+                    //******************************** Valida data inicio e fim do contrato ****************************
+                    $dtIni = explode('/', $v['dt_inicio']);
+                    $dIni = $dtIni[0];
+                    $mIni = $dtIni[1];
+                    $yIni = $dtIni[2];
+                    if (!checkdate($mIni, $dIni, $yIni)) {
+                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início do contrato é inválida.');
+                    }
+
+                    if (!empty($v['dt_fim'])) {
+                        $dtFim = explode('/', $v['dt_fim']);
+                        $dFim = $dtFim[0];
+                        $mFim = $dtFim[1];
+                        $yFim = $dtFim[2];
+                        if (!checkdate($mFim, $dFim, $yFim)) {
+                            return Metodos::retornoAjax('Erro', 'alert', 'A data de fim do contrato é inválida.');
+                        }
+                    }
+                    //**************************************************************************************************
+
                     $rs = $contrato->insertContratoLotacao($pdo);
                     if ($rs != "Sucesso") {
                         $sucesso = false;
-                        $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                         $pdo->rollBack();
-                        return $retorno;
+                        return Metodos::retornoAjax("Erro", "console", $rs);
                     }
                     $idContratoLot = $pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq');
                     if (!(Log::SalvaLogI('ses_contrato_lotacao', $idContratoLot, $pdo))) {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                         $pdo->rollBack();
-                        return $retorno;
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                     }
                     //*********************histórico*************************************
                     $data = date('Y-m-d H:i');
@@ -290,26 +326,21 @@ class Contrato {
                     $rs1 = $contrato->insertContratoHistorico($pdo);
                     if ($rs1 != "Sucesso") {
                         $sucesso = false;
-                        $retorno = Metodos::retornoAjax("Erro", "console", $rs1);
                         $pdo->rollBack();
-                        return $retorno;
+                        return Metodos::retornoAjax("Erro", "console", $rs1);
                     }
                     $idContratoHist = $pdo->lastInsertId('ses_contrato_historico_id_contrato_historico_seq');
                     if (!(Log::SalvaLogI('ses_contrato_historico', $idContratoHist, $pdo))) {
-                        $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                         $pdo->rollBack();
-                        return $retorno;
+                        return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                     }
                     $sucesso = true;
                 }
             }
-            //print_r($pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq'));
-            //print_r($contrato);
-            //return;
-            //************************************************************************************************
-            // Definindo o perfil(CHAMADO) padrão para o funcionário
+            //**********************************************************************************************************
+            //************************ Definindo o perfil(CHAMADO) padrão para o funcionário ***************************
             if ($sucesso) {
-//************* Ativar código quando as pendencias do módulo do RH estiverem prontos ***************
+//************* Ativar código quando as pendencias dos módulos do RH e Chamados estiverem prontos ***************
 //                $perfilPessoa = new PerfilPessoa();
 //                $perfilPessoa->setIdPerfil();
 //                $perfilPessoa->setIdPessoa($idPessoa);
@@ -325,18 +356,15 @@ class Contrato {
                 if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
                     $fim = true;
                 } else {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
                 if ($fim) {
-                    $retorno = Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                     $pdo->commit();
-                    return $retorno;
+                    return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 } else {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
             }
             //************************************************************************************************
