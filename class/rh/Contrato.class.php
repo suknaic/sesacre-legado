@@ -460,6 +460,51 @@ class Contrato {
                 }
             }
             //*********************************************
+
+            //**************************** Carga Horaria dos Contratos permitidas são:20,24,30 e 44 ********************
+            $ch = $dadosContrato['nrCargaHoraria'];
+            if ($ch == 20 || $ch == 24 || $ch == 30 || $ch == 40 || $ch == 44) {
+                $cadatraContrato = true;
+            } else {
+                $cadatraContrato = false;
+            }
+
+            if (!$cadatraContrato) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'As Cargas Horárias Permitidas para Contratos são: 20,24,30,40 e 44.');
+            }
+            //**********************************************************************************************************
+
+            //******************************** Verifica a existencia do hifen na matricula *****************************
+            $matricula = $dadosContrato['nrMatricula'];
+            if (strpos($matricula, '-') == false) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'A matrícula informada é inválida.');
+            }
+            //**********************************************************************************************************
+
+            //*********************************** Valida data de admissão e demissão ***********************************
+            $dtAd = explode('/', $dadosContrato['dtAdmissao']);
+            $dAd = $dtAd[0];
+            $mAd = $dtAd[1];
+            $yAd = $dtAd[2];
+            if (!checkdate($mAd, $dAd, $yAd)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'A data de admissão informada é inválida.');
+            }
+
+            if (!empty($dadosContrato['dtDemissao'])) {
+                $dtDm = explode('/', $dadosContrato['dtDemissao']);
+                $dDm = $dtDm[0];
+                $mDm = $dtDm[1];
+                $yDm = $dtDm[2];
+                if (!checkdate($mDm, $dDm, $yDm)) {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'alert', 'A data de demissão informada é inválida.');
+                }
+            }
+            //**********************************************************************************************************
+
             $contrato->setId_contrato($dadosContrato['idContrato']);
             $contrato->setDt_admissao($dadosContrato['dtAdmissao']);
             $contrato->setDt_demissao($dadosContrato['dtDemissao']);
@@ -817,13 +862,13 @@ class Contrato {
             $pdo = $conexao->connect();
             $rh = new DaoSesContrato();
             $filtro = "";
-//***************************************************************
+            //***************************************************************
             $filter = array();
             if (!empty($nome)) {
-                $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%'";
+                $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%' or P.nm_pessoa ilike '%$nome%'";
             }
             if (!empty($cpf)) {
-                $filter[] = "PF.nr_cpf ilike '%$cpf%'";
+                $filter[] = "PF.nr_cpf = '%$cpf%'";
             }
             if (!empty($matricula)) {
                 $filter[] = "c.nr_matricula ilike '%$matricula%'";
@@ -840,7 +885,7 @@ class Contrato {
             } else {
                 return false;
             }
-//****************************************************************            
+            //****************************************************************
             $result = $rh->retornaTodosFuncionarios($pdo, $filtro, $ferias);
 
             if (!$result) {

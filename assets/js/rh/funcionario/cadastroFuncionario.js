@@ -921,11 +921,13 @@ $(document).ready(function () {
                     } else {
                         //CEP pesquisado não foi encontrado.
                         func.modalAlert("CEP não encontrado.");
+                        return false;
                     }
                 });
             } else {
                 //cep é inválido.
                 func.modalAlert("Formato de CEP inválido.");
+                return false;
             }
         } else {
             //cep sem valor, limpa formulário.
