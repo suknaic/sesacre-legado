@@ -11,7 +11,7 @@ class FinEntregaConfirmacaoModel {
     private $dt_entrega = null;
     private $dh_cadastramento = null;
     private $sit_entrega = null;
-    private $id_pedido =  null;
+    private $id_pedido = null;
     private $sucesso = false;
     private $msgRetorno = null;
 
@@ -88,7 +88,7 @@ class FinEntregaConfirmacaoModel {
     public function sucesso() {
         return $this->sucesso;
     }
-    
+
     public function getIdPedido() {
         return $this->id_pedido;
     }
@@ -751,8 +751,14 @@ class FinEntregaConfirmacaoModel {
             }
 
             $pedido = new Pedido();
-            $pedido->setIdPedido($ordem[0]->idPedido);
+            $pedido->setIdPedido($this->id_pedido);
             $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+
+            if (!$pedido->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
+            }
+
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");
@@ -774,6 +780,16 @@ class FinEntregaConfirmacaoModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao finalizar a ordem.");
             }
+
+            $pedido = new Pedido();
+            $pedido->setIdPedido($this->id_pedido);
+            $pedido->atualizaStatusSituacaoOficialPedido($pdo);
+
+            if (!$pedido->sucesso()) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", $pedido->getMsgRetorno());
+            }
+
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", "Entrega Finalizada com sucesso");

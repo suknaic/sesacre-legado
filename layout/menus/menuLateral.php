@@ -295,10 +295,6 @@
                                 </li>
 
                                 <li>
-                                    <a href="/pages/financeiro/ordem/index.php">Ordem</a>
-                                </li>
-
-                                <li>
                                     <a href="#">
                                         <span class="menu-title">Gerenciar Ordem</span>
                                         <i class="arrow"></i>
@@ -306,7 +302,7 @@
 
                                     <ul class="collapse">
                                         <li>
-                                            <a href="/pages/financeiro/gdof/documentoFiscal/pesquisar_documento/">Ordem</a>
+                                            <a href="/pages/financeiro/ordem/index.php">Ordem</a>
                                         </li>
 
                                         <li>
