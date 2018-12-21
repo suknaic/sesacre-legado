@@ -44,47 +44,47 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
             //Modal Alert
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
-            <div id="modalContratoLotacao" class="modal fade modalContratoLotacao" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">    
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close fecharModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 id="modal_titulo" class="modal-title">Titulo</h4>
-                        </div>
-                        <div id="modal-corpo"class="modal-body">
-                            <input type="hidden"  id="id_contrato_lotacao" name="id_contrato_lotacao" value="" />
-                            <input type="hidden"  id="nr_ch_editar2" name="nr_ch_editar2" value="" />
-                            <input type="hidden"  id="id_funcao_editar" name="id_funcao_editar" value="" />
-                            <input type="hidden"  id="id_lotacao_editar" name="id_lotacao_editar" value="" />
-                            <div class="form-group">
-                                <div class="col-sm-4 valor_editar">
-                                    <label>Carga Horária:</label>
-                                    <div class="mui-textfield">
-                                        <input type="text"  id="nr_ch_editar" name="nr_ch_editar" required="" class="form-control cargaHorariaEditar nr"/>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 dataIni_editar">
-                                    <label>Data de inicio</label>
-                                    <div class="mui-textfield mui-textfield">
-                                        <input type="text"  id="dt_inicio_editar" name="dt_inicio_editar" required="" class="form-control dtInicio_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 dataPre_editar">
-                                    <label>Data de Fim</label>
-                                    <div class="mui-textfield mui-textfield">
-                                        <input type="text"  id="dt_fim_editar" name="dt_fim_editar" required="" class="form-control dtFim_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-flat btn-success AtualizarItem">Atualizar Item</button>
-                            <button type="button" class="btn btn-flat btn-danger fecharModal" data-dismiss="modal">Fechar</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
+<!--            <div id="modalContratoLotacao" class="modal fade modalContratoLotacao" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">    -->
+<!--                <div class="modal-dialog modal-lg">-->
+<!--                    <div class="modal-content">-->
+<!--                        <div class="modal-header">-->
+<!--                            <button type="button" class="close fecharModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--                            <h4 id="modal_titulo" class="modal-title">Titulo</h4>-->
+<!--                        </div>-->
+<!--                        <div id="modal-corpo"class="modal-body">-->
+<!--                            <input type="hidden"  id="id_contrato_lotacao" name="id_contrato_lotacao" value="" />-->
+<!--                            <input type="hidden"  id="nr_ch_editar2" name="nr_ch_editar2" value="" />-->
+<!--                            <input type="hidden"  id="id_funcao_editar" name="id_funcao_editar" value="" />-->
+<!--                            <input type="hidden"  id="id_lotacao_editar" name="id_lotacao_editar" value="" />-->
+<!--                            <div class="form-group">-->
+<!--                                <div class="col-sm-4 valor_editar">-->
+<!--                                    <label>Carga Horária:</label>-->
+<!--                                    <div class="mui-textfield">-->
+<!--                                        <input type="text"  id="nr_ch_editar" name="nr_ch_editar" required="" class="form-control cargaHorariaEditar nr"/>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-4 dataIni_editar">-->
+<!--                                    <label>Data de inicio</label>-->
+<!--                                    <div class="mui-textfield mui-textfield">-->
+<!--                                        <input type="text"  id="dt_inicio_editar" name="dt_inicio_editar" required="" class="form-control dtInicio_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-4 dataPre_editar">-->
+<!--                                    <label>Data de Fim</label>-->
+<!--                                    <div class="mui-textfield mui-textfield">-->
+<!--                                        <input type="text"  id="dt_fim_editar" name="dt_fim_editar" required="" class="form-control dtFim_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <br>-->
+<!--                        <div class="modal-footer">-->
+<!--                            <button type="button" class="btn btn-flat btn-success AtualizarItem">Atualizar Item</button>-->
+<!--                            <button type="button" class="btn btn-flat btn-danger fecharModal" data-dismiss="modal">Fechar</button>-->
+<!--                        </div>-->
+<!--                    </div> /.modal-content -->
+<!--                </div></.modal-dialog -->
+<!--            </div> /.modal -->
             <div class="boxed">
 
                 <!--CONTENT CONTAINER-->
@@ -236,7 +236,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         CPF: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" placeholder="___.___.___-__" required="true">
                                                         </div>
@@ -245,7 +245,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         Registro Geral: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_rg" id="nr_rg" required="true">
                                                         </div>
@@ -315,7 +315,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         Número do Cartão SUS:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_cns" id="nr_cns" placeholder="___ ____ ____ ____">
                                                         </div>
@@ -445,7 +445,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                 </div>
                                                 <div class="form-group">    
                                                     <div class="col-md-2"></div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-3">
                                                         Logradouro: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -463,7 +463,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <input type="text" class="form-control" name="ds_complemento" id="ds_complemento">
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-md-2">
+                                                        N°: <span class="text-danger">*</span>
+                                                        <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                                </span>
+                                                            <input type="number" class="form-control" name="nr_endereco" id="nr_endereco" min="0" required="true">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group"> 
                                                     <div class="col-md-2"></div>
@@ -480,7 +488,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         CEP:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
                                                         </div>
@@ -501,7 +509,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         Telefone Residêncial:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_telefone_residencial" id="nr_telefone_residencial" placeholder="(__) ____-____">
                                                         </div>
@@ -510,7 +518,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         Telefone Celular: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
-                                                                <p class="fa fa-file-text-o inputPFa"></p>
+                                                                <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                             </span>
                                                             <input type="text" class="form-control" name="nr_telefone_celular" id="nr_telefone_celular" required="true" placeholder="(__) _ ____-____" >
                                                         </div>
@@ -568,7 +576,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             Carga Horária: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
-                                                                    <p class="fa fa-file-text-o inputPFa"></p>
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                 </span>
                                                                 <input type="text" class="form-control nr" name="nr_carga_horaria" id="nr_carga_horaria" required="true">
                                                             </div>
@@ -646,7 +654,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 Carga Horária: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
-                                                                        <p class="fa fa-file-text-o inputPFa"></p>
+                                                                        <p class="fa fa-sort-numeric-asc inputPFa"></p>
                                                                     </span>
                                                                     <input type="text" class="form-control nr" name="nr_carga_horaria2" id="nr_carga_horaria2" required="true">
                                                                 </div>

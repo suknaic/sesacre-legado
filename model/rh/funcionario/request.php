@@ -23,24 +23,31 @@ switch ($_REQUEST['acao']) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
+
+            //**********************************************************************************************************************************************
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //******************************************************************************************************************
+            //**********************************************************************************************************************************************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosCompetencia = filter_input(INPUT_POST, 'dadosCompetencia', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //******************************************************************************************************************
+            //**********************************************************************************************************************************************
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //***************************************************************
+            //**********************************************************************************************************************************************
+
+            //********************************************* Valida E-mail **********************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
             }
-            $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
-            if (!$validaCpf) {
+            //**********************************************************************************************************
+
+            //************************************************** Valida Cpf ********************************************
+            if (!Metodos::validaCPF(trim($dadosPessoaFisica['cpf']))) {
                 echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF.");
                 return;
             }
-            //*************************************************
+            //**********************************************************************************************************
+
             $contrato = new Contrato();
             echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
             return;
@@ -58,20 +65,22 @@ switch ($_REQUEST['acao']) {
                 return;
             }
 
+            //**********************************************************************************************************************************************
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //******************************************************************************************************************
+            //**********************************************************************************************************************************************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //******************************************************************************************************************
+            //**********************************************************************************************************************************************
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //***************************************************************
+            //**********************************************************************************************************************************************
+
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
             }
-            $validaCpf = Metodos::validaCPF(trim($dadosPessoaFisica['cpf']));
-            if (!$validaCpf) {
-                echo Metodos::retornoAjax("Erro", "alert", "CPF inválido, tente com outro número de CPF.");
+
+            if (!Metodos::validaCPF(trim($dadosPessoaFisica['cpf']))) {
+                echo Metodos::retornoAjax("Erro", "alert", "O CPF informado é inválido, tente com outro número de CPF.");
                 return;
             }
 

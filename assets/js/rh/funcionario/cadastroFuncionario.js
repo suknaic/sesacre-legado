@@ -522,7 +522,6 @@ $(document).ready(function () {
     });
     //******************************************************************************************
     $("body").on("click", ".btn-add", function (e) {
-
         var competenciaId = $("#id_competencia").val();
         if (competenciaId == 0) {
             func.modalAlert('Informe a Competência.');
