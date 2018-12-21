@@ -325,7 +325,8 @@ class VincularTramitacao {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
     }
-
+    
+    
     function listaLotacaoTipoPorUsuarioAnulacaoEmpenho() {
         $opcoes = "<option value=0>Selecione o Tipo de Remetente/Remetente</option>";
         try {

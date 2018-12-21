@@ -159,7 +159,6 @@ function lista() {
             "dados": dados
         },
         "success": function (response) {
-            console.log(response);
             func.carregaTabelaPadrao('tabela', response, [4], true);
         }
     });

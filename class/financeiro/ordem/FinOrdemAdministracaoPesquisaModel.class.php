@@ -112,7 +112,7 @@ class FinOrdemAdministracaoPesquisaModel {
 
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->retornaReativacaoAdministracaoOrdem($pdo, $this->condicoes());
-
+            
             if (!$daoFinOrdemAdministracao->Sucesso()) {
                 return "";
             }
@@ -148,7 +148,7 @@ class FinOrdemAdministracaoPesquisaModel {
     private function condicoes() {
         try {
             $condicoes[] = array('ordem.nr_ordem', '=', $this->getNrOrdem(), 'string');
-            $condicoes[] = array('ordem.aa_ordem', '=', $this->getAaOrdem(), 'ano');
+            $condicoes[] = array('ordem.aa_ordem', '=', $this->getAaOrdem(), 'string');
             $condicoes[] = array('fornecedor.id_pessoa', '=', $this->getFornecedor(), 'int');
             $condicoes[] = array('contrato.nr_contrato', '=', $this->getNrContrato(), 'string');
             $condicoes[] = array('pedido.nr_pedido', '=', $this->getNrPedido(), 'string');
