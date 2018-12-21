@@ -524,7 +524,7 @@ class Contrato {
                     return $retorno;
                 }
                 $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
-                //*********************************Contrato / Lotação*************************************************
+                //*********************************Contrato / Lotação***************************************************
                 if (count($dadosContratoLotacao) > 0) {
                     foreach ($dadosContratoLotacao as $linha => $v) {
                         $contrato->setCarga_horaria_lotacao($v['chLotacao']);
@@ -533,6 +533,27 @@ class Contrato {
                         $contrato->setDt_inicio($v['dt_inicio']);
                         $contrato->setDt_fim($v['dt_fim']);
 
+                        //************************ Valida data inicio e fim do contrato da lotação *********************
+                        $dtIni = explode('/', $v['dt_inicio']);
+                        $dIni = $dtIni[0];
+                        $mIni = $dtIni[1];
+                        $yIni = $dtIni[2];
+                        if (!checkdate($mIni, $dIni, $yIni)) {
+                            return Metodos::retornoAjax('Erro', 'alert', 'A data de início do contrato é inválida.');
+                        }
+
+                        if (!empty($v['dt_fim'])) {
+                            $dtFim = explode('/', $v['dt_fim']);
+                            $dFim = $dtFim[0];
+                            $mFim = $dtFim[1];
+                            $yFim = $dtFim[2];
+                            if (!checkdate($mFim, $dFim, $yFim)) {
+                                return Metodos::retornoAjax('Erro', 'alert', 'A data de fim do contrato é inválida.');
+                            }
+                        }
+                        //**********************************************************************************************
+
+                        //**********************************************************************************************
                         $rs = $contrato->insertContratoLotacao($pdo);
                         if ($rs != "Sucesso") {
                             $sucesso = false;
@@ -546,7 +567,9 @@ class Contrato {
                             $pdo->rollBack();
                             return $retorno;
                         }
-                        //*********************histórico********************************************************************
+                        //**********************************************************************************************
+
+                        //*********************histórico****************************************************************
                         $data = date('Y-m-d H:i');
                         $contrato->setDs_observacao("Cadastro do Contrato");
                         $contrato->setId_contrato_situacao(NULL);
@@ -672,6 +695,8 @@ class Contrato {
                 $pdo->rollBack();
                 return $retorno;
             }
+
+
 
             $rs = $contrato->updateContratoLotacao($pdo);
 
@@ -868,7 +893,7 @@ class Contrato {
                 $filter[] = "unaccent(P.nm_pessoa) ilike '%$nome%' or P.nm_pessoa ilike '%$nome%'";
             }
             if (!empty($cpf)) {
-                $filter[] = "PF.nr_cpf = '%$cpf%'";
+                $filter[] = "PF.nr_cpf = '".Metodos::limpaCPF_CNPJ($cpf)."'";
             }
             if (!empty($matricula)) {
                 $filter[] = "c.nr_matricula ilike '%$matricula%'";
