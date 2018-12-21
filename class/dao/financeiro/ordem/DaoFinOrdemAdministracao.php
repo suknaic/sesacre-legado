@@ -127,7 +127,7 @@ class DaoFinOrdemAdministracao extends FinOrdemAdministracaoTb {
                         left join ses_pessoa_fisica as pf
                         on pf.id_pessoa = pessoa.id_pessoa
                         left join ses_pessoa_juridica as pj
-                        on pj.id_pessoa = pessoa.id_pessoa";
+                        on pj.id_pessoa = pessoa.id_pessoa ".$strQuery;
 
                 $stmt = $pdo->prepare($sql);
 

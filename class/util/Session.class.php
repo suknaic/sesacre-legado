@@ -11,7 +11,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/ErroExcept.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesPessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/RecursoUtil.class.php";
 
-class Session extends RecursoUtil{
+class Session extends RecursoUtil {
 
     private $logado = FALSE;
     private $idUser = null;
@@ -43,16 +43,16 @@ class Session extends RecursoUtil{
     function setPerfis($perfis) {
         $this->perfis = $perfis;
     }
-    
+
     public function getOpcao() {
         return $this->opcao;
     }
+
     public function setOpcao($opcao) {
         $this->opcao = $opcao;
         return $this;
     }
 
-    
     public function __construct($opcao = null) {
         $this->opcao = $opcao;
         switch ($opcao) {
@@ -200,32 +200,32 @@ class Session extends RecursoUtil{
             
         }
     }
-    
+
     /**
      * Faz o negocio acontecer
      */
-    public function recurso(PDO $pdo = null){
-        try{          
-            if(empty($pdo)){
+    public function recurso(PDO $pdo = null) {
+        try {
+            if (empty($pdo)) {
                 $conexao = new Conexao();
-                $pdo = $conexao->connect(); 
-            }            
-            $this->setIdPessoa($this->idUser);            
+                $pdo = $conexao->connect();
+            }
+            $this->setIdPessoa($this->idUser);
             $resultado = $this->validaRecursoUsuario($pdo);
-            if(!$resultado){
+            if (!$resultado) {
                 echo "Resultado false";
-                if($this->opcao == "ajax"){
+                if ($this->opcao == "ajax") {
                     echo "SessaoExpirada";
                     exit;
-                }else{
+                } else {
                     header("location:" . "/pages/index.php?permi=1");
                     exit;
                 }
-            }                                                
-            return true;                                    
-        } catch (Exception $ex) {            
+            }
+            return true;
+        } catch (Exception $ex) {
             return false;
-        }                
+        }
     }
 
     /**
@@ -597,7 +597,7 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
     public function vPDiariasSolicitacao() {
         if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_SOLICITACAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
@@ -608,6 +608,7 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
     public function vPDiariasAutorizacao() {
         if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_AUTORIZACAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
@@ -618,7 +619,7 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO DIÁRIAS
     public function vPDiariasPermissoes() {
         if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_DIARIA_PERMISSAO) && !$this->verificaPermissao(PERFIL_DIARIA_ZEUS)) {
@@ -629,7 +630,7 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL
     public function vPContabilAdministracao() {
         if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_ADMINISTRACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
@@ -640,7 +641,7 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - LIQUIDAÇÃO
     public function vPContabilLiquidacao() {
         if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_LIQUIDACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
@@ -651,12 +652,10 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
-     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - ANULAÇÃO DE EMEPENHO
-    public function vPContabilEmpenhoAnulacao() {
-        if (!$this->verificaPermissao(PERFIL_TI) 
-                && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO_ANULACAO) 
-                && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - LIQUIDAÇÃO
+    public function vPAutorizaAdministracaoOrdem() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_LIQUIDACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
 
             RETURN FALSE;
         } else {
@@ -664,12 +663,21 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - ANULAÇÃO DE EMEPENHO
+    public function vPContabilEmpenhoAnulacao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO_ANULACAO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - EMPENHO
     public function vPContabilEmpenho() {
-        if (!$this->verificaPermissao(PERFIL_TI)                 
-                && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO)
-                && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_EMPENHO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
 
             RETURN FALSE;
         } else {
@@ -677,12 +685,21 @@ class Session extends RecursoUtil{
         }
         RETURN FALSE;
     }
-    
+
     //VERIFICA SE POSSUI ACESSO AO MÓDULO CONTÁBIL - EMPENHO
     public function vPContabilPagamento() {
-        if (!$this->verificaPermissao(PERFIL_TI)                 
-                && !$this->verificaPermissao(PERFIL_CONTABIL_PAGAMENTO)
-                && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_CONTABIL_PAGAMENTO) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
+
+            RETURN FALSE;
+        } else {
+            RETURN TRUE;
+        }
+        RETURN FALSE;
+    }
+
+    //VERIFICA SE POSSUI ACESSO AO MÓDULO ORDEM ADMINISTRACAO  - AUTORIZA
+    public function vPOrdemAdministracao() {
+        if (!$this->verificaPermissao(PERFIL_TI) && !$this->verificaPermissao(PERFIL_ADMINISTRACAO_ORDEM_ADMINISTRADOR) && !$this->verificaPermissao(PERFIL_CONTABIL_ZEUS)) {
 
             RETURN FALSE;
         } else {
