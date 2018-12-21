@@ -457,6 +457,7 @@ switch ($_REQUEST['acao']) {
     case 'listaPaisOption':
         try {
             $pais = new Pais();
+            $pais->setIdPais($_REQUEST['idPais'] == null ? null:$_REQUEST['idPais']);
             echo $pais->retornaOptionPaises();
             return;
             break;

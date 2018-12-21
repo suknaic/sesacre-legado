@@ -168,7 +168,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="tp_sexo" class="form-control">
+                                                            <select id="tp_sexo" class="form-control select">
                                                                 <option value="0">Selecione o Sexo</option>
                                                                 <option value="1">Feminino</option>
                                                                 <option value="2">Masculino</option>
@@ -188,13 +188,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                 <div class="form-group">
                                                     <div class="col-md-1"></div>
                                                     <div class="col-md-3">
-                                                        Naturalidade: 
-                                                        País <span class="text-danger">*</span>
+                                                        País: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_pais_naturalidade" class="form-control pais">
+                                                            <select id="id_pais_naturalidade" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -208,7 +207,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_estado_naturalidade" class="form-control estado">
+                                                            <select id="id_estado_naturalidade" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -222,7 +221,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_naturalidade" class="form-control idCidade">
+                                                            <select id="id_naturalidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Naturalidade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -266,7 +265,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_estado" class="form-control">
+                                                            <select id="id_estado" class="form-control select">
                                                                 <option value="0">Selecione o Estado</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -313,12 +312,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         </div>
                                                     </div> 
                                                     <div class="col-md-3">
-                                                        N° do Cartão SUS:
+                                                        Número do Cartão SUS:
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nr_cns" id="nr_cns">
+                                                            <input type="text" class="form-control" name="nr_cns" id="nr_cns" placeholder="___ ____ ____ ____">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
@@ -327,7 +326,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_escolaridade" class="form-control">
+                                                            <select id="id_escolaridade" class="form-control select">
                                                                 <option value="0">Selecione a Escolaridade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -346,7 +345,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_competencia" class="form-control formacao competencia">
+                                                                <select id="id_competencia" class="form-control formacao competencia select">
                                                                     <option value="0">Selecione a Competência</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -407,7 +406,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_pais_endereco" class="form-control pais">
+                                                            <select id="id_pais_endereco" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -421,7 +420,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_estado_endereco" class="form-control estado">
+                                                            <select id="id_estado_endereco" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -435,7 +434,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_cidade" class="form-control idCidade">
+                                                            <select id="id_cidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Cidade</option>
                                                                 <?php
                                                                 // echo $lotacoes;
@@ -531,7 +530,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_vinculo" class="form-control">
+                                                                <select id="id_vinculo" class="form-control select">
                                                                     <option value="0">Selecione o Vínculo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -545,7 +544,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_pessoa_juridica" class="form-control">
+                                                                <select id="id_pessoa_juridica" class="form-control select">
                                                                     <option value="0">Selecione a Empresa</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -589,7 +588,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                                <select id="id_cargo" class="form-control">
+                                                                <select id="id_cargo" class="form-control select">
                                                                     <option value="0">Selecione do Cargo</option>
                                                                     <?php
                                                                     // echo $lotacoes;
@@ -617,7 +616,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_lotacao" class="form-control">
+                                                                    <select id="id_lotacao" class="form-control select">
                                                                         <option value="0">Selecione Lotação</option>                                                                
                                                                         <?php
                                                                         // echo $lotacoes;
@@ -631,7 +630,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_funcao" class="form-control">
+                                                                    <select id="id_funcao" class="form-control select">
                                                                         <option value="0">Selecione Função</option>                                                                
                                                                         <?php
                                                                         // echo $lotacoes;
@@ -728,9 +727,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             </button>
                                         </div>
                                         <br>
-
                                         <!--===================================================-->
-
                                     </div>
                                     <!-- <div class="panel-body"> -->
                                     <!-- Footer Form -->
@@ -808,9 +805,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
-
-
-
     </body>
 </html>

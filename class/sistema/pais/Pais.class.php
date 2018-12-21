@@ -284,7 +284,11 @@ class Pais {
                 return $retorno;
             } else {
                 foreach ($result as $v) {
-                    $retorno .= "<option value = '" . $v['id_pais'] . "'>" . $v['nm_pais'] . "</option>";
+                    if ($this->idPais == $v['id_pais']) {
+                        $retorno .= "<option value = '" . $v['id_pais'] . "' selected>" . $v['nm_pais'] . "</option>";
+                    } else {
+                        $retorno .= "<option value = '" . $v['id_pais'] . "'>" . $v['nm_pais'] . "</option>";
+                    }
                 }
             }
 
