@@ -29,16 +29,16 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('click', '.excluir-pagamento', function (e) {
+    $('body').on('click', '.excluir', function (e) {
 
         var $this = $(this);
         var item = $this.closest('tr').data('objeto');
-        var id = item.id_pagamento;
+        var id = item.id_ordem_administracao;
 
         bootbox.confirm({
             title: 'Cancelamento do Pagamento',
             message: 'Você tem Certeza que deseja continuar com o \n\
-                Cancelamento do Pagamento <span class="text-danger">' + item.nr_pagamento + '</span>?\n\
+                Cancelamento da Reativação da Ordem <span class="text-danger">' + item.nr_ordem + '/'+item.aa_ordem+'</span> ?\n\
                 <br> \n\
                 <div class="form-group"> \n\
                     <label for="rem_justificativa">Justificativa: <span class="text-danger">*</span></label> \n\
@@ -61,7 +61,6 @@ $(document).ready(function () {
             },
 
             callback: function (result) {
-
                 if (result) {
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);

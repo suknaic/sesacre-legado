@@ -508,7 +508,7 @@ $(document).ready(function () {
     $('body').on('click', '.btn-finaliza-descumprimento', function (e) {
         var $this = $(this);
         var id = $("#idOrdem").val();
-
+        var idPedido = $("#idPedido").val();
 
         bootbox.confirm({
             title: func.msgCaixaDeConfirmacao,
@@ -526,7 +526,8 @@ $(document).ready(function () {
             callback: function (result) {
                 if (result) {
                     var dados = {
-                        "idOrdem": id
+                        "idOrdem": id,
+                        "idPedido": idPedido
                     }
 
                     if (id == "") {

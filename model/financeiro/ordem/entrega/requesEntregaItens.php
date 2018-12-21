@@ -6,6 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinProtocoloMo
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaItensModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinEntregaConfirmacaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemItensModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 
 $session = new Session('ajax');
 
@@ -92,6 +93,7 @@ switch ($_REQUEST['acao']) {
             $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
+            $finEntregaConfirmacaoModel->setIdPedido($itens["idPedido"]);
             echo $finEntregaConfirmacaoModel->finalizaEntregaPorSupressao();
             return;
             break;
@@ -108,6 +110,7 @@ switch ($_REQUEST['acao']) {
             $itens = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $finEntregaConfirmacaoModel = new FinEntregaConfirmacaoModel();
             $finEntregaConfirmacaoModel->setIdOrdem($itens["idOrdem"]);
+            $finEntregaConfirmacaoModel->setIdPedido($itens["idPedido"]);
             echo $finEntregaConfirmacaoModel->finalizaEntregaPorDescumprimento();
             return;
             break;
