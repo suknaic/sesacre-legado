@@ -134,6 +134,15 @@ class pessoaJuridica {
             $pessoaJuridica->setDt_fundacao($this->dt_fundacao);
             $pessoaJuridica->setId_pessoa($this->id_pessoa);
             //***********************************************************************
+
+            //******************************************** Valida cnpj *************************************************
+            if (!Metodos::validaCNPJ($this->nr_cnpj)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+            }
+            //**********************************************************************************************************
+
+            //**************************** Verifica a existencia do cnpj na base de dados ******************************
             $validaCnpj = $pessoaJuridica->validarCnpj($pdo);
             if ($validaCnpj) {
                 $this->setSuccess(false);
@@ -141,6 +150,20 @@ class pessoaJuridica {
                 $pdo->rollBack();
                 return;
             }
+            //**********************************************************************************************************
+
+            //**************************************** Valida a data da fundação ***************************************
+            if (!empty($this->dt_fundacao)) {
+                $dtFund = explode('/', $this->dt_fundacao);
+                $d = $dtFund[0];
+                $m = $dtFund[1];
+                $y = $dtFund[2];
+                if (!checkdate($m, $d, $y)) {
+                    return Metodos::retornoAjax('Erro', 'alert', 'A data da fundação informada é inválida.');
+                }
+            }
+            //**********************************************************************************************************
+
             //*****************************************
             $result = $pessoaJuridica->insert($pdo);
             //*****************************************
@@ -162,7 +185,6 @@ class pessoaJuridica {
                 return;
             }
         } catch (Exception $exc) {
-            //return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
             return false;
         }
     }

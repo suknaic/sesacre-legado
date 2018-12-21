@@ -96,7 +96,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="id_lotacao" class="form-control">
-                                                            <option value="0">Selecione Lotação</option>                                                                
+                                                            <option value="0">Selecione a Lotação</option>
                                                             <?php
                                                             // echo $lotacoes;
                                                             ?>
@@ -116,7 +116,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    Matricula:
+                                                    Matrícula:
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -132,7 +132,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
                                                         <select id="id_vinculo" class="form-control">
-                                                            <option value="0">Selecione Vínculo</option>                                                                
+                                                            <option value="0">Selecione o Vínculo</option>
                                                             <?php
                                                             // echo $lotacoes;
                                                             ?>

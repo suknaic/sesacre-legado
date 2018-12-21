@@ -322,12 +322,12 @@ class Fornecedor {
 
                     if ($verificaPf == false) {
                         $pessoaFisica->setTp_sexo($this->pessoaFisica['sexo']);
-
-                        if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
-                            $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
-                        } else {
-                            return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
-                        }
+                        $pessoaFisica->setNr_cpf($this->pessoaFisica['cpf']);
+//                        if (Metodos::validaCPF($this->pessoaFisica['cpf'])) {
+//                            $pessoaFisica->setNr_cpf(Metodos::limpaCPF_CNPJ($this->pessoaFisica['cpf']));
+//                        } else {
+//                            return Metodos::retornoAjax('Erro', 'alert', 'O CPF informado é inválido.');
+//                        }
 
                         $pessoaFisica->cadastrarPessoaFisica($pdo);
                         if (!$pessoaFisica->getSuccess()) {
@@ -349,12 +349,12 @@ class Fornecedor {
 
                     if ($verificaPj == false) {
                         $pessoaJuridica->setNm_fantasia($this->pessoaJuridica['nmFantasia']);
-
-                        if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
-                            $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
-                        } else {
-                            return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
-                        }
+                        $pessoaJuridica->setNr_cnpj($this->pessoaJuridica['cnpj']);
+//                        if (Metodos::validaCNPJ($this->pessoaJuridica['cnpj'])) {
+//                            $pessoaJuridica->setNr_cnpj(Metodos::limpaCPF_CNPJ($this->pessoaJuridica['cnpj']));
+//                        } else {
+//                            return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+//                        }
 
                         $pessoaJuridica->setDs_insc_estadual(empty($this->pessoaJuridica['nrEstudal']) ? null:trim($this->pessoaJuridica['nrEstudal']));
                         $pessoaJuridica->setDs_insc_municipal(empty($this->pessoaJuridica['nrMunicipal']) ? null:trim($this->pessoaJuridica['nrMunicipal']));
