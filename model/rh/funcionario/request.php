@@ -70,6 +70,8 @@ switch ($_REQUEST['acao']) {
             //**********************************************************************************************************************************************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
+            $dadosCompetencia = filter_input(INPUT_POST, 'dadosCompetencia', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //**********************************************************************************************************************************************
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
@@ -85,7 +87,7 @@ switch ($_REQUEST['acao']) {
             }
 
             $contrato = new Contrato();
-            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosContrato, $dadosContratoLotacao);
+            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
             return;
             break;
         } catch (Exception $e) {

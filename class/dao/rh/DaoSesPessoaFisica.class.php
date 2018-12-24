@@ -287,8 +287,6 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
      * @return boolean/Array
      */
     function retornaCompetencia($pdo) {
-
-        //$retorno = FALSE;
         $sql = "select c.id_competencia, c.id_pessoa_fisica, c.id_escolaridade_formacao, ef.nm_escolaridade_formacao, e.nm_escolaridade
                 FROM ses_competencia c
                 inner join ses_escolaridade_formacao ef on c.id_escolaridade_formacao = ef.id_escolaridade_formacao
@@ -305,7 +303,26 @@ class DaoSesPessoaFisica extends SesPessoaFisica {
             } else {
                 return FALSE;
             }
-            //  return $retorno;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return FALSE;
+        }
+    }
+
+    function retornaCompetenciaPessoaFisica($pdo) {
+        try {
+            $sth = $pdo->prepare("select c.id_competencia, c.id_escolaridade_formacao
+                                    FROM ses_competencia c
+                                      inner join ses_escolaridade_formacao ef on c.id_escolaridade_formacao = ef.id_escolaridade_formacao
+                                      inner join ses_escolaridade e on ef.id_escolaridade = e.id_escolaridade
+                                        WHERE c.id_pessoa_fisica  = :idPessoaFisica");
+            $sth->bindValue(":idPessoaFisica", $this->getId_pessoa_fisica(), PDO::PARAM_INT);
+            $sth->execute();
+            if ($sth->rowCount() >= 1) {
+                return $sth->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                return FALSE;
+            }
         } catch (PDOException $e) {
             echo $e->getMessage();
             return FALSE;

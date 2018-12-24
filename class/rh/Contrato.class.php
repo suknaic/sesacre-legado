@@ -374,7 +374,7 @@ class Contrato {
     }
 
 //************************************************************************************************************************
-    public function editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosContrato, $dadosContratoLotacao) {
+    public function editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao) {
         try {
             $sucesso = false;
             $retorno = "";
@@ -604,13 +604,70 @@ class Contrato {
                     return $retorno;
                 }
             } else {
+                //************************************* Busca dados do contrato ****************************************
                 $busca = $contrato->retornaContrato($pdo);
+                //******************************************************************************************************
 
                 if (!$busca) {
                     $sucesso = FALSE;
                     $retorno = Metodos::retornoAjax("Erro", "console", $busca);
                     $pdo->rollBack();
                     return $retorno;
+                }
+
+                //********************************* Busca Competencia Pessoa Fisica ************************************
+                $competencias = $pessoaFisica->retornaCompetenciaPessoaFisica($busca['id_pessoa_fisica']);
+                //******************************************************************************************************
+
+                if ($competencias == null) {
+                    //********************** Cadastra as competencias caso não possua nenhuma **************************
+                    if (count($dadosCompetencia) > 0) {
+                        foreach ($dadosCompetencia as $linha => $v) {
+                            $pessoaFisica->setId_escolaridade_formacao_competencia($v['id_escolaridade_formacao']);
+                            $cadastra = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
+                            if ($cadastra != "Sucesso") {
+                                $pdo->rollBack();
+                                return $cadastra;
+                            }
+                        }
+                    }
+                    //**************************************************************************************************
+                } else {
+                    $telaCompetancias = array();
+                    foreach ($dadosCompetencia as $comp) {
+                        $telaCompetancias[] = $comp['id_escolaridade_formacao'];
+                    }
+                    $bancoCompetencias = array();
+                    foreach ($competencias as $bdComp) {
+                        $bancoCompetencias[] = $bdComp['id_escolaridade_formacao'];
+                    }
+
+                    $inserir = array_diff(array_unique($telaCompetancias), $bancoCompetencias);
+                    if (count($inserir) > 0) {
+                        foreach ($inserir as $idEscolaridadeFormacao) {
+                            $pessoaFisica->setId_escolaridade_formacao_competencia($idEscolaridadeFormacao);
+                            $cadastra = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
+                            if ($cadastra != "Sucesso") {
+                                $pdo->rollBack();
+                                return $cadastra;
+                            }
+                        }
+                    }
+
+                    $deletar = array_diff($bancoCompetencias, $telaCompetancias);
+                    if (count($deletar) > 0) {
+                        foreach ($competencias as $idEscolaridadeFormacaoBanco => $banco) {
+                            foreach ($deletar as $idEscolaridadeFormacaoTela => $tela) {
+                                if ($banco['id_escolaridade_formacao'] == $tela) {
+                                    $remover = $pessoaFisica->removerCompetencia($banco['id_competencia']);
+                                    if ($remover == 'Sucesso') {
+                                        unset($competencias[$idEscolaridadeFormacaoBanco]);
+                                        unset($deletar[$idEscolaridadeFormacaoTela]);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 $rs = $contrato->update($pdo);

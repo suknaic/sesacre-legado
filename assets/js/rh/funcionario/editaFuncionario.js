@@ -829,6 +829,17 @@ $(document).ready(function () {
                 return;
             }
 
+            //*************************** Competencias ********************************
+            if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
+                var DadosCompetencia = [];
+                $("#tabela tbody tr").each(function () {
+                    DadosCompetencia.push({
+                        id_escolaridade_formacao: $(this).find(".escolaridade").attr("idEscolaridadeFormacao")
+                    });
+                });
+            }
+            //**************************************************************************
+
             var DadosContrato_Lotacao = [];
             if (idContrato == 0) {
                 var x = 0;
@@ -879,31 +890,31 @@ $(document).ready(function () {
                 //*************************
             };
 
-            $campo = 0;
-            $i = 0;
-            $.each(DadosObrigatorio, function (index, value) {
-                $i++;
-                $campo = "";
-                if (value == 0 || value == "" || value == null) {
-                    if ($i <= 12) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-                    } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
-                    }
-                    $campo = 1;
-                    return false;
-                }
-            });
-            if ($campo == 1) {
-                return false;
-            }
-
-            if (x == 0) {
-                func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
-                return false;
-            }
+            // $campo = 0;
+            // $i = 0;
+            // $.each(DadosObrigatorio, function (index, value) {
+            //     $i++;
+            //     $campo = "";
+            //     if (value == 0 || value == "" || value == null) {
+            //         if ($i <= 12) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
+            //         } else if ($i >= 13 && $i <= 16) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+            //         } else if ($i >= 17 && $i <= 22) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
+            //         }
+            //         $campo = 1;
+            //         return false;
+            //     }
+            // });
+            // if ($campo == 1) {
+            //     return false;
+            // }
+            //
+            // if (x == 0) {
+            //     func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
+            //     return false;
+            // }
             //********************************************************************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
@@ -913,10 +924,13 @@ $(document).ready(function () {
                     "acao": "editarContrato",
                     "dadosPessoa": DadosPessoa,
                     "dadosPessoaFisica": DadosPessoaFisica,
+                    "dadosCompetencia": DadosCompetencia,
                     "dadosContrato": DadosContrato,
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
+                    console.log(response);
+                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

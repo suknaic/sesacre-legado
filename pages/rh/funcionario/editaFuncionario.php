@@ -370,7 +370,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     <table class="table table-striped table-bordered table-hover table-condensed" id="tabela">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th class="text-capitalize text-center">Formação</th> 
+                                                                                <th class="text-capitalize text-center">Curso</th>
                                                                                 <th class="text-capitalize text-center">Escolaridade</th>
                                                                                 <th class="text-capitalize text-center">Ação</th>
                                                                             </tr>
