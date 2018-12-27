@@ -360,9 +360,9 @@ $(document).ready(function () {
 
             },
             "success":
-                    function (response) {
-                        $("#corpoTabelaLotacao").html(response);
-                    }
+                function (response) {
+                    $("#corpoTabelaLotacao").html(response);
+                }
         });
     }
     //******************************************************************************************************************
@@ -494,12 +494,34 @@ $(document).ready(function () {
         //**********************************************************************************
         $("#modal_titulo").text("Lotação: " + $(this).closest(".lotacaoLinha").find(".lotacao").text() + "  /  Função: " + $(this).closest(".lotacaoLinha").find(".funcao").text());
         $("#id_contrato_lotacao").val($idContratoLotacao);
-        $("#nr_ch_editar2").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
+        // $("#nr_ch_editar2").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
         $("#nr_ch_editar").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
         $("#dt_inicio_editar").val($(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio"));
         $("#dt_fim_editar").val($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim"));
-        $("#id_funcao_editar").val($(this).closest(".lotacaoLinha").find(".funcao").attr("idFuncao"));
-        $("#id_lotacao_editar").val($(this).closest(".lotacaoLinha").find(".lotacao").attr("idLotacao"));
+        // $("#id_funcao_editar").val($(this).closest(".lotacaoLinha").find(".funcao").attr("idFuncao"));
+        // $("#id_lotacao_editar").val($(this).closest(".lotacaoLinha").find(".lotacao").attr("idLotacao"));
+
+        var idLinha = $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont');
+        // console.log(idLinha);
+        // return false;
+
+        $("body").on("click", ".AtualizarItem", function (e) {
+            var ch = $('#nr_ch_editar').val();
+            var dtIni = $('#dt_inicio_editar').val();
+            var dtFim = $('#dt_fim_editar').val();
+
+            $("#tabelaLotacao tbody tr").each(function () {
+                if (idLinha == $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont')) {
+                    var ch = $(this).find('td:eq(2)');
+                    console.log(ch[0]);
+                    // $(this).find('td:eq(2)').text(ch);
+                    // $(this).find('td:eq(3)').text(dtIni);
+                    // $(this).find('td:eq(4)').text(dtFim);
+                }
+            });
+
+            $('#modalContratoLotacao').modal('hide');
+        });
     });
     //******************************************************************************************************************
 
@@ -705,28 +727,58 @@ $(document).ready(function () {
     });
     //******************************************************************************************************************
 
-    //************************************************* Exlui Competência **********************************************
+    //************************************************* Exclui Competência *********************************************
     $("body").on("click", ".excluirLinha", function (e) {
         $(this).closest(".competenciaLinha").remove();
     });
     //******************************************************************************************************************
 
-    //*********************************************** Exclui Lotação **************************************************
+    //*********************************************** Exclui Lotação ***************************************************
     $("body").on("click", ".excluirLinhaLotacao", function (e) {
         $(this).closest(".lotacaoLinha").remove();
     });
     //******************************************************************************************************************
 
-    // ***************************** Mostra o campos de datav de demissão de acordo com o vinculo **********************
-       $("body").on("change", "#id_vinculo", function (e) {
-           var id = $(this).val();
-           if (id == 5) {
-               $(".demissao").show();
-           } else {
-               $(".demissao").hide();
-           }
-       });
-    // *****************************************************************************************************************
+    //*********************************************** Exclui Lotação ***************************************************
+    $("body").on("click", ".excluirLinhaLotacao", function (e) {
+        $(this).closest(".lotacaoLinha").remove();
+    });
+    //******************************************************************************************************************
+
+    //***************************** Mostra o campos de datav de demissão de acordo com o vinculo ***********************
+    // $("body").on("change", "#id_vinculo", function (e) {
+    //     var id = $(this).val();
+    //     if (id == 5) {
+    //         $(".demissao").show();
+    //     } else {
+    //         $(".demissao").hide();
+    //     }
+    // });
+    //******************************************************************************************************************
+
+    //************************************ Atualiza valores das Lotações do contrato ***********************************
+
+    // var idLinha = $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont');
+    // console.log(idLinha);
+    // return false;
+    //
+    // $("body").on("click", ".AtualizarItem", function (e) {
+    //     var ch = $('#nr_ch_editar').val();
+    //     var dtIni = $('#dt_inicio_editar').val();
+    //     var dtFim = $('#dt_fim_editar').val();
+    //
+    //     $("#tabelaLotacao tbody tr").each(function () {
+    //         if (idLinha) {
+    //
+    //         }
+    //         $(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch").html(ch);
+    //         $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").html(dtIni);
+    //         $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").html(dtFim);
+    //     });
+    //
+    //     $('#modalContratoLotacao').modal('hide');
+    // });
+    //******************************************************************************************************************
 
     //************************************************ Salva o contrato ************************************************
     $('body').on('click', '.btn-salvar', function (e) {
@@ -930,7 +982,6 @@ $(document).ready(function () {
                 },
                 "success": function (response) {
                     console.log(response);
-                    // return false;
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

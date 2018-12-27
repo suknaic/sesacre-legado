@@ -304,7 +304,7 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica = new Contrato();
             $pessoaFisica->retornaLotacaoFuncao($idContrato);
 
-            //return;
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
