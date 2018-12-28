@@ -195,9 +195,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_pais_naturalidade" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -209,9 +206,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado_naturalidade" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -223,9 +217,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_naturalidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Naturalidade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -267,9 +258,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado" class="form-control select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -304,10 +292,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado_civil" class="form-control">
-                                                                <option value="0">Selecione</option>                                                                
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
+                                                                <option value="0">Selecione</option>
                                                             </select>
                                                         </div>
                                                     </div> 
@@ -328,9 +313,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_escolaridade" class="form-control select">
                                                                 <option value="0">Selecione a Escolaridade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -347,9 +329,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_competencia" class="form-control formacao competencia select">
                                                                     <option value="0">Selecione a Competência</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -408,9 +387,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_pais_endereco" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -422,9 +398,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado_endereco" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -436,9 +409,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_cidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Cidade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -540,9 +510,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_vinculo" class="form-control select">
                                                                     <option value="0">Selecione o Vínculo</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -554,9 +521,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_pessoa_juridica" class="form-control select">
                                                                     <option value="0">Selecione a Empresa</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -598,9 +562,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_cargo" class="form-control select">
                                                                     <option value="0">Selecione do Cargo</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -625,10 +586,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_lotacao" class="form-control select">
-                                                                        <option value="0">Selecione Lotação</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                        <option value="0">Selecione Lotação</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -639,14 +597,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_funcao" class="form-control select">
-                                                                        <option value="0">Selecione Função</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                        <option value="0">Selecione Função</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
-
                                                         </div>    
                                                         <div class="form-group">    
                                                             <div class="col-md-1"></div>
@@ -761,27 +715,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
             </div>
             <!--===================================================-->
             <!--END CONTENT CONTAINER-->
-
             <!--MENU LATERAL-->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
             <!--END MENU LATERAL-->
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->

@@ -510,13 +510,25 @@ $(document).ready(function () {
             var dtIni = $('#dt_inicio_editar').val();
             var dtFim = $('#dt_fim_editar').val();
 
+            if (ch == 20 || ch == 24 || ch == 30 || ch == 40 || ch == 44) {
+                segue = true;
+            } else {
+                segue = false;
+            }
+
+            if (segue == false) {
+                func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
+                return false;
+            }
+
             $("#tabelaLotacao tbody tr").each(function () {
                 if (idLinha == $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont')) {
-                    var ch = $(this).find('td:eq(2)');
-                    console.log(ch[0]);
-                    // $(this).find('td:eq(2)').text(ch);
-                    // $(this).find('td:eq(3)').text(dtIni);
-                    // $(this).find('td:eq(4)').text(dtFim);
+                    $(this).find('.cargaLotacao').attr('ch', ch);
+                    $(this).find('.dataIni').attr('dt_inicio', dtIni);
+                    $(this).find('.dataFim').attr('dt_fim', dtFim);
+                    $(this).find('td:eq(2)').text(ch);
+                    $(this).find('td:eq(3)').text(dtIni);
+                    $(this).find('td:eq(4)').text(dtFim);
                 }
             });
 
@@ -572,7 +584,7 @@ $(document).ready(function () {
             return;
         }
 
-        //******** Controle de data e carga horária das lotações dos funcionários (Autor: Elivelton) *********
+        //************************** Controle de data e carga horária das lotações dos funcionário *********************
         seguir = 0;
         $("#tabelaLotacao tbody tr").each(function () {
             if (dataFimAntiga !== '') {
@@ -596,8 +608,6 @@ $(document).ready(function () {
                 }
 
                 if (dtFim > dataAtua) {
-                    console.log(parseInt(nr_carga_horaria));
-                    console.log(cargaHorariaLotacao);
                     if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
                         seguir = 3;
                         return;
@@ -756,30 +766,6 @@ $(document).ready(function () {
     // });
     //******************************************************************************************************************
 
-    //************************************ Atualiza valores das Lotações do contrato ***********************************
-
-    // var idLinha = $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont');
-    // console.log(idLinha);
-    // return false;
-    //
-    // $("body").on("click", ".AtualizarItem", function (e) {
-    //     var ch = $('#nr_ch_editar').val();
-    //     var dtIni = $('#dt_inicio_editar').val();
-    //     var dtFim = $('#dt_fim_editar').val();
-    //
-    //     $("#tabelaLotacao tbody tr").each(function () {
-    //         if (idLinha) {
-    //
-    //         }
-    //         $(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch").html(ch);
-    //         $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").html(dtIni);
-    //         $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").html(dtFim);
-    //     });
-    //
-    //     $('#modalContratoLotacao').modal('hide');
-    // });
-    //******************************************************************************************************************
-
     //************************************************ Salva o contrato ************************************************
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -893,21 +879,33 @@ $(document).ready(function () {
             //**************************************************************************
 
             var DadosContrato_Lotacao = [];
-            if (idContrato == 0) {
+            // if (idContrato == 0) {
                 var x = 0;
                 if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
                     x = 1;
                     $("#tabelaLotacao tbody tr").each(function () {
+                        var idContratoLotacao = null;
+                        if ($(this).find('.editarLinhaLotacao').attr('value') != undefined) {
+                            idContratoLotacao = $(this).find('.editarLinhaLotacao').attr('value');
+                        }
+
+                        var dtFim = null;
+                        if ($(this).find(".dataFim").attr("dt_fim") != undefined) {
+                            dtFim = $(this).find(".dataFim").attr("dt_fim").split('/').reverse().join('-');
+                        }
                         DadosContrato_Lotacao.push({
+                            idContratoLotacao: idContratoLotacao,
                             chLotacao: $(this).find(".cargaLotacao").attr("ch"),
                             idLotacao: $(this).find(".lotacao").attr("idLotacao"),
                             idFuncao: $(this).find(".funcao").attr("idFuncao"),
-                            dt_inicio: $(this).find(".dataIni").attr("dt_inicio"),
-                            dt_fim: $(this).find(".dataFim").attr("dt_fim")
+                            dt_inicio: $(this).find(".dataIni").attr("dt_inicio").split('/').reverse().join('-'),
+                            dt_fim: dtFim
                         });
                     });
                 }
-            }
+            // }
+            // console.log();
+            // return false;
             //******************************** Dados que são obrigatorios ************************************
             var DadosObrigatorio = {
                 //********* 1-12 **********

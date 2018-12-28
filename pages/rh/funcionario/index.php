@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/funcionario/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
@@ -34,18 +34,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
 
     <body>
         <div id="container" class="effect aside-float aside-bright mainnav-sm">
-
             <?php
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
-            //Modal Alert
-            require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/header.php";
+                //Modal Alert
+                require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
-
             <div class="boxed">
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
@@ -69,11 +66,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                         </button>
                                     </div>
                                     <div class="panel-heading ">
-                                        <h3 class="panel-title">Formulário
-
-                                        </h3>
+                                        <h3 class="panel-title">Formulário</h3>
                                     </div>
-
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formPesquisaFuncionario">
@@ -124,7 +118,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         <input type="text" class="form-control" name="matricula" id="matricula">
                                                     </div>
                                                 </div>
-
                                                 <div class="col-md-4">
                                                     Vínculo:
                                                     <div class="input-group">
@@ -139,7 +132,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         </select>
                                                     </div>
                                                 </div>
-                                                
                                             </div>    
                                             <!-- End <div class="form-group"> -->
                                         </div>
@@ -154,7 +146,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             </button>
                                         </div>
                                         <!-- End Form -->
-
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
@@ -190,50 +181,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                             </table>            
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
 
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -265,6 +238,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>
