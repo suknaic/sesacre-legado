@@ -357,14 +357,14 @@ class Contrato {
                     $fim = true;
                 } else {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
                 if ($fim) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 } else {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
+                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
                 }
             }
             //************************************************************************************************
@@ -419,8 +419,7 @@ class Contrato {
             $pessoa->editarPessoa($pdo);
             //********************************
             if ($pessoa->getSuccess() == false) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
             }
 
             //******************************************* Pessoa Fisica*************************************************
@@ -521,9 +520,8 @@ class Contrato {
                 $rs = $contrato->insert($pdo);
                 if ($rs != "Sucesso") {
                     $sucesso = false;
-                    $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "console", $rs);
                 }
                 $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
                 //*********************************Contrato / Lotação***************************************************
@@ -561,15 +559,13 @@ class Contrato {
                         $rs = $contrato->insertContratoLotacao($pdo);
                         if ($rs != "Sucesso") {
                             $sucesso = false;
-                            $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "console", $rs);
                         }
                         $idContratoLot = $pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq');
                         if (!(Log::SalvaLogI('ses_contrato_lotacao', $idContratoLot, $pdo))) {
-                            $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                         }
                         //**********************************************************************************************
 
@@ -581,15 +577,13 @@ class Contrato {
                         $rs1 = $contrato->insertContratoHistorico($pdo);
                         if ($rs1 != "Sucesso") {
                             $sucesso = false;
-                            $retorno = Metodos::retornoAjax("Erro", "console", $rs1);
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "console", $rs1);
                         }
                         $idContratoHist = $pdo->lastInsertId('ses_contrato_historico_id_contrato_historico_seq');
                         if (!(Log::SalvaLogI('ses_contrato_historico', $idContratoHist, $pdo))) {
-                            $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                         }
                         $sucesso = true;
                     }
@@ -601,9 +595,8 @@ class Contrato {
                     $sucesso = true;
                     $msg = STR_CADASTRO_SUCESSO;
                 } else {
-                    $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 }
             } else {
                 //************************************* Busca dados do contrato ****************************************
@@ -612,9 +605,8 @@ class Contrato {
 
                 if (!$busca) {
                     $sucesso = FALSE;
-                    $retorno = Metodos::retornoAjax("Erro", "console", $busca);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "console", $busca);
                 }
 
                 //********************************* Busca Competencia Pessoa Fisica ************************************
@@ -709,14 +701,12 @@ class Contrato {
                                 $rs = $contrato->updateContratoLotacao($pdo);
                                 if ($rs != "Sucesso") {
                                     $sucesso = false;
-                                    $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                                     $pdo->rollBack();
-                                    return $retorno;
+                                    return Metodos::retornoAjax("Erro", "console", $rs);
                                 }
                                 if (!(Log::SalvaLogU('ses_contrato_lotacao', $dcLotacao['idContratoLotacao'], $busca, $pdo))) {
-                                    $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                                     $pdo->rollBack();
-                                    return $retorno;
+                                    return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                                 }
                                 //**********************************************************************************************
                             }
@@ -769,9 +759,8 @@ class Contrato {
                 $rs = $contrato->update($pdo);
                 if ($rs != "Sucesso") {
 
-                    $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                     $pdo->rollBack();
-                    return $retorno;
+                    return Metodos::retornoAjax("Erro", "console", $rs);
                 }
 
                 if (Log::SalvaLogU('ses_contrato', $contrato->getId_contrato(), $busca, $pdo)) {
@@ -779,9 +768,8 @@ class Contrato {
                     $msg = STR_EDICAO_SUCESSO;
                 } else {
                     $sucesso = FALSE;
-                    $retorno = Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
                     $pdo->rollBack();
-                    return;
+                    return Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
                 }
                 $sucesso = TRUE;
             }
@@ -814,9 +802,7 @@ class Contrato {
             }
             //***********************************************************************
             $pdo->commit();
-            $retorno = Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
-
-            return $retorno;
+            return Metodos::retornoAjax("ok", "html", STR_REMOCAO_SUCESSO);
             //***********************************************************************************
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -864,9 +850,8 @@ class Contrato {
                 $msg = "Item Atualizado com Sucesso";
             } else {
                 $sucesso = FALSE;
-                $retorno = Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
             }
 
             //*********************histórico*************************************
@@ -876,19 +861,16 @@ class Contrato {
             $rs1 = $contrato->insertContratoHistorico($pdo);
             if ($rs1 != "Sucesso") {
                 $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs1);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs1);
             }
             $idContratoHist = $pdo->lastInsertId('ses_contrato_historico_id_contrato_historico_seq');
             if (!(Log::SalvaLogI('ses_contrato_historico', $idContratoHist, $pdo))) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
             }
             $pdo->commit();
-            $retorno = Metodos::retornoAjax("ok", "html", $msg);
-            return $retorno;
+            return Metodos::retornoAjax("ok", "html", $msg);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -912,30 +894,26 @@ class Contrato {
             $busca = $contrato->retornaContratoHistorico($pdo);
             if (!$busca) {
                 $sucesso = FALSE;
-                $retorno = Metodos::retornoAjax("Erro", "console", $busca);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $busca);
             }
 
             $rs = $contrato->updateContratoHistorico($pdo);
 
             if ($rs != "Sucesso") {
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             if (Log::SalvaLogU('ses_contrato_historico', $contrato->getId_contrato_historico(), $busca, $pdo)) {
                 $sucesso = TRUE;
                 $msg = "Item Atualizado com Sucesso";
             } else {
                 $sucesso = FALSE;
-                $retorno = Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", "Erro Cadastro de LOG em Update Contrato");
             }
             $pdo->commit();
-            $retorno = Metodos::retornoAjax("ok", "html", $msg);
-            return $retorno;
+            return Metodos::retornoAjax("ok", "html", $msg);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -957,15 +935,13 @@ class Contrato {
             $rs = $contrato->insertContratoLotacao($pdo);
             if ($rs != "Sucesso") {
                 $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             $idContratoLot = $pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq');
             if (!(Log::SalvaLogI('ses_contrato_lotacao', $idContratoLot, $pdo))) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
             }
             //*********************histórico*************************************
             $data = date('Y-m-d H:i');
@@ -975,15 +951,13 @@ class Contrato {
             $rs1 = $contrato->insertContratoHistorico($pdo);
             if ($rs1 != "Sucesso") {
                 $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs1);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs1);
             }
             $idContratoHist = $pdo->lastInsertId('ses_contrato_historico_id_contrato_historico_seq');
             if (!(Log::SalvaLogI('ses_contrato_historico', $idContratoHist, $pdo))) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
             }
             $sucesso = true;
         } catch (Exception $exc) {
@@ -1014,19 +988,16 @@ class Contrato {
             $rs = $contrato->insertContratoHistorico($pdo);
             if ($rs != "Sucesso") {
                 $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "console", $rs);
             }
             $idContratoHist = $pdo->lastInsertId('ses_contrato_historico_id_contrato_historico_seq');
             if (!(Log::SalvaLogI('ses_contrato_historico', $idContratoHist, $pdo))) {
-                $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Histórico");
             }
             $pdo->commit();
-            $retorno = Metodos::retornoAjax("ok", "alert", STR_CADASTRO_SUCESSO);
-            return $retorno;
+            return Metodos::retornoAjax("ok", "alert", STR_CADASTRO_SUCESSO);
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -1155,7 +1126,7 @@ class Contrato {
             $pdo = $conexao->connect();
             $rh = new DaoSesContrato();
             $filtro = "";
-//***************************************************************
+            //***************************************************************
             $filter = array();
             if ($idFormacao <> 0) {
                 $filter[] = "ef.id_escolaridade_formacao = $idFormacao";
@@ -1168,7 +1139,7 @@ class Contrato {
             } else {
                 return false;
             }
-//****************************************************************    
+            //****************************************************************
             //print_r($filtro);
             $result = $rh->retornaRelatorioCompetencia($pdo, $filtro);
 
@@ -1338,7 +1309,7 @@ class Contrato {
                         }
                         return $retorno;
                     } else {
-                        return $rs;
+                        return $result;
                     }
                 }
             }
@@ -1611,8 +1582,7 @@ class Contrato {
             $contrato = new DaoSesContrato();
             $contrato->setId_contrato($idContrato);
             $rs = $contrato->retornaLotacaoFuncao($pdo);
-//          ****************************************************************************
-            // print_r($rs);
+            //****************************************************************************
             if ($rs != FALSE) {
                 foreach ($rs as $linha) {
 
@@ -1632,7 +1602,7 @@ class Contrato {
                 return $rs;
             }
 
-//          ****************************************************************************
+        //****************************************************************************
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }
@@ -1953,7 +1923,6 @@ class Contrato {
             return Metodos::retornoAjax('Erro', 'console', $ex);
         }
     }
-
 }
 
 ?>
