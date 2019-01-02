@@ -383,7 +383,7 @@ class DaoSesContrato extends SesContrato {
             $ativo = "and (c.st_ativo = '1' or c.st_ativo = '0')";
         }
         $sql = "SELECT c.id_contrato, c.nr_matricula, c.id_cargo, c.st_ativo, cg.nm_cargo, v.id_vinculo, v.nm_vinculo, 
-                       PF.nr_cpf, P.id_pessoa, PF.id_pessoa_fisica, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, 
+                       PF.nr_cpf, P.id_pessoa, PF.id_pessoa_fisica, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.st_login, 
                        array_to_string(array_agg(distinct l.nm_lotacao), ', ') as nm_lotacao,
                        array_to_string(array_agg(t.nr_telefone), ', ') as nr_telefone_funcional
                 FROM ses_pessoa P 

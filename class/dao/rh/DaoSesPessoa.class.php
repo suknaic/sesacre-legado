@@ -307,6 +307,32 @@ class DaoSesPessoa extends SesPessoa {
      * @param type $pdo
      * @return boolean/Array
      */
+
+    function desativarLoginPessoa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_pessoa 
+                                        SET st_login = '0'
+                                            WHERE id_pessoa = :idPessoa");
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->execute();
+            return true;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function ativarLoginPessoa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_pessoa 
+                                        SET st_login = '1' 
+                                            WHERE id_pessoa = :idPessoa");
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->execute();
+            return true;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
 }
 
 /* 

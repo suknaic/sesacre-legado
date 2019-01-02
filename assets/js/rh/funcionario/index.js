@@ -156,7 +156,6 @@ $(document).ready(function () {
                             "pessoa": Pessoa
                         },
                         "success": function (response) {
-                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -166,15 +165,11 @@ $(document).ready(function () {
                                 response = JSON.parse(response);
                             } catch (e) {
                                 func.modalAlert(func.msgErroPadrao);
-                                //console.log("Parse JSON");
-                                //console.log(response);
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    //console.log('Console Mensagem');
-                                    //console.log(response);
                                     func.modalAlert(func.msgErroPadrao);
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
@@ -186,24 +181,18 @@ $(document).ready(function () {
                                 func.fechaModalReload();
                                 return false;
                             } else {
-                                //console.log('Ultimo else');
-                                //console.log(response);
                                 func.modalAlert(func.msgErroPadrao);
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            //console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
 
     $('body').on('click', '.btn-redefinir', function (e) {
@@ -229,8 +218,7 @@ $(document).ready(function () {
                 if (result) {
                     var Pessoa = {
                         idPessoa: idPessoa
-
-                    }
+                    };
                     $.ajax({
                         "url": "/model/rh/funcionario/request.php",
                         "dataType": "html",
@@ -240,7 +228,6 @@ $(document).ready(function () {
                             "pessoa": Pessoa
                         },
                         "success": function (response) {
-                            console.log(response);
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -250,15 +237,11 @@ $(document).ready(function () {
                                 response = JSON.parse(response);
                             } catch (e) {
                                 func.modalAlert(func.msgErroPadrao);
-                                //console.log("Parse JSON");
-                                //console.log(response);
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    //console.log('Console Mensagem');
-                                    //console.log(response);
                                     func.modalAlert(func.msgErroPadrao);
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
@@ -266,29 +249,168 @@ $(document).ready(function () {
                                     return false;
                                 }
                             } else if (response.tipoMsg === "ok") {
-                                func.modalAlert(response.msg, 'primary');
-                                //func.fechaModalReload();
+                                func.modalAlert(response.msg, 'success');
                                 return false;
                             } else {
-                                //console.log('Ultimo else');
-                                //console.log(response);
                                 func.modalAlert(func.msgErroPadrao);
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            //console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         }
                     });
-
-
                 }
             }
         });
-
     });
+
+    //************************************** Desativa o login de um funcionário ****************************************
+    $('body').on('click', '.btn-login-desativar', function (e) {
+
+        var $this = $(this);
+        var idPessoa = $this.val();
+        var item = $this.closest('td').find('.btn-edit').attr("nome");
+
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja <span class="text-danger">DESATIVAR</span> o login de:   <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Pessoa = {
+                        idPessoa: idPessoa
+                    };
+                    $.ajax({
+                        "url": "/model/rh/funcionario/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "desativarLogin",
+                            "idPessoa": Pessoa
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao);
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    //******************************************************************************************************************
+
+    //***************************************** Ativa o login de um funcionário ****************************************
+    $('body').on('click', '.btn-login-ativar', function (e) {
+
+        var $this = $(this);
+        var idPessoa = $this.val();
+        var item = $this.closest('td').find('.btn-edit').attr("nome");
+
+        bootbox.confirm({
+            title: 'Caixa de Confirmação',
+            message: 'Você tem Certeza que deseja <span class="text-danger">ATIVAR</span> o login de:   <span class="text-danger">' + item + '</span>?',
+            buttons: {
+                'cancel': {
+                    label: 'Não',
+                    className: 'btn-default btn-rounded'
+                },
+                'confirm': {
+                    label: 'Sim',
+                    className: 'btn-primary btn-rounded'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var Pessoa = {
+                        idPessoa: idPessoa
+                    };
+                    $.ajax({
+                        "url": "/model/rh/funcionario/request.php",
+                        "dataType": "html",
+                        "method": "POST",
+                        "data": {
+                            "acao": "ativarLogin",
+                            "idPessoa": Pessoa
+                        },
+                        "success": function (response) {
+                            if (response.trim() == "SessaoExpirada") {
+                                func.modalAlert(func.msgSemPermissao);
+                                return false;
+                            }
+
+                            try {
+                                response = JSON.parse(response);
+                            } catch (e) {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+
+                            if (response.tipoMsg === "Erro") {
+                                if (response.tipoExibicao === "console") {
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
+                                    return false;
+                                } else if (response.tipoExibicao === "alert") {
+                                    func.modalAlert(response.msg);
+                                    return false;
+                                }
+                            } else if (response.tipoMsg === "ok") {
+                                func.modalAlert(response.msg, 'success');
+                                func.fechaModalReload();
+                            } else {
+                                func.modalAlert(func.msgErroPadrao, 'danger');
+                                return false;
+                            }
+                        },
+                        "error": function (response) {
+                            func.modalAlert(func.msgErroPadrao, 'danger');
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    });
+    //******************************************************************************************************************
 
     $('body').on('click', '.btn-edit', function (e) {
         e.preventDefault();

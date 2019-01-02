@@ -595,5 +595,49 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
+    case 'desativarLogin':
+        try {
+
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+
+            $idPessoa = filter_input(INPUT_POST, 'idPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $pessoa = new Pessoa();
+            $pessoa->setId_pessoa($idPessoa['idPessoa']);
+
+            echo $pessoa->desativarLogin();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
+    case 'ativarLogin':
+        try {
+
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+
+            $idPessoa = filter_input(INPUT_POST, 'idPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $pessoa = new Pessoa();
+            $pessoa->setId_pessoa($idPessoa['idPessoa']);
+
+            echo $pessoa->ativarLogin();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }
 ?>

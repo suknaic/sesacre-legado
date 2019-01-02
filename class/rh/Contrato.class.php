@@ -754,15 +754,13 @@ class Contrato {
                         $rs = $contrato->insertContratoLotacao($pdo);
                         if ($rs != "Sucesso") {
                             $sucesso = false;
-                            $retorno = Metodos::retornoAjax("Erro", "console", $rs);
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "console", $rs);
                         }
                         $idContratoLot = $pdo->lastInsertId('ses_contrato_lotacao_id_contrato_lotacao_seq');
                         if (!(Log::SalvaLogI('ses_contrato_lotacao', $idContratoLot, $pdo))) {
-                            $retorno = Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                             $pdo->rollBack();
-                            return $retorno;
+                            return Metodos::retornoAjax("Erro", "alert", "Erro ao Salvar Log de Contrato Lotação");
                         }
                         //**********************************************************************************************
                     }
@@ -789,13 +787,11 @@ class Contrato {
             }
 
             if ($sucesso) {
-                $retorno = Metodos::retornoAjax("ok", "html", $msg);
                 $pdo->commit();
-                return $retorno;
+                return Metodos::retornoAjax("ok", "html", $msg);
             } else {
-                $retorno = Metodos::retornoAjax("Erro", "alert", STR_ERROR);
                 $pdo->rollBack();
-                return $retorno;
+                return Metodos::retornoAjax("Erro", "alert", STR_ERROR);
             }
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
@@ -1119,17 +1115,28 @@ class Contrato {
                                             <button type='button' class='btn btn-default btn-edit btn-xs'                               
                                                   title='Editar' nome='" . $v['nm_pessoa'] . "' value='" . $idContrato . "/" . $idPessoaFisica . "' >
                                                   <i class='fa fa-pencil-square-o fa-lg text-primary' aria-hidden='true'></i>                                
+                                            </button>
+                                            <button type='button' class='btn btn-default btn-perfil btn-xs' title='Configurar Perfil' value='" . $idPessoaFisica . "'>
+                                                <i class='fa fa-lock fa-lg text-success' aria-hidden='true'></i>
                                             </button> 
                                             <button type='button' class='btn btn-default btn-remover btn-xs' title='Remover' value='" . $idContrato . "'>
                                                 <i class='fa fa-trash fa-lg text-danger' aria-hidden='true'></i>
                                             </button>
                                             <button type='button' class='btn btn-default btn-redefinir btn-xs' title='Redefinir Senha' value='" . $idPessoa . "'>
                                                 <i class='fa fa-key fa-lg text-warning' aria-hidden='true'></i>
-                                            </button>
-                                            <button type='button' class='btn btn-default btn-perfil btn-xs' title='Configurar Perfil' value='" . $idPessoaFisica . "'>
-                                                <i class='fa fa-lock fa-lg text-success' aria-hidden='true'></i>
-                                            </button>
-                                        </td>
+                                            </button>";
+
+                        if ($v['st_login']) {
+                            $retorno .="    <button type='button' class='btn btn-default btn-login-desativar btn-xs' title='Desativar Login' value='" . $idPessoa . "'>
+                                                <i class='fa fa-power-off fa-lg text-danger' aria-hidden='true'></i>
+                                            </button>";
+                        } else {
+                            $retorno .="    <button type='button' class='btn btn-default btn-login-ativar btn-xs' title='Ativar Login' value='" . $idPessoa . "'>
+                                                <i class='fa fa-power-off fa-lg text-success' aria-hidden='true'></i>
+                                            </button>";
+                        }
+
+                        $retorno .="    </td>
                                     </tr>";
                     }
                 }

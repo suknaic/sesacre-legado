@@ -645,21 +645,21 @@ $(document).ready(function () {
         if (lotacaoId == 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Lotação)</strong>");
             $("#lotacao").focus();
-            return;
+            return false;
         }
         if (funcaoId == 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Função)</strong>");
             $("#id_funcao").focus();
-            return;
+            return false;
         }
         if (nr_carga_horaria2 == null) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Carga Horária da Lotação)</strong>");
             $("#nr_carga_horaria2").focus();
-            return;
+            return false;
         }
         if ($("#dt_inicio").val() == "") {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Data de inicio da Função na Lotação)</strong>");
-            return;
+            return false;
         }
         //********** Data inicial da função na lotação tem de ser inferior a data final ************
         if ($("#dt_fim").val().length > 3) {

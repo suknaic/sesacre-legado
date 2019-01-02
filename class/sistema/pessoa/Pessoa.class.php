@@ -482,6 +482,74 @@ class Pessoa {
         }
     }
 
+    //********************************************* Desativar Login da Pessoa ******************************************
+    public function desativarLogin() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $pessoa = new DaoSesPessoa();
+            $pessoa->setIdPessoa($this->id_pessoa);
+
+            $busca = $pessoa->retornaPessoa($pdo);
+
+            if ($busca == false) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            } else {
+                $desativa = $pessoa->desativarLoginPessoa($pdo);
+                if ($desativa) {
+                    if (!Log::SalvaLogU('ses_pessoa', $this->id_pessoa, $busca, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                    } else {
+                        $pdo->commit();
+                        return Metodos::retornoAjax('ok', 'html', 'Login Desativado Com Sucesso.');
+                    }
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'console', $desativa);
+                }
+            }
+        } catch (Exception $erro) {
+            return Metodos::retornoAjax("Erro", "console", $erro->getMessage());
+        }
+    }
+    //******************************************************************************************************************
+
+    //********************************************** Ativar Login da Pessoa ********************************************
+    public function ativarLogin() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $pessoa = new DaoSesPessoa();
+            $pessoa->setIdPessoa($this->id_pessoa);
+
+            $busca = $pessoa->retornaPessoa($pdo);
+            if ($busca == false) {
+                return Metodos::retornoAjax('Erro', 'alert', STR_NAO_ENCONTRADO);
+            } else {
+                $ativa = $pessoa->ativarLoginPessoa($pdo);
+                if ($ativa) {
+                    if (!Log::SalvaLogU('ses_pessoa', $this->id_pessoa, $busca, $pdo)) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'console', STR_ERROR);
+                    } else {
+                        $pdo->commit();
+                        return Metodos::retornoAjax('ok', 'html', 'Login Ativado Com Sucesso.');
+                    }
+                } else {
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax('Erro', 'console', $ativa);
+                }
+            }
+        } catch (Exception $erro) {
+            return Metodos::retornoAjax("Erro", "console", $erro->getMessage());
+        }
+    }
+    //******************************************************************************************************************
 }
 
 ?>
