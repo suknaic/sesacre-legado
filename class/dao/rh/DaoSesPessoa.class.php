@@ -153,7 +153,7 @@ class DaoSesPessoa extends SesPessoa {
         $sql = " SELECT "
                 . " id_pessoa, nm_pessoa, st_ativo, nm_senha"
                 . " FROM ses_pessoa"
-                . " WHERE nm_email = :nmEmail";
+                . " WHERE nm_email = :nmEmail and st_login = '1'";
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":nmEmail", $this->getNmEmail(), PDO::PARAM_STR);
