@@ -312,10 +312,10 @@ class pessoaFisica {
             if ($buscaFormacao['nm_escolaridade'] == 'Ensino Médio') {
                 $nivelFormaçao = 3;
             }
-            if ($buscaFormacao['nm_escolaridade'] == 'Ensino Superior' || $buscaFormacao['nm_escoçaridade'] == 'Tecnólogo') {
+            if ($buscaFormacao['nm_escolaridade'] == 'Ensino Superior' || $buscaFormacao['nm_escolaridade'] == 'Tecnólogo') {
                 $nivelFormaçao = 4;
             }
-            if ($buscaFormacao['nm_escolaridade'] == 'Pós-Graduação' || $buscaFormacao['nm_escoçaridade'] == 'Especialização') {
+            if ($buscaFormacao['nm_escolaridade'] == 'Pós-Graduação' || $buscaFormacao['nm_escolaridade'] == 'Especialização') {
                 $nivelFormaçao = 5;
             }
             if ($buscaFormacao['nm_escolaridade'] == 'Mestrado') {
@@ -355,23 +355,21 @@ class pessoaFisica {
             }
 
             if ($nivelFormaçao > $nivelEscolaridade){
-                return Metodos::retornoAjax('Erro', 'alert', 'Curso Não Corresponde ao Nível de Escolaridade.');
+                return 'Curso Não Corresponde ao Nível de Escolaridade.';
             }
             //****************************************************************************
             $result = $pessoaFisica->insertCompetencia($pdo);
             //****************************************************************************
             if ($result != "Sucesso") {
-                $sucesso = false;
-                $retorno = Metodos::retornoAjax("Erro", "console", $result);
-                return $retorno;
+                return $result;
             }
 
             $idCompetencia = $pdo->lastInsertId('ses_competencia_id_competencia_seq');
             if (!(Log::SalvaLogI('ses_competencia', $idCompetencia, $pdo))) {
-                $retorno = Metodos::retornoAjax("Erro", "console", $idCompetencia);
-                return $retorno;
+                return 'Erro no Log!';
+            } else {
+                return true;
             }
-            return $result;
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
         }

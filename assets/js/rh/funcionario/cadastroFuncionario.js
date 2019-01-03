@@ -228,7 +228,7 @@ $(document).ready(function () {
                 acao: "listaEstadoOption"
             },
             "success": function (response) {
-                $("#id_estado").append(response);
+                $("#id_estado").html(response);
             }
         });
     }
@@ -264,7 +264,6 @@ $(document).ready(function () {
         $("#ds_bairro").val("");
         $("#ds_complemento").val("");
         $("#nr_cep").val("");
-
     });
 
     //************************************ Naturalidade ****************************************
@@ -377,19 +376,25 @@ $(document).ready(function () {
             return;
         }
 
-//        //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
-//        admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
-//        inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
-//        if (inicio > admissao) {
-//            func
-//        }
-        //*******************************************************************************************************
+        if ($("#dt_inicio").val() == "") {
+            func.modalAlert(func.msgPreencherCampos + " <strong>(Data de inicio da Função na Lotação)</strong>");
+            return false;
+        }
+
+       //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
+       admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
+       inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
+       if (inicio > admissao) {
+           func.modalAlert('Data de Início da Lotação não pode ser maior que a Data de Admissão.');
+           return false;
+       }
+        //******************************************************************************************************
         var flag = 0;
         if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {
             var cargaHorariaLotacao = 0;
             $("#corpoTabelaLotacao tbody tr").each(function () {
                 if (lotacaoId == $(this).find(".lotacao").attr("idLotacao") && funcaoId == $(this).find(".funcao").attr("idFuncao")) {
-                    func.modalAlert(" Lotação e Função já existem!!!");
+                    func.modalAlert("Os dados de Lotação e Função Informados já estão cadastrados no Sistema.");
                     flag = 1;
                 }
 
@@ -406,9 +411,10 @@ $(document).ready(function () {
             return;
         }
         seguir = 0;
+        var dtFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
         $("#tabelaLotacao tbody tr").each(function () {
-            if (dataFimAntiga !== '') {
-                var dataAnti = +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString());
+            if (dtFimAntiga !== '' && dtFimAntiga != undefined) {
+                var dataAnti = +new Date(dtFimAntiga.split("/")[2].toString() + "/" + dtFimAntiga.split("/")[1].toString() + "/" + dtFimAntiga.split("/")[0].toString());
                 var dataAtua = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
 
                 if (dataAnti >= dataAtua) {
@@ -428,8 +434,6 @@ $(document).ready(function () {
                 }
 
                 if (dtFim > dataAtua) {
-                    console.log(parseInt(nr_carga_horaria));
-                    console.log(cargaHorariaLotacao);
                     if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
                         seguir = 3;
                         return;
@@ -478,11 +482,7 @@ $(document).ready(function () {
             $("#nr_carga_horaria2").focus();
             return;
         }
-        if ($("#dt_inicio").val() == "") {
-            func.modalAlert(func.msgPreencherCampos + " <strong>(Data de inicio da Função na Lotação)</strong>");
-            //$("#dt_inicio").focus();
-            return;
-        }
+
         if ($("#dt_fim").val().length > 3) {
             var data1 = $("#dt_inicio").val();
             var data2 = $("#dt_fim").val();
@@ -491,7 +491,7 @@ $(document).ready(function () {
             var dataIni = new Date(x);
             var dataFim = new Date(y);
             if (dataIni > dataFim) {
-                func.modalAlert("A data Inicio da Lotação Não Pode Ser Maior que a Data Fim.");
+                func.modalAlert("A Data Início da Função na Lotação não pode ser Maior que a Data Fim.");
                 return;
             }
         }
@@ -562,16 +562,16 @@ $(document).ready(function () {
         $(this).closest(".lotacaoLinha").remove();
     });
     //******************************************************************************************
-    $("body").on("change", "#id_vinculo", function (e) {
-        var id = $(this).val();
-        if (id == 5) {
+    // $("body").on("change", "#id_vinculo", function (e) {
+    //     var id = $(this).val();
+    //     if (id == 5) {
             $(".demissao").show();
-        } else {
-            $(".demissao").hide();
-        }
-        $("#dt_demissao").val("");
-        $("#dt_fim").val("");
-    });
+    //     } else {
+    //         $(".demissao").hide();
+    //     }
+    //     $("#dt_demissao").val("");
+    //     $("#dt_fim").val("");
+    // });
     //******************************************************************************************
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -656,7 +656,7 @@ $(document).ready(function () {
                     pessoaJuridica: $("#id_pessoa_juridica").val(),
                     idCargo: $("#id_cargo").val()
                 };
-            }else {
+            } else {
                 func.modalAlert('As Cargas Horárias Permitidas para Contratos são: 20,24,30,40 e 44.');
                 return false;
             }
@@ -665,6 +665,7 @@ $(document).ready(function () {
             var x = 0;
             if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
                 x = 1;
+                var chTotal = 0;
                 var DadosContrato_Lotacao = [];
                 $("#tabelaLotacao tbody tr").each(function () {
                     DadosContrato_Lotacao.push({
@@ -674,7 +675,12 @@ $(document).ready(function () {
                         dt_inicio: $(this).find(".dataIni").attr("dt_inicio"),
                         dt_fim: $(this).find(".dataFim").attr("dt_fim")
                     });
+                    chTotal = chTotal + parseInt($(this).find(".cargaLotacao").attr("ch"));
                 });
+            }
+
+            if (chTotal != DadosContrato.nrCargaHoraria) {
+                func.modalAlert('Carga horária total das lotações deve ser igual a carga horária do contrato.');
             }
     //*******************************************************************
             var DadosObrigatorio = {
@@ -691,12 +697,13 @@ $(document).ready(function () {
                 "Nome da Mãe": DadosPessoaFisica.mae,
                 "Estado Civil": DadosPessoaFisica.estadoCivil,
                 "Escolaridade": DadosPessoaFisica.escolaridade,
-                //***************13-16*****************************
+                //***************13-17*****************************
                 "Cidade Endereço": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
                 "Bairro": DadosPessoa.bairro,
+                "Número": DadosPessoa.numero,
                 "Telefone Celular": DadosPessoa.telefone_celular,
-                //******************17-22****************************
+                //******************18-22****************************
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
@@ -749,7 +756,7 @@ $(document).ready(function () {
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
-                    // console.log(response);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

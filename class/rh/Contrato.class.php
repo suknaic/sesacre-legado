@@ -124,14 +124,14 @@ class Contrato {
                 $email = strstr($dadosPessoa['email'], 'ac.gov.br');
                 if ($email != 'ac.gov.br') {
                     $pdo->rollBack();
-                    return Metodos::retornoAjax('Erro', 'alert','Informe o E-mail Institucional do Domínio <strong>ac.gov.br</strong>.');
+                    return Metodos::retornoAjax('Erro', 'alert','Informe seu E-mail Institucional do domínio ac.gov.br.');
                 }
             } else {
                 return Metodos::retornoAjax('Erro', 'alert',"O E-mail Informado é Inválido.");
             }
             //***********************************************************************************
 
-            //******************* Valida Data de Admisão, se a mesma é maior que a data atual ************************
+            //******************* Valida Data de Admissão, se a mesma é maior que a data atual ************************
             $dtAdm = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtAdm > $dtAtual) {
@@ -140,7 +140,7 @@ class Contrato {
             }
             //********************************************************************************************************
 
-            //**************************** Pessoa ********************************************************************
+            //************************************************ Pessoa **************************************************
             $pessoa = new Pessoa();
             $telefoneRes = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
             $telefoneCel = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_celular']);
@@ -164,7 +164,7 @@ class Contrato {
                 return Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
             }
 
-            //************************************************* Pessoa Fisica *******************************************
+            //******************************************** Pessoa Fisica ***********************************************
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->setId_pessoa($idPessoa);
             $pessoaFisica->setTp_sexo(trim($dadosPessoaFisica['tpSexo']));
@@ -193,7 +193,7 @@ class Contrato {
                 foreach ($dadosCompetencia as $linha => $v) {
                     $pessoaFisica->setId_escolaridade_formacao_competencia($v['id_escolaridade_formacao']);
                     $rs = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
-                    if ($rs != "Sucesso") {
+                    if (!$rs) {
                         $pdo->rollBack();
                         return Metodos::retornoAjax("Erro", "console", $rs);
                     }
@@ -245,7 +245,7 @@ class Contrato {
             $yAd = $dtAd[2];
             if (!checkdate($mAd, $dAd, $yAd)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'A data de admissão informada é inválida.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão inválida.');
             }
 
             if (!empty($dadosContrato['dtDemissao'])) {
@@ -257,6 +257,15 @@ class Contrato {
                     $pdo->rollBack();
                     return Metodos::retornoAjax('Erro', 'alert', 'A data de demissão informada é inválida.');
                 }
+            }
+            //**********************************************************************************************************
+
+            //***************************** Verifica se a data de admissão é maior que data atual **********************
+            $dtAdmissao = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
+            $dtAtual = strtotime(date("d-m-Y"));
+            if ($dtAdmissao > $dtAtual) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão é Maior que a Data Atual.');
             }
             //**********************************************************************************************************
 
@@ -293,7 +302,7 @@ class Contrato {
                     $mIni = $dtIni[1];
                     $yIni = $dtIni[2];
                     if (!checkdate($mIni, $dIni, $yIni)) {
-                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início do contrato é inválida.');
+                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação é inválida.');
                     }
 
                     if (!empty($v['dt_fim'])) {
@@ -302,8 +311,17 @@ class Contrato {
                         $mFim = $dtFim[1];
                         $yFim = $dtFim[2];
                         if (!checkdate($mFim, $dFim, $yFim)) {
-                            return Metodos::retornoAjax('Erro', 'alert', 'A data de fim do contrato é inválida.');
+                            return Metodos::retornoAjax('Erro', 'alert', 'A data de fim da lotação é inválida.');
                         }
+                    }
+                    //**************************************************************************************************
+
+                    //********************** Verifica se a data de inicio é maior que data atual *********************
+                    $dtInicio = strtotime(date(str_replace('/', '-', $v['dt_inicio'])));
+                    $dtAtual = strtotime(date("d-m-Y"));
+                    if ($dtInicio > $dtAtual) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'alert', 'Data de início da lotação é maior que a data atual.');
                     }
                     //**************************************************************************************************
 
@@ -354,12 +372,6 @@ class Contrato {
 //                }
 // *************************************************************************************************
                 if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
-                    $fim = true;
-                } else {
-                    $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "console", STR_ERROR);
-                }
-                if ($fim) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 } else {
@@ -413,6 +425,7 @@ class Contrato {
             $pessoa->setId_naturalidade($dadosPessoa['naturalidade']);
             $pessoa->setNm_pessoa(trim($dadosPessoa['nomeSocial'] === '' ? $dadosPessoaFisica['nomeCivil'] : $dadosPessoa['nomeSocial']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero(trim($dadosPessoa['numero']));
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -1419,6 +1432,7 @@ class Contrato {
                     "id_naturalidade" => $p["id_naturalidade"],
                     "ds_logradouro" => $p["ds_logradouro"],
                     "ds_complemento" => $p["ds_complemento"],
+                    "nr_numero" => $p["nr_numero"],
                     "ds_bairro" => $p["ds_bairro"],
                     "nr_cep" => $p["nr_cep"],
                     "id_pais_endereco" => $p["id_pais_endereco"],

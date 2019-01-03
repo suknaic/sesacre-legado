@@ -260,6 +260,7 @@ class Pessoa {
             $pessoa->setDsLogradouro($this->ds_logradouro);
             $pessoa->setDsObservacao($this->ds_observacao);
             $pessoa->setIdCidade($this->id_cidade);
+            $pessoa->setNrNumero(trim($this->nr_numero));
             $pessoa->setIdNaturalidade($this->id_naturalidade);
             $pessoa->setNmEmail($this->nm_email);
             $pessoa->setNmPessoa(ucwords(strtolower($this->nm_pessoa)));
@@ -436,6 +437,7 @@ class Pessoa {
                         "id_pais_naturalidade" => $rs["id_pais_naturalidade"],
                         "ds_logradouro" => $rs["ds_logradouro"],
                         "ds_bairro" => $rs["ds_bairro"],
+                        "nr_numero" => $rs["nr_numero"],
                         "ds_complemento" => $rs["ds_complemento"],
                         "nr_cep" => $rs["nr_cep"],
                         "id_cidade_endereco" => $rs["id_cidade_endereco"],

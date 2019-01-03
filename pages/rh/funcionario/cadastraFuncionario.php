@@ -560,7 +560,7 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-2 demissao" style="display:none">
+                                                            <div class="col-md-2 demissao">
                                                                 Data de Demissão:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -607,7 +607,7 @@
                                                             <div class="form-group">    
                                                                 <div class="col-md-1"></div>
                                                                 <div class="col-md-2">
-                                                                    Carga Horária:
+                                                                    Carga Horária: <span class="text-danger">*</span>
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon">
                                                                             <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -654,7 +654,7 @@
                                                                                         <th class="text-capitalize text-center">Lotação</th> 
                                                                                         <th class="text-capitalize text-center">Função</th>
                                                                                         <th class="text-capitalize text-center">C. H.</th>
-                                                                                        <th class="text-capitalize text-center">Data Inicio</th>
+                                                                                        <th class="text-capitalize text-center">Data Início</th>
                                                                                         <th class="text-capitalize text-center">Data Fim</th>
                                                                                         <th class="text-capitalize text-center">Ação</th>
                                                                                     </tr>

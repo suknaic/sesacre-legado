@@ -45,6 +45,7 @@ class DaoSesPessoa extends SesPessoa {
                             ds_bairro = :ds_bairro, 
                             ds_complemento = :ds_complemento, 
                             nr_cep = :nr_cep, 
+                            nr_numero = :nrNumero,
                             id_cidade = :id_cidade, 
                             nr_telefone_residencial = :nr_telefone_residencial, 
                             nr_telefone_celular = :nr_telefone_celular, 
@@ -63,6 +64,7 @@ class DaoSesPessoa extends SesPessoa {
             $result->bindValue(":nr_telefone_celular", $this->getNrTelefoneCelular() === '' ? null : $this->getNrTelefoneCelular(), PDO::PARAM_STR);
             $result->bindValue(":nm_email", $this->getNmEmail() === '' ? null : $this->getNmEmail(), PDO::PARAM_STR);
             $result->bindValue(":ds_observacao", $this->getDsObservacao() === '' ? null : $this->getDsObservacao(), PDO::PARAM_STR);
+            $result->bindValue(":nrNumero", $this->getNrNumero(), PDO::PARAM_INT);
             $result->bindValue(":id_pessoa", $this->getIdPessoa(), PDO::PARAM_INT);
             $result->execute();
             return "Sucesso";
@@ -114,7 +116,7 @@ class DaoSesPessoa extends SesPessoa {
         $retorno = FALSE;
 
         $sql = "SELECT p.id_pessoa, p.nm_pessoa, p.ds_logradouro, p.ds_bairro, p.ds_complemento, p.nr_cep, p.nr_telefone_residencial, p.nr_telefone_celular, p.nm_email, p.ds_observacao, p.nm_senha, p.dh_login, 
-                    p.st_login, p.st_ativo, 
+                    p.st_login, p.st_ativo, p.nr_numero,
                     p.id_naturalidade, en.id_estado id_estado_naturalidade, pn.id_pais id_pais_naturalidade,
                     p.id_cidade id_cidade_endereco, c.id_estado id_estado_endereco, pc.id_pais id_pais_endereco
                 FROM ses_pessoa p 

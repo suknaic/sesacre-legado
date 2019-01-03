@@ -56,7 +56,7 @@ $(document).ready(function () {
                     listaEstadoCivilCombo(response[0]['id_estado_civil']);
                     listaEscolaridadeCombo(response[0]['id_escolaridade']);
                     //**********************************************************************
-                    //$("#id_cidade").val(response[0]['id_cidade']).change();
+                    $("#nr_endereco").val(response[0]['nr_numero']);
                     listaPaisEndereco(response[0]['id_pais_endereco']);
                     listaEstadoEndereco(response[0]['id_pais_endereco'], response[0]['id_estado_endereco']);
                     listaCidadeEndereco(response[0]['id_estado_endereco'], response[0]['id_cidade']);
@@ -789,6 +789,7 @@ $(document).ready(function () {
                 logradouro: $("#ds_logradouro").val(),
                 complemento: $("#ds_complemento").val(),
                 bairro: $("#ds_bairro").val(),
+                numero: $("#nr_endereco").val(),
                 cep: cep,
                 cidade: $("#id_cidade").val(),
                 telefone_residencial: $("#nr_telefone_residencial").val(),
@@ -923,14 +924,15 @@ $(document).ready(function () {
                 "Escolaridade": DadosPessoaFisica.escolaridade,
                 //*************************
 
-                //********* 13-16 *********
+                //********* 13-17 *********
                 "Cidade Endereco": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
                 "Bairro": DadosPessoa.bairro,
+                "Número": DadosPessoa.numero,
                 "Telefone Celular": DadosPessoa.telefone_celular,
                 //*************************
 
-                //********* 17-22 *********
+                //********* 18-22 *********
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissao": DadosContrato.dtAdmissao,
@@ -940,31 +942,31 @@ $(document).ready(function () {
                 //*************************
             };
 
-            // $campo = 0;
-            // $i = 0;
-            // $.each(DadosObrigatorio, function (index, value) {
-            //     $i++;
-            //     $campo = "";
-            //     if (value == 0 || value == "" || value == null) {
-            //         if ($i <= 12) {
-            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-            //         } else if ($i >= 13 && $i <= 16) {
-            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
-            //         } else if ($i >= 17 && $i <= 22) {
-            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
-            //         }
-            //         $campo = 1;
-            //         return false;
-            //     }
-            // });
-            // if ($campo == 1) {
-            //     return false;
-            // }
-            //
-            // if (x == 0) {
-            //     func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
-            //     return false;
-            // }
+            $campo = 0;
+            $i = 0;
+            $.each(DadosObrigatorio, function (index, value) {
+                $i++;
+                $campo = "";
+                if (value == 0 || value == "" || value == null) {
+                    if ($i <= 12) {
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
+                    } else if ($i >= 13 && $i <= 16) {
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+                    } else if ($i >= 17 && $i <= 22) {
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
+                    }
+                    $campo = 1;
+                    return false;
+                }
+            });
+            if ($campo == 1) {
+                return false;
+            }
+
+            if (x == 0) {
+                func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
+                return false;
+            }
             //********************************************************************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
