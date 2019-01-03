@@ -81,7 +81,7 @@ $(document).ready(function () {
                         "dataType": "html",
                         "method": "post",
                         "data": {
-                            "acao": "cancelarPagamento",
+                            "acao": "cancelarReativacao",
                             "dados": dados
                         },
                         "success": function (response) {
