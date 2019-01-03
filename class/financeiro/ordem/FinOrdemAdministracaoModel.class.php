@@ -154,25 +154,25 @@ class FinOrdemAdministracaoModel {
 
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->setIdOrdem($this->id_ordem);
-            
+
             $daoFinOrdemAdministracao->verificarSerExisteReativacao($pdo);
-            if($daoFinOrdemAdministracao->Sucesso()){
+            if ($daoFinOrdemAdministracao->Sucesso()) {
                 return Metodos::retornoAjax("Erro", "alert", "Já existe uma reativação para essa ordem.");
             }
-            
+
             $daoFinOrdemAdministracao->setIdProtocolo($this->id_protocolo);
             $daoFinOrdemAdministracao->setIdSolicitante($this->id_solicitante);
             $daoFinOrdemAdministracao->setIdLotacaoSolicitante($this->id_lotacao_solicitante);
             $daoFinOrdemAdministracao->setTpAdministracao(1);
             $daoFinOrdemAdministracao->reativarOrdem($pdo);
-             echo $daoFinOrdemAdministracao->getMsgRetorno();
+            echo $daoFinOrdemAdministracao->getMsgRetorno();
             $this->id_ordem_administracao = $pdo->lastInsertId('fin_ordem_administracao_id_ordem_administracao_seq');
-           
+
             if (!$daoFinOrdemAdministracao->Sucesso()) {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao cadastrar a reativação.");
             }
-            
+
             if (!empty($this->ds_ordem_administracao_anotacao)) {
                 $finOrdemAdministracaoAnotacaoModel = new FinOrdemAdministracaoAnotacaoModel();
                 $finOrdemAdministracaoAnotacaoModel->setIdOrdemAdministracao($this->id_ordem_administracao);
@@ -216,12 +216,12 @@ class FinOrdemAdministracaoModel {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            
+
             $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
             $daoFinOrdemAdministracao->setIdAutorizado($this->id_autorizado);
             $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
             $daoFinOrdemAdministracao->setIdLotacaoAutorizado($this->id_lotacao_autorizado);
-            
+
             $daoFinOrdemAdministracao->autorizacaoReativacaoOrdem($pdo);
 
             if (!$daoFinOrdemAdministracao->Sucesso()) {
@@ -236,6 +236,22 @@ class FinOrdemAdministracaoModel {
                 $pdo->rollBack();
                 return Metodos::retornoAjax("Erro", "alert", "Erro ao atualizar a ordem.");
             }
+
+            $pdo->commit();
+            return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
+        } catch (Exception $ex) {
+            
+        }
+    }
+
+    public function excluirReativacao() {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pdo->beginTransaction();
+
+            $daoFinOrdemAdministracao = new DaoFinOrdemAdministracao();
+            $daoFinOrdemAdministracao->setIdOrdemAdministracao($this->id_ordem_administracao);
 
             $pdo->commit();
             return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);

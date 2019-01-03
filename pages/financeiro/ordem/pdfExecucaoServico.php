@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/util/Session.class.php";
 
 
 $dados = new Dados();
-$corpo = pdf((int)$_GET['id'], $dados);
+$corpo = pdf((int) $_GET['id'], $dados);
 $html = "<html>
         <head>
          <style>
@@ -102,7 +102,7 @@ $html = "<html>
 //echo $html;
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->SetHTMLFooter('<table width="100%" class="tabelaRodape"><tr class="trRodape">
-            <td width="33%" class="tdRodape">'.$dados->getNumeroDocumento().'</td>
+            <td width="33%" class="tdRodape">' . $dados->getNumeroDocumento() . '</td>
             <td width="33%" class="tdRodape" align="center">{PAGENO}/{nbpg}</td>
             <td width="33%" class="tdRodape" style="text-align: right;">{DATE j/m/Y H:m:s}</td>
         </tr></table>');
@@ -115,10 +115,10 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
     $conexao = new Conexao();
     $pdo = $conexao->connect();
     $dados = "";
-    if(empty($ordem)){
+    if (empty($ordem)) {
         return "";
     }
-    
+
     $sql = ("select p.id_pedido, concat(concat(concat(p.id_lotacao, '-'),concat(p.nr_pedido, '/')),
              to_char(p.dt_pedido, 'yyyy')) as pedido, ordem.nr_ordem, ordem.aa_ordem, ordem.nr_prazo_ordem, 
              cont.nr_contrato, cont.tp_contrato, gprocesso.cd_pregao, modalidade.nm_modalidade, objeto.nm_objeto, 
@@ -204,20 +204,25 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                 <td style="text-align: center"><b>Dados de Contato:</b> <br/> 
                 <b>(Contratante)</b> 
                 </td>
-                <td><b>Emissor:</b> ' .$dados[0]["emissor"].'<br/>
-                    <b>Setor:</b> ' .$dados[0]["setor"].'<br/>
-                    <b>Telefone/Fax:</b> ' .$dados[0]["telefoneEmissor"].'<br/>
-                    <b>E-mail:</b> ' .$dados[0]["nm_email"].'<br/>
-                    <b>Data de Emissão:</b> ' .Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]).' As '. Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]).'<br/>
-                    <b>Sol. de Necessidade nº:</b> ' .$dados[0]["pedido"].' 
+                <td><b>Emissor:</b> ' . $dados[0]["emissor"] . '<br/>
+                    <b>Setor:</b> ' . $dados[0]["setor"] . '<br/>
+                    <b>Telefone/Fax:</b> ';
+
+        if (!empty($dados[0]["telefoneEmissor"])) {
+            $tabela .= '' . $dados[0]["telefoneEmissor"] . '';
+        }
+
+        $tabela .= '<br/><b>E-mail:</b> ' . $dados[0]["nm_email"] . '<br/>
+                    <b>Data de Emissão:</b> ' . Metodos::obterDataBRTimestamp($dados[0]["dh_ordem"]) . ' As ' . Metodos::obterHoraTimestamp($dados[0]["dh_ordem"]) . '<br/>
+                    <b>Sol. de Necessidade nº:</b> ' . $dados[0]["pedido"] . ' 
                 </td>
             </tr>
                 <tr>
                 <td colspan="2">
-                    <b>Licitação nº:</b> '.$dados[0]["nm_modalidade"].'.:'.$dados[0]["cd_pregao"].'<br/>
-                    <b>Objeto Licitado/Contratado:</b> '.$dados[0]["nm_objeto"].'<br/>
-                    <b>Contrato Nº:</b> '.$dados[0]["nr_contrato"].'  <br/>
-                    <b>Vigencia:</b> '. Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]).' a '. Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]).'
+                    <b>Licitação nº:</b> ' . $dados[0]["nm_modalidade"] . '.:' . $dados[0]["cd_pregao"] . '<br/>
+                    <b>Objeto Licitado/Contratado:</b> ' . $dados[0]["nm_objeto"] . '<br/>
+                    <b>Contrato Nº:</b> ' . $dados[0]["nr_contrato"] . '  <br/>
+                    <b>Vigencia:</b> ' . Metodos::ConverteDataBR($dados[0]["dt_ini_vigencia_contrato"]) . ' a ' . Metodos::ConverteDataBR($dados[0]["dt_fim_vigencia_contrato"]) . '
                 </td>
             </tr>
         </table>
@@ -227,11 +232,18 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                 <tr>
                     <td >
                         <b>Razão Social:</b> ' . $dados[0]["nm_pessoa"] . '<br/>
-                        <b>CNPJ:</b> ' . $dados[0]["nr_cnpj"] . '&nbsp;&nbsp;<b>Contato.:</b> ' . $dados[0]["telefoneCredor"] . '<br/>
-                        <b>Credor Safira nº: </b>'.$dados[0]["nr_safira"].'<br/>        
+                        <b>CNPJ:</b> ' . $dados[0]["nr_cnpj"] . '&nbsp;&nbsp;<b>Contato.:</b> ';
+        if (!empty($dados[0]["telefoneCredor"])) {
+            $tabela .= $dados[0]["telefoneCredor"];
+        }
+        $tabela .= '<br/><b>Credor Safira nº: </b>' . $dados[0]["nr_safira"] . '<br/>        
                         <b>Endereço:</b> ' . $dados[0]["ds_logradouro"] . '<br/>
                         <b>Bairro:</b> ' . $dados[0]["ds_bairro"] . '<br/>
-                        <b>E-Mail:</b> ' . $dados[0]["emailFornecedor"] . '<br/>      
+                        <b>E-Mail:</b>';
+        if (!empty($dados[0]["emailFornecedor"])) {
+            $tabela .= $dados[0]["emailFornecedor"];
+        }
+        $tabela .= '<br/>
                     </td>
                 </tr>
         </table>
@@ -255,7 +267,7 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                     <td>' . $linha["nr_item"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["qt_itens_ordem"], 2), 2) . '</td>
                     <td>' . $linha["nm_unidade_medida"] . '</td>
-                    <td>' . $linha["cd_desc_material"].' - '.$linha["nm_desc_material"] . '</td>
+                    <td>' . $linha["cd_desc_material"] . ' - ' . $linha["nm_desc_material"] . '</td>
                     <td>' . $linha["nm_marca"] . '</td>
                     <td>' . Metodos::ConverteValorBr(round($linha["vl_itens_ordem"], 2), 2) . '</td>
                     <td>' . Metodos::ConverteValorBr($totalItens, 2) . '</td>
@@ -282,9 +294,9 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                 
                 <tr>
                     <td><b>Local de Execução:</b></td>
-                    <td>' . $dados[0]["localentrega"] . ',   localizado   no bairro:' 
-                          . $dados[0]["localbairro"] . ', CEP: ' . $dados[0]["localcep"]. 
-                    '</td>
+                    <td>' . $dados[0]["localentrega"] . ',   localizado   no bairro:'
+                . $dados[0]["localbairro"] . ', CEP: ' . $dados[0]["localcep"] .
+                '</td>
                 </tr>
             </table>';
         $tabela .= '
@@ -358,17 +370,15 @@ function pdf(int $ordem = null, Dados $dadosPdf) {
                 <div style="margin-left: 45%; margin-top:-5%; margin-right: -5%; font-size: 10pt;"> 
                         <b>Assinatura:</b>____________________________________________________
                 </div>';
-
-              
-
     }
     return $tabela;
 }
 
-class Dados{
-    
+class Dados {
+
     private $numeroContrato = null;
     private $numeroDocumento = null;
+
     function getNumeroContrato() {
         return $this->numeroContrato;
     }
@@ -384,4 +394,5 @@ class Dados{
     function setNumeroDocumento($numeroDocumento) {
         $this->numeroDocumento = $numeroDocumento;
     }
+
 }

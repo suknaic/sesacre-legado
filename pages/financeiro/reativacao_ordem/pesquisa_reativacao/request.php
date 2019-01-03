@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemModel.
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/compras/contrato/FinContratoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/pedido/Pedido.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/orcamento/empenho/FinEmpenhoModel.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemAdministracaoModel.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/financeiro/ordem/FinOrdemAdministracaoPesquisaModel.class.php";
 $session = new Session('ajax');
 
@@ -38,14 +39,13 @@ switch ($_REQUEST['acao']) {
             break;
         }
 
-    CASE 'cancelarPagamento':
+    CASE 'cancelarReativacao':
         $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         try {
-            $pagamento = new ConPagamento();
-            $pagamento->setIdPagamento($dados['id']);
-            $pagamento->setIdPessoa($session->getIdUser());
-            $pagamento->setDsAnotacao($dados['justificativa']);
+            $finOrdemAdministracaoModel = new FinOrdemAdministracaoModel();
+            $finOrdemAdministracaoModel->setIdOrdemAdministracao($dados[""]);
+            $finOrdemAdministracaoModel->setDsOrdemAdministracaoAnotacao($dados[""]);
             echo $pagamento->cancelarPagamento();
             return;
             break;
