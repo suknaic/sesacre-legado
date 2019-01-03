@@ -35,15 +35,15 @@ $(document).ready(function(){
                   try {
                       response = JSON.parse(response);
                   } catch (e) {
-                      func.modalAlert(func.msgErroPadrao);
-                      console.log("Parse JSON");
+                      func.modalAlert(func.msgErroPadrao, 'danger');
+                      // console.log("Parse JSON");
                       return false;
                   }
 
                   if (response.tipoMsg === "Erro") {
                       if (response.tipoExibicao === "console") {
-                          console.log('Console Mensagem');
-                          func.modalAlert(func.msgErroPadrao);
+                          // console.log('Console Mensagem');
+                          func.modalAlert(func.msgErroPadrao, 'danger');
                           return false;
                       } else if (response.tipoExibicao === "alert") {                        
                           func.modalAlert(response.msg);                        
@@ -56,14 +56,14 @@ $(document).ready(function(){
                       novaSenha(response.msg, senha);                    
                       return false;               
                   } else {
-                      console.log('Ultimo else');
-                      func.modalAlert(func.msgErroPadrao);
+                      // console.log('Ultimo else');
+                      func.modalAlert(func.msgErroPadrao, 'danger');
                       return false;
                   }
               },
               "error": function (response) {
                   $this.prop( "disabled", false );
-                  func.modalAlert(func.msgErroPadrao);
+                  func.modalAlert(func.msgErroPadrao, 'danger');
                   return false;
               }
           });
@@ -136,35 +136,35 @@ $(document).ready(function(){
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        // console.log("Parse JSON");
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            func.modalAlert(func.msgErroPadrao);
+                            // console.log('Console Mensagem');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {                        
                             func.modalAlert(response.msg);                        
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(func.msgSenhaAlteradaSucesso, 'primary');        
+                        func.modalAlert(func.msgSenhaAlteradaSucesso, 'success');
                         $('.modal-alert').on('hidden.bs.modal', function (e) {
                             location.reload();
                         });                        
                         return false;
                     } else {
-                        console.log('Ultimo else');
-                        func.modalAlert(func.msgErroPadrao);
+                        // console.log('Ultimo else');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop( "disabled", false );
-                    func.modalAlert(func.msgErroPadrao);
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });

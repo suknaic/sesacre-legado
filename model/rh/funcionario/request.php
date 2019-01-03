@@ -70,6 +70,8 @@ switch ($_REQUEST['acao']) {
             //**********************************************************************************************************************************************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
+            $dadosCompetencia = filter_input(INPUT_POST, 'dadosCompetencia', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //**********************************************************************************************************************************************
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
@@ -85,7 +87,7 @@ switch ($_REQUEST['acao']) {
             }
 
             $contrato = new Contrato();
-            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosContrato, $dadosContratoLotacao);
+            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
             return;
             break;
         } catch (Exception $e) {
@@ -302,7 +304,7 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica = new Contrato();
             $pessoaFisica->retornaLotacaoFuncao($idContrato);
 
-            //return;
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -586,6 +588,50 @@ switch ($_REQUEST['acao']) {
             $func->setDt_nascimento(trim($data));
             echo $func->retornaAniversario();
 
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
+    case 'desativarLogin':
+        try {
+
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+
+            $idPessoa = filter_input(INPUT_POST, 'idPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $pessoa = new Pessoa();
+            $pessoa->setId_pessoa($idPessoa['idPessoa']);
+
+            echo $pessoa->desativarLogin();
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
+
+    case 'ativarLogin':
+        try {
+
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+
+            $idPessoa = filter_input(INPUT_POST, 'idPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $pessoa = new Pessoa();
+            $pessoa->setId_pessoa($idPessoa['idPessoa']);
+
+            echo $pessoa->ativarLogin();
             return;
             break;
         } catch (Exception $e) {

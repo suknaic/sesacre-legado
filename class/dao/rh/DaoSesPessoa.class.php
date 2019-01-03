@@ -153,7 +153,7 @@ class DaoSesPessoa extends SesPessoa {
         $sql = " SELECT "
                 . " id_pessoa, nm_pessoa, st_ativo, nm_senha"
                 . " FROM ses_pessoa"
-                . " WHERE nm_email = :nmEmail";
+                . " WHERE nm_email = :nmEmail and st_login = '1'";
         try {
             $sth = $pdo->prepare($sql);
             $sth->bindValue(":nmEmail", $this->getNmEmail(), PDO::PARAM_STR);
@@ -307,6 +307,32 @@ class DaoSesPessoa extends SesPessoa {
      * @param type $pdo
      * @return boolean/Array
      */
+
+    function desativarLoginPessoa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_pessoa 
+                                        SET st_login = '0'
+                                            WHERE id_pessoa = :idPessoa");
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->execute();
+            return true;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function ativarLoginPessoa($pdo) {
+        try {
+            $result = $pdo->prepare("UPDATE ses_pessoa 
+                                        SET st_login = '1' 
+                                            WHERE id_pessoa = :idPessoa");
+            $result->bindValue(":idPessoa", $this->getIdPessoa(), PDO::PARAM_INT);
+            $result->execute();
+            return true;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
 }
 
 /* 

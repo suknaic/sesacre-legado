@@ -360,9 +360,9 @@ $(document).ready(function () {
 
             },
             "success":
-                    function (response) {
-                        $("#corpoTabelaLotacao").html(response);
-                    }
+                function (response) {
+                    $("#corpoTabelaLotacao").html(response);
+                }
         });
     }
     //******************************************************************************************************************
@@ -494,12 +494,46 @@ $(document).ready(function () {
         //**********************************************************************************
         $("#modal_titulo").text("Lotação: " + $(this).closest(".lotacaoLinha").find(".lotacao").text() + "  /  Função: " + $(this).closest(".lotacaoLinha").find(".funcao").text());
         $("#id_contrato_lotacao").val($idContratoLotacao);
-        $("#nr_ch_editar2").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
+        // $("#nr_ch_editar2").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
         $("#nr_ch_editar").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
         $("#dt_inicio_editar").val($(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio"));
         $("#dt_fim_editar").val($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim"));
-        $("#id_funcao_editar").val($(this).closest(".lotacaoLinha").find(".funcao").attr("idFuncao"));
-        $("#id_lotacao_editar").val($(this).closest(".lotacaoLinha").find(".lotacao").attr("idLotacao"));
+        // $("#id_funcao_editar").val($(this).closest(".lotacaoLinha").find(".funcao").attr("idFuncao"));
+        // $("#id_lotacao_editar").val($(this).closest(".lotacaoLinha").find(".lotacao").attr("idLotacao"));
+
+        var idLinha = $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont');
+        // console.log(idLinha);
+        // return false;
+
+        $("body").on("click", ".AtualizarItem", function (e) {
+            var ch = $('#nr_ch_editar').val();
+            var dtIni = $('#dt_inicio_editar').val();
+            var dtFim = $('#dt_fim_editar').val();
+
+            if (ch == 20 || ch == 24 || ch == 30 || ch == 40 || ch == 44) {
+                segue = true;
+            } else {
+                segue = false;
+            }
+
+            if (segue == false) {
+                func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
+                return false;
+            }
+
+            $("#tabelaLotacao tbody tr").each(function () {
+                if (idLinha == $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont')) {
+                    $(this).find('.cargaLotacao').attr('ch', ch);
+                    $(this).find('.dataIni').attr('dt_inicio', dtIni);
+                    $(this).find('.dataFim').attr('dt_fim', dtFim);
+                    $(this).find('td:eq(2)').text(ch);
+                    $(this).find('td:eq(3)').text(dtIni);
+                    $(this).find('td:eq(4)').text(dtFim);
+                }
+            });
+
+            $('#modalContratoLotacao').modal('hide');
+        });
     });
     //******************************************************************************************************************
 
@@ -550,7 +584,7 @@ $(document).ready(function () {
             return;
         }
 
-        //******** Controle de data e carga horária das lotações dos funcionários (Autor: Elivelton) *********
+        //************************** Controle de data e carga horária das lotações dos funcionário *********************
         seguir = 0;
         $("#tabelaLotacao tbody tr").each(function () {
             if (dataFimAntiga !== '') {
@@ -574,8 +608,6 @@ $(document).ready(function () {
                 }
 
                 if (dtFim > dataAtua) {
-                    console.log(parseInt(nr_carga_horaria));
-                    console.log(cargaHorariaLotacao);
                     if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
                         seguir = 3;
                         return;
@@ -613,21 +645,21 @@ $(document).ready(function () {
         if (lotacaoId == 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Lotação)</strong>");
             $("#lotacao").focus();
-            return;
+            return false;
         }
         if (funcaoId == 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Função)</strong>");
             $("#id_funcao").focus();
-            return;
+            return false;
         }
         if (nr_carga_horaria2 == null) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Carga Horária da Lotação)</strong>");
             $("#nr_carga_horaria2").focus();
-            return;
+            return false;
         }
         if ($("#dt_inicio").val() == "") {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Data de inicio da Função na Lotação)</strong>");
-            return;
+            return false;
         }
         //********** Data inicial da função na lotação tem de ser inferior a data final ************
         if ($("#dt_fim").val().length > 3) {
@@ -705,28 +737,34 @@ $(document).ready(function () {
     });
     //******************************************************************************************************************
 
-    //************************************************* Exlui Competência **********************************************
+    //************************************************* Exclui Competência *********************************************
     $("body").on("click", ".excluirLinha", function (e) {
         $(this).closest(".competenciaLinha").remove();
     });
     //******************************************************************************************************************
 
-    //*********************************************** Exclui Lotação **************************************************
+    //*********************************************** Exclui Lotação ***************************************************
     $("body").on("click", ".excluirLinhaLotacao", function (e) {
         $(this).closest(".lotacaoLinha").remove();
     });
     //******************************************************************************************************************
 
-    // ***************************** Mostra o campos de datav de demissão de acordo com o vinculo **********************
-       $("body").on("change", "#id_vinculo", function (e) {
-           var id = $(this).val();
-           if (id == 5) {
-               $(".demissao").show();
-           } else {
-               $(".demissao").hide();
-           }
-       });
-    // *****************************************************************************************************************
+    //*********************************************** Exclui Lotação ***************************************************
+    $("body").on("click", ".excluirLinhaLotacao", function (e) {
+        $(this).closest(".lotacaoLinha").remove();
+    });
+    //******************************************************************************************************************
+
+    //***************************** Mostra o campos de datav de demissão de acordo com o vinculo ***********************
+    // $("body").on("change", "#id_vinculo", function (e) {
+    //     var id = $(this).val();
+    //     if (id == 5) {
+    //         $(".demissao").show();
+    //     } else {
+    //         $(".demissao").hide();
+    //     }
+    // });
+    //******************************************************************************************************************
 
     //************************************************ Salva o contrato ************************************************
     $('body').on('click', '.btn-salvar', function (e) {
@@ -829,22 +867,45 @@ $(document).ready(function () {
                 return;
             }
 
+            //*************************** Competencias ********************************
+            if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
+                var DadosCompetencia = [];
+                $("#tabela tbody tr").each(function () {
+                    DadosCompetencia.push({
+                        id_escolaridade_formacao: $(this).find(".escolaridade").attr("idEscolaridadeFormacao")
+                    });
+                });
+            }
+            //**************************************************************************
+
             var DadosContrato_Lotacao = [];
-            if (idContrato == 0) {
+            // if (idContrato == 0) {
                 var x = 0;
                 if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
                     x = 1;
                     $("#tabelaLotacao tbody tr").each(function () {
+                        var idContratoLotacao = null;
+                        if ($(this).find('.editarLinhaLotacao').attr('value') != undefined) {
+                            idContratoLotacao = $(this).find('.editarLinhaLotacao').attr('value');
+                        }
+
+                        var dtFim = null;
+                        if ($(this).find(".dataFim").attr("dt_fim") != undefined) {
+                            dtFim = $(this).find(".dataFim").attr("dt_fim").split('/').reverse().join('-');
+                        }
                         DadosContrato_Lotacao.push({
+                            idContratoLotacao: idContratoLotacao,
                             chLotacao: $(this).find(".cargaLotacao").attr("ch"),
                             idLotacao: $(this).find(".lotacao").attr("idLotacao"),
                             idFuncao: $(this).find(".funcao").attr("idFuncao"),
-                            dt_inicio: $(this).find(".dataIni").attr("dt_inicio"),
-                            dt_fim: $(this).find(".dataFim").attr("dt_fim")
+                            dt_inicio: $(this).find(".dataIni").attr("dt_inicio").split('/').reverse().join('-'),
+                            dt_fim: dtFim
                         });
                     });
                 }
-            }
+            // }
+            // console.log();
+            // return false;
             //******************************** Dados que são obrigatorios ************************************
             var DadosObrigatorio = {
                 //********* 1-12 **********
@@ -879,31 +940,31 @@ $(document).ready(function () {
                 //*************************
             };
 
-            $campo = 0;
-            $i = 0;
-            $.each(DadosObrigatorio, function (index, value) {
-                $i++;
-                $campo = "";
-                if (value == 0 || value == "" || value == null) {
-                    if ($i <= 12) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-                    } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
-                    }
-                    $campo = 1;
-                    return false;
-                }
-            });
-            if ($campo == 1) {
-                return false;
-            }
-
-            if (x == 0) {
-                func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
-                return false;
-            }
+            // $campo = 0;
+            // $i = 0;
+            // $.each(DadosObrigatorio, function (index, value) {
+            //     $i++;
+            //     $campo = "";
+            //     if (value == 0 || value == "" || value == null) {
+            //         if ($i <= 12) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
+            //         } else if ($i >= 13 && $i <= 16) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+            //         } else if ($i >= 17 && $i <= 22) {
+            //             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
+            //         }
+            //         $campo = 1;
+            //         return false;
+            //     }
+            // });
+            // if ($campo == 1) {
+            //     return false;
+            // }
+            //
+            // if (x == 0) {
+            //     func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Informar Lotação e Função)</strong>");
+            //     return false;
+            // }
             //********************************************************************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
@@ -913,10 +974,12 @@ $(document).ready(function () {
                     "acao": "editarContrato",
                     "dadosPessoa": DadosPessoa,
                     "dadosPessoaFisica": DadosPessoaFisica,
+                    "dadosCompetencia": DadosCompetencia,
                     "dadosContrato": DadosContrato,
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

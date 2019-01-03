@@ -406,6 +406,22 @@ class pessoaFisica {
         }
     }
 
+    public function retornaCompetenciaPessoaFisica($idPessoaFisica) {
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            $pessoaFisica = new DaoSesPessoaFisica();
+            $pessoaFisica->setId_pessoa_fisica($idPessoaFisica);
+            $buscaCompetencia = $pessoaFisica->retornaCompetenciaPessoaFisica($pdo);
+
+            if ($buscaCompetencia != FALSE) {
+                return $buscaCompetencia;
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
+
     public function retornaPessoaFisica($pdo) {
         try {
             $pessoaFisica = new DaoSesPessoaFisica();
@@ -571,8 +587,11 @@ class pessoaFisica {
             }
             //************************************************************************************
             $rs = $pessoaFisica->removerCompetencia($pdo);
-
-            return $retorno;
+            if ($rs == 'Sucesso') {
+                return $rs;
+            } else {
+                return $retorno;
+            }
             //***********************************************************************************
         } catch (Exception $exc) {
             return Metodos::retornoAjax("Erro", "console", $exc->getMessage());

@@ -44,47 +44,47 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
             //Modal Alert
             require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/modalAlert.html";
             ?>
-<!--            <div id="modalContratoLotacao" class="modal fade modalContratoLotacao" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">    -->
-<!--                <div class="modal-dialog modal-lg">-->
-<!--                    <div class="modal-content">-->
-<!--                        <div class="modal-header">-->
-<!--                            <button type="button" class="close fecharModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-<!--                            <h4 id="modal_titulo" class="modal-title">Titulo</h4>-->
-<!--                        </div>-->
-<!--                        <div id="modal-corpo"class="modal-body">-->
-<!--                            <input type="hidden"  id="id_contrato_lotacao" name="id_contrato_lotacao" value="" />-->
-<!--                            <input type="hidden"  id="nr_ch_editar2" name="nr_ch_editar2" value="" />-->
-<!--                            <input type="hidden"  id="id_funcao_editar" name="id_funcao_editar" value="" />-->
-<!--                            <input type="hidden"  id="id_lotacao_editar" name="id_lotacao_editar" value="" />-->
-<!--                            <div class="form-group">-->
-<!--                                <div class="col-sm-4 valor_editar">-->
-<!--                                    <label>Carga Horária:</label>-->
-<!--                                    <div class="mui-textfield">-->
-<!--                                        <input type="text"  id="nr_ch_editar" name="nr_ch_editar" required="" class="form-control cargaHorariaEditar nr"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-sm-4 dataIni_editar">-->
-<!--                                    <label>Data de inicio</label>-->
-<!--                                    <div class="mui-textfield mui-textfield">-->
-<!--                                        <input type="text"  id="dt_inicio_editar" name="dt_inicio_editar" required="" class="form-control dtInicio_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-sm-4 dataPre_editar">-->
-<!--                                    <label>Data de Fim</label>-->
-<!--                                    <div class="mui-textfield mui-textfield">-->
-<!--                                        <input type="text"  id="dt_fim_editar" name="dt_fim_editar" required="" class="form-control dtFim_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <br>-->
-<!--                        <div class="modal-footer">-->
-<!--                            <button type="button" class="btn btn-flat btn-success AtualizarItem">Atualizar Item</button>-->
-<!--                            <button type="button" class="btn btn-flat btn-danger fecharModal" data-dismiss="modal">Fechar</button>-->
-<!--                        </div>-->
-<!--                    </div> /.modal-content -->
-<!--                </div></.modal-dialog -->
-<!--            </div> /.modal -->
+            <div id="modalContratoLotacao" class="modal fade modalContratoLotacao" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close fecharModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 id="modal_titulo" class="modal-title">Titulo</h4>
+                        </div>
+                        <div id="modal-corpo"class="modal-body">
+                            <input type="hidden"  id="id_contrato_lotacao" name="id_contrato_lotacao" value="" />
+                            <input type="hidden"  id="nr_ch_editar2" name="nr_ch_editar2" value="" />
+                            <input type="hidden"  id="id_funcao_editar" name="id_funcao_editar" value="" />
+                            <input type="hidden"  id="id_lotacao_editar" name="id_lotacao_editar" value="" />
+                            <div class="form-group">
+                                <div class="col-sm-4 valor_editar">
+                                    <label>Carga Horária:</label>
+                                    <div class="mui-textfield">
+                                        <input type="text"  id="nr_ch_editar" name="nr_ch_editar" required="" class="form-control cargaHorariaEditar nr"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 dataIni_editar">
+                                    <label>Data de inicio</label>
+                                    <div class="mui-textfield mui-textfield">
+                                        <input type="text"  id="dt_inicio_editar" name="dt_inicio_editar" required="" class="form-control dtInicio_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 dataPre_editar">
+                                    <label>Data de Fim</label>
+                                    <div class="mui-textfield mui-textfield">
+                                        <input type="text"  id="dt_fim_editar" name="dt_fim_editar" required="" class="form-control dtFim_editar data" placeholder="99/99/9999" data-mask="99/99/9999"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-flat btn-success AtualizarItem">Atualizar Item</button>
+                            <button type="button" class="btn btn-flat btn-danger fecharModal" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="boxed">
 
                 <!--CONTENT CONTAINER-->
@@ -195,9 +195,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_pais_naturalidade" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -209,9 +206,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado_naturalidade" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -223,9 +217,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_naturalidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Naturalidade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -267,9 +258,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado" class="form-control select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -304,10 +292,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
                                                             <select id="id_estado_civil" class="form-control">
-                                                                <option value="0">Selecione</option>                                                                
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
+                                                                <option value="0">Selecione</option>
                                                             </select>
                                                         </div>
                                                     </div> 
@@ -328,9 +313,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_escolaridade" class="form-control select">
                                                                 <option value="0">Selecione a Escolaridade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -347,9 +329,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_competencia" class="form-control formacao competencia select">
                                                                     <option value="0">Selecione a Competência</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -370,7 +349,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                     <table class="table table-striped table-bordered table-hover table-condensed" id="tabela">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th class="text-capitalize text-center">Formação</th> 
+                                                                                <th class="text-capitalize text-center">Curso</th>
                                                                                 <th class="text-capitalize text-center">Escolaridade</th>
                                                                                 <th class="text-capitalize text-center">Ação</th>
                                                                             </tr>
@@ -408,9 +387,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_pais_endereco" class="form-control pais select">
                                                                 <option value="0">Selecione o País</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -422,9 +398,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_estado_endereco" class="form-control estado select">
                                                                 <option value="0">Selecione o Estado</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -436,9 +409,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             </span>
                                                             <select id="id_cidade" class="form-control idCidade select">
                                                                 <option value="0">Selecione a Cidade</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -540,9 +510,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_vinculo" class="form-control select">
                                                                     <option value="0">Selecione o Vínculo</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -554,9 +521,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_pessoa_juridica" class="form-control select">
                                                                     <option value="0">Selecione a Empresa</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -598,9 +562,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                 </span>
                                                                 <select id="id_cargo" class="form-control select">
                                                                     <option value="0">Selecione do Cargo</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -625,10 +586,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_lotacao" class="form-control select">
-                                                                        <option value="0">Selecione Lotação</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                        <option value="0">Selecione Lotação</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -639,14 +597,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_funcao" class="form-control select">
-                                                                        <option value="0">Selecione Função</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                        <option value="0">Selecione Função</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
-
                                                         </div>    
                                                         <div class="form-group">    
                                                             <div class="col-md-1"></div>
@@ -761,27 +715,21 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
             </div>
             <!--===================================================-->
             <!--END CONTENT CONTAINER-->
-
             <!--MENU LATERAL-->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
             <!--END MENU LATERAL-->
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->

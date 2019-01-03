@@ -491,7 +491,7 @@ $(document).ready(function () {
             var dataIni = new Date(x);
             var dataFim = new Date(y);
             if (dataIni > dataFim) {
-                func.modalAlert("A data Inicio Não Pode Ser Maior que a Data Fim");
+                func.modalAlert("A data Inicio da Lotação Não Pode Ser Maior que a Data Fim.");
                 return;
             }
         }
@@ -514,11 +514,9 @@ $(document).ready(function () {
         $("#dt_fim").val("");
         //***********************************************************************************
         $("#id_lotacao").val(0);
-        $("#id_lotacao").select2({
-        });
+        $("#id_lotacao").select2({});
         $("#id_funcao").val(0);
-        $("#id_funcao").select2({
-        });
+        $("#id_funcao").select2({});
     });
     //******************************************************************************************
     $("body").on("click", ".btn-add", function (e) {
@@ -553,8 +551,7 @@ $(document).ready(function () {
         $(linha).appendTo('.corpoTabela');
 
         $("#id_competencia").val(0);
-        $("#id_competencia").select2({
-        });
+        $("#id_competencia").select2({});
     });
     //******************************************************************************************
     $("body").on("click", ".excluirLinha", function (e) {
@@ -752,7 +749,7 @@ $(document).ready(function () {
                     "dadosContrato_Lotacao": DadosContrato_Lotacao
                 },
                 "success": function (response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
