@@ -1937,6 +1937,31 @@ class Contrato {
             return Metodos::retornoAjax('Erro', 'console', $ex);
         }
     }
+
+    public function retornaDataHoraAtual($objeto) {
+        try {
+            if (empty($objeto)) {
+                return;
+            }
+
+            switch ($objeto) {
+                case 'data':
+                    $data = date('d/m/Y');
+                    return $data;
+                    break;
+                case 'hora':
+                    $hora = date('H:i');
+                    return $hora;
+                    break;
+                case 'dataHora':
+                    $dataHora = date('d/m/Y - H:i');
+                    return $dataHora;
+                    break;
+            }
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex);
+        }
+    }
 }
 
 ?>

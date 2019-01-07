@@ -145,7 +145,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-1"></div>
                                                         <div class="col-md-3">
-                                                            País: <span class="text-danger">*</span>
+                                                            País de Naturalidade: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
@@ -159,7 +159,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
-                                                            Estado: <span class="text-danger">*</span>
+                                                            Estado de Naturalidade: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
@@ -173,7 +173,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            Cidade: <span class="text-danger">*</span>
+                                                            Cidade de Naturalidade: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
@@ -208,7 +208,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            Orgão Expedidor: <span class="text-danger">*</span>
+                                                            Órgão Expedidor: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-file-text-o inputPFa"></p>
@@ -421,7 +421,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            N°: <span class="text-danger">*</span>
+                                                            Número: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -769,6 +769,5 @@
             <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
             <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
             <!-- END JAVASCRIPT -->
-
     </body>
 </html>

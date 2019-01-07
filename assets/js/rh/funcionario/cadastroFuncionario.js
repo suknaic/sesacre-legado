@@ -354,169 +354,192 @@ $(document).ready(function () {
     $('#nr_carga_horaria').on('focus blur', function (e) {
         $('#nr_carga_horaria2').val($('#nr_carga_horaria').val());
     });
+
 //******************************************************************************************
     $("body").on("click", ".btn-add-lotacao", function (e) {
-        var lotacaoId = $("#id_lotacao").val();
-        var funcaoId = $("#id_funcao").val();
-        var nr_carga_horaria = $("#nr_carga_horaria").val();
-        var nr_carga_horaria2 = $("#nr_carga_horaria2").val();
-        if (nr_carga_horaria <= 0) {
-            func.modalAlert(" Informe Carga Horária do Funcionário");
-            $("#nr_carga_horaria").focus();
-            return;
-        }
-        //********carga hoaria da lotação não deve exceder a carga horaria do funcionario**************** 
-        if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
-            return;
-        }
-        //********data inicial da função na lotação tem de ser inferior a data final**********************
-        if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
-            return;
-        }
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "dataHora",
+                objeto: "data"
+            },
+            "success": function (response) {
+                var dataAtual = response.split("/")[2].toString() + "/" + response.split("/")[1].toString() + "/" + response.split("/")[0].toString();
 
-        if ($("#dt_inicio").val() == "") {
-            func.modalAlert(func.msgPreencherCampos + " <strong>(Data de inicio da Função na Lotação)</strong>");
-            return false;
-        }
-
-       //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
-       admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
-       inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
-       if (inicio > admissao) {
-           func.modalAlert('Data de Início da Lotação não pode ser maior que a Data de Admissão.');
-           return false;
-       }
-        //******************************************************************************************************
-        var flag = 0;
-        if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {
-            var cargaHorariaLotacao = 0;
-            $("#corpoTabelaLotacao tbody tr").each(function () {
-                if (lotacaoId == $(this).find(".lotacao").attr("idLotacao") && funcaoId == $(this).find(".funcao").attr("idFuncao")) {
-                    func.modalAlert("Os dados de Lotação e Função Informados já estão cadastrados no Sistema.");
-                    flag = 1;
+                var lotacaoId = $("#id_lotacao").val();
+                var funcaoId = $("#id_funcao").val();
+                var nr_carga_horaria = $("#nr_carga_horaria").val();
+                var nr_carga_horaria2 = $("#nr_carga_horaria2").val();
+                if (nr_carga_horaria <= 0) {
+                    func.modalAlert(" Informe Carga Horária do Funcionário");
+                    $("#nr_carga_horaria").focus();
+                    return;
+                }
+                //********carga hoaria da lotação não deve exceder a carga horaria do funcionario****************
+                if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                    func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
+                    return;
                 }
 
-                dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
-                dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
-                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
-                    cargaHorariaLotacao += 0;
-                } else {
-                    cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
+                if ($("#dt_admissao").val() == "") {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>(Data de admissão do Contrato)</strong>");
+                    return false;
                 }
-            });
-        }
-        if (flag == 1) {
-            return;
-        }
-        seguir = 0;
-        var dtFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
-        $("#tabelaLotacao tbody tr").each(function () {
-            if (dtFimAntiga !== '' && dtFimAntiga != undefined) {
-                var dataAnti = +new Date(dtFimAntiga.split("/")[2].toString() + "/" + dtFimAntiga.split("/")[1].toString() + "/" + dtFimAntiga.split("/")[0].toString());
-                var dataAtua = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
 
-                if (dataAnti >= dataAtua) {
+                if ($("#dt_inicio").val() == "") {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>(Data de início da Função na Lotação)</strong>");
+                    return false;
+                }
+
+               //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
+               admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
+               inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
+               if (inicio < admissao) {
+                   func.modalAlert('Data de Início da Lotação não pode ser menor que a Data de Admissão.');
+                   return false;
+               }
+               //******************************************************************************************************
+                var flag = 0;
+                if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {
+                    var cargaHorariaLotacao = 0;
+                    $("#corpoTabelaLotacao tbody tr").each(function () {
+                        if (lotacaoId == $(this).find(".lotacao").attr("idLotacao") && funcaoId == $(this).find(".funcao").attr("idFuncao")) {
+                            func.modalAlert("Os dados de Lotação e Função Informados já estão cadastrados no Sistema.");
+                            flag = 1;
+                        }
+
+                        dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
+                        if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
+                            cargaHorariaLotacao += 0;
+                        } else {
+                            cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
+                        }
+                    });
+                }
+                if (flag == 1) {
+                    return;
+                }
+                var seguir = 0;
+                $("#tabelaLotacao tbody tr").each(function () {
+                    var dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[0].toString();
+                    var dataInicioAntiga = $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[0].toString();
+                    var dataInicioNova = $("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString();
+                    if (dataFimAntiga != undefined) {
+
+                        if (+new Date(dataFimAntiga) >= +new Date(dataAtual)) {
+                            if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                                seguir = 3;
+                                return;
+                            }
+                        }
+
+
+                        if (+new Date(dataInicioNova) <= +new Date(dataInicioAntiga) && +new Date(dataInicioNova) >= +new Date(dataFimAntiga)) {
+                            seguir = 1;
+                            return;
+                        }
+
+                        if (dataInicioNova < dataFimAntiga) {
+                            seguir = 2;
+                        }
+
+                        if (dataFimAntiga > +new Date(dataAtual)) {
+                            if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
+                                seguir = 3;
+                                return;
+                            }
+                        }
+
+                        if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                            seguir = 3;
+                            return;
+                        }
+                    }
+
                     if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
                         seguir = 3;
                         return;
                     }
+
+                    if (dataInicioNova > +new Date(dataAtual)) {
+                        seguir = 4;
+                        return;
+                    }
+                });
+
+                if (seguir === 1) {
+                    func.modalAlert("A (DATA INÍCIO) da Nova Lotação do Funcionário é Menor ou igual a (DATA FIM) da Lotação ainda Vigente.");
+                    return false;
                 }
 
-                dtFim = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[0].toString();
-                dtInicio = $("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString();
-                dtInicio2 = $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[0].toString();
+                if (seguir === 2) {
+                    func.modalAlert("Não é Possível Inserir uma Nova Lotação pois a uma Lotação ainda Vigente.");
+                    return false;
+                }
+                if (seguir === 3) {
+                    func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
+                    return false;
+                }
 
-                if (+new Date(dtInicio) <= +new Date(dtInicio2) && +new Date(dtInicio) >= +new Date(dtFim)) {
-                    seguir = 1;
+                if (seguir === 4) {
+                    func.modalAlert("Data de início é maior que a data atual.");
+                    return false;
+                }
+
+        //********************************************************************************
+                if (lotacaoId == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>(Lotação)</strong>");
+                    $("#id_lotacao").focus();
+                    return;
+                }
+                if (funcaoId == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>(Função)</strong>");
+                    $("#id_funcao").focus();
+                    return;
+                }
+                if (nr_carga_horaria2 == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>(Carga Horária da Lotação)</strong>");
+                    $("#nr_carga_horaria2").focus();
                     return;
                 }
 
-                if (dtFim > dataAtua) {
-                    if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
-                        seguir = 3;
+                if ($("#dt_fim").val().length > 3) {
+                    var data1 = $("#dt_inicio").val();
+                    var data2 = $("#dt_fim").val();
+                    var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
+                    var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
+                    var dataIni = new Date(x);
+                    var dataFim = new Date(y);
+                    if (dataIni > dataFim) {
+                        func.modalAlert("A Data Início da Função na Lotação não pode ser Maior que a Data Fim.");
                         return;
                     }
                 }
+                var lotacao = $("#id_lotacao option:selected").text();
+                var funcao = $("#id_funcao option:selected").text();
 
-                if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                    seguir = 3;
-                    return;
-                }
-            }
-
-            if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                seguir = 3;
-                return;
+                //********************************************************************************
+                var linha = "";
+                linha = "<tr class='warning lotacaoLinha'>\n\
+                            <td class='text-center lotacao' idLotacao='" + lotacaoId + "'>" + lotacao + "</td>\n\
+                            <td class='text-center funcao' idFuncao='" + funcaoId + "'>" + funcao + "</td>\n\
+                            <td class='text-center cargaLotacao'ch='" + nr_carga_horaria2 + "'>" + nr_carga_horaria2 + "</td>\n\
+                            <td class='text-center dataIni' dt_inicio='" + $("#dt_inicio").val() + "'>" + $("#dt_inicio").val() + "</td>\n\
+                            <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
+                            <td class='text-center'><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
+                         </tr>";
+                $(linha).appendTo('.corpoTabelaLotacao');
+                $("#nr_carga_horaria2").val("");
+                $("#dt_inicio").val("");
+                $("#dt_fim").val("");
+                //***********************************************************************************
+                $("#id_lotacao").val(0);
+                $("#id_lotacao").select2({});
+                $("#id_funcao").val(0);
+                $("#id_funcao").select2({});
             }
         });
-        
-        if (seguir === 1) {
-            func.modalAlert("A (DATA INÍCIO) da Nova Lotação do Funcionário é Menor ou igual a (DATA FIM) da Lotação ainda Vigente.");
-            return false;
-        }
-
-        if (seguir === 2) {
-            func.modalAlert("Não é Possível Inserir uma Nova Lotação pois a uma Lotação ainda Vigente.");
-            return false;
-        }
-        if (seguir === 3) {
-            func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
-            return false;
-        }
-
-//********************************************************************************
-        if (lotacaoId == 0) {
-            func.modalAlert(func.msgPreencherCampos + " <strong>(Lotação)</strong>");
-            $("#id_lotacao").focus();
-            return;
-        }
-        if (funcaoId == 0) {
-            func.modalAlert(func.msgPreencherCampos + " <strong>(Função)</strong>");
-            $("#id_funcao").focus();
-            return;
-        }
-        if (nr_carga_horaria2 == 0) {
-            func.modalAlert(func.msgPreencherCampos + " <strong>(Carga Horária da Lotação)</strong>");
-            $("#nr_carga_horaria2").focus();
-            return;
-        }
-
-        if ($("#dt_fim").val().length > 3) {
-            var data1 = $("#dt_inicio").val();
-            var data2 = $("#dt_fim").val();
-            var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
-            var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
-            var dataIni = new Date(x);
-            var dataFim = new Date(y);
-            if (dataIni > dataFim) {
-                func.modalAlert("A Data Início da Função na Lotação não pode ser Maior que a Data Fim.");
-                return;
-            }
-        }
-        var lotacao = $("#id_lotacao option:selected").text();
-        var funcao = $("#id_funcao option:selected").text();
-
-        //********************************************************************************
-        var linha = "";
-        linha = "<tr class='warning lotacaoLinha'>\n\
-                    <td class='text-center lotacao' idLotacao='" + lotacaoId + "'>" + lotacao + "</td>\n\
-                    <td class='text-center funcao' idFuncao='" + funcaoId + "'>" + funcao + "</td>\n\
-                    <td class='text-center cargaLotacao'ch='" + nr_carga_horaria2 + "'>" + nr_carga_horaria2 + "</td>\n\
-                    <td class='text-center dataIni' dt_inicio='" + $("#dt_inicio").val() + "'>" + $("#dt_inicio").val() + "</td>\n\
-                    <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
-                    <td class='text-center'><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
-                 </tr>";
-        $(linha).appendTo('.corpoTabelaLotacao');
-        $("#nr_carga_horaria2").val("");
-        $("#dt_inicio").val("");
-        $("#dt_fim").val("");
-        //***********************************************************************************
-        $("#id_lotacao").val(0);
-        $("#id_lotacao").select2({});
-        $("#id_funcao").val(0);
-        $("#id_funcao").select2({});
     });
     //******************************************************************************************
     $("body").on("click", ".btn-add", function (e) {
@@ -590,12 +613,16 @@ $(document).ready(function () {
             var DadosPessoa = {
                 //****************dados pessoais*********************
                 nomeSocial: $("#nm_nome").val(),
+                pais: $("#id_pais_naturalidade").val(),
+                estado: $("#id_estado_naturalidade").val(),
                 naturalidade: $("#id_naturalidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 complemento: $("#ds_complemento").val(),
                 numero: $('#nr_endereco').val(),
                 bairro: $("#ds_bairro").val(),
                 cep: cep,
+                pais: $("#id_pais_endereco").val(),
+                estado: $("#id_estado_endereco").val(),
                 cidade: $("#id_cidade").val(),
                 telefone_residencial: $("#nr_telefone_residencial").val(),
                 telefone_celular: $("#nr_telefone_celular").val(),
@@ -684,12 +711,14 @@ $(document).ready(function () {
             }
     //*******************************************************************
             var DadosObrigatorio = {
-                //**************1-12***********************
-                "Email": DadosPessoa.email,
+                //**************1-14***********************
+                "E-mail": DadosPessoa.email,
                 "Nome Civil": DadosPessoaFisica.nomeCivil,
                 "Sexo": DadosPessoaFisica.tpSexo,
                 "Data de Nascimento": DadosPessoaFisica.dtNascimento,
-                "Naturalidade": DadosPessoa.naturalidade,
+                "Pais de Naturalidade": DadosPessoa.pais,
+                "Estado de Naturalidade": DadosPessoa.estado,
+                "Cidade de Naturalidade": DadosPessoa.naturalidade,
                 "CPF": DadosPessoaFisica.cpf,
                 "Registro Geral": DadosPessoaFisica.rg,
                 "Órgão Expedidor": DadosPessoaFisica.orgaoExpedidor,
@@ -697,13 +726,15 @@ $(document).ready(function () {
                 "Nome da Mãe": DadosPessoaFisica.mae,
                 "Estado Civil": DadosPessoaFisica.estadoCivil,
                 "Escolaridade": DadosPessoaFisica.escolaridade,
-                //***************13-17*****************************
-                "Cidade Endereço": DadosPessoa.cidade,
+                //***************15-21*****************************
+                "País": DadosPessoa.pais,
+                "Estado": DadosPessoa.estado,
+                "Cidade": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
-                "Bairro": DadosPessoa.bairro,
                 "Número": DadosPessoa.numero,
+                "Bairro": DadosPessoa.bairro,
                 "Telefone Celular": DadosPessoa.telefone_celular,
-                //******************18-22****************************
+                //******************22-28****************************
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
@@ -718,11 +749,11 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    if ($i <= 12) {
+                    if ($i <= 14) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-                    } else if ($i >= 13 && $i <= 16) {
+                    } else if ($i >= 15 && $i <= 21) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
+                    } else if ($i >= 22 && $i <= 28) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
                     }
                     $campo = 1;

@@ -639,5 +639,25 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
+    case 'dataHora':
+        try {
+            if (!$session->vPRh()) {
+                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
+                return;
+            }
+
+            $objeto = filter_input(INPUT_GET, 'objeto', FILTER_DEFAULT);
+
+            $contrato = new Contrato();
+
+            echo $contrato->retornaDataHoraAtual($objeto);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+            break;
+        }
 }
 ?>
