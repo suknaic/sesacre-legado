@@ -603,15 +603,15 @@ $(document).ready(function () {
     //******************************************************************************************************************
 
     //****************************************** Terceirizados e Estagiarios *******************************************
-    $('#id_pessoa_juridica').prop('disabled', true);
-    $("body").on("change", "#id_vinculo", function (e) {
-        var id = $(this).val();
-        if (id == 3 || id == 6) {
-            $('#id_pessoa_juridica').prop('disabled', false);
-        } else {
-            $('#id_pessoa_juridica').prop('disabled', true);
-        }
-    });
+    // $('#id_pessoa_juridica').prop('disabled', true);
+    // $("body").on("change", "#id_vinculo", function (e) {
+    //     var id = $(this).val();
+    //     if (id == 3 || id == 6) {
+    //         $('#id_pessoa_juridica').prop('disabled', false);
+    //     } else {
+    //         $('#id_pessoa_juridica').prop('disabled', true);
+    //     }
+    // });
     //******************************************************************************************************************
 
     //********************************************** Salva todos os dados **********************************************
@@ -751,7 +751,7 @@ $(document).ready(function () {
                 "Telefone Celular": DadosPessoa.telefone_celular,
                 //******************22-28****************************
                 "Vínculo": DadosContrato.vinculo,
-                // "Empresa": DadosContrato.pessoaJuridica,
+                "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
                 "Carga Horária do Contrato": DadosContrato.nrCargaHoraria,
                 "Matrícula": DadosContrato.nrMatricula,
@@ -779,13 +779,13 @@ $(document).ready(function () {
                 return false;
             }
 
-            var id = $('#id_vinculo').val();
-            if (id == 3 || id == 6) {
-                if (DadosContrato.pessoaJuridica == 0 || DadosContrato.pessoaJuridica == '') {
-                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Empresa)</strong>");
-                    return;
-                }
-            }
+            // var id = $('#id_vinculo').val();
+            // if (id == 3 || id == 6) {
+            //     if (DadosContrato.pessoaJuridica == 0 || DadosContrato.pessoaJuridica == '') {
+            //         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Empresa)</strong>");
+            //         return;
+            //     }
+            // }
 
             //**********************************************************************************************************
             if (DadosContrato.nrMatricula == "" && DadosContrato.dtAdmissao == "" && DadosContrato.nrCargaHoraria == "" && DadosContrato.vinculo == 0
