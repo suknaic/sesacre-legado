@@ -371,35 +371,64 @@ $(document).ready(function () {
                 var funcaoId = $("#id_funcao").val();
                 var nr_carga_horaria = $("#nr_carga_horaria").val();
                 var nr_carga_horaria2 = $("#nr_carga_horaria2").val();
+
+
+
                 if (nr_carga_horaria <= 0) {
-                    func.modalAlert(" Informe Carga Horária do Funcionário");
-                    $("#nr_carga_horaria").focus();
-                    return;
-                }
-                //********carga hoaria da lotação não deve exceder a carga horaria do funcionario****************
-                if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                    func.modalAlert(" Carga Horária da Lotação excede a Carga Horária do Funcionário");
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Data de admissão do Contrato)</strong>");
                     return;
                 }
 
+                //******************************* Verifica se a data de admissão está vazia ****************************
                 if ($("#dt_admissao").val() == "") {
-                    func.modalAlert(func.msgPreencherCampos + " <strong>(Data de admissão do Contrato)</strong>");
-                    return false;
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Data de admissão do Contrato)</strong>");
+                    return;
                 }
+                //******************************************************************************************************
 
-                if ($("#dt_inicio").val() == "") {
-                    func.modalAlert(func.msgPreencherCampos + " <strong>(Data de início da Função na Lotação)</strong>");
-                    return false;
+                //********************************** Verifica se a lotacao esta vazia **********************************
+                if (lotacaoId == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Lotação)</strong>");
+                    return;
                 }
+                //******************************************************************************************************
+
+                //************************************** Verifica se a funcao esta vazia *******************************
+                if (funcaoId == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Função)</strong>");
+                    return;
+                }
+                //******************************************************************************************************
+
+                //************************ Verifica se a carga horaria da lotacao esta vazia ***************************
+                if (nr_carga_horaria2 == 0) {
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Carga Horária da Lotação)</strong>");
+                    return;
+                }
+                //******************************************************************************************************
+
+                //**********carga horaria da lotação não deve exceder a carga horaria do funcionario********************
+                if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
+                    func.modalAlert("A Carga Horária da Função na Lotação Excede a Carga Horária do Contato.");
+                    return;
+                }
+                //******************************************************************************************************
+
+                //***************** Verifica se a data de inicio da funcao da lotacao esta vazia ***********************
+                if ($("#dt_inicio").val() == "") {
+                    func.modalAlert(func.msgPreencherCampos + " <strong>Dados Funcionais (Data de início da Função na Lotação)</strong>");
+                    return;
+                }
+                //******************************************************************************************************
 
                //***************** Data de Início da Lotação Não Poder Ser Maior que a Data de Admissão ****************
                admissao = +new Date($('#dt_admissao').val().split("/")[2].toString() + "/" + $('#dt_admissao').val().split("/")[1].toString() + "/" + $('#dt_admissao').val().split("/")[0].toString());
                inicio = +new Date($('#dt_inicio').val().split("/")[2].toString() + "/" + $('#dt_inicio').val().split("/")[1].toString() + "/" + $('#dt_inicio').val().split("/")[0].toString());
                if (inicio < admissao) {
                    func.modalAlert('Data de Início da Lotação não pode ser menor que a Data de Admissão.');
-                   return false;
+                   return;
                }
-               //******************************************************************************************************
+               //*******************************************************************************************************
                 var flag = 0;
                 if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {
                     var cargaHorariaLotacao = 0;
@@ -478,7 +507,7 @@ $(document).ready(function () {
                     return false;
                 }
                 if (seguir === 3) {
-                    func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
+                    func.modalAlert("A Carga Horária da Função na Lotação Excede a Carga Horária do Contato.");
                     return false;
                 }
 
@@ -487,23 +516,7 @@ $(document).ready(function () {
                     return false;
                 }
 
-        //********************************************************************************
-                if (lotacaoId == 0) {
-                    func.modalAlert(func.msgPreencherCampos + " <strong>(Lotação)</strong>");
-                    $("#id_lotacao").focus();
-                    return;
-                }
-                if (funcaoId == 0) {
-                    func.modalAlert(func.msgPreencherCampos + " <strong>(Função)</strong>");
-                    $("#id_funcao").focus();
-                    return;
-                }
-                if (nr_carga_horaria2 == 0) {
-                    func.modalAlert(func.msgPreencherCampos + " <strong>(Carga Horária da Lotação)</strong>");
-                    $("#nr_carga_horaria2").focus();
-                    return;
-                }
-
+                //********************************************************************************
                 if ($("#dt_fim").val().length > 3) {
                     var data1 = $("#dt_inicio").val();
                     var data2 = $("#dt_fim").val();
@@ -576,45 +589,45 @@ $(document).ready(function () {
         $("#id_competencia").val(0);
         $("#id_competencia").select2({});
     });
-    //******************************************************************************************
+
+    //*********************************** Destroi uma linha das competencias *******************************************
     $("body").on("click", ".excluirLinha", function (e) {
         $(this).closest(".competenciaLinha").remove();
     });
-    //******************************************************************************************
+    //******************************************************************************************************************
+
+    //*********************************** Destroi uma linha das lotacoes ***********************************************
     $("body").on("click", ".excluirLinhaLotacao", function (e) {
         $(this).closest(".lotacaoLinha").remove();
     });
-    //******************************************************************************************
-    // $("body").on("change", "#id_vinculo", function (e) {
-    //     var id = $(this).val();
-    //     if (id == 5) {
-            $(".demissao").show();
-    //     } else {
-    //         $(".demissao").hide();
-    //     }
-    //     $("#dt_demissao").val("");
-    //     $("#dt_fim").val("");
-    // });
-    //******************************************************************************************
+    //******************************************************************************************************************
+
+    //****************************************** Terceirizados e Estagiarios *******************************************
+    $('#id_pessoa_juridica').prop('disabled', true);
+    $("body").on("change", "#id_vinculo", function (e) {
+        var id = $(this).val();
+        if (id == 3 || id == 6) {
+            $('#id_pessoa_juridica').prop('disabled', false);
+        } else {
+            $('#id_pessoa_juridica').prop('disabled', true);
+        }
+    });
+    //******************************************************************************************************************
+
+    //********************************************** Salva todos os dados **********************************************
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
         } else {
             e.preventDefault();
             var $this = $(this);
-            //$this.prop("disabled", true);
-    //*******************************************************
-    //            $email = $("#nm_email").val();
-    //            $x = $email.split("@");
-    //            $y = $x[1].substring(0, 3);
-    //*******************************************************
 
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
             var DadosPessoa = {
                 //****************dados pessoais*********************
                 nomeSocial: $("#nm_nome").val(),
-                pais: $("#id_pais_naturalidade").val(),
-                estado: $("#id_estado_naturalidade").val(),
+                paisNaturalidade: $("#id_pais_naturalidade").val(),
+                estadoNaturalidade: $("#id_estado_naturalidade").val(),
                 naturalidade: $("#id_naturalidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 complemento: $("#ds_complemento").val(),
@@ -646,7 +659,7 @@ $(document).ready(function () {
                 cns: $("#nr_cns").val(),
                 escolaridade: $("#id_escolaridade").val()
             };
-    //***************competencias************************************
+                //*************************************** Competencias *************************************************
                 if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
                     var DadosCompetencia = [];
                     $("#tabela tbody tr").each(function () {
@@ -655,7 +668,9 @@ $(document).ready(function () {
                         });
                     });
                 }
-    //*******************dados funcionais********************************
+                //******************************************************************************************************
+
+            //****************************************** DADOS FUNCIONAIS **********************************************
             //********data admissao tem de ser inferior a data demissao**********************
             if ($("#dt_demissao").val().length > 3) {
                 var data1 = $("#dt_admissao").val();
@@ -709,15 +724,15 @@ $(document).ready(function () {
             if (chTotal != DadosContrato.nrCargaHoraria) {
                 func.modalAlert('Carga horária total das lotações deve ser igual a carga horária do contrato.');
             }
-    //*******************************************************************
+            //*******************************************************************
             var DadosObrigatorio = {
                 //**************1-14***********************
                 "E-mail": DadosPessoa.email,
                 "Nome Civil": DadosPessoaFisica.nomeCivil,
                 "Sexo": DadosPessoaFisica.tpSexo,
                 "Data de Nascimento": DadosPessoaFisica.dtNascimento,
-                "Pais de Naturalidade": DadosPessoa.pais,
-                "Estado de Naturalidade": DadosPessoa.estado,
+                "Pais de Naturalidade": DadosPessoa.paisNaturalidade,
+                "Estado de Naturalidade": DadosPessoa.estadoNaturalidade,
                 "Cidade de Naturalidade": DadosPessoa.naturalidade,
                 "CPF": DadosPessoaFisica.cpf,
                 "Registro Geral": DadosPessoaFisica.rg,
@@ -736,7 +751,7 @@ $(document).ready(function () {
                 "Telefone Celular": DadosPessoa.telefone_celular,
                 //******************22-28****************************
                 "Vínculo": DadosContrato.vinculo,
-                "Empresa": DadosContrato.pessoaJuridica,
+                // "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
                 "Carga Horária do Contrato": DadosContrato.nrCargaHoraria,
                 "Matrícula": DadosContrato.nrMatricula,
@@ -763,9 +778,18 @@ $(document).ready(function () {
             if ($campo == 1) {
                 return false;
             }
-            //***********************************************
-            if (DadosContrato.nrMatricula == "" || DadosContrato.dtAdmissao == "" || DadosContrato.nrCargaHoraria == "" || DadosContrato.vinculo == 0
-                    || DadosContrato.nrCargaHoraria == 0 || DadosContrato.pessoaJuridica == 0 || DadosContrato.id_cargo == 0) {
+
+            var id = $('#id_vinculo').val();
+            if (id == 3 || id == 6) {
+                if (DadosContrato.pessoaJuridica == 0 || DadosContrato.pessoaJuridica == '') {
+                    func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (Empresa)</strong>");
+                    return;
+                }
+            }
+
+            //**********************************************************************************************************
+            if (DadosContrato.nrMatricula == "" && DadosContrato.dtAdmissao == "" && DadosContrato.nrCargaHoraria == "" && DadosContrato.vinculo == 0
+                && DadosContrato.nrCargaHoraria == 0 && DadosContrato.pessoaJuridica == 0 && DadosContrato.id_cargo == 0) {
                 func.modalAlert(func.msgPreencherCampos + " (Dados Funcionais)");
                 return false;
             }
@@ -773,7 +797,7 @@ $(document).ready(function () {
                 func.modalAlert(func.msgPreencherCampos + "<strong>(Lotação e Função)</strong>");
                 return false;
             }
-    //***********************************************
+            //**********************************************************************************************************
             $.ajax({
                 "url": "/model/rh/funcionario/request.php",
                 "dataType": "html",

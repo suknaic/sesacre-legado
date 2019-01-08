@@ -234,7 +234,7 @@ class Contrato {
             $matricula = $dadosContrato['nrMatricula'];
             if (strpos($matricula, '-') == false) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'A matrícula informada é inválida.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Por Favor, Informe o Dígito da Matrícula Correspondente ao Contrato.');
             }
             //**********************************************************************************************************
 
