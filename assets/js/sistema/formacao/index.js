@@ -1,6 +1,6 @@
 func = new Funcoes();
 func.carregaTabelaPadrao('tabela', null, [2]);
-$('.obrigatorio').show();
+$('.obrigatorio').hide();
 $('.btn-cancelar').hide();
 //******************************************************************************************    
 function listaEscolaridadeCombo() {
@@ -12,15 +12,15 @@ function listaEscolaridadeCombo() {
         },
         "success": function (response) {
             $("#id_escolaridade").append(response);
-            $("#id_escolaridade").select2({
-                
-            });
         }
     });
 }
 listaEscolaridadeCombo();
 //**************************************************************************
 $(document).ready(function () {
+
+    $("#id_escolaridade").select2({});
+
     $('body').on('click', '.btn-pesquisar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -73,7 +73,7 @@ $(document).ready(function () {
                     "formacao": Formacao
                 },
                 "success": function (response) {
-                    console.log(response);
+                    // console.log(response);
                     $this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
@@ -448,7 +448,7 @@ $(document).ready(function () {
         $("#id_escolaridade").val(0).change();
         $("#nm_formacao").val("");
         $("#nm_formacao").focus();
-        $('.obrigatorio').show();
+        $('.obrigatorio').hide();
     });
 
     $('body').on('click', '.btn-edit', function (e) {

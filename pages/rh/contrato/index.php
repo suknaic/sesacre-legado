@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/rh/contrato/index.load.php";
 ?>
 <html lang="pt-br">
     <head>
