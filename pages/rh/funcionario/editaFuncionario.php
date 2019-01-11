@@ -434,7 +434,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        N°: <span class="text-danger">*</span>
+                                                        Número: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>

@@ -1646,6 +1646,7 @@ class Contrato {
                 "ds_logradouro" => $p["ds_logradouro"],
                 "ds_complemento" => $p["ds_complemento"],
                 "ds_bairro" => $p["ds_bairro"],
+                "nr_numero" => $p["nr_numero"],
                 "nr_cep" => $p["nr_cep"],
                 "id_cidade_endereco" => $p["id_cidade_endereco"],
                 "id_estado_endereco" => $p["id_estado_endereco"],

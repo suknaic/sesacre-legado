@@ -339,7 +339,7 @@ $(document).ready(function () {
     listaEscolaridadeFormacaoCombo();
     //******************************************************************************************************************
 
-    //************************************* Carrega os cursos do contrato na tabela ************************************
+    //************************************* Carrega os cursos da pessoa na tabela **************************************
     function returnCompetencia(id_pessoa_fisica) {
         var DadosPessoa = {
             id_pessoa_fisica: id_pessoa_fisica,
@@ -359,7 +359,6 @@ $(document).ready(function () {
                 }
         });
     }
-
     //******************************************************************************************************************
 
     //************************************ Carrega os dados das lotações do contrato ***********************************
