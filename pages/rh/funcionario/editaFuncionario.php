@@ -291,7 +291,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
                                                             </span>
-                                                            <select id="id_estado_civil" class="form-control">
+                                                            <select id="id_estado_civil" class="form-control select">
                                                                 <option value="0">Selecione</option>
                                                             </select>
                                                         </div>
