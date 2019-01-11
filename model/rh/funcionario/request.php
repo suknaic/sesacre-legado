@@ -15,6 +15,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/funcao.class.php";
 
 $session = new Session('ajax');
 
+if (!$session->vPRh()) {
+    echo "SessaoExpirada";
+    return;
+}
+
 switch ($_REQUEST['acao']) {
 
     case 'cadastrarContrato':
@@ -153,6 +158,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -170,6 +176,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'inserirCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -189,6 +196,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -206,6 +214,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'inserirContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -221,6 +230,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'atualizarContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -255,6 +265,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'removerContrato':
         try {
 
@@ -294,6 +305,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnLotacaoFuncao':
         try {
             if (!$session->vPRh()) {
@@ -311,6 +323,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'cadastraSituacao':
         try {
 
@@ -328,6 +341,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnHistorico':
         try {
             if (!$session->vPRh()) {
@@ -360,6 +374,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirContratoHistorico':
         try {
             if (!$session->vPRh()) {
@@ -377,6 +392,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -394,6 +410,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaPessoaFisicaTable':
         try {
 
@@ -412,6 +429,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaCidadeOption':
         try {
             $prog = new Cidade();
@@ -432,6 +450,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaCidadeOptionUf':
         try {
             if (!$session->vPRh()) {
@@ -451,6 +470,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaEstadoOption':
         try {
             $prog = new Estado();
@@ -465,6 +485,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaPaisOption':
         try {
             $pais = new Pais();
@@ -490,6 +511,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEstadoCivilOption':
         try {
             $prog = new pessoaFisica();
@@ -501,6 +523,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaPessoaJuridicaOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -513,6 +536,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEscolaridadeFormacaoOption':
         try {
             $prog = new Escolaridade();
@@ -523,6 +547,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEscolaridadeOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -546,6 +571,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaFuncaoOption':
         try {
             $prog = new Funcao();
@@ -556,6 +582,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaVinculoOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -567,6 +594,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaLotacaoOption':
         try {
             $prog = new Lotacao();
@@ -578,6 +606,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'aniversario':
         try {
             $func = new pessoaFisica();
@@ -632,26 +661,6 @@ switch ($_REQUEST['acao']) {
             $pessoa->setId_pessoa($idPessoa['idPessoa']);
 
             echo $pessoa->ativarLogin();
-            return;
-            break;
-        } catch (Exception $e) {
-            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
-            return;
-            break;
-        }
-
-    case 'dataHora':
-        try {
-            if (!$session->vPRh()) {
-                echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
-                return;
-            }
-
-            $objeto = filter_input(INPUT_GET, 'objeto', FILTER_DEFAULT);
-
-            $contrato = new Contrato();
-
-            echo $contrato->retornaDataHoraAtual($objeto);
             return;
             break;
         } catch (Exception $e) {

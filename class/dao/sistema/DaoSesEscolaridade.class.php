@@ -71,6 +71,7 @@ class DaoSesEscolaridade extends SesEscolaridade {
         $sql = "select ef.id_escolaridade_formacao, ef.nm_escolaridade_formacao, e.id_escolaridade, e.nm_escolaridade
                 from ses_escolaridade_formacao ef
                 inner join ses_escolaridade e on ef.id_escolaridade = e.id_escolaridade
+                where ef.st_ativo = '1'
                 order by ef.nm_escolaridade_formacao";
         try {
             $sth = $pdo->prepare($sql);

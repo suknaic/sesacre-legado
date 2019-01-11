@@ -740,7 +740,6 @@ class DaoSesContrato extends SesContrato {
             return "Sucesso";
         } catch (PDOException $e) {
             return $e->getMessage();
-            //return false;
         }
     }
 
@@ -995,6 +994,20 @@ class DaoSesContrato extends SesContrato {
             $sql->execute();
 
             return $sql->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $erroPdo) {
+            return $erroPdo;
+        }
+    }
+
+    public function retornaIdsContratoLotacao($pdo, $idContrato) {
+        try {
+            $sql = $pdo->prepare("SELECT CL.id_contrato_lotacao
+                                    FROM ses_contrato_lotacao CL
+                                        WHERE CL.id_contrato = :idContrato");
+            $sql->bindValue(":idContrato", $idContrato, PDO::PARAM_INT);
+            $sql->execute();
+
+            return $sql->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $erroPdo) {
             return $erroPdo;
         }
