@@ -531,13 +531,21 @@ $(document).ready(function () {
                 cont = $("#cont").val();
             }
             var linha = "";
-            linha = "<tr class='warning lotacaoLinha' id='" + cont + "'>\n\
+            /*linha = "<tr class='warning lotacaoLinha' id='" + cont + "'>\n\
                     <td class='text-center lotacao' idLotacao='" + lotacaoId + "'>" + lotacao + "</td>\n\
                     <td class='text-center funcao' idFuncao='" + funcaoId + "'>" + funcao + "</td>\n\
                     <td class='text-center cargaLotacao'ch='" + nr_carga_horaria2 + "'>" + nr_carga_horaria2 + "</td>\n\
                     <td class='text-center dataIni' dt_inicio='" + $("#dt_inicio").val() + "'>" + $("#dt_inicio").val() + "</td>\n\
                     <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
                     <td class='text-center buttons'><button type='button' title='Editar' class='editarLinhaLotacao' value='" + cont + "'><i class='fa fa-edit text-primary'></i></button><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
+                 </tr>";*/
+            linha = "<tr class='warning lotacaoLinha' id='" + cont + "'>\n\
+                    <td class='text-center lotacao' idLotacao='" + lotacaoId + "'>" + lotacao + "</td>\n\
+                    <td class='text-center funcao' idFuncao='" + funcaoId + "'>" + funcao + "</td>\n\
+                    <td class='text-center cargaLotacao'ch='" + nr_carga_horaria2 + "'>" + nr_carga_horaria2 + "</td>\n\
+                    <td class='text-center dataIni' dt_inicio='" + $("#dt_inicio").val() + "'>" + $("#dt_inicio").val() + "</td>\n\
+                    <td class='text-center dataFim' dt_fim='" + $("#dt_fim").val() + "'>" + $("#dt_fim").val() + "</td>\n\
+                    <td class='text-center buttons'><button type='button' title='Remover' class='excluirLinhaLotacao' value=''><i class='fa fa-remove text-danger'></i></button></td>\n\
                  </tr>";
             $(linha).appendTo('.corpoTabelaLotacao');
             $("#cont").val(++cont);
