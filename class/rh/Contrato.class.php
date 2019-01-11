@@ -241,11 +241,11 @@ class Contrato {
             //**********************************************************************************************************
 
             //******************************** Verifica a existencia do hifen na matricula *****************************
-            $matricula = $dadosContrato['nrMatricula'];
-            if (strpos($matricula, '-') == false) {
-                $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Por Favor, Informe o Dígito da Matrícula Correspondente ao Contrato.');
-            }
+//            $matricula = $dadosContrato['nrMatricula'];
+//            if (strpos($matricula, '-') == false) {
+//                $pdo->rollBack();
+//                return Metodos::retornoAjax('Erro', 'alert', 'Por Favor, Informe o Dígito da Matrícula Correspondente ao Contrato.');
+//            }
             //**********************************************************************************************************
 
             //*********************************** Valida data de admissão e demissão ***********************************

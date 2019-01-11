@@ -609,7 +609,7 @@ $(document).ready(function () {
         $("#id_competencia").select2({});
     });
     //******************************************************************************************************************
-    
+
     //*********************************** Destroi uma linha das competencias *******************************************
     $("body").on("click", ".excluirLinha", function (e) {
         $(this).closest(".competenciaLinha").remove();
