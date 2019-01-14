@@ -48,7 +48,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/login/index.load.php";
                 <div class="cls-content-sm panel">
                     <div class="panel-body">
                         <div class="mar-ver pad-btm">
-                            <h1 class="h1 mar-no" >SESACRENET</h1>
+                            <h1 class="h1 mar-no" style="color: white">SESACRENET</h1>
                         </div>                                                                       
                         <form action="">
                             <div class="form-group">
