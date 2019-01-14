@@ -457,6 +457,26 @@ class Cidade {
             return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
         }
     }
+    
+    public function retornaOptionCidadesSelect2(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoSesCidade = new DaoSesCidade();
+            
+            $opcoes = [];
+            $resultado = $daoSesCidade->listaTodasCidades($pdo);
+            if ($resultado) {
+                foreach ($resultado as $linha) {
+                    $opcoes[] = (object) array('id' => $linha['id_cidade'], 'text' => ($linha['nm_cidade'] . ' - ' . $linha['nm_sigla']), 'pais' => $linha['id_pais']) ;
+                }
+                return json_encode($opcoes);
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
 
 }
 

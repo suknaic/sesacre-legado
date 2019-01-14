@@ -132,7 +132,7 @@ class DaoSesCidade extends SesCidade {
     function listaTodasCidades($pdo) {
         $retorno = false;
 
-        $sql = "select cid.id_cidade,cid.nm_cidade,est.nm_sigla "
+        $sql = "select cid.id_cidade,cid.nm_cidade,est.nm_sigla,est.id_pais "
                 . "from ses_cidade cid, ses_estado est"
                 . " where cid.id_estado = est.id_estado" ;
         try {

@@ -1264,6 +1264,7 @@ class Contrato {
                                 . $ativo .
                                 "<td>" . $numeros . "</td>
                                         <td>" . $v['nm_email'] . "</td>
+                                        <td>" . $v['recadastrado'] ."</td>
                                         <td style='text-align: center;'>                           
                                             <button type='button' class='btn btn-default btn-edit btn-xs'                               
                                                   title='Editar' nome='" . $v['nm_pessoa'] . "' value='" . $idContrato . "/" . $idPessoaFisica . "' >

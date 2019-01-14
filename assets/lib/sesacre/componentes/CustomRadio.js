@@ -1,8 +1,9 @@
-Vue.component('custom-textarea',{
+Vue.component('custom-radio',{
     props: {
         nome: String,
         descricao: String,
         value: String,
+        opcoes: Array,
         requerido: {
             default: false,
             type: Boolean
@@ -16,12 +17,9 @@ Vue.component('custom-textarea',{
     template: `<div class="form-group">
                     <label v-bind:for="nome" class="col-sm-2 control-label text-left">{{descricao}}: <span v-if="requerido" class="text-danger">*</span> </label>
                     <div class="col-sm-6">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <p v-bind:class="estilo"></p>
-                            </span>
-                            <textarea class="form-control" v-bind:id="nome" rows="4" cols="50" v-bind:class="nome" v-bind:value="value" v-on:input="$emit('input',$event.target.value)" >{{ value }}</textarea>                                                        
-                        </div>                                                  
+                        <div v-for="opcao in opcoes">
+                            <input  type="radio" v-bind:name="nome" v-bind:id="nome" v-bind:value="opcao.id" v-model="value"> {{ opcao.nome }}                                        
+                        </div>
                     </div>
                 </div>`
 })
