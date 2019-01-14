@@ -172,6 +172,7 @@
                                                         <th>Status</th>
                                                         <th>Telefone Funcional</th>
                                                         <th>E-mail</th>
+                                                        <th>Recadastrado</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>

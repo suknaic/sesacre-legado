@@ -385,7 +385,12 @@ class DaoSesContrato extends SesContrato {
         $sql = "SELECT c.id_contrato, c.nr_matricula, c.id_cargo, c.st_ativo, cg.nm_cargo, v.id_vinculo, v.nm_vinculo, 
                        PF.nr_cpf, P.id_pessoa, PF.id_pessoa_fisica, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.st_login, 
                        array_to_string(array_agg(distinct l.nm_lotacao), ', ') as nm_lotacao,
-                       array_to_string(array_agg(t.nr_telefone), ', ') as nr_telefone_funcional
+                       array_to_string(array_agg(t.nr_telefone), ', ') as nr_telefone_funcional,
+                       case
+                            r.is_ativo
+                            when true then 'Sim'
+                            else 'Não'
+                        end as recadastrado
                 FROM ses_pessoa P 
                     inner join ses_pessoa_fisica PF on P.id_pessoa = PF.id_pessoa
                     inner join ses_contrato c on PF.id_pessoa_fisica = c.id_pessoa_fisica
@@ -394,12 +399,13 @@ class DaoSesContrato extends SesContrato {
                     inner join ses_lotacao l on cl.id_lotacao = l.id_lotacao
                     inner join ses_cargo cg on c.id_cargo = cg.id_cargo
                     left join ses_telefone t on l.id_lotacao = t.id_lotacao
+                    left join ses_contrato_recadastramento r on c.id_contrato = r.id_contrato and r.is_ativo and r.aa_recadastramento = extract(year from now())
                 where P.st_ativo = '1' and PF.st_ativo = '1'
                 $ativo
                 $filtro
-		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo
+		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo, r.id_contrato_recadastramento
                 ORDER BY P.nm_pessoa, c.nr_matricula";
-        
+
         try {
             $sth = $pdo->prepare($sql);
             $sth->execute();
