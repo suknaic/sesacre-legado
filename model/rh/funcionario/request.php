@@ -38,6 +38,8 @@ switch ($_REQUEST['acao']) {
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
+                        
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);
 
             //********************************************* Valida E-mail **********************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
@@ -53,8 +55,9 @@ switch ($_REQUEST['acao']) {
             }
             //**********************************************************************************************************
 
-            $contrato = new Contrato();
-            echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
+            $contrato = new Contrato();         
+            $contrato->setRecadastramento($recadastramento);
+            echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $session->getIdUser());
             return;
             break;
         } catch (Exception $e) {
@@ -81,6 +84,8 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
 
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);                  
+            
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
@@ -92,7 +97,8 @@ switch ($_REQUEST['acao']) {
             }
 
             $contrato = new Contrato();
-            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
+            $contrato->setRecadastramento($recadastramento);
+            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $session->getIdUser());
             return;
             break;
         } catch (Exception $e) {
@@ -683,5 +689,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'houveRecadastramento':
+        try {
+            $id = filter_input(INPUT_GET, 'idContrato', FILTER_DEFAULT);                
+            $contrato = new Contrato();
+            $contrato->setId_contrato((int)$id);
+            echo $contrato->verificaHouveRecadastramento();            
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+        
+    
 }
 ?>
