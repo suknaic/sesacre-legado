@@ -552,6 +552,46 @@ class Pessoa {
         }
     }
     //******************************************************************************************************************
+    
+    
+    
+    /**
+     * Valida se o email já está sendo utilizado
+     * @param string $email
+     * @param PDO $pdo
+     * @return type
+     */
+    public function validaEmail(string $email, PDO $pdo = null){
+        try{
+            
+            if(empty($pdo)){
+                $conexao = new Conexao();
+                $pdo = $conexao->connect();
+            }            
+            $dao = new DaoSesPessoa();
+                        
+            if (!Metodos::validaEmail($email)) {
+                $this->setSuccess(false);
+                $this->setMsg('O E-mail Informado é Inválido.');
+                return Metodos::retornoAjax("Erro", "alert", "O E-mail Informado é Inválido.");        
+            }
+            
+            $validaEmail = $dao->validarEmail($pdo, $email);
+            if ($validaEmail) {
+                $this->setSuccess(false);
+                $this->setMsg('E-mail Informado Já Está Sendo Utilizado.');                                
+                return Metodos::retornoAjax("Erro", "alert", "E-mail Informado Já Está Sendo Utilizado.");
+            } else {
+                $this->setSuccess(true);
+                return Metodos::retornoAjax("ok", "console", "ok");
+            }                        
+        } catch (Exception $ex) {
+            $this->success = false;
+            $this->msg = $ex->getMessage();
+            return Metodos::retornoAjax("Erro", "alert", $ex->getMessage());
+        }
+    }
+    
 }
 
 ?>

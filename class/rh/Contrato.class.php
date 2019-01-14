@@ -2115,7 +2115,7 @@ class Contrato {
     
     
     /**
-     * 
+     * Faz o Registro do recadastramento do contrato 
      * @param bool $recadastramento
      * @param int $ano
      * @param int $idContrato

@@ -910,6 +910,34 @@ $(document).ready(function () {
         }
         //**************************************************************************************************************
     });
+    
+    
+    $('body').on('focusout', '#nm_email', function (e) {
+        var $this = $(this)        
+        if($this.val().length < 5){
+            return false
+        }
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "json",
+            "method": "GET",
+            "data": {
+                "acao": "validaEmailExiste",
+                "email": $this.val()                
+            },
+            "success": function (response) {
+                console.log(response)
+                if(response.tipoMsg == "Erro"){
+                    func.modalAlert(response.msg);
+                }else{
+                    $(".pro").trigger('click');
+                }               
+            },
+            "error": function (response) {
+                console.log(response)                
+            }
+        });
+    });
 //   URL: viacep.com.br/ws/01001000/json/ 
 //    {
 //      "cep": "01001-000",
