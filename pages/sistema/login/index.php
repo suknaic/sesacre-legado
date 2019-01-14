@@ -64,7 +64,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/login/index.load.php";
                                 </div>
                             </div>
                             <button class="btn btn-success btn-lg btn-block" type="button" id="btn-logar">Logar</button>
-                            <button class="btn btn-danger btn-lg btn-block" type="button" id="cadFornecedor">Cadastro de Fornecedores</button>
+<!--                            <button class="btn btn-danger btn-lg btn-block" type="button" id="cadFornecedor">Cadastro de Fornecedores</button>-->
                         </form>
                     </div>
                 </div>
