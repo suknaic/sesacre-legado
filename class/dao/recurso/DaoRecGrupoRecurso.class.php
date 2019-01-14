@@ -94,6 +94,25 @@ class DaoRecGrupoRecurso extends RecGrupoRecurso {
         }
     }
 
-    
+    function retornaTodosGrupoRecurso($pdo) {
+        $this->sucesso = false;
+        
+        $sql = "SELECT GR.id_grupo_recurso, GR.nm_grupo_recurso, GR.st_ativo"
+                . " FROM rec_grupo_recurso GR";                
+        try {
+            $result = $pdo->prepare($sql);            
+            $result->execute();
+            if ($result->rowCount() >= 1) {
+                $this->sucesso = true;
+                $this->msgRetorno = $result->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $this->sucesso = false;
+                $this->msgRetorno = "Não encontrou Registros";
+            }
+        } catch (PDOException $e) {
+            $this->sucesso = false;
+            $this->msgRetorno = $e->getMessage();
+        }
+    }
     
 }

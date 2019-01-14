@@ -153,7 +153,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="tp_sexo" class="form-control sexo">
-                                                                        <option value="0">Selecione Sexo</option>                                                                
+                                                                        <option value="0">Selecione o Sexo</option>
                                                                         <option value="1">Feminino</option>
                                                                         <option value="2">Masculino</option>
                                                                     </select>
@@ -179,7 +179,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_pais_naturalidade" class="form-control pais">
-                                                                        <option value="0">Selecione País</option>                                                                
+                                                                        <option value="0">Selecione o País</option>
                                                                         <?php
                                                                         // echo $lotacoes;
                                                                         ?>
@@ -193,7 +193,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_estado_naturalidade" class="form-control estado">
-                                                                        <option value="0">Selecione Estado</option>                                                                
+                                                                        <option value="0">Selecione o Estado</option>
                                                                         <?php
                                                                         // echo $lotacoes;
                                                                         ?>
@@ -207,7 +207,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_naturalidade" class="form-control idCidade">
-                                                                        <option value="0">Selecione Naturalidade</option>                                                                
+                                                                        <option value="0">Selecione a Naturalidade</option>
                                                                         <?php
                                                                         // echo $lotacoes;
                                                                         ?>
@@ -245,16 +245,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Estado Orgão Expedidor: <span class="text-danger">*</span>
+                                                                Estado do Orgão Expedidor: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_estado" class="form-control">
-                                                                        <option value="0">Selecione</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                    <select id="id_estado" class="form-control select">
+                                                                        <option value="0">Selecione o Estado do Órgão Expeditor</option>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -283,26 +281,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                         <div class="form-group">
                                                             <div class="col-md-1"></div>
                                                             <div class="col-md-3">
-                                                                Estado Civil:
+<!--                                                                Estado Civil: <span class="text-danger">*</span>-->
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_estado_civil" class="form-control">
-                                                                        <option value="0">Selecione</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                    <select id="id_estado_civil" class="form-control select">
+                                                                        <option value="0">Selecione o Estado Civil</option>
+
                                                                     </select>
                                                                 </div>
                                                             </div> 
                                                             <div class="col-md-3">
-                                                                Nro. Cartão SUS:
+                                                                Número do Cartão SUS:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="nr_cns" id="nr_cns">
+                                                                    <input type="text" class="form-control" name="nr_cns" id="nr_cns" placeholder="___ ____ ____ ____">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
@@ -311,11 +307,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_escolaridade" class="form-control">
-                                                                        <option value="0">Selecione Escolaridade</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                    <select id="id_escolaridade" class="form-control select">
+                                                                        <option value="0">Selecione a Escolaridade</option>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -330,11 +324,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <span class="input-group-addon">
                                                                             <p class="fa fa-list inputPFa"></p>
                                                                         </span>
-                                                                        <select id="id_competencia" class="form-control formacao competencia">
-                                                                            <option value="0">Selecione Competência</option>                                                                
-                                                                            <?php
-                                                                            // echo $lotacoes;
-                                                                            ?>
+                                                                        <select id="id_competencia" class="form-control formacao competencia select">
+                                                                            <option value="0">Selecione a Competência</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -393,11 +384,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_pais_endereco" class="form-control pais">
-                                                                        <option value="0">Selecione País</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+                                                                    <select id="id_pais_endereco" class="form-control pais select">
+                                                                        <option value="0">Selecione País</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -407,11 +395,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_estado_endereco" class="form-control estado">
+                                                                    <select id="id_estado_endereco" class="form-control estado select">
                                                                         <option value="0">Selecione Estado</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -421,18 +407,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_cidade" class="form-control idCidade">
+                                                                    <select id="id_cidade" class="form-control idCidade select">
                                                                         <option value="0">Selecione Cidade</option>                                                                
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">    
                                                             <div class="col-md-2"></div>
-                                                            <div class="col-md-5">
+                                                            <div class="col-md-3">
                                                                 Logradouro: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -450,7 +434,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <input type="text" class="form-control" name="ds_complemento" id="ds_complemento">
                                                                 </div>
                                                             </div>
-
+                                                            <div class="col-md-2">
+                                                                Número:
+                                                                <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                                </span>
+                                                                    <input type="number" class="form-control" name="nr_endereco" id="nr_endereco" min="0" required="true">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-md-2"></div>
@@ -469,7 +461,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                                    <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-1">

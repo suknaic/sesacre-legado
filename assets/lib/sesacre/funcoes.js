@@ -9,8 +9,12 @@ function Funcoes() {
     this.msgSemPermissao = "Você não tem permissão para esta ação.";
     this.msgAcaoSucesso = "Ação Realizada com Sucesso.";
     this.msgPerguntaRemover = "Deseja Remover?";
-    this.msgRegistroNaoEncontrado = "Registro não encontrado";
+    this.msgRegistroNaoEncontrado = "Registro não encontrado.";
     this.msgCaixaDeConfirmacao = "Confirmação";
+    this.msgRecadastramentoOpcao = "Cadastro Autorizado pela Comissão de Recadastramento?";
+    this.msgRecadastramentoObrigatorio =  "Informe se o Cadastro foi autorizado pela Comissão de Recadastramento.";
+    this.msgRecadastramentoTitulo = "Confirmação de Recadastramento";
+
     //********************************************************************************************************************
     this.extrairCarater = function (str, x) {
         return str.split(x).join('');

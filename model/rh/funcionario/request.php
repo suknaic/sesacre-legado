@@ -15,6 +15,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/funcao.class.php";
 
 $session = new Session('ajax');
 
+if (!$session->vPRh()) {
+    echo "SessaoExpirada";
+    return;
+}
+
 switch ($_REQUEST['acao']) {
 
     case 'cadastrarContrato':
@@ -33,6 +38,8 @@ switch ($_REQUEST['acao']) {
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
+                        
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);
 
             //********************************************* Valida E-mail **********************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
@@ -48,8 +55,9 @@ switch ($_REQUEST['acao']) {
             }
             //**********************************************************************************************************
 
-            $contrato = new Contrato();
-            echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
+            $contrato = new Contrato();         
+            $contrato->setRecadastramento($recadastramento);
+            echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $session->getIdUser());
             return;
             break;
         } catch (Exception $e) {
@@ -76,6 +84,8 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
 
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);                  
+            
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
                 return;
@@ -87,7 +97,8 @@ switch ($_REQUEST['acao']) {
             }
 
             $contrato = new Contrato();
-            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao);
+            $contrato->setRecadastramento($recadastramento);
+            echo $contrato->editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $session->getIdUser());
             return;
             break;
         } catch (Exception $e) {
@@ -153,6 +164,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -170,6 +182,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'inserirCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -189,6 +202,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirCompetencia':
         try {
             if (!$session->vPRh()) {
@@ -206,6 +220,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'inserirContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -221,6 +236,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'atualizarContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -255,6 +271,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'removerContrato':
         try {
 
@@ -294,6 +311,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnLotacaoFuncao':
         try {
             if (!$session->vPRh()) {
@@ -311,6 +329,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'cadastraSituacao':
         try {
 
@@ -328,6 +347,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'returnHistorico':
         try {
             if (!$session->vPRh()) {
@@ -360,6 +380,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirContratoHistorico':
         try {
             if (!$session->vPRh()) {
@@ -377,6 +398,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'excluirContratoLotacao':
         try {
             if (!$session->vPRh()) {
@@ -394,6 +416,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaPessoaFisicaTable':
         try {
 
@@ -412,6 +435,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaCidadeOption':
         try {
             $prog = new Cidade();
@@ -432,6 +456,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaCidadeOptionUf':
         try {
             if (!$session->vPRh()) {
@@ -451,6 +476,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'listaEstadoOption':
         try {
             $prog = new Estado();
@@ -465,6 +491,22 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
+    case 'listaOrgaoExpeditor':
+        try {
+            $prog = new Estado();
+            $idPais = $_REQUEST['idPais'];
+            $idEstado = $_REQUEST['idEstado'];
+
+            echo "<option value = '0'>Selecione o Estado do Órgão Expedidor</option>";
+            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+
     case 'listaPaisOption':
         try {
             $pais = new Pais();
@@ -490,6 +532,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEstadoCivilOption':
         try {
             $prog = new pessoaFisica();
@@ -501,6 +544,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaPessoaJuridicaOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -513,6 +557,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEscolaridadeFormacaoOption':
         try {
             $prog = new Escolaridade();
@@ -523,6 +568,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaEscolaridadeOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -546,6 +592,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaFuncaoOption':
         try {
             $prog = new Funcao();
@@ -556,6 +603,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaVinculoOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
@@ -567,6 +615,7 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'listaLotacaoOption':
         try {
             $prog = new Lotacao();
@@ -578,6 +627,7 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+
     case 'aniversario':
         try {
             $func = new pessoaFisica();
@@ -639,5 +689,20 @@ switch ($_REQUEST['acao']) {
             return;
             break;
         }
+        
+    case 'houveRecadastramento':
+        try {
+            $id = filter_input(INPUT_GET, 'idContrato', FILTER_DEFAULT);                
+            $contrato = new Contrato();
+            $contrato->setId_contrato((int)$id);
+            echo $contrato->verificaHouveRecadastramento();            
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+        
+    
 }
 ?>

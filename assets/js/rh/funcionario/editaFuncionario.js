@@ -1,7 +1,9 @@
 $(document).ready(function () {
 
     func = new Funcoes();
-
+    
+    var possuiRecadastramento = false;
+    
     $(".select").select2({width: " 100%"});
 
     //***************************************** Carrega Dados do Contrato **********************************************
@@ -33,7 +35,7 @@ $(document).ready(function () {
                     $("#dt_nascimento").val(response[0]['dt_nascimento']);
                     //**************************************************************************
                     listaPaisNaturalidade(response[0]['id_pais_naturalidade']);
-                    listaEstadoNaturalidade(response[0]['id_pais_naturalidade'],response[0]['id_estado_naturalidade']);
+                    listaEstadoNaturalidade(response[0]['id_pais_naturalidade'], response[0]['id_estado_naturalidade']);
                     listaCidadeNaturalidade(response[0]['id_estado_naturalidade'], response[0]['id_naturalidade']);
                     //********************************************************************
                     $("#id_pessoa").val(response[0]['id_pessoa']);
@@ -76,9 +78,11 @@ $(document).ready(function () {
                     listaCargoCombo(response[0]['id_cargo']);
                     returnCompetencia(idPessoaFisica);
                     returnLotacaoFuncao(idContrato);
+                    houveRecadastramento(idContrato);
                 }
         });
     }
+
     //******************************************************************************************************************
 
     //******************************************** Carrega os Dados de Naturalidade ************************************
@@ -125,6 +129,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //******************************************* Carrega os Dados de Endereço *****************************************
@@ -172,6 +177,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //************************************************* Orgao Expeditor ************************************************
@@ -180,7 +186,7 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaEstadoOption"
+                acao: "listaOrgaoExpeditor"
             },
             "success": function (response) {
                 if (idOrgao == null) {
@@ -192,6 +198,7 @@ $(document).ready(function () {
             }
         });
     }
+
     listaOrgaoExpeditor();
     //******************************************************************************************************************
 
@@ -208,6 +215,7 @@ $(document).ready(function () {
             }
         });
     }
+
     listaFuncaoCombo();
     //******************************************************************************************************************
 
@@ -224,6 +232,7 @@ $(document).ready(function () {
             }
         });
     }
+
     listaLotacaoCombo();
     //******************************************************************************************************************
 
@@ -242,6 +251,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //************************************************ Lista o vinvulo *************************************************
@@ -260,6 +270,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //************************************************ Lista Cargos ****************************************************
@@ -277,6 +288,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //********************************************** Lista Estado Civil ************************************************
     function listaEstadoCivilCombo(id) {
         $.ajax({
@@ -292,6 +304,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //*********************************************** Lista Escolaridade ***********************************************
@@ -309,6 +322,7 @@ $(document).ready(function () {
             }
         });
     }
+
     //******************************************************************************************************************
 
     //*************************************************** Lista Curso **************************************************
@@ -324,10 +338,11 @@ $(document).ready(function () {
             }
         });
     }
+
     listaEscolaridadeFormacaoCombo();
     //******************************************************************************************************************
 
-    //************************************* Carrega os cursos do contrato na tabela ************************************
+    //************************************* Carrega os cursos da pessoa na tabela **************************************
     function returnCompetencia(id_pessoa_fisica) {
         var DadosPessoa = {
             id_pessoa_fisica: id_pessoa_fisica,
@@ -342,9 +357,9 @@ $(document).ready(function () {
                 "dadosPessoa": DadosPessoa
             },
             "success":
-                    function (response) {
-                        $("#corpoCompetencia").html(response);
-                    }
+                function (response) {
+                    $("#corpoCompetencia").html(response);
+                }
         });
     }
     //******************************************************************************************************************
@@ -365,6 +380,7 @@ $(document).ready(function () {
                 }
         });
     }
+
     //******************************************************************************************************************
 
     //********************************* Chama a função que carrega os dados do contrato ********************************
@@ -472,175 +488,19 @@ $(document).ready(function () {
     });
     //******************************************************************************************************************
 
-    //********************************* Edita os dados da lotação que estão na tabela **********************************
-    $("body").on("click", ".editarLinhaLotacao", function (e) {
-        $('#modalContratoLotacao').modal('show');
-        $idContratoLotacao = $(this).val();
-        lotacoes = 0;
-        $("#tabelaLotacao tbody tr").each(function () {
-            if ($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim") === '') {
-                lotacoes++;
-            }
-        });
-        if (lotacoes > 1) {
-            $("#dt_inicio_editar").prop("disabled", true);
-        } else {
-            $("#dt_inicio_editar").prop("disabled", false);
-        }
-        //**********************************************************************************
-        $("#nr_ch_editar").val("");
-        $("#dt_inicio_editar").val("");
-        $("#dt_fim_editar").val("");
-        //**********************************************************************************
-        $("#modal_titulo").text("Lotação: " + $(this).closest(".lotacaoLinha").find(".lotacao").text() + "  /  Função: " + $(this).closest(".lotacaoLinha").find(".funcao").text());
-        $("#id_contrato_lotacao").val($idContratoLotacao);
-        // $("#nr_ch_editar2").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
-        $("#nr_ch_editar").val($(this).closest(".lotacaoLinha").find(".cargaLotacao").attr("ch"));
-        $("#dt_inicio_editar").val($(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio"));
-        $("#dt_fim_editar").val($(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim"));
-        // $("#id_funcao_editar").val($(this).closest(".lotacaoLinha").find(".funcao").attr("idFuncao"));
-        // $("#id_lotacao_editar").val($(this).closest(".lotacaoLinha").find(".lotacao").attr("idLotacao"));
-
-        var idLinha = $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont');
-        // console.log(idLinha);
-        // return false;
-
-        $("body").on("click", ".AtualizarItem", function (e) {
-            var ch = $('#nr_ch_editar').val();
-            var dtIni = $('#dt_inicio_editar').val();
-            var dtFim = $('#dt_fim_editar').val();
-
-            if (ch == 20 || ch == 24 || ch == 30 || ch == 40 || ch == 44) {
-                segue = true;
-            } else {
-                segue = false;
-            }
-
-            if (segue == false) {
-                func.modalAlert('Carga Horária do Contrato deve Corresponder as Cargas 20,24,30,40 ou 44 Horas.');
-                return false;
-            }
-
-            $("#tabelaLotacao tbody tr").each(function () {
-                if (idLinha == $(this).closest("#corpoTabelaLotacao").find('.lotacaoLinha').attr('idcont')) {
-                    $(this).find('.cargaLotacao').attr('ch', ch);
-                    $(this).find('.dataIni').attr('dt_inicio', dtIni);
-                    $(this).find('.dataFim').attr('dt_fim', dtFim);
-                    $(this).find('td:eq(2)').text(ch);
-                    $(this).find('td:eq(3)').text(dtIni);
-                    $(this).find('td:eq(4)').text(dtFim);
-                }
-            });
-
-            $('#modalContratoLotacao').modal('hide');
-        });
-    });
-    //******************************************************************************************************************
-
     //********************************************* Adiciona Lotação ***************************************************
     $("body").on("click", ".btn-add-lotacao", function (e) {
-        var contratoId = $("#id_contrato").val();
         var lotacaoId = $("#id_lotacao").val();
         var funcaoId = $("#id_funcao").val();
         var nr_carga_horaria = $("#nr_carga_horaria").val();
         var nr_carga_horaria2 = $("#nr_carga_horaria2").val();
 
         //***********************************************
-        var idContrato = 0;
-        if ($("#id_contrato").val() !== "") {
-            idContrato = $("#id_contrato").val();
-        }
-        //***********************************************
         if (nr_carga_horaria <= 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Carga Horária do Funcionário)</strong>");
             $("#nr_carga_horaria").focus();
             return;
         }
-
-        //********carga hoaria da lotação não deve exceder a carga horaria do funcionario****************
-        if ((parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-            func.modalAlert("Carga Horaria da Lotação excede a Carga Horária do Funcionário");
-            return;
-        }
-        var flag = 0;
-        if ($(this).closest(".panelForm").find(".lotacaoLinha").length > 0) {
-            var cargaHorariaLotacao = 0;
-            $("#tabelaLotacao tbody tr").each(function () {
-                if (lotacaoId == $(this).find(".lotacao").attr("idLotacao") && funcaoId == $(this).find(".funcao").attr("idFuncao")) {
-                    func.modalAlert("Os dados de Lotação e Função Informados já estão cadastrados no Sistema.");
-                    flag = 1;
-                }
-
-                dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
-                dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
-                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
-                    cargaHorariaLotacao += 0;
-                } else {
-                    cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
-                }
-            });
-        }
-        if (flag === 1) {
-            return;
-        }
-
-        //************************** Controle de data e carga horária das lotações dos funcionário *********************
-        seguir = 0;
-        $("#tabelaLotacao tbody tr").each(function () {
-            if (dataFimAntiga !== '') {
-                var dataAnti = +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString());
-                var dataAtua = +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString());
-
-                if (dataAnti >= dataAtua) {
-                    if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                        seguir = 3;
-                        return;
-                    }
-                }
-
-                dtFim = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim").split("/")[0].toString();
-                dtInicio = $("#dt_inicio").val().split("/")[2].toString() + "/" + $("#dt_inicio").val().split("/")[1].toString() + "/" + $("#dt_inicio").val().split("/")[0].toString();
-                dtInicio2 = $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[2].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[1].toString() + "/" + $(this).closest(".lotacaoLinha").find(".dataIni").attr("dt_inicio").split("/")[0].toString();
-
-                if (+new Date(dtInicio) <= +new Date(dtInicio2) && +new Date(dtInicio) >= +new Date(dtFim)) {
-                    seguir = 1;
-                    return;
-                }
-
-                if (dtFim > dataAtua) {
-                    if ((cargaHorariaLotacao > parseInt(nr_carga_horaria))) {
-                        seguir = 3;
-                        return;
-                    }
-                }
-
-                if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                    seguir = 3;
-                    return;
-                }
-            }
-
-            if ((cargaHorariaLotacao + parseInt(nr_carga_horaria2)) > parseInt(nr_carga_horaria)) {
-                seguir = 3;
-                return;
-            }
-        });
-
-        if (seguir === 1) {
-            func.modalAlert("A (DATA INÍCIO) da Nova Lotação do Funcionário é Menor ou igual a (DATA FIM) da Lotação ainda Vigente.");
-            return false;
-        }
-
-        if (seguir === 2) {
-            func.modalAlert("Não é Possível Inserir uma Nova Lotação pois a uma Lotação ainda Vigente.");
-            return false;
-        }
-        if (seguir === 3) {
-            func.modalAlert("Carga Horária da Lotação excede a Carga Horária do Funcionário.");
-            return false;
-        }
-        //**********************************************************************************************************
-
         //*********************************** Verifica se os campos estão vazios ***********************************
         if (lotacaoId == 0) {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Lotação)</strong>");
@@ -661,19 +521,6 @@ $(document).ready(function () {
             func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais(Data de inicio da Função na Lotação)</strong>");
             return false;
         }
-        //********** Data inicial da função na lotação tem de ser inferior a data final ************
-        if ($("#dt_fim").val().length > 3) {
-            var data1 = $("#dt_inicio").val();
-            var data2 = $("#dt_fim").val();
-            var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
-            var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
-            var dataIni = new Date(x);
-            var dataFim = new Date(y);
-            if (dataIni > dataFim) {
-                func.modalAlert(" A data Inicio não pode ser maior que a data fim");
-                return;
-            }
-        }
 
         var lotacao = $("#id_lotacao option:selected").text();
         var funcao = $("#id_funcao option:selected").text();
@@ -692,10 +539,10 @@ $(document).ready(function () {
         $("#dt_inicio").val("");
         $("#dt_fim").val("");
 
-        $("#lotacao").val(0);
-        $("#lotacao").select2({width:"100%"});
-        $("#id_funcao").val(0);
-        $("#id_funcao").select2({width:"100%"});
+        $("#id_lotacao").val('0').change();
+        $("#id_lotacao").select2({width: "100%"});
+        $("#id_funcao").val('0').change();
+        $("#id_funcao").select2({width: "100%"});
     });
     //******************************************************************************************************************
 
@@ -703,7 +550,7 @@ $(document).ready(function () {
     $("body").on("click", ".btn-add", function (e) {
         var competenciaId = $("#id_competencia").val();
         if (competenciaId == 0) {
-            func.modalAlert(func.msgPreencherCampos+" - <strong> Dados Pessoais(Competência)</strong>");
+            func.modalAlert(func.msgPreencherCampos + " - <strong> Dados Pessoais(Competência)</strong>");
             $("#id_competencia").focus();
             return;
         }
@@ -731,9 +578,8 @@ $(document).ready(function () {
                  </tr>";
         $(linha).appendTo('.corpoCompetencia');
 
-        $("#id_competencia").val(0);
-        $("#id_competencia").select2({
-        });
+        $("#id_competencia").val('0').change();
+        $("#id_competencia").select2({});
     });
     //******************************************************************************************************************
 
@@ -755,17 +601,6 @@ $(document).ready(function () {
     });
     //******************************************************************************************************************
 
-    //***************************** Mostra o campos de datav de demissão de acordo com o vinculo ***********************
-    // $("body").on("change", "#id_vinculo", function (e) {
-    //     var id = $(this).val();
-    //     if (id == 5) {
-    //         $(".demissao").show();
-    //     } else {
-    //         $(".demissao").hide();
-    //     }
-    // });
-    //******************************************************************************************************************
-
     //************************************************ Salva o contrato ************************************************
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
@@ -779,6 +614,7 @@ $(document).ready(function () {
             if (idContrato == "") {
                 idContrato = 0;
             }
+                                   
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
 
             //****************** Dados pessoais *********************
@@ -816,36 +652,7 @@ $(document).ready(function () {
                 cns: $("#nr_cns").val(),
                 escolaridade: $("#id_escolaridade").val()
             };
-            //******* Data admissao tem de ser inferior a data demissao ********
-            if ($("#dt_demissao").val().length > 3) {
-                var data1 = $("#dt_admissao").val();
-                var data2 = $("#dt_demissao").val();
-                var x = data1.split("/")[2].toString() + "/" + data1.split("/")[1].toString() + "/" + data1.split("/")[0].toString();
-                var y = data2.split("/")[2].toString() + "/" + data2.split("/")[1].toString() + "/" + data2.split("/")[0].toString();
-                var dataIni = new Date(x);
-                var dataFim = new Date(y);
-                if (dataIni > dataFim) {
-                    func.modalAlert(" A data de Admissão não pode ser maior que a data de Demissão.");
-                    return;
-                }
-            }
-            cargaHorariaLotacao = 0;
-            $("#tabelaLotacao tbody tr").each(function () {
-                dataFimAntiga = $(this).closest(".lotacaoLinha").find(".dataFim").attr("dt_fim");
-                dataAtual = $(this).closest(".lotacaoLinha").attr("dataAtual");
-                if (dataFimAntiga !== "" && +new Date(dataFimAntiga.split("/")[2].toString() + "/" + dataFimAntiga.split("/")[1].toString() + "/" + dataFimAntiga.split("/")[0].toString()) < +new Date(dataAtual.split("/")[2].toString() + "/" + dataAtual.split("/")[1].toString() + "/" + dataAtual.split("/")[0].toString())) {
-                    cargaHorariaLotacao += 0;
-                } else {
-                    cargaHorariaLotacao += parseInt($(this).find(".cargaLotacao").attr("ch"));
-                }
-            });
-            if (parseInt($("#nr_carga_horaria").val()) !== cargaHorariaLotacao) {
-                func.modalAlert('Complete ou Reajuste a Carga Horária.');
-                $('.modal-alert').on('hidden.bs.modal', function (e) {
-                    $("#nr_carga_horaria").focus();
-                });
-                return false;
-            }
+
             var DadosContrato = {
                 idContrato: idContrato,
                 nrMatricula: $("#nr_matricula").val(),
@@ -880,33 +687,29 @@ $(document).ready(function () {
             //**************************************************************************
 
             var DadosContrato_Lotacao = [];
-            // if (idContrato == 0) {
-                var x = 0;
-                if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
-                    x = 1;
-                    $("#tabelaLotacao tbody tr").each(function () {
-                        var idContratoLotacao = null;
-                        if ($(this).find('.editarLinhaLotacao').attr('value') != undefined) {
-                            idContratoLotacao = $(this).find('.editarLinhaLotacao').attr('value');
-                        }
+            var x = 0;
+            if ($(this).closest(".formRhFuncionario").find(".lotacaoLinha").length > 0) {
+                x = 1;
+                $("#tabelaLotacao tbody tr").each(function () {
+                    var idContratoLotacao = null;
+                    if ($(this).find('.excluirLinhaLotacao').attr('value') != undefined) {
+                        idContratoLotacao = $(this).find('.excluirLinhaLotacao').attr('value');
+                    }
 
-                        var dtFim = null;
-                        if ($(this).find(".dataFim").attr("dt_fim") != undefined) {
-                            dtFim = $(this).find(".dataFim").attr("dt_fim").split('/').reverse().join('-');
-                        }
-                        DadosContrato_Lotacao.push({
-                            idContratoLotacao: idContratoLotacao,
-                            chLotacao: $(this).find(".cargaLotacao").attr("ch"),
-                            idLotacao: $(this).find(".lotacao").attr("idLotacao"),
-                            idFuncao: $(this).find(".funcao").attr("idFuncao"),
-                            dt_inicio: $(this).find(".dataIni").attr("dt_inicio").split('/').reverse().join('-'),
-                            dt_fim: dtFim
-                        });
+                    var dtFim = null;
+                    if ($(this).find(".dataFim").attr("dt_fim") != undefined) {
+                        dtFim = $(this).find(".dataFim").attr("dt_fim");
+                    }
+                    DadosContrato_Lotacao.push({
+                        idContratoLotacao: idContratoLotacao,
+                        chLotacao: $(this).find(".cargaLotacao").attr("ch"),
+                        idLotacao: $(this).find(".lotacao").attr("idLotacao"),
+                        idFuncao: $(this).find(".funcao").attr("idFuncao"),
+                        dt_inicio: $(this).find(".dataIni").attr("dt_inicio"),
+                        dt_fim: dtFim
                     });
-                }
-            // }
-            // console.log();
-            // return false;
+                });
+            }
             //******************************** Dados que são obrigatorios ************************************
             var DadosObrigatorio = {
                 //********* 1-12 **********
@@ -951,7 +754,7 @@ $(document).ready(function () {
                     if ($i <= 12) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
                     } else if ($i >= 13 && $i <= 16) {
-                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato ("+ index + ")</strong>");
+                        func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato (" + index + ")</strong>");
                     } else if ($i >= 17 && $i <= 22) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
                     }
@@ -968,57 +771,117 @@ $(document).ready(function () {
                 return false;
             }
             //********************************************************************************************
-            $.ajax({
-                "url": "/model/rh/funcionario/request.php",
-                "dataType": "html",
-                "method": "POST",
-                "data": {
-                    "acao": "editarContrato",
-                    "dadosPessoa": DadosPessoa,
-                    "dadosPessoaFisica": DadosPessoaFisica,
-                    "dadosCompetencia": DadosCompetencia,
-                    "dadosContrato": DadosContrato,
-                    "dadosContrato_Lotacao": DadosContrato_Lotacao
-                },
-                "success": function (response) {
-                    console.log(response);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao, 'danger');
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
+            
+            if(!possuiRecadastramento){                            
+                bootbox.confirm({
+                    title: `${func.msgRecadastramentoTitulo}`,                    
+                    message: `<span class="text-danger">${func.msgRecadastramentoOpcao}</span>                        
+                        <br><br>  
+                        <div class="form-group">
+                            
+                            <div class="input-group">
+                                <div class="radio-inline">
+                                    <label role="button">
+                                        <input type="radio" name="opt_recadastramento" value="s">Sim
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label role="button">
+                                        <input type="radio" name="opt_recadastramento" value="n">Não
+                                    </label>
+                                </div>
+                            </div>
+                        </div>`,  
+                    buttons: {
+                        'cancel': {
+                            label: 'Fechar',
+                            className: 'btn-default btn-rounded'
+                        },
+                        'confirm': {
+                            label: 'Salvar',
+                            className: 'btn-primary btn-rounded'
                         }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        func.fechaModalHref('/pages/rh/funcionario/index.php');
-                        return false;
-                    } else {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
+                    },
+                    callback: function (result) {
+                        if (result) {                            
+                            if($('input[name=opt_recadastramento]:checked', '.bootbox-body').length < 1 ){
+                                func.modalAlert(`${func.msgRecadastramentoObrigatorio}`);                             
+                            }else{                                                                
+                                salvarEdicaoContrato(DadosPessoa
+                                , DadosPessoaFisica
+                                , DadosCompetencia
+                                , DadosContrato
+                                , DadosContrato_Lotacao
+                                , $('input[name=opt_recadastramento]:checked', '.bootbox-body').val())
+                            }                            
+                            
+                        }
                     }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao, 'danger');
-                    return false;
-                }
-            });
+                });
+            }else{
+                salvarEdicaoContrato(DadosPessoa, DadosPessoaFisica, DadosCompetencia, DadosContrato, DadosContrato_Lotacao, 'n')
+            }
+            
+            
+            
             $this.prop("disabled", false);
         }
     });
+        
+    
+    function salvarEdicaoContrato(DadosPessoa, DadosPessoaFisica, DadosCompetencia, DadosContrato, DadosContrato_Lotacao, recadastramento){
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                "acao": "editarContrato",
+                "dadosPessoa": DadosPessoa,
+                "dadosPessoaFisica": DadosPessoaFisica,
+                "dadosCompetencia": DadosCompetencia,
+                "dadosContrato": DadosContrato,
+                "dadosContrato_Lotacao": DadosContrato_Lotacao,
+                "recadastramento" : recadastramento
+            },
+            "success": function (response) {
+                console.log(response);
+                if (response.trim() == "SessaoExpirada") {
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    func.modalAlert(response.msg, 'success');
+                    func.fechaModalHref('/pages/rh/funcionario/index.php');
+                    return false;
+                } else {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {                    
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+    
+    
+    
     //******************************************************************************************************************
 
     //*************************************************** Busca Cep ****************************************************
@@ -1063,7 +926,7 @@ $(document).ready(function () {
                                     response = JSON.parse(response);
                                     $('#id_pais_endereco').val(response[0].id_pais).trigger('change.select2');
                                     listaEstadoEndereco(response[0].id_pais, response[0].id_estado);
-                                    listaCidadeEndereco(response[0].id_estado, 0,cidade);
+                                    listaCidadeEndereco(response[0].id_estado, 0, cidade);
                                 } catch (e) {
                                     console.log(response);
                                     return false;
@@ -1096,4 +959,54 @@ $(document).ready(function () {
         location.reload();
     });
     //******************************************************************************************************************
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //************************************************ Recadastramento ************************************************
+    
+    
+    function houveRecadastramento(idContrato){
+                
+        if (idContrato == "") {
+            idContrato = 0;
+        }
+        
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "json",
+            "method": "GET",
+            "data": {
+                "acao": "houveRecadastramento",
+                "idContrato": idContrato                
+            },
+            "success": function (response) {
+                console.log(response)
+                if(response.tipoMsg == "ok"){
+                    possuiRecadastramento = true;
+                }
+                
+            },
+            "error": function (response) {
+                console.log(response)                
+            }
+        });
+    }
+    
+       
+    
+    //******************************************************************************************************************
+    
+    
+    
+    
+    
+    
 });

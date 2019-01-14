@@ -63,6 +63,7 @@ switch ($_REQUEST['acao']) {
             $pessoa->setNm_pessoa(trim($dadosPessoa['nomeSocial'] === '' ? $dadosPessoaFisica['nomeCivil'] : $dadosPessoa['nomeSocial']));
             $pessoa->setNm_senha(trim($dadosPessoa['senha']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero(trim($dadosPessoa['numero']));
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -101,6 +102,7 @@ switch ($_REQUEST['acao']) {
                     $rs = $pessoaFisica->cadastrarCompetencia($pdo);
                     if ($rs != "Sucesso") {
                         $pdo->rollBack();
+                        $pessoaFisica->getSuccess(false);
                         echo Metodos::retornoAjax("Erro", "alert", $rs);
                         return;
                     }
@@ -131,6 +133,8 @@ switch ($_REQUEST['acao']) {
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //*****************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            //****************
+            $dadosCompetencia = filter_input(INPUT_POST, 'dadosCompetencia', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
             //********************valida cpf e email*****************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
@@ -161,6 +165,7 @@ switch ($_REQUEST['acao']) {
             $pessoa->setId_naturalidade($dadosPessoa['naturalidade']);
             $pessoa->setNm_pessoa(trim($dadosPessoa['nomeSocial'] === '' ? $dadosPessoaFisica['nomeCivil'] : $dadosPessoa['nomeSocial']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero($dadosPessoa['numero']);
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -192,12 +197,68 @@ switch ($_REQUEST['acao']) {
             $pessoaFisica->setId_escolaridade_formacao(($dadosPessoaFisica['escolaridade']));
             //******************************************
             $pessoaFisica->editarPessoaFisica($pdo);
-            
-            // print_r($pessoaFisica);
-            //return;
-            //******************************************
-
+            $fim = false;
             if ($pessoaFisica->getSuccess()) {
+                //********************************* Busca Competencia Pessoa Fisica ************************************
+                $competencias = $pessoaFisica->retornaCompetenciaPessoaFisica($dadosPessoaFisica['idPessoaFisica']);
+                //******************************************************************************************************
+
+                if ($competencias == null) {
+                    //********************** Cadastra as competencias caso não possua nenhuma **************************
+                    if (count($dadosCompetencia) > 0) {
+                        foreach ($dadosCompetencia as $linha => $v) {
+                            $pessoaFisica->setId_escolaridade_formacao_competencia($v['id_escolaridade_formacao']);
+                            $cadastra = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
+                            if ($cadastra != "Sucesso") {
+                                $pdo->rollBack();
+                                echo $cadastra;
+                                return;
+                            }
+                        }
+                        $fim = true;
+                    }
+                    //**************************************************************************************************
+                } else {
+                    $telaCompetancias = array();
+                    foreach ($dadosCompetencia as $comp) {
+                        $telaCompetancias[] = $comp['id_escolaridade_formacao'];
+                    }
+                    $bancoCompetencias = array();
+                    foreach ($competencias as $bdComp) {
+                        $bancoCompetencias[] = $bdComp['id_escolaridade_formacao'];
+                    }
+
+                    $inserir = array_diff(array_unique($telaCompetancias), $bancoCompetencias);
+                    if (count($inserir) > 0) {
+                        foreach ($inserir as $idEscolaridadeFormacao) {
+                            $pessoaFisica->setId_escolaridade_formacao_competencia($idEscolaridadeFormacao);
+                            $cadastra = $pessoaFisica->cadastrarCompetencia($pdo, $dadosPessoaFisica['escolaridade']);
+                            if ($cadastra != "Sucesso") {
+                                $pdo->rollBack();
+                                echo $cadastra;
+                                return;
+                            }
+                        }
+                    }
+
+                    $deletar = array_diff($bancoCompetencias, $telaCompetancias);
+                    if (count($deletar) > 0) {
+                        foreach ($competencias as $idEscolaridadeFormacaoBanco => $banco) {
+                            foreach ($deletar as $idEscolaridadeFormacaoTela => $tela) {
+                                if ($banco['id_escolaridade_formacao'] == $tela) {
+                                    $remover = $pessoaFisica->removerCompetencia($banco['id_competencia']);
+                                    if ($remover == 'Sucesso') {
+                                        unset($competencias[$idEscolaridadeFormacaoBanco]);
+                                        unset($deletar[$idEscolaridadeFormacaoTela]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $fim = true;
+                }
+            }
+            if ($fim) {
                 $pdo->commit();
                 echo Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 return;
@@ -206,8 +267,8 @@ switch ($_REQUEST['acao']) {
                 echo Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
                 return;
             }
-            return;
 
+            return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -509,10 +570,10 @@ switch ($_REQUEST['acao']) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
-            $idPessoaFisica = $_REQUEST['id_pessoa_fisica'];
+            $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //print_r($idPessoaFisica);
             $pessoaFisica = new pessoaFisica();
-            $pessoaFisica->retornaCompetencia($idPessoaFisica);
+            $pessoaFisica->retornaCompetencia($dadosPessoa);
 
             //return;
             break;
@@ -763,6 +824,7 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
+            echo '<option selected>Selecione o Estado</option>';
             echo $prog->retornaOptionCidade($idEstado, $idCidade);
             return;
             break;
@@ -780,7 +842,7 @@ switch ($_REQUEST['acao']) {
             $idEstado = filter_input(INPUT_POST, 'idEstado', FILTER_DEFAULT);
             $uf = filter_input(INPUT_POST, 'uf', FILTER_DEFAULT);
             $cidade = new Cidade();
-            echo $cidade->retornaOptionCidadeUf($idEstado, $uf);
+            echo $cidade->retornaCidadeUf($uf);
 
             return;
             break;
@@ -802,9 +864,25 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
+    case 'listaOrgaoExpeditor':
+        try {
+            $prog = new Estado();
+            $idPais = $_REQUEST['idPais'];
+            $idEstado = $_REQUEST['idEstado'];
+            echo '<option selected>Selecione o Órgão Expeditor</option>';
+            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+
     case 'listaPaisOption':
         try {
             $pais = new Pais();
+            $pais->setIdPais($_REQUEST['idPais'] != null ? $_REQUEST['idPais']:null);
             echo $pais->retornaOptionPaises();
             return;
             break;

@@ -6,7 +6,7 @@ new Vue({
     data: function () {
         return {
             grupoOptions: [],
-            grupo: {idGrupoRecurso: 0, nmGrupoRecurso: 'Teste', recursos: []},
+            grupo: {idGrupoRecurso: 0, nmGrupoRecurso: '', recursos: []},
             inserir: false
         }
     },
@@ -18,11 +18,11 @@ new Vue({
             
             var dados = {
                 acao: 'cadastrarGrupo',
-                dados: this.novoGrupo
+                dados: this.grupo
             }
            
             req.axiosPost('request.php',dados, function(response){
-
+                console.log(response);
                 if (response.tipoMsg === "Erro") {
                     if (response.tipoExibicao === "console") {
                         console.log('Console Mensagem');
@@ -51,28 +51,15 @@ new Vue({
                 acao: 'listaGrupos'
             }; 
             req.axiosGet('request.php',dados,function(response){
-                if (response.tipoMsg === "Erro") {
-                    if (response.tipoExibicao === "console") {
-                        console.log('Console Mensagem');
-                        func.modalAlert(func.msgErroPadrao);
-                        return false;
-                    } else if (response.tipoExibicao === "alert") {
-                        func.modalAlert(response.msg);
-                        return false;
-                    }
-                } else if (response.tipoMsg === "ok") {
-                    vm.grupoOptions = response;
-                    return false;
-                } else {
-                    console.log('Ultimo else');
-                    func.modalAlert(func.msgErroPadrao);
-                    return false;
-                }
+                vm.grupoOptions = response;
             })
         },
         novoGrupo: function(parametro){
             this.inserir = parametro;
 
+        },
+        setaGrupo: function(dados){
+            console.log(dados);
         }
 
     }

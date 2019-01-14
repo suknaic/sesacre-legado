@@ -3,31 +3,44 @@ Vue.component('custom-select',{
         nome: String,
         descricao: String,
         opcoes: Array,
-        valor: String,
+        value: String,
         requerido: {
             default: false,
             type: Boolean
         }
     },
+    
     mounted: function () {
-        var vm = this
-        $('.' + this.nome).select2("val",this.valor).on('change', function () {
-            vm.$emit('input', this.value) // 'this.value' aqui se refere ao elemento capturado pelo Jquery
-        })
+        var vm = this;
+        $('.' + this.nome)
+                .select2({width: '100%', data: this.opcoes, placeholder: 'Selecione o(a) ' + this.descricao})
+                .trigger('change')
+                .on('change', function(){
+                    vm.$emit('input',this.value);
+                    vm.$emit('change');
+                });
+    },
+    watch: {
+        value: function (valor){
+            $('.' + this.nome).val(valor).trigger('change');
+        },
+        opcoes: function (opcoes){
+            $('.' + this.nome).empty();
+            $('.' + this.nome).select2({width: '100%', data: opcoes, placeholder: 'Selecione o(a) ' + this.descricao}).trigger('change');
+        }
     },
     template: `<div class="form-group">
-                    <label class="col-sm-2 control-label text-left">
+                    <label v-bind:for="nome" class="col-sm-2 control-label text-left">
                         {{ descricao }}: <span v-if="requerido" class="text-danger">*</span></label>
                     <div class="col-sm-6">
                         <div class="input-group">
                                 <span class="input-group-addon">
                                     <p class="fa fa-list inputPFa"></p>
                                 </span>
-                            <select class="form-control" v-bind:class="nome">
-                                <option value="0">Selecione o {{descricao}}</option>
-                                <option v-for="opcao in opcoes" :key="opcao.id" v-bind:value="opcao.id">{{ opcao.nome }}</option>
+                            <select class="form-control" v-bind:class="nome" v-model="value">
+
                             </select>                                                                
-                        </div>                                                   
+                        </div>
                     </div>
                     <slot>
                     </slot>

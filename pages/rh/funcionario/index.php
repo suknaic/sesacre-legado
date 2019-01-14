@@ -166,12 +166,14 @@
                                                     <tr>                                                        
                                                         <th>Nome</th>
                                                         <th>Matricula</th>
+                                                        <th>CPF</th>
                                                         <th>Vínculo</th>
                                                         <th>Cargo</th>
                                                         <th>Lotação</th>
                                                         <th>Status</th>
                                                         <th>Telefone Funcional</th>
                                                         <th>E-mail</th>
+                                                        <th>Recadastrado</th>
                                                         <th class="text-center">Ações</th> 
                                                     </tr>
                                                 </thead>
