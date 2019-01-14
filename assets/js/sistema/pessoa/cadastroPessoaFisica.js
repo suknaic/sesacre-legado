@@ -6,7 +6,7 @@ $(document).ready(function () {
     $(".select").select2({width: " 100%"});
     //*************************************
 
-//********************************** Pais Naturalidade *************************************
+    //********************************** Pais Naturalidade *************************************
     function listaPaisNaturalidade() {
         $.ajax({
             "url": "/model/sistema/pessoa/request.php",
@@ -382,6 +382,7 @@ $(document).ready(function () {
                 naturalidade: DadosPessoa.naturalidade,
                 cpf: DadosPessoaFisica.cpf,
                 rg: DadosPessoaFisica.rg,
+                estadoCivil: DadosPessoaFisica.estadoCivil,
                 orgaoExpedidor: DadosPessoaFisica.orgaoExpedidor,
                 orgaoExpedidorEstado: DadosPessoaFisica.orgaoExpedidorEst,
                 mae: DadosPessoaFisica.mae,
@@ -400,9 +401,9 @@ $(document).ready(function () {
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
                     //console.log($i+"-"+index+"=>"+value);
-                    if ($i <= 10) {
+                    if ($i <= 11) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
-                    } else if ($i >= 11 && $i <= 14) {
+                    } else if ($i >= 12 && $i <= 15) {
                         func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato (" + index + ")");
                     }
                     console.log($i + "-" + index + "=>" + value);

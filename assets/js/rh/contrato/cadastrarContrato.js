@@ -748,14 +748,14 @@ $(document).ready(function () {
                 "Nome da Mãe": DadosPessoaFisica.mae,
                 "Estado Civil": DadosPessoaFisica.estadoCivil,
                 "Escolaridade": DadosPessoaFisica.escolaridade,
-                //***************15-21*****************************
+                //***************15-20*****************************
                 "País": DadosPessoa.pais,
                 "Estado": DadosPessoa.estado,
                 "Cidade": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
                 "Bairro": DadosPessoa.bairro,
                 "Telefone Celular": DadosPessoa.telefone_celular,
-                //******************22-28****************************
+                //******************21-27****************************
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
@@ -769,11 +769,11 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    if ($i <= 12) {
+                    if ($i <= 14) {
                         func.modalAlert(func.msgPreencherCampos + "<strong>(" + index + ")</strong>");
-                    } else if ($i >= 13 && $i <= 16) {
+                    } else if ($i >= 15 && $i <= 20) {
                         func.modalAlert(func.msgPreencherCampos + "<strong>(" + index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
+                    } else if ($i >= 21 && $i <= 27) {
                         func.modalAlert(func.msgPreencherCampos + "<strong>(" + index + ")</strong>");
                     }
                     $campo = 1;
@@ -783,10 +783,7 @@ $(document).ready(function () {
             if ($campo == 1) {
                 return false;
             }
-            
-            
-                     
-              
+
             bootbox.confirm({
                 title: `${func.msgRecadastramentoTitulo}`,                    
                 message: `<span class="text-danger">${func.msgRecadastramentoOpcao}</span>                        

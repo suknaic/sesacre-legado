@@ -727,15 +727,14 @@ $(document).ready(function () {
                 "Escolaridade": DadosPessoaFisica.escolaridade,
                 //*************************
 
-                //********* 13-17 *********
+                //********* 13-16 *********
                 "Cidade Endereco": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
                 "Bairro": DadosPessoa.bairro,
-                "Número": DadosPessoa.numero,
                 "Telefone Celular": DadosPessoa.telefone_celular,
                 //*************************
 
-                //********* 18-22 *********
+                //********* 17-21 *********
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissao": DadosContrato.dtAdmissao,
@@ -755,7 +754,7 @@ $(document).ready(function () {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
                     } else if ($i >= 13 && $i <= 16) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato (" + index + ")</strong>");
-                    } else if ($i >= 17 && $i <= 22) {
+                    } else if ($i >= 17 && $i <= 21) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
                     }
                     $campo = 1;

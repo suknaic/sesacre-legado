@@ -215,8 +215,8 @@ switch ($_REQUEST['acao']) {
                                 return;
                             }
                         }
-                        $fim = true;
                     }
+                    $fim = true;
                     //**************************************************************************************************
                 } else {
                     $telaCompetancias = array();
@@ -258,6 +258,7 @@ switch ($_REQUEST['acao']) {
                     $fim = true;
                 }
             }
+
             if ($fim) {
                 $pdo->commit();
                 echo Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);

@@ -260,7 +260,7 @@ class Pessoa {
             $pessoa->setDsLogradouro($this->ds_logradouro);
             $pessoa->setDsObservacao($this->ds_observacao);
             $pessoa->setIdCidade($this->id_cidade);
-            $pessoa->setNrNumero(trim($this->nr_numero));
+            $pessoa->setNrNumero(trim($this->nr_numero) == null ? null:trim($this->nr_numero));
             $pessoa->setIdNaturalidade($this->id_naturalidade);
             $pessoa->setNmEmail($this->nm_email);
             $pessoa->setNmPessoa(ucwords(strtolower($this->nm_pessoa)));

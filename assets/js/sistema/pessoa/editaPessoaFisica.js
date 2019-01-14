@@ -519,6 +519,8 @@ $(document).ready(function () {
                 orgaoExpedidor: DadosPessoaFisica.orgaoExpedidor,
                 orgaoExpedidorEstado: DadosPessoaFisica.orgaoExpedidorEst,
                 mae: DadosPessoaFisica.mae,
+                estadoCivil: DadosPessoaFisica.estadoCivil,
+                escolaridade: DadosPessoaFisica.escolaridade,
                 //********************************************
                 cidadeEndereco: DadosPessoa.cidade,
                 logradouro: DadosPessoa.logradouro,
@@ -534,9 +536,9 @@ $(document).ready(function () {
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
                     //console.log($i+"-"+index+"=>"+value);
-                    if ($i <= 10) {
+                    if ($i <= 11) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
-                    } else if ($i >= 11 && $i <= 14) {
+                    } else if ($i >= 12 && $i <= 15) {
                         func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato (" + index + ")");
                     }
                     console.log($i + "-" + index + "=>" + value);
@@ -572,7 +574,7 @@ $(document).ready(function () {
                 },
 
                 "success": function (response) {
-                    //$this.prop("disabled", false);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;

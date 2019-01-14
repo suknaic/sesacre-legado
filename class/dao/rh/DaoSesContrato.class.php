@@ -664,7 +664,7 @@ class DaoSesContrato extends SesContrato {
                 inner join ses_lotacao l on cl.id_lotacao = l.id_lotacao
                 inner join ses_funcao f on cl.id_funcao = f.id_funcao
                 where c.id_contrato = :idContrato
-                order by dt_inicio asc";
+                order by id_contrato_lotacao asc";
 
         try {
             $sth = $pdo->prepare($sql);

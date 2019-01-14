@@ -320,7 +320,6 @@ class Contrato {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
                 }                        
             }
-            
             //**********************************************************************************************************
             
             
@@ -855,7 +854,7 @@ class Contrato {
                         }
                         //**********************************************************************************************
 
-                        if ($dtInicio <= $dataAtual && $dtFim >= $dataAtual) {
+                        if ($dtInicio >= $dataAtual && $dtFim >= $dataAtual) {
                             $chTotal = $chTotal + $lotacao['chLotacao'];
                         }
                     } else {
@@ -866,6 +865,10 @@ class Contrato {
                         //**********************************************************************************************
                     }
                 }
+
+//                var_dump($chTotal);
+//                $pdo->rollBack();
+//                return;
                 //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
                 if ($chTotal > $dadosContrato['nrCargaHoraria']) {
                     $pdo->rollBack();

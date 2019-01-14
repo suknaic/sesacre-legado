@@ -276,7 +276,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                         <div class="form-group">
                                                             <div class="col-md-1"></div>
                                                             <div class="col-md-3">
-                                                                Estado Civil:
+                                                                Estado Civil: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
@@ -288,7 +288,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                 </div>
                                                             </div> 
                                                             <div class="col-md-3">
-                                                                Nro. Cartão SUS:
+                                                                Número do Cartão SUS:
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
@@ -297,7 +297,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Escolaridade:
+                                                                Escolaridade: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
