@@ -63,6 +63,7 @@ switch ($_REQUEST['acao']) {
             $pessoa->setNm_pessoa(trim($dadosPessoa['nomeSocial'] === '' ? $dadosPessoaFisica['nomeCivil'] : $dadosPessoa['nomeSocial']));
             $pessoa->setNm_senha(trim($dadosPessoa['senha']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero(trim($dadosPessoa['numero']));
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -763,6 +764,7 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
+            echo '<option selected>Selecione o Estado</option>';
             echo $prog->retornaOptionCidade($idEstado, $idCidade);
             return;
             break;
@@ -780,7 +782,7 @@ switch ($_REQUEST['acao']) {
             $idEstado = filter_input(INPUT_POST, 'idEstado', FILTER_DEFAULT);
             $uf = filter_input(INPUT_POST, 'uf', FILTER_DEFAULT);
             $cidade = new Cidade();
-            echo $cidade->retornaOptionCidadeUf($idEstado, $uf);
+            echo $cidade->retornaCidadeUf($uf);
 
             return;
             break;
@@ -802,6 +804,21 @@ switch ($_REQUEST['acao']) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
+    case 'listaOrgaoExpeditor':
+        try {
+            $prog = new Estado();
+            $idPais = $_REQUEST['idPais'];
+            $idEstado = $_REQUEST['idEstado'];
+            echo '<option selected>Selecione o Órgão Expeditor</option>';
+            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+
     case 'listaPaisOption':
         try {
             $pais = new Pais();

@@ -251,7 +251,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/pessoaFisica/index.load.php"
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        Estado Orgão Expedidor: <span class="text-danger">*</span>
+                                                        Estado do Orgão Expedidor: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>

@@ -486,6 +486,21 @@ switch ($_REQUEST['acao']) {
             return;
         }
 
+    case 'listaOrgaoExpeditor':
+        try {
+            $prog = new Estado();
+            $idPais = $_REQUEST['idPais'];
+            $idEstado = $_REQUEST['idEstado'];
+
+            echo "<option value = '0'>Selecione o Estado do Órgão Expedidor</option>";
+            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+
     case 'listaPaisOption':
         try {
             $pais = new Pais();

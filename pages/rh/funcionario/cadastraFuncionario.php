@@ -152,9 +152,7 @@
                                                                 </span>
                                                                 <select id="id_pais_naturalidade" class="form-control pais select">
                                                                     <option value="0">Selecione o País</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -166,9 +164,7 @@
                                                                 </span>
                                                                 <select id="id_estado_naturalidade" class="form-control estado select">
                                                                     <option value="0">Selecione o Estado</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -180,9 +176,7 @@
                                                                 </span>
                                                                 <select id="id_naturalidade" class="form-control idCidade select">
                                                                     <option value="0">Selecione a Cidade</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -217,16 +211,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            Estado Orgão Expeditor: <span class="text-danger">*</span>
+                                                            Estado do Orgão Expeditor: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
                                                                 <select id="id_estado" class="form-control select">
                                                                     <option value="0">Selecione o Estado do Órgão Expedidor</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -262,9 +254,7 @@
                                                                 </span>
                                                                 <select id="id_estado_civil" class="form-control select">
                                                                     <option value="0">Selecione o Estado Civil</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div> 
@@ -285,9 +275,7 @@
                                                                 </span>
                                                                 <select id="id_escolaridade" class="form-control select">
                                                                     <option value="0">Selecione a Escolaridade</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -304,9 +292,7 @@
                                                                     </span>
                                                                     <select id="id_competencia" class="form-control formacao competencia select">
                                                                         <option value="0">Selecione a Competência</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -365,9 +351,7 @@
                                                                 </span>
                                                                 <select id="id_pais_endereco" class="form-control pais select">
                                                                     <option value="0">Selecione o País</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -379,9 +363,7 @@
                                                                 </span>
                                                                 <select id="id_estado_endereco" class="form-control estado select">
                                                                     <option value="0">Selecione o Estado</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -393,9 +375,7 @@
                                                                 </span>
                                                                 <select id="id_cidade" class="form-control idCidade select">
                                                                     <option value="0">Selecione a Cidade</option>
-                                                                    <?php
-                                                                    // echo $lotacoes;
-                                                                    ?>
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -421,7 +401,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            Número: <span class="text-danger">*</span>
+                                                            Número:
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>
@@ -496,9 +476,7 @@
                                                                     </span>
                                                                     <select id="id_vinculo" class="form-control select">
                                                                         <option value="0">Selecione o Vínculo</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -510,9 +488,7 @@
                                                                     </span>
                                                                     <select id="id_pessoa_juridica" class="form-control select">
                                                                         <option value="0">Selecione a Empresa</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -554,9 +530,7 @@
                                                                     </span>
                                                                     <select id="id_cargo" class="form-control select">
                                                                         <option value="0">Selecione o Cargo</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -582,9 +556,7 @@
                                                                         </span>
                                                                         <select id="id_lotacao" class="form-control select">
                                                                             <option value="0">Selecione a Lotação</option>
-                                                                            <?php
-                                                                            // echo $lotacoes;
-                                                                            ?>
+
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -596,9 +568,7 @@
                                                                         </span>
                                                                         <select id="id_funcao" class="form-control select">
                                                                             <option value="0">Selecione a Função</option>
-                                                                            <?php
-                                                                            // echo $lotacoes;
-                                                                            ?>
+
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -691,8 +661,6 @@
                                                 </button>
                                             </div>
                                             <br>
-                                            <!-- <div class="panel-body"> -->
-                                            <!-- Footer Form -->
                                             <div class="panel-footer text-right">
                                                 <button type="button" class="btn btn-default btn-default btn-rounded btn-limpar">
                                                     Limpar
@@ -705,10 +673,6 @@
                                                 </button>
                                             </div>
                                         </form>
-                                        <!-- End Form -->
-
-                                        <!--===================================================-->
-                                        <!--End Horizontal Form-->
                                     </div>
                                 </div>
                             </div>
