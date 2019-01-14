@@ -166,6 +166,7 @@
                                                     <tr>                                                        
                                                         <th>Nome</th>
                                                         <th>Matricula</th>
+                                                        <th>CPF</th>
                                                         <th>Vínculo</th>
                                                         <th>Cargo</th>
                                                         <th>Lotação</th>
