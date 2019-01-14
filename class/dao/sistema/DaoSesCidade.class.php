@@ -84,7 +84,6 @@ class DaoSesCidade extends SesCidade {
 
         $retorno = FALSE;
         $idEstado = $this->getId_estado();
-
         $sql = "select c.id_cidade, c.nm_cidade, c.id_estado, e.nm_estado, c.id_regional_geo, rg.nm_regional_geo, c.id_regional_saude,
                        rs.nm_regional_saude, p.id_pais, p.nm_pais, c.st_ativo
                 from ses_cidade c

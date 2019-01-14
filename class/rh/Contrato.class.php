@@ -5,6 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/pessoa/Pessoa.class.php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/PessoaFisica.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/sistema/perfil_pessoa/PerfilPessoa.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesContrato.class.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/class/dao/rh/DaoSesContratoRecadastramento.class.php";
 
 class Contrato {
 
@@ -20,6 +21,7 @@ class Contrato {
     private $id_cargo = null;
     private $st_ativo = null;
     private $dt_historico = null;
+    private $recadastramento = null;
 
 //*******************************************************************************
     function getDt_historico() {
@@ -109,9 +111,20 @@ class Contrato {
     function setSt_ativo($st_ativo) {
         $this->st_ativo = $st_ativo;
     }
+    
+    function getRecadastramento() {
+        return $this->recadastramento;
+    }
+
+    function setRecadastramento($recadastramento) {
+        $this->recadastramento = $recadastramento;
+        return $this;
+    }
+
+
 
 //*******************************************************************************
-    public function cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao) {
+    public function cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $idUsuario) {
         try {
             $sucesso = false;
             $retorno = "";
@@ -297,7 +310,18 @@ class Contrato {
             }
             $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
             //**********************************************************************************************************
-
+                        
+            
+            //****************************** Cadastra o Recadastramento se for necessário*******************************
+            
+            if(!$this->registraRecadastramento(true, 0, (int)$contrato->getId_contrato(), (int)$idUsuario, $pdo)){
+                $pdo->rollBack();
+                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
+            }                        
+            
+            //**********************************************************************************************************
+            
+            
             //************************************* Validações - Contrato / Lotação ************************************
             $dataAtual = strtotime(date('d-m-Y'));
             $dataAdmissao = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
@@ -454,7 +478,7 @@ class Contrato {
     }
 
 //************************************************************************************************************************
-    public function editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao) {
+    public function editarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $idUsuario) {
         try {
             $sucesso = false;
             $retorno = "";
@@ -915,6 +939,20 @@ class Contrato {
                 }
                 $sucesso = TRUE;
             }
+            
+            
+             //****************************** Cadastra o Recadastramento se for necessário*******************************
+            if($this->recadastramento == "s"){
+                if(!$this->registraRecadastramento(true, 0, (int)$contrato->getId_contrato(), (int)$idUsuario, $pdo)){
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
+                }   
+            }
+            
+            
+            //**********************************************************************************************************
+            
+            
 
             if ($sucesso) {
                 $pdo->commit();
@@ -2066,6 +2104,91 @@ class Contrato {
             return Metodos::retornoAjax('Erro', 'console', $ex);
         }
     }
+    
+    
+    
+    /**
+     * 
+     * @param bool $recadastramento
+     * @param int $ano
+     * @param int $idContrato
+     * @param int $idUsuario
+     * @param PDO $pdo
+     * @return boolean
+     */
+    function registraRecadastramento(bool $recadastramento, int $ano, int $idContrato, int $idUsuario, PDO $pdo){
+        
+        try{
+            
+            if(empty($ano)){
+                $data = new DateTime();
+                $ano = (int)$data->format("Y");
+            }
+            
+            $dao = new DaoSesContratoRecadastramento();
+            $dao->setIdContrato($idContrato);
+            $dao->setAaRecadastramento($ano);
+            
+            //Valida se o contrato já existe algum recadastramento
+            $dao->retornaRecadastramentoAtivoPorContratoAno($pdo);            
+            if($dao->Sucesso()){
+                //Se ele tiver algum recadastramento ativo, então se deve desativar esse recastramento                
+                $dao->desativa($pdo);                
+                if(!$dao->Sucesso()){
+                    echo "<pre>";
+                    print_r($dao->getMsgRetorno());
+                    echo "</pre>";
+                    return false;
+                }
+            }
+                                                            
+            
+            $dao->setIdPessoa($idUsuario);
+            $dao->setIsRecadastramento($recadastramento);
+            
+            $dao->insert($pdo);
+            if(!$dao->Sucesso()){
+                echo "<pre>";
+                print_r($dao->getMsgRetorno());
+                echo "</pre>";
+                return false;
+            }
+            $dao->setIdContratoRecadastramento($pdo->lastInsertId('ses_contrato_recadastramento_id_contrato_recadastramento_seq'));
+            if (!Log::SalvaLogI('ses_contrato_recadastramento', $dao->getIdContratoRecadastramento(), $pdo)) {
+                return false;
+            }
+            
+                                    
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }                
+    }
+    
+    public function verificaHouveRecadastramento() {
+        try {           
+
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+
+            $data = new DateTime();
+            $ano = (int)$data->format("Y");            
+            $dao = new DaoSesContratoRecadastramento();
+            $dao->setIdContrato($this->id_contrato);
+            $dao->setAaRecadastramento($ano);            
+            
+            $dao->retornaRecadastramentoAtivoPorContratoAno($pdo);
+            if($dao->Sucesso()){
+                return Metodos::retornoAjax("ok", "console", array("data" => $dao->getMsgRetorno()['dh_contrato_recadastramento']) );
+            }else{
+                return Metodos::retornoAjax("nok", "console", $dao->getMsgRetorno());
+            }           
+        } catch (Exception $ex) {
+            return Metodos::retornoAjax('Erro', 'console', $ex->getMessage());
+        }
+    }
+    
+    
 }
 
 ?>

@@ -1,7 +1,9 @@
 $(document).ready(function () {
 
     func = new Funcoes();
-
+    
+    var possuiRecadastramento = false;
+    
     $(".select").select2({width: " 100%"});
 
     //***************************************** Carrega Dados do Contrato **********************************************
@@ -76,6 +78,7 @@ $(document).ready(function () {
                     listaCargoCombo(response[0]['id_cargo']);
                     returnCompetencia(idPessoaFisica);
                     returnLotacaoFuncao(idContrato);
+                    houveRecadastramento(idContrato);
                 }
         });
     }
@@ -183,7 +186,7 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaEstadoOption"
+                acao: "listaOrgaoExpeditor"
             },
             "success": function (response) {
                 if (idOrgao == null) {
@@ -611,6 +614,7 @@ $(document).ready(function () {
             if (idContrato == "") {
                 idContrato = 0;
             }
+                                   
             var cep = func.extrairCarater($("#nr_cep").val(), "-");
 
             //****************** Dados pessoais *********************
@@ -767,57 +771,118 @@ $(document).ready(function () {
                 return false;
             }
             //********************************************************************************************
-            $.ajax({
-                "url": "/model/rh/funcionario/request.php",
-                "dataType": "html",
-                "method": "POST",
-                "data": {
-                    "acao": "editarContrato",
-                    "dadosPessoa": DadosPessoa,
-                    "dadosPessoaFisica": DadosPessoaFisica,
-                    "dadosCompetencia": DadosCompetencia,
-                    "dadosContrato": DadosContrato,
-                    "dadosContrato_Lotacao": DadosContrato_Lotacao
-                },
-                "success": function (response) {
-                    console.log(response);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao, 'danger');
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
+            
+            if(!possuiRecadastramento){            
+                bootbox.confirm({
+                    title: 'Recadastramento de 2019',
+                    //message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
+                    message: `<span class="text-danger">Informe se a alteração desse Contrato faz parte do Recadastramento de 2019</span>                        
+                        <br><br>  
+                        <div class="form-group">
+                            
+                            <div class="input-group">
+                                <div class="radio-inline">
+                                    <label role="button">
+                                        <input type="radio" name="opt_recadastramento" value="s">Sim
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label role="button">
+                                        <input type="radio" name="opt_recadastramento" value="n">Não
+                                    </label>
+                                </div>
+                            </div>
+                        </div>`,  
+                    buttons: {
+                        'cancel': {
+                            label: 'Fechar',
+                            className: 'btn-default btn-rounded'
+                        },
+                        'confirm': {
+                            label: 'Salvar',
+                            className: 'btn-primary btn-rounded'
                         }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        func.fechaModalHref('/pages/rh/funcionario/index.php');
-                        return false;
-                    } else {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
+                    },
+                    callback: function (result) {
+                        if (result) {                            
+                            if($('input[name=opt_recadastramento]:checked', '.bootbox-body').length < 1 ){
+                                func.modalAlert("Informe Se esse Contrato é do Recadastramento de 2019.");                             
+                            }else{                                                                
+                                salvarEdicaoContrato(DadosPessoa
+                                , DadosPessoaFisica
+                                , DadosCompetencia
+                                , DadosContrato
+                                , DadosContrato_Lotacao
+                                , $('input[name=opt_recadastramento]:checked', '.bootbox-body').val())
+                            }                            
+                            
+                        }
                     }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao, 'danger');
-                    return false;
-                }
-            });
+                });
+            }else{
+                salvarEdicaoContrato(DadosPessoa, DadosPessoaFisica, DadosCompetencia, DadosContrato, DadosContrato_Lotacao, 'n')
+            }
+            
+            
+            
             $this.prop("disabled", false);
         }
     });
+        
+    
+    function salvarEdicaoContrato(DadosPessoa, DadosPessoaFisica, DadosCompetencia, DadosContrato, DadosContrato_Lotacao, recadastramento){
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                "acao": "editarContrato",
+                "dadosPessoa": DadosPessoa,
+                "dadosPessoaFisica": DadosPessoaFisica,
+                "dadosCompetencia": DadosCompetencia,
+                "dadosContrato": DadosContrato,
+                "dadosContrato_Lotacao": DadosContrato_Lotacao,
+                "recadastramento" : recadastramento
+            },
+            "success": function (response) {
+                console.log(response);
+                if (response.trim() == "SessaoExpirada") {
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    func.modalAlert(response.msg, 'success');
+                    func.fechaModalHref('/pages/rh/funcionario/index.php');
+                    return false;
+                } else {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {                    
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
+    
+    
+    
     //******************************************************************************************************************
 
     //*************************************************** Busca Cep ****************************************************
@@ -895,4 +960,54 @@ $(document).ready(function () {
         location.reload();
     });
     //******************************************************************************************************************
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //************************************************ Recadastramento ************************************************
+    
+    
+    function houveRecadastramento(idContrato){
+                
+        if (idContrato == "") {
+            idContrato = 0;
+        }
+        
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "json",
+            "method": "GET",
+            "data": {
+                "acao": "houveRecadastramento",
+                "idContrato": idContrato                
+            },
+            "success": function (response) {
+                console.log(response)
+                if(response.tipoMsg == "ok"){
+                    possuiRecadastramento = true;
+                }
+                
+            },
+            "error": function (response) {
+                console.log(response)                
+            }
+        });
+    }
+    
+       
+    
+    //******************************************************************************************************************
+    
+    
+    
+    
+    
+    
 });
