@@ -63,13 +63,11 @@ require_once "index.load.php";
                                     <h2 class="panel-title">Dados do Recurso</h2>
                                 </div>
                                 <div class="panel-body">
-                                    <pre>
-                                        {{ novoRecurso }}
-                                    </pre>
-                                    <custom-select nome="id_sistema" descricao="Sistema do Recurso" v-bind:valor="novoRecurso.idSistema" v-on:input="novoRecurso.idSistema = $event" requerido v-bind:opcoes="sistemasOptions"></custom-select>
-                                    <input-texto nome="nm_recurso" descricao="Nome do Recurso"  v-model="novoRecurso.nmRecurso" requerido></input-texto>
-                                    <input-texto nome="lk_recurso" descricao="Endereço do Recurso" v-model="novoRecurso.lkRecurso" requerido></input-texto>
-                                    <custom-textarea nome="ds_recurso" descricao="Descrição do Recurso" v-bind:valor="novoRecurso.dsRecurso" v-on:input="novoRecurso.dsRecurso = $event"></custom-textarea>
+                                    <pre>{{novoRecurso}}</pre>
+                                    <custom-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" v-bind:opcoes="sistemasOptions" requerido></custom-select>
+                                    <custom-text nome="nm_recurso" descricao="Nome do Recurso" estilo="fa fa-file-text-o inputPFa"  v-model="novoRecurso.nmRecurso" requerido></custom-text>
+                                    <custom-text nome="lk_recurso" descricao="Endereço do Recurso" estilo="fa fa-file-text-o inputPFa" v-model="novoRecurso.lkRecurso"  requerido></custom-text>
+                                    <custom-textarea nome="ds_recurso" descricao="Descrição do Recurso" estilo="fa fa-file-text-o inputPFa" v-model="novoRecurso.dsRecurso"></custom-textarea>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
@@ -134,7 +132,7 @@ require_once "index.load.php";
         <script src="/assets/lib/template/js/vue.min.js"></script>
         <script src="/assets/lib/template/js/axios.min.js"></script>
         <script src="/assets/lib/sesacre/mixins/requisicoes.js"></script>
-        <script src="/assets/lib/sesacre/componentes/InputTexto.js"></script>
+        <script src="/assets/lib/sesacre/componentes/CustomText.js"></script>
         <script src="/assets/lib/sesacre/componentes/CustomTextarea.js"></script>
         <script src="/assets/lib/sesacre/componentes/CustomSelect.js"></script>
         <script src="index.js"></script> 

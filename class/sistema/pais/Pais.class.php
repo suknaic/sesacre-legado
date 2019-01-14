@@ -297,6 +297,27 @@ class Pais {
             $retorno = "";
         }
     }
+    
+    public function retornaOptionPaisesSelect2(){
+        try {
+            $conexao = new Conexao();
+            $pdo = $conexao->connect();
+            
+            $daoSesPais = new DaoSesPais();
+            
+            $opcoes = [];
+            
+            $resultado = $daoSesPais->retornaPaises($pdo);
+            if ($resultado) {
+                foreach ($resultado as $linha) {
+                    $opcoes[] = (object) array('id' => $linha['id_pais'], 'text' => $linha['nm_pais']);
+                }
+                return json_encode($opcoes);
+            }
+        } catch (Exception $exc) {
+            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+        }
+    }
 
 }
 
