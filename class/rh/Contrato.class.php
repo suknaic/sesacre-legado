@@ -1258,6 +1258,7 @@ class Contrato {
                         //*********************************************************
                         $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
                                         <td>" . $v['nr_matricula'] . "</td>   
+                                        <td>" . Metodos::formataCpf($v['nr_cpf']) . "</td>   
                                         <td>" . $v['nm_vinculo'] . "</td>
                                         <td>" . $v['nm_cargo'] . "</td>   
                                         <td>" . $v['nm_lotacao'] . "</td>"
