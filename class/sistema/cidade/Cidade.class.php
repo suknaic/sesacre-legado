@@ -260,7 +260,7 @@ class Cidade {
         }
     }
 
-    public function retornaCidadeUf($uf) {
+    public function  retornaCidadeUf($uf) {
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();

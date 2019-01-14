@@ -186,7 +186,7 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaEstadoOption"
+                acao: "listaOrgaoExpeditor"
             },
             "success": function (response) {
                 if (idOrgao == null) {

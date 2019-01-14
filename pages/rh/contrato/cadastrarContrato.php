@@ -200,7 +200,7 @@
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-file-text-o inputPFa"></p>
                                                             </span>
-                                                            <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" placeholder="___.___.___-__" required="true" disabled="">
+                                                            <input type="text" class="form-control" name="nr_cpf" id="nr_cpf" placeholder="___.___.___-__" required="true">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
@@ -222,7 +222,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        Estado Orgão Expedidor: <span class="text-danger">*</span>
+                                                        Estado do Orgão Expedidor: <span class="text-danger">*</span>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
                                                                 <p class="fa fa-list inputPFa"></p>
@@ -412,7 +412,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        Número: <span class="text-danger">*</span>
+                                                        Número:
                                                         <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-sort-numeric-asc inputPFa"></p>

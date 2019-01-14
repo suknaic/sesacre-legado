@@ -179,7 +179,7 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaEstadoOption"
+                acao: "listaOrgaoExpeditor"
             },
             "success": function (response) {
                 if (idOrgao == null) {
@@ -753,7 +753,6 @@ $(document).ready(function () {
                 "Estado": DadosPessoa.estado,
                 "Cidade": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
-                "Número": DadosPessoa.numero,
                 "Bairro": DadosPessoa.bairro,
                 "Telefone Celular": DadosPessoa.telefone_celular,
                 //******************22-28****************************

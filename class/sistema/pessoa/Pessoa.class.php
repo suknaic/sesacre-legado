@@ -198,7 +198,7 @@ class Pessoa {
             $pessoa->setIdNaturalidade($this->id_naturalidade);
             $pessoa->setNmPessoa(ucwords(strtolower($this->nm_pessoa)));
             $pessoa->setNrCep($this->nr_cep);
-            $pessoa->setNrNumero($this->nr_numero);
+            $pessoa->setNrNumero($this->nr_numero == null ? null:$this->nr_numero);
             $pessoa->setNrTelefoneCelular($this->nr_telefone_celular);
             $pessoa->setNrTelefoneResidencial($this->nr_elefone_residencial);
             $pessoa->setNmSenha($this->nm_senha);

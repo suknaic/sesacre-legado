@@ -238,7 +238,7 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaEstadoOption"
+                acao: "listaOrgaoExpeditor"
             },
             "success": function (response) {
                 $("#id_estado").html(response);
@@ -606,15 +606,14 @@ $(document).ready(function () {
                 "Nome da Mãe": DadosPessoaFisica.mae,
                 "Estado Civil": DadosPessoaFisica.estadoCivil,
                 "Escolaridade": DadosPessoaFisica.escolaridade,
-                //***************15-21*****************************
+                //***************15-20*****************************
                 "País": DadosPessoa.pais,
                 "Estado": DadosPessoa.estado,
                 "Cidade": DadosPessoa.cidade,
                 "Logradouro": DadosPessoa.logradouro,
-                "Número": DadosPessoa.numero,
                 "Bairro": DadosPessoa.bairro,
                 "Telefone Celular": DadosPessoa.telefone_celular,
-                //******************22-28****************************
+                //******************21-27****************************
                 "Vínculo": DadosContrato.vinculo,
                 "Empresa": DadosContrato.pessoaJuridica,
                 "Data de Admissão": DadosContrato.dtAdmissao,
@@ -631,9 +630,9 @@ $(document).ready(function () {
                 if (value == 0 || value == "" || value == null) {
                     if ($i <= 14) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Pessoais (" + index + ")</strong>");
-                    } else if ($i >= 15 && $i <= 21) {
+                    } else if ($i >= 15 && $i <= 20) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Endereço / Contato (" + index + ")</strong>");
-                    } else if ($i >= 22 && $i <= 28) {
+                    } else if ($i >= 21 && $i <= 27) {
                         func.modalAlert(func.msgPreencherCampos + " - <strong>Dados Funcionais (" + index + ")</strong>");
                     }
                     $campo = 1;
