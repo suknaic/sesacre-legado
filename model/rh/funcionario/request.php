@@ -703,6 +703,22 @@ switch ($_REQUEST['acao']) {
             return;
         }
         
+        
+    case 'validaEmailExiste':
+        try {
+            $email = filter_input(INPUT_GET, 'email', FILTER_DEFAULT);                
+            $pessoa = new Pessoa();            
+            echo $pessoa->validaEmail(trim($email));                        
+            return;
+            break;
+        } catch (Exception $e) {
+            echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
+            return;
+        }
+        
+        
+        
+        
     
 }
 ?>
