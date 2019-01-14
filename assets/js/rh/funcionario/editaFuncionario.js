@@ -772,11 +772,10 @@ $(document).ready(function () {
             }
             //********************************************************************************************
             
-            if(!possuiRecadastramento){            
+            if(!possuiRecadastramento){                            
                 bootbox.confirm({
-                    title: 'Recadastramento de 2019',
-                    //message: 'Você tem Certeza que deseja continuar com a Exclusão do Item <span class="text-danger">' + item + '</span>?',
-                    message: `<span class="text-danger">Informe se a alteração desse Contrato faz parte do Recadastramento de 2019</span>                        
+                    title: `${func.msgRecadastramentoTitulo}`,                    
+                    message: `<span class="text-danger">${func.msgRecadastramentoOpcao}</span>                        
                         <br><br>  
                         <div class="form-group">
                             
@@ -806,7 +805,7 @@ $(document).ready(function () {
                     callback: function (result) {
                         if (result) {                            
                             if($('input[name=opt_recadastramento]:checked', '.bootbox-body').length < 1 ){
-                                func.modalAlert("Informe Se esse Contrato é do Recadastramento de 2019.");                             
+                                func.modalAlert(`${func.msgRecadastramentoObrigatorio}`);                             
                             }else{                                                                
                                 salvarEdicaoContrato(DadosPessoa
                                 , DadosPessoaFisica

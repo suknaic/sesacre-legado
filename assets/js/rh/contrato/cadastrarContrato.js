@@ -783,63 +783,112 @@ $(document).ready(function () {
             if ($campo == 1) {
                 return false;
             }
+            
+            
+                     
+              
+            bootbox.confirm({
+                title: `${func.msgRecadastramentoTitulo}`,                    
+                message: `<span class="text-danger">${func.msgRecadastramentoOpcao}</span>                        
+                    <br><br>  
+                    <div class="form-group">
 
-            //***********************************************
-            $.ajax({
-                "url": "/model/rh/funcionario/request.php",
-                "dataType": "html",
-                "method": "POST",
-                "data": {
-                    "acao": "editarContrato",
-                    "dadosPessoa": DadosPessoa,
-                    "dadosPessoaFisica": DadosPessoaFisica,
-                    "dadosCompetencia": DadosCompetencia,
-                    "dadosContrato": DadosContrato,
-                    "dadosContrato_Lotacao": DadosContrato_Lotacao
-                },
-
-                "success": function (response) {
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
-
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        console.log(response);
-                        return false;
-                    }
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            console.log(response);
-                            func.modalAlert(func.msgErroPadrao, 'danger');
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, 'success');
-                        func.fechaModalHref('/pages/rh/funcionario/index.php');
-                        return false;
-                    } else {
-                        console.log(response);
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
+                        <div class="input-group">
+                            <div class="radio-inline">
+                                <label role="button">
+                                    <input type="radio" name="opt_recadastramento" value="s">Sim
+                                </label>
+                            </div>
+                            <div class="radio-inline">
+                                <label role="button">
+                                    <input type="radio" name="opt_recadastramento" value="n">Não
+                                </label>
+                            </div>
+                        </div>
+                    </div>`,  
+                buttons: {
+                    'cancel': {
+                        label: 'Fechar',
+                        className: 'btn-default btn-rounded'
+                    },
+                    'confirm': {
+                        label: 'Salvar',
+                        className: 'btn-primary btn-rounded'
                     }
                 },
-                "error": function (response) {
-                    $this.prop("disabled", false);
-                    console.log(response);
+                callback: function (result) {
+                    if (result) {                            
+                        if($('input[name=opt_recadastramento]:checked', '.bootbox-body').length < 1 ){
+                            func.modalAlert(`${func.msgRecadastramentoObrigatorio}`);                             
+                        }else{                                                                
+                            salvarContrato(DadosPessoa
+                            , DadosPessoaFisica
+                            , DadosCompetencia
+                            , DadosContrato
+                            , DadosContrato_Lotacao
+                            , $('input[name=opt_recadastramento]:checked', '.bootbox-body').val())
+                        }                            
+
+                    }
+                }
+            });
+           
+            $this.prop("disabled", false);           
+            
+        }
+    });
+    
+    
+    function salvarContrato(DadosPessoa, DadosPessoaFisica, DadosCompetencia, DadosContrato, DadosContrato_Lotacao, recadastramento){
+        $.ajax({
+            "url": "/model/rh/funcionario/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                "acao": "editarContrato",
+                "dadosPessoa": DadosPessoa,
+                "dadosPessoaFisica": DadosPessoaFisica,
+                "dadosCompetencia": DadosCompetencia,
+                "dadosContrato": DadosContrato,
+                "dadosContrato_Lotacao": DadosContrato_Lotacao,
+                "recadastramento" : recadastramento
+            },
+            "success": function (response) {
+                console.log(response);
+                if (response.trim() == "SessaoExpirada") {
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
+
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
-            });
-            $this.prop("disabled", false);
-        }
-    });
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    func.modalAlert(response.msg, 'success');
+                    func.fechaModalHref('/pages/rh/funcionario/index.php');
+                    return false;
+                } else {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {                    
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
+    }
 
     //*************************************************** Busca Cep ****************************************************
     $('body').on('click', '.cep', function (e) {

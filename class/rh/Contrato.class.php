@@ -313,11 +313,13 @@ class Contrato {
                         
             
             //****************************** Cadastra o Recadastramento se for necessário*******************************
-            
-            if(!$this->registraRecadastramento(true, 0, (int)$contrato->getId_contrato(), (int)$idUsuario, $pdo)){
-                $pdo->rollBack();
-                return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
-            }                        
+                         
+            if($this->recadastramento == "s"){
+                if(!$this->registraRecadastramento(true, 0, (int)$contrato->getId_contrato(), (int)$idUsuario, $pdo)){
+                    $pdo->rollBack();
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
+                }                        
+            }
             
             //**********************************************************************************************************
             

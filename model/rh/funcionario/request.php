@@ -38,6 +38,8 @@ switch ($_REQUEST['acao']) {
             $dadosContrato = filter_input(INPUT_POST, 'dadosContrato', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
+                        
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);
 
             //********************************************* Valida E-mail **********************************************
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
@@ -53,7 +55,8 @@ switch ($_REQUEST['acao']) {
             }
             //**********************************************************************************************************
 
-            $contrato = new Contrato();            
+            $contrato = new Contrato();         
+            $contrato->setRecadastramento($recadastramento);
             echo $contrato->cadastrarContrato($dadosPessoa, $dadosPessoaFisica, $dadosCompetencia, $dadosContrato, $dadosContratoLotacao, $session->getIdUser());
             return;
             break;
@@ -81,7 +84,7 @@ switch ($_REQUEST['acao']) {
             $dadosContratoLotacao = filter_input(INPUT_POST, 'dadosContrato_Lotacao', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //**********************************************************************************************************************************************
 
-            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);                        
+            $recadastramento = filter_input(INPUT_POST, 'recadastramento', FILTER_DEFAULT);                  
             
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O E-mail Informadao é Inválido.");
