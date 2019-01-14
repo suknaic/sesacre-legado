@@ -367,13 +367,13 @@ class Contrato {
                     return Metodos::retornoAjax('Erro', 'alert', 'Data de início da lotação não pode ser menor que a data de admissão.');
                 }
                 //***************************************************************************************
-                
-                if ($dtFimAntiga != null) {
-                    if ($dtFimAntiga > $dtInicio) {
-                        $pdo->rollBack();
-                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da outra.');
-                    }
-                }
+
+//                if ($dtFimAntiga != null) {
+//                    if ($dtFimAntiga > $dtInicio) {
+//                        $pdo->rollBack();
+//                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da outra.');
+//                    }
+//                }
 
                 if ($dtFim != null) {
                     //*************************** Verifica se a data fim é < que a data de inicio **********************
