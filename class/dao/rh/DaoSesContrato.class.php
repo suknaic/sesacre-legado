@@ -382,31 +382,73 @@ class DaoSesContrato extends SesContrato {
         } else {
             $ativo = "and (c.st_ativo = '1' or c.st_ativo = '0')";
         }
-        $sql = "SELECT c.id_contrato, c.nr_matricula, c.id_cargo, c.st_ativo, cg.nm_cargo, v.id_vinculo, v.nm_vinculo, 
-                       PF.nr_cpf, P.id_pessoa, PF.id_pessoa_fisica, P.nm_pessoa, P.nm_email, P.nr_telefone_residencial, P.nr_telefone_celular, P.st_login, 
-                       array_to_string(array_agg(distinct l.nm_lotacao), ', ') as nm_lotacao,
-                       array_to_string(array_agg(t.nr_telefone), ', ') as nr_telefone_funcional,
-                       case
-                            r.is_ativo
-                            when true then 'Sim'
-                            else 'Não'
-                        end as recadastrado,
-                        pr.nm_pessoa as nm_pessoa_recadastramento, to_char(r.dh_contrato_recadastramento, 'dd/mm/YYYY HH24:MI:SS') as dh_contrato_recadastramento
-                FROM ses_pessoa P 
-                    inner join ses_pessoa_fisica PF on P.id_pessoa = PF.id_pessoa
-                    inner join ses_contrato c on PF.id_pessoa_fisica = c.id_pessoa_fisica
-                    inner join ses_contrato_lotacao cl on c.id_contrato = cl.id_contrato
-                    inner join ses_vinculo v on c.id_vinculo = v.id_vinculo
-                    inner join ses_lotacao l on cl.id_lotacao = l.id_lotacao
-                    inner join ses_cargo cg on c.id_cargo = cg.id_cargo
-                    left join ses_telefone t on l.id_lotacao = t.id_lotacao
-                    left join ses_contrato_recadastramento r on c.id_contrato = r.id_contrato and r.is_ativo and r.aa_recadastramento = extract(year from now())
-                    left join ses_pessoa pr on pr.id_pessoa = r.id_pessoa
-                where P.st_ativo = '1' and PF.st_ativo = '1'
-                $ativo
-                $filtro
-		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo, r.id_contrato_recadastramento, pr.id_pessoa
-                ORDER BY P.nm_pessoa, c.nr_matricula";
+
+        $sql = "select
+                    c.id_contrato,
+                    c.nr_matricula,
+                    c.id_cargo,
+                    c.st_ativo,
+                    cg.nm_cargo,
+                    v.id_vinculo,
+                    v.nm_vinculo,
+                    PF.nr_cpf,
+                    P.id_pessoa,
+                    PF.id_pessoa_fisica,
+                    P.nm_pessoa,
+                    P.nm_email,
+                    P.nr_telefone_residencial,
+                    P.nr_telefone_celular,
+                    P.st_login,
+                    cls.nm_lotacao,
+                    cls.id_lotacao,
+                    cls.nr_telefone_funcional,
+                    case
+                        r.is_ativo
+                        when true then 'Sim'
+                        else 'Não'
+                    end as recadastrado,
+                    pr.nm_pessoa as nm_pessoa_recadastramento, to_char(r.dh_contrato_recadastramento, 'dd/mm/YYYY HH24:MI:SS') as dh_contrato_recadastramento
+                from
+                    ses_contrato C
+                inner join ses_pessoa_fisica PF on
+                    PF.id_pessoa_fisica = C.id_pessoa_fisica
+                inner join ses_pessoa P on
+                    P.id_pessoa = PF.id_pessoa
+                inner join ses_vinculo v on
+                    v.id_vinculo = c.id_vinculo
+                inner join ses_cargo cg on
+                    cg.id_cargo = c.id_cargo
+                left join (
+                    select
+                        cl.id_contrato,
+                        string_agg(distinct(l.nm_lotacao), ', ') as nm_lotacao,
+                        array_agg(distinct(l.id_lotacao)) as id_lotacao,
+                        string_agg(t.nr_telefone, ', ') as nr_telefone_funcional
+                    from
+                        ses_contrato_lotacao cl
+                    inner join ses_lotacao l on
+                        l.id_lotacao = cl.id_lotacao
+                    left join ses_telefone t on
+                        t.id_lotacao = l.id_lotacao
+                    group by
+                        cl.id_contrato ) cls on
+                    cls.id_contrato = c.id_contrato
+                left join ses_contrato_recadastramento r on
+                    c.id_contrato = r.id_contrato
+                    and r.is_ativo
+                    and r.aa_recadastramento = extract(year
+                from
+                    now())
+                left join ses_pessoa pr on pr.id_pessoa = r.id_pessoa
+                where
+                    P.st_ativo = '1'
+                    and PF.st_ativo = '1'
+                    $ativo
+                    $filtro
+                order by
+                    P.nm_pessoa,
+                    c.nr_matricula";
+
 
         try {
             $sth = $pdo->prepare($sql);
