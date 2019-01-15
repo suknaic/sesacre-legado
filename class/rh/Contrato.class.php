@@ -1266,6 +1266,19 @@ class Contrato {
                         $numeros = substr($numeros, 0, strlen($numeros) - 2);
                         //*********************************************************
                         $ativo = $v['st_ativo'] === '0' ? "<td class='text-danger text-center'>INATIVO</td>" : "<td class= 'text-center'>ATIVO</td>";
+                        
+                        $classRecadastramento = '';
+                        $titleRecadastramento = "";
+                        if($v['recadastrado'] == "Sim"){
+                            $classRecadastramento = "text-success";
+                            $titleRecadastramento = "title='".$v['nm_pessoa_recadastramento']." ".$v['dh_contrato_recadastramento']." '";
+                        }else if($v['recadastrado'] == "Não"){
+                            $classRecadastramento = "text-danger";
+                        }
+                        
+                        
+                        
+                        
                         //*********************************************************
                         $retorno .= "   <td>" . $v['nm_pessoa'] . "</td>
                                         <td>" . $v['nr_matricula'] . "</td>   
@@ -1276,7 +1289,7 @@ class Contrato {
                                 . $ativo .
                                 "<td>" . $numeros . "</td>
                                         <td>" . $v['nm_email'] . "</td>
-                                        <td>" . $v['recadastrado'] ."</td>
+                                        <td class='text-center ".$classRecadastramento."' ".$titleRecadastramento.">" . $v['recadastrado'] ."</td>
                                         <td style='text-align: center;'>                           
                                             <button type='button' class='btn btn-default btn-edit btn-xs'                               
                                                   title='Editar' nome='" . $v['nm_pessoa'] . "' value='" . $idContrato . "/" . $idPessoaFisica . "' >

@@ -390,7 +390,8 @@ class DaoSesContrato extends SesContrato {
                             r.is_ativo
                             when true then 'Sim'
                             else 'Não'
-                        end as recadastrado
+                        end as recadastrado,
+                        pr.nm_pessoa as nm_pessoa_recadastramento, to_char(r.dh_contrato_recadastramento, 'dd/mm/YYYY HH24:MI:SS') as dh_contrato_recadastramento
                 FROM ses_pessoa P 
                     inner join ses_pessoa_fisica PF on P.id_pessoa = PF.id_pessoa
                     inner join ses_contrato c on PF.id_pessoa_fisica = c.id_pessoa_fisica
@@ -400,10 +401,11 @@ class DaoSesContrato extends SesContrato {
                     inner join ses_cargo cg on c.id_cargo = cg.id_cargo
                     left join ses_telefone t on l.id_lotacao = t.id_lotacao
                     left join ses_contrato_recadastramento r on c.id_contrato = r.id_contrato and r.is_ativo and r.aa_recadastramento = extract(year from now())
+                    left join ses_pessoa pr on pr.id_pessoa = r.id_pessoa
                 where P.st_ativo = '1' and PF.st_ativo = '1'
                 $ativo
                 $filtro
-		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo, r.id_contrato_recadastramento
+		group by c.id_contrato, cg.nm_cargo, P.id_pessoa, PF.id_pessoa_fisica, PF.nm_civil, v.id_vinculo, r.id_contrato_recadastramento, pr.id_pessoa
                 ORDER BY P.nm_pessoa, c.nr_matricula";
 
         try {
