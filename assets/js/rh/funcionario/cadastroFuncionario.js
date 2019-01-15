@@ -238,7 +238,9 @@ $(document).ready(function () {
             "url": "/model/rh/funcionario/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaOrgaoExpeditor"
+                acao: "listaOrgaoExpeditor",
+                idPais: 1,
+                orgaoExpedidor: '1'
             },
             "success": function (response) {
                 $("#id_estado").html(response);

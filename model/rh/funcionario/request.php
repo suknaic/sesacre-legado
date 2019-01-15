@@ -440,10 +440,9 @@ switch ($_REQUEST['acao']) {
         try {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
-            $idCidade = $_REQUEST['idCidade'];
+            $idCidade = array_key_exists('idCidade', $_REQUEST) ? $_REQUEST['idCidade']:null;
             $nmCidade = $_REQUEST['nmCidade'];
 
-            echo "<option value = '0'>Selecione a Cidade</option>";
             if (empty($nmCidade)) {
                 echo $prog->retornaOptionCidade($idEstado, $idCidade);
             } else {
@@ -483,7 +482,6 @@ switch ($_REQUEST['acao']) {
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
 
-            echo "<option value = '0'>Selecione o Estado</option>";
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;
@@ -496,10 +494,10 @@ switch ($_REQUEST['acao']) {
         try {
             $prog = new Estado();
             $idPais = $_REQUEST['idPais'];
-            $idEstado = $_REQUEST['idEstado'];
+            $idEstado = array_key_exists('idEstado', $_REQUEST) ? $_REQUEST['idEstado']:null;
+            $orgaoExpeditor = $_REQUEST['orgaoExpedidor'] == null ? null:$_REQUEST['orgaoExpedidor'];
 
-            echo "<option value = '0'>Selecione o Estado do Órgão Expedidor</option>";
-            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            echo $prog->retornaOptionEstado($idPais, $idEstado, $orgaoExpeditor);
             return;
             break;
         } catch (Exception $e) {

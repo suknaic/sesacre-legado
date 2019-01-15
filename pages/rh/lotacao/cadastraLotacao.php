@@ -30,7 +30,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <!--checkbox-circle-primary -->
         <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
-
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
@@ -377,7 +378,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
@@ -409,11 +409,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
-
-
     </body>
 </html>

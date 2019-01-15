@@ -3,7 +3,7 @@ $(document).ready(function () {
     func = new Funcoes();
 
     //**************** Select2 ************
-    $(".select").select2({width: " 100%"});
+    $(".select").select2({width: "100%"});
     //*************************************
 
     //********************************** Pais Naturalidade *************************************
@@ -229,7 +229,9 @@ $(document).ready(function () {
             "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaOrgaoExpeditor"
+                acao: "listaOrgaoExpeditor",
+                idPais: 1,
+                orgaoExpedidor: '1'
             },
             "success": function (response) {
                 $("#id_estado").html(response);
@@ -481,19 +483,6 @@ $(document).ready(function () {
         $("#ds_complemento").val("");
         $("#nr_cep").val("");
 
-    });
-
-    $(".pais").select2({
-        width: " 100%"
-    });
-    $(".estado").select2({
-        width: " 100%"
-    });
-    $(".idCidade").select2({
-        width: " 100%"
-    });
-    $(".sexo").select2({
-        width: " 100%"
     });
 
     $('body').on('click', '.btn-limpar', function (e) {

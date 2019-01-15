@@ -311,7 +311,11 @@ class Cidade {
     }
 
     public function retornaOptionCidade($idEstado, $idCidade = 0) {
-        $retorno = "";
+        if ($idCidade == null || $idCidade == 0) {
+            $retorno = "<option value='0' selected>Selecione a Cidade</option>";
+        } else {
+            $retorno = "<option value='0'>Selecione a Cidade</option>";
+        }
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();

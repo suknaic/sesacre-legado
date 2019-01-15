@@ -278,8 +278,21 @@ class Estado {
         }
     }
 
-    public function retornaOptionEstado($idPais = null, $idEstado = null) {
-        $retorno = "";
+    public function retornaOptionEstado($idPais = null, $idEstado = null, $orgaoExpeditor = null) {
+        if ($idEstado == null || $idEstado == 0) {
+            if ($orgaoExpeditor == null) {
+                $retorno = "<option value='0' selected>Selecione o Estado</option>";
+            } else {
+                $retorno = "<option value='0' selected>Selecione o Órgão Expeditor</option>";
+            }
+        } else {
+            if ($orgaoExpeditor == null) {
+                $retorno = "<option value='0'>Selecione o Estado</option>";
+            } else {
+                $retorno = "<option value='0'>Selecione o Órgão Expeditor</option>";
+            }
+        }
+
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();

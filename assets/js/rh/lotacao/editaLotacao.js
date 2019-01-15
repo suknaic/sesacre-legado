@@ -152,7 +152,7 @@ function returnLotacaoEditar() {
                     listaEstadoCombo(response[0]['id_pais'], response[0]['id_estado']);
                     $("#id_estado_endereco").val(response[0]['id_estado']);
                     listaCidadeCombo(response[0]['id_estado'], response[0]['id_cidade']);
-                    $("#id_cidade").val(response[0]['id_cidade']);
+                    $("#id_cidade").val(response[0]['id_cidade']).change();
                     //console.log(response);
                     returnTelefones(id_get);
                 }

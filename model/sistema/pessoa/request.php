@@ -131,6 +131,8 @@ switch ($_REQUEST['acao']) {
                 return;
             }
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+//            print_r($dadosPessoa);
+//            return;
             //*****************
             $dadosPessoaFisica = filter_input(INPUT_POST, 'dadosPessoaFisica', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //****************
@@ -241,7 +243,7 @@ switch ($_REQUEST['acao']) {
                         }
                     }
 
-                    $deletar = array_diff($bancoCompetencias, $telaCompetancias);
+                    $deletar = array_diff($bancoCompetencias, array_unique($telaCompetancias));
                     if (count($deletar) > 0) {
                         foreach ($competencias as $idEscolaridadeFormacaoBanco => $banco) {
                             foreach ($deletar as $idEscolaridadeFormacaoTela => $tela) {
@@ -263,9 +265,12 @@ switch ($_REQUEST['acao']) {
                 $pdo->commit();
                 echo Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 return;
+                break;
+                return;
             } else {
                 $pdo->rollBack();
                 echo Metodos::retornoAjax("Erro", "alert", $pessoaFisica->getMsg());
+                break;
                 return;
             }
 
@@ -467,6 +472,7 @@ switch ($_REQUEST['acao']) {
                     "ds_logradouro" => $p["ds_logradouro"],
                     "ds_complemento" => $p["ds_complemento"],
                     "ds_bairro" => $p["ds_bairro"],
+                    "nr_numero" => $p["nr_numero"],
                     "nr_cep" => $p["nr_cep"],
                     "id_pais_endereco" => $p["id_pais_endereco"],
                     "id_estado_endereco" => $p["id_estado_endereco"],
@@ -825,8 +831,13 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
-            echo '<option selected>Selecione o Estado</option>';
-            echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            $nmCidade = $_REQUEST['nmCidade'];
+
+            if (empty($nmCidade)) {
+                echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            } else {
+                echo $prog->retornaOptionCidadeUf($idEstado, $nmCidade);
+            }
             return;
             break;
         } catch (Exception $e) {
@@ -857,7 +868,7 @@ switch ($_REQUEST['acao']) {
             $prog = new Estado();
             $idPais = $_REQUEST['idPais'];
             $idEstado = $_REQUEST['idEstado'];
-            echo '<option selected>Selecione o Estado</option>';
+
             echo $prog->retornaOptionEstado($idPais, $idEstado);
             return;
             break;
@@ -869,10 +880,11 @@ switch ($_REQUEST['acao']) {
     case 'listaOrgaoExpeditor':
         try {
             $prog = new Estado();
-            $idPais = $_REQUEST['idPais'];
-            $idEstado = $_REQUEST['idEstado'];
-            echo '<option selected>Selecione o Órgão Expeditor</option>';
-            echo $prog->retornaOptionEstado($idPais, $idEstado);
+            $idPais = $_REQUEST['idPais'] == null ? null:$_REQUEST['idPais'];
+            $idEstado = $_REQUEST['idEstado'] == null ? null:$_REQUEST['idEstado'];
+            $orgaoExpeditor = $_REQUEST['orgaoExpedidor'] == null ? null:$_REQUEST['orgaoExpedidor'];
+
+            echo $prog->retornaOptionEstado($idPais, $idEstado, $orgaoExpeditor);
             return;
             break;
         } catch (Exception $e) {
