@@ -1219,7 +1219,8 @@ class Contrato {
                 $filter[] = "v.id_vinculo = $vinculo";
             }
             if (!empty($lotacao)) {
-                $filter[] = "l.id_lotacao = $lotacao";
+                //$filter[] = "l.id_lotacao = $lotacao";
+                $filter[] = "array_position(cls.id_lotacao,$lotacao) > 0";
             }
             //*************************************************
             if (count($filter) > 0) {
