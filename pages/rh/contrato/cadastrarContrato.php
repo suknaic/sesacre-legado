@@ -536,7 +536,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            Cargo: <span class="text-danger">*</span>
+                                                            Cargo do Contrato: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
@@ -574,7 +574,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Função: <span class="text-danger">*</span>
+                                                                Função Exercida: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
@@ -635,7 +635,7 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th class="text-capitalize text-center">Lotação</th> 
-                                                                                    <th class="text-capitalize text-center">Função</th>
+                                                                                    <th class="text-capitalize text-center">Função Exercida</th>
                                                                                     <th class="text-capitalize text-center">C. H.</th>
                                                                                     <th class="text-capitalize text-center">Data Início</th>
                                                                                     <th class="text-capitalize text-center">Data Fim</th>

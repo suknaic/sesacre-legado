@@ -1,6 +1,8 @@
 //******************************************************************************************
 $(document).ready(function () {
-
+    //************ Select2 ***********
+    $(".select").select2({width: " 100%"});
+    //********************************
 //******************************************************************************************
     func = new Funcoes();
     func.carregaTabelaPadrao('tabela', null, [8]);
@@ -279,7 +281,7 @@ $(document).ready(function () {
                     var Pessoa = {
                         idPessoa: idPessoa
 
-                    }
+                    };
 
                     if (id == "") {
                         func.modalAlert(func.msgPreencherCampos);
