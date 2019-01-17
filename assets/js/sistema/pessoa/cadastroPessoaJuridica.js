@@ -1,156 +1,111 @@
-function listaNatureza() {
-    $.ajax({
-        "url": "/model/sistema/pessoa/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaNaturezaOption"
-        },
-        "success": function (response) {
-            //console.log(response);
-            $("#id_natureza").append(response);
-            $("#id_natureza").select2({
-                width: " 100%"
-            });
-        }
-    });
-}
-listaNatureza();
-//*************************************************
-function listaPaisCombo() {
-    $.ajax({
-        "url": "/model/sistema/pessoa/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaPaisOption"
-        },
-        "success": function (response) {
-            //console.log(response);
-            $(".pais").append(response);
-            $(".pais").select2({
-                width: " 100%"
-            });
-        }
-    });
-}
-listaPaisCombo();
-function listaEstadoNaturalidadeCombo(idPais, sw, estado) {
-    $.ajax({
-        "url": "/model/sistema/pessoa/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaEstadoOption",
-            idPais: idPais,
-            idEstado: estado
-        },
-        "success": function (response) {
-            //console.log(response);
-            if (sw == 2) {
-                $("#id_estado_endereco").empty();
-                $("#id_estado_endereco").append(response);
-                $("#id_estado_endereco").select2({
-                    width: " 100%"
-                });
-                $("#id_estado_endereco").val(estado);
-//                $("#id_estado_endereco").trigger('change');
-            }
-        }
-    });
-}
-//listaEstadoCombo();
-function listaCidadeCombo(idEstado, sw) {
-    $.ajax({
-        "url": "/model/sistema/pessoa/request.php",
-        "dataType": 'html',
-        "data": {
-            acao: "listaCidadeOption",
-            idEstado: idEstado
-        },
-        "success": function (response) {
-            //console.log(response);
-            if (sw == 1) {
-                $("#id_naturalidade").append(response);
-                $("#id_naturalidade").select2({
-                    width: " 100%"
-                });
-            }
-            if (sw == 2) {
-                $("#id_cidade").append(response);
-                $("#id_cidade").select2({
-                    width: " 100%"
-                });
-            }
-
-        }
-    });
-}
-//**********************uf para cep**********************************************************
-function listaCidadeComboUf(idEstado, uf) {
-    //alert(cidade);
-    $.ajax({
-        "url": "/model/sistema/pessoa/request.php",
-        "dataType": 'html',
-        "method": 'POST',
-        "data": {
-            acao: "listaCidadeOptionUf",
-            idEstado: idEstado,
-            uf: uf
-        },
-        "success": function (response) {
-            //console.log(response);
-            //console.log(cidade);
-
-            $("#id_cidade").empty();
-            $("#id_cidade").append(response);
-            $("#id_cidade").select2({
-                width: " 100%"
-            });
 
 
-        }
-    });
-}
-//********************************************
 $(document).ready(function () {
+
     func = new Funcoes();
+
+    //************ Select2 **************
+    $(".select").select2({width: " 100%"});
+    //************************************
+
+    //*********************** Natureza ********************
+    function listaNatureza() {
+        $.ajax({
+            "url": "/model/sistema/pessoa/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaNaturezaOption"
+            },
+            "success": function (response) {
+                $("#id_natureza").append(response);
+            }
+        });
+    }
+    listaNatureza();
+    //******************************************************
+
+    //************************************* Pais Endereço **************************************
+    function listaPaisEndereco() {
+        $.ajax({
+            "url": "/model/sistema/pessoa/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaPaisOption"
+            },
+            "success": function (response) {
+                $("#id_pais_endereco").append(response);
+            }
+        });
+    }
+    listaPaisEndereco();
     //******************************************************************************************
+
+    //************************************* Estado Endereço ************************************
+    function listaEstadoEndereco(pais = 0, estado = 0) {
+        $.ajax({
+            "url": "/model/sistema/pessoa/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaEstadoOption",
+                idPais: pais,
+                idEstado: estado
+            },
+            "success": function (response) {
+                $("#id_estado_endereco").html(response);
+            }
+        });
+    }
+    //******************************************************************************************
+
+    //************************************* Cidade Endereço ************************************
+    function listaCidadeEndereco(estado = 0, cidade = null) {
+        $.ajax({
+            "url": "/model/sistema/pessoa/request.php",
+            "dataType": 'html',
+            "data": {
+                acao: "listaCidadeOption",
+                idEstado: estado,
+                nmCidade: cidade,
+            },
+            "success": function (response) {
+                $("#id_cidade").html(response);
+            }
+        });
+    }
+    //******************************************************************************************
+
+    //************************************ Abas ************************************************
     $(".pro").click(function () {
         $('.nav > .active').next('li').find('a').trigger('click');
 
     });
-    // função do botão anterior
     $(".ant").click(function () {
-        // aba que esta ativa no momento
         $('.nav > .active').prev('li').find('a').trigger('click');
-    })
-
+    });
     //******************************************************************************************
+
+    //******************************** Regras dos Dados do Endereço *********************************
     $("body").on("change.select2", "#id_pais_endereco", function (e) {
-        $("#id_estado_endereco").empty();
-        $("#id_cidade").empty();
-        $idPais = $("#id_pais_endereco").val();
-        if ($idPais == 0) {
+        $("#id_estado_endereco").val(0).trigger('change.select2');
+        $("#id_cidade").val(0).trigger('change.select2');
+        idPais = $("#id_pais_endereco").val();
+        if (idPais == 0) {
             return;
         }
-        listaEstadoNaturalidadeCombo($idPais, 2);
+        listaEstadoEndereco(idPais);
     });
-    //******************************************************************************************
-    $("body").on("change.select2", "#id_estado_endereco", function (e) {
-        $("#id_cidade").empty();
-        $idEstado = $("#id_estado_endereco").val();
-        if ($idEstado == 0) {
-            return;
-        }
-        listaCidadeCombo($idEstado, 2, null);
-    });
-    //******************************************************************************************
-    $("body").on("change", "#id_cidade", function (e) {
-        $("#ds_logradouro").val("");
-        $("#ds_bairro").val("");
-        $("#ds_complemento").val("");
-        $("#nr_cep").val("");
 
+    $("body").on("change.select2", "#id_estado_endereco", function (e) {
+        $("#id_cidade").val(0).trigger('change.select2');
+        idEstado = $("#id_estado_endereco").val();
+        if (idEstado == 0) {
+            return;
+        }
+        listaCidadeEndereco(idEstado);
     });
-//******************************************************************************************
+    //***********************************************************************************************
+
+    //******************************************************************************************
     $("#nr_cnpj").mask("99.999.999/9999-99");
     $("#nr_cnae").mask("9999-9/99");
     $("#nr_cep").mask("99999-999");
@@ -187,18 +142,18 @@ $(document).ready(function () {
             var DadosPessoa = {
                 //****************dados pessoais*********************
                 razaoSocial: $("#nm_pessoa").val(),
-                naturalidade: $("id_cidade").val(),
                 logradouro: $("#ds_logradouro").val(),
                 complemento: $("#ds_complemento").val(),
+                numero: $('#nr_endereco').val(),
                 bairro: $("#ds_bairro").val(),
                 cep: cep,
                 cidade: $("#id_cidade").val(),
                 telefone_residencial: $("#nr_telefone_residencial").val(),
                 telefone_celular: $("#nr_telefone_celular").val(),
                 email: $("#nm_email").val(),
-                senha: "Palmeiras",
+                senha: "Palmeiras", //==> Não tem mundial
                 obs: $("#ds_observacao").val()
-            }
+            };
             $cnpj = $("#nr_cnpj").val().replace(/(\.|\/|\-)/g, "");
             var DadosPessoaJuridica = {
                 nomeFantasia: $("#nm_fantasia").val(),
@@ -210,22 +165,21 @@ $(document).ready(function () {
                 inscricaoMunicipal: $("#ds_insc_municipal").val(),
                 dtFundacao: $("#dt_fundacao").val(),
 
-            }
+            };
             //******************************************************************
             var DadosObrigatorio = {
-                email: DadosPessoa.email,
+                "E-mail": DadosPessoa.email,
                 //*************************************
-                razaoSocial: DadosPessoa.razaoSocial,
-                natureza: DadosPessoaJuridica.idNatureza,
-                cnpj: DadosPessoaJuridica.cnpj,
+                "Razão Social": DadosPessoa.razaoSocial,
+                "Natureza": DadosPessoaJuridica.idNatureza,
+                "CNPJ": DadosPessoaJuridica.cnpj,
                 //********************************************
-                cidadeEndereco: DadosPessoa.cidade,
-                logradouro: DadosPessoa.logradouro,
-                bairro: DadosPessoa.bairro,
-                telefoneCelular: DadosPessoa.telefone_celular
-
+                "Cidade Endereço": DadosPessoa.cidade,
+                "Logradouro": DadosPessoa.logradouro,
+                "Bairro": DadosPessoa.bairro,
+                "Telefone Celular": DadosPessoa.telefone_celular
             };
-//            console.log(DadosObrigatorio);
+
             $campo = 0;
             $i = 0;
             $.each(DadosObrigatorio, function (index, value) {
@@ -258,7 +212,7 @@ $(document).ready(function () {
                 },
 
                 "success": function (response) {
-                    //$this.prop("disabled", false);
+                    console.log(response);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -312,21 +266,12 @@ $(document).ready(function () {
         }
     });
 
-    $(".pais").select2({
-        width: " 100%"
-    });
-    $(".estado").select2({
-        width: " 100%"
-    });
-    $(".idCidade").select2({
-        width: " 100%"
-    });
-
-    //*************************************************************************************************
+    //*************************************************** Busca Cep ****************************************************
     $('body').on('click', '.cep', function (e) {
+        $("#id_cidade").prop('disabled', false);
+        $("#id_estado_endereco").prop('disabled', false);
         //Nova variável "cep" somente com dígitos.
         var cep = $("#nr_cep").val().replace(/\D/g, '');
-        $("#ds_complemento").val("");
         //Verifica se campo cep possui valor informado.
         if (cep != "") {
             //Expressão regular para validar o CEP.
@@ -336,7 +281,8 @@ $(document).ready(function () {
                 //Preenche os campos com "..." enquanto consulta webservice.
                 $("#ds_logradouro").val("");
                 $("#ds_bairro").val("");
-                $("#id_pais_endereco").val(0).change();
+                $("#id_pais").val(0).trigger('change.select2');
+                // return false;
                 //Consulta o webservice viacep.com.br/
                 $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
                     if (!("erro" in dados)) {
@@ -344,47 +290,42 @@ $(document).ready(function () {
                         $("#ds_logradouro").val(dados.logradouro);
                         $("#ds_bairro").val(dados.bairro);
                         $("#ds_logradouro").focus();
-                        //$("#cidade").val(dados.localidade);
                         var uf = dados.uf;
                         var cidade = dados.localidade;
                         $.ajax({
-                            "url": "/model/rh/funcionario/request.php",
+                            "url": "/model/sistema/pessoa/request.php",
                             "dataType": "html",
                             "method": "POST",
                             "data": {
-                                "acao": "buscaCidadeUf",
+                                "acao": "listaCidadeOptionUf",
                                 "uf": uf
                             },
                             "success": function (response) {
                                 try {
                                     response = JSON.parse(response);
+                                    $('#id_pais_endereco').val(response[0].id_pais).trigger('change.select2');
+                                    listaEstadoEndereco(response[0].id_pais, response[0].id_estado);
+                                    listaCidadeEndereco(response[0].id_estado, cidade);
                                 } catch (e) {
                                     console.log(response);
                                     return false;
                                 }
-                                //console.log(response);
-                                $("#id_pais_endereco").val(response[0]["id_pais"]).change();
-                                listaEstadoNaturalidadeCombo(response[0]['id_pais'], 2, response[0]['id_estado']);
-                                listaCidadeComboUf(response[0]['id_estado'], cidade);
                             }
                         });
-                        //$("#ibge").val(dados.ibge);
-                        //console.log(dados);
-                    } //end if.
-                    else {
+                    } else {
                         //CEP pesquisado não foi encontrado.
-                        alert("CEP não encontrado.");
+                        func.modalAlert("CEP não encontrado.");
+                        return false;
                     }
                 });
-            } //end if.
-            else {
+            } else {
                 //cep é inválido.
-                alert("Formato de CEP inválido.");
+                func.modalAlert("Formato de CEP inválido.");
+                return false;
             }
-        } //end if.
-        else {
+        } else {
             //cep sem valor, limpa formulário.
         }
-
+        //**************************************************************************************************************
     });
 });

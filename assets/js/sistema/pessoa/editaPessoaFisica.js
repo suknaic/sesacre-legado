@@ -280,7 +280,7 @@ $(document).ready(function () {
     // });
     //********************************************************************
 
-    //************************************************* Regras dos Dados do Endereço *******************************************************
+    //*************************************** Regras dos Dados do Endereço *********************************************
     $("body").on("change.select2", "#id_pais_endereco", function (e) {
         $("#id_estado_endereco").val(0).trigger('change.select2');
         $("#id_cidade").val(0).trigger('change.select2');

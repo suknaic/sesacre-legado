@@ -14,7 +14,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/cargo.class.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/class/rh/funcao.class.php";
 $session = new Session('ajax');
 
-if (!$session->vPRh() && !$session->vPFinanceiro()) {
+if (!$session->vPRh()) {
     echo "SessaoExpirada";
     return;
 }
@@ -25,7 +25,7 @@ switch ($_REQUEST['acao']) {
         try {
 
 
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -126,7 +126,7 @@ switch ($_REQUEST['acao']) {
         }
     case 'editarPessoaFisica':
         try {
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
             }
@@ -284,10 +284,10 @@ switch ($_REQUEST['acao']) {
     case 'cadastrarPessoaJuridica':
         try {
 
-
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //*****************
@@ -296,15 +296,16 @@ switch ($_REQUEST['acao']) {
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido");
                 return;
+                break;
             }
             //*********************************************************************************************************************
             $retorno = "";
             $conexao = new Conexao();
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
-            //**************************************Pessoa**************************************************************************
+            //************************************** Pessoa **************************************************************************
             $pessoa = new Pessoa();
-            $telefoneRes = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
+            $telefoneRes = empty($dadosPessoa['telefone_residencial']) ? null:Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
             $telefoneCel = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_celular']);
             $pessoa->setNm_email(trim($dadosPessoa['email']));
             $pessoa->setDs_bairro(trim($dadosPessoa['bairro']));
@@ -316,6 +317,7 @@ switch ($_REQUEST['acao']) {
             $pessoa->setNm_pessoa(trim($dadosPessoa['razaoSocial']));
             $pessoa->setNm_senha(trim($dadosPessoa['senha']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero($dadosPessoa['numero']);
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -325,8 +327,9 @@ switch ($_REQUEST['acao']) {
             } else {
                 echo Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
                 return;
+                break;
             }
-            //**************************** Pessoa Juridica********************************************************************
+            //**************************** Pessoa Juridica ********************************************************************
             $pessoaJuridica = new pessoaJuridica();
             $pessoaJuridica->setId_pessoa($idPessoa);
             $pessoaJuridica->setNm_fantasia(trim($dadosPessoaJuridica['nomeFantasia']));
@@ -341,18 +344,21 @@ switch ($_REQUEST['acao']) {
             if (!$pessoaJuridica->getSuccess()) {
                 echo Metodos::retornoAjax("Erro", "alert", $pessoaJuridica->getMsg());
                 return;
+                break;
             }
             //********************************Competencias****************************************************************
             if ($pessoaJuridica->getSuccess()) {
                 $pdo->commit();
                 echo Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 return;
+                break;
             } else {
                 echo Metodos::retornoAjax("Erro", "alert", $pessoaJuridica->getMsg());
                 return;
+                break;
             }
-//          **********************************************************************************************************************
-            return;
+            //**********************************************************************************************************************
+
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -361,9 +367,10 @@ switch ($_REQUEST['acao']) {
         }
     case 'editarPessoaJuridica':
         try {
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             //*****************
@@ -372,6 +379,7 @@ switch ($_REQUEST['acao']) {
             if (!filter_var(trim($dadosPessoa['email']), FILTER_VALIDATE_EMAIL)) {
                 echo Metodos::retornoAjax("Erro", "alert", "O Email Digitado é considerado Inválido");
                 return;
+                break;
             }
             //*********************************************************************************************************************
             $retorno = "";
@@ -379,7 +387,7 @@ switch ($_REQUEST['acao']) {
             $pdo = $conexao->connect();
             $pdo->beginTransaction();
             //**************************** Pessoa ********************************************************************
-            $telefoneRes = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
+            $telefoneRes = empty($dadosPessoa['telefone_residencial']) ? null:Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_residencial']);
             $telefoneCel = Metodos::removeMascaraCel_Tel($dadosPessoa['telefone_celular']);
             $pessoa = new Pessoa();
             $pessoa->setId_pessoa($dadosPessoa['idPessoa']);
@@ -392,6 +400,7 @@ switch ($_REQUEST['acao']) {
             $pessoa->setId_naturalidade($dadosPessoa['cidade']);
             $pessoa->setNm_pessoa(trim($dadosPessoa['razaoSocial'] === '' ? $dadosPessoaFisica['razaoCivil'] : $dadosPessoa['razaoSocial']));
             $pessoa->setNr_cep($dadosPessoa['cep']);
+            $pessoa->setNrNumero($dadosPessoa['numero']);
             $pessoa->setNr_elefone_residencial($telefoneRes);
             $pessoa->setNr_telefone_celular($telefoneCel);
             //********************************
@@ -402,8 +411,9 @@ switch ($_REQUEST['acao']) {
             } else {
                 echo Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
                 return;
+                break;
             }
-            //**************************** Pessoa Juridica********************************************************************
+            //**************************** Pessoa Juridica ********************************************************************
             $pessoaJuridica = new pessoaJuridica();
             //**************************************************************************************************************
             $pessoaJuridica->setId_pessoa($idPessoa);
@@ -418,22 +428,18 @@ switch ($_REQUEST['acao']) {
             $pessoaJuridica->setDt_fundacao(($dadosPessoaJuridica['dtFundacao']));
             //******************************************
             $pessoaJuridica->editarPessoaJuridica($pdo);
-            // print_r($pessoaFisica);
-            //return;
             //******************************************
 
             if ($pessoaJuridica->getSuccess()) {
                 $pdo->commit();
                 echo Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
                 return;
+                break;
             } else {
-                //$pdo->rollBack();
                 echo Metodos::retornoAjax("Erro", "alert", $pessoaJuridica->getMsg());
                 return;
+                break;
             }
-            return;
-
-            break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
@@ -444,9 +450,10 @@ switch ($_REQUEST['acao']) {
         $pdo = $conexao->connect();
         try {
 
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
 
@@ -502,7 +509,6 @@ switch ($_REQUEST['acao']) {
             }
             echo json_encode($retorno);
             return;
-
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -514,9 +520,10 @@ switch ($_REQUEST['acao']) {
         $pdo = $conexao->connect();
         try {
 
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idGet = filter_input(INPUT_POST, 'id_get', FILTER_DEFAULT);
             $idPessoaJuridica = explode("-", $idGet)[1];
@@ -542,6 +549,7 @@ switch ($_REQUEST['acao']) {
                     "ds_complemento" => $p["ds_complemento"],
                     "ds_bairro" => $p["ds_bairro"],
                     "nr_cep" => $p["nr_cep"],
+                    "nr_numero" => $p['nr_numero'],
                     "id_pais_endereco" => $p["id_pais_endereco"],
                     "id_estado_endereco" => $p["id_estado_endereco"],
                     "id_cidade" => $p["id_cidade_endereco"],
@@ -564,7 +572,6 @@ switch ($_REQUEST['acao']) {
             }
             echo json_encode($retorno);
             return;
-
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -573,16 +580,16 @@ switch ($_REQUEST['acao']) {
         }
     case 'returnCompetencia':
         try {
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $dadosPessoa = filter_input(INPUT_POST, 'dadosPessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //print_r($idPessoaFisica);
+
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->retornaCompetencia($dadosPessoa);
 
-            //return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -591,9 +598,10 @@ switch ($_REQUEST['acao']) {
         }
     case 'inserirCompetencia':
         try {
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -610,15 +618,15 @@ switch ($_REQUEST['acao']) {
         }
     case 'excluirCompetencia':
         try {
-            if (!$session->vPRh() && !$session->vPFinanceiro()) {
+            if (!$session->vPRh()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idCompetencia = $_REQUEST['idCompetencia'];
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->removerCompetencia($idCompetencia);
 
-            //return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -632,6 +640,7 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $get = filter_input(INPUT_GET, 'pessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             if ((explode("-", $get['idPessoa'])[0]) == '1') {
@@ -661,15 +670,18 @@ switch ($_REQUEST['acao']) {
                     $pdo->rollBack();
                     echo Metodos::retornoAjax("Erro", "console", $rs);
                     return;
+                    break;
                 }
                 if ($pessoa->getSuccess()) {
                     $pdo->commit();
                     echo Metodos::retornoAjax("ok", "html", "Realizado Com Sucesso");
                     return;
+                    break;
                 } else {
                     $pdo->rollBack();
                     echo Metodos::retornoAjax("Erro", "alert", $pessoa->getMsg());
                     return;
+                    break;
                 }
             }
             return;
@@ -685,6 +697,7 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $get = filter_input(INPUT_GET, 'pessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -754,12 +767,14 @@ switch ($_REQUEST['acao']) {
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
+            break;
         }
     case 'returnCompetencia':
         try {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idPessoaFisica = $_REQUEST['id_pessoa_fisica'];
             $pessoaFisica = new pessoaFisica();
@@ -777,6 +792,7 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -796,12 +812,12 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idCompetencia = $_REQUEST['idCompetencia'];
             $pessoaFisica = new pessoaFisica();
             $pessoaFisica->removerCompetencia($idCompetencia);
 
-            //return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
@@ -814,6 +830,7 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh() && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $postPessoa = filter_input(INPUT_POST, 'pessoa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             $pessoa = new Pessoa();
@@ -850,6 +867,7 @@ switch ($_REQUEST['acao']) {
             if (!$session->vPRh()  && !$session->vPFinanceiro()) {
                 echo Metodos::retornoAjax("Erro", "alert", STR_PERMISSAO_ACAO);
                 return;
+                break;
             }
             $idEstado = filter_input(INPUT_POST, 'idEstado', FILTER_DEFAULT);
             $uf = filter_input(INPUT_POST, 'uf', FILTER_DEFAULT);
@@ -916,6 +934,7 @@ switch ($_REQUEST['acao']) {
     case 'listaNaturezaOption':
         try {
             $id = filter_input(INPUT_POST, 'id', FILTER_DEFAULT);
+
             $natureza = new pessoaJuridica();
             echo $natureza->retornaNatureza($id);
             return;
