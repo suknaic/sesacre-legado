@@ -33,8 +33,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
         <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
         <!-- select2 -->
         <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
-        <!--        *******************************************************************************************************-->
-
+        <!--*******************************************************************************************************-->
     </head>
     <!--TIPS-->
 
@@ -62,13 +61,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <!--===================================================-->
-<!--                                    <div class="panel-heading ">-->
-<!--                                        <h3 class="panel-title">                                                                                       -->
-<!--                                            Pesquisa:-->
-<!--                                        </h3>-->
-<!--                                    </div>-->
-                                    <!--Horizontal Form-->
-                                    <!--===================================================-->
                                     <form class="form-horizontal formRelatorio">
                                         <div class="panel-body">
                                             <div class="form-group">
@@ -87,7 +79,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                 </div>
 
                                                 <div class="col-md-3">
-                                                    Data Fim: <span class="text-danger">*</span>
+                                                    Data Final: <span class="text-danger">*</span>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-calendar inputPFa"></p>
@@ -184,7 +176,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
             </div>
             <!--===================================================-->
             <!--END CONTENT CONTAINER-->
-
             <!--MENU LATERAL-->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
             <!--END MENU LATERAL-->

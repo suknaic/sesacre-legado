@@ -64,28 +64,28 @@ switch ($_REQUEST['acao']) {
     case 'pesquisaGrafico1':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-            //print_r($dados);
+
             $todos = $dados['todos'];
-            $dataInicio = $dados['dt_inicio'];
-            $dataFim = $dados['dt_fim'];
-            if (strtotime(Metodos::ConverteDataING($dataInicio)) > strtotime(date('Y-m-d')) && strtotime(Metodos::ConverteDataING($dataFim)) > strtotime(date('Y-m-d'))) {
-                echo 'menor';
-                return;
-                break;
-            } else {
-                echo 'invalida';
+            $dataInicio = strtotime(date(str_replace('/', '-', $dados['dt_inicio'])));
+            $dataFim = strtotime(date(str_replace('/', '-', $dados['dt_fim'])));
+            $dataAtual = strtotime(date('d-m-Y'));
+
+            if ($dataInicio > $dataAtual && $dataFim > $dataAtual) {
+                echo 'maior';
                 return;
                 break;
             }
+
             //**************************************
             $banco = new Contrato();
-            echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 1, 0, 0);
+            echo $banco->pesquisaGrafico($dados['dt_inicio'], $dados['dt_fim'], $todos, 1, 0, 0);
             return;
             break;
         } catch (Exception $e) {
             echo Metodos::retornoAjax("Erro", "console", $e->getMessage());
             return;
         }
+
     case 'pesquisaGrafico2':
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

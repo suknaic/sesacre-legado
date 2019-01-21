@@ -39,10 +39,9 @@ $cabecalho ="<div class ='lateralLogo'>
             </div>
             <div class='esquerdaCabecalho'>
                 <div class='esquerdaEmpresa'>
-                    <b> " . utf8_decode("Secretaria Estadual de Saúde - SESACRE") . "</b>
+                    <b>Secretaria Estadual de Saúde - SESACRE</b>
                 </div>
-                <div class='lateral'>
-                    " . utf8_decode("Rua Benjamim Constant, Nº 830 - Centro | 69900-062, Rio Branco - Acre") . " <br>
+                <div class='lateral'>Rua Benjamim Constant, Nº 830 - Centro | 69900-062, Rio Branco - Acre<br>
                     telefone (68) 3215-2631 / (68) 3215-2637 | ganinete.saude@ac.gov.br
                 </div>
             </div>";
@@ -72,6 +71,7 @@ $html = "
         <html>
         <title>Relatório de Funcionário<title>
         <head>
+        <meta charset='utf-8'>
         <style>
                     page toc { sheet-size: A4; }
                     body{
@@ -156,16 +156,16 @@ $html .= $cabecalho;
 $html .= "  <br>          
             <hr>
             <div class='centro'>
-                    <b>" . utf8_decode("RELATÓRIO DE FUNCIONÁRIOS POR FUNÇÂO") . "</b>
+                    <b>RELATÓRIO DE FUNCIONÁRIOS POR FUNÇÂO</b>
             </div><hr>
-                <b>" . utf8_decode("FUNÇÃO") . ": " . utf8_decode($rs[0]['nm_funcao']) . "</b><br> <hr>
-               <b>=>". utf8_decode("LOTAÇÃO: ") . utf8_decode($rs[0]['nm_lotacao']) . "</b><br>
+                <b>FUNÇÃO: " . $rs[0]['nm_funcao']."</b><br> <hr>
+               <b>=>LOTAÇÃO: ".$rs[0]['nm_lotacao']."</b><br>
                <table>
                         <tr>
-                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
-                            <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
-                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
+                            <td width=><b>Matrícula</b></td>
+                            <td width=><b>Nome</b></td>
+                            <td width=><b>Vínculo</b></td>
+                            <td width=><b>Cargo</b></td>
                             <td width=><b>C. H.</b></td>
                         </tr>";
 $idLot = $rs[0]['id_lotacao'];
@@ -183,54 +183,54 @@ foreach ($rs as $linhas) {
             $html .= "
                         <tr> 
                             <td>" .
-                    utf8_decode($linhas['nr_matricula']) . "
+                                $linhas['nr_matricula'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                                $linhas['nm_pessoa'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_vinculo']) . "                                
+                                $linhas['nm_vinculo'] . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_cargo']) . "
+                                $linhas['nm_cargo'] . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                                $linhas['carga_horaria_lotacao'] . "
                             </td>
                         </tr>";
         } else {
 
             $html .= "   <tr>
-                            <td colspan=4 align='right'><b>".utf8_decode("Quantidade p/Lotação").":
+                            <td colspan=4 align='right'><b>Quantidade p/Lotação:
                             <td><b>" . $somaQuantLot . "</td>
                         </tr>
                     </table>
                     <br>
-                    <b>=>".utf8_decode("LOTAÇÂO: ") . utf8_decode($linhas['nm_lotacao']) . "</b><br>
+                    <b>=>LOTAÇÂO: ".$linhas['nm_lotacao']."</b><br>
                     <table>
                         <tr>
                            <tr>
-                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
-                            <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
-                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
+                            <td width=><b>Matrícula</b></td>
+                            <td width=><b>Nome</b></td>
+                            <td width=><b>Vínculo</b></td>
+                            <td width=><b>Cargo</b></td>
                             <td width=><b>C. H.</b></td>
                         </tr>
                         <tr> 
                             <td>" .
-                    utf8_decode($linhas['nr_matricula']) . "
+                                $linhas['nr_matricula'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                                $linhas['nm_pessoa'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_vinculo']) . "                                
+                                $linhas['nm_vinculo'] . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_cargo']) . "
+                                $linhas['nm_cargo'] . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                                $linhas['carga_horaria_lotacao'] . "
                             </td>
                         </tr>";
             $somaQuantLot = 0;
@@ -241,46 +241,46 @@ foreach ($rs as $linhas) {
     } else {
 
         $html .= "<tr>
-                            <td colspan=4 align='right'><b>".utf8_decode("Quantidade p/Lotações:")."<br></td>
+                            <td colspan=4 align='right'><b>Quantidade p/Lotações:<br></td>
                             <td><b>" . $somaQuantLot . "</td>
                  </tr>
             </table>
             <hr>
-            <div class='esquerda'><b>" . utf8_decode("Total p/Funções: </b></div><div class='esquerda'><b>") . $somaQuantFuncao . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
+            <div class='esquerda'><b>Total p/Funções: </b></div><div class='esquerda'><b>" . $somaQuantFuncao . " Funcionários</b> </div><div class='esquerda'></div>
             <br>
             <hr>";
 
         $mpdf->AddPage();
-        $mpdf->WriteHTML(utf8_encode($html));
+        $mpdf->WriteHTML($html);
 $html = $cabecalho;
         $html .= "
                 <hr>
-                <b>" . utf8_decode("FUNÇÃO") . ": " . utf8_decode($linhas['nm_funcao']). "</b><br>
+                <b>FUNÇÃO: ".$linhas['nm_funcao']."</b><br>
                 <hr>
-                 <b>=> " . utf8_decode("LOTAÇÂO: ") . utf8_decode($linhas['nm_lotacao']) . "</b><br>
+                 <b>=>LOTAÇÂO: " . $linhas['nm_lotacao'] . "</b><br>
                      <table>
                         <tr>
-                            <td width=><b>" . utf8_decode("Matrícula") . "</b></td>
-                            <td width=><b>" . utf8_decode("Nome") . "</b></td>
-                            <td width=><b>" . utf8_decode("Vínculo") . "</b></td>
-                            <td width=><b>" . utf8_decode("Cargo") . "</b></td>
+                            <td width=><b>Matrícula</b></td>
+                            <td width=><b>Nome</b></td>
+                            <td width=><b>Vínculo</b></td>
+                            <td width=><b>Cargo</b></td>
                             <td width=><b>C. H.</b></td>
                         </tr>
                         <tr>
                             <td>" .
-                    utf8_decode($linhas['nr_matricula']) . "
+                                $linhas['nr_matricula'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_pessoa']) . "
+                                $linhas['nm_pessoa'] . "
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_vinculo']) . "                                
+                                $linhas['nm_vinculo'] . "                                
                             </td>
                             <td>" .
-                    utf8_decode($linhas['nm_cargo']) . "
+                                $linhas['nm_cargo'] . "
                             </td>
                              <td>" .
-                    utf8_decode($linhas['carga_horaria_lotacao']) . "
+                                $linhas['carga_horaria_lotacao'] . "
                             </td>
                         </tr>";
         $somaQuantLot = 0;
@@ -295,23 +295,22 @@ $html = $cabecalho;
 }
 
 $html .= "      <tr>
-                            <td colspan=4 align='right'><b>" . utf8_decode(" Quantidade p/Lotação"). "</td>
+                            <td colspan=4 align='right'><b> Quantidade p/Lotação</td>
                             <td><b>" . $somaQuantLot . "</td>
                 </tr>
             </table>
             <hr>
-            <div class='esquerda'><b>" . utf8_decode("Total p/Função: </b></div><div class='esquerda'><b>") . $somaQuantFuncao . utf8_decode(" Funcionários") . "</b> </div><div class='esquerda'></div>
+            <div class='esquerda'><b>Total p/Função: </b></div><div class='esquerda'><b>".$somaQuantFuncao." Funcionários </b> </div><div class='esquerda'></div>
             <br>
             <hr>
-            <div class='centro'><b>" . utf8_decode("Total Geral do Relatório: ")."</b> <b>" . $totalGeral . utf8_decode(" Funcionários") . "</b> </div>
+            <div class='centro'><b>Total Geral do Relatório: </b> <b>".$totalGeral." Funcionários</b> </div>
             <hr>
             <div align='center'><br><br><br>
-                    " . utf8_decode("Relatório gerado em " ) . $dia . " de " . utf8_decode($meses[$mes]) . " de " . $ano . " as " . date("H:i:s") . "  
+                    Relatório gerado em ". $dia . " de " . $meses[$mes] . " de " . $ano . " as " . date("H:i:s") . "  
             </div>
            </body>
     </html>";
 $mpdf->AddPage();
-$html = utf8_encode($html);
 $mpdf->WriteHTML($html);
 $mpdf->debug = false;
 $mpdf->SetTitle('Relatório de Funcionários por Função');

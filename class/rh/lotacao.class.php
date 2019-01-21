@@ -231,8 +231,8 @@ class Lotacao {
             $lotacao->setNm_email($this->nm_email);
             $lotacao->setMp_latitude($this->mp_latitude);
             $lotacao->setMp_longitute($this->mp_longitute);
-            $lotacao->setId_pessoa($this->id_pessoa);
-            $lotacao->setId_pessoa_juridica($this->id_pessoa_juridica);
+            $lotacao->setId_pessoa(empty($this->id_pessoa) ? null:$this->id_pessoa);
+            $lotacao->setId_pessoa_juridica(empty($this->id_pessoa_juridica) ? null:$this->id_pessoa_juridica);
             $lotacao->setId_cidade($this->id_cidade);
 
             $verifica = $lotacao->verificarExistenciaLotacao($pdo);
@@ -313,8 +313,8 @@ class Lotacao {
             $lotacao->setNm_email($this->nm_email);
             $lotacao->setMp_latitude($this->mp_latitude);
             $lotacao->setMp_longitute($this->mp_longitute);
-            $lotacao->setId_pessoa($this->id_pessoa);
-            $lotacao->setId_pessoa_juridica($this->id_pessoa_juridica);
+            $lotacao->setId_pessoa(empty($this->id_pessoa) ? null:$this->id_pessoa);
+            $lotacao->setId_pessoa_juridica(empty($this->id_pessoa_juridica) ? null:$this->id_pessoa_juridica);
             $lotacao->setId_cidade($this->id_cidade);
 
             $busca = $lotacao->retornaLotacao($pdo);
