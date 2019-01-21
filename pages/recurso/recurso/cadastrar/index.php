@@ -65,9 +65,9 @@ require_once "index.load.php";
                                 <div class="panel-body">
                                     <pre>{{novoRecurso}}</pre>
                                     <custom-select nome="id_sistema" descricao="Sistema do Recurso" v-model="novoRecurso.idSistema" v-bind:opcoes="sistemasOptions" requerido></custom-select>
-                                    <custom-text nome="nm_recurso" descricao="Nome do Recurso" estilo="fa fa-file-text-o inputPFa"  v-model="novoRecurso.nmRecurso" requerido></custom-text>
-                                    <custom-text nome="lk_recurso" descricao="Endereço do Recurso" estilo="fa fa-file-text-o inputPFa" v-model="novoRecurso.lkRecurso"  requerido></custom-text>
-                                    <custom-textarea nome="ds_recurso" descricao="Descrição do Recurso" estilo="fa fa-file-text-o inputPFa" v-model="novoRecurso.dsRecurso"></custom-textarea>
+                                    <custom-text nome="nm_recurso" descricao="Nome do Recurso" icone="fa fa-file-text-o inputPFa"  v-model="novoRecurso.nmRecurso" horizontal requerido></custom-text>
+                                    <custom-text nome="lk_recurso" descricao="Endereço do Recurso" icone="fa fa-file-text-o inputPFa" v-model="novoRecurso.lkRecurso" horizontal requerido></custom-text>
+                                    <custom-textarea nome="ds_recurso" descricao="Descrição do Recurso" icone="fa fa-file-text-o inputPFa" v-model="novoRecurso.dsRecurso"></custom-textarea>
                                     
                                 </div>
                                 <div class="panel-footer text-right">                                   
