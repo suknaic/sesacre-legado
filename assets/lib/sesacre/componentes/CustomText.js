@@ -7,19 +7,23 @@ Vue.component('custom-text', {
             default: false,
             type: Boolean
         },
-        estilo: String
+        icone: String,
+        horizontal: {
+            default: false,
+            type: Boolean
+        }
     },
     template: `<div class="form-group">
-                    <label v-bind:for="nome" class="col-sm-2 control-label text-left">{{ descricao }}: <span v-if="requerido" class="text-danger">*</span> </label>
-                    <div class="col-sm-6">
+                    <label v-bind:for="nome" v-bind:class="{ 'col-sm-2 control-label text-left': horizontal }">{{ descricao }}: <span v-if="requerido" class="text-danger">*</span> </label>
+                    <div v-bind:class="{'col-sm-6': horizontal }">
                         <div class="input-group">
                             <span class="input-group-addon">
-                                <p v-bind:class="estilo"></p>
+                                <p v-bind:class="icone"></p>
                             </span>
                             <input class="form-control" v-bind:id="nome" v-bind:class="nome" v-bind:value="value" v-on:input="$emit('input', $event.target.value)" >
-                        </div>                                                    
+                        </div>                        
                     </div>
                     <slot>
                     </slot>
                 </div>`
-})
+})  

@@ -11,7 +11,7 @@ switch ($_REQUEST['acao']) {
     CASE 'listaSistemas':
         try {      
             $sistema = new Sistema();
-            echo $sistema->retornaOptionSistemas();
+            echo $sistema->retornaOptionSistemasSelect2();
             return;
             break;
         } catch (Error $e) {
