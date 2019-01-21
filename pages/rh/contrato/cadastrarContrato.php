@@ -28,6 +28,8 @@
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -534,7 +536,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            Cargo: <span class="text-danger">*</span>
+                                                            Cargo do Contrato: <span class="text-danger">*</span>
                                                             <div class="input-group">
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
@@ -572,7 +574,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Função: <span class="text-danger">*</span>
+                                                                Função Exercida: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
@@ -633,7 +635,7 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th class="text-capitalize text-center">Lotação</th> 
-                                                                                    <th class="text-capitalize text-center">Função</th>
+                                                                                    <th class="text-capitalize text-center">Função Exercida</th>
                                                                                     <th class="text-capitalize text-center">C. H.</th>
                                                                                     <th class="text-capitalize text-center">Data Início</th>
                                                                                     <th class="text-capitalize text-center">Data Fim</th>
@@ -673,9 +675,7 @@
                                             </button>
                                         </div>
                                         <br>
-
                                         <!--===================================================-->
-
                                     </div>
                                     <!-- <div class="panel-body"> -->
                                     <!-- Footer Form -->
@@ -701,27 +701,21 @@
             </div>
             <!--===================================================-->
             <!--END CONTENT CONTAINER-->
-
             <!--MENU LATERAL-->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
             <!--END MENU LATERAL-->
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -750,7 +744,6 @@
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>

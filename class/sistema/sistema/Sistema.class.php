@@ -68,7 +68,7 @@ class Sistema {
         return $this;
     }
 
-    public function retornaOptionSistemas(){
+    public function retornaOptionSistemasSelect2(){
         try {
             $conexao = new Conexao();
             $pdo = $conexao->connect();
@@ -79,7 +79,7 @@ class Sistema {
             $opcoes = [];
             if ($daoSesSistema->getSucesso()) {
                 foreach ($daoSesSistema->getMsgRetorno() as $linha) {
-                    $opcoes[] = (object) array('id' => $linha['id_sistema'], 'nome' => $linha['nm_sistema']);
+                    $opcoes[] = (object) array('id' => $linha['id_sistema'], 'text' => $linha['nm_sistema']);
                 }
                 return json_encode($opcoes);
             }

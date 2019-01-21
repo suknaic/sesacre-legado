@@ -129,7 +129,7 @@ $(document).ready(function () {
     //********************************** Cidade Naturalidade ***********************************
     function listaCidadeNaturalidade(estado = 0, idCidade = 0) {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaCidadeOption",
@@ -280,7 +280,7 @@ $(document).ready(function () {
     // });
     //********************************************************************
 
-    //************************************************* Regras dos Dados do Endereço *******************************************************
+    //*************************************** Regras dos Dados do Endereço *********************************************
     $("body").on("change.select2", "#id_pais_endereco", function (e) {
         $("#id_estado_endereco").val(0).trigger('change.select2');
         $("#id_cidade").val(0).trigger('change.select2');
@@ -326,7 +326,6 @@ $(document).ready(function () {
                 acao: "listaEscolaridadeFormacaoOption"
             },
             "success": function (response) {
-                //  console.log(response);
                 $(".formacao").append(response);
             }
         });
@@ -338,18 +337,16 @@ $(document).ready(function () {
     //************************************************* Orgao Expeditor ************************************************
     function listaOrgaoExpeditor(idOrgao = null) {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaOrgaoExpeditor"
+                acao: "listaOrgaoExpeditor",
+                idPais: 1,
+                idEstado: idOrgao,
+                orgaoExpedidor: '1'
             },
             "success": function (response) {
-                if (idOrgao == null) {
-                    $("#id_estado").html(response);
-                } else {
-                    $("#id_estado").html(response);
-                    $("#id_estado").val(idOrgao).change();
-                }
+                $("#id_estado").html(response);
             }
         });
     }
@@ -357,6 +354,7 @@ $(document).ready(function () {
     listaOrgaoExpeditor();
     //******************************************************************************************************************
 
+    //************************************* Escolaridade ***************************************
     function listaEscolaridadeCombo(id) {
         $.ajax({
             "url": "/model/sistema/pessoa/request.php",
@@ -376,7 +374,6 @@ $(document).ready(function () {
     //**********************************função do botão Próximo ********************************
     $(".pro").click(function () {
         $('.nav > .active').next('li').find('a').trigger('click');
-
     });
     // função do botão anterior
     $(".ant").click(function () {
@@ -535,13 +532,11 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    //console.log($i+"-"+index+"=>"+value);
                     if ($i <= 11) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
                     } else if ($i >= 12 && $i <= 15) {
                         func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato (" + index + ")");
                     }
-                    console.log($i + "-" + index + "=>" + value);
                     $campo = 1;
                     return false;
                 }
@@ -583,14 +578,10 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         } else if (response.tipoExibicao === "alert") {
@@ -599,19 +590,15 @@ $(document).ready(function () {
                         }
                     } else if (response.tipoMsg === "ok") {
                         func.modalAlert(response.msg, 'success');
-                        func.fechaModalReload();
+                        func.fechaModalHref('/pages/sistema/pessoa/fisica/index.php');
                         return false;
-                        //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
                     func.modalAlert(func.msgErroPadrao);
                     return false;
                 }
@@ -676,6 +663,7 @@ $(document).ready(function () {
                             "success": function (response) {
                                 try {
                                     response = JSON.parse(response);
+                                    console.log(response[0].id_estado, cidade);
                                     $('#id_pais_endereco').val(response[0].id_pais).trigger('change.select2');
                                     listaEstadoEndereco(response[0].id_pais, response[0].id_estado);
                                     listaCidadeEndereco(response[0].id_estado, 0, cidade);

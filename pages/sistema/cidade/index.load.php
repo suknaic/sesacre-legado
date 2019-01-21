@@ -8,7 +8,9 @@ $session = new Session();
 if(!$session->verificaPermissao(PERFIL_TI)){
     header("Location: /pages/index.php"); 
 } else {
-    $idCidade = $_REQUEST['key'] == null || $_REQUEST['key'] == '' ? null: $_REQUEST['key'];
+    if (array_key_exists('key', $_REQUEST)) {
+        $idCidade = $_REQUEST['key'] == null || $_REQUEST['key'] == '' ? null: $_REQUEST['key'];
+    }
 }
 
 ?>

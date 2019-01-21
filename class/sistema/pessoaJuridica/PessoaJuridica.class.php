@@ -294,11 +294,21 @@ class pessoaJuridica {
                 $pdo->rollBack();
                 return;
             }
-
             //*************************************************************************
-            $busca = $pessoaJuridica->retornaPessoaJuridica($pdo);
 
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
+            //**************************************** Valida a data da fundação ***************************************
+            if (!empty($this->dt_fundacao)) {
+                $dtFund = explode('/', $this->dt_fundacao);
+                $d = $dtFund[0];
+                $m = $dtFund[1];
+                $y = $dtFund[2];
+                if (!checkdate($m, $d, $y)) {
+                    return Metodos::retornoAjax('Erro', 'alert', 'A data da fundação informada é inválida.');
+                }
+            }
+            //**********************************************************************************************************
+
+            $busca = $pessoaJuridica->retornaPessoaJuridica($pdo);
             if (!$busca) {
                 $this->setSuccess(false);
                 $this->setMsg("Erro ao Buscar Pessoa Jurídica");

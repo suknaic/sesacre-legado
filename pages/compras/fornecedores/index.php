@@ -28,7 +28,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
-
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
@@ -42,11 +43,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
             ?>
 
             <div class="boxed">
-
                 <!--CONTENT CONTAINER-->
                 <!--===================================================-->
                 <div id="content-container">
-
                     <!--Page Title-->
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <div id="page-title">
@@ -54,11 +53,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
                     </div>
                     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                     <!--End page title-->
-
                     <!--Page content-->
                     <!--===================================================-->
                     <div id="page-content">
-
                         <!-- Inicio Form -->
                         <div class="row">
                             <div class="col-sm-12">
@@ -76,7 +73,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
 
                                         </h3>
                                     </div>
-
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formPesquisaPessoa">
@@ -89,13 +85,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
                                                                 <span class="input-group-addon">
                                                                     <p class="fa fa-list inputPFa"></p>
                                                                 </span>
-                                                        <select id="tipoPessoa" class="form-control">
+                                                        <select id="tipoPessoa" class="form-control select">
                                                             <option value="0">Selecione Tipo de Pessoa</option>
                                                             <option value="1">Pessoa Física</option>
                                                             <option value="2">Pessoa Jurídica</option>
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -126,10 +119,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
                                                         <input type="text" class="form-control" name="nm_pessoa" id="nm_pessoa" required="true">
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
                                             <!-- End <div class="form-group"> -->
                                         </div>
                                         <!-- <div class="panel-body"> -->
@@ -179,50 +169,31 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
                                             </table>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
     <!--jQuery [ REQUIRED ]-->
     <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
     <!--BootstrapJS [ REQUIRED ]-->
@@ -251,7 +222,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/compras/fornecedores/index.load
     <!--MaskedInput-->
     <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
     <!-- select2 -->
-    <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
     <!-- END JAVASCRIPT -->
     </body>

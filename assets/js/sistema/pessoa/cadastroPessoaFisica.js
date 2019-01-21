@@ -3,7 +3,7 @@ $(document).ready(function () {
     func = new Funcoes();
 
     //**************** Select2 ************
-    $(".select").select2({width: " 100%"});
+    $(".select").select2({width: "100%"});
     //*************************************
 
     //********************************** Pais Naturalidade *************************************
@@ -93,7 +93,7 @@ $(document).ready(function () {
     //************************************* Pais Endereço **************************************
     function listaPaisEndereco() {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaPaisOption"
@@ -109,7 +109,7 @@ $(document).ready(function () {
     //************************************* Estado Endereço ************************************
     function listaEstadoEndereco(pais = 0, estado = 0) {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaEstadoOption",
@@ -126,7 +126,7 @@ $(document).ready(function () {
     //************************************* Cidade Endereço ************************************
     function listaCidadeEndereco(estado = 0, cidade = null) {
         $.ajax({
-            "url": "/model/rh/funcionario/request.php",
+            "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
                 acao: "listaCidadeOption",
@@ -138,7 +138,6 @@ $(document).ready(function () {
             }
         });
     }
-
     //******************************************************************************************
 
     //**************************** Endereco ******************************
@@ -229,7 +228,9 @@ $(document).ready(function () {
             "url": "/model/sistema/pessoa/request.php",
             "dataType": 'html',
             "data": {
-                acao: "listaOrgaoExpeditor"
+                acao: "listaOrgaoExpeditor",
+                idPais: 1,
+                orgaoExpedidor: '1'
             },
             "success": function (response) {
                 $("#id_estado").html(response);
@@ -429,7 +430,6 @@ $(document).ready(function () {
                 },
 
                 "success": function (response) {
-                    //$this.prop("disabled", false);
                     if (response.trim() == "SessaoExpirada") {
                         func.modalAlert(func.msgSemPermissao);
                         return false;
@@ -438,14 +438,10 @@ $(document).ready(function () {
                         response = JSON.parse(response);
                     } catch (e) {
                         func.modalAlert(func.msgErroPadrao);
-                        console.log("Parse JSON");
-                        console.log(response);
                         return false;
                     }
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            console.log('Console Mensagem');
-                            console.log(response);
                             func.modalAlert(func.msgErroPadrao);
                             return false;
                         } else if (response.tipoExibicao === "alert") {
@@ -456,17 +452,13 @@ $(document).ready(function () {
                         func.modalAlert(response.msg, 'success');
                         func.fechaModalReload();
                         return false;
-                        //top.location = "/pages/rh/pessoaFisica/index.php";
                     } else {
-                        console.log('Ultimo else');
-                        console.log(response);
                         func.modalAlert(func.msgErroPadrao);
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    console.log(response);
                     func.modalAlert(func.msgErroPadrao);
                     return false;
                 }
@@ -481,19 +473,6 @@ $(document).ready(function () {
         $("#ds_complemento").val("");
         $("#nr_cep").val("");
 
-    });
-
-    $(".pais").select2({
-        width: " 100%"
-    });
-    $(".estado").select2({
-        width: " 100%"
-    });
-    $(".idCidade").select2({
-        width: " 100%"
-    });
-    $(".sexo").select2({
-        width: " 100%"
     });
 
     $('body').on('click', '.btn-limpar', function (e) {

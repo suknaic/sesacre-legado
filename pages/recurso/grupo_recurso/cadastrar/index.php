@@ -66,14 +66,14 @@ require_once "index.load.php";
                                     <pre>
                                         {{ grupo }}
                                     </pre>
-                                    <custom-select v-if="!inserir" nome="id_grupo_recurso" descricao="Grupo de Recursos" v-bind:valor="grupo.idGrupoRecurso" v-on:change="grupo.idGrupoRecurso = $event" v-bind:opcoes="grupoOptions" requerido>
+                                    <custom-select v-if="!inserir" nome="idGrupoRecurso" descricao="Grupo de Recursos" v-bind:valor="grupo.idGrupoRecurso" v-on:change="grupo.idGrupoRecurso = $event" v-bind:opcoes="grupoOptions" requerido>
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" v-on:click="novoGrupo(true)" type="button">
                                                 <i class="fa fa-plus-circle fa-1x"></i>
                                             </button>
                                         </span>
                                     </custom-select>
-                                    <custom-text v-if="inserir" nome="nm_grupo_recurso" descricao="Grupo de Recursos" v-bind:valor="grupo.nmGrupoRecurso" v-on:input="grupo.nmGrupoRecurso = $event" requerido>
+                                    <custom-text v-if="inserir" nome="nmGrupoRecurso" icone="fa fa-file-text-o inputPFa" descricao="Grupo de Recursos" v-bind:valor="grupo.nmGrupoRecurso" v-on:input="grupo.nmGrupoRecurso = $event" horizontal requerido>
                                         <span class="input-group-btn">
                                             <button class="btn btn-success" v-on:click="cadastrar" type="button">
                                                 Cadastrar

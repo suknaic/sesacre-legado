@@ -29,6 +29,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
+        <!-- Select2-->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -173,38 +175,37 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                         <div class="form-group">
                                                             <div class="col-md-1"></div>
                                                             <div class="col-md-3">
-                                                                Naturalidade: 
-                                                                País <span class="text-danger">*</span>
+                                                                País Naturalidade: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_pais_naturalidade" class="form-control pais select">
-                                                                        <option value="0">Selecione País</option>                                                                
+                                                                        <option value="0">Selecione o País</option>
 
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-3">
-                                                                Estado: <span class="text-danger">*</span>
+                                                                Estado Naturalidade: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_estado_naturalidade" class="form-control estado select">
-                                                                        <option value="0">Selecione Estado</option>                                                                
+                                                                        <option value="0">Selecione o Estado</option>
 
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Cidade: <span class="text-danger">*</span>
+                                                                Cidade Naturalidade: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_naturalidade" class="form-control idCidade select">
-                                                                        <option value="0">Selecione Naturalidade</option>                                                                
+                                                                        <option value="0">Selecione a Naturalidade</option>
 
                                                                     </select>
                                                                 </div>
@@ -381,7 +382,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_pais_endereco" class="form-control pais select">
-                                                                        <option value="0">Selecione País</option>                                                                
+                                                                        <option value="0">Selecione o País</option>
 
                                                                     </select>
                                                                 </div>
@@ -393,7 +394,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_estado_endereco" class="form-control estado select">
-                                                                        <option value="0">Selecione Estado</option>                                                                
+                                                                        <option value="0">Selecione o Estado</option>
 
                                                                     </select>
                                                                 </div>
@@ -405,7 +406,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_cidade" class="form-control idCidade select">
-                                                                        <option value="0">Selecione Cidade</option>                                                                
+                                                                        <option value="0">Selecione a Cidade</option>
 
                                                                     </select>
                                                                 </div>
@@ -561,9 +562,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
+        
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -592,9 +591,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

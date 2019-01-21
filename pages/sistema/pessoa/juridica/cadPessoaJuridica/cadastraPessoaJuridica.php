@@ -19,16 +19,13 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">
         <!-- ion icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
-        <!--DataTables [ OPT ]-->
-        <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -149,11 +146,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_natureza" class="form-control">
+                                                                    <select id="id_natureza" class="form-control select">
                                                                         <option value="0">Selecione a Natureza</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -227,11 +222,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_pais_endereco" class="form-control pais">
+                                                                    <select id="id_pais_endereco" class="form-control pais select">
                                                                         <option value="0">Selecione o País</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -241,11 +234,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_estado_endereco" class="form-control estado">
+                                                                    <select id="id_estado_endereco" class="form-control estado select">
                                                                         <option value="0">Selecione o Estado</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -255,18 +246,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_cidade" class="form-control idCidade">
+                                                                    <select id="id_cidade" class="form-control idCidade select">
                                                                         <option value="0">Selecione a Cidade</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">    
                                                             <div class="col-md-2"></div>
-                                                            <div class="col-md-5">
+                                                            <div class="col-md-3">
                                                                 Logradouro: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -284,7 +273,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <input type="text" class="form-control" name="ds_complemento" id="ds_complemento">
                                                                 </div>
                                                             </div>
-
+                                                            <div class="col-md-2">
+                                                                Número:
+                                                                <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <p class="fa fa-sort-numeric-asc inputPFa"></p>
+                                                                </span>
+                                                                    <input type="number" class="form-control" name="nr_endereco" id="nr_endereco" min="0" required="true">
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="form-group"> 
                                                             <div class="col-md-2"></div>
@@ -303,7 +300,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-file-text-o inputPFa"></p>
                                                                     </span>
-                                                                    <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                                    <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-1">
@@ -414,17 +411,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
-        <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script> <!-- Search sem Acento -->
         <!-- DIALOG CONFIRM [OPT] -->
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
@@ -436,7 +422,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
     </body>

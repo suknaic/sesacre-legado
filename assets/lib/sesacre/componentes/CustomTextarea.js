@@ -7,7 +7,7 @@ Vue.component('custom-textarea',{
             default: false,
             type: Boolean
         },
-        estilo: String
+        icone: String
     },
     /*
      * https://br.vuejs.org/v2/guide/components.html#Usando-v-model-em-Componentes
@@ -18,7 +18,7 @@ Vue.component('custom-textarea',{
                     <div class="col-sm-6">
                         <div class="input-group">
                             <span class="input-group-addon">
-                                <p v-bind:class="estilo"></p>
+                                <p v-bind:class="icone"></p>
                             </span>
                             <textarea class="form-control" v-bind:id="nome" rows="4" cols="50" v-bind:class="nome" v-bind:value="value" v-on:input="$emit('input',$event.target.value)" >{{ value }}</textarea>                                                        
                         </div>                                                  

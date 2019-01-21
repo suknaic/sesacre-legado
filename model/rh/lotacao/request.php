@@ -26,8 +26,8 @@ switch ($_REQUEST['acao']) {
             $lotacao->setId_lotacao_categoria($getLotacao['idCategoria']);
             $lotacao->setNr_cnpj($getLotacao['cnpj']);
             $lotacao->setNm_email($getLotacao['email']);
-            $lotacao->setId_pessoa_juridica($getLotacao['pessoaJuridica']);
-            $lotacao->setId_pessoa($getLotacao['pessoa']);
+            $lotacao->setId_pessoa_juridica(empty($getLotacao['pessoaJuridica']) ? null:$getLotacao['pessoaJuridica']);
+            $lotacao->setId_pessoa(empty($getLotacao['pessoa']) ? null:$getLotacao['pessoa']);
             $lotacao->setDs_logradouro($getLotacao['logradouro']);
             $lotacao->setDs_bairro($getLotacao['bairro']);
             $lotacao->setNr_cep($getLotacao['cep']);
@@ -57,8 +57,8 @@ switch ($_REQUEST['acao']) {
             $lotacao->setId_lotacao_categoria($getLotacao['idCategoria']);
             $lotacao->setNr_cnpj($getLotacao['cnpj']);
             $lotacao->setNm_email($getLotacao['email']);
-            $lotacao->setId_pessoa_juridica($getLotacao['pessoaJuridica']);
-            $lotacao->setId_pessoa($getLotacao['pessoa']);
+            $lotacao->setId_pessoa_juridica(empty($getLotacao['pessoaJuridica']) ? null:$getLotacao['pessoaJuridica']);
+            $lotacao->setId_pessoa(empty($getLotacao['pessoa']) ? null:$getLotacao['pessoa']);
             $lotacao->setDs_logradouro($getLotacao['logradouro']);
             $lotacao->setDs_bairro($getLotacao['bairro']);
             $lotacao->setNr_cep($getLotacao['cep']);
@@ -259,7 +259,17 @@ switch ($_REQUEST['acao']) {
             $prog = new Cidade();
             $idEstado = $_REQUEST['idEstado'];
             $idCidade = $_REQUEST['idCidade'];
-            echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            $nmCidade = $_REQUEST['nmCidade'];
+
+//            var_dump($idEstado);
+//            var_dump($idCidade);
+//            var_dump($nmCidade);
+//            return;
+            if (empty($nmCidade)) {
+                echo $prog->retornaOptionCidade($idEstado, $idCidade);
+            } else {
+                echo $prog->retornaOptionCidadeUf($idEstado, $nmCidade);
+            }
             return;
             break;
         } catch (Exception $e) {

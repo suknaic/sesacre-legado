@@ -268,7 +268,7 @@ class Contrato {
             $yAd = $dtAd[2];
             if (!checkdate($mAd, $dAd, $yAd)) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão inválida.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de admissão inválida.');
             }
 
             if (!empty($dadosContrato['dtDemissao'])) {
@@ -288,7 +288,7 @@ class Contrato {
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtAdmissao > $dtAtual) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão é Maior que a Data Atual.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de admissão é maior que a data atual.');
             }
             //**********************************************************************************************************
 
@@ -317,7 +317,7 @@ class Contrato {
             if($this->recadastramento == "s"){
                 if(!$this->registraRecadastramento(true, 0, (int)$contrato->getId_contrato(), (int)$idUsuario, $pdo)){
                     $pdo->rollBack();
-                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
+                    return Metodos::retornoAjax("Erro", "alert", "Não foi possível realizar a ação do recadastramento.");
                 }                        
             }
             //**********************************************************************************************************
@@ -327,11 +327,11 @@ class Contrato {
             $dataAtual = strtotime(date('d-m-Y'));
             $dataAdmissao = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
             $chTotal = 0;
-            $dtFimAntiga = null;
+            $dtFimAntiga = 0;
 
             foreach ($dadosContratoLotacao as $linha => $lotacao) {
                 $dtInicio = strtotime(date(str_replace('/', '-', $lotacao['dt_inicio'])));
-                $dtFim = empty($lotacao['dt_inicio']) ? null:strtotime(date(str_replace('/', '-', $lotacao['dt_fim'])));
+                $dtFim = empty($lotacao['dt_fim']) ? null:strtotime(date(str_replace('/', '-', $lotacao['dt_fim'])));
 
 
                 //******************************** Valida data inicio e fim do contrato ****************************
@@ -344,10 +344,10 @@ class Contrato {
                 }
 
                 if (!empty($lotacao['dt_fim'])) {
-                    $dtFim = explode('/', $lotacao['dt_fim']);
-                    $dFim = $dtFim[0];
-                    $mFim = $dtFim[1];
-                    $yFim = $dtFim[2];
+                    $dtF = explode('/', $lotacao['dt_fim']);
+                    $dFim = $dtF[0];
+                    $mFim = $dtF[1];
+                    $yFim = $dtF[2];
                     if (!checkdate($mFim, $dFim, $yFim)) {
                         return Metodos::retornoAjax('Erro', 'alert', 'A data de fim da lotação é inválida.');
                     }
@@ -368,12 +368,14 @@ class Contrato {
                 }
                 //***************************************************************************************
 
-//                if ($dtFimAntiga != null) {
-//                    if ($dtFimAntiga > $dtInicio) {
-//                        $pdo->rollBack();
-//                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da outra.');
-//                    }
-//                }
+                //************ Se a data fim antiga for > que 0, vai verifica se a data de inicio é <= que a data fim antiga ***********
+                if ($dtFimAntiga > 0) {
+                    if ($dtInicio <= $dtFimAntiga) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da anterior.');
+                    }
+                }
+                //***************************************************************************************************************************
 
                 if ($dtFim != null) {
                     //*************************** Verifica se a data fim é < que a data de inicio **********************
@@ -393,10 +395,14 @@ class Contrato {
                     if ($dtInicio >= $dataAtual && $dtFim >= $dataAtual) {
                         $chTotal = $chTotal + $lotacao['chLotacao'];
                     }
+
+                    if ($dtInicio <= $dataAtual && $dtFim >= $dataAtual) {
+                        $chTotal = $chTotal + $lotacao['chLotacao'];
+                    }
                     $dtFimAntiga = $dtFim;
                 } else {
                     //********************* Verifica se a data de inicio é < que a data atual **********************
-                    if ($dtInicio <= $dataAtual) {
+                    if ($dtInicio >= $dataAdmissao) {
                         $chTotal = $chTotal + $lotacao['chLotacao'];
                     }
                     //**********************************************************************************************
@@ -404,17 +410,17 @@ class Contrato {
             }
 
             //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
-//            if ($chTotal > $dadosContrato['nrCargaHoraria']) {
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax('Erro', 'alert', 'A carga corária da função na lotação excede a carga horária do contrato.');
-//            }
+            if ($chTotal > $dadosContrato['nrCargaHoraria']) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'A carga horária da função na lotação excede a carga horária do contrato.');
+            }
             //**************************************************************************************************
 
             //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
-//            if ($chTotal < $dadosContrato['nrCargaHoraria']) {
-//                $pdo->rollBack();
-//                return Metodos::retornoAjax('Erro', 'alert', 'Por favor! Complete a carga horária.');
-//            }
+            if ($chTotal < $dadosContrato['nrCargaHoraria']) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'Por favor! Complete a carga horária.');
+            }
             //**************************************************************************************************
 
             //**************************************** Contrato / Lotação **********************************************
@@ -457,21 +463,8 @@ class Contrato {
                 }
             }
             //**********************************************************************************************************
-            //************************ Definindo o perfil(CHAMADO) padrão para o funcionário ***************************
+            //***************************************** Salvando o LOG ***************************************
             if ($sucesso) {
-//************* Ativar código quando as pendencias dos módulos do RH e Chamados estiverem prontos ***************
-//                $perfilPessoa = new PerfilPessoa();
-//                $perfilPessoa->setIdPerfil();
-//                $perfilPessoa->setIdPessoa($idPessoa);
-//
-//                $inseriPerfil = $perfilPessoa->incluirPessoaPerfil($pdo);
-//                if ($inseriPerfil) {
-//                    
-//                } else {
-//                    $pdo->rollBack();
-//                    return Metodos::retornoAjax('Erro', 'console', $inseriPerfil);
-//                }
-// *************************************************************************************************
                 if (Log::SalvaLogI('ses_contrato', $contrato->getId_contrato(), $pdo)) {
                     $pdo->commit();
                     return Metodos::retornoAjax("ok", "html", STR_CADASTRO_SUCESSO);
@@ -499,7 +492,7 @@ class Contrato {
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtNasc > $dtAtual) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Data de Nascimento Não Pode Ser Maior que a Data Atual.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de nascimento não pode ser maior que a data atual.');
             }
             //**********************************************************************************************************
 
@@ -508,7 +501,7 @@ class Contrato {
             $dtAtual = strtotime(date("d-m-Y"));
             if ($dtAdm > $dtAtual) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'Data de Admissão Deve Ser Menor ou Igual a Data Atual.');
+                return Metodos::retornoAjax('Erro', 'alert', 'Data de admissão deve ser menor ou igual a data atual.');
             }
             //********************************************************************************************************
 
@@ -586,7 +579,7 @@ class Contrato {
 
             if (!$cadatraContrato) {
                 $pdo->rollBack();
-                return Metodos::retornoAjax('Erro', 'alert', 'As Cargas Horárias Permitidas para Contratos são: 20,24,30,40 e 44.');
+                return Metodos::retornoAjax('Erro', 'alert', 'As cargas horárias permitidas para contratos são: 20,24,30,40 e 44.');
             }
             //**********************************************************************************************************
 
@@ -640,34 +633,106 @@ class Contrato {
                 $contrato->setId_contrato($pdo->lastInsertId('ses_contrato_id_contrato_seq'));
                 //*********************************Contrato / Lotação***************************************************
                 if (count($dadosContratoLotacao) > 0) {
+                    //********************************* Validações - Contrato / Lotação ************************************
+                    $dataAtual = strtotime(date('d-m-Y'));
+                    $dataAdmissao = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
+                    $chTotal = 0;
+                    $dtFimAntiga = 0;
+
+                    foreach ($dadosContratoLotacao as $linha => $lotacao) {
+                        $dtInicio = strtotime(date(str_replace('/', '-', $lotacao['dt_inicio'])));
+                        $dtFim = $lotacao['dt_fim'] == '' ? null:strtotime(date(str_replace('/', '-', $lotacao['dt_fim'])));
+                        //******************************** Valida data inicio e fim do contrato ****************************
+                        $dtIni = explode('/', $lotacao['dt_inicio']);
+                        $dIni = $dtIni[0];
+                        $mIni = $dtIni[1];
+                        $yIni = $dtIni[2];
+                        if (!checkdate($mIni, $dIni, $yIni)) {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação é inválida.');
+                        }
+
+                        if (!empty($lotacao['dt_fim'])) {
+                            $dtF = explode('/', $lotacao['dt_fim']);
+                            $dFim = $dtF[0];
+                            $mFim = $dtF[1];
+                            $yFim = $dtF[2];
+                            if (!checkdate($mFim, $dFim, $yFim)) {
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', 'A data de fim da lotação é inválida.');
+                            }
+                        }
+                        //**************************************************************************************************
+
+                        //*************** Verifica se a data de inicio é > que a data de admissao ***************
+                        if ($dtInicio < $dataAdmissao) {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax('Erro', 'alert', 'Data de início da lotação não pode ser menor que a data de admissão.');
+                        }
+                        //***************************************************************************************
+
+                        //************ Se a data fim antiga for > que 0, vai verifica se a data de inicio é <= que a data fim antiga ***********
+                        if ($dtFimAntiga > 0) {
+                            if ($dtInicio <= $dtFimAntiga) {
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da anterior.');
+                            }
+                        }
+                        //***************************************************************************************************************************
+
+                        if ($dtFim != null) {
+                            //************************ Verifica se a data fim é < que a data de inicio *********************
+                            if ($dtFim < $dtInicio) {
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', 'Data fim da lotação não pode ser menor que a Data de início.');
+                            }
+                            //**********************************************************************************************
+
+                            //*********************** Verifica se a data inicio é > que a data de fim **********************
+                            if ($dtInicio > $dtFim) {
+                                $pdo->rollBack();
+                                return Metodos::retornoAjax('Erro', 'alert', 'Data de  início da lotação não pode ser maior que a Data fim.');
+                            }
+                            //**********************************************************************************************
+
+                            if ($dtInicio >= $dataAtual && $dtFim >= $dataAtual) {
+                                $chTotal = $chTotal + $lotacao['chLotacao'];
+                            }
+
+                            if ($dtInicio <= $dataAtual && $dtFim >= $dataAtual) {
+                                $chTotal = $chTotal + $lotacao['chLotacao'];
+                            }
+                            $dtFimAntiga = $dtFim;
+                        } else {
+                            //********************* Verifica se a data de inicio é < que a data atual **********************
+                            if ($dtInicio >= $dataAdmissao) {
+                                $chTotal = $chTotal + $lotacao['chLotacao'];
+                            }
+                            //**********************************************************************************************
+                        }
+                    }
+//                    $pdo->rollBack();
+//                    return;
+                    //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
+                    if ($chTotal > $dadosContrato['nrCargaHoraria']) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'alert', 'A carga corária da função na lotação excede a carga horária do contrato.');
+                    }
+                    //**************************************************************************************************
+
+                    //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
+                    if ($chTotal < $dadosContrato['nrCargaHoraria']) {
+                        $pdo->rollBack();
+                        return Metodos::retornoAjax('Erro', 'alert', 'Por favor! Complete a carga horária.');
+                    }
+                    //**************************************************************************************************
+
                     foreach ($dadosContratoLotacao as $linha => $v) {
                         $contrato->setCarga_horaria_lotacao($v['chLotacao']);
                         $contrato->setId_lotacao($v['idLotacao']);
                         $contrato->setId_funcao($v['idFuncao']);
                         $contrato->setDt_inicio($v['dt_inicio']);
                         $contrato->setDt_fim($v['dt_fim']);
-
-                        //************************ Valida data inicio e fim do contrato da lotação *********************
-                        $dtIni = explode('/', $v['dt_inicio']);
-                        $dIni = $dtIni[0];
-                        $mIni = $dtIni[1];
-                        $yIni = $dtIni[2];
-                        if (!checkdate($mIni, $dIni, $yIni)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax('Erro', 'alert', 'A data de início do contrato é inválida.');
-                        }
-
-                        if (!empty($v['dt_fim'])) {
-                            $dtFim = explode('/', $v['dt_fim']);
-                            $dFim = $dtFim[0];
-                            $mFim = $dtFim[1];
-                            $yFim = $dtFim[2];
-                            if (!checkdate($mFim, $dFim, $yFim)) {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax('Erro', 'alert', 'A data de fim do contrato é inválida.');
-                            }
-                        }
-                        //**********************************************************************************************
 
                         //**********************************************************************************************
                         $rs = $contrato->insertContratoLotacao($pdo);
@@ -812,10 +877,11 @@ class Contrato {
                 $dataAtual = strtotime(date('d-m-Y'));
                 $dataAdmissao = strtotime(date(str_replace('/', '-', $dadosContrato['dtAdmissao'])));
                 $chTotal = 0;
+                $dtFimAntiga = 0;
 
                 foreach ($dadosContratoLotacao as $linha => $lotacao) {
                     $dtInicio = strtotime(date(str_replace('/', '-', $lotacao['dt_inicio'])));
-                    $dtFim = empty($lotacao['dt_inicio']) ? null:strtotime(date(str_replace('/', '-', $lotacao['dt_fim'])));
+                    $dtFim = empty($lotacao['dt_fim']) ? null:strtotime(date(str_replace('/', '-', $lotacao['dt_fim'])));
 
                     //******************************** Valida data inicio e fim do contrato ****************************
                     $dtIni = explode('/', $lotacao['dt_inicio']);
@@ -828,10 +894,10 @@ class Contrato {
                     }
 
                     if (!empty($lotacao['dt_fim'])) {
-                        $dtFim = explode('/', $lotacao['dt_fim']);
-                        $dFim = $dtFim[0];
-                        $mFim = $dtFim[1];
-                        $yFim = $dtFim[2];
+                        $dtF = explode('/', $lotacao['dt_fim']);
+                        $dFim = $dtF[0];
+                        $mFim = $dtF[1];
+                        $yFim = $dtF[2];
                         if (!checkdate($mFim, $dFim, $yFim)) {
                             $pdo->rollBack();
                             return Metodos::retornoAjax('Erro', 'alert', 'A data de fim da lotação é inválida.');
@@ -846,6 +912,14 @@ class Contrato {
                     }
                     //***************************************************************************************
 
+                    //************ Se a data fim antiga for > que 0, vai verifica se a data de inicio é <= que a data fim antiga ***********
+                    if ($dtFimAntiga > 0) {
+                        if ($dtInicio <= $dtFimAntiga) {
+                            $pdo->rollBack();
+                            return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação deve ser após o termino da anterior.');
+                        }
+                    }
+                    //**********************************************************************************************************************
 
                     if ($dtFim != null) {
                         //************************ Verifica se a data fim é < que a data de inicio *********************
@@ -861,22 +935,23 @@ class Contrato {
                             return Metodos::retornoAjax('Erro', 'alert', 'Data de  início da lotação não pode ser maior que a Data fim.');
                         }
                         //**********************************************************************************************
-
                         if ($dtInicio >= $dataAtual && $dtFim >= $dataAtual) {
                             $chTotal = $chTotal + $lotacao['chLotacao'];
                         }
+
+                        if ($dtInicio <= $dataAtual && $dtFim >= $dataAtual) {
+                            $chTotal = $chTotal + $lotacao['chLotacao'];
+                        }
+                        $dtFimAntiga = $dtFim;
                     } else {
                         //********************* Verifica se a data de inicio é < que a data atual **********************
-                        if ($dtInicio <= $dataAtual) {
+                        if ($dtInicio >= $dataAdmissao) {
                             $chTotal = $chTotal + $lotacao['chLotacao'];
                         }
                         //**********************************************************************************************
                     }
                 }
 
-//                var_dump($chTotal);
-//                $pdo->rollBack();
-//                return;
                 //************************* Verifica se a chTotal das lotacoes é > ch contrato *********************
                 if ($chTotal > $dadosContrato['nrCargaHoraria']) {
                     $pdo->rollBack();
@@ -898,28 +973,6 @@ class Contrato {
                         $contrato->setId_funcao($dcLotacao['idFuncao']);
                         $contrato->setDt_inicio($dcLotacao['dt_inicio']);
                         $contrato->setDt_fim($dcLotacao['dt_fim']);
-
-                        //************************ Valida data inicio e fim do contrato da lotação *********************
-                        $dtIni = explode('/', $dcLotacao['dt_inicio']);
-                        $dIni = $dtIni[0];
-                        $mIni = $dtIni[1];
-                        $yIni = $dtIni[2];
-                        if (!checkdate($mIni, $dIni, $yIni)) {
-                            $pdo->rollBack();
-                            return Metodos::retornoAjax('Erro', 'alert', 'A data de início da lotação é inválida.');
-                        }
-
-                        if (!empty($dcLotacao['dt_fim'])) {
-                            $dtFim = explode('/', $dcLotacao['dt_fim']);
-                            $dFim = $dtFim[0];
-                            $mFim = $dtFim[1];
-                            $yFim = $dtFim[2];
-                            if (!checkdate($mFim, $dFim, $yFim)) {
-                                $pdo->rollBack();
-                                return Metodos::retornoAjax('Erro', 'alert', 'A data de fim da lotacao é inválida.');
-                            }
-                        }
-                        //**********************************************************************************************
 
                         //**********************************************************************************************
                         $rs = $contrato->insertContratoLotacao($pdo);
@@ -961,12 +1014,7 @@ class Contrato {
                     return Metodos::retornoAjax("Erro", "alert", "Não foi possível Realizar a Ação do Recadastramento.");
                 }   
             }
-            
-            
             //**********************************************************************************************************
-            
-            
-
             if ($sucesso) {
                 $pdo->commit();
                 return Metodos::retornoAjax("ok", "html", $msg);

@@ -384,7 +384,6 @@ class pessoaFisica {
             $rs = $pessoaFisica->retornaCompetencia($pdo);
 //          ****************************************************************************
             $disabled = "";
-            //$disabled = $dadosPessoa['contrato'] == 1? "disabled=''":"";
             //**************************************************************************
             if ($rs != FALSE) {
                 foreach ($rs as $linha) {

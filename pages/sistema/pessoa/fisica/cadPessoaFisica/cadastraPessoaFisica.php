@@ -29,6 +29,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
         <link href="/assets/lib/template/plugins/checkbox/checkbox-circle-pimary.css" rel="stylesheet">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -152,7 +154,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="tp_sexo" class="form-control sexo">
+                                                                    <select id="tp_sexo" class="form-control sexo select">
                                                                         <option value="0">Selecione o Sexo</option>
                                                                         <option value="1">Feminino</option>
                                                                         <option value="2">Masculino</option>
@@ -178,11 +180,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_pais_naturalidade" class="form-control pais">
+                                                                    <select id="id_pais_naturalidade" class="form-control pais select">
                                                                         <option value="0">Selecione o País</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -192,11 +192,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_estado_naturalidade" class="form-control estado">
+                                                                    <select id="id_estado_naturalidade" class="form-control estado select">
                                                                         <option value="0">Selecione o Estado</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -206,11 +204,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
-                                                                    <select id="id_naturalidade" class="form-control idCidade">
+                                                                    <select id="id_naturalidade" class="form-control idCidade select">
                                                                         <option value="0">Selecione a Naturalidade</option>
-                                                                        <?php
-                                                                        // echo $lotacoes;
-                                                                        ?>
+
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -408,7 +404,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_cidade" class="form-control idCidade select">
-                                                                        <option value="0">Selecione Cidade</option>                                                                
 
                                                                     </select>
                                                                 </div>
@@ -596,9 +591,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

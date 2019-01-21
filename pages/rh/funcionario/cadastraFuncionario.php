@@ -28,6 +28,8 @@
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <style>
             li.active {
                 background:#EEEEEE;  
@@ -523,7 +525,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                Cargo: <span class="text-danger">*</span>
+                                                                Cargo do Contrato: <span class="text-danger">*</span>
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                         <p class="fa fa-list inputPFa"></p>
@@ -561,7 +563,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    Função: <span class="text-danger">*</span>
+                                                                    Função Exercida: <span class="text-danger">*</span>
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon">
                                                                             <p class="fa fa-list inputPFa"></p>
@@ -622,7 +624,7 @@
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th class="text-capitalize text-center">Lotação</th> 
-                                                                                        <th class="text-capitalize text-center">Função</th>
+                                                                                        <th class="text-capitalize text-center">Função Exercida</th>
                                                                                         <th class="text-capitalize text-center">C. H.</th>
                                                                                         <th class="text-capitalize text-center">Data Início</th>
                                                                                         <th class="text-capitalize text-center">Data Fim</th>
@@ -730,7 +732,6 @@
             <!--MaskedInput-->
             <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
             <!-- select2 -->
-            <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
             <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
             <!-- END JAVASCRIPT -->
     </body>
