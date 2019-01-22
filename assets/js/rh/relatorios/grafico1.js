@@ -30,7 +30,6 @@ $(document).ready(function () {
     //************************************
     func = new Funcoes();
     carregaTabela('tabela', null, false);
-    //func.carregaTabelaPadrao('tabela', null, [4], false);
     //***********************************
     $(".data").mask("99/99/9999");
     //datapiker, plugins para data
@@ -54,9 +53,6 @@ $(document).ready(function () {
     });
 //*****************************************
     $('body').on('click', '.btn-gerar', function () {
-//        func.modalAlert(" Página em Construção");
-//        return false;
-
         var dataIni = $.trim($("#dt_inicio").val());
         var dataFim = $.trim($("#dt_fim").val());
         var x = $(".todos").is(":checked");
@@ -70,7 +66,6 @@ $(document).ready(function () {
             title = "Todos os Funcionários da SESACRE Cadastrados no Sistema";
         } else {
             if (dataIni == "" && dataFim == "") {
-                //alert("É necessário informar no mínimo um filtro para imprimir");
                 func.modalAlert(func.msgPreencherCampos + '<strong>(Data Início)</strong>');
                 return false;
             }
@@ -103,6 +98,7 @@ $(document).ready(function () {
                 dt_fim: dataFim,
                 todos: 0
             };
+            console.log(Dados);
         }
         //************************************************************************************************
         $.ajax({
@@ -114,19 +110,20 @@ $(document).ready(function () {
                 dados: Dados
             },
             "success": function (response) {
-                // console.log(response);
                 try {
                     response = JSON.parse(response);
                     erro = false;
                 } catch (e) {
-                    if (response === 'menor') {
+                    if (response === 'maior') {
                         erro = true;
                     } else if (response === 'invalida'){
                         console.log(response);
+                        erro = true;
                         func.modalAlert('Data Início ou Data Fim São Inválidas.');
                         return false;
                     }else {
                         console.log(response);
+                        erro = true;
                         func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
@@ -262,7 +259,6 @@ $(document).ready(function () {
                 dados: Dados
             },
             "success": function (response) {
-                //console.log(response);
                 try {
                     response = JSON.parse(response);
                 } catch (e) {
@@ -270,12 +266,11 @@ $(document).ready(function () {
                     return false;
                 }
                 //      console.log(response, idVinculo);
-                graficoLotacaoHig(title, response, idVinculo)
+                graficoLotacaoHig(title, response, idVinculo);
                 $(".panelVinculo").show();
                 $(".panelLotacao").show();
                 $(".panelFuncionario").hide();
                 carregaTabela('tabela', null, true);
-                //func.carregaTabelaPadrao('tabela', null, [4], true);
             }
         });
     }
@@ -292,7 +287,6 @@ $(document).ready(function () {
             };
             dados.a.push(c);
         });
-        //console.log(dados.a);
         //**********************************************
         Highcharts.chart('graficoLotacao', {
             chart: {
@@ -319,9 +313,7 @@ $(document).ready(function () {
                     point: {
                         events: {
                             click: function () {
-                                //alert(this.id);
                                 graficoFuncionario(this.id, this.name, idVinculo);
-                                //$(".panelFuncionario").hide();
                             },
                         }
                     }
@@ -374,7 +366,6 @@ $(document).ready(function () {
                 $(".panelFuncionario").show();
                 $(".titulo").text(title);
                 carregaTabela('tabela', response, true);
-                //func.carregaTabelaPadrao('tabela', response, [4], true);
 
             }
         });

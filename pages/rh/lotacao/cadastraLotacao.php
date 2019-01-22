@@ -81,11 +81,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
-                                                        <select id="id_categoria" class="form-control">
+                                                        <select id="id_categoria" class="form-control select">
                                                             <option value="0">Selecione Categoria</option>                                                                
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -125,11 +123,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
-                                                        <select id="id_pai_lotacao" class="form-control">
+                                                        <select id="id_pai_lotacao" class="form-control select">
                                                             <option value="0">Selecione Lotação Pai</option>                                                                
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -138,7 +134,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-9">
                                                     <input type="hidden" id="id_pessoa_juridica" disabled value="">
-                                                    Empresa Responsável: <span class="text-danger">*</span>
+                                                    Empresa Responsável: <!--<span class="text-danger">*</span>-->
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
@@ -157,7 +153,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                             <div class="form-group">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-9">
-                                                    Pessoa Responsável: <span class="text-danger">*</span>
+                                                    Pessoa Responsável: <!--<span class="text-danger">*</span>-->
                                                     <input type="hidden" id="id_pessoa" disabled value="">
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
@@ -208,7 +204,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-file-text-o inputPFa"></p>
                                                         </span>
-                                                        <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="______-___">
+                                                        <input type="text" class="form-control" name="nr_cep" id="nr_cep" placeholder="_____-___">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2">
@@ -247,11 +243,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
-                                                        <select id="id_pais_endereco" class="form-control pais">
+                                                        <select id="id_pais_endereco" class="form-control pais select">
                                                             <option value="0">Selecione País</option>                                                                
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -261,11 +255,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
-                                                        <select id="id_estado_endereco" class="form-control estado">
+                                                        <select id="id_estado_endereco" class="form-control estado select">
                                                             <option value="0">Selecione Estado</option>                                                                
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -275,11 +267,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                         <span class="input-group-addon">
                                                             <p class="fa fa-list inputPFa"></p>
                                                         </span>
-                                                        <select id="id_cidade" class="form-control idCidade">
+                                                        <select id="id_cidade" class="form-control idCidade select">
                                                             <option value="0" selected>Selecione Cidade</option>
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
+
                                                         </select>
                                                     </div>
                                                 </div>
@@ -334,8 +324,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/lotacao/index.load.php";
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <!-- <div class="panel-body"> -->
                                     <!-- Footer Form -->

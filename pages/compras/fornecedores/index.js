@@ -71,7 +71,7 @@ $(document).ready(function () {
                 tipoPessoa: $("#tipoPessoa").val()
             };
             $.ajax({
-                "url": "/model/sistema/pessoa/request.php",
+                "url": "/model/compras/fornecedores/request.php",
                 "dataType": 'html',
                 "method": "POST",
                 "data": {
@@ -120,7 +120,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/model/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "inativarPessoa",
@@ -200,7 +200,7 @@ $(document).ready(function () {
 
                     }
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/model/compras/fornecedores/request.php",
                         "dataType": "html",
                         "method": "POST",
                         "data": {
@@ -290,7 +290,7 @@ $(document).ready(function () {
                     }
 
                     $.ajax({
-                        "url": "/model/sistema/pessoa/request.php",
+                        "url": "/model/compras/fornecedores/request.php",
                         "dataType": "html",
                         "data": {
                             "acao": "removerPessoa",

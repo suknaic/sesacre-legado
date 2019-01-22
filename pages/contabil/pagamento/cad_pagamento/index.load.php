@@ -13,6 +13,7 @@ if(!$session->vPContabilPagamento()){
 /*
  * Só permite cadastrar Pagamento quem possuir a Tramitação Pagar
  */
+
 $tramitacao = new VincularTramitacao();
 $tramitacao->setIdPessoa($session->getIdUser());
 $tramitacao->setIdTramitacao($tramitacao->getTramitacaoPagar());
