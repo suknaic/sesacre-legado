@@ -405,6 +405,13 @@ $(document).ready(function () {
     $('#nr_carga_horaria').on('focus blur', function (e) {
         $('#nr_carga_horaria2').val($('#nr_carga_horaria').val())
     });
+
+    //****************** Letras Maiúsculas *************
+    $("#ds_orgao_expedidor").keyup(function(){
+        $(this).val($(this).val().toUpperCase());
+    });
+    //**************************************************
+
     //*********************************************************************
 
     //*************************************** Regras dos Dados da Naturalidade *****************************************

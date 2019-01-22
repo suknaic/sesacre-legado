@@ -65,6 +65,32 @@ switch ($_REQUEST['acao']) {
         try {
             $dados = filter_input(INPUT_POST, 'dados', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+            if (!empty($dados['dt_inicio']) && !empty($dados['dt_fim'])) {
+                //*********************** Valida a data de início ********************
+                $dtInicio = explode('/', $dados['dt_inicio']);
+                $d = $dtInicio[0];
+                $m = $dtInicio[1];
+                $y = $dtInicio[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data início informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+
+                //*********************** Valida a data de fim ********************
+                $dtFim = explode('/', $dados['dt_fim']);
+                $d = $dtFim[0];
+                $m = $dtFim[1];
+                $y = $dtFim[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data final informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+            }
+
             $todos = $dados['todos'];
             $dataInicio = strtotime(date(str_replace('/', '-', $dados['dt_inicio'])));
             $dataFim = strtotime(date(str_replace('/', '-', $dados['dt_fim'])));
@@ -94,6 +120,33 @@ switch ($_REQUEST['acao']) {
             $dataFim = $dados['dt_fim'];
             $idVinculo = $dados['idVinculo'];
             //**************************************
+
+            if (!empty($dataInicio) && !empty($dataFim)) {
+                //*********************** Valida a data de início ********************
+                $dtInicio = explode('/', $dataInicio);
+                $d = $dtInicio[0];
+                $m = $dtInicio[1];
+                $y = $dtInicio[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data início informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+
+                //*********************** Valida a data de fim ********************
+                $dtFim = explode('/', $dataFim);
+                $d = $dtFim[0];
+                $m = $dtFim[1];
+                $y = $dtFim[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data fim informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+            }
+
             $banco = new Contrato();
             echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 2, $idVinculo, 0);
             return;
@@ -111,6 +164,33 @@ switch ($_REQUEST['acao']) {
             $idVinculo = $dados['idVinculo'];
             $idLotacao = $dados['idLotacao'];
             //**************************************
+
+            if (!empty($dataInicio) && !empty($dataFim)) {
+                //*********************** Valida a data de início ********************
+                $dtInicio = explode('/', $dataInicio);
+                $d = $dtInicio[0];
+                $m = $dtInicio[1];
+                $y = $dtInicio[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data início informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+
+                //*********************** Valida a data de fim ********************
+                $dtFim = explode('/', $dataFim);
+                $d = $dtFim[0];
+                $m = $dtFim[1];
+                $y = $dtFim[2];
+                if (!checkdate($m, $d, $y)) {
+                    echo('A data fim informada é inválida.');
+                    return;
+                    break;
+                }
+                //********************************************************************
+            }
+
             $banco = new Contrato();
             echo $banco->pesquisaGrafico($dataInicio, $dataFim, $todos, 3, $idVinculo, $idLotacao);
             return;

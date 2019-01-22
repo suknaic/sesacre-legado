@@ -280,6 +280,13 @@ $(document).ready(function () {
             $(".data").datepicker('hide');
         }
     });
+
+    //****************** Letras Maiúsculas *************
+    $("#ds_orgao_expedidor").keyup(function(){
+        $(this).val($(this).val().toUpperCase());
+    });
+    //**************************************************
+
 //******************************************************************************************
     $("body").on("click", ".btn-add", function (e) {
 
