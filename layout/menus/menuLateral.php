@@ -37,15 +37,19 @@
                                         <li>
                                             <a href="/pages/sistema/cargo/index.php">Cargo</a>
                                         </li>
-                                        <li>
-                                            <a href="/pages/sistema/escolaridade/index.php">Escolaridade</a>
-                                        </li>
+
                                         <li>
                                             <a href="/pages/sistema/formacao/index.php">Curso</a>
                                         </li>
+
+                                        <li>
+                                            <a href="/pages/sistema/escolaridade/index.php">Escolaridade</a>
+                                        </li>
+
                                         <li>
                                             <a href="/pages/sistema/funcao/index.php">Função</a>
                                         </li>
+
                                         <li>
                                             <a href="/pages/rh/lotacao/index.php">Lotação</a>
                                         </li>
@@ -54,9 +58,6 @@
                                             <a href="/pages/sistema/vinculo/index.php">Vínculo</a>
                                         </li>
 
-                                        <!--                                        <li>-->
-                                        <!--                                            <a href="/pages/sistema/servidores/index.php">Servidores</a>-->
-                                        <!--                                        </li>-->
 
                                     </ul>
                                     <ul class="collapse">
@@ -132,7 +133,7 @@
                                                         <i class="arrow"></i>
                                                     </a>
                                                     Submenu
-                                                    <ul class="collapse">                                
+                                                    <ul class="collapse">
                                                         <li>
                                                             <a href="#">Engenharia</a>
                                                         </li>
@@ -148,7 +149,7 @@
                                                         <li>
                                                             <a href="#">Serviços Gerais</a>
                                                         </li>
-                        
+
                                                         <li>
                                                             <a href="#">
                                                                 Administração
@@ -194,7 +195,7 @@
                                                             </ul>
                                                         </li>
                                                     </ul>
-                        
+
                                                 </li>-->
                         <!--Menu list Planejamento-->
                         <li>
@@ -400,10 +401,10 @@
                                         <i class="arrow"></i>
                                     </a>
                                     <!--Submenu-->
-                                    <ul class="collapse">                                                                                 
+                                    <ul class="collapse">
                                         <li>
                                             <a href="/pages/contabil/empenho/pesquisa_empenho/">Empenho</a>
-                                        </li>     
+                                        </li>
 
                                         <li>
                                             <a href="/pages/contabil/empenho/anulacao/pesquisa/">Anulação do Empenho</a>
@@ -411,7 +412,7 @@
 
                                         <li>
                                             <a href="/pages/contabil/empenho/anulacao/autorizacao/">Autorização da Anulação do Empenho</a>
-                                        </li>                                                                                  
+                                        </li>
                                     </ul>
                                 </li>
 
