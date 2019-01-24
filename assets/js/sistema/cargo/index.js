@@ -1,5 +1,6 @@
 func = new Funcoes();
 func.carregaTabelaPadrao('tabela', null, [1]);
+
 function listaCargos() {
     $.ajax({
         "url": "/model/sistema/cargo/request.php",
@@ -12,10 +13,11 @@ function listaCargos() {
         }
     });
 }
+
 listaCargos();
 
 $(document).ready(function () {
-    
+
     $('body').on('click', '.btn-salvar', function (e) {
         e.stopPropagation();
         if (e.isDefaultPrevented()) {
@@ -51,30 +53,30 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao,'danger');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao,'danger');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
                             return false;
                         }
                     } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg,"success");
+                        func.modalAlert(response.msg, "success");
                         func.fechaModalReload();
                         return false;
                     } else {
-                        func.modalAlert(func.msgErroPadrao,'danger');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao,'danger');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -119,13 +121,13 @@ $(document).ready(function () {
                     try {
                         response = JSON.parse(response);
                     } catch (e) {
-                        func.modalAlert(func.msgErroPadrao,'danger');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
 
                     if (response.tipoMsg === "Erro") {
                         if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao,'danger');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         } else if (response.tipoExibicao === "alert") {
                             func.modalAlert(response.msg);
@@ -136,13 +138,13 @@ $(document).ready(function () {
                         func.fechaModalReload();
                         return false;
                     } else {
-                        func.modalAlert(func.msgErroPadrao,'danger');
+                        func.modalAlert(func.msgErroPadrao, 'danger');
                         return false;
                     }
                 },
                 "error": function (response) {
                     $this.prop("disabled", false);
-                    func.modalAlert(func.msgErroPadrao,'danger');
+                    func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
             });
@@ -197,13 +199,13 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    func.modalAlert(func.msgErroPadrao,'danger');
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
@@ -214,12 +216,12 @@ $(document).ready(function () {
                                 func.fechaModalReload();
                                 return false;
                             } else {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            func.modalAlert(func.msgErroPadrao,'danger');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
@@ -227,7 +229,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('body').on('click', '.btn-desativar', function (e) {
         var $this = $(this);
         var id = $this.val();
@@ -274,13 +276,13 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    func.modalAlert(func.msgErroPadrao,'danger');
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
@@ -291,12 +293,12 @@ $(document).ready(function () {
                                 func.fechaModalReload();
                                 return false;
                             } else {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            func.modalAlert(func.msgErroPadrao,'danger');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
@@ -304,7 +306,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('body').on('click', '.btn-ativar', function (e) {
         var $this = $(this);
         var id = $this.val();
@@ -343,7 +345,7 @@ $(document).ready(function () {
                             "cargo": Cargo
                         },
                         "success": function (response) {
-                            
+
                             if (response.trim() == "SessaoExpirada") {
                                 func.modalAlert(func.msgSemPermissao);
                                 return false;
@@ -352,13 +354,13 @@ $(document).ready(function () {
                             try {
                                 response = JSON.parse(response);
                             } catch (e) {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
 
                             if (response.tipoMsg === "Erro") {
                                 if (response.tipoExibicao === "console") {
-                                    func.modalAlert(func.msgErroPadrao,'danger');
+                                    func.modalAlert(func.msgErroPadrao, 'danger');
                                     return false;
                                 } else if (response.tipoExibicao === "alert") {
                                     func.modalAlert(response.msg);
@@ -369,12 +371,12 @@ $(document).ready(function () {
                                 func.fechaModalReload();
                                 return false;
                             } else {
-                                func.modalAlert(func.msgErroPadrao,'danger');
+                                func.modalAlert(func.msgErroPadrao, 'danger');
                                 return false;
                             }
                         },
                         "error": function (response) {
-                            func.modalAlert(func.msgErroPadrao,'danger');
+                            func.modalAlert(func.msgErroPadrao, 'danger');
                             return false;
                         }
                     });
@@ -391,7 +393,6 @@ $(document).ready(function () {
         $('.btn-salvar').hide();
         $('.btn-editar').show();
         $("#nm_cargo").focus();
-
     });
     $('body').on('click', '.btn-limpar', function (e) {
         $('.btn-salvar').prop("disabled", false);
@@ -400,17 +401,5 @@ $(document).ready(function () {
         $('.btn-editar').val(0);
         $('.btn-editar').hide();
         $("#nm_cargo").val("");
-    });
-
-    $('.modal-alert').on('shown.bs.modal', function (e) {
-        $("#nm_cargo").focus();
-    });
-
-    $('body').on('keypress', '.formVinculo', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-salvar").trigger('click');
-            return false;
-        }
     });
 });

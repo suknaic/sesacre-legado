@@ -62,7 +62,7 @@ $(document).ready(function () {
             "dataType": 'html',
             "data": {
                 acao: "carregaDadosCidade",
-                "id_cidade": $('#id_cidade').val()
+                id_cidade: $('#id_cidade').val()
             },
 
             "success": function (response) {
@@ -239,10 +239,10 @@ $(document).ready(function () {
     $('.btn-cancelar').hide();
 
     $('body').on('click', '.btn-limpar', function (e) {
-        $("#nmCidade").val("");
+        $("#nmCidade").val('');
         $('#idRegionalGeografica').val('').trigger('change.select2');
         $('#idRegionalSaude').val('').trigger('change.select2');
-        $('#idEstado').val('').trigger('change.select2');
+        $('#idEstado').val('0').trigger('change.select2');
     });
 
     $('body').on('click', '.btn-voltar', function (e) {
@@ -251,17 +251,5 @@ $(document).ready(function () {
 
     $('body').on('click', '.btn-cancelar', function (e) {
         top.location.href='/pages/sistema/cidade/index.php';
-    });
-
-    $('.modal-alert').on('shown.bs.modal', function (e) {
-        $("#nmCidade").focus();
-    });
-
-    $('body').on('keypress', '.formCidade', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-salvar").trigger('click');
-            return false;
-        }
     });
 });

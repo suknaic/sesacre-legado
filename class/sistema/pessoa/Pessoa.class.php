@@ -269,7 +269,6 @@ class Pessoa {
             $pessoa->setNrTelefoneResidencial($this->nr_elefone_residencial);
 
             //***********************************************************************
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &1 ");
             $validaEmail = $pessoa->validarEmail($pdo, $this->nm_email);
             if ($validaEmail) {
                 $this->setSuccess(false);
@@ -277,12 +276,8 @@ class Pessoa {
                 $pdo->rollBack();
                 return;
             }
-            //print_r($pessoa);
-            //*****************************************
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &3 ");
+
             $busca = $pessoa->retornaPessoa($pdo);
-            //print_r($busca);
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
             if (!$busca) {
                 $this->setSuccess(false);
                 $this->setMsg($busca);
@@ -323,11 +318,7 @@ class Pessoa {
             $pessoa->setNmSenha('$2y$14$rnt28R3reooTFh1exTRw9.aF08zbyP2Kio73YxgVeqh/3qZmCPbQ2');
 
             //***********************************************************************
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &1 ");
-
             $busca = $pessoa->retornaPessoa($pdo);
-            //print_r($busca);
-            //print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
 
             if (!$busca) {
                 $this->setSuccess(false);

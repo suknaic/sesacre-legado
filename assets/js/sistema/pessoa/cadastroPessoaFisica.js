@@ -374,7 +374,6 @@ $(document).ready(function () {
             if ($(this).closest(".formRhFuncionario").find(".competenciaLinha").length > 0) {
                 var DadosCompetencia = [];
                 $("#tabela tbody tr").each(function () {
-                    //var coluna =  $(this).children();
                     DadosCompetencia.push({
                         id_escolaridade_formacao: $(this).find(".escolaridade").attr("idEscolaridadeFormacao")
                     })
@@ -382,24 +381,27 @@ $(document).ready(function () {
             }
             //******************************************************************
             var DadosObrigatorio = {
-                email: DadosPessoa.email,
+                "E-mail": DadosPessoa.email,
                 //*************************************
-                nomeCivil: DadosPessoaFisica.nomeCivil,
-                tpSexo: DadosPessoaFisica.tpSexo,
-                dataNascimento: DadosPessoaFisica.dtNascimento,
-                naturalidade: DadosPessoa.naturalidade,
-                cpf: DadosPessoaFisica.cpf,
-                rg: DadosPessoaFisica.rg,
-                estadoCivil: DadosPessoaFisica.estadoCivil,
-                orgaoExpedidor: DadosPessoaFisica.orgaoExpedidor,
-                orgaoExpedidorEstado: DadosPessoaFisica.orgaoExpedidorEst,
-                mae: DadosPessoaFisica.mae,
+                "Nome Civil": DadosPessoaFisica.nomeCivil,
+                "Sexo": DadosPessoaFisica.tpSexo,
+                "Data de Nascimento": DadosPessoaFisica.dtNascimento,
+                "País Naturalidade": $("#id_pais_naturalidade").val(),
+                "Estado Naturalidade": $("#id_estado_naturalidade").val(),
+                "Cidade Naturalidade": DadosPessoa.naturalidade,
+                "CPF": DadosPessoaFisica.cpf,
+                "Registro Geral": DadosPessoaFisica.rg,
+                "Estado Civil": DadosPessoaFisica.estadoCivil,
+                "Órgão Expedidor": DadosPessoaFisica.orgaoExpedidor,
+                "Estado do Órgão Expedidor": DadosPessoaFisica.orgaoExpedidorEst,
+                "Mãe": DadosPessoaFisica.mae,
                 //********************************************
-                cidadeEndereco: DadosPessoa.cidade,
-                logradouro: DadosPessoa.logradouro,
-                bairro: DadosPessoa.bairro,
-                telefoneCelular: DadosPessoa.telefone_celular
-
+                "País": $("#id_pais_endereço").val(),
+                "Estado": $("#id_estado_endereço").val(),
+                "Cidade": DadosPessoa.cidade,
+                "Logradouro": DadosPessoa.logradouro,
+                "Bairro": DadosPessoa.bairro,
+                "Telefone Celular": DadosPessoa.telefone_celular
             };
 
             $campo = 0;
@@ -408,10 +410,9 @@ $(document).ready(function () {
                 $i++;
                 $campo = "";
                 if (value == 0 || value == "" || value == null) {
-                    //console.log($i+"-"+index+"=>"+value);
-                    if ($i <= 11) {
+                    if ($i <= 13) {
                         func.modalAlert(func.msgPreencherCampos + " - Dados Pessoais (" + index + ")");
-                    } else if ($i >= 12 && $i <= 15) {
+                    } else if ($i >= 14 && $i <= 19) {
                         func.modalAlert(func.msgPreencherCampos + "  - Endereço / Contato (" + index + ")");
                     }
                     console.log($i + "-" + index + "=>" + value);

@@ -69,7 +69,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/pages/sistema/cidade/cadEditCidade/in
                                     <!--Horizontal Form-->
                                     <!--===================================================-->
                                     <form class="form-horizontal formCidade">
-                                        <input type="hidden" id="id_cidade" value="<?php echo $idCidade ?>">
+                                        <input type="hidden" id="id_cidade" value="<?php if (!empty($idCidade)) {echo $idCidade;} ?>">
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <div class="col-sm-3">

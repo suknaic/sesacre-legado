@@ -90,12 +90,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/escolaridade/index.load
                                     </form>
                                     <!--===================================================-->
                                     <!--End Horizontal Form-->
-
                                 </div>
                             </div>
                         </div>
                         <!-- Fim do Formulario -->
-
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Lista de Escolaridades</h3>
@@ -117,35 +115,22 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/escolaridade/index.load
                                             </table>            
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
 
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
@@ -153,13 +138,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/escolaridade/index.load
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
@@ -182,7 +163,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/escolaridade/index.load
         <script src="/assets/lib/sesacre/funcoes.js"></script>    
         <script src="/assets/js/sistema/escolaridade/index.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
-        <!-- END JAVASCRIPT -->              
-
+        <!-- END JAVASCRIPT -->
     </body>
 </html>

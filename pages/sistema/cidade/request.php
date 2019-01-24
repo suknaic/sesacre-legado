@@ -62,8 +62,7 @@ switch ($_REQUEST['acao']) {
             $id = filter_input(INPUT_GET, 'id_cidade', FILTER_DEFAULT);
 
             $estado = new Estado();
-            echo "<option value = ''>Selecione o Estado</option>
-                  <option value = 'Todos'>Todos os Estados</option>";
+            echo "<option value = 'Todos'>Todos os Estados</option>";
             echo $estado->retornaOptionEstado(null, $id);
             return;
             

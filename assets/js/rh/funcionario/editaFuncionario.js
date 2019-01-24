@@ -483,7 +483,6 @@ $(document).ready(function () {
         var key = e.which;
         if (key == 13) {
             $(".data").datepicker('hide');
-            //return false;
         }
     });
     //****************** Letras Maiúsculas *************

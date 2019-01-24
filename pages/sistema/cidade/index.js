@@ -157,7 +157,7 @@ $(document).ready(function () {
         $('#nmCidade').prop("disabled", false);
         $('#idEstado').prop("disabled", false);
         $("#nmCidade").val("");
-        $('#idEstado').val('').trigger('change.select2');
+        $('#idEstado').val('0').trigger('change.select2');
     });
 
     $('.modal-alert').on('shown.bs.modal', function (e) {
@@ -173,10 +173,9 @@ $(document).ready(function () {
         top.location.href='cadEditCidade/index.php?key='+id;
     });
 
-    $('body').on('keypress', '.formCidade', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-salvar").trigger('click');
+    $('body').keypress(function (e) {
+        if (e.which == 13) {
+            $(".btn-pesquisar").trigger('click');
             return false;
         }
     });
@@ -192,7 +191,7 @@ $(document).ready(function () {
 
     $("body").on("change", "#idEstado", function () {
         var texto = $(this).val();
-        if (texto != '') {
+        if (texto != '0') {
             $("#nmCidade").prop('disabled', true);
         } else {
             $("#nmCidade").prop('disabled', false);

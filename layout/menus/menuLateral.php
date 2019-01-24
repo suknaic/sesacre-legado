@@ -78,22 +78,6 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                    <ul class="collapse">
-                                        <li>
-                                            <a href="#">
-                                                Pessoa
-                                                <i class="arrow"></i>
-                                            </a>
-                                            <ul>
-                                                <li>
-                                                    <a href="/pages/sistema/pessoa/fisica/index.php">Física</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/pages/sistema/pessoa/juridica/index.php">Jurídica</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
                                 </li>
 
                                 <li>
@@ -532,6 +516,23 @@
                                 <span class="menu-title">Administração</span>
                                 <i class="arrow"></i>
                             </a>
+
+                            <ul class="collapse">
+                                <li>
+                                    <a href="#">
+                                        Pessoa
+                                        <i class="arrow"></i>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            <a href="/pages/sistema/pessoa/fisica/index.php">Física</a>
+                                        </li>
+                                        <li>
+                                            <a href="/pages/sistema/pessoa/juridica/index.php">Jurídica</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
 
                             <ul class="collapse">
                                 <li>

@@ -381,7 +381,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_pais_endereco" class="form-control pais select">
-                                                                        <option value="0">Selecione País</option>
+                                                                        <option value="0">Selecione o País</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -392,7 +392,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_estado_endereco" class="form-control estado select">
-                                                                        <option value="0">Selecione Estado</option>                                                                
+                                                                        <option value="0">Selecione o Estado</option>
 
                                                                     </select>
                                                                 </div>
@@ -404,7 +404,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                                                         <p class="fa fa-list inputPFa"></p>
                                                                     </span>
                                                                     <select id="id_cidade" class="form-control idCidade select">
-
+                                                                        <option value="0">Selecione a Cidade</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -530,7 +530,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                                     </div>
                                 </div>
                             </div>
-
                             <!--===================================================-->
                             <!--End Horizontal Form-->
                         </div>
@@ -556,13 +555,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/pessoa/index.load.php";
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
