@@ -215,7 +215,7 @@ class pessoaFisica {
             $pessoaFisica->setNr_rg($this->nr_rg);
             $pessoaFisica->setTp_sexo($this->tp_sexo);
 
-            //************************************ Verifica se o cnpj é valido *****************************************
+            //************************************ Verifica se o cpf é valido *****************************************
             if (!Metodos::validaCPF($this->nr_cpf)) {
                 $this->setSuccess(false);
                 $this->setMsg('O CPF informado é inválido.');
@@ -515,6 +515,15 @@ class pessoaFisica {
             $pessoaFisica->setNr_rg($this->nr_rg);
             $pessoaFisica->setTp_sexo($this->tp_sexo);
 
+            //************************************ Verifica se o cpf é valido *****************************************
+            if (!Metodos::validaCPF($this->nr_cpf)) {
+                $this->setSuccess(false);
+                $this->setMsg('O CPF informado é inválido.');
+                $pdo->rollBack();
+                return;
+            }
+            //**********************************************************************************************************
+
             //***********************************************************************
             $validaCpf = $pessoaFisica->validarCpf($pdo, $this->nr_cpf);
             //******************************************
@@ -527,17 +536,15 @@ class pessoaFisica {
             //************************************************************************
             $dtNascimento = strtotime($this->dt_nascimento);
             $dtAtual = strtotime(date("d-m-Y"));
-            if ($dtNascimento >= $dtAtual) {
+            if ($dtNascimento > $dtAtual) {
                 $this->setSuccess(false);
-                $this->setMsg('Data de Nascimento é Maior ou Igual a Data Atual.');
+                $this->setMsg('Data de Nascimento é Maior que a Data Atual.');
                 $pdo->rollBack();
                 return;
             }
             //*************************************************************************
             $busca = $pessoaFisica->retornaPessoaFisica($pdo);
-//print_r("1--" . $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS)." &4 ");
             if (!$busca) {
-
                 $this->setSuccess(false);
                 $this->setMsg("Erro ao Buscar Pessoa Física");
                 $pdo->rollBack();

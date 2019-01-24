@@ -19,16 +19,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
         <link rel="stylesheet" href="/assets/lib/template/plugins/themify-icons/themify-icons.min.css">  
         <!-- ion icons [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/lib/template/plugins/ionicons/css/ionicons.min.css">
-<!--        DataTables [ OPT ]
-        <link href="/assets/lib/template/plugins/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.dataTables.min.css" rel="stylesheet">
-        <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
-         Estilo Default das Páginas [ REQUIRED ] -->
+         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
         <!--Datapicker-->
         <link href="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
-
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
 
@@ -66,14 +62,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                             <div class="col-sm-12">
                                 <div class="panel">
                                     <!--===================================================-->
-<!--                                    <div class="panel-heading ">-->
-<!--                                        <h3 class="panel-title">-->
-<!--                                            Diversos em PDF:-->
-<!--                                        </h3>-->
-<!--                                    </div>-->
-                                    <!--Horizontal Form-->
-
-                                    <!--===================================================-->
                                     <form class="form-horizontal formRelatorio">
 
                                         <div class="panel-body">
@@ -93,9 +81,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             <option value="4">Por Lotação</option>
                                                             <option value="5">Por Vínculo</option>
                                                             <option value="6">Relatório de Competências</option>
-                                                            <?php
-                                                            // echo $lotacoes;
-                                                            ?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -112,9 +97,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </span>
                                                             <select id="id_vinculo" class="form-control">
                                                                 <option value="0">Selecione o Vínculo</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -126,9 +108,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </span>
                                                             <select id="id_lotacao" class="form-control">
                                                                 <option value="0">Selecione a Lotação</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -145,9 +124,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </span>
                                                             <select id="id_cargo" class="form-control">
                                                                 <option value="0">Selecione o Cargo</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -159,9 +135,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </span>
                                                             <select id="id_funcao" class="form-control">
                                                                 <option value="0">Selecione a Função</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -208,9 +181,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                                             </span>
                                                             <select id="id_competencia" class="form-control formacao competencia">
                                                                 <option value="0">Selecione a Competência</option>
-                                                                <?php
-                                                                // echo $lotacoes;
-                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -231,83 +201,52 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/rh/relatorios/index.load.php";
                                             </button>
                                         </div>
                                         <!-- End Form -->
-
                                     </form>
                                     <!--End Horizontal Form-->
                                 </div>
                             </div>
                         </div>
                         <!-- Fim Form -->
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
-
-
-
         <!--jQuery [ REQUIRED ]-->
         <script src="/assets/lib/template/js/jquery-2.2.4.min.js"></script>
         <!--BootstrapJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/bootstrap.min.js"></script>
         <!--NiftyJS [ REQUIRED ]-->
         <script src="/assets/lib/template/js/nifty.min.js"></script>
-        <!--DataTables [OPT]-->
-<!--        <script src="/assets/lib/template/plugins/datatables/media/js/jquery.dataTables.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/dataTables.bootstrap.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>        
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>           
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/jszip.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/pdfmake.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/vfs_fonts.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.html5.min.js"></script>   
-        <script src="/assets/lib/template/plugins/datatables/extensions/buttons/js/buttons.print.min.js"></script>
-        <script src="/assets/lib/template/plugins/datatables/media/js/accent-neutralise.js"></script>  Search sem Acento -->
         <!-- DIALOG CONFIRM [OPT] -->
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>     
         <!--JAVASCRIP da pagina-->
         <script src="/assets/lib/loadingover/loadingoverlay.js"></script>
         <script src="/assets/lib/sesacre/funcoes.js"></script>
         <script src="/assets/js/rh/relatorios/index.js"></script> 
-        <!--        Datapicker-->
+        <!--Datapicker-->
         <script src="/assets/lib/template/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
         <!--MaskedInput-->
         <script src="/assets/lib/template/plugins/masked-input/jquery.maskedinput.min.js"></script>
         <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
         <!-- END JAVASCRIPT -->
-
     </body>
 </html>

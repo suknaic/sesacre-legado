@@ -349,6 +349,13 @@ $(document).ready(function () {
             $(".data").datepicker('hide');
         }
     });
+
+    //****************** Letras Maiúsculas *************
+    $("#ds_orgao_expedidor").keyup(function(){
+        $(this).val($(this).val().toUpperCase());
+    });
+    //**************************************************
+
     //*********************************************************************
 
     //*********************************************************************
@@ -760,26 +767,12 @@ $(document).ready(function () {
             }
         });
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
     $('body').on('click', '.btn-limpar', function (e) {
         location.reload();
     });
     $('.modal-alert').on('shown.bs.modal', function (e) {
         $("#nome").focus();
-    });
-    $('body').on('keypress', '.formRhFuncionario', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-salvar").trigger('click');
-            return false;
-        }
     });
 
     //************************** Naturalidade *************************

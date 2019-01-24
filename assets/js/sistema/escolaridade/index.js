@@ -391,7 +391,7 @@ $(document).ready(function () {
         $('.btn-salvar').hide();
         $('.btn-editar').show();
         $("#nmEscolaridade").focus();
-
+        $('.btn-pesquisar').prop("disabled", true);
     });
     $('body').on('click', '.btn-limpar', function (e) {
         $('.btn-salvar').prop("disabled", false);
@@ -400,20 +400,6 @@ $(document).ready(function () {
         $('.btn-editar').val(0);
         $('.btn-editar').hide();
         $("#nmEscolaridade").val("");
-
+        $('.btn-pesquisar').prop("disabled", false);
     });
-
-    $('.modal-alert').on('shown.bs.modal', function (e) {
-        $("#nmEscolaridade").focus();
-    });
-
-
-    $('body').on('keypress', '.formEscolaridade', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-salvar").trigger('click');
-            return false;
-        }
-    });
-
 });

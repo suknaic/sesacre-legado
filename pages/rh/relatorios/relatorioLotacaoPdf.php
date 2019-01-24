@@ -24,8 +24,7 @@ $dataFim = explode("-", $filtro)[5];
 //**************************************
 $banco = new Contrato();
 $lotacoes = $banco->pesquisaRelatorioVinculo($idVinculo, $idLotacao, $idCargo, $idFuncao, $dataInicio, $dataFim, 4);
-//print_r($lotacoes);
-//return FALSE;
+
 if (empty($lotacoes)) {
     echo '<script language="javaScript">
               window.alert("Registros Não Encontrados.");

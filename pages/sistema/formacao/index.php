@@ -26,6 +26,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
         <link href="/assets/lib/template/plugins/datatables/extensions/buttons/css/buttons.bootstrap.min.css" rel="stylesheet">
         <!-- Estilo Default das Páginas [ REQUIRED ] -->
         <link rel="stylesheet" href="/assets/css/estilo.css">
+        <!-- select2 -->
+        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
     </head>
     <!--TIPS-->
     <!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
@@ -140,45 +142,28 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
                                             </table>            
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                     <!--===================================================-->
                     <!--End page content-->
-
-
                 </div>
                 <!--===================================================-->
                 <!--END CONTENT CONTAINER-->
-
-
-
-
-
                 <!--MENU LATERAL-->
                 <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/menus/menuLateral.php"; ?>
                 <!--END MENU LATERAL-->
             </div>
-
             <!-- FOOTER -->
             <?php require_once $_SERVER['DOCUMENT_ROOT'] . "/layout/rodape.php"; ?>
             <!-- END FOOTER -->
-
-
             <!-- SCROLL PAGE BUTTON -->
             <!--===================================================-->
             <button class="scroll-top btn">
                 <i class="pci-chevron chevron-up"></i>
             </button>
             <!--===================================================-->
-
-
-
         </div>
         <!--===================================================-->
         <!-- END OF CONTAINER -->
@@ -206,11 +191,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/model/sistema/formacao/index.load.php
         <script src="/assets/js/sistema/formacao/index.js"></script>
         <script src="/assets/lib/template/plugins/bootbox/bootbox.min.js"></script>
          <!-- select2 -->
-        <link href="/assets/lib/template/plugins/select2/css/select2.min.css" rel="stylesheet">
         <script src="/assets/lib/template/plugins/select2/js/select2.min.js"></script>
-        <!-- END JAVASCRIPT -->              
-<!--        <script src="/assets/js/rh/feriasLicencas/cadastrarFeriasLicencas.js"></script>-->
-        <!--Datapicker-->
-
     </body>
 </html>

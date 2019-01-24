@@ -30,11 +30,8 @@ $(document).ready(function () {
                 id: 0
             },
             "success": function (response) {
-                //console.log(response);
                 $("#id_vinculo").append(response);
-                $("#id_vinculo").select2({
-                    width: " 100%"
-                });
+                $("#id_vinculo").select2({width: " 100%"});
             }
         });
     }
@@ -51,9 +48,7 @@ $(document).ready(function () {
             "success": function (response) {
                 // console.log(response);
                 $("#id_lotacao").append(response);
-                $("#id_lotacao").select2({
-                    width: " 100%"
-                });
+                $("#id_lotacao").select2({width: " 100%"});
             }
         });
     }
@@ -69,9 +64,7 @@ $(document).ready(function () {
             "success": function (response) {
                 //console.log(response);
                 $("#id_cargo").append(response);
-                $("#id_cargo").select2({
-                    width: " 100%"
-                });
+                $("#id_cargo").select2({width: " 100%"});
             }
         });
     }
@@ -87,9 +80,7 @@ $(document).ready(function () {
             "success": function (response) {
                 // console.log(response);
                 $("#id_funcao").append(response);
-                $("#id_funcao").select2({
-                    width: " 100%"
-                });
+                $("#id_funcao").select2({width: " 100%"});
             }
         });
     }
@@ -97,9 +88,7 @@ $(document).ready(function () {
     //******************************************************************************************
     func = new Funcoes();
     //************************************
-    $("#tipo").select2({
-        width: " 100%"
-    });
+    $("#tipo").select2({width: " 100%"});
     //************************************
     $(".data").mask("99/99/9999");
     //datapiker, plugins para data
@@ -123,8 +112,6 @@ $(document).ready(function () {
     });
     //*****************************************
     $('body').on('click', '.btn-gerar', function () {
-//        func.modalAlert(" Página em Construção");
-//        return false;
         var tipo = $("#tipo").val();
         var cargo = $("#id_cargo").val();
         var funcao = $("#id_funcao").val();
@@ -140,17 +127,14 @@ $(document).ready(function () {
         }
         //************************************************************************************************
         if (cargo == 0 && funcao == 0 && vinculo == 0 && lotacao == 0 && dataIni == "" && dataFim == "" && competencia == 0) {
-//alert("É necessário informar no mínimo um filtro para imprimir");
-//             func.modalAlert(" É necessário informar no mínimo um filtro para imprimir");
             func.modalAlert('Selecione um dos Filtros de Pesquisa.');
             return false;
         }
         if (dataIni.length == 10 && dataFim.length == 0) {
-            // func.modalAlert(func.msgPreencherCampos + " Ao informar a Data Inicio é preciso também informar a Data Fim");
             func.modalAlert(func.msgPreencherCampos + ' <strong>(Data Inicio e Data Fim)</strong>');
             return false;
         }
-//********data fim tem de ser inferior a data inicio**********************
+        //********data fim tem de ser inferior a data inicio**********************
         if ($("#dt_fim").val().length == 10) {
             if ($("#dt_inicio").val().length == 10) {
                 var data1 = $("#dt_inicio").val();
@@ -164,7 +148,6 @@ $(document).ready(function () {
                     return false;
                 }
             } else {
-                // func.modalAlert("Ao informar a Data Fim é preciso também informar a Data Inicio");
                 func.modalAlert(func.msgPreencherCampos + ' <strong>(Data Inicio e Data Fim)</strong>');
                 return false;
             }

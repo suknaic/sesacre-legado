@@ -2,7 +2,8 @@ func = new Funcoes();
 func.carregaTabelaPadrao('tabela', null, [2]);
 $('.obrigatorio').hide();
 $('.btn-cancelar').hide();
-//******************************************************************************************    
+
+//******************************************************************************************
 function listaEscolaridadeCombo() {
     $.ajax({
         "url": "/model/sistema/formacao/request.php",
@@ -15,6 +16,7 @@ function listaEscolaridadeCombo() {
         }
     });
 }
+
 listaEscolaridadeCombo();
 //**************************************************************************
 $(document).ready(function () {
@@ -28,7 +30,7 @@ $(document).ready(function () {
             e.preventDefault();
             var nome = $("#nm_formacao").val();
             var escolaridade = $("#id_escolaridade").val();
-            
+
             $.ajax({
                 "url": "/model/sistema/formacao/request.php",
                 "dataType": 'html',
@@ -117,72 +119,66 @@ $(document).ready(function () {
 
 
     $('body').on('click', '.btn-editar', function (e) {
-        e.stopPropagation();
-        if (e.isDefaultPrevented()) {
-        } else {
-            e.preventDefault();
-            var $this = $(this);
-            $this.prop("disabled", true);
-            var Formacao = {
-                nome: $("#nm_formacao").val(),
-                escolaridade: $("#id_escolaridade").val(),
-                id: $this.val()
-            };
+        e.preventDefault();
+        var $this = $(this);
+        $this.prop("disabled", true);
+        var Formacao = {
+            nome: $("#nm_formacao").val(),
+            escolaridade: $("#id_escolaridade").val(),
+            id: $this.val()
+        };
 
-            if ($("#nm_formacao").val() == "" || $("#id_escolaridade").val() == 0) {
-                func.modalAlert(func.msgPreencherCampos);
-                $this.prop("disabled", false);
-                return false;
-            }
+        if ($("#nm_formacao").val() == "" || $("#id_escolaridade").val() == 0) {
+            func.modalAlert(func.msgPreencherCampos);
+            $this.prop("disabled", false);
+            return false;
+        }
 
-            $.ajax({
-                "url": "/model/sistema/formacao/request.php",
-                "dataType": "html",
-                "method": "POST",
-                "data": {
-                    "acao": "editarFormacao",
-                    "formacao": Formacao
-                },
-                "success": function (response) {
-                    $this.prop("disabled", false);
-                    if (response.trim() == "SessaoExpirada") {
-                        func.modalAlert(func.msgSemPermissao);
-                        return false;
-                    }
+        $.ajax({
+            "url": "/model/sistema/formacao/request.php",
+            "dataType": "html",
+            "method": "POST",
+            "data": {
+                "acao": "editarFormacao",
+                "formacao": Formacao
+            },
+            "success": function (response) {
+                $this.prop("disabled", true);
+                if (response.trim() == "SessaoExpirada") {
+                    func.modalAlert(func.msgSemPermissao);
+                    return false;
+                }
 
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-
-                    if (response.tipoMsg === "Erro") {
-                        if (response.tipoExibicao === "console") {
-                            func.modalAlert(func.msgErroPadrao, 'danger');
-                            return false;
-                        } else if (response.tipoExibicao === "alert") {
-                            func.modalAlert(response.msg);
-                            return false;
-                        }
-                    } else if (response.tipoMsg === "ok") {
-                        func.modalAlert(response.msg, "success");
-                        func.fechaModalReload();
-                        return false;
-                    } else {
-                        func.modalAlert(func.msgErroPadrao, 'danger');
-                        return false;
-                    }
-                },
-                "error": function (response) {
-                    $this.prop("disabled", false);
+                try {
+                    response = JSON.parse(response);
+                } catch (e) {
                     func.modalAlert(func.msgErroPadrao, 'danger');
                     return false;
                 }
-            });
 
-            $this.prop("disabled", false);
-        }
+                if (response.tipoMsg === "Erro") {
+                    if (response.tipoExibicao === "console") {
+                        func.modalAlert(func.msgErroPadrao, 'danger');
+                        return false;
+                    } else if (response.tipoExibicao === "alert") {
+                        func.modalAlert(response.msg);
+                        return false;
+                    }
+                } else if (response.tipoMsg === "ok") {
+                    func.modalAlert(response.msg, "success");
+                    func.fechaModalReload();
+                    return false;
+                } else {
+                    func.modalAlert(func.msgErroPadrao, 'danger');
+                    return false;
+                }
+            },
+            "error": function (response) {
+                $this.prop("disabled", false);
+                func.modalAlert(func.msgErroPadrao, 'danger');
+                return false;
+            }
+        });
     });
 
 
@@ -264,7 +260,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('body').on('click', '.btn-desativar', function (e) {
 
         var $this = $(this);
@@ -343,7 +339,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('body').on('click', '.btn-ativar', function (e) {
 
         var $this = $(this);
@@ -422,7 +418,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('body').on('click', '.btn-novo', function (e) {
         $('.btn-salvar').prop("disabled", false);
         $('.btn-editar').prop("disabled", false);
@@ -449,6 +445,7 @@ $(document).ready(function () {
         $("#nm_formacao").val("");
         $("#nm_formacao").focus();
         $('.obrigatorio').hide();
+        $('.btn-pesquisar').prop("disabled", true);
     });
 
     $('body').on('click', '.btn-edit', function (e) {
@@ -463,24 +460,13 @@ $(document).ready(function () {
         $("#nm_formacao").focus();
         $('.obrigatorio').show();
         $('.btn-cancelar').show();
-    });
-    $('body').on('click', '.btn-limpar', function (e) {
-        $("#id_escolaridade").val(0).change();
-        $("#nm_formacao").val("");
-
+        $('.btn-pesquisar').prop("disabled", true);
     });
 
-    $('.modal-alert').on('shown.bs.modal', function (e) {
-        $("#nm_formacao").focus();
-    });
-
-
-    $('body').on('keypress', '.formFormacao', function (e) {
-        var key = e.which;
-        if (key == 13) {
-            $(".btn-pesquisar").trigger('click');
+    $('body').keypress(function (e) {
+        if (e.which == 13) {
+            $(".btn-pesquisar").click();
             return false;
         }
     });
-
 });

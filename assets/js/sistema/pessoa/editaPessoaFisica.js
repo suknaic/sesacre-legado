@@ -416,6 +416,12 @@ $(document).ready(function () {
         }
     });
 
+    //****************** Letras Maiúsculas *************
+    $("#ds_orgao_expedidor").keyup(function(){
+        $(this).val($(this).val().toUpperCase());
+    });
+    //**************************************************
+
     //*********************************************** Adicionar Competência ********************************************
     $("body").on("click", ".btn-add", function (e) {
         var competenciaId = $("#id_competencia").val();

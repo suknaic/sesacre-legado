@@ -164,7 +164,20 @@ class pessoaJuridica {
             }
             //**********************************************************************************************************
 
-            //*****************************************
+            //************************** Verifica se a data da fundação é maior que a data atual ***********************
+            if (!empty($this->dt_fundacao)){
+                $dtFundacao = strtotime(date(str_replace('/', '-', $this->dt_fundacao)));
+                $dtAtual = strtotime(date("d-m-Y"));
+                if ($dtFundacao > $dtAtual) {
+                    $this->setSuccess(false);
+                    $this->setMsg('Data da fundação é maior que a data atual.');
+                    $pdo->rollBack();
+                    return;
+                }
+            }
+            //**********************************************************************************************************
+
+            //***************** Salva *****************
             $result = $pessoaJuridica->insert($pdo);
             //*****************************************
             if ($result != "Sucesso") {
@@ -274,7 +287,8 @@ class pessoaJuridica {
     public function editarPessoaJuridica($pdo) {
         try {
             $sucesso = false;
-            //**************************************
+
+            //*************************** Setando os dados **************************
             $pessoaJuridica = new DaoSesPessoaJuridica();
             $pessoaJuridica->setId_pessoa_juridica($this->id_pessoa_juridica);
             $pessoaJuridica->setNm_fantasia(ucwords(strtolower($this->nm_fantasia)));
@@ -287,6 +301,15 @@ class pessoaJuridica {
             $pessoaJuridica->setDt_fundacao($this->dt_fundacao);
             $pessoaJuridica->setId_pessoa($this->id_pessoa);
             //***********************************************************************
+
+            //******************************************** Valida cnpj *************************************************
+            if (!Metodos::validaCNPJ($this->nr_cnpj)) {
+                $pdo->rollBack();
+                return Metodos::retornoAjax('Erro', 'alert', 'O CNPJ informado é inválido.');
+            }
+            //**********************************************************************************************************
+
+            //**************************** Verifica a existencia do cnpj na base de dados ******************************
             $validaCnpj = $pessoaJuridica->validarCnpj($pdo);
             if ($validaCnpj) {
                 $this->setSuccess(false);
@@ -294,7 +317,7 @@ class pessoaJuridica {
                 $pdo->rollBack();
                 return;
             }
-            //*************************************************************************
+            //**********************************************************************************************************
 
             //**************************************** Valida a data da fundação ***************************************
             if (!empty($this->dt_fundacao)) {
@@ -308,6 +331,20 @@ class pessoaJuridica {
             }
             //**********************************************************************************************************
 
+            //************************** Verifica se a data da fundação é maior que a data atual ***********************
+            if (!empty($this->dt_fundacao)){
+                $dtFundacao = strtotime(date(str_replace('/', '-', $this->dt_fundacao)));
+                $dtAtual = strtotime(date("d-m-Y"));
+                if ($dtFundacao > $dtAtual) {
+                    $this->setSuccess(false);
+                    $this->setMsg('Data da fundação é maior que a data atual.');
+                    $pdo->rollBack();
+                    return;
+                }
+            }
+            //**********************************************************************************************************
+
+            //**************************************** Busca os dados da pessoa ****************************************
             $busca = $pessoaJuridica->retornaPessoaJuridica($pdo);
             if (!$busca) {
                 $this->setSuccess(false);
@@ -315,6 +352,8 @@ class pessoaJuridica {
                 $pdo->rollBack();
                 return;
             }
+            //**********************************************************************************************************
+
             //*****************************************
             $result = $pessoaJuridica->update($pdo);
             //*****************************************
