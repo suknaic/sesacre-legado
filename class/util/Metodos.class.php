@@ -1,8 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-class Metodos {
+class Metodos
+{
 
     /**
      * Utilizado para format uma mensagem que será entregue via requesição do ajax.
@@ -11,32 +12,36 @@ class Metodos {
      * @param type $msg
      * @return type
      */
-    public static function retornoAjax($tipoMsg = null, $tipoExibicao = null, $msg = null) {
+    public static function retornoAjax($tipoMsg = null, $tipoExibicao = null, $msg = null)
+    {
         $array = array();
         $array = array("tipoMsg" => $tipoMsg, "tipoExibicao" => $tipoExibicao, "msg" => $msg);
         $array = json_encode($array);
         return $array;
     }
 
-    public static function retornaPasswordHash($senha = null) {
+    public static function retornaPasswordHash($senha = null)
+    {
         return password_hash($senha, PASSWORD_DEFAULT, ['cost' => 14]);
     }
 
-    public static function validaCPF($cpf = null) {
+    public static function validaCPF($cpf = null)
+    {
         $cpf = str_pad(preg_replace("/[^0-9]/", '', $cpf), 11, '0', STR_PAD_LEFT);
         // Verifica se nenhuma das sequências abaixo foi digitada, caso seja, retorna falso
-        if (strlen($cpf) != 11 || $cpf == '00000000000' || $cpf == '11111111111' || $cpf == '22222222222' || $cpf == '33333333333' || $cpf == '44444444444' || $cpf == '55555555555' || $cpf == '66666666666' || $cpf == '77777777777' || $cpf == '88888888888' || $cpf == '99999999999'
+        if (
+            strlen($cpf) != 11 || $cpf == '00000000000' || $cpf == '11111111111' || $cpf == '22222222222' || $cpf == '33333333333' || $cpf == '44444444444' || $cpf == '55555555555' || $cpf == '66666666666' || $cpf == '77777777777' || $cpf == '88888888888' || $cpf == '99999999999'
         ) {
             return false;
         } else {   // Calcula os números para verificar se o CPF é verdadeiro
             for ($t = 9; $t < 11; $t++) {
                 for ($d = 0, $c = 0; $c < $t; $c++) {
-                    $d += $cpf{$c} * (($t + 1) - $c);
+                    $d += $cpf[$c] * (($t + 1) - $c);
                 }
 
                 $d = ((10 * $d) % 11) % 10;
 
-                if ($cpf{$c} != $d) {
+                if ($cpf[$c] != $d) {
                     return false;
                 }
             }
@@ -50,7 +55,8 @@ class Metodos {
      * @param type $cpf estado inicial do cpf
      * @return string retorna o cpf formatado
      */
-    public static function formataCpf($cpf) {
+    public static function formataCpf($cpf)
+    {
         $novoCpf = "";
         if (strlen($cpf) > 11) {
             $valorRetirar = array(".", "-");
@@ -70,7 +76,8 @@ class Metodos {
      * @param type $cpf estado inicial do cpf
      * @return string retorna o cpf formatado
      */
-    public static function formataCnpj($cnpj) {
+    public static function formataCnpj($cnpj)
+    {
         $novoCnpj = "";
         if (strlen($cnpj) > 14) {
             $valorRetirar1 = array(".", "-", "/");
@@ -86,7 +93,8 @@ class Metodos {
         return $novoCnpj;
     }
 
-    public static function formataTelefone(string $numero = null): string {
+    public static function formataTelefone(string $numero = null): string
+    {
         if ($numero != null) {
             $numero = trim($numero);
             $prefixo = substr($numero, 0, 2);
@@ -100,7 +108,8 @@ class Metodos {
     }
 
     //***********************(99)9 9999-9999***************************************************
-    public static function formataCelular(string $numero = null): string {
+    public static function formataCelular(string $numero = null): string
+    {
         if ($numero != null) {
             $numero = trim($numero);
             $prefixo = substr($numero, 0, 2);
@@ -119,7 +128,8 @@ class Metodos {
      * @param type $cpf ou cnpj
      * @return string retorna o cpf ou cnpj sem nenhum caracter especial
      */
-    public static function limpaCPF_CNPJ($valor = null) {
+    public static function limpaCPF_CNPJ($valor = null)
+    {
         if ($valor != null) {
             $valor = trim($valor);
             $valor = str_replace(".", "", $valor);
@@ -132,7 +142,8 @@ class Metodos {
         }
     }
 
-    public static function removeMascaraCel_Tel(string $valor = null): string {
+    public static function removeMascaraCel_Tel(string $valor = null): string
+    {
         if ($valor != null) {
             $valor = trim($valor);
             $valor = str_replace("(", "", $valor);
@@ -145,7 +156,8 @@ class Metodos {
         }
     }
 
-    public static function primerioNomePessoa(string $nmPessoa = null): string {
+    public static function primerioNomePessoa(string $nmPessoa = null): string
+    {
         if ($nmPessoa != NULL || $nmPessoa != "") {
             $string = explode(" ", $nmPessoa);
             $nome = ucfirst(strtolower($string[0]));
@@ -165,7 +177,8 @@ class Metodos {
      * @param type $format formato para verificaçao exemplo d/m/Y ou Y-m-d H:i:s
      * @return true caso a data seja valida ou false ser a data for invalida 
      */
-    public static function ValidaData($date, $format = 'Y-m-d H:i:s') {
+    public static function ValidaData($date, $format = 'Y-m-d H:i:s')
+    {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
@@ -175,7 +188,8 @@ class Metodos {
      * @param string $numero
      * @return string
      */
-    public static function ConverteValorIng(string $numero): string {
+    public static function ConverteValorIng(string $numero): string
+    {
         $numero = str_replace(".", "", $numero);
         $numero = str_replace(",", ".", $numero);
         return $numero;
@@ -187,7 +201,8 @@ class Metodos {
      * @param int $digitos
      * @return string
      */
-    public static function ConverteValorBr(float $numero = null, int $digitos): string {
+    public static function ConverteValorBr(float $numero = null, int $digitos): string
+    {
         switch ($digitos) {
             case 4:
                 if ($numero != 0) {
@@ -209,13 +224,15 @@ class Metodos {
         return $numero;
     }
 
-    public static function ConverteDataING(string $data): string {
+    public static function ConverteDataING(string $data): string
+    {
         $explode = explode('/', $data);
         $dataBanco = $explode[2] . "-" . $explode[1] . "-" . $explode[0];
         return $dataBanco;
     }
 
-    public static function ConverteDataBR(string $data): string {
+    public static function ConverteDataBR(string $data): string
+    {
         $explodida = explode("-", $data);
         $explodida01 = explode(" ", $explodida[2]);
         $dataIso = $explodida01[0] . "/" . $explodida[1] . "/" . $explodida[0];
@@ -228,7 +245,8 @@ class Metodos {
      * @param string $data Formato (mm/dd/YYYY)
      * @return string
      */
-    public static function validaConverteDataING(string $data): string {
+    public static function validaConverteDataING(string $data): string
+    {
         $retorno = "";
         try {
             if ($data != '' || $data !== "" || $data != null) {
@@ -255,7 +273,8 @@ class Metodos {
      * Formato 99 => nomeDoMês
      * @return array
      */
-    public static function getMeses(): array {
+    public static function getMeses(): array
+    {
         $arr_meses = array(
             '01' => 'Janeiro',
             '02' => 'Fevereiro',
@@ -278,7 +297,8 @@ class Metodos {
      * @param type $ano
      * @return string
      */
-    public static function retornaAnosSelect($ano = ""): string {
+    public static function retornaAnosSelect($ano = ""): string
+    {
         $anoMaximo = date("Y") + 1;
         $anoAtual = date("Y");
         $anosReturn = "";
@@ -292,7 +312,8 @@ class Metodos {
         return $anosReturn;
     }
 
-    public static function validaValoresNulos($dados = null) {
+    public static function validaValoresNulos($dados = null)
+    {
         if ($dados == "" || $dados == '' || $dados == null) {
             return null;
         } else {
@@ -300,7 +321,8 @@ class Metodos {
         }
     }
 
-    public static function implodeComAspas(array $array = null) {
+    public static function implodeComAspas(array $array = null)
+    {
 
         $ids = implode("', '", array_map('strval', $array));
         $ids = "'" . $ids . "'";
@@ -311,7 +333,8 @@ class Metodos {
      * Retorna um Array com os Tipos da Fonte
      * @return array
      */
-    public static function retornaTpFonte(): array {
+    public static function retornaTpFonte(): array
+    {
         $array = array(
             TP_FONTE_MAC => "MAC",
             TP_FONTE_CP => "Contra Partida"
@@ -323,7 +346,8 @@ class Metodos {
      * Retorna campos em Options dos Tipos da Fonte
      * @return string
      */
-    public static function retornaTpFonteSelect(): string {
+    public static function retornaTpFonteSelect(): string
+    {
         $retorno = "";
         $retorno .= "<option value='0'>Selecione um Tipo da Fonte</option>";
         foreach (self::retornaTpFonte() as $key => $value) {
@@ -332,7 +356,8 @@ class Metodos {
         return $retorno;
     }
 
-    public static function retornaTpFonteTexto($tpFonte): string {
+    public static function retornaTpFonteTexto($tpFonte): string
+    {
         if (empty($tpFonte)) {
             return "";
         } else {
@@ -346,7 +371,8 @@ class Metodos {
      * Formato 999 => Número da Fonte
      * @return array
      */
-    public static function getFontes(): array {
+    public static function getFontes(): array
+    {
         $arr_fontes = array(
             FONTE_100 => 100,
             FONTE_200 => 200,
@@ -360,7 +386,8 @@ class Metodos {
      * Retorna campos em Options das Fonte
      * @return string
      */
-    public static function retornaFonteSelect(): string {
+    public static function retornaFonteSelect(): string
+    {
         $retorno = "";
         $retorno .= "<option value='0'>Selecione uma Fonte</option>";
         foreach (self::getFontes() as $key => $value) {
@@ -369,7 +396,8 @@ class Metodos {
         return $retorno;
     }
 
-    public static function valorPorExtenso($valor, $unidade = '') {
+    public static function valorPorExtenso($valor, $unidade = '')
+    {
         switch ($unidade) {
             case '$':
                 $singular = array("centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
@@ -419,13 +447,14 @@ class Metodos {
             if (($t == 1) && ($z > 0) && ($inteiro[0] > 0))
                 $r .= (($z > 1) ? " de " : "") . $plural[$t];
             if ($r)
-                $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
+                $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
         }
 
-        return($rt ? $rt : "zero");
+        return ($rt ? $rt : "zero");
     }
 
-    public static function obterDataBRTimestamp($data) {
+    public static function obterDataBRTimestamp($data)
+    {
         if ($data != '') {
             $data = substr($data, 0, 10);
             $explodida = explode("-", $data);
@@ -435,14 +464,16 @@ class Metodos {
         return NULL;
     }
 
-    public static function obterHoraTimestamp($data) {
+    public static function obterHoraTimestamp($data)
+    {
         return substr($data, 11, 5);
     }
 
-    public static function validaCNPJ($cnpj = null) {
+    public static function validaCNPJ($cnpj = null)
+    {
 
         // Verifica se um número foi informado
-        if(empty($cnpj)) {
+        if (empty($cnpj)) {
             return false;
         }
 
@@ -457,7 +488,8 @@ class Metodos {
 
         // Verifica se nenhuma das sequências invalidas abaixo
         // foi digitada. Caso afirmativo, retorna falso
-        else if ($cnpj == '00000000000000' ||
+        else if (
+            $cnpj == '00000000000000' ||
             $cnpj == '11111111111111' ||
             $cnpj == '22222222222222' ||
             $cnpj == '33333333333333' ||
@@ -466,7 +498,8 @@ class Metodos {
             $cnpj == '66666666666666' ||
             $cnpj == '77777777777777' ||
             $cnpj == '88888888888888' ||
-            $cnpj == '99999999999999') {
+            $cnpj == '99999999999999'
+        ) {
             return false;
 
             // Calcula os digitos verificadores para verificar se o
@@ -483,41 +516,45 @@ class Metodos {
                 $j = $j == 1 ? 9 : $j;
                 $k = $k == 1 ? 9 : $k;
 
-                $soma2 += ($cnpj{$i} * $k);
+                $soma2 += ($cnpj{
+                $i} * $k);
 
                 if ($i < 12) {
-                    $soma1 += ($cnpj{$i} * $j);
+                    $soma1 += ($cnpj{
+                    $i} * $j);
                 }
 
                 $k--;
                 $j--;
-
             }
 
             $digito1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
             $digito2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
 
-            return (($cnpj{12} == $digito1) and ($cnpj{13} == $digito2));
-
+            return (($cnpj{
+            12} == $digito1) and ($cnpj{
+            13} == $digito2));
         }
     }
 
-    public static function validaEmail($email = null) {
-        if(preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $email)) {
+    public static function validaEmail($email = null)
+    {
+        if (preg_match("/^([[:alnum:]_.-]){3,}@([[:lower:][:digit:]_.-]{3,})(.[[:lower:]]{2,3})(.[[:lower:]]{2})?$/", $email)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
-    public static function serializaCondicaoSql($atributo,$operador,$valor, $tipo) {
-        if(empty($valor) or empty($operador) or empty($tipo) or empty($atributo)){ //Todos parametros são obrigatórios para serialização
-            return array(); 
+
+    public static function serializaCondicaoSql($atributo, $operador, $valor, $tipo)
+    {
+        if (empty($valor) or empty($operador) or empty($tipo) or empty($atributo)) { //Todos parametros são obrigatórios para serialização
+            return array();
         } else {
             $inicioString = strpos($atributo, '.') ? strpos($atributo, '.') + 1 : 0; //Remove o PREFIXO para evitar erro no BindValue do PDO
-            $bind = ":" . substr($atributo,$inicioString); 
+            $bind = ":" . substr($atributo, $inicioString);
             $query = $atributo . " " . $operador . " " . $bind;
-            
+
             switch ($tipo) {
                 case 'string':
                     if ($operador == 'ilike') {
@@ -529,26 +566,22 @@ class Metodos {
                     $param = PDO::PARAM_INT;
                     break;
                 case 'ano':
-                    $query = "EXTRACT(YEAR FROM ".$atributo.") " . $operador . " " . $bind;
+                    $query = "EXTRACT(YEAR FROM " . $atributo . ") " . $operador . " " . $bind;
                     $param = PDO::PARAM_STR;
                     break;
-                
-            }            
+            }
             return array("sql" => $query, "bind" => $bind, "valor" => $valor, "pdo_param" => $param);
         }
     }
-    
-    public static function montaFiltroSQL(array $condicoes = []) {                                       
+
+    public static function montaFiltroSQL(array $condicoes = [])
+    {
         $filtros = array();
         if (!empty($condicoes)) {
             foreach ($condicoes as $condicao) {
-                $filtros[] = self::serializaCondicaoSql($condicao[0],$condicao[1],$condicao[2],$condicao[3]);
+                $filtros[] = self::serializaCondicaoSql($condicao[0], $condicao[1], $condicao[2], $condicao[3]);
             }
         }
         return array_filter($filtros);
-
     }
-
 }
-
-?>
