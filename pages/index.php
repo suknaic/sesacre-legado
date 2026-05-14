@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/model/index.load.php";
-?>
+?><!DOCTYPE html>
 
 <html lang="pt-br">
     <head>

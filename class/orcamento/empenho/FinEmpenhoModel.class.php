@@ -415,9 +415,12 @@ class FinEmpenhoModel {
             $pdo = $conexao->connect();
             $daoFinEmpenho = new DaoFinEmpenho();
             $daoFinEmpenho->retornaTodosEmpenhos($pdo);
+            if (!$daoFinEmpenho->Sucesso()) {
+                return json_encode([]);
+            }
             return json_encode($daoFinEmpenho->getMsgRetorno());
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            return json_encode([]);
         }
     }
 

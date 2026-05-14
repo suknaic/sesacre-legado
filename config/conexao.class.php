@@ -16,11 +16,11 @@
       }
 
       private static $dbtype   = "pgsql";
-      private static $host     = "localhost";
-      private static $port     = "5432";
-      private static $user     = "postgres";
-      private static $password = "postgres";
-      private static $db       = "sesacre";
+      private static $host     = null;
+      private static $port     = null;
+      private static $user     = null;
+      private static $password = null;
+      private static $db       = null;
 
       /*Metodos que trazem o conteudo da variavel desejada
       @return   conteudo da variavel solicitada*/
@@ -32,6 +32,13 @@
       private function getDB()      {return self::$db;}
 
       public function connect(){
+          if (self::$host === null) {
+              self::$host     = getenv('DB_HOST') ?: 'localhost';
+              self::$port     = getenv('DB_PORT') ?: '5432';
+              self::$user     = getenv('DB_USER') ?: 'postgres';
+              self::$password = getenv('DB_PASSWORD') ?: 'postgres';
+              self::$db       = getenv('DB_NAME') ?: 'sesacre';
+          }
           try
           {
               $this->conexao = new PDO($this->getDBType().":host=".$this->getHost().";port=".$this->getPort().";dbname=".$this->getDB(), $this->getUser(), $this->getPassword());

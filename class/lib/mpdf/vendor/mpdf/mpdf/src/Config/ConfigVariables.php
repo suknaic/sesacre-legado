@@ -3,10 +3,8 @@
 namespace Mpdf\Config;
 
 use Mpdf\Css\DefaultCss;
-
 use Mpdf\Language\LanguageToFont;
 use Mpdf\Language\ScriptToLanguage;
-
 use Mpdf\Ucdn;
 
 class ConfigVariables
@@ -154,6 +152,7 @@ class ConfigVariables
 			'PDFA' => false,
 			// Overrides warnings making changes when possible to force PDFA1-b compliance
 			'PDFAauto' => false,
+			'PDFAversion' => '1-B',
 
 			// Colour profile OutputIntent
 			// sRGB_IEC61966-2-1 (=default if blank and PDFA), or other added .icc profile
@@ -164,7 +163,6 @@ class ConfigVariables
 			'spotColorIDs' => [],
 
 			// DEBUGGING & DEVELOPERS
-			'showStats' => false,
 			'debug' => false,
 			// Checks and reports on errors when parsing TTF files - adds significantly to processing time
 			'debugfonts' => false,
@@ -296,6 +294,10 @@ class ConfigVariables
 			// Default dpi to output images if size not defined
 			// See also above "dpi"
 			'img_dpi' => 96,
+			// Specify whitelisted PHP streams to be used for images
+			// Useful to add custom streams like `s3`
+			// Note: for security reasons the `phar` stream cannot be used @see https://github.com/mpdf/mpdf/issues/949
+			'whitelistStreamWrappers' => ['http', 'https', 'file'],
 
 			// TEXT SPACING & JUSTIFICATION
 
@@ -452,6 +454,8 @@ class ConfigVariables
 
 			'tempDir' => __DIR__ . '/../../tmp',
 
+			'cacheCleanupInterval' => 3600,
+
 			'allowAnnotationFiles' => false,
 
 			'hyphenationDictionaryFile' => __DIR__ . '/../../data/patterns/dictionary.txt',
@@ -507,7 +511,14 @@ class ConfigVariables
 			// cURL options
 			'curlFollowLocation' => false,
 			'curlAllowUnsafeSslRequests' => false,
+			'curlCaCertificate' => '',
 			'curlTimeout' => 5,
+			'curlExecutionTimeout' => null,
+			'curlProxy' => null,
+			'curlProxyAuth' => null,
+			'curlUserAgent' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0',
+
+			'exposeVersion' => true,
 		];
 	}
 

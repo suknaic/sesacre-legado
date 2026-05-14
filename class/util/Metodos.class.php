@@ -516,12 +516,12 @@ class Metodos
                 $j = $j == 1 ? 9 : $j;
                 $k = $k == 1 ? 9 : $k;
 
-                $soma2 += ($cnpj{
-                $i} * $k);
+                $soma2 += ($cnpj[
+                $i] * $k);
 
                 if ($i < 12) {
-                    $soma1 += ($cnpj{
-                    $i} * $j);
+                    $soma1 += ($cnpj[
+                    $i] * $j);
                 }
 
                 $k--;
@@ -531,9 +531,9 @@ class Metodos
             $digito1 = $soma1 % 11 < 2 ? 0 : 11 - $soma1 % 11;
             $digito2 = $soma2 % 11 < 2 ? 0 : 11 - $soma2 % 11;
 
-            return (($cnpj{
-            12} == $digito1) and ($cnpj{
-            13} == $digito2));
+            return (($cnpj[
+            12] == $digito1) and ($cnpj[
+            13] == $digito2));
         }
     }
 

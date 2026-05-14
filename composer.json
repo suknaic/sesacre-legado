@@ -1,0 +1,19 @@
+{
+    "name": "sesacre/legado",
+    "description": "SESACRE - Sistema Integrado de Gestão",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "classmap": [
+            "class/",
+            "config/"
+        ]
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "echo 'Setup concluído. Configure o .env e execute docker-compose up -d'"
+        ]
+    }
+}

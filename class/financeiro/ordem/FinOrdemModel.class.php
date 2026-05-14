@@ -566,24 +566,17 @@ class FinOrdemModel {
                 );
             }
 
-            $arrayQuantidade = array();
-
             if ($dao->Sucesso()) {
-
                 foreach ($dao->getMsgRetorno() as $value) {
                     if (array_key_exists($value['tp_ordem'], $arrayTipo)) {
                         $arrayTipo[$value['tp_ordem']]['quantidade'] = $value['quantidade'];
                     }
                 }
-
-                foreach ($arrayTipo as $key => $value) {
-                    $arrayQuantidade[] = $value;
-                }
-
-                return json_encode($arrayQuantidade);
             }
+
+            return json_encode(array_values($arrayTipo));
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return json_encode([]);
         }
     }
 
