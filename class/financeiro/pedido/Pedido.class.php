@@ -473,10 +473,12 @@ class Pedido {
             $pdo = $conexao->connect();
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->retornaTodosPedidos($pdo);
+            if (!$daoFinPedido->Sucesso()) {
+                return json_encode([]);
+            }
             return json_encode($daoFinPedido->getMsgRetorno());
-            // return $daoFinPedido->getMsgRetorno();
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return json_encode([]);
         }
     }
 
@@ -590,13 +592,6 @@ class Pedido {
             $daoFinPedido = new DaoFinPedido();
             $daoFinPedido->retornaQuantidadeSituacaoPedido($pdo);
 
-            $array = array(
-                '11' => 'Aut. Central',
-                '12' => 'Aut. Orçamento',
-                '13' => 'Aut. Financeiro',
-                '14' => 'Aut. Ordenador'
-            );
-
             $arraySituacao = array(
                 11 => array(
                     "situacao" => "Aut. Central",
@@ -616,22 +611,17 @@ class Pedido {
                 ),
             );
 
-            $arrayQuantidade = array();
-            foreach ($daoFinPedido->getMsgRetorno() as $value) {
-                if (array_key_exists($value['st_pedido'], $arraySituacao)) {
-                    $arraySituacao[$value['st_pedido']]['quantidade'] = $value['quantidade'];
+            if ($daoFinPedido->Sucesso()) {
+                foreach ($daoFinPedido->getMsgRetorno() as $value) {
+                    if (array_key_exists($value['st_pedido'], $arraySituacao)) {
+                        $arraySituacao[$value['st_pedido']]['quantidade'] = $value['quantidade'];
+                    }
                 }
             }
 
-            foreach ($arraySituacao as $key => $value) {
-                $arrayQuantidade[] = $value;
-            }
-
-
-            return json_encode($arrayQuantidade);
-            return json_encode($daoFinPedido->getMsgRetorno());
+            return json_encode(array_values($arraySituacao));
         } catch (Exception $exc) {
-            return Metodos::retornoAjax("Erro", "console", $exc->getMessage());
+            return json_encode([]);
         }
     }
 

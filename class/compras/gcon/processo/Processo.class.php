@@ -938,9 +938,12 @@ class Processo {
             $anexo = "";
 
             $resultado = $processo->listarProcessoJSON($pdo, null, $anexo);
+            if (!is_array($resultado)) {
+                return json_encode([]);
+            }
             return json_encode($resultado);
         } catch (Exception $ex) {
-            return Metodos::retornoAjax("Erro", "console", $ex->getMessage());
+            return json_encode([]);
         }
     }
     //***************************************************************************
