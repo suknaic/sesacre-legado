@@ -11,7 +11,7 @@ export default function AuthenticatedLayout({ header, children }) {
         <div className="flex min-h-screen bg-gray-100">
             <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-            <div className="flex flex-1 flex-col lg:pl-0">
+            <div className="flex flex-1 flex-col lg:pl-64">
                 <nav className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white shadow-sm">
                     <div className="flex flex-1 items-center px-4 sm:px-6">
                         <button
