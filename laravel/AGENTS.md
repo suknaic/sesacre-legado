@@ -221,4 +221,18 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
+=== git/commits rules ===
+
+# Commits Pequenos e Atômicos
+
+- SEMPRE pare após completar uma etapa lógica de implementação (ex.: criar migration, criar controller de um módulo, criar páginas Inertia de um CRUD) e pergunte ao usuário se deseja commitar.
+- Commits devem ser pequenos, focados e descritivos, seguindo o padrão:
+  - `feat(rh): cria model ContractSituation e migration`
+  - `feat(rh): implementa lógica de negócio do EmploymentContract`
+  - `feat(rh): cria páginas Inertia do módulo Férias/Licenças`
+  - `fix(orcamento): corrige validação de saldo no QddValor`
+- NÃO acumule múltiplas features num único commit.
+- Exceção: correções de formatação (Pint) podem ser incluídas no commit da feature relacionada.
+- Após cada commit, pergunte "Deseja continuar para a próxima etapa?" antes de prosseguir.
+
 </laravel-boost-guidelines>
