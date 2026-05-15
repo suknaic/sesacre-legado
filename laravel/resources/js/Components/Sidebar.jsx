@@ -20,6 +20,8 @@ const menuItems = [
                     { label: 'Função', route: '/job-functions' },
                     { label: 'Lotação', route: '/organizations' },
                     { label: 'Vínculo', route: '/employment-bonds' },
+                    { label: 'Estado Civil', route: '/marital-statuses' },
+                    { label: 'Situação Contratual', route: '/contract-situations' },
                 ],
             },
             {
@@ -285,7 +287,7 @@ export default function Sidebar({ open, onClose }) {
                 <div className="fixed h-full inset-0 z-40 bg-black/50 lg:hidden" onClick={onClose} />
             )}
             <aside
-                className={`fixed top-0 left-0 z-50 h-[100vh] w-64 transform bg-gray-900 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto ${
+                className={`fixed top-0 left-0 z-50 h-[100vh] w-64 transform bg-gray-900 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
                     open ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
