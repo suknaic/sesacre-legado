@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -84,5 +86,15 @@ class StateController extends Controller
 
         return redirect()->route('states.index')
             ->with('success', 'Estado removido com sucesso.');
+    }
+
+    public function cities(State $state): JsonResponse
+    {
+        return response()->json(
+            City::where('state_id', $state->id)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(['id', 'name'])
+        );
     }
 }

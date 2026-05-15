@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\EducationFormation;
 use App\Models\EmploymentContract;
 use App\Models\MaritalStatus;
@@ -286,7 +285,7 @@ class PersonalInfoController extends Controller
             'maritalStatuses' => MaritalStatus::all(),
             'educationFormations' => EducationFormation::all(),
             'states' => State::all(),
-            'cities' => City::where('is_active', true)->orderBy('name')->get(),
+            'cities' => [],
         ];
     }
 }

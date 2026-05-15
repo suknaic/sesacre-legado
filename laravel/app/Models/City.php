@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class City extends Model
 {
     use HasFactory;
+
     protected $fillable = ['state_id', 'name', 'health_region_id', 'geo_region_id', 'is_active'];
 
     protected function casts(): array

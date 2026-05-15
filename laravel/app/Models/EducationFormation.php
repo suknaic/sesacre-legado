@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class EducationFormation extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name', 'education_level_id', 'is_active'];
 
     protected function casts(): array

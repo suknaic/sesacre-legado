@@ -15,7 +15,7 @@ function validateCPF(cpf) {
     return null;
 }
 
-export default function Create({ maritalStatuses = [], educationFormations = [], states = [], cities = [] }) {
+export default function Create({ maritalStatuses = [], educationFormations = [], states = [] }) {
     const { flash } = usePage().props;
     const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         name: '', email: '', cpf: '', phone: '', mobile: '',
@@ -28,6 +28,24 @@ export default function Create({ maritalStatuses = [], educationFormations = [],
     });
 
     const [cpfError, setCpfError] = useState(null);
+    const [addressStateId, setAddressStateId] = useState('');
+    const [cityOptions, setCityOptions] = useState([]);
+    const [loadingCities, setLoadingCities] = useState(false);
+
+    function loadCities(stateId) {
+        setAddressStateId(stateId);
+        setData('city_id', '');
+        if (!stateId) {
+            setCityOptions([]);
+            return;
+        }
+        setLoadingCities(true);
+        fetch(`/states/${stateId}/cities`)
+            .then(res => res.json())
+            .then(data => setCityOptions(data))
+            .catch(() => setCityOptions([]))
+            .finally(() => setLoadingCities(false));
+    }
 
     function handleCpfBlur() {
         if (data.cpf) {
@@ -126,18 +144,27 @@ export default function Create({ maritalStatuses = [], educationFormations = [],
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                         </div>
 
-                        <div className="mb-4 grid grid-cols-2 gap-4">
+                        <div className="mb-4 grid grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Bairro</label>
                                 <input type="text" value={data.neighborhood} onChange={e => setData('neighborhood', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-gray-700">UF</label>
+                                <select value={addressStateId} onChange={e => loadCities(Number(e.target.value) || '')}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Selecione...</option>
+                                    {(states || []).map((s) => <option key={s.id} value={s.id}>{s.code}</option>)}
+                                </select>
+                            </div>
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700">Cidade</label>
                                 <select value={data.city_id} onChange={e => setData('city_id', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="">Selecione...</option>
-                                    {(cities || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                    {loadingCities && <option value="" disabled>Carregando...</option>}
+                                    {!loadingCities && (cityOptions || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
                             </div>
                         </div>

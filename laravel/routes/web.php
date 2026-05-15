@@ -115,6 +115,7 @@ Route::middleware('auth')->group(function () {
 
     // HR - Origem
     Route::resource('countries', CountryController::class);
+    Route::get('states/{state}/cities', [StateController::class, 'cities'])->name('states.cities');
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
 

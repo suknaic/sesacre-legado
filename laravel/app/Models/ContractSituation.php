@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ContractSituation extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name', 'type', 'is_active',
     ];

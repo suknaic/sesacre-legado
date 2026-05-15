@@ -117,5 +117,4 @@ class ContractSituationControllerTest extends TestCase
         $response->assertSessionHas('success');
         $this->assertDatabaseMissing('contract_situations', ['id' => $record->id]);
     }
-
 }

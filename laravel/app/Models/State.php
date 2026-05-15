@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class State extends Model
 {
     use HasFactory;
+
     protected $fillable = ['country_id', 'code', 'name', 'is_active'];
 
     protected function casts(): array

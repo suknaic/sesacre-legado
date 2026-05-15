@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmploymentBond extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name', 'is_active'];
 
     protected function casts(): array
