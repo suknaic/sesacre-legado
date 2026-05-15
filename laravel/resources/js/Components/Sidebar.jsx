@@ -31,7 +31,7 @@ const menuItems = [
                 ],
             },
             { label: 'Contrato', route: '/employment-contracts' },
-            { label: 'Férias, Licenças e Concessões', route: '/page/ferias-licencas-concessoes' },
+            { label: 'Férias, Licenças e Concessões', route: '/ferias-licencas' },
             { label: 'Funcionário', route: '/personal-info' },
             {
                 label: 'Relatórios',

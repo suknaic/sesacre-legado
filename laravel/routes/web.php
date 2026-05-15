@@ -4,8 +4,6 @@ use App\Http\Controllers\AnnualPlanController;
 use App\Http\Controllers\BudgetProposalController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CommitmentController;
-use App\Http\Controllers\ContractLocationController;
-use App\Http\Controllers\RecruitmentHistoryController;
 use App\Http\Controllers\Compras\FinContratoController;
 use App\Http\Controllers\Compras\FornecedorController;
 use App\Http\Controllers\Compras\MaterialConsumoController;
@@ -16,6 +14,8 @@ use App\Http\Controllers\Contabil\ConEmpenhoAnulacaoController;
 use App\Http\Controllers\Contabil\ConEmpenhoController;
 use App\Http\Controllers\Contabil\ConLiquidacaoController;
 use App\Http\Controllers\Contabil\ConPagamentoController;
+use App\Http\Controllers\ContractLocationController;
+use App\Http\Controllers\ContractSituationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationFormationController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\EmploymentBondController;
 use App\Http\Controllers\EmploymentContractController;
 use App\Http\Controllers\ExpenseTypeController;
+use App\Http\Controllers\FeriasLicencasController;
 use App\Http\Controllers\Financeiro\AutorizacaoController;
 use App\Http\Controllers\Financeiro\CentralDemandaController;
 use App\Http\Controllers\Financeiro\CentralResponsavelController;
@@ -62,6 +63,7 @@ use App\Http\Controllers\ProcessTypeController;
 use App\Http\Controllers\ProcurementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseRequestController;
+use App\Http\Controllers\RecruitmentHistoryController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\SupplierController;
@@ -113,6 +115,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('countries', CountryController::class);
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
+
+    // HR - Situações Contratuais
+    Route::resource('contract-situations', ContractSituationController::class);
+
+    // HR - Férias, Licenças e Concessões
+    Route::get('ferias-licencas', [FeriasLicencasController::class, 'index'])->name('ferias-licencas.index');
+    Route::get('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'show'])->name('ferias-licencas.show');
 
     // HR - People
     Route::resource('personal-info', PersonalInfoController::class);

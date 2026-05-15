@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContractSituation;
 use App\Models\EmploymentBond;
 use App\Models\EmploymentContract;
 use App\Models\JobFunction;
@@ -91,13 +92,13 @@ class EmploymentContractController extends Controller
         $this->checkDuplicateActiveContract($validated['personal_info_id']);
         $this->validateAgeAtAdmission($personalInfo, $validated['admission_date']);
 
-        if (!empty($validated['contract_locations'])) {
+        if (! empty($validated['contract_locations'])) {
             $this->validateContractLocations($validated['contract_locations'], $validated['workload']);
         }
 
         $contract = EmploymentContract::create($validated);
 
-        if (!empty($validated['contract_locations'])) {
+        if (! empty($validated['contract_locations'])) {
             foreach ($validated['contract_locations'] as $location) {
                 $contract->locations()->create($location);
             }
@@ -177,7 +178,7 @@ class EmploymentContractController extends Controller
         $this->validateCpf($personalInfo);
         $this->validateAgeAtAdmission($personalInfo, $validated['admission_date']);
 
-        if (!empty($validated['contract_locations'])) {
+        if (! empty($validated['contract_locations'])) {
             $this->validateContractLocations($validated['contract_locations'], $validated['workload']);
         }
 
@@ -246,7 +247,7 @@ class EmploymentContractController extends Controller
     private function validateAgeAtAdmission(PersonalInfo $personalInfo, string $admissionDate): void
     {
         $birthDate = $personalInfo->birth_date;
-        if (!$birthDate) {
+        if (! $birthDate) {
             return;
         }
 
@@ -255,7 +256,7 @@ class EmploymentContractController extends Controller
         $minAgeDate = $birth->copy()->addYears(16);
 
         if ($admission->lessThan($minAgeDate)) {
-            throw ValidationException::withMessages(['admission_date' => 'A data de admissão deve ser posterior a ' . $birth->format('d/m/Y') . ' (16 anos completos).']);
+            throw ValidationException::withMessages(['admission_date' => 'A data de admissão deve ser posterior a '.$birth->format('d/m/Y').' (16 anos completos).']);
         }
     }
 
@@ -268,7 +269,7 @@ class EmploymentContractController extends Controller
             $end = isset($loc['end_date']) ? Carbon::parse($loc['end_date']) : null;
 
             if ($end && $end->lessThan($start)) {
-                throw ValidationException::withMessages(['contract_locations.' . $i . '.end_date' => 'A data de fim não pode ser anterior à data de início.']);
+                throw ValidationException::withMessages(['contract_locations.'.$i.'.end_date' => 'A data de fim não pode ser anterior à data de início.']);
             }
 
             foreach ($locations as $j => $other) {
@@ -281,17 +282,17 @@ class EmploymentContractController extends Controller
 
                 if ($end && $otherEnd) {
                     if ($start->lessThanOrEqualTo($otherEnd) && $end->greaterThanOrEqualTo($otherStart)) {
-                        throw ValidationException::withMessages(['contract_locations.' . $i . '.start_date' => 'As datas não podem se sobrepor com a lotação #' . ($j + 1) . '.']);
+                        throw ValidationException::withMessages(['contract_locations.'.$i.'.start_date' => 'As datas não podem se sobrepor com a lotação #'.($j + 1).'.']);
                     }
-                } elseif (!$end && !$otherEnd) {
-                    throw ValidationException::withMessages(['contract_locations.' . $i . '.end_date' => 'Não pode haver mais de uma lotação sem data de fim.']);
-                } elseif (!$end && $otherEnd) {
+                } elseif (! $end && ! $otherEnd) {
+                    throw ValidationException::withMessages(['contract_locations.'.$i.'.end_date' => 'Não pode haver mais de uma lotação sem data de fim.']);
+                } elseif (! $end && $otherEnd) {
                     if ($start->lessThanOrEqualTo($otherEnd)) {
-                        throw ValidationException::withMessages(['contract_locations.' . $i . '.start_date' => 'As datas não podem se sobrepor com a lotação #' . ($j + 1) . '.']);
+                        throw ValidationException::withMessages(['contract_locations.'.$i.'.start_date' => 'As datas não podem se sobrepor com a lotação #'.($j + 1).'.']);
                     }
-                } elseif ($end && !$otherEnd) {
+                } elseif ($end && ! $otherEnd) {
                     if ($otherStart->lessThanOrEqualTo($end)) {
-                        throw ValidationException::withMessages(['contract_locations.' . $i . '.start_date' => 'As datas não podem se sobrepor com a lotação #' . ($j + 1) . '.']);
+                        throw ValidationException::withMessages(['contract_locations.'.$i.'.start_date' => 'As datas não podem se sobrepor com a lotação #'.($j + 1).'.']);
                     }
                 }
             }
@@ -300,11 +301,11 @@ class EmploymentContractController extends Controller
         }
 
         if ($totalWorkload > $contractWorkload) {
-            throw ValidationException::withMessages(['workload' => 'A soma das cargas horárias das lotações (' . $totalWorkload . 'h) excede a carga horária do contrato (' . $contractWorkload . 'h).']);
+            throw ValidationException::withMessages(['workload' => 'A soma das cargas horárias das lotações ('.$totalWorkload.'h) excede a carga horária do contrato ('.$contractWorkload.'h).']);
         }
 
         if ($totalWorkload < $contractWorkload) {
-            throw ValidationException::withMessages(['workload' => 'A soma das cargas horárias das lotações (' . $totalWorkload . 'h) é inferior à carga horária do contrato (' . $contractWorkload . 'h). Complete a carga horária.']);
+            throw ValidationException::withMessages(['workload' => 'A soma das cargas horárias das lotações ('.$totalWorkload.'h) é inferior à carga horária do contrato ('.$contractWorkload.'h). Complete a carga horária.']);
         }
     }
 
@@ -321,7 +322,7 @@ class EmploymentContractController extends Controller
             'legalEntities' => LegalEntity::all(),
             'organizations' => Organization::where('is_active', true)->get(),
             'jobFunctions' => JobFunction::all(),
-            'contractSituations' => \App\Models\ContractSituation::all(),
+            'contractSituations' => ContractSituation::all(),
         ];
     }
 }

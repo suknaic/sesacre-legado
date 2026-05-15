@@ -1,33 +1,153 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
-export default function Create({ users = [], maritalStatuses = [], educationFormations = [], states = [] }) {
-    const { data, setData, post, processing, errors } = useForm({
-        user_id: '', gender: '', rg: '', issuing_agency: '', issuing_state_id: '',
+function validateCPF(cpf) {
+    const cleaned = cpf.replace(/\D/g, '');
+    if (cleaned.length !== 11) return 'CPF deve conter exatamente 11 dígitos.';
+    if (/^(\d)\1{10}$/.test(cleaned)) return 'CPF inválido (todos os dígitos iguais).';
+    for (let t = 9; t < 11; t++) {
+        let d = 0;
+        for (let c = 0; c < t; c++) d += parseInt(cleaned[c]) * ((t + 1) - c);
+        d = ((10 * d) % 11) % 10;
+        if (parseInt(cleaned[t]) !== d) return 'CPF inválido.';
+    }
+    return null;
+}
+
+export default function Create({ maritalStatuses = [], educationFormations = [], states = [], cities = [] }) {
+    const { flash } = usePage().props;
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
+        name: '', email: '', cpf: '', phone: '', mobile: '',
+        address: '', neighborhood: '', zip_code: '', city_id: '',
+        user_id: '',
+        gender: '', rg: '', issuing_agency: '', issuing_state_id: '',
         marital_status_id: '', education_formation_id: '', skills: '',
         father_name: '', mother_name: '', birth_date: '', cns_number: '',
-        photo_url: '', is_active: true,
+        is_active: true,
     });
-    function handleSubmit(e) { e.preventDefault(); post(route('personal-info.store')); }
+
+    const [cpfError, setCpfError] = useState(null);
+
+    function handleCpfBlur() {
+        if (data.cpf) {
+            const err = validateCPF(data.cpf);
+            setCpfError(err);
+        }
+    }
+
+    function handleCepBlur() {
+        const cep = data.zip_code?.replace(/\D/g, '');
+        if (cep && cep.length === 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(res => res.json())
+                .then(json => {
+                    if (!json.erro) {
+                        setData('address', json.logradouro || '');
+                        setData('neighborhood', json.bairro || '');
+                    }
+                })
+                .catch(() => {});
+        }
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (data.cpf) {
+            const err = validateCPF(data.cpf);
+            if (err) { setCpfError(err); return; }
+        }
+        setCpfError(null);
+        clearErrors();
+        post(route('personal-info.store'));
+    }
+
     return (
         <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">Novo Funcionário</h2>}>
             <Head title="Novo Funcionário" />
-            <div className="py-12"><div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
+            <div className="py-12"><div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
+                {flash?.success && <div className="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">{flash.success}</div>}
+                {flash?.error && <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">{flash.error}</div>}
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <form onSubmit={handleSubmit} className="p-6">
-                        <div className="mb-6"><Link href={route('personal-info.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">Usuário</label>
-                            <select value={data.user_id} onChange={e => setData('user_id', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                <option value="">Selecione...</option>
-                                {(users || []).map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-                            </select>
-                            {errors.user_id && <p className="mt-1 text-sm text-red-600">{errors.user_id}</p>}
-                        </div>
+                        <div className="mb-6"><Link href={route('personal-infos.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
+
+                        <h3 className="mb-4 text-lg font-medium text-gray-900">Dados do Usuário</h3>
                         <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Gênero</label>
+                                <label className="block text-sm font-medium text-gray-700">Nome *</label>
+                                <input type="text" value={data.name} onChange={e => setData('name', e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">CPF *</label>
+                                <input type="text" value={data.cpf} onChange={e => setData('cpf', e.target.value)} onBlur={handleCpfBlur}
+                                    placeholder="000.000.000-00"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                {cpfError && <p className="mt-1 text-sm text-red-600">{cpfError}</p>}
+                                {errors.cpf && <p className="mt-1 text-sm text-red-600">{errors.cpf}</p>}
+                            </div>
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">E-mail</label>
+                                <input type="email" value={data.email} onChange={e => setData('email', e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Telefone</label>
+                                <input type="text" value={data.phone} onChange={e => setData('phone', e.target.value)}
+                                    placeholder="(68) 99999-9999"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            </div>
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Celular</label>
+                                <input type="text" value={data.mobile} onChange={e => setData('mobile', e.target.value)}
+                                    placeholder="(68) 99999-9999"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">CEP</label>
+                                <input type="text" value={data.zip_code} onChange={e => setData('zip_code', e.target.value)} onBlur={handleCepBlur}
+                                    placeholder="69900-000"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Endereço</label>
+                            <input type="text" value={data.address} onChange={e => setData('address', e.target.value)}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Bairro</label>
+                                <input type="text" value={data.neighborhood} onChange={e => setData('neighborhood', e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Cidade</label>
+                                <select value={data.city_id} onChange={e => setData('city_id', e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Selecione...</option>
+                                    {(cities || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr className="my-6" />
+
+                        <h3 className="mb-4 text-lg font-medium text-gray-900">Dados Pessoais</h3>
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Sexo</label>
                                 <select value={data.gender} onChange={e => setData('gender', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="">Selecione...</option>
@@ -38,18 +158,30 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                 {errors.gender && <p className="mt-1 text-sm text-red-600">{errors.gender}</p>}
                             </div>
                             <div>
+                                <label className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+                                <input type="date" value={data.birth_date} onChange={e => setData('birth_date', e.target.value)}
+                                    max={new Date().toISOString().split('T')[0]}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                {errors.birth_date && <p className="mt-1 text-sm text-red-600">{errors.birth_date}</p>}
+                            </div>
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                            <div>
                                 <label className="block text-sm font-medium text-gray-700">RG</label>
                                 <input type="text" value={data.rg} onChange={e => setData('rg', e.target.value)}
+                                    placeholder="00.000.000-0"
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                                 {errors.rg && <p className="mt-1 text-sm text-red-600">{errors.rg}</p>}
                             </div>
-                        </div>
-                        <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Órgão Expedidor</label>
                                 <input type="text" value={data.issuing_agency} onChange={e => setData('issuing_agency', e.target.value)}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                             </div>
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">UF do Órgão Expedidor</label>
                                 <select value={data.issuing_state_id} onChange={e => setData('issuing_state_id', e.target.value)}
@@ -58,8 +190,6 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                     {(states || []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                                 </select>
                             </div>
-                        </div>
-                        <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Estado Civil</label>
                                 <select value={data.marital_status_id} onChange={e => setData('marital_status_id', e.target.value)}
@@ -68,6 +198,9 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                     {(maritalStatuses || []).map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
                                 </select>
                             </div>
+                        </div>
+
+                        <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Formação</label>
                                 <select value={data.education_formation_id} onChange={e => setData('education_formation_id', e.target.value)}
@@ -76,7 +209,13 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                     {(educationFormations || []).map((f) => <option key={f.id} value={f.id}>{f.name}</option>)}
                                 </select>
                             </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">CNS</label>
+                                <input type="text" value={data.cns_number} onChange={e => setData('cns_number', e.target.value)}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                            </div>
                         </div>
+
                         <div className="mb-4 grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Nome do Pai</label>
@@ -89,29 +228,13 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                             </div>
                         </div>
-                        <div className="mb-4 grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
-                                <input type="date" value={data.birth_date} onChange={e => setData('birth_date', e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                                {errors.birth_date && <p className="mt-1 text-sm text-red-600">{errors.birth_date}</p>}
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">CNS</label>
-                                <input type="text" value={data.cns_number} onChange={e => setData('cns_number', e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                            </div>
-                        </div>
+
                         <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700">Habilidades</label>
                             <textarea value={data.skills} onChange={e => setData('skills', e.target.value)}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="3" />
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700">URL da Foto</label>
-                            <input type="text" value={data.photo_url} onChange={e => setData('photo_url', e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                        </div>
+
                         <div className="mb-6">
                             <label className="flex items-center gap-2">
                                 <input type="checkbox" checked={data.is_active} onChange={e => setData('is_active', e.target.checked)}
@@ -119,8 +242,9 @@ export default function Create({ users = [], maritalStatuses = [], educationForm
                                 <span className="text-sm text-gray-700">Ativo</span>
                             </label>
                         </div>
+
                         <div className="flex items-center justify-end gap-4">
-                            <Link href={route('personal-info.index')} className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300">Cancelar</Link>
+                            <Link href={route('personal-infos.index')} className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300">Cancelar</Link>
                             <button type="submit" disabled={processing}
                                 className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50">
                                 {processing ? 'Salvando...' : 'Salvar'}</button>

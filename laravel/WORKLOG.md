@@ -58,3 +58,4 @@ Migrar o sistema legado SESACRE (vanilla PHP) para Laravel 12 + Inertia + React.
 - 2026-05-14: Módulo Financeiro/Empenho: 3 migrations, 8 models, controller, 4 Inertia pages
 - 2026-05-14: Módulo Compras/GCON: 2 migrations, 7 models, 2 controllers, 8 Inertia pages
 - 2026-05-15: Módulo Financeiro/Solicitação: 6 controllers, 24 Inertia pages, 6 new models
+- 2026-05-15: RH - ContractSituationController (CRUD), FeriasLicencasController (index/show), 5 Inertia pages (ContractSituations: Index/Create/Edit, FeriasLicencas: Index/Show), rotas adicionadas
