@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class TicketService extends Model
+{
+    protected $fillable = [
+        'ticket_id', 'ticket_secondary_category_id', 'hours_worked',
+        'service_description', 'service_value', 'quantity', 'total_value',
+        'expense', 'expense_description',
+    ];
+
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo(Ticket::class);
+    }
+}

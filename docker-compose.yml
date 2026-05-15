@@ -11,6 +11,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - sesacre-network
 
   db:
     image: postgres:13
@@ -30,6 +32,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - sesacre-network
 
 volumes:
   pgdata:
+
+networks:
+  sesacre-network:
+    external: true
