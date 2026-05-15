@@ -28,7 +28,9 @@ class CountryController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'code' => 'required|string|max:10',
             'name' => 'required|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
         Country::create($validated);
@@ -54,7 +56,9 @@ class CountryController extends Controller
     public function update(Request $request, Country $country): RedirectResponse
     {
         $validated = $request->validate([
+            'code' => 'required|string|max:10',
             'name' => 'required|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
         $country->update($validated);

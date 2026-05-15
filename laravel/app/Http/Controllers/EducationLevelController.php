@@ -29,6 +29,7 @@ class EducationLevelController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
         EducationLevel::create($validated);
@@ -55,6 +56,7 @@ class EducationLevelController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'is_active' => 'boolean',
         ]);
 
         $educationLevel->update($validated);

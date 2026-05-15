@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EducationFormation;
+use App\Models\EducationLevel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,13 +23,17 @@ class EducationFormationController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('HR/EducationFormations/Create');
+        return Inertia::render('HR/EducationFormations/Create', [
+            'educationLevels' => EducationLevel::all(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'education_level_id' => 'nullable|exists:education_levels,id',
+            'is_active' => 'boolean',
         ]);
 
         EducationFormation::create($validated);
@@ -39,6 +44,8 @@ class EducationFormationController extends Controller
 
     public function show(EducationFormation $educationFormation): Response
     {
+        $educationFormation->load('educationLevel');
+
         return Inertia::render('HR/EducationFormations/Show', [
             'educationFormation' => $educationFormation,
         ]);
@@ -48,6 +55,7 @@ class EducationFormationController extends Controller
     {
         return Inertia::render('HR/EducationFormations/Edit', [
             'educationFormation' => $educationFormation,
+            'educationLevels' => EducationLevel::all(),
         ]);
     }
 
@@ -55,6 +63,8 @@ class EducationFormationController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'education_level_id' => 'nullable|exists:education_levels,id',
+            'is_active' => 'boolean',
         ]);
 
         $educationFormation->update($validated);
