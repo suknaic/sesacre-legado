@@ -16,6 +16,8 @@ export default function Show({ educationFormation }) {
                     <div className="p-6">
                         <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div><dt className="text-sm font-medium text-gray-500">Nome</dt><dd className="mt-1 text-sm text-gray-900">{educationFormation.name || '-'}</dd></div>
+                            <div><dt className="text-sm font-medium text-gray-500">Nível de Escolaridade</dt><dd className="mt-1 text-sm text-gray-900">{educationFormation.education_level?.name || '-'}</dd></div>
+                            <div><dt className="text-sm font-medium text-gray-500">Ativo</dt><dd className="mt-1 text-sm text-gray-900">{educationFormation.is_active ? 'Sim' : 'Não'}</dd></div>
                         </dl>
                     </div>
                 </div>

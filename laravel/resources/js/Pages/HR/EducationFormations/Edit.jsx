@@ -1,8 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function Edit({ educationFormation }) {
-    const { data, setData, put, processing, errors } = useForm({ name: educationFormation.name });
+export default function Edit({ educationFormation, educationLevels }) {
+    const { data, setData, put, processing, errors } = useForm({
+        name: educationFormation.name,
+        education_level_id: educationFormation.education_level_id || '',
+        is_active: educationFormation.is_active,
+    });
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -25,6 +29,20 @@ export default function Edit({ educationFormation }) {
                                 <label className="block text-sm font-medium text-gray-700">Nome</label>
                                 <input type="text" value={data.name} onChange={e => setData('name', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
                                 {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Nível de Escolaridade</label>
+                                <select value={data.education_level_id} onChange={e => setData('education_level_id', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Selecione...</option>
+                                    {educationLevels.map(el => (
+                                        <option key={el.id} value={el.id}>{el.name}</option>
+                                    ))}
+                                </select>
+                                {errors.education_level_id && <p className="mt-1 text-sm text-red-600">{errors.education_level_id}</p>}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="checkbox" checked={data.is_active} onChange={e => setData('is_active', e.target.checked)} className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                                <label className="text-sm font-medium text-gray-700">Ativo</label>
                             </div>
                             <div className="flex items-center gap-4">
                                 <button type="submit" disabled={processing} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50">Salvar</button>
