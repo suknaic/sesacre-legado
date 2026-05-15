@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class City extends Model
 {
+    use HasFactory;
     protected $fillable = ['state_id', 'name', 'health_region_id', 'geo_region_id', 'is_active'];
 
     protected function casts(): array

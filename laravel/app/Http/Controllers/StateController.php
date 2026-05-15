@@ -32,8 +32,8 @@ class StateController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'country_id' => 'nullable|exists:countries,id',
-            'code' => 'nullable|string|max:10',
+            'country_id' => 'required|exists:countries,id',
+            'code' => 'required|string|max:10',
             'name' => 'required|string|max:255',
             'is_active' => 'boolean',
         ]);
@@ -66,8 +66,8 @@ class StateController extends Controller
     public function update(Request $request, State $state): RedirectResponse
     {
         $validated = $request->validate([
-            'country_id' => 'nullable|exists:countries,id',
-            'code' => 'nullable|string|max:10',
+            'country_id' => 'required|exists:countries,id',
+            'code' => 'required|string|max:10',
             'name' => 'required|string|max:255',
             'is_active' => 'boolean',
         ]);

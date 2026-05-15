@@ -40,6 +40,7 @@ use App\Http\Controllers\Financeiro\TipoSolicitacaoController;
 use App\Http\Controllers\JobFunctionController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\LegalEntityController;
+use App\Http\Controllers\MaritalStatusController;
 use App\Http\Controllers\MeasurementUnitController;
 use App\Http\Controllers\Orcamento\BlocoOrcamentarioController;
 use App\Http\Controllers\Orcamento\CentralLiberacaoController;
