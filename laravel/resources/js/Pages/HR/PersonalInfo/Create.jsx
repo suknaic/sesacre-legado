@@ -70,7 +70,7 @@ export default function Create({ maritalStatuses = [], educationFormations = [],
                 {flash?.error && <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">{flash.error}</div>}
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <form onSubmit={handleSubmit} className="p-6">
-                        <div className="mb-6"><Link href={route('personal-infos.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
+                        <div className="mb-6"><Link href={route('personal-info.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
 
                         <h3 className="mb-4 text-lg font-medium text-gray-900">Dados do Usuário</h3>
                         <div className="mb-4 grid grid-cols-2 gap-4">
@@ -244,7 +244,7 @@ export default function Create({ maritalStatuses = [], educationFormations = [],
                         </div>
 
                         <div className="flex items-center justify-end gap-4">
-                            <Link href={route('personal-infos.index')} className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300">Cancelar</Link>
+                            <Link href={route('personal-info.index')} className="rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-300">Cancelar</Link>
                             <button type="submit" disabled={processing}
                                 className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50">
                                 {processing ? 'Salvando...' : 'Salvar'}</button>

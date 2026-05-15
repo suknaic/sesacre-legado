@@ -20,7 +20,7 @@ export default function Show({ personalInfo, contracts = [] }) {
         <AuthenticatedLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800">{personalInfo.user?.name || 'Funcionário'}</h2>}>
             <Head title={personalInfo.user?.name || 'Funcionário'} />
             <div className="py-12"><div className="mx-auto max-w-4xl sm:px-6 lg:px-8">
-                <div className="mb-4"><Link href={route('personal-infos.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
+                <div className="mb-4"><Link href={route('personal-info.index')} className="text-sm text-indigo-600 hover:text-indigo-900">&larr; Voltar</Link></div>
 
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div className="p-6">

@@ -238,7 +238,7 @@ class PersonalInfoController extends Controller
     {
         $personalInfo->delete();
 
-        return redirect()->route('personal-infos.index')
+        return redirect()->route('personal-info.index')
             ->with('success', 'Funcionário removido com sucesso.');
     }
 

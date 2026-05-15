@@ -6,7 +6,7 @@ export default function Index({ personalInfos, filters = {} }) {
     const { search = '' } = filters;
 
     function handleFilterChange(key, value) {
-        router.get(route('personal-infos.index'), { ...filters, [key]: value, page: 1 }, { preserveState: true, replace: true });
+        router.get(route('personal-info.index'), { ...filters, [key]: value, page: 1 }, { preserveState: true, replace: true });
     }
 
     function formatCpf(cpf) {
