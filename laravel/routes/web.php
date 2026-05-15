@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('employment-bonds', EmploymentBondController::class);
     Route::resource('education-formations', EducationFormationController::class);
     Route::resource('education-levels', EducationLevelController::class);
+    Route::resource('marital-statuses', MaritalStatusController::class);
 
     // HR - Origem
     Route::resource('countries', CountryController::class);

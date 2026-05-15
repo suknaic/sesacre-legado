@@ -62,6 +62,14 @@ class ContractLocationController extends Controller
             ->with('success', 'Lotação cadastrada com sucesso.');
     }
 
+    public function show(EmploymentContract $employmentContract, ContractLocation $contractLocation): Response
+    {
+        return Inertia::render('HR/ContractLocations/Show', [
+            'employmentContract' => $employmentContract->load('personalInfo.user'),
+            'location' => $contractLocation->load(['organization', 'jobFunction']),
+        ]);
+    }
+
     public function edit(EmploymentContract $employmentContract, ContractLocation $contractLocation): Response
     {
         return Inertia::render('HR/ContractLocations/Edit', [

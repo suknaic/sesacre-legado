@@ -43,6 +43,13 @@ class ContractSituationController extends Controller
             ->with('success', 'Situação contratual criada com sucesso.');
     }
 
+    public function show(ContractSituation $contractSituation): Response
+    {
+        return Inertia::render('HR/ContractSituations/Show', [
+            'contractSituation' => $contractSituation,
+        ]);
+    }
+
     public function edit(ContractSituation $contractSituation): Response
     {
         return Inertia::render('HR/ContractSituations/Edit', [

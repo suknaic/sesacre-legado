@@ -58,6 +58,14 @@ class RecruitmentHistoryController extends Controller
             ->with('success', 'Histórico cadastrado com sucesso.');
     }
 
+    public function show(EmploymentContract $employmentContract, RecruitmentHistory $recruitmentHistory): Response
+    {
+        return Inertia::render('HR/RecruitmentHistory/Show', [
+            'employmentContract' => $employmentContract->load('personalInfo.user'),
+            'recruitmentHistory' => $recruitmentHistory->load(['contractSituation', 'organization', 'jobFunction']),
+        ]);
+    }
+
     public function edit(EmploymentContract $employmentContract, RecruitmentHistory $recruitmentHistory): Response
     {
         return Inertia::render('HR/RecruitmentHistory/Edit', [
