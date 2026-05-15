@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobPosition extends Model
 {
-    //
+    protected $fillable = ['name', 'is_active'];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 }
