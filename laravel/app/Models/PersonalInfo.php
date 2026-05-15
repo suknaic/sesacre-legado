@@ -10,6 +10,8 @@ class PersonalInfo extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'personal_info';
+
     protected $fillable = [
         'user_id', 'gender', 'rg', 'issuing_agency', 'issuing_state_id',
         'marital_status_id', 'education_formation_id', 'skills',
