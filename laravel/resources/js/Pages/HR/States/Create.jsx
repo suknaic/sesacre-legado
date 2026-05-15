@@ -1,0 +1,56 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, Link, useForm } from '@inertiajs/react';
+
+export default function Create({ countries = [] }) {
+    const { data, setData, post, processing, errors } = useForm({ country_id: '', code: '', name: '', is_active: true });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        post(route('states.store'));
+    }
+
+    return (
+        <AuthenticatedLayout header={
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">Novo Estado</h2>
+                <Link href={route('states.index')} className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-gray-500">Voltar</Link>
+            </div>
+        }>
+            <Head title="Novo Estado" />
+            <div className="py-8">
+                <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">País</label>
+                                <select value={data.country_id} onChange={e => setData('country_id', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Selecione...</option>
+                                    {countries.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                </select>
+                                {errors.country_id && <p className="mt-1 text-sm text-red-600">{errors.country_id}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Código</label>
+                                <input type="text" value={data.code} onChange={e => setData('code', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                                {errors.code && <p className="mt-1 text-sm text-red-600">{errors.code}</p>}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Nome</label>
+                                <input type="text" value={data.name} onChange={e => setData('name', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                                {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input type="checkbox" checked={data.is_active} onChange={e => setData('is_active', e.target.checked)} className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                                <label className="text-sm font-medium text-gray-700">Ativo</label>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <button type="submit" disabled={processing} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 disabled:opacity-50">Salvar</button>
+                                <Link href={route('states.index')} className="text-sm text-gray-600 hover:text-gray-900">Cancelar</Link>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
