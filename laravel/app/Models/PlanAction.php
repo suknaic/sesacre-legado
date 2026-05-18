@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PlanAction extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['plan_objective_id', 'name', 'indicator', 'goal', 'registration_type', 'is_active', 'department_id'];
 
     protected function casts(): array
