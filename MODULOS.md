@@ -42,16 +42,16 @@
 | PAS / Plano Anual (AnnualPlan) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Pré-LOA / Proposta Orçamentária (BudgetProposal) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Execução Orçamentária (BudgetExecution) | sim | Controller, Model, Migration, Factory, Test, Pages (dashboard) | ✅ Completo |
-| Eixo | sim | ❌ | ❌ Ausente |
-| Diretriz | sim | ❌ | ❌ Ausente |
-| Indicador Saúde | sim | ❌ | ❌ Ausente |
-| PAS Ação/Indicador | sim | ❌ | ❌ Ausente |
-| PAS Responsável | sim | ❌ | ❌ Ausente |
-| PAS Liberação/Validação | sim | ❌ | ❌ Ausente |
+| Eixo (PlanningAxis) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Diretriz (PlanningGuideline) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Indicador Saúde (HealthIndicator) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PAS Ação/Indicador (PasAction) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PAS Responsável (PasResponsible) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PAS Liberação/Validação (PasValidation) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Liberação Fonte (BudgetSourceRelease) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Central Demanda (CentralDemand) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | PTA | sim | ❌ | ❌ Ausente |
 | Ordem de Entrega/Recebido | sim | ❌ | ❌ Ausente |
-| Liberação Fonte | sim | ❌ | ❌ Ausente |
-| Central Demanda (Planejamento) | sim | ❌ | ❌ Ausente |
 
 ## 3. ORÇAMENTO
 
@@ -168,7 +168,7 @@
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
 | RH | 18 | 0 | 0 | 0 |
-| Planejamento | 11 | 0 | 0 | 10 |
+| Planejamento | 20 | 0 | 0 | 2 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
 | Contábil | 0 | 4 | 0 | 0 |
@@ -178,7 +178,7 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **51** | **22** | **12** | **14** |
+| **Total** | **60** | **22** | **12** | **6** |
 
 ---
 
@@ -189,7 +189,7 @@
 2. **Diárias**: Finalizar PerDiemRequest e submódulos
 
 ### Prioridade 2 — Implementar módulos não iniciados (❌ Ausente)
-1. **Planejamento**: Eixo, Diretriz, Indicador Saúde, PAS Ação/Indicador, PAS Responsável, PAS Liberação/Validação, PTA, Ordem de Entrega/Recebido, Liberação Fonte, Central Demanda Planejamento
+1. **Planejamento**: PTA, Ordem de Entrega/Recebido
 2. **Diárias**: Autorizações, Relatórios
 3. **Integrações**: GRP, ANGRA, Mapas
 
