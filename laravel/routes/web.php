@@ -21,6 +21,7 @@ use App\Http\Controllers\ContractLocationController;
 use App\Http\Controllers\ContractSituationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\EmploymentBondController;
@@ -118,6 +119,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('budget-execution', BudgetExecutionController::class);
     Route::resource('budget-source-releases', BudgetSourceReleaseController::class);
     Route::resource('central-demands', CentralDemandController::class);
+    Route::resource('delivery-orders', DeliveryOrderController::class);
+    Route::post('delivery-orders/{deliveryOrder}/receive', [DeliveryOrderController::class, 'receive'])->name('delivery-orders.receive');
     Route::resource('measurement-units', MeasurementUnitController::class);
     Route::resource('pes-plans', PesPlanController::class);
     Route::resource('planning-axes', PlanningAxisController::class);
