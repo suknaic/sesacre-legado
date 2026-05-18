@@ -52,7 +52,7 @@ const menuItems = [
         children: [
             { label: 'PPA', route: '/strategic-plans' },
             { label: 'PES', route: '/pes-plans' },
-            { label: 'Programa Setorial', route: '/page/programa-setorial' },
+            { label: 'Programa Setorial', route: '/strategic-plans' },
             { label: 'Programa de Governo', route: '/page/programa-governo' },
             { label: 'Metas Físicas', route: '/plan-objectives' },
             { label: 'Execução Orçamentária', route: '/page/execucao-orcamentaria' },
