@@ -30,7 +30,7 @@ export default function Index({ budgetProposals }) {
                                 ) : budgetProposals.data.map((p) => (
                                     <tr key={p.id}>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{p.year}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.status}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.situation}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm">{p.is_active ? <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold text-green-800">Sim</span> : 'Não'}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm">
                                             <Link href={route('budget-proposals.show', p.id)} className="text-indigo-600 hover:text-indigo-900">Ver</Link>
