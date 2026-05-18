@@ -52,6 +52,9 @@ const menuItems = [
         children: [
             { label: 'PPA', route: '/strategic-plans' },
             { label: 'PES', route: '/pes-plans' },
+            { label: 'Eixo', route: '/planning-axes' },
+            { label: 'Diretriz', route: '/planning-guidelines' },
+            { label: 'Indicador de Saúde', route: '/health-indicators' },
             { label: 'Programa Setorial', route: '/ppa-project-activities' },
             { label: 'Programa de Governo', route: '/government-programs' },
             { label: 'Metas Físicas', route: '/plan-objectives' },

@@ -31,22 +31,24 @@
 
 | Submódulo | Legado | Laravel | Status |
 |---|---|---|---|
-| PES | sim | Placeholder | 🔴 Incompleto |
+| PPA Programa (StrategicPlan) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PES (PesPlan) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PPA Proj/Ativ (PpaProjectActivity) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Programa de Governo (GovernmentProgram) | sim | Controller, Pages (reusa StrategicPlan) | ✅ Completo |
+| Metas Físicas / Objetivo (PlanObjective) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Ação (PlanAction) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Material (PlanMaterial) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Unidade Medida (MeasurementUnit) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| PAS / Plano Anual (AnnualPlan) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Pré-LOA / Proposta Orçamentária (BudgetProposal) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
+| Execução Orçamentária (BudgetExecution) | sim | Controller, Model, Migration, Factory, Test, Pages (dashboard) | ✅ Completo |
 | Eixo | sim | ❌ | ❌ Ausente |
 | Diretriz | sim | ❌ | ❌ Ausente |
-| Objetivo (PlanObjective) | sim | Controller, Migration | 🟡 Parcial (sem Pages/Test completos) |
-| Ação (PlanAction) | sim | Controller, Migration | 🟡 Parcial |
 | Indicador Saúde | sim | ❌ | ❌ Ausente |
-| PPA Programa (StrategicPlan) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
-| PPA Proj/Ativ | sim | ❌ | ❌ Ausente |
-| PAS (AnnualPlan) | sim | Controller (AnnualPlan), Migration | 🟡 Parcial |
 | PAS Ação/Indicador | sim | ❌ | ❌ Ausente |
 | PAS Responsável | sim | ❌ | ❌ Ausente |
 | PAS Liberação/Validação | sim | ❌ | ❌ Ausente |
-| Pré-LOA (BudgetProposal) | sim | Controller, Migration | 🟡 Parcial |
 | PTA | sim | ❌ | ❌ Ausente |
-| Material (PlanMaterial) | sim | Controller, Migration | 🟡 Parcial |
-| Unidade Medida (MeasurementUnit) | sim | Controller, Migration | 🟡 Parcial |
 | Ordem de Entrega/Recebido | sim | ❌ | ❌ Ausente |
 | Liberação Fonte | sim | ❌ | ❌ Ausente |
 | Central Demanda (Planejamento) | sim | ❌ | ❌ Ausente |
@@ -166,7 +168,7 @@
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
 | RH | 18 | 0 | 0 | 0 |
-| Planejamento | 1 | 5 | 1 | 10 |
+| Planejamento | 11 | 0 | 0 | 10 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
 | Contábil | 0 | 4 | 0 | 0 |
@@ -176,19 +178,18 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **41** | **27** | **13** | **14** |
+| **Total** | **51** | **22** | **12** | **14** |
 
 ---
 
 ## Prioridades
 
 ### Prioridade 1 — Finalizar módulos já iniciados (🟡 Parcial)
-1. **Planejamento**: Finalizar PlanObjective, PlanAction, PlanMaterial, MeasurementUnit, BudgetProposal (Pages + testes)
-2. **Contábil**: Adicionar factories + testes para Empenho, Anulação, Liquidação, Pagamento
-3. **Diárias**: Finalizar PerDiemRequest e submódulos
+1. **Contábil**: Adicionar factories + testes para Empenho, Anulação, Liquidação, Pagamento
+2. **Diárias**: Finalizar PerDiemRequest e submódulos
 
 ### Prioridade 2 — Implementar módulos não iniciados (❌ Ausente)
-1. **Planejamento**: Eixo, Diretriz, Indicador Saúde, PPA Proj/Ativ, PAS Ação/Indicador, PAS Responsável, PAS Liberação/Validação, PTA, Ordem de Entrega/Recebido, Liberação Fonte, Central Demanda Planejamento
+1. **Planejamento**: Eixo, Diretriz, Indicador Saúde, PAS Ação/Indicador, PAS Responsável, PAS Liberação/Validação, PTA, Ordem de Entrega/Recebido, Liberação Fonte, Central Demanda Planejamento
 2. **Diárias**: Autorizações, Relatórios
 3. **Integrações**: GRP, ANGRA, Mapas
 
