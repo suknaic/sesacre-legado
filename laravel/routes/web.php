@@ -21,6 +21,7 @@ use App\Http\Controllers\ContractLocationController;
 use App\Http\Controllers\ContractSituationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DecreeValueController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
@@ -120,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('strategic-plans', StrategicPlanController::class);
     Route::resource('annual-plans', AnnualPlanController::class);
     Route::resource('per-diem-requests', PerDiemRequestController::class);
+    Route::resource('decree-values', DecreeValueController::class);
 
     // Planning
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
