@@ -55,6 +55,7 @@ use App\Http\Controllers\Orcamento\QddValorController;
 use App\Http\Controllers\Orcamento\RedeTematicaController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDetailController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PersonalInfoController;
 use App\Http\Controllers\ProcessTypeController;
 use App\Http\Controllers\ProfileController;
