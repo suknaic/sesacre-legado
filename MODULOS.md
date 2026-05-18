@@ -24,8 +24,8 @@
 | Lotação Detalhada (OrganizationDetail) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Férias/Licenças/Concessões | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Histórico Recrutamento (RecruitmentHistory) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
-| Relatórios RH (PDF) | sim | Placeholder no menu | 🔴 Incompleto |
-| Controle de Acesso RH | sim | ❌ | ❌ Ausente |
+| Relatórios RH (PDF) | sim | Controller, Pages com filtros e impressão | ✅ Completo |
+| Controle de Acesso RH | sim | Controller, Pages (atribuição de roles a usuários), Seeders | ✅ Completo |
 
 ## 2. PLANEJAMENTO
 
@@ -165,7 +165,7 @@
 
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
-| RH | 16 | 0 | 1 | 1 |
+| RH | 18 | 0 | 0 | 0 |
 | Planejamento | 1 | 5 | 1 | 10 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
@@ -176,20 +176,16 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **39** | **27** | **14** | **15** |
+| **Total** | **41** | **27** | **13** | **14** |
 
 ---
 
 ## Prioridades
 
 ### Prioridade 1 — Finalizar módulos já iniciados (🟡 Parcial)
-São módulos que já têm estrutura (Controller + Model + Migration + Pages) mas faltam factories, testes, ou refinamentos:
-
-1. **RH**: Finalizar PersonalInfo, EmploymentContract, Organization (factories + testes)
-2. **RH**: Completar Férias/Licenças (CRUD full), RecruitmentHistory (tests)
-3. **Planejamento**: Finalizar PlanObjective, PlanAction, PlanMaterial, MeasurementUnit, BudgetProposal (Pages + testes)
-4. **Contábil**: Adicionar factories + testes para Empenho, Anulação, Liquidação, Pagamento
-5. **Diárias**: Finalizar PerDiemRequest e submódulos
+1. **Planejamento**: Finalizar PlanObjective, PlanAction, PlanMaterial, MeasurementUnit, BudgetProposal (Pages + testes)
+2. **Contábil**: Adicionar factories + testes para Empenho, Anulação, Liquidação, Pagamento
+3. **Diárias**: Finalizar PerDiemRequest e submódulos
 
 ### Prioridade 2 — Implementar módulos não iniciados (❌ Ausente)
 1. **Planejamento**: Eixo, Diretriz, Indicador Saúde, PPA Proj/Ativ, PAS Ação/Indicador, PAS Responsável, PAS Liberação/Validação, PTA, Ordem de Entrega/Recebido, Liberação Fonte, Central Demanda Planejamento
@@ -197,11 +193,10 @@ São módulos que já têm estrutura (Controller + Model + Migration + Pages) ma
 3. **Integrações**: GRP, ANGRA, Mapas
 
 ### Prioridade 3 — Completar módulos incompletos (🔴 Incompleto)
-1. **RH**: Lotação Detalhada, Relatórios RH, Controle de Acesso RH
-2. **Permissões/Segurança**: Implementar CRUD de Recursos, Grupos, Perfis
-3. **Administração**: Tipo Administração, Tipo Remetente, Vincular Remetente/Admin
-4. **Diárias**: Decreto Valor, Central Responsável, Perfil de Acesso
-5. **Chamados**: Materiais, Categorias
+1. **Permissões/Segurança**: Implementar CRUD de Recursos, Grupos, Perfis
+2. **Administração**: Tipo Administração, Tipo Remetente, Vincular Remetente/Admin
+3. **Diárias**: Decreto Valor, Central Responsável, Perfil de Acesso
+4. **Chamados**: Materiais, Categorias
 
 ### Prioridade 4 — Qualidade
 1. Adicionar factories + testes para todos os módulos parciais sem teste

@@ -55,17 +55,12 @@ use App\Http\Controllers\Orcamento\QddValorController;
 use App\Http\Controllers\Orcamento\RedeTematicaController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDetailController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PerDiemRequestController;
 use App\Http\Controllers\PersonalInfoController;
-use App\Http\Controllers\PlanActionController;
-use App\Http\Controllers\PlanMaterialController;
-use App\Http\Controllers\PlanObjectiveController;
 use App\Http\Controllers\ProcessTypeController;
-use App\Http\Controllers\ProcurementController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\RecruitmentHistoryController;
+use App\Http\Controllers\RhAccessController;
+use App\Http\Controllers\RhReportController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\SupplierController;
@@ -131,6 +126,12 @@ Route::middleware('auth')->group(function () {
     Route::get('ferias-licencas/{recruitmentHistory}/edit', [FeriasLicencasController::class, 'edit'])->name('ferias-licencas.edit');
     Route::put('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'update'])->name('ferias-licencas.update');
     Route::delete('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'destroy'])->name('ferias-licencas.destroy');
+
+    Route::get('rh-access', [RhAccessController::class, 'index'])->name('rh-access.index');
+    Route::put('rh-access/{user}', [RhAccessController::class, 'update'])->name('rh-access.update');
+
+    Route::get('rh-reports/diverse', [RhReportController::class, 'diverse'])->name('rh-reports.diverse');
+    Route::get('rh-reports/vacations', [RhReportController::class, 'vacations'])->name('rh-reports.vacations');
 
     // HR - People
     Route::resource('personal-info', PersonalInfoController::class);

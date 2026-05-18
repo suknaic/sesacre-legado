@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BrazilianDataSeeder::class,
             MaritalStatusSeeder::class,
+            SystemSeeder::class,
+            RoleSeeder::class,
             LegacyDataSeeder::class,
             FinancialSupportTablesSeeder::class,
             ProcurementSupportTablesSeeder::class,

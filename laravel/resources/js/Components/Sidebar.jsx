@@ -23,6 +23,7 @@ const menuItems = [
                     { label: 'Vínculo', route: '/employment-bonds' },
                     { label: 'Estado Civil', route: '/marital-statuses' },
                     { label: 'Situação Contratual', route: '/contract-situations' },
+                    { label: 'Controle de Acesso', route: '/rh-access' },
                 ],
             },
             {
@@ -39,9 +40,8 @@ const menuItems = [
             {
                 label: 'Relatórios',
                 children: [
-                    { label: 'Diversos em PDF', route: '/page/relatorios-diversos' },
-                    { label: 'Férias em PDF', route: '/page/relatorios-ferias' },
-                    { label: 'Gráfico', route: '/page/relatorios-grafico' },
+                    { label: 'Diversos', route: '/rh-reports/diverse' },
+                    { label: 'Férias', route: '/rh-reports/vacations' },
                 ],
             },
         ],
