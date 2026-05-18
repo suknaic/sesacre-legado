@@ -92,10 +92,10 @@
 
 | Submódulo | Legado | Laravel | Status |
 |---|---|---|---|
-| Empenho | sim | Controller, Model, Pages | 🟡 Parcial |
-| Anulação Empenho | sim | Controller, Model, Pages | 🟡 Parcial |
-| Liquidação | sim | Controller, Model, Pages | 🟡 Parcial |
-| Pagamento | sim | Controller, Model, Pages | 🟡 Parcial |
+| Empenho | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Anulação Empenho | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Liquidação | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Pagamento | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
 
 ## 6. COMPRAS / CONTRATOS
 
@@ -171,21 +171,21 @@
 | Planejamento | 22 | 0 | 0 | 0 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
-| Contábil | 0 | 4 | 0 | 0 |
+| Contábil | 4 | 0 | 0 | 0 |
 | Compras/Contratos | 2 | 6 | 0 | 0 |
 | Diárias | 0 | 1 | 4 | 1 |
 | Chamados | 1 | 2 | 1 | 0 |
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **62** | **22** | **12** | **4** |
+| **Total** | **66** | **18** | **12** | **4** |
 
 ---
 
 ## Prioridades
 
 ### Prioridade 1 — Finalizar módulos já iniciados (🟡 Parcial)
-1. **Contábil**: Adicionar factories + testes para Empenho, Anulação, Liquidação, Pagamento
+1. _(Nenhum — Contábil completo)_
 2. **Diárias**: Finalizar PerDiemRequest e submódulos
 
 ### Prioridade 2 — Implementar módulos não iniciados (❌ Ausente)
