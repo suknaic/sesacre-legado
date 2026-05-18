@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ConEmpenhoAnulacao extends Model
 {
+    use HasFactory;
     protected $table = 'con_empenho_anulacao';
 
     protected $primaryKey = 'id_empenho_anulacao';
