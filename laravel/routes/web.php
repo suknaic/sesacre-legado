@@ -57,6 +57,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDetailController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PersonalInfoController;
+use App\Http\Controllers\PesPlanController;
 use App\Http\Controllers\PlanActionController;
 use App\Http\Controllers\PlanMaterialController;
 use App\Http\Controllers\PlanObjectiveController;
@@ -104,6 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('plan-materials', PlanMaterialController::class);
     Route::resource('budget-proposals', BudgetProposalController::class);
     Route::resource('measurement-units', MeasurementUnitController::class);
+    Route::resource('pes-plans', PesPlanController::class);
 
     // HR - Administration
     Route::resource('job-positions', JobPositionController::class);
