@@ -4,6 +4,7 @@ use App\Http\Controllers\AnnualPlanController;
 use App\Http\Controllers\BudgetExecutionController;
 use App\Http\Controllers\BudgetProposalController;
 use App\Http\Controllers\BudgetSourceReleaseController;
+use App\Http\Controllers\CentralDemandController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CommitmentController;
 use App\Http\Controllers\Compras\FinContratoController;
@@ -116,6 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('budget-proposals', BudgetProposalController::class);
     Route::resource('budget-execution', BudgetExecutionController::class);
     Route::resource('budget-source-releases', BudgetSourceReleaseController::class);
+    Route::resource('central-demands', CentralDemandController::class);
     Route::resource('measurement-units', MeasurementUnitController::class);
     Route::resource('pes-plans', PesPlanController::class);
     Route::resource('planning-axes', PlanningAxisController::class);

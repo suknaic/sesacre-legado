@@ -59,6 +59,7 @@ const menuItems = [
             { label: 'PAS Ação', route: '/pas-actions' },
             { label: 'PAS Validação', route: '/pas-validations' },
             { label: 'Liberação Fonte', route: '/budget-source-releases' },
+            { label: 'Central Demanda', route: '/central-demands' },
             { label: 'Programa Setorial', route: '/ppa-project-activities' },
             { label: 'Programa de Governo', route: '/government-programs' },
             { label: 'Metas Físicas', route: '/plan-objectives' },
