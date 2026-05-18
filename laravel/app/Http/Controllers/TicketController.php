@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Material;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\TicketPriority;
 use App\Models\TicketSecondaryCategory;
+use App\Models\TicketService;
+use App\Models\TicketServiceMaterial;
 use App\Models\TicketStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -76,7 +79,7 @@ class TicketController extends Controller
             'status',
             'priority',
             'secondaryCategory.primaryCategory.categoryType.category',
-            'services',
+            'services.materials.material',
             'notes',
             'attachments',
         ]);
@@ -86,7 +89,68 @@ class TicketController extends Controller
             'statuses' => TicketStatus::where('is_active', true)->get(),
             'priorities' => TicketPriority::where('is_active', true)->get(),
             'categories' => TicketCategory::with(['categoryTypes.primaryCategories.secondaryCategories'])->where('is_active', true)->get(),
+            'materials' => Material::orderBy('name')->get(['id', 'name', 'patrimony_number']),
         ]);
+    }
+
+    public function addService(Request $request, Ticket $ticket): RedirectResponse
+    {
+        $validated = $request->validate([
+            'service_description' => 'required|string',
+            'quantity' => 'nullable|integer|min:1',
+            'service_value' => 'nullable|numeric|min:0',
+            'total_value' => 'nullable|numeric|min:0',
+        ]);
+
+        $ticket->services()->create($validated);
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Serviço adicionado ao chamado.');
+    }
+
+    public function updateService(Request $request, Ticket $ticket, TicketService $service): RedirectResponse
+    {
+        $validated = $request->validate([
+            'service_description' => 'required|string',
+            'quantity' => 'nullable|integer|min:1',
+            'service_value' => 'nullable|numeric|min:0',
+            'total_value' => 'nullable|numeric|min:0',
+        ]);
+
+        $service->update($validated);
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Serviço atualizado.');
+    }
+
+    public function removeService(Ticket $ticket, TicketService $service): RedirectResponse
+    {
+        $service->delete();
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Serviço removido do chamado.');
+    }
+
+    public function addMaterial(Request $request, TicketService $service): RedirectResponse
+    {
+        $validated = $request->validate([
+            'material_id' => 'required|exists:materials,id',
+            'quantity' => 'nullable|integer|min:1',
+            'value' => 'nullable|numeric|min:0',
+        ]);
+
+        $service->materials()->create($validated);
+
+        return redirect()->route('tickets.show', $service->ticket_id)
+            ->with('success', 'Material vinculado ao serviço.');
+    }
+
+    public function removeMaterial(TicketService $service, TicketServiceMaterial $material): RedirectResponse
+    {
+        $material->delete();
+
+        return redirect()->route('tickets.show', $service->ticket_id)
+            ->with('success', 'Material removido do serviço.');
     }
 
     public function edit(Ticket $ticket): Response

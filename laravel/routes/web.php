@@ -110,6 +110,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::resource('procurements', ProcurementController::class);
     Route::resource('tickets', TicketController::class);
+    Route::post('/tickets/{ticket}/services', [TicketController::class, 'addService'])->name('tickets.services.add');
+    Route::put('/tickets/{ticket}/services/{service}', [TicketController::class, 'updateService'])->name('tickets.services.update');
+    Route::delete('/tickets/{ticket}/services/{service}', [TicketController::class, 'removeService'])->name('tickets.services.remove');
+    Route::post('/services/{service}/materials', [TicketController::class, 'addMaterial'])->name('services.materials.add');
+    Route::delete('/services/{service}/materials/{material}', [TicketController::class, 'removeMaterial'])->name('services.materials.remove');
     Route::resource('materials', MaterialController::class);
     Route::resource('strategic-plans', StrategicPlanController::class);
     Route::resource('annual-plans', AnnualPlanController::class);
