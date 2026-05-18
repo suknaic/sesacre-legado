@@ -60,6 +60,9 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PersonalInfoController;
 use App\Http\Controllers\PesPlanController;
 use App\Http\Controllers\PlanActionController;
+use App\Http\Controllers\PlanningAxisController;
+use App\Http\Controllers\PlanningGuidelineController;
+use App\Http\Controllers\HealthIndicatorController;
 use App\Http\Controllers\PlanMaterialController;
 use App\Http\Controllers\PlanObjectiveController;
 use App\Http\Controllers\PpaProjectActivityController;
@@ -110,6 +113,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('budget-execution', BudgetExecutionController::class);
     Route::resource('measurement-units', MeasurementUnitController::class);
     Route::resource('pes-plans', PesPlanController::class);
+    Route::resource('planning-axes', PlanningAxisController::class);
+    Route::resource('planning-guidelines', PlanningGuidelineController::class);
+    Route::resource('health-indicators', HealthIndicatorController::class);
     Route::resource('ppa-project-activities', PpaProjectActivityController::class);
     Route::resource('government-programs', GovernmentProgramController::class);
 
