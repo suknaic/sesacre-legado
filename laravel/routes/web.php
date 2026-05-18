@@ -6,6 +6,7 @@ use App\Http\Controllers\BudgetProposalController;
 use App\Http\Controllers\BudgetSourceReleaseController;
 use App\Http\Controllers\CentralDemandController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\WorkPlanController;
 use App\Http\Controllers\CommitmentController;
 use App\Http\Controllers\Compras\FinContratoController;
 use App\Http\Controllers\Compras\FornecedorController;
@@ -119,6 +120,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('budget-execution', BudgetExecutionController::class);
     Route::resource('budget-source-releases', BudgetSourceReleaseController::class);
     Route::resource('central-demands', CentralDemandController::class);
+    Route::resource('work-plans', WorkPlanController::class);
+    Route::post('work-plans/{workPlan}/items', [WorkPlanController::class, 'addItem'])->name('work-plans.items.store');
+    Route::put('work-plans/{workPlan}/items/{item}', [WorkPlanController::class, 'updateItem'])->name('work-plans.items.update');
+    Route::delete('work-plans/{workPlan}/items/{item}', [WorkPlanController::class, 'removeItem'])->name('work-plans.items.destroy');
     Route::resource('delivery-orders', DeliveryOrderController::class);
     Route::post('delivery-orders/{deliveryOrder}/receive', [DeliveryOrderController::class, 'receive'])->name('delivery-orders.receive');
     Route::resource('measurement-units', MeasurementUnitController::class);

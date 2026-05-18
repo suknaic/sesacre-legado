@@ -61,6 +61,7 @@ const menuItems = [
             { label: 'Liberação Fonte', route: '/budget-source-releases' },
             { label: 'Central Demanda', route: '/central-demands' },
             { label: 'Ordem de Entrega', route: '/delivery-orders' },
+            { label: 'PTA', route: '/work-plans' },
             { label: 'Programa Setorial', route: '/ppa-project-activities' },
             { label: 'Programa de Governo', route: '/government-programs' },
             { label: 'Metas Físicas', route: '/plan-objectives' },
