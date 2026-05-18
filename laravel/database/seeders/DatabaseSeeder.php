@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             MaritalStatusSeeder::class,
             SystemSeeder::class,
             RoleSeeder::class,
+            ContractSituationSeeder::class,
             LegacyDataSeeder::class,
             FinancialSupportTablesSeeder::class,
             ProcurementSupportTablesSeeder::class,
