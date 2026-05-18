@@ -19,6 +19,7 @@ const menuItems = [
                     { label: 'Escolaridade', route: '/education-levels' },
                     { label: 'Função', route: '/job-functions' },
                     { label: 'Lotação', route: '/organizations' },
+                    { label: 'Detalhe de Lotação', route: '/organization-details' },
                     { label: 'Vínculo', route: '/employment-bonds' },
                     { label: 'Estado Civil', route: '/marital-statuses' },
                     { label: 'Situação Contratual', route: '/contract-situations' },

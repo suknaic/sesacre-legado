@@ -54,6 +54,7 @@ use App\Http\Controllers\Orcamento\QddController;
 use App\Http\Controllers\Orcamento\QddValorController;
 use App\Http\Controllers\Orcamento\RedeTematicaController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\OrganizationDetailController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PerDiemRequestController;
 use App\Http\Controllers\PersonalInfoController;
@@ -140,6 +141,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('expense-types', ExpenseTypeController::class);
     Route::resource('process-types', ProcessTypeController::class);
     Route::resource('organizations', OrganizationController::class);
+    Route::resource('organization-details', OrganizationDetailController::class);
 
     // Orcamento
     Route::prefix('orcamento')->name('orcamento.')->group(function () {
