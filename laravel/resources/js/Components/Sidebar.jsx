@@ -296,7 +296,7 @@ export default function Sidebar({ open, onClose }) {
                         <div className="flex h-8 w-8 items-center justify-center rounded bg-indigo-600 text-sm font-bold text-white">
                             S
                         </div>
-                        <span className="text-lg font-bold text-white">SESACRENET</span>
+                        <span className="text-lg font-bold text-white">SEMULHER</span>
                     </Link>
                 </div>
 

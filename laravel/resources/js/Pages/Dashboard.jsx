@@ -55,7 +55,7 @@ export default function Dashboard({ stats, chartData }) {
             header={
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">Dashboard</h2>
-                    <span className="text-sm text-gray-500">SESACRE - Secretaria de Saúde do Acre</span>
+                    <span className="text-sm text-gray-500">SEMULHER - Secretaria de Estado da Mulher</span>
                 </div>
             }
         >
