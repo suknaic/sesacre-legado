@@ -22,6 +22,7 @@ use App\Http\Controllers\ContractSituationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DecreeValueController;
+use App\Http\Controllers\DiariasAutorizacaoController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
@@ -122,6 +123,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('annual-plans', AnnualPlanController::class);
     Route::resource('per-diem-requests', PerDiemRequestController::class);
     Route::resource('decree-values', DecreeValueController::class);
+    Route::prefix('diarias-autorizacoes')->name('diarias-autorizacoes.')->group(function () {
+        Route::get('/', [DiariasAutorizacaoController::class, 'index'])->name('index');
+        Route::post('{perDiemRequest}/approve', [DiariasAutorizacaoController::class, 'approve'])->name('approve');
+        Route::post('{perDiemRequest}/reject', [DiariasAutorizacaoController::class, 'reject'])->name('reject');
+        Route::post('{perDiemRequest}/reset', [DiariasAutorizacaoController::class, 'reset'])->name('reset');
+    });
 
     // Planning
     Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
