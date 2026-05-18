@@ -149,9 +149,9 @@
 
 | Submódulo | Legado | Laravel | Status |
 |---|---|---|---|
-| Recursos | sim | Model, Migration | 🔴 Incompleto |
-| Grupo de Recursos | sim | Model, Migration | 🔴 Incompleto |
-| Perfis de Acesso (RBAC) | sim | Model, Migration | 🔴 Incompleto |
+| Recursos | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Grupo de Recursos | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Perfis de Acesso (RBAC) | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
 
 ## 11. INTEGRAÇÕES
 
@@ -176,9 +176,9 @@
 | Diárias | 6 | 0 | 0 | 0 |
 | Chamados | 4 | 0 | 0 | 0 |
 | Administração | 4 | 0 | 4 | 0 |
-| Permissões | 0 | 0 | 3 | 0 |
+| Permissões | 3 | 0 | 0 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **75** | **16** | **5** | **3** |
+| **Total** | **78** | **16** | **2** | **3** |
 
 ---
 
