@@ -50,8 +50,8 @@
 | PAS Liberação/Validação (PasValidation) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Liberação Fonte (BudgetSourceRelease) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Central Demanda (CentralDemand) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
-| PTA | sim | ❌ | ❌ Ausente |
-| Ordem de Entrega/Recebido | sim | ❌ | ❌ Ausente |
+| PTA / Plano Trabalho Anual (WorkPlan) | sim | Controller, Model, Migration, Factory, Test, Pages (itens inline) | ✅ Completo |
+| Ordem de Entrega/Recebido (DeliveryOrder) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 
 ## 3. ORÇAMENTO
 
@@ -168,7 +168,7 @@
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
 | RH | 18 | 0 | 0 | 0 |
-| Planejamento | 20 | 0 | 0 | 2 |
+| Planejamento | 22 | 0 | 0 | 0 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
 | Contábil | 0 | 4 | 0 | 0 |
@@ -178,7 +178,7 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **60** | **22** | **12** | **6** |
+| **Total** | **62** | **22** | **12** | **4** |
 
 ---
 
@@ -189,7 +189,7 @@
 2. **Diárias**: Finalizar PerDiemRequest e submódulos
 
 ### Prioridade 2 — Implementar módulos não iniciados (❌ Ausente)
-1. **Planejamento**: PTA, Ordem de Entrega/Recebido
+1. _(Nenhum — Planejamento completo)_
 2. **Diárias**: Autorizações, Relatórios
 3. **Integrações**: GRP, ANGRA, Mapas
 
