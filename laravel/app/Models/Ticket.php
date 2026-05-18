@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'ticket_secondary_category_id', 'requester_person_id', 'service_person_id',
         'opened_at', 'description', 'requester_phone', 'resolution',
