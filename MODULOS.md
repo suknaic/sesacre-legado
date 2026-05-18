@@ -165,7 +165,7 @@
 
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
-| RH | 16 | 1 | 1 | 0 |
+| RH | 16 | 0 | 1 | 1 |
 | Planejamento | 1 | 5 | 1 | 10 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
@@ -176,7 +176,7 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **39** | **28** | **14** | **14** |
+| **Total** | **39** | **27** | **14** | **15** |
 
 ---
 
