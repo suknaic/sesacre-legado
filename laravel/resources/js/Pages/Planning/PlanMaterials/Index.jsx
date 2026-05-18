@@ -33,9 +33,9 @@ export default function Index({ planMaterials }) {
                                     <tr key={p.id}>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{p.code}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.name}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.group}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.subgroup}</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.type}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.group_name}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.subgroup_name}</td>
+                                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{p.material_type}</td>
                                         <td className="whitespace-nowrap px-6 py-4 text-sm">
                                             <Link href={route('plan-materials.show', p.id)} className="text-indigo-600 hover:text-indigo-900">Ver</Link>
                                             <Link href={route('plan-materials.edit', p.id)} className="ml-3 text-indigo-600 hover:text-indigo-900">Editar</Link>
