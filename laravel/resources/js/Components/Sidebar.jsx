@@ -55,7 +55,7 @@ const menuItems = [
             { label: 'Programa Setorial', route: '/ppa-project-activities' },
             { label: 'Programa de Governo', route: '/government-programs' },
             { label: 'Metas Físicas', route: '/plan-objectives' },
-            { label: 'Execução Orçamentária', route: '/page/execucao-orcamentaria' },
+            { label: 'Execução Orçamentária', route: '/budget-execution' },
             { label: 'Planos Anuais', route: '/annual-plans' },
             { label: 'LOA', route: '/budget-proposals' },
             { label: 'Materiais', route: '/plan-materials' },
