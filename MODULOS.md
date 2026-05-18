@@ -126,10 +126,10 @@
 
 | Submódulo | Legado | Laravel | Status |
 |---|---|---|---|
-| Chamado (Ticket) | sim | Controller, Model, Migration, Pages | ✅ Completo |
-| Categorias (Principal/Tipo/Primária/Secundária) | sim | Model, Migration | 🟡 Parcial |
-| Status/Condição/Prioridade/Material | sim | Model, Migration | 🟡 Parcial |
-| Materiais (modulo chamados) | sim | Placeholder | 🔴 Incompleto |
+| Chamado (Ticket) | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
+| Categorias (Principal/Tipo/Primária/Secundária) | sim | Model (HasFactory), Factory, Controller (via cascata no Ticket) | ✅ Completo |
+| Status/Condição/Prioridade | sim | Model (HasFactory), Factory | ✅ Completo |
+| Materiais (modulo chamados) | sim | Controller, Model (HasFactory), Factory, Test, Pages | ✅ Completo |
 
 ## 9. ADMINISTRAÇÃO / SISTEMA
 
@@ -174,11 +174,11 @@
 | Contábil | 4 | 0 | 0 | 0 |
 | Compras/Contratos | 2 | 6 | 0 | 0 |
 | Diárias | 0 | 1 | 4 | 1 |
-| Chamados | 1 | 2 | 1 | 0 |
+| Chamados | 4 | 0 | 0 | 0 |
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **66** | **18** | **12** | **4** |
+| **Total** | **69** | **16** | **11** | **4** |
 
 ---
 
@@ -197,7 +197,6 @@
 1. **Permissões/Segurança**: Implementar CRUD de Recursos, Grupos, Perfis
 2. **Administração**: Tipo Administração, Tipo Remetente, Vincular Remetente/Admin
 3. **Diárias**: Decreto Valor, Central Responsável, Perfil de Acesso
-4. **Chamados**: Materiais, Categorias
 
 ### Prioridade 4 — Qualidade
 1. Adicionar factories + testes para todos os módulos parciais sem teste
