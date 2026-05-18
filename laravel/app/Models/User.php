@@ -34,6 +34,7 @@ class User extends Authenticatable
         'notes',
         'last_login_at',
         'is_active',
+        'can_access_diarias',
     ];
 
     protected $hidden = [
@@ -48,6 +49,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'last_login_at' => 'datetime',
             'is_active' => 'boolean',
+            'can_access_diarias' => 'boolean',
         ];
     }
 

@@ -24,6 +24,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DecreeValueController;
 use App\Http\Controllers\DiariasAutorizacaoController;
 use App\Http\Controllers\DiariasCentralResponsavelController;
+use App\Http\Controllers\DiariasPerfilAcessoController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
@@ -133,6 +134,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('diarias-central-responsavel')->name('diarias-central-responsavel.')->group(function () {
         Route::get('/', [DiariasCentralResponsavelController::class, 'index'])->name('index');
         Route::post('{organization}/toggle', [DiariasCentralResponsavelController::class, 'toggle'])->name('toggle');
+    });
+    Route::prefix('diarias-perfil-acesso')->name('diarias-perfil-acesso.')->group(function () {
+        Route::get('/', [DiariasPerfilAcessoController::class, 'index'])->name('index');
+        Route::put('{user}', [DiariasPerfilAcessoController::class, 'update'])->name('update');
     });
 
     // Planning

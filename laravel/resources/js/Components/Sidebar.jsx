@@ -150,7 +150,7 @@ const menuItems = [
             {
                 label: 'Administração',
                 children: [
-                    { label: 'Perfil de Acesso', route: '/page/diarias-perfil-acesso' },
+                    { label: 'Perfil de Acesso', route: '/diarias-perfil-acesso' },
                     { label: 'Valores das Diárias', route: '/decree-values' },
                     { label: 'Vincular Central', route: '/diarias-central-responsavel' },
                 ],
