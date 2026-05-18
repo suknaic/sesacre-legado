@@ -22,7 +22,7 @@
 | Contrato (EmploymentContract) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Lotação (Organization) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Lotação Detalhada (OrganizationDetail) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
-| Férias/Licenças/Concessões | sim | Controller (index/show), Pages (Index/Show) | 🟡 Parcial (sem CRUD completo) |
+| Férias/Licenças/Concessões | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Histórico Recrutamento (RecruitmentHistory) | sim | Controller, Model, Migration, Factory, Test, Pages | ✅ Completo |
 | Relatórios RH (PDF) | sim | Placeholder no menu | 🔴 Incompleto |
 | Controle de Acesso RH | sim | ❌ | ❌ Ausente |
@@ -165,7 +165,7 @@
 
 | Categoria | ✅ Completo | 🟡 Parcial | 🔴 Incompleto | ❌ Ausente |
 |---|---|---|---|---|
-| RH | 15 | 2 | 1 | 0 |
+| RH | 16 | 1 | 1 | 0 |
 | Planejamento | 1 | 5 | 1 | 10 |
 | Orçamento | 9 | 2 | 0 | 0 |
 | Financeiro | 6 | 7 | 0 | 0 |
@@ -176,7 +176,7 @@
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **38** | **29** | **14** | **14** |
+| **Total** | **39** | **28** | **14** | **14** |
 
 ---
 

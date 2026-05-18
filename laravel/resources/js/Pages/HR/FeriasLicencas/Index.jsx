@@ -21,6 +21,7 @@ export default function Index({ history, contractSituations = [], filters = {} }
         <AuthenticatedLayout header={
             <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">Férias, Licenças e Concessões</h2>
+                <Link href={route('ferias-licencas.create')} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500">Novo Registro</Link>
             </div>
         }>
             <Head title="Férias, Licenças e Concessões" />

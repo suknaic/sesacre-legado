@@ -125,7 +125,12 @@ Route::middleware('auth')->group(function () {
 
     // HR - Férias, Licenças e Concessões
     Route::get('ferias-licencas', [FeriasLicencasController::class, 'index'])->name('ferias-licencas.index');
+    Route::get('ferias-licencas/create', [FeriasLicencasController::class, 'create'])->name('ferias-licencas.create');
+    Route::post('ferias-licencas', [FeriasLicencasController::class, 'store'])->name('ferias-licencas.store');
     Route::get('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'show'])->name('ferias-licencas.show');
+    Route::get('ferias-licencas/{recruitmentHistory}/edit', [FeriasLicencasController::class, 'edit'])->name('ferias-licencas.edit');
+    Route::put('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'update'])->name('ferias-licencas.update');
+    Route::delete('ferias-licencas/{recruitmentHistory}', [FeriasLicencasController::class, 'destroy'])->name('ferias-licencas.destroy');
 
     // HR - People
     Route::resource('personal-info', PersonalInfoController::class);

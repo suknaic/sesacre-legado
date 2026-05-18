@@ -9,6 +9,7 @@ export default function Show({ recruitmentHistory }) {
         <AuthenticatedLayout header={
             <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">Registro de Férias/Licenças</h2>
+                <Link href={route('ferias-licencas.edit', h.id)} className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500">Editar</Link>
             </div>
         }>
             <Head title="Registro" />
