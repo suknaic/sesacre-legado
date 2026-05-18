@@ -55,6 +55,7 @@ const menuItems = [
             { label: 'Eixo', route: '/planning-axes' },
             { label: 'Diretriz', route: '/planning-guidelines' },
             { label: 'Indicador de Saúde', route: '/health-indicators' },
+            { label: 'PAS Responsável', route: '/pas-responsibles' },
             { label: 'Programa Setorial', route: '/ppa-project-activities' },
             { label: 'Programa de Governo', route: '/government-programs' },
             { label: 'Metas Físicas', route: '/plan-objectives' },
