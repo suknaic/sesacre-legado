@@ -57,6 +57,7 @@ use App\Http\Controllers\Orcamento\RedeTematicaController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationDetailController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PasActionController;
 use App\Http\Controllers\PasResponsibleController;
 use App\Http\Controllers\PersonalInfoController;
 use App\Http\Controllers\PesPlanController;
@@ -118,6 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('planning-guidelines', PlanningGuidelineController::class);
     Route::resource('health-indicators', HealthIndicatorController::class);
     Route::resource('pas-responsibles', PasResponsibleController::class);
+    Route::resource('pas-actions', PasActionController::class);
     Route::resource('ppa-project-activities', PpaProjectActivityController::class);
     Route::resource('government-programs', GovernmentProgramController::class);
 
