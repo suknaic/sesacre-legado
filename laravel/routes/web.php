@@ -22,11 +22,11 @@ use App\Http\Controllers\ContractSituationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DecreeValueController;
+use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\DiariasAutorizacaoController;
 use App\Http\Controllers\DiariasCentralResponsavelController;
 use App\Http\Controllers\DiariasPerfilAcessoController;
 use App\Http\Controllers\DiariasRelatorioController;
-use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
 use App\Http\Controllers\EmploymentBondController;
@@ -72,6 +72,7 @@ use App\Http\Controllers\PasActionController;
 use App\Http\Controllers\PasResponsibleController;
 use App\Http\Controllers\PasValidationController;
 use App\Http\Controllers\PerDiemRequestController;
+use App\Http\Controllers\PermissionGroupController;
 use App\Http\Controllers\PersonalInfoController;
 use App\Http\Controllers\PesPlanController;
 use App\Http\Controllers\PlanActionController;
@@ -84,8 +85,10 @@ use App\Http\Controllers\PpaProjectActivityController;
 use App\Http\Controllers\ProcessTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecruitmentHistoryController;
+use App\Http\Controllers\ResourceController;
 use App\Http\Controllers\RhAccessController;
 use App\Http\Controllers\RhReportController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\StrategicPlanController;
 use App\Http\Controllers\SupplierController;
@@ -140,6 +143,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DiariasPerfilAcessoController::class, 'index'])->name('index');
         Route::put('{user}', [DiariasPerfilAcessoController::class, 'update'])->name('update');
     });
+    // Permissions
+    Route::resource('resources', ResourceController::class);
+    Route::resource('permission-groups', PermissionGroupController::class);
+    Route::resource('roles', RoleController::class);
+
     Route::prefix('diarias-relatorios')->name('diarias-relatorios.')->group(function () {
         Route::get('/', [DiariasRelatorioController::class, 'index'])->name('index');
         Route::get('/gerar', [DiariasRelatorioController::class, 'gerar'])->name('gerar');
