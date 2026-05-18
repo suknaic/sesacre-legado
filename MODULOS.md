@@ -114,13 +114,13 @@
 ## 7. DIÁRIAS
 
 | Submódulo | Legado | Laravel | Status |
-|---|---|---|---|
-| Proposta e Concessão | sim | Controller, Model, Migration, Pages | 🟡 Parcial |
-| Autorizações | sim | Placeholder | 🔴 Incompleto |
-| Decreto Valor | sim | Model, Migration | 🔴 Incompleto |
-| Central Responsável | sim | Placeholder | 🔴 Incompleto |
-| Perfil de Acesso | sim | Placeholder | 🔴 Incompleto |
-| Relatórios | sim | ❌ | ❌ Ausente |
+|---|---|---|---|---|
+| Proposta e Concessão | sim | Controller, Model (HasFactory), Migration, Factory, Test, Pages | ✅ Completo |
+| Autorizações | sim | Controller, Pages (fluxo approve/reject/reset), Test | ✅ Completo |
+| Decreto Valor | sim | Controller, Model (HasFactory), Migration, Factory, Test, Pages | ✅ Completo |
+| Central Responsável | sim | Controller, Pages (toggle organizações), Test | ✅ Completo |
+| Perfil de Acesso | sim | Controller, Migration (can_access_diarias), Pages, Test | ✅ Completo |
+| Relatórios | sim | Controller, Pages (filtros por período/tipo/etapa), Test | ✅ Completo |
 
 ## 8. CHAMADOS (Service Desk)
 
@@ -173,12 +173,12 @@
 | Financeiro | 6 | 7 | 0 | 0 |
 | Contábil | 4 | 0 | 0 | 0 |
 | Compras/Contratos | 2 | 6 | 0 | 0 |
-| Diárias | 0 | 1 | 4 | 1 |
+| Diárias | 6 | 0 | 0 | 0 |
 | Chamados | 4 | 0 | 0 | 0 |
 | Administração | 4 | 0 | 4 | 0 |
 | Permissões | 0 | 0 | 3 | 0 |
 | Integrações | 0 | 0 | 0 | 3 |
-| **Total** | **69** | **16** | **11** | **4** |
+| **Total** | **75** | **16** | **5** | **3** |
 
 ---
 
