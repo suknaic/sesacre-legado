@@ -1,16 +1,64 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
-export default function Edit({ ticket, statuses, priorities }) {
+export default function Edit({ ticket, statuses, priorities, categories }) {
     const { flash } = usePage().props;
+
+    const initialSec = ticket.ticket_secondary_category_id;
+    const initialPrimary = initialSec ? ticket.secondary_category?.primary_category_id : null;
+    const initialType = initialPrimary ? ticket.secondary_category?.primary_category?.ticket_category_type_id : null;
+    const initialCat = initialType ? ticket.secondary_category?.primary_category?.category_type?.ticket_category_id : null;
+
+    const [selectedCategory, setSelectedCategory] = useState(initialCat ?? '');
+    const [selectedType, setSelectedType] = useState(initialType ?? '');
+    const [selectedPrimary, setSelectedPrimary] = useState(initialPrimary ?? '');
 
     const { data, setData, put, processing, errors } = useForm({
         description: ticket.description ?? '',
         resolution: ticket.resolution ?? '',
         ticket_status_id: ticket.ticket_status_id ?? '',
         ticket_priority_id: ticket.ticket_priority_id ?? '',
+        ticket_secondary_category_id: ticket.ticket_secondary_category_id ?? '',
         deadline: ticket.deadline?.split('T')[0] ?? '',
     });
+
+    const types = selectedCategory
+        ? categories.find((c) => c.id === Number(selectedCategory))?.category_types ?? []
+        : [];
+
+    const primaries = selectedType
+        ? types.find((t) => t.id === Number(selectedType))?.primary_categories ?? []
+        : [];
+
+    const secondaries = selectedPrimary
+        ? primaries.find((p) => p.id === Number(selectedPrimary))?.secondary_categories ?? []
+        : [];
+
+    function handleCategoryChange(e) {
+        const val = e.target.value;
+        setSelectedCategory(val);
+        setSelectedType('');
+        setSelectedPrimary('');
+        setData('ticket_secondary_category_id', '');
+    }
+
+    function handleTypeChange(e) {
+        const val = e.target.value;
+        setSelectedType(val);
+        setSelectedPrimary('');
+        setData('ticket_secondary_category_id', '');
+    }
+
+    function handlePrimaryChange(e) {
+        const val = e.target.value;
+        setSelectedPrimary(val);
+        setData('ticket_secondary_category_id', '');
+    }
+
+    function handleSecondaryChange(e) {
+        setData('ticket_secondary_category_id', e.target.value);
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -32,6 +80,69 @@ export default function Edit({ ticket, statuses, priorities }) {
                     {flash?.success && <div className="mb-4 rounded-md bg-green-50 p-4 text-sm text-green-800">{flash.success}</div>}
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Categoria</label>
+                                <select
+                                    value={selectedCategory}
+                                    onChange={handleCategoryChange}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                >
+                                    <option value="">Selecione...</option>
+                                    {categories.map((c) => (
+                                        <option key={c.id} value={c.id}>{c.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {selectedCategory && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Tipo</label>
+                                    <select
+                                        value={selectedType}
+                                        onChange={handleTypeChange}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    >
+                                        <option value="">Selecione...</option>
+                                        {types.map((t) => (
+                                            <option key={t.id} value={t.id}>{t.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {selectedType && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Categoria Primária</label>
+                                    <select
+                                        value={selectedPrimary}
+                                        onChange={handlePrimaryChange}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    >
+                                        <option value="">Selecione...</option>
+                                        {primaries.map((p) => (
+                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+
+                            {selectedPrimary && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Categoria Secundária</label>
+                                    <select
+                                        value={data.ticket_secondary_category_id}
+                                        onChange={handleSecondaryChange}
+                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    >
+                                        <option value="">Selecione...</option>
+                                        {secondaries.map((s) => (
+                                            <option key={s.id} value={s.id}>{s.name}{s.value ? ` (R$ ${s.value})` : ''}</option>
+                                        ))}
+                                    </select>
+                                    {errors.ticket_secondary_category_id && <p className="mt-1 text-sm text-red-600">{errors.ticket_secondary_category_id}</p>}
+                                </div>
+                            )}
+
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Descrição</label>
                                 <textarea

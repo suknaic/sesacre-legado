@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketServicePerson extends Model
 {
-    use HasFactory;
+    protected $table = 'ticket_service_persons';
+
     protected $fillable = ['ticket_id', 'person_id'];
 
     public function ticket(): BelongsTo

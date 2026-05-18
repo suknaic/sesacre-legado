@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketCategory;
 use App\Models\TicketPriority;
+use App\Models\TicketSecondaryCategory;
 use App\Models\TicketStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,14 +14,33 @@ use Inertia\Response;
 
 class TicketController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $tickets = Ticket::with(['status', 'priority', 'secondaryCategory'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+        $query = Ticket::with(['status', 'priority', 'secondaryCategory']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                    ->orWhere('id', $search);
+            });
+        }
+
+        if ($request->filled('ticket_status_id')) {
+            $query->where('ticket_status_id', $request->ticket_status_id);
+        }
+
+        if ($request->filled('ticket_priority_id')) {
+            $query->where('ticket_priority_id', $request->ticket_priority_id);
+        }
+
+        $tickets = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return Inertia::render('Helpdesk/Tickets/Index', [
             'tickets' => $tickets,
+            'filters' => $request->only(['search', 'ticket_status_id', 'ticket_priority_id']),
+            'statuses' => TicketStatus::where('is_active', true)->get(),
+            'priorities' => TicketPriority::where('is_active', true)->get(),
         ]);
     }
 
@@ -28,6 +49,7 @@ class TicketController extends Controller
         return Inertia::render('Helpdesk/Tickets/Create', [
             'statuses' => TicketStatus::where('is_active', true)->get(),
             'priorities' => TicketPriority::where('is_active', true)->get(),
+            'categories' => TicketCategory::with(['categoryTypes.primaryCategories.secondaryCategories'])->where('is_active', true)->get(),
         ]);
     }
 
@@ -38,6 +60,7 @@ class TicketController extends Controller
             'requester_phone' => 'nullable|string|max:255',
             'ticket_status_id' => 'nullable|exists:ticket_statuses,id',
             'ticket_priority_id' => 'nullable|exists:ticket_priorities,id',
+            'ticket_secondary_category_id' => 'nullable|exists:ticket_secondary_categories,id',
             'deadline' => 'nullable|date',
         ]);
 
@@ -49,19 +72,32 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket): Response
     {
-        $ticket->load(['status', 'priority', 'secondaryCategory', 'services', 'notes', 'attachments']);
+        $ticket->load([
+            'status',
+            'priority',
+            'secondaryCategory.primaryCategory.categoryType.category',
+            'services',
+            'notes',
+            'attachments',
+        ]);
 
         return Inertia::render('Helpdesk/Tickets/Show', [
             'ticket' => $ticket,
+            'statuses' => TicketStatus::where('is_active', true)->get(),
+            'priorities' => TicketPriority::where('is_active', true)->get(),
+            'categories' => TicketCategory::with(['categoryTypes.primaryCategories.secondaryCategories'])->where('is_active', true)->get(),
         ]);
     }
 
     public function edit(Ticket $ticket): Response
     {
+        $ticket->load(['secondaryCategory.primaryCategory.categoryType.category']);
+
         return Inertia::render('Helpdesk/Tickets/Edit', [
             'ticket' => $ticket,
             'statuses' => TicketStatus::where('is_active', true)->get(),
             'priorities' => TicketPriority::where('is_active', true)->get(),
+            'categories' => TicketCategory::with(['categoryTypes.primaryCategories.secondaryCategories'])->where('is_active', true)->get(),
         ]);
     }
 
@@ -72,6 +108,7 @@ class TicketController extends Controller
             'resolution' => 'nullable|string',
             'ticket_status_id' => 'nullable|exists:ticket_statuses,id',
             'ticket_priority_id' => 'nullable|exists:ticket_priorities,id',
+            'ticket_secondary_category_id' => 'nullable|exists:ticket_secondary_categories,id',
             'deadline' => 'nullable|date',
         ]);
 

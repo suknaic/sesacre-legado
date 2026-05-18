@@ -46,6 +46,7 @@ use App\Http\Controllers\JobFunctionController;
 use App\Http\Controllers\JobPositionController;
 use App\Http\Controllers\LegalEntityController;
 use App\Http\Controllers\MaritalStatusController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MeasurementUnitController;
 use App\Http\Controllers\Orcamento\BlocoOrcamentarioController;
 use App\Http\Controllers\Orcamento\CentralLiberacaoController;
@@ -69,6 +70,7 @@ use App\Http\Controllers\PesPlanController;
 use App\Http\Controllers\PlanActionController;
 use App\Http\Controllers\PlanningAxisController;
 use App\Http\Controllers\PlanningGuidelineController;
+use App\Http\Controllers\PlanningController;
 use App\Http\Controllers\HealthIndicatorController;
 use App\Http\Controllers\PlanMaterialController;
 use App\Http\Controllers\PlanObjectiveController;
@@ -108,11 +110,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::resource('procurements', ProcurementController::class);
     Route::resource('tickets', TicketController::class);
+    Route::resource('materials', MaterialController::class);
     Route::resource('strategic-plans', StrategicPlanController::class);
     Route::resource('annual-plans', AnnualPlanController::class);
     Route::resource('per-diem-requests', PerDiemRequestController::class);
 
     // Planning
+    Route::get('/planning', [PlanningController::class, 'index'])->name('planning.index');
     Route::resource('plan-objectives', PlanObjectiveController::class);
     Route::resource('plan-actions', PlanActionController::class);
     Route::resource('plan-materials', PlanMaterialController::class);
