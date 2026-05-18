@@ -147,6 +147,7 @@ const menuItems = [
         children: [
             { label: 'Proposta e Concessão', route: '/per-diem-requests' },
             { label: 'Autorizações', route: '/diarias-autorizacoes' },
+            { label: 'Relatórios', route: '/diarias-relatorios' },
             {
                 label: 'Administração',
                 children: [

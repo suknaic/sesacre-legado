@@ -25,6 +25,7 @@ use App\Http\Controllers\DecreeValueController;
 use App\Http\Controllers\DiariasAutorizacaoController;
 use App\Http\Controllers\DiariasCentralResponsavelController;
 use App\Http\Controllers\DiariasPerfilAcessoController;
+use App\Http\Controllers\DiariasRelatorioController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EducationFormationController;
 use App\Http\Controllers\EducationLevelController;
@@ -138,6 +139,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('diarias-perfil-acesso')->name('diarias-perfil-acesso.')->group(function () {
         Route::get('/', [DiariasPerfilAcessoController::class, 'index'])->name('index');
         Route::put('{user}', [DiariasPerfilAcessoController::class, 'update'])->name('update');
+    });
+    Route::prefix('diarias-relatorios')->name('diarias-relatorios.')->group(function () {
+        Route::get('/', [DiariasRelatorioController::class, 'index'])->name('index');
+        Route::get('/gerar', [DiariasRelatorioController::class, 'gerar'])->name('gerar');
     });
 
     // Planning
