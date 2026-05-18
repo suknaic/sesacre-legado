@@ -25,7 +25,10 @@ class CentralDemandController extends Controller
 
     public function create(): Response
     {
-        $people = PersonalInfo::orderBy('name')->get(['id', 'name']);
+        $people = PersonalInfo::select('personal_info.id', 'users.name')
+            ->join('users', 'personal_info.user_id', '=', 'users.id')
+            ->orderBy('users.name')
+            ->get();
         $organizations = Organization::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Planning/CentralDemands/Create', [
@@ -59,7 +62,10 @@ class CentralDemandController extends Controller
     public function edit(CentralDemand $centralDemand): Response
     {
         $centralDemand->load(['personalInfo', 'organization']);
-        $people = PersonalInfo::orderBy('name')->get(['id', 'name']);
+        $people = PersonalInfo::select('personal_info.id', 'users.name')
+            ->join('users', 'personal_info.user_id', '=', 'users.id')
+            ->orderBy('users.name')
+            ->get();
         $organizations = Organization::orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Planning/CentralDemands/Edit', [
