@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PerDiemRequest extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'travel_type_id', 'transport_type_id', 'decree_type_id', 'travel_class_id',
         'applicant_person_id', 'applicant_role_id', 'applicant_department_id',

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PerDiemHistory extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['per_diem_request_id', 'person_id', 'history_date', 'description'];
 
     protected function casts(): array
