@@ -63,6 +63,7 @@ use App\Http\Controllers\PlanMaterialController;
 use App\Http\Controllers\PlanObjectiveController;
 use App\Http\Controllers\PpaProjectActivityController;
 use App\Http\Controllers\ProcessTypeController;
+use App\Http\Controllers\GovernmentProgramController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecruitmentHistoryController;
 use App\Http\Controllers\RhAccessController;
@@ -108,6 +109,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('measurement-units', MeasurementUnitController::class);
     Route::resource('pes-plans', PesPlanController::class);
     Route::resource('ppa-project-activities', PpaProjectActivityController::class);
+    Route::resource('government-programs', GovernmentProgramController::class);
 
     // HR - Administration
     Route::resource('job-positions', JobPositionController::class);
